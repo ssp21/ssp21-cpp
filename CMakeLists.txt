@@ -33,7 +33,7 @@ set_target_properties(ssp21 PROPERTIES FOLDER libs)
 # ---- sodiumbackend library ----
 file(GLOB_RECURSE sodiumbackend_SRC ./cpp/libs/src/sodiumbackend/*.cpp ./cpp/libs/src/sodiumbackend/*.h ./cpp/libs/include/sodiumbackend/*.h)
 add_library(sodiumbackend ${LIB_TYPE} ${sodiumbackend_SRC})
-target_link_libraries(sodiumbackend ssp21 libsodium)
+target_link_libraries(sodiumbackend ssp21 sodium)
 install(TARGETS sodiumbackend DESTINATION lib)
 set_target_properties(sodiumbackend PROPERTIES FOLDER libs)
 

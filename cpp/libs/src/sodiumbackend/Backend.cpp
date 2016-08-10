@@ -5,8 +5,6 @@
 #include <sodium.h>
 #include <assert.h>
 
-#include "ssp21\Crypto.h"
-
 namespace ssp21
 {
 	namespace sodium

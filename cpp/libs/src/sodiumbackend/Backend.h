@@ -8,7 +8,7 @@
 
 #include <initializer_list>
 
-#include "ssp21\Crypto.h"
+#include "ssp21/Crypto.h"
 
 namespace ssp21
 {	
