@@ -4,7 +4,7 @@
 #include "ssp21/Crypto.h"
 #include <string.h>
 
-#define SUITE(name) "HMACTestSuite - " name
+#define SUITE(name) "Curve25519TestSuite - " name
 
 using namespace ssp21;
 
