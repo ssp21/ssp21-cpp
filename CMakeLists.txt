@@ -26,13 +26,24 @@ set_target_properties(openpal PROPERTIES FOLDER libs)
 # ---- ssp21 library ----
 file(GLOB_RECURSE ssp21_SRC ./cpp/libs/src/ssp21/*.cpp ./cpp/libs/src/ssp21/*.h ./cpp/libs/include/ssp21/*.h)
 add_library(ssp21 ${LIB_TYPE} ${ssp21_SRC})
+target_link_libraries(ssp21 openpal)
 install(TARGETS ssp21 DESTINATION lib)
 set_target_properties(ssp21 PROPERTIES FOLDER libs)
 
 # ---- sodiumbackend library ----
 file(GLOB_RECURSE sodiumbackend_SRC ./cpp/libs/src/sodiumbackend/*.cpp ./cpp/libs/src/sodiumbackend/*.h ./cpp/libs/include/sodiumbackend/*.h)
 add_library(sodiumbackend ${LIB_TYPE} ${sodiumbackend_SRC})
+target_link_libraries(sodiumbackend ssp21 libsodium)
 install(TARGETS sodiumbackend DESTINATION lib)
 set_target_properties(sodiumbackend PROPERTIES FOLDER libs)
 
+enable_testing()
 
+include_directories(./cpp/tests/catch)
+
+# ---- sodiumbackend tests ----
+file(GLOB_RECURSE testsodiumbackend_SRC ./cpp/tests/sodiumbackend/*.cpp ./cpp/tests/sodiumbackend/*.h)
+add_executable (testsodiumbackend ${testsodiumbackend_SRC})
+target_link_libraries (testsodiumbackend sodiumbackend)
+set_target_properties(testsodiumbackend PROPERTIES FOLDER tests)
+add_test(testsodiumbackend testsodiumbackend)
