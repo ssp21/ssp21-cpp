@@ -1,5 +1,5 @@
-#ifndef SSP21_STATICBUFFER_H
-#define SSP21_STATICBUFFER_H
+#ifndef SSP21_SECUREBUFFER_H
+#define SSP21_SECUREBUFFER_H
 
 #include "openpal/container/WSlice.h"
 #include "openpal/container/RSlice.h"
@@ -7,7 +7,7 @@
 
 #include <cstdint>
 
-#include "Crypto.h"
+//#include "Crypto.h"
 
 namespace ssp21
 {
@@ -23,12 +23,13 @@ public:
 
 	~SecureBuffer()
 	{		
-		Crypto::Zero(GetWSlice());
+		// TODO: resolve circular dependence with Crypto.h
+		//Crypto::Zero(GetWSlice());
 	}
 
 	openpal::RSlice ToRSlice() const
 	{
-		return RSlice(buffer, SIZE);
+		return openpal::RSlice(buffer, SIZE);
 	}
 
 	openpal::RSlice ToRSlice(uint32_t maxSize) const

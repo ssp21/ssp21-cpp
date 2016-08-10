@@ -2,11 +2,7 @@
 #ifndef SSP21_CRYTPTO_H
 #define SSP21_CRYTPTO_H
 
-#include <openpal/container/RSlice.h>
-#include <openpal/container/WSlice.h>
-#include <openpal/container/StaticBuffer.h>
-
-#include "Constants.h"
+#include "Key.h"
 
 #include <initializer_list>
 #include <system_error>
@@ -17,7 +13,7 @@ namespace ssp21
 
 	typedef openpal::RSlice(*HASHFuncT)(		
 		std::initializer_list<openpal::RSlice> data,
-		openpal::WSlice& dest		
+		openpal::WSlice& dest
 	);
 
 	typedef openpal::RSlice(*HMACFuncT)(
@@ -25,16 +21,10 @@ namespace ssp21
 		std::initializer_list<openpal::RSlice> data,
 		openpal::WSlice& dest
 	);
-
-	struct KeyPair
-	{		
-		openpal::StaticBuffer<consts::X25519_KEY_LENGTH> pub;
-		openpal::StaticBuffer<consts::X25519_KEY_LENGTH> priv;
-	};
 	
 	typedef void(*GenKeyPairT)(KeyPair& pair);
 
-	typedef openpal::RSlice (*DH_X25519T)(const openpal::RSlice& priv_key, const openpal::RSlice& pub_key, openpal::WSlice& dest, std::error_code& ec);
+	typedef void (*DH_X25519T)(const openpal::RSlice& priv_key, const openpal::RSlice& pub_key, Key& output, std::error_code& ec);
 
 	
 	/**
@@ -59,7 +49,7 @@ namespace ssp21
 
 		static void GenKeyPair_X25519(KeyPair& pair);
 
-		static openpal::RSlice DH_X25519(const openpal::RSlice& priv_key, const openpal::RSlice& pub_key, openpal::WSlice& dest, std::error_code& ec);
+		static void DH_X25519(const openpal::RSlice& priv_key, const openpal::RSlice& pub_key, Key& output, std::error_code& ec);
 		
 		static void Inititalize(
 			ZeroT zero_memory,

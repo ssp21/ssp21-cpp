@@ -62,19 +62,23 @@ namespace ssp21
 
 		void GenKeyPair_X25519(KeyPair& pair)
 		{
-			randombytes_buf(pair.priv(), sizeof pair.priv.Size());
-			crypto_scalarmult_base(pair.pub(), pair.priv());
+			auto dest = pair.privateKey.GetWriteDest();
+			randombytes_buf(dest, crypto_scalarmult_BYTES);
+			crypto_scalarmult_base(pair.publicKey.GetWriteDest(), dest);
+
+			pair.publicKey.SetLength(crypto_scalarmult_BYTES);
+			pair.privateKey.SetLength(crypto_scalarmult_BYTES);
 		}
 
-		openpal::RSlice DH_X25519(const openpal::RSlice& priv_key, const openpal::RSlice& pub_key, openpal::WSlice& dest, std::error_code& ec)
+		void DH_X25519(const openpal::RSlice& priv_key, const openpal::RSlice& pub_key, Key& output, std::error_code& ec)
 		{
-			if (crypto_scalarmult(dest, priv_key, pub_key) != 0)
+			if (crypto_scalarmult(output.GetWriteDest(), priv_key, pub_key) != 0)
 			{
 				ec = std::error_code(1, std::generic_category()); // TODO - make actual error codes
-				return openpal::RSlice::Empty();
+				return;
 			}
 
-			return dest.ToRSlice().Take(crypto_scalarmult_BYTES);
+			output.SetLength(crypto_scalarmult_BYTES);
 		}
 	}
 }

@@ -1,28 +1,37 @@
 
-#ifndef SSP21_DHKEY_H
-#define SSP21_DHKEY_H
+#ifndef SSP21_KEY_H
+#define SSP21_KEY_H
 
 #include "SecureBuffer.h"
 #include "Constants.h"
 
 namespace ssp21
 {		
-	class DHKey
+	class Key
 	{
 		public:
 
-			DHKey();
+			Key();
 
 			openpal::RSlice GetKey();
 
-
 			openpal::WSlice GetWriteDest();
+
 			void SetLength(uint32_t length);
 
 		private:
 
 			uint32_t m_length;
-			SecureBuffer<consts::MAX_DH_KEY_SIZE> m_buffer;
+			SecureBuffer<consts::MAX_KEY_SIZE> m_buffer;
+	};
+
+	class KeyPair
+	{
+
+	public:
+
+		Key publicKey;
+		Key privateKey;
 	};
 }
 

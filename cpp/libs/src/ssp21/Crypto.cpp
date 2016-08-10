@@ -47,13 +47,12 @@ namespace ssp21
 		m_genpair_x25519(pair);
 	}
 
-	openpal::RSlice Crypto::DH_X25519(const openpal::RSlice& priv_key, const openpal::RSlice& pub_key, openpal::WSlice& dest, std::error_code& ec)
+	void Crypto::DH_X25519(const openpal::RSlice& priv_key, const openpal::RSlice& pub_key, Key& output, std::error_code& ec)
 	{
 		assert(m_dh_x25519);
-		assert(pub_key.Size() == consts::X25519_KEY_LENGTH);
-		assert(dest.Size() >= consts::X25519_KEY_LENGTH);
+		assert(pub_key.Size() == consts::X25519_KEY_LENGTH);		
 		
-		return m_dh_x25519(priv_key, pub_key, dest, ec);
+		m_dh_x25519(priv_key, pub_key, output, ec);
 	}
 
 	void Crypto::Inititalize(

@@ -22,7 +22,7 @@ namespace ssp21
 
 		void GenKeyPair_X25519(KeyPair& pair);
 
-		openpal::RSlice DH_X25519(const openpal::RSlice& priv_key, const openpal::RSlice& pub_key, openpal::WSlice& dest, std::error_code& ec);
+		void DH_X25519(const openpal::RSlice& priv_key, const openpal::RSlice& pub_key, Key& output, std::error_code& ec);
 	}
 }
 
