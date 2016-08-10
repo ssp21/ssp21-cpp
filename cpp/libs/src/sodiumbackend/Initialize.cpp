@@ -1,7 +1,12 @@
 
 #include "sodiumbackend/Initialize.h"
 
+#include "ssp21/Crypto.h"
+
 #include <sodium.h>
+
+#include "Backend.h"
+
 
 namespace ssp21
 {
@@ -10,9 +15,21 @@ namespace ssp21
 
 		bool Initialize()
 		{
-			return sodium_init() != -1;
+			if (sodium_init() == -1)
+			{
+				return false;
+			}
+
+			// initialize concrete functions
+			Crypto::Inititalize(
+				&SHA256,
+				&HMAC_SHA256
+			);
+
+			return true;
 		}
 
+		
 	}
 }
 
