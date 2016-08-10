@@ -1,0 +1,3 @@
+[submodule "deps/openpal"]
+	path = deps/openpal
+	url = git@github.com:automatak/openpal.git
