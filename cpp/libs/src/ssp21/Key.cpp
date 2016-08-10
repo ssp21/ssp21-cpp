@@ -22,6 +22,7 @@ openpal::WSlice Key::GetWriteDest()
 void Key::SetLength(uint32_t length)
 {
 	assert(length <= m_buffer.Size());
+	m_length = length;
 }
 
 		
