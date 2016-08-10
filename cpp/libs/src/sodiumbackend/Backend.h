@@ -14,6 +14,8 @@ namespace ssp21
 {	
 	namespace sodium
 	{
+		void Zero(openpal::WSlice& buff);
+
 		openpal::RSlice SHA256(std::initializer_list<openpal::RSlice> data, openpal::WSlice& dest);
 
 		openpal::RSlice HMAC_SHA256(const openpal::RSlice& key, std::initializer_list<openpal::RSlice> data, openpal::WSlice& dest);

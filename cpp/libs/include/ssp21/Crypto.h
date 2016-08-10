@@ -13,6 +13,8 @@
 
 namespace ssp21
 {		
+	typedef void (*ZeroT)(openpal::WSlice&);
+
 	typedef openpal::RSlice(*HASHFuncT)(		
 		std::initializer_list<openpal::RSlice> data,
 		openpal::WSlice& dest		
@@ -43,6 +45,8 @@ namespace ssp21
 	{
 
 	public:		
+
+		static void Zero(openpal::WSlice&);
 		
 		static openpal::RSlice CalcHash_SHA256(
 			std::initializer_list<openpal::RSlice> data,
@@ -58,6 +62,7 @@ namespace ssp21
 		static openpal::RSlice DH_X25519(const openpal::RSlice& priv_key, const openpal::RSlice& pub_key, openpal::WSlice& dest, std::error_code& ec);
 		
 		static void Inititalize(
+			ZeroT zero_memory,
 			HASHFuncT hash_sha256,
 			HMACFuncT hmac_sha256,
 			GenKeyPairT genpair_x25519,
@@ -70,6 +75,7 @@ namespace ssp21
 		/// Function typedefs all initialized to nullptr. Concrete backends will initialize these.
 		/// These should not be used directly
 
+		static ZeroT m_zero_memory;
 		static HASHFuncT m_hash_sha256;
 		static HMACFuncT m_hmac_sha256;
 

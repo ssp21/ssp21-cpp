@@ -5,8 +5,19 @@
 
 namespace ssp21
 {	
+			
+	ZeroT Crypto::m_zero_memory(nullptr);
 	HASHFuncT Crypto::m_hash_sha256(nullptr);
 	HMACFuncT Crypto::m_hmac_sha256(nullptr);
+	GenKeyPairT Crypto::m_genpair_x25519(nullptr);
+	DH_X25519T Crypto::m_dh_x25519(nullptr);
+
+
+	void Crypto::Zero(openpal::WSlice& buff)
+	{
+		assert(m_zero_memory);
+		m_zero_memory(buff);
+	}
 
 	openpal::RSlice Crypto::CalcHash_SHA256(
 		std::initializer_list<openpal::RSlice> data,
@@ -46,11 +57,13 @@ namespace ssp21
 	}
 
 	void Crypto::Inititalize(
+		ZeroT zero_memory,
 		HASHFuncT hash_sha256,
 		HMACFuncT hmac_sha256,
 		GenKeyPairT genpair_x25519,
 		DH_X25519T dh_x25519)
 	{
+		m_zero_memory = zero_memory,
 		m_hash_sha256 = hash_sha256;
 		m_hmac_sha256 = hmac_sha256;
 		m_genpair_x25519 = genpair_x25519;

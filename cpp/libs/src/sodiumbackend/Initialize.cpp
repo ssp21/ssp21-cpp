@@ -22,6 +22,7 @@ namespace ssp21
 
 			// initialize concrete functions
 			Crypto::Inititalize(
+				&Zero,
 				&SHA256,
 				&HMAC_SHA256,
 				&GenKeyPair_X25519,

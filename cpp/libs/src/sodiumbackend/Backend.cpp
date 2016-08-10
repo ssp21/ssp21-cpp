@@ -19,6 +19,10 @@ namespace ssp21
 		
 		static_assert(consts::X25519_KEY_LENGTH == crypto_scalarmult_BYTES, "X25519 key length mismatch");
 		
+		void Zero(openpal::WSlice& buff)
+		{
+			sodium_memzero(buff, buff.Size());
+		}
 
 		openpal::RSlice SHA256(std::initializer_list<openpal::RSlice> data, openpal::WSlice& dest)
 		{
