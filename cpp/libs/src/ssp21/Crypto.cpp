@@ -3,8 +3,8 @@
 
 namespace ssp21
 {
-	Crypto::Crypto()
-	{}
+	HMACFuncT Crypto::HMAC_SHA256(nullptr);
+	HASHFuncT Crypto::HASH_SHA256(nullptr);
 }
 
 
