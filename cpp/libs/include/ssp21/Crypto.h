@@ -6,6 +6,8 @@
 #include <openpal/container/WSlice.h>
 #include <openpal/container/StaticBuffer.h>
 
+#include "Constants.h"
+
 #include <initializer_list>
 #include <system_error>
 
@@ -23,11 +25,9 @@ namespace ssp21
 	);
 
 	struct KeyPair
-	{
-		static const uint8_t X25519_KEY_LENGTH = 32;
-
-		openpal::StaticBuffer<X25519_KEY_LENGTH> pub;
-		openpal::StaticBuffer<X25519_KEY_LENGTH> priv;		
+	{		
+		openpal::StaticBuffer<consts::X25519_KEY_LENGTH> pub;
+		openpal::StaticBuffer<consts::X25519_KEY_LENGTH> priv;
 	};
 	
 	typedef void(*GenKeyPairT)(KeyPair& pair);
@@ -42,9 +42,7 @@ namespace ssp21
 	class Crypto
 	{
 
-	public:
-
-		static const uint8_t SHA256_HASH_OUTPUT_LENGTH = 32;		
+	public:		
 		
 		static openpal::RSlice CalcHash_SHA256(
 			std::initializer_list<openpal::RSlice> data,

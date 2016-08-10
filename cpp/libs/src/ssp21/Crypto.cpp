@@ -13,7 +13,7 @@ namespace ssp21
 		openpal::WSlice& dest)
 	{
 		assert(m_hash_sha256);
-		assert(dest.Size() >= SHA256_HASH_OUTPUT_LENGTH);
+		assert(dest.Size() >= consts::SHA256_HASH_OUTPUT_LENGTH);
 		
 		return m_hash_sha256(data, dest);
 	}
@@ -24,7 +24,7 @@ namespace ssp21
 		openpal::WSlice& dest)
 	{
 		assert(m_hmac_sha256);
-		assert(dest.Size() >= SHA256_HASH_OUTPUT_LENGTH);
+		assert(dest.Size() >= consts::SHA256_HASH_OUTPUT_LENGTH);
 		
 		return m_hmac_sha256(key, data, dest);
 	}
@@ -39,8 +39,8 @@ namespace ssp21
 	openpal::RSlice Crypto::DH_X25519(const openpal::RSlice& priv_key, const openpal::RSlice& pub_key, openpal::WSlice& dest, std::error_code& ec)
 	{
 		assert(m_dh_x25519);
-		assert(pub_key.Size() == KeyPair::X25519_KEY_LENGTH);
-		assert(dest.Size() >= KeyPair::X25519_KEY_LENGTH);
+		assert(pub_key.Size() == consts::X25519_KEY_LENGTH);
+		assert(dest.Size() >= consts::X25519_KEY_LENGTH);
 		
 		return m_dh_x25519(priv_key, pub_key, dest, ec);
 	}
