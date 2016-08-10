@@ -14,6 +14,15 @@ if(DEFINED SSP21_LIBSODIUM_LIB_DIR)
   link_directories(${SSP21_LIBSODIUM_LIB_DIR}) 
 endif()
 
+
+if(WIN32)
+	set(SODIUM_LIB_NAME libsodium)
+	# these definitions are required when linking libsodium statically on Windows
+	add_definitions(-DSODIUM_STATIC=1 -DSODIUM_EXPORT=)
+else()
+	set(SODIUM_LIB_NAME sodium)
+endif()
+
 include_directories(./cpp/libs/include)
 include_directories(./deps/openpal/cpp/libs/include)
 
@@ -33,7 +42,7 @@ set_target_properties(ssp21 PROPERTIES FOLDER libs)
 # ---- sodiumbackend library ----
 file(GLOB_RECURSE sodiumbackend_SRC ./cpp/libs/src/sodiumbackend/*.cpp ./cpp/libs/src/sodiumbackend/*.h ./cpp/libs/include/sodiumbackend/*.h)
 add_library(sodiumbackend ${LIB_TYPE} ${sodiumbackend_SRC})
-target_link_libraries(sodiumbackend ssp21 sodium)
+target_link_libraries(sodiumbackend ssp21 ${SODIUM_LIB_NAME})
 install(TARGETS sodiumbackend DESTINATION lib)
 set_target_properties(sodiumbackend PROPERTIES FOLDER libs)
 
