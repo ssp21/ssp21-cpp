@@ -23,6 +23,12 @@ add_library(openpal ${LIB_TYPE} ${openpal_SRC})
 install(TARGETS openpal DESTINATION lib)
 set_target_properties(openpal PROPERTIES FOLDER libs)
 
+# ---- ssp21 library ----
+file(GLOB_RECURSE ssp21_SRC ./cpp/libs/src/ssp21/*.cpp ./cpp/libs/src/ssp21/*.h ./cpp/libs/include/ssp21/*.h)
+add_library(ssp21 ${LIB_TYPE} ${ssp21_SRC})
+install(TARGETS ssp21 DESTINATION lib)
+set_target_properties(ssp21 PROPERTIES FOLDER libs)
+
 # ---- sodiumbackend library ----
 file(GLOB_RECURSE sodiumbackend_SRC ./cpp/libs/src/sodiumbackend/*.cpp ./cpp/libs/src/sodiumbackend/*.h ./cpp/libs/include/sodiumbackend/*.h)
 add_library(sodiumbackend ${LIB_TYPE} ${sodiumbackend_SRC})
