@@ -1,6 +1,6 @@
 ## Dependencies
 
-SSP21 depends on [libsodium](https://download.libsodium.org/doc/).
+SSP21 depends on [libsodium](https://download.libsodium.org/doc/). You can substitute another cryptographic backend if you really must.
 
 On Windows, download and install the prebuilt binaries. You'll need to tell cmake where to find the headers and correct library.
 For instance, if you're building a 32-bit debug build, you can invoke cmake with:
