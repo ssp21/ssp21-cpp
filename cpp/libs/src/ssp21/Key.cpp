@@ -6,23 +6,23 @@
 namespace ssp21
 {		
 
-Key::Key() : m_length(0)
+Key::Key() : length_(0)
 {}
 	
-openpal::RSlice Key::GetKey()
+openpal::RSlice Key::as_slice()
 {
-	return m_buffer.ToRSlice().Take(m_length);
+	return buffer_.ToRSlice().Take(length_);
 }
 
-openpal::WSlice Key::GetWriteDest()
+openpal::WSlice Key::get_write_slice()
 {
-	return m_buffer.GetWSlice();
+	return buffer_.GetWSlice();
 }
 
-void Key::SetLength(uint32_t length)
+void Key::set_length(uint32_t length)
 {
-	assert(length <= m_buffer.Size());
-	m_length = length;
+	assert(length_ <= buffer_.Size());
+	length_ = length;
 }
 
 		

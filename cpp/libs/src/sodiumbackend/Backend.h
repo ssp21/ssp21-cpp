@@ -14,15 +14,15 @@ namespace ssp21
 {	
 	namespace sodium
 	{
-		void Zero(openpal::WSlice& buff);
+		void zero_memory(openpal::WSlice& buff);
 
-		openpal::RSlice SHA256(std::initializer_list<openpal::RSlice> data, openpal::WSlice& dest);
+		openpal::RSlice calc_hash_sha256(std::initializer_list<openpal::RSlice> data, openpal::WSlice& dest);
 
-		openpal::RSlice HMAC_SHA256(const openpal::RSlice& key, std::initializer_list<openpal::RSlice> data, openpal::WSlice& dest);
+		openpal::RSlice calc_hmac_sha256(const openpal::RSlice& key, std::initializer_list<openpal::RSlice> data, openpal::WSlice& dest);
 
-		void GenKeyPair_X25519(KeyPair& pair);
+		void gen_keypair_x25519(KeyPair& pair);
 
-		void DH_X25519(const openpal::RSlice& priv_key, const openpal::RSlice& pub_key, Key& output, std::error_code& ec);
+		void dh_x25519(const openpal::RSlice& priv_key, const openpal::RSlice& pub_key, Key& output, std::error_code& ec);
 	}
 }
 

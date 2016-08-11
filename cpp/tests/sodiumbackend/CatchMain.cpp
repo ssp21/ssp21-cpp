@@ -8,7 +8,7 @@ int main(int argc, char* const argv[])
 {
 	// global setup...
 
-	assert(ssp21::sodium::Initialize());
+	assert(ssp21::sodium::initialize());
 
 	int result = Catch::Session().run(argc, argv);
 

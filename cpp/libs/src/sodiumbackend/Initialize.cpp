@@ -13,7 +13,7 @@ namespace ssp21
 	namespace sodium
 	{
 
-		bool Initialize()
+		bool initialize()
 		{
 			if (sodium_init() == -1)
 			{
@@ -21,12 +21,12 @@ namespace ssp21
 			}
 
 			// initialize concrete functions
-			Crypto::Inititalize(
-				&Zero,
-				&SHA256,
-				&HMAC_SHA256,
-				&GenKeyPair_X25519,
-				&DH_X25519
+			Crypto::inititalize(
+				&zero_memory,
+				&calc_hash_sha256,
+				&calc_hmac_sha256,
+				&gen_keypair_x25519,
+				&dh_x25519
 			);
 
 			return true;

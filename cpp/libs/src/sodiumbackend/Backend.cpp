@@ -17,12 +17,12 @@ namespace ssp21
 		
 		static_assert(consts::X25519_KEY_LENGTH == crypto_scalarmult_BYTES, "X25519 key length mismatch");
 		
-		void Zero(openpal::WSlice& buff)
+		void zero_memory(openpal::WSlice& buff)
 		{
 			sodium_memzero(buff, buff.Size());
 		}
 
-		openpal::RSlice SHA256(std::initializer_list<openpal::RSlice> data, openpal::WSlice& dest)
+		openpal::RSlice calc_hash_sha256(std::initializer_list<openpal::RSlice> data, openpal::WSlice& dest)
 		{
 			assert(dest.Size() >= crypto_hash_sha256_BYTES);
 
@@ -40,7 +40,7 @@ namespace ssp21
 			return dest.ToRSlice().Take(crypto_hash_sha256_BYTES);
 		}
 
-		openpal::RSlice HMAC_SHA256(const openpal::RSlice& key, std::initializer_list<openpal::RSlice> data, openpal::WSlice& dest)
+		openpal::RSlice calc_hmac_sha256(const openpal::RSlice& key, std::initializer_list<openpal::RSlice> data, openpal::WSlice& dest)
 		{
 			assert(dest.Size() >= crypto_auth_hmacsha256_BYTES);
 
@@ -58,25 +58,25 @@ namespace ssp21
 			return dest.ToRSlice().Take(crypto_auth_hmacsha256_BYTES);
 		}
 
-		void GenKeyPair_X25519(KeyPair& pair)
+		void gen_keypair_x25519(KeyPair& pair)
 		{
-			auto dest = pair.privateKey.GetWriteDest();
+			auto dest = pair.private_key.get_write_slice();
 			randombytes_buf(dest, crypto_scalarmult_BYTES);
-			crypto_scalarmult_base(pair.publicKey.GetWriteDest(), dest);
+			crypto_scalarmult_base(pair.public_key.get_write_slice(), dest);
 
-			pair.publicKey.SetLength(crypto_scalarmult_BYTES);
-			pair.privateKey.SetLength(crypto_scalarmult_BYTES);
+			pair.public_key.set_length(crypto_scalarmult_BYTES);
+			pair.private_key.set_length(crypto_scalarmult_BYTES);
 		}
 
-		void DH_X25519(const openpal::RSlice& priv_key, const openpal::RSlice& pub_key, Key& output, std::error_code& ec)
+		void dh_x25519(const openpal::RSlice& priv_key, const openpal::RSlice& pub_key, Key& output, std::error_code& ec)
 		{
-			if (crypto_scalarmult(output.GetWriteDest(), priv_key, pub_key) != 0)
+			if (crypto_scalarmult(output.get_write_slice(), priv_key, pub_key) != 0)
 			{
 				ec = std::error_code(1, std::generic_category()); // TODO - make actual error codes
 				return;
 			}
 
-			output.SetLength(crypto_scalarmult_BYTES);
+			output.set_length(crypto_scalarmult_BYTES);
 		}
 	}
 }

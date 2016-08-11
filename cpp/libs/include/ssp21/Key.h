@@ -13,25 +13,23 @@ namespace ssp21
 
 			Key();
 
-			openpal::RSlice GetKey();
+			openpal::RSlice as_slice();
 
-			openpal::WSlice GetWriteDest();
+			openpal::WSlice get_write_slice();
 
-			void SetLength(uint32_t length);
+			// TODO - possibly use an enumeration here of possible key types?
+			void set_length(uint32_t length);
 
 		private:
 
-			uint32_t m_length;
-			SecureBuffer<consts::MAX_KEY_SIZE> m_buffer;
+			uint32_t length_;
+			SecureBuffer<consts::MAX_KEY_SIZE> buffer_;
 	};
 
-	class KeyPair
+	struct KeyPair
 	{
-
-	public:
-
-		Key publicKey;
-		Key privateKey;
+		Key public_key;
+		Key private_key;
 	};
 }
 

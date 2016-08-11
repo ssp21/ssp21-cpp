@@ -11,7 +11,6 @@ namespace ssp21
 		const uint8_t X25519_KEY_LENGTH = 32;
 
 		const uint8_t MAX_DH_KEY_SIZE = X25519_KEY_LENGTH;
-
 		const uint8_t MAX_KEY_SIZE = MAX_DH_KEY_SIZE;
 	}
 }

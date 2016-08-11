@@ -6,7 +6,7 @@ namespace ssp21
 {
 	namespace sodium
 	{
-		bool Initialize();		
+		bool initialize();		
 	}
 }
 
