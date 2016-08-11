@@ -29,12 +29,12 @@ TEST_CASE(SUITE("DH_X25519"))
 
 	// derive the shared secrets
 	Key shared_secret1;
-	Crypto::dh_x25519(kp2.private_key.as_slice(), kp1.public_key.as_slice(), shared_secret1, ec);
+	Crypto::dh_x25519(kp2.private_key, kp1.public_key, shared_secret1, ec);
 	REQUIRE(!ec);
 	REQUIRE(shared_secret1.get_key_type() == KeyType::X25519);
 	
 	Key shared_secret2;
-	Crypto::dh_x25519(kp1.private_key.as_slice(), kp2.public_key.as_slice(), shared_secret2, ec);
+	Crypto::dh_x25519(kp1.private_key, kp2.public_key, shared_secret2, ec);
 	REQUIRE(!ec);
 	REQUIRE(shared_secret2.get_key_type() == KeyType::X25519);
 

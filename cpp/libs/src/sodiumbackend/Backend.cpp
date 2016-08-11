@@ -29,10 +29,8 @@ namespace ssp21
 			return sodium_memcmp(lhs, rhs, lhs.Size()) == 0;
 		}
 
-		openpal::RSlice calc_hash_sha256(std::initializer_list<openpal::RSlice> data, openpal::WSlice& dest)
-		{
-			assert(dest.Size() >= crypto_hash_sha256_BYTES);
-
+		void calc_hash_sha256(std::initializer_list<openpal::RSlice> data, HashOutput& output)
+		{			
 			crypto_hash_sha256_state state;
 			crypto_hash_sha256_init(&state);
 
@@ -41,16 +39,13 @@ namespace ssp21
 				crypto_hash_sha256_update(&state, item, item.Size());
 			}
 
+			crypto_hash_sha256_final(&state, output.get_write_slice());
 
-			crypto_hash_sha256_final(&state, dest);
-
-			return dest.ToRSlice().Take(crypto_hash_sha256_BYTES);
+			output.set_type(HashOutputType::SHA256);
 		}
 
-		openpal::RSlice calc_hmac_sha256(const openpal::RSlice& key, std::initializer_list<openpal::RSlice> data, openpal::WSlice& dest)
-		{
-			assert(dest.Size() >= crypto_auth_hmacsha256_BYTES);
-
+		void calc_hmac_sha256(const openpal::RSlice& key, std::initializer_list<openpal::RSlice> data, HashOutput& output)
+		{			
 			crypto_auth_hmacsha256_state state;
 			crypto_auth_hmacsha256_init(&state, key, key.Size());
 
@@ -60,9 +55,9 @@ namespace ssp21
 			}
 
 
-			crypto_auth_hmacsha256_final(&state, dest);
+			crypto_auth_hmacsha256_final(&state, output.get_write_slice());
 
-			return dest.ToRSlice().Take(crypto_auth_hmacsha256_BYTES);
+			output.set_type(HashOutputType::SHA256);
 		}
 
 		void gen_keypair_x25519(KeyPair& pair)
@@ -75,9 +70,9 @@ namespace ssp21
 			pair.private_key.set_key_type(KeyType::X25519);
 		}
 
-		void dh_x25519(const openpal::RSlice& priv_key, const openpal::RSlice& pub_key, Key& output, std::error_code& ec)
+		void dh_x25519(const Key& priv_key, const Key& pub_key, Key& output, std::error_code& ec)
 		{
-			if (crypto_scalarmult(output.get_write_slice(), priv_key, pub_key) != 0)
+			if (crypto_scalarmult(output.get_write_slice(), priv_key.as_slice(), pub_key.as_slice()) != 0)
 			{
 				ec = std::error_code(1, std::generic_category()); // TODO - make actual error codes
 				return;

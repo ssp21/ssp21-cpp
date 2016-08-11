@@ -19,25 +19,21 @@ namespace ssp21
 		return backend_.secure_compare(lhs, rhs);
 	}
 
-	openpal::RSlice Crypto::calc_hash_sha256(
+	void Crypto::calc_hash_sha256(
 		std::initializer_list<openpal::RSlice> data,
-		openpal::WSlice& dest)
+		HashOutput& output)
 	{
-		assert(backend_.hash_sha256);
-		assert(dest.Size() >= consts::SHA256_HASH_OUTPUT_LENGTH);
-		
-		return backend_.hash_sha256(data, dest);
+		assert(backend_.hash_sha256);				
+		backend_.hash_sha256(data, output);
 	}
 
-	openpal::RSlice Crypto::calc_hmac_sha256(
+	void Crypto::calc_hmac_sha256(
 		const openpal::RSlice& key,
 		std::initializer_list<openpal::RSlice> data,
-		openpal::WSlice& dest)
+		HashOutput& output)
 	{
-		assert(backend_.hmac_sha256);
-		assert(dest.Size() >= consts::SHA256_HASH_OUTPUT_LENGTH);
-		
-		return backend_.hmac_sha256(key, data, dest);
+		assert(backend_.hmac_sha256);		
+		backend_.hmac_sha256(key, data, output);
 	}
 
 	void Crypto::gen_keypair_x25519(KeyPair& pair)
@@ -46,11 +42,12 @@ namespace ssp21
 		backend_.gen_keypair_x25519(pair);
 	}
 
-	void Crypto::dh_x25519(const openpal::RSlice& priv_key, const openpal::RSlice& pub_key, Key& output, std::error_code& ec)
+	void Crypto::dh_x25519(const Key& priv_key, const Key& pub_key, Key& output, std::error_code& ec)
 	{
 		assert(backend_.dh_x25519);
-		assert(pub_key.Size() == consts::X25519_KEY_LENGTH);		
-		
+		assert(priv_key.get_key_type() == KeyType::X25519);
+		assert(pub_key.get_key_type() == KeyType::X25519);
+				
 		backend_.dh_x25519(priv_key, pub_key, output, ec);
 	}
 

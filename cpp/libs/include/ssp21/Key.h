@@ -9,9 +9,9 @@
 
 namespace ssp21
 {		
-	enum KeyType
+	enum class KeyType
 	{
-		NONE,
+		EMPTY,
 		X25519
 	};
 

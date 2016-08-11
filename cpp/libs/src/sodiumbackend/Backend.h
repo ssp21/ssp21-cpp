@@ -3,12 +3,7 @@
 #ifndef SODIUMBACKEND_BACKEND_H
 #define SODIUMBACKEND_BACKEND_H
 
-#include <openpal/container/RSlice.h>
-#include <openpal/container/WSlice.h>
-
-#include <initializer_list>
-
-#include "ssp21/Crypto.h"
+#include "ssp21/CryptoBackend.h"
 
 namespace ssp21
 {	
@@ -18,13 +13,13 @@ namespace ssp21
 
 		bool secure_compare(const openpal::RSlice& lhs, const openpal::RSlice& rhs);
 
-		openpal::RSlice calc_hash_sha256(std::initializer_list<openpal::RSlice> data, openpal::WSlice& dest);
+		void calc_hash_sha256(std::initializer_list<openpal::RSlice> data, HashOutput& output);
 
-		openpal::RSlice calc_hmac_sha256(const openpal::RSlice& key, std::initializer_list<openpal::RSlice> data, openpal::WSlice& dest);
+		void calc_hmac_sha256(const openpal::RSlice& key, std::initializer_list<openpal::RSlice> data, HashOutput& output);
 
 		void gen_keypair_x25519(KeyPair& pair);
 
-		void dh_x25519(const openpal::RSlice& priv_key, const openpal::RSlice& pub_key, Key& output, std::error_code& ec);
+		void dh_x25519(const Key& priv_key, const Key& pub_key, Key& output, std::error_code& ec);
 	}
 }
 

@@ -2,11 +2,9 @@
 #include "sodiumbackend/Initialize.h"
 
 #include "ssp21/Crypto.h"
-
-#include <sodium.h>
-
 #include "Backend.h"
 
+#include <sodium.h>
 
 namespace ssp21
 {

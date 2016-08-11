@@ -6,7 +6,7 @@
 namespace ssp21
 {		
 
-Key::Key() : length_(0), key_type_(KeyType::NONE)
+Key::Key() : length_(0), key_type_(KeyType::EMPTY)
 {}
 	
 openpal::RSlice Key::as_slice() const

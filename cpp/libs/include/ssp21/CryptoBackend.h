@@ -3,6 +3,7 @@
 #define SSP21_CRYTPTOBACKEND_H
 
 #include "Key.h"
+#include "HashOutput.h"
 
 #include <initializer_list>
 #include <system_error>
@@ -13,20 +14,20 @@ namespace ssp21
 
 	typedef bool (*secure_compare_func_t)(const openpal::RSlice& lhs, const openpal::RSlice& rhs);
 
-	typedef openpal::RSlice (*hash_func_t)(		
+	typedef void (*hash_func_t)(		
 		std::initializer_list<openpal::RSlice> data,
-		openpal::WSlice& dest
+		HashOutput& output
 	);
 
-	typedef openpal::RSlice (*hmac_func_t)(
+	typedef void (*hmac_func_t)(
 		const openpal::RSlice& key,
 		std::initializer_list<openpal::RSlice> data,
-		openpal::WSlice& dest
+		HashOutput& output
 	);
 	
 	typedef void (*gen_keypair_func_t)(KeyPair& pair);
 
-	typedef void (*dh_func_t)(const openpal::RSlice& priv_key, const openpal::RSlice& pub_key, Key& output, std::error_code& ec);
+	typedef void(*dh_func_t)(const Key& priv_key, const Key& pub_key, Key& output, std::error_code& ec);
 
 	struct CryptoBackend
 	{
