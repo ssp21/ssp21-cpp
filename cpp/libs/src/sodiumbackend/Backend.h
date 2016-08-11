@@ -11,7 +11,7 @@ namespace ssp21
 	{
 		void zero_memory(openpal::WSlice& buff);
 
-		bool secure_compare(const openpal::RSlice& lhs, const openpal::RSlice& rhs);
+		bool secure_equals(const openpal::RSlice& lhs, const openpal::RSlice& rhs);
 
 		void calc_hash_sha256(std::initializer_list<openpal::RSlice> data, HashOutput& output);
 

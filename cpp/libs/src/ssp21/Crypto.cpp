@@ -13,7 +13,7 @@ namespace ssp21
 		backend_.zero_memory(buff);
 	}
 
-	bool Crypto::secure_compare(const openpal::RSlice& lhs, const openpal::RSlice& rhs)
+	bool Crypto::secure_equals(const openpal::RSlice& lhs, const openpal::RSlice& rhs)
 	{
 		assert(backend_.secure_compare);
 		return backend_.secure_compare(lhs, rhs);

@@ -22,7 +22,7 @@ namespace ssp21
 			Crypto::inititalize(
 				CryptoBackend(
 					&zero_memory,
-					&secure_compare,
+					&secure_equals,
 					&calc_hash_sha256,
 					&calc_hmac_sha256,
 					&gen_keypair_x25519,

@@ -12,7 +12,7 @@ namespace ssp21
 {			
 	typedef void (*zero_memory_func_t)(openpal::WSlice&);
 
-	typedef bool (*secure_compare_func_t)(const openpal::RSlice& lhs, const openpal::RSlice& rhs);
+	typedef bool (*secure_equals_func_t)(const openpal::RSlice& lhs, const openpal::RSlice& rhs);
 
 	typedef void (*hash_func_t)(		
 		std::initializer_list<openpal::RSlice> data,
@@ -27,7 +27,7 @@ namespace ssp21
 	
 	typedef void (*gen_keypair_func_t)(KeyPair& pair);
 
-	typedef void(*dh_func_t)(const Key& priv_key, const Key& pub_key, Key& output, std::error_code& ec);
+	typedef void (*dh_func_t)(const Key& priv_key, const Key& pub_key, Key& output, std::error_code& ec);
 
 	struct CryptoBackend
 	{
@@ -42,7 +42,7 @@ namespace ssp21
 
 		CryptoBackend(
 				zero_memory_func_t zero_memory,
-				secure_compare_func_t secure_compare,
+				secure_equals_func_t secure_compare,
 				hash_func_t hash_sha256,
 				hmac_func_t hmac_sha256,
 				gen_keypair_func_t gen_keypair_x25519,
@@ -56,7 +56,7 @@ namespace ssp21
 		{}
 
 		zero_memory_func_t zero_memory;
-		secure_compare_func_t secure_compare;
+		secure_equals_func_t secure_compare;
 		hash_func_t hash_sha256;
 		hmac_func_t hmac_sha256;
 		gen_keypair_func_t gen_keypair_x25519;

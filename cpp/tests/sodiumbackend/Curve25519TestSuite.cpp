@@ -1,8 +1,8 @@
 
 
 #include "catch.hpp"
+
 #include "ssp21/Crypto.h"
-#include <string.h>
 
 #define SUITE(name) "Curve25519TestSuite - " name
 
@@ -39,6 +39,6 @@ TEST_CASE(SUITE("DH_X25519"))
 	REQUIRE(shared_secret2.get_key_type() == KeyType::X25519);
 
 	// compare the shared secrets
-	REQUIRE(memcmp(shared_secret1.as_slice(), shared_secret2.as_slice(), consts::X25519_KEY_LENGTH) == 0); 
+	REQUIRE(Crypto::secure_equals(shared_secret1.as_slice(), shared_secret2.as_slice()));
 }
 

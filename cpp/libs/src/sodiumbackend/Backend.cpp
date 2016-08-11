@@ -22,7 +22,7 @@ namespace ssp21
 			sodium_memzero(buff, buff.Size());
 		}
 
-		bool secure_compare(const openpal::RSlice& lhs, const openpal::RSlice& rhs)
+		bool secure_equals(const openpal::RSlice& lhs, const openpal::RSlice& rhs)
 		{
 			if (lhs.Size() != rhs.Size()) return false;
 
