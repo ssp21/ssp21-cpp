@@ -5,27 +5,28 @@
 
 namespace ssp21
 {					
-	zero_memory_func_t Crypto::zero_memory_(nullptr);
-	hash_func_t Crypto::hash_sha256_(nullptr);
-	hmac_func_t Crypto::hmac_sha256_(nullptr);
-	gen_keypair_func_t Crypto::gen_keypair_x25519_(nullptr);
-	dh_func_t Crypto::dh_x25519_(nullptr);
-
+	CryptoBackend Crypto::backend_;
 
 	void Crypto::zero_memory(openpal::WSlice& buff)
 	{
-		assert(zero_memory_);
-		zero_memory_(buff);
+		assert(backend_.zero_memory);
+		backend_.zero_memory(buff);
+	}
+
+	bool Crypto::secure_compare(const openpal::RSlice& lhs, const openpal::RSlice& rhs)
+	{
+		assert(backend_.secure_compare);
+		return backend_.secure_compare(lhs, rhs);
 	}
 
 	openpal::RSlice Crypto::calc_hash_sha256(
 		std::initializer_list<openpal::RSlice> data,
 		openpal::WSlice& dest)
 	{
-		assert(hash_sha256_);
+		assert(backend_.hash_sha256);
 		assert(dest.Size() >= consts::SHA256_HASH_OUTPUT_LENGTH);
 		
-		return hash_sha256_(data, dest);
+		return backend_.hash_sha256(data, dest);
 	}
 
 	openpal::RSlice Crypto::calc_hmac_sha256(
@@ -33,39 +34,29 @@ namespace ssp21
 		std::initializer_list<openpal::RSlice> data,
 		openpal::WSlice& dest)
 	{
-		assert(hmac_sha256_);
+		assert(backend_.hmac_sha256);
 		assert(dest.Size() >= consts::SHA256_HASH_OUTPUT_LENGTH);
 		
-		return hmac_sha256_(key, data, dest);
+		return backend_.hmac_sha256(key, data, dest);
 	}
 
 	void Crypto::gen_keypair_x25519(KeyPair& pair)
 	{
-		assert(gen_keypair_x25519_);
-
-		gen_keypair_x25519_(pair);
+		assert(backend_.gen_keypair_x25519);
+		backend_.gen_keypair_x25519(pair);
 	}
 
 	void Crypto::dh_x25519(const openpal::RSlice& priv_key, const openpal::RSlice& pub_key, Key& output, std::error_code& ec)
 	{
-		assert(dh_x25519_);
+		assert(backend_.dh_x25519);
 		assert(pub_key.Size() == consts::X25519_KEY_LENGTH);		
 		
-		dh_x25519_(priv_key, pub_key, output, ec);
+		backend_.dh_x25519(priv_key, pub_key, output, ec);
 	}
 
-	void Crypto::inititalize(
-		zero_memory_func_t zero_memory,
-		hash_func_t hash_sha256,
-		hmac_func_t hmac_sha256,
-		gen_keypair_func_t gen_keypair_x25519,
-		dh_func_t dh_x25519)
+	void Crypto::inititalize(const CryptoBackend& backend)
 	{
-		zero_memory_ = zero_memory,
-		hash_sha256_ = hash_sha256;
-		hmac_sha256_ = hmac_sha256;
-		gen_keypair_x25519_ = gen_keypair_x25519;
-		dh_x25519_ = dh_x25519;
+		backend_ = backend;
 	}
 
 

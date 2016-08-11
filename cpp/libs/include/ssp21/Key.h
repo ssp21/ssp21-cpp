@@ -5,24 +5,36 @@
 #include "SecureBuffer.h"
 #include "Constants.h"
 
+#include <openpal/util/Uncopyable.h>
+
 namespace ssp21
 {		
-	class Key
+	enum KeyType
+	{
+		NONE,
+		X25519
+	};
+
+	class Key : private openpal::Uncopyable
 	{
 		public:
 
 			Key();
 
-			openpal::RSlice as_slice();
+			openpal::RSlice as_slice() const;
+			
+			KeyType get_key_type() const;
 
 			openpal::WSlice get_write_slice();
+			
+			void set_key_type(KeyType key_type);			
 
-			// TODO - possibly use an enumeration here of possible key types?
-			void set_length(uint32_t length);
+		private:	
 
-		private:
+			static uint32_t get_key_length(KeyType);
 
 			uint32_t length_;
+			KeyType key_type_;
 			SecureBuffer<consts::MAX_KEY_SIZE> buffer_;
 	};
 

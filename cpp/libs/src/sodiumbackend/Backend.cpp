@@ -9,17 +9,24 @@ namespace ssp21
 {
 	namespace sodium
 	{
-		/// assertiosn for SHA-256 related constants
+		/// assertions for SHA-256 related constants
 		static_assert(crypto_hash_sha256_BYTES == crypto_auth_hmacsha256_BYTES, "SHA256 hash and HMAC length mismatch");
 		static_assert(consts::SHA256_HASH_OUTPUT_LENGTH == crypto_hash_sha256_BYTES, "SHA256 length mismatch");
 		static_assert(consts::SHA256_HASH_OUTPUT_LENGTH == crypto_auth_hmacsha256_BYTES, "SHA256-HMAC length mismatch");
 
-		
+		/// assertions for DH key lengths
 		static_assert(consts::X25519_KEY_LENGTH == crypto_scalarmult_BYTES, "X25519 key length mismatch");
 		
 		void zero_memory(openpal::WSlice& buff)
 		{
 			sodium_memzero(buff, buff.Size());
+		}
+
+		bool secure_compare(const openpal::RSlice& lhs, const openpal::RSlice& rhs)
+		{
+			if (lhs.Size() != rhs.Size()) return false;
+
+			return sodium_memcmp(lhs, rhs, lhs.Size()) == 0;
 		}
 
 		openpal::RSlice calc_hash_sha256(std::initializer_list<openpal::RSlice> data, openpal::WSlice& dest)
@@ -64,8 +71,8 @@ namespace ssp21
 			randombytes_buf(dest, crypto_scalarmult_BYTES);
 			crypto_scalarmult_base(pair.public_key.get_write_slice(), dest);
 
-			pair.public_key.set_length(crypto_scalarmult_BYTES);
-			pair.private_key.set_length(crypto_scalarmult_BYTES);
+			pair.public_key.set_key_type(KeyType::X25519);
+			pair.private_key.set_key_type(KeyType::X25519);
 		}
 
 		void dh_x25519(const openpal::RSlice& priv_key, const openpal::RSlice& pub_key, Key& output, std::error_code& ec)
@@ -76,7 +83,7 @@ namespace ssp21
 				return;
 			}
 
-			output.set_length(crypto_scalarmult_BYTES);
+			output.set_key_type(KeyType::X25519);
 		}
 	}
 }

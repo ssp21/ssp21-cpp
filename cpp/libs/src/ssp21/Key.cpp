@@ -6,12 +6,17 @@
 namespace ssp21
 {		
 
-Key::Key() : length_(0)
+Key::Key() : length_(0), key_type_(KeyType::NONE)
 {}
 	
-openpal::RSlice Key::as_slice()
+openpal::RSlice Key::as_slice() const
 {
 	return buffer_.ToRSlice().Take(length_);
+}
+
+KeyType Key::get_key_type() const
+{
+	return key_type_;
 }
 
 openpal::WSlice Key::get_write_slice()
@@ -19,12 +24,22 @@ openpal::WSlice Key::get_write_slice()
 	return buffer_.GetWSlice();
 }
 
-void Key::set_length(uint32_t length)
+void Key::set_key_type(KeyType key_type)
 {
-	assert(length_ <= buffer_.Size());
-	length_ = length;
+	key_type_ = key_type;
+	length_ = get_key_length(key_type);
 }
 
+uint32_t Key::get_key_length(KeyType key_type)
+{
+	switch (key_type)
+	{
+		case(KeyType::X25519) :
+			return consts::X25519_KEY_LENGTH;
+		default:
+			return 0;
+	}
+}
 		
 }
 

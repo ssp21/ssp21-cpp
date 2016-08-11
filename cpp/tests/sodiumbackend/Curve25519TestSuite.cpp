@@ -8,10 +8,10 @@
 
 using namespace ssp21;
 
-void CheckKeyLengths(KeyPair& kp, uint32_t size)
+void CheckKeys(KeyPair& kp, KeyType type)
 {
-	REQUIRE(kp.public_key.as_slice().Size() == size);
-	REQUIRE(kp.private_key.as_slice().Size() == size);
+	REQUIRE(kp.public_key.get_key_type() == type);
+	REQUIRE(kp.private_key.get_key_type() == type);
 }
 
 TEST_CASE(SUITE("DH_X25519"))
@@ -19,11 +19,11 @@ TEST_CASE(SUITE("DH_X25519"))
 	// derive two key pairs 
 	KeyPair kp1;
 	Crypto::gen_keypair_x25519(kp1);
-	CheckKeyLengths(kp1, consts::X25519_KEY_LENGTH);
+	CheckKeys(kp1, KeyType::X25519);
 
 	KeyPair kp2;
 	Crypto::gen_keypair_x25519(kp2);
-	CheckKeyLengths(kp2, consts::X25519_KEY_LENGTH);
+	CheckKeys(kp2, KeyType::X25519);
 
 	std::error_code ec;
 
@@ -31,12 +31,12 @@ TEST_CASE(SUITE("DH_X25519"))
 	Key shared_secret1;
 	Crypto::dh_x25519(kp2.private_key.as_slice(), kp1.public_key.as_slice(), shared_secret1, ec);
 	REQUIRE(!ec);
-	REQUIRE(shared_secret1.as_slice().Size() == consts::X25519_KEY_LENGTH);
+	REQUIRE(shared_secret1.get_key_type() == KeyType::X25519);
 	
 	Key shared_secret2;
 	Crypto::dh_x25519(kp1.private_key.as_slice(), kp2.public_key.as_slice(), shared_secret2, ec);
 	REQUIRE(!ec);
-	REQUIRE(shared_secret2.as_slice().Size() == consts::X25519_KEY_LENGTH);
+	REQUIRE(shared_secret2.get_key_type() == KeyType::X25519);
 
 	// compare the shared secrets
 	REQUIRE(memcmp(shared_secret1.as_slice(), shared_secret2.as_slice(), consts::X25519_KEY_LENGTH) == 0); 
