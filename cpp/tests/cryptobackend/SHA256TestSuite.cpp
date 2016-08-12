@@ -17,7 +17,7 @@ TEST_CASE(SUITE("SHA256"))
 
 	auto slice = openpal::RSlice(reinterpret_cast<const uint8_t*>(text.c_str()), text.size());
 
-	HashOutput output;
+	SymmetricKey output;
 	Crypto::hash_sha256({slice}, output);
 	REQUIRE(output.get_type() == BufferType::SHA256);
 
@@ -33,7 +33,7 @@ TEST_CASE(SUITE("HMAC-SHA256"))
 	auto text_slice = openpal::RSlice(reinterpret_cast<const uint8_t*>(text.c_str()), text.size());
 	auto key_slice = openpal::RSlice(reinterpret_cast<const uint8_t*>(key.c_str()), key.size());
 
-	HashOutput output;
+	SymmetricKey output;
 	Crypto::hmac_sha256(key_slice, { text_slice }, output);
 	REQUIRE(output.get_type() == BufferType::SHA256);
 

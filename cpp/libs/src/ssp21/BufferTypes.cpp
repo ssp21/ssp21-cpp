@@ -40,6 +40,8 @@ uint32_t Buffer::get_buffer_length(BufferType key_type)
 			return consts::x25519_key_length;
 		case(BufferType::SHA256) :
 			return consts::sha256_hash_output_length;
+		case(BufferType::SYMMETRIC_KEY) :
+			return consts::symmetric_ley_length;
 		default:
 			return 0;
 	}

@@ -21,7 +21,7 @@ namespace ssp21
 
 	void Crypto::hash_sha256(
             std::initializer_list<openpal::RSlice> data,
-            HashOutput &output)
+			SymmetricKey& output)
 	{
 		assert(backend_);
 		backend_->hash_sha256(data, output);
@@ -30,7 +30,7 @@ namespace ssp21
 	void Crypto::hmac_sha256(
 			const openpal::RSlice &key,
 			std::initializer_list<openpal::RSlice> data,
-			HashOutput &output)
+			SymmetricKey& output)
 	{
 		assert(backend_);
 		backend_->hmac_sha256(key, data, output);
@@ -51,6 +51,32 @@ namespace ssp21
 		assert(pub_key.get_type() == BufferType::X25519_KEY);
 				
 		backend_->dh_x25519(priv_key, pub_key, output, ec);
+	}
+
+	// TODO : Is there a test vector for this? The RFC uses the info paramter only 
+
+	void Crypto::hkdf(
+		hmac_func_t hmac,
+		const openpal::RSlice &chaining_key,
+		std::initializer_list<openpal::RSlice> input_key_material,
+		SymmetricKey& output1,
+		SymmetricKey& output2		
+		)
+	{
+		// extract
+		SymmetricKey temp_key;
+		hmac(chaining_key, input_key_material, temp_key);
+
+		const uint8_t ONE = 0x01;
+		const uint8_t TWO = 0x02;
+		
+		// expand
+		hmac(temp_key.as_slice(), { openpal::RSlice(&ONE, 1) }, output1);
+		hmac(temp_key.as_slice(), { output1.as_slice(), openpal::RSlice(&TWO, 1) }, output2);
+		
+		// this will truncate the lengths in the event that the hmac-output size is > the symmetric key size
+		output1.set_type(BufferType::SYMMETRIC_KEY);
+		output2.set_type(BufferType::SYMMETRIC_KEY);
 	}
 
 	void Crypto::inititalize(ICryptoBackend& backend)

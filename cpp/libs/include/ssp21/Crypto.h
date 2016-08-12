@@ -17,6 +17,7 @@ namespace ssp21
 
 	public:
 
+
 		// --- These are the static proxy functions that SSP21 calls at runtime ---
 
 		static void zero_memory(openpal::WSlice data);
@@ -25,13 +26,13 @@ namespace ssp21
 		
 		static void hash_sha256(
 				std::initializer_list<openpal::RSlice> data,
-				HashOutput &output
+				SymmetricKey &output
 		);
 
 		static void hmac_sha256(
 				const openpal::RSlice &key,
 				std::initializer_list<openpal::RSlice> data,
-				HashOutput &output
+				SymmetricKey &output
 		);
 
 		static void gen_keypair_x25519(KeyPair& pair);
@@ -41,6 +42,23 @@ namespace ssp21
 			const PublicKey& pub_key,
 			DHOutput& output,
 			std::error_code& ec
+		);
+
+		// --- The HKDF function defined in Noise and SSP21, concrete implementation is here ---
+
+
+		typedef void(*hmac_func_t)(
+			const openpal::RSlice &key,
+			std::initializer_list<openpal::RSlice> data,
+			SymmetricKey &output
+		);
+
+		static void hkdf(
+			hmac_func_t hmac,
+			const openpal::RSlice &chaining_key,
+			std::initializer_list<openpal::RSlice> input_key_material,
+			SymmetricKey& key1,
+			SymmetricKey& key2		
 		);
 		
 		/**

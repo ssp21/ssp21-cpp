@@ -14,7 +14,8 @@ namespace ssp21
 	{
 		EMPTY,
 		X25519_KEY,
-		SHA256
+		SHA256,
+		SYMMETRIC_KEY
 	};
 
 	class Buffer : private openpal::Uncopyable
@@ -59,15 +60,16 @@ namespace ssp21
 
 	class PrivateKey final : public SecureBuffer {};
 	
-	class DHOutput final : public SecureBuffer {};
+	class DHOutput final : public SecureBuffer {};	
 
-	class HashOutput final : public SecureBuffer {};
+	class SymmetricKey final : public SecureBuffer {};
 
 	struct KeyPair final
 	{
 		PublicKey public_key;
 		PrivateKey private_key;
 	};
+	
 }
 
 #endif
