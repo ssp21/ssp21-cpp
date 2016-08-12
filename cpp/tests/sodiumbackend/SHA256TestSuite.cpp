@@ -5,6 +5,8 @@
 
 #include "testlib/HexConversions.h"
 
+#include <cstring>
+
 #define SUITE(name) "SHA256TestSuite - " name
 
 using namespace ssp21;
