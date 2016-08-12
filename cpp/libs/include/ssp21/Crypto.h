@@ -23,15 +23,15 @@ namespace ssp21
 
 		static bool secure_equals(const openpal::RSlice& lhs, const openpal::RSlice& rhs);
 		
-		static void calc_hash_sha256(
-			std::initializer_list<openpal::RSlice> data,
-			HashOutput& output
+		static void hash_sha256(
+				std::initializer_list<openpal::RSlice> data,
+				HashOutput &output
 		);
 
-		static void calc_hmac_sha256(
-			const openpal::RSlice& key,
-			std::initializer_list<openpal::RSlice> data,
-			HashOutput& output
+		static void hmac_sha256(
+				const openpal::RSlice &key,
+				std::initializer_list<openpal::RSlice> data,
+				HashOutput &output
 		);
 
 		static void gen_keypair_x25519(KeyPair& pair);

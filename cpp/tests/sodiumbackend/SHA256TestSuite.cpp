@@ -18,7 +18,7 @@ TEST_CASE(SUITE("SHA256 output"))
 	auto slice = openpal::RSlice(reinterpret_cast<const uint8_t*>(text), strlen(text));
 
 	HashOutput output;
-	Crypto::calc_hash_sha256({ slice }, output);
+	Crypto::hash_sha256({slice}, output);
 	REQUIRE(output.get_type() == HashOutputType::SHA256);
 
 	auto hex = testlib::ToHex(output.as_slice(), false);

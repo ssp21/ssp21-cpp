@@ -19,18 +19,18 @@ namespace ssp21
 		return backend_.secure_compare(lhs, rhs);
 	}
 
-	void Crypto::calc_hash_sha256(
-		std::initializer_list<openpal::RSlice> data,
-		HashOutput& output)
+	void Crypto::hash_sha256(
+            std::initializer_list<openpal::RSlice> data,
+            HashOutput &output)
 	{
 		assert(backend_.hash_sha256);				
 		backend_.hash_sha256(data, output);
 	}
 
-	void Crypto::calc_hmac_sha256(
-		const openpal::RSlice& key,
-		std::initializer_list<openpal::RSlice> data,
-		HashOutput& output)
+	void Crypto::hmac_sha256(
+			const openpal::RSlice &key,
+			std::initializer_list<openpal::RSlice> data,
+			HashOutput &output)
 	{
 		assert(backend_.hmac_sha256);		
 		backend_.hmac_sha256(key, data, output);
