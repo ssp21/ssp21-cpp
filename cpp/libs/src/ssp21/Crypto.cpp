@@ -53,6 +53,15 @@ namespace ssp21
 		backend_->dh_x25519(priv_key, pub_key, output, ec);
 	}
 
+	void Crypto::hkdf_sha256(
+		const openpal::RSlice &chaining_key,
+		std::initializer_list<openpal::RSlice> input_key_material,
+		SymmetricKey& output1,
+		SymmetricKey& output2)
+	{
+		hkdf(&hmac_sha256, chaining_key, input_key_material, output1, output2);
+	}
+
 	// TODO : Is there a test vector for this? The RFC uses the info paramter only 
 
 	void Crypto::hkdf(
@@ -60,8 +69,7 @@ namespace ssp21
 		const openpal::RSlice &chaining_key,
 		std::initializer_list<openpal::RSlice> input_key_material,
 		SymmetricKey& output1,
-		SymmetricKey& output2		
-		)
+		SymmetricKey& output2)
 	{
 		// extract
 		SymmetricKey temp_key;
@@ -74,10 +82,11 @@ namespace ssp21
 		hmac(temp_key.as_slice(), { openpal::RSlice(&ONE, 1) }, output1);
 		hmac(temp_key.as_slice(), { output1.as_slice(), openpal::RSlice(&TWO, 1) }, output2);
 		
-		// this will truncate the lengths in the event that the hmac-output size is > the symmetric key size
+		// this will truncate the lengths in the event that the hmac-output size is > the symmetric key size we need
+		// TODO: research how noise implementations handle this
 		output1.set_type(BufferType::SYMMETRIC_KEY);
 		output2.set_type(BufferType::SYMMETRIC_KEY);
-	}
+	}	
 
 	void Crypto::inititalize(ICryptoBackend& backend)
 	{

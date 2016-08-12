@@ -41,4 +41,23 @@ TEST_CASE(SUITE("HMAC-SHA256"))
 	REQUIRE(hex == "9F93EAF321335A7F3B4F9FBB872123F37E51F494F4062D32588295FEEDB08F82");
 }
 
+// TODO: Find a proper test vector. The RFC formulates things differently. See what noise implementations do.
+// for now, we'll just run it and check that it doesn't blow up.
+TEST_CASE(SUITE("HKDF-SHA256"))
+{
+	std::string secret1("The quick brown fox");
+	std::string secret2("somesecret");
+
+	auto secret1_slice = openpal::RSlice(reinterpret_cast<const uint8_t*>(secret1.c_str()), secret1.size());
+	auto secret2_slice = openpal::RSlice(reinterpret_cast<const uint8_t*>(secret2.c_str()), secret1.size());
+
+	SymmetricKey key1;
+	SymmetricKey key2;
+	
+	Crypto::hkdf_sha256(secret1_slice, { secret2_slice }, key1, key2);
+	REQUIRE(key1.get_type() == BufferType::SYMMETRIC_KEY);
+	REQUIRE(key2.get_type() == BufferType::SYMMETRIC_KEY);
+
+}
+
 
