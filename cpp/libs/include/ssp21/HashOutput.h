@@ -2,10 +2,10 @@
 #ifndef SSP21_HASHOUTPUT_H
 #define SSP21_HASHOUTPUT_H
 
-#include "SecureBuffer.h"
 #include "Constants.h"
 
 #include <openpal/util/Uncopyable.h>
+#include <openpal/container/StaticBuffer.h>
 
 namespace ssp21
 {			
@@ -22,6 +22,8 @@ namespace ssp21
 
 			HashOutput();
 
+			~HashOutput();
+
 			openpal::RSlice as_slice() const;
 			
 			HashOutputType get_type() const;
@@ -36,7 +38,7 @@ namespace ssp21
 
 			uint32_t length_;
 			HashOutputType hash_type_;
-			SecureBuffer<consts::max_hash_output_length> buffer_;
+			openpal::StaticBuffer<consts::max_hash_output_length> buffer_;
 	};	
 }
 

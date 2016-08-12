@@ -1,6 +1,8 @@
 
 #include "ssp21/Key.h"
 
+#include "ssp21/Crypto.h"
+
 #include <assert.h>
 
 namespace ssp21
@@ -39,6 +41,11 @@ uint32_t Key::get_key_length(KeyType key_type)
 		default:
 			return 0;
 	}
+}
+
+SecureKey::~SecureKey()
+{
+	Crypto::zero_memory(buffer_.GetWSlice());
 }
 		
 }

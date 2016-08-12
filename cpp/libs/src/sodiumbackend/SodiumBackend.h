@@ -9,7 +9,7 @@ namespace ssp21
 {	
 	namespace sodium
 	{
-		class SodiumBackend : public ICryptoBackend
+		class SodiumBackend final : public ICryptoBackend
 		{
 
 		public:

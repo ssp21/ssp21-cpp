@@ -12,7 +12,7 @@ namespace ssp21
 	* Assumming for the time being that a static backend is fine 
 	* to keep dependency injection simple.
 	*/
-	class Crypto : openpal::StaticOnly
+	class Crypto final : openpal::StaticOnly
 	{
 
 	public:

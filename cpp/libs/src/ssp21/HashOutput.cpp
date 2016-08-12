@@ -1,11 +1,18 @@
 
 #include "ssp21/HashOutput.h"
 
+#include "ssp21/Crypto.h"
+
 namespace ssp21
 {			
 	
 HashOutput::HashOutput() : length_(0), hash_type_(HashOutputType::EMPTY)
 {}
+
+HashOutput::~HashOutput()
+{
+	Crypto::zero_memory(buffer_.GetWSlice());
+}
 
 openpal::RSlice HashOutput::as_slice() const
 {

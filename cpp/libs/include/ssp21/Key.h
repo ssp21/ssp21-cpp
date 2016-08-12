@@ -2,10 +2,10 @@
 #ifndef SSP21_KEY_H
 #define SSP21_KEY_H
 
-#include "SecureBuffer.h"
 #include "Constants.h"
 
 #include <openpal/util/Uncopyable.h>
+#include <openpal/container/StaticBuffer.h>
 
 namespace ssp21
 {		
@@ -17,9 +17,9 @@ namespace ssp21
 
 	class Key : private openpal::Uncopyable
 	{
-		public:
+		public:	
 
-			Key();
+			virtual ~Key() {}
 
 			openpal::RSlice as_slice() const;
 			
@@ -29,20 +29,37 @@ namespace ssp21
 			
 			void set_key_type(KeyType key_type);			
 
+		protected:
+
+			Key();
+
 		private:	
 
 			static uint32_t get_key_length(KeyType);
 
 			uint32_t length_;
 			KeyType key_type_;
-			SecureBuffer<consts::max_key_length> buffer_;
+
+		protected:
+			openpal::StaticBuffer<consts::max_key_length> buffer_;
 	};
 
-	class PublicKey : public Key {};
-	class PrivateKey : public Key {};
-	class DHOutput : public Key {};
+	// A secure key zeros its memory upon destruction
+	class SecureKey : public Key
+	{
+	public:
+		virtual ~SecureKey();
+	};
 
-	struct KeyPair
+	// specialized types that actually get used
+
+	class PublicKey final : public Key {};
+
+	class PrivateKey final : public SecureKey {};
+	
+	class DHOutput final : public SecureKey {};	
+
+	struct KeyPair final
 	{
 		PublicKey public_key;
 		PrivateKey private_key;
