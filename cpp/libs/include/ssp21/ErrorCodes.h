@@ -42,15 +42,13 @@ namespace ssp21
 	};
 
 	
-	std::error_code make_error_code(Error err);
-	
-	/*
-	namespace std
-	{
-		template <>
-		struct is_error_code_enum<ssp21::Error> : public true_type{};
-	}
-	*/
+	std::error_code make_error_code(Error err);		
+}
+
+namespace std
+{
+	template <>
+	struct is_error_code_enum<ssp21::Error> : public true_type{};
 }
 
 #endif
