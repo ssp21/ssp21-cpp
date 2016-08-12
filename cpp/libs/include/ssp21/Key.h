@@ -38,10 +38,14 @@ namespace ssp21
 			SecureBuffer<consts::max_key_length> buffer_;
 	};
 
+	class PublicKey : public Key {};
+	class PrivateKey : public Key {};
+	class DHOutput : public Key {};
+
 	struct KeyPair
 	{
-		Key public_key;
-		Key private_key;
+		PublicKey public_key;
+		PrivateKey private_key;
 	};
 }
 

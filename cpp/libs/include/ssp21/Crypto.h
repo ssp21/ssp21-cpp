@@ -37,9 +37,9 @@ namespace ssp21
 		static void gen_keypair_x25519(KeyPair& pair);
 
 		static void dh_x25519(
-			const Key& priv_key,
-			const Key& pub_key,
-			Key& output,
+			const PrivateKey& priv_key,
+			const PublicKey& pub_key,
+			DHOutput& output,
 			std::error_code& ec
 		);
 		

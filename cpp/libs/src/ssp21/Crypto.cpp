@@ -43,7 +43,7 @@ namespace ssp21
 		backend_->gen_keypair_x25519(pair);
 	}
 
-	void Crypto::dh_x25519(const Key& priv_key, const Key& pub_key, Key& output, std::error_code& ec)
+	void Crypto::dh_x25519(const PrivateKey& priv_key, const PublicKey& pub_key, DHOutput& output, std::error_code& ec)
 	{
 		assert(backend_);
 		assert(priv_key.get_key_type() == KeyType::X25519);
