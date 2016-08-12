@@ -26,13 +26,13 @@ namespace ssp21
 		
 		static void hash_sha256(
 				std::initializer_list<openpal::RSlice> data,
-				SymmetricKey &output
+				SymmetricKey& output
 		);
 
 		static void hmac_sha256(
 				const openpal::RSlice &key,
 				std::initializer_list<openpal::RSlice> data,
-				SymmetricKey &output
+				SymmetricKey& output
 		);
 
 		static void gen_keypair_x25519(KeyPair& pair);
@@ -44,17 +44,10 @@ namespace ssp21
 			std::error_code& ec
 		);
 
-		// --- The HKDF function defined in Noise and SSP21, concrete implementation is here ---
-
-
-		typedef void(*hmac_func_t)(
-			const openpal::RSlice &key,
-			std::initializer_list<openpal::RSlice> data,
-			SymmetricKey &output
-		);
+		// --- The HKDF function defined in Noise and SSP21, concrete implementation is here ---		
 
 		static void hkdf_sha256(			
-			const openpal::RSlice &chaining_key,
+			const openpal::RSlice& chaining_key,
 			std::initializer_list<openpal::RSlice> input_key_material,
 			SymmetricKey& key1,
 			SymmetricKey& key2
@@ -68,9 +61,15 @@ namespace ssp21
 
 	private:
 
+		typedef void(*hmac_func_t)(
+			const openpal::RSlice& key,
+			std::initializer_list<openpal::RSlice> data,
+			SymmetricKey& output
+		);
+
 		static void hkdf(
 			hmac_func_t hmac,
-			const openpal::RSlice &chaining_key,
+			const openpal::RSlice& chaining_key,
 			std::initializer_list<openpal::RSlice> input_key_material,
 			SymmetricKey& key1,
 			SymmetricKey& key2
