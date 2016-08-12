@@ -1,6 +1,8 @@
 
 #include "ssp21/Crypto.h"
 
+#include "ssp21/ErrorCodes.h"
+
 #include <assert.h>
 
 namespace ssp21
@@ -46,10 +48,12 @@ namespace ssp21
 	{
 		assert(backend_);
 
-		// TODO: make error codes for these since user has to check error anyway
-		assert(priv_key.get_type() == BufferType::X25519_KEY);
-		assert(pub_key.get_type() == BufferType::X25519_KEY);
-				
+		if ((priv_key.get_type() != BufferType::X25519_KEY) || (pub_key.get_type() != BufferType::X25519_KEY))
+		{
+			ec = make_error_code(Error::BAD_KEY_TYPE);
+			return;
+		}
+						
 		backend_->dh_x25519(priv_key, pub_key, output, ec);
 	}
 
