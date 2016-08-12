@@ -14,7 +14,7 @@ namespace ssp21
 
 	public:
 
-		virtual void zero_memory(openpal::WSlice&) = 0;
+		virtual void zero_memory(openpal::WSlice data) = 0;
 
 		virtual bool secure_equals(const openpal::RSlice& lhs, const openpal::RSlice& rhs) = 0;
 

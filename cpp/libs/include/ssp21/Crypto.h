@@ -19,7 +19,7 @@ namespace ssp21
 
 		// --- These are the static proxy functions that SSP21 calls at runtime ---
 
-		static void zero_memory(openpal::WSlice&);
+		static void zero_memory(openpal::WSlice data);
 
 		static bool secure_equals(const openpal::RSlice& lhs, const openpal::RSlice& rhs);
 		

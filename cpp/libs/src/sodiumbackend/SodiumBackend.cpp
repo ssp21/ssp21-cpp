@@ -19,9 +19,9 @@ namespace ssp21
 		
 		SodiumBackend SodiumBackend::backend_;
 
-		void SodiumBackend::zero_memory(openpal::WSlice& buff)
+		void SodiumBackend::zero_memory(openpal::WSlice data)
 		{
-			sodium_memzero(buff, buff.Size());
+			sodium_memzero(data, data.Size());
 		}
 
 		bool SodiumBackend::secure_equals(const openpal::RSlice& lhs, const openpal::RSlice& rhs)

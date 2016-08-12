@@ -7,10 +7,10 @@ namespace ssp21
 {				
 	ICryptoBackend* Crypto::backend_(nullptr);
 	
-	void Crypto::zero_memory(openpal::WSlice& buff)
+	void Crypto::zero_memory(openpal::WSlice data)
 	{
 		assert(backend_);
-		backend_->zero_memory(buff);
+		backend_->zero_memory(data);
 	}
 
 	bool Crypto::secure_equals(const openpal::RSlice& lhs, const openpal::RSlice& rhs)
