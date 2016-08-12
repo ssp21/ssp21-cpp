@@ -1,6 +1,6 @@
 
 
-#include "Backend.h"
+#include "SodiumBackend.h"
 
 #include <sodium.h>
 #include <assert.h>
@@ -17,19 +17,21 @@ namespace ssp21
 		/// assertions for DH key lengths
 		static_assert(consts::x25519_key_length == crypto_scalarmult_BYTES, "X25519 key length mismatch");
 		
-		void zero_memory(openpal::WSlice& buff)
+		SodiumBackend SodiumBackend::backend_;
+
+		void SodiumBackend::zero_memory(openpal::WSlice& buff)
 		{
 			sodium_memzero(buff, buff.Size());
 		}
 
-		bool secure_equals(const openpal::RSlice& lhs, const openpal::RSlice& rhs)
+		bool SodiumBackend::secure_equals(const openpal::RSlice& lhs, const openpal::RSlice& rhs)
 		{
 			if (lhs.Size() != rhs.Size()) return false;
 
 			return sodium_memcmp(lhs, rhs, lhs.Size()) == 0;
 		}
 
-		void calc_hash_sha256(std::initializer_list<openpal::RSlice> data, HashOutput& output)
+		void SodiumBackend::hash_sha256(std::initializer_list<openpal::RSlice> data, HashOutput& output)
 		{			
 			crypto_hash_sha256_state state;
 			crypto_hash_sha256_init(&state);
@@ -44,7 +46,7 @@ namespace ssp21
 			output.set_type(HashOutputType::SHA256);
 		}
 
-		void calc_hmac_sha256(const openpal::RSlice& key, std::initializer_list<openpal::RSlice> data, HashOutput& output)
+		void SodiumBackend::hmac_sha256(const openpal::RSlice& key, std::initializer_list<openpal::RSlice> data, HashOutput& output)
 		{			
 			crypto_auth_hmacsha256_state state;
 			crypto_auth_hmacsha256_init(&state, key, key.Size());
@@ -60,7 +62,7 @@ namespace ssp21
 			output.set_type(HashOutputType::SHA256);
 		}
 
-		void gen_keypair_x25519(KeyPair& pair)
+		void SodiumBackend::gen_keypair_x25519(KeyPair& pair)
 		{
 			auto dest = pair.private_key.get_write_slice();
 			randombytes_buf(dest, crypto_scalarmult_BYTES);
@@ -70,7 +72,7 @@ namespace ssp21
 			pair.private_key.set_key_type(KeyType::X25519);
 		}
 
-		void dh_x25519(const Key& priv_key, const Key& pub_key, Key& output, std::error_code& ec)
+		void SodiumBackend::dh_x25519(const Key& priv_key, const Key& pub_key, Key& output, std::error_code& ec)
 		{
 			if (crypto_scalarmult(output.get_write_slice(), priv_key.as_slice(), pub_key.as_slice()) != 0)
 			{

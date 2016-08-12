@@ -2,7 +2,7 @@
 #ifndef SSP21_CRYTPTO_H
 #define SSP21_CRYTPTO_H
 
-#include "CryptoBackend.h"
+#include "ICryptoBackend.h"
 
 #include <openpal/util/Uncopyable.h>
 
@@ -42,19 +42,18 @@ namespace ssp21
 			Key& output,
 			std::error_code& ec
 		);
-
 		
 		/**
 		* Called once by a concrete backend during program initialization
 		*/
-		static void inititalize(const CryptoBackend& backend);
+		static void inititalize(ICryptoBackend& backend);
 
 
 	private:
 
 		/// Function typedefs all initialized to nullptr. Concrete backends will initialize these.		
 
-		static CryptoBackend backend_;
+		static ICryptoBackend* backend_;
 		
 	};
 }

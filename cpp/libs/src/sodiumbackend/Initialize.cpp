@@ -2,7 +2,7 @@
 #include "sodiumbackend/Initialize.h"
 
 #include "ssp21/Crypto.h"
-#include "Backend.h"
+#include "SodiumBackend.h"
 
 #include <sodium.h>
 
@@ -17,18 +17,8 @@ namespace ssp21
 			{
 				return false;
 			}
-			
-			// initialize concrete functions
-			Crypto::inititalize(
-				CryptoBackend(
-					&zero_memory,
-					&secure_equals,
-					&calc_hash_sha256,
-					&calc_hmac_sha256,
-					&gen_keypair_x25519,
-					&dh_x25519
-				)				
-			);
+						
+			Crypto::inititalize(SodiumBackend::Instance());
 
 			return true;
 		}
