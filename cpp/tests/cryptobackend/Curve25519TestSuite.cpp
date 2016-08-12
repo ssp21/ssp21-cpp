@@ -14,6 +14,8 @@ void CheckKeys(KeyPair& kp, KeyType type)
 	REQUIRE(kp.private_key.get_key_type() == type);
 }
 
+// TODO: check that implementations map the null public key to null output as in Nosie spec
+
 TEST_CASE(SUITE("DH_X25519"))
 {
 	// derive two key pairs 

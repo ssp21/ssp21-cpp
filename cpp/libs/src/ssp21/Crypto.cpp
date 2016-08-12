@@ -6,7 +6,6 @@
 namespace ssp21
 {				
 	ICryptoBackend* Crypto::backend_(nullptr);
-
 	
 	void Crypto::zero_memory(openpal::WSlice& buff)
 	{
@@ -46,6 +45,8 @@ namespace ssp21
 	void Crypto::dh_x25519(const PrivateKey& priv_key, const PublicKey& pub_key, DHOutput& output, std::error_code& ec)
 	{
 		assert(backend_);
+
+		// TODO: make error codes for these since user has to check error anyway
 		assert(priv_key.get_key_type() == KeyType::X25519);
 		assert(pub_key.get_key_type() == KeyType::X25519);
 				
