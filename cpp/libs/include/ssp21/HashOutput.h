@@ -36,7 +36,7 @@ namespace ssp21
 
 			uint32_t length_;
 			HashOutputType hash_type_;
-			SecureBuffer<consts::MAX_HASH_OUTPUT_SIZE> buffer_;
+			SecureBuffer<consts::max_hash_output_length> buffer_;
 	};	
 }
 

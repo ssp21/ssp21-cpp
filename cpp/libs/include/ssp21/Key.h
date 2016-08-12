@@ -35,7 +35,7 @@ namespace ssp21
 
 			uint32_t length_;
 			KeyType key_type_;
-			SecureBuffer<consts::MAX_KEY_SIZE> buffer_;
+			SecureBuffer<consts::max_key_length> buffer_;
 	};
 
 	struct KeyPair

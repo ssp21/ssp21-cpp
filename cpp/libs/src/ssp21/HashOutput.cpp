@@ -34,7 +34,7 @@ uint32_t HashOutput::get_length(HashOutputType type)
 	switch (type)
 	{
 	case(HashOutputType::SHA256) :
-		return consts::SHA256_HASH_OUTPUT_LENGTH;
+		return consts::sha256_hash_output_length;
 	default:
 		return 0;
 	}

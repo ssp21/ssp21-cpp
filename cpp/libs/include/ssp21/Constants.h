@@ -7,13 +7,13 @@ namespace ssp21
 {
 	namespace consts
 	{
-		const uint8_t SHA256_HASH_OUTPUT_LENGTH = 32;
-		const uint8_t X25519_KEY_LENGTH = 32;
+		const uint8_t sha256_hash_output_length = 32;
+		const uint8_t x25519_key_length = 32;
 
 		// maximum sizes across algorithm types
 		// usually used to size static buffers so that they can be used for any algorithm in that class
-		const uint8_t MAX_KEY_SIZE = X25519_KEY_LENGTH;
-		const uint8_t MAX_HASH_OUTPUT_SIZE = SHA256_HASH_OUTPUT_LENGTH;
+		const uint8_t max_key_length = x25519_key_length;
+		const uint8_t max_hash_output_length = sha256_hash_output_length;
 	}
 }
 

@@ -11,11 +11,11 @@ namespace ssp21
 	{
 		/// assertions for SHA-256 related constants
 		static_assert(crypto_hash_sha256_BYTES == crypto_auth_hmacsha256_BYTES, "SHA256 hash and HMAC length mismatch");
-		static_assert(consts::SHA256_HASH_OUTPUT_LENGTH == crypto_hash_sha256_BYTES, "SHA256 length mismatch");
-		static_assert(consts::SHA256_HASH_OUTPUT_LENGTH == crypto_auth_hmacsha256_BYTES, "SHA256-HMAC length mismatch");
+		static_assert(consts::sha256_hash_output_length == crypto_hash_sha256_BYTES, "SHA256 length mismatch");
+		static_assert(consts::sha256_hash_output_length == crypto_auth_hmacsha256_BYTES, "SHA256-HMAC length mismatch");
 
 		/// assertions for DH key lengths
-		static_assert(consts::X25519_KEY_LENGTH == crypto_scalarmult_BYTES, "X25519 key length mismatch");
+		static_assert(consts::x25519_key_length == crypto_scalarmult_BYTES, "X25519 key length mismatch");
 		
 		void zero_memory(openpal::WSlice& buff)
 		{

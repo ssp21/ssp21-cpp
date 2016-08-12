@@ -35,7 +35,7 @@ uint32_t Key::get_key_length(KeyType key_type)
 	switch (key_type)
 	{
 		case(KeyType::X25519) :
-			return consts::X25519_KEY_LENGTH;
+			return consts::x25519_key_length;
 		default:
 			return 0;
 	}
