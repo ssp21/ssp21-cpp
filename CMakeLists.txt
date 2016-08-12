@@ -58,9 +58,9 @@ target_link_libraries(testlib openpal)
 install(TARGETS testlib DESTINATION lib)
 set_target_properties(testlib PROPERTIES FOLDER tests)
 
-# ---- sodiumbackend tests ----
-file(GLOB_RECURSE testsodiumbackend_SRC ./cpp/tests/sodiumbackend/*.cpp ./cpp/tests/sodiumbackend/*.h)
-add_executable (testsodiumbackend ${testsodiumbackend_SRC})
-target_link_libraries (testsodiumbackend sodiumbackend testlib)
-set_target_properties(testsodiumbackend PROPERTIES FOLDER tests)
-add_test(testsodiumbackend testsodiumbackend)
+# ---- cryptobackends tests ----
+file(GLOB_RECURSE cryptobackend_SRC ./cpp/tests/cryptobackend/*.cpp ./cpp/tests/cryptobackend/*.h)
+add_executable (testcryptobackend ${cryptobackend_SRC})
+target_link_libraries (testcryptobackend sodiumbackend testlib)
+set_target_properties(testcryptobackend PROPERTIES FOLDER tests)
+add_test(testcryptobackend testcryptobackend)
