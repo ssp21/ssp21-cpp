@@ -15,7 +15,8 @@ namespace ssp21
 {				
 	enum class Error : int
 	{
-		BAD_KEY_TYPE
+		BAD_KEY_TYPE,
+		DH_X25519_FAIL
 	};		
 
 	class ErrorCategory final : public std::error_category

@@ -12,6 +12,8 @@ std::string ErrorCategory::message(int ev) const
 	{
 	case(Error::BAD_KEY_TYPE) :
 		return "bad key type";
+	case(Error::DH_X25519_FAIL) :
+		return "X25519 DH operation failed. Bad public key?";
 	default:
 		return "unknown error";
 	}

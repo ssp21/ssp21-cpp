@@ -2,6 +2,8 @@
 
 #include "SodiumBackend.h"
 
+#include "ssp21/ErrorCodes.h"
+
 #include <sodium.h>
 #include <assert.h>
 
@@ -76,7 +78,7 @@ namespace ssp21
 		{
 			if (crypto_scalarmult(output.get_write_slice(), priv_key.as_slice(), pub_key.as_slice()) != 0)
 			{
-				ec = std::error_code(1, std::generic_category()); // TODO - make actual error codes
+				ec = ssp21::Error::DH_X25519_FAIL;
 				return;
 			}
 

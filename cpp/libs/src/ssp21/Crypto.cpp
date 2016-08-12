@@ -53,7 +53,7 @@ namespace ssp21
 			ec = Error::BAD_KEY_TYPE;
 			return;
 		}
-						
+
 		backend_->dh_x25519(priv_key, pub_key, output, ec);
 	}
 
@@ -64,9 +64,7 @@ namespace ssp21
 		SymmetricKey& output2)
 	{
 		hkdf(&hmac_sha256, chaining_key, input_key_material, output1, output2);
-	}
-
-	// TODO : Is there a test vector for this? The RFC uses the info paramter only 
+	}	
 
 	void Crypto::hkdf(
 		hmac_func_t hmac,
