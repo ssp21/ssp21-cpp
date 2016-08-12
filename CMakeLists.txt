@@ -63,4 +63,4 @@ file(GLOB_RECURSE cryptobackend_SRC ./cpp/tests/cryptobackend/*.cpp ./cpp/tests/
 add_executable (testcryptobackend ${cryptobackend_SRC})
 target_link_libraries (testcryptobackend sodiumbackend testlib)
 set_target_properties(testcryptobackend PROPERTIES FOLDER tests)
-add_test(testcryptobackend testcryptobackend)
+add_test(testcryptobackend-sodium testcryptobackend --sodium)
