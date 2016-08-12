@@ -2,8 +2,7 @@
 #ifndef SSP21_ICRYTPTOBACKEND_H
 #define SSP21_ICRYTPTOBACKEND_H
 
-#include "Key.h"
-#include "HashOutput.h"
+#include "BufferTypes.h"
 
 #include <initializer_list>
 #include <system_error>

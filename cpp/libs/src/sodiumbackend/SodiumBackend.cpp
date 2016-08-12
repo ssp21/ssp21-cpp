@@ -43,7 +43,7 @@ namespace ssp21
 
 			crypto_hash_sha256_final(&state, output.get_write_slice());
 
-			output.set_type(HashOutputType::SHA256);
+			output.set_type(BufferType::SHA256);
 		}
 
 		void SodiumBackend::hmac_sha256(const openpal::RSlice& key, std::initializer_list<openpal::RSlice> data, HashOutput& output)
@@ -59,7 +59,7 @@ namespace ssp21
 
 			crypto_auth_hmacsha256_final(&state, output.get_write_slice());
 
-			output.set_type(HashOutputType::SHA256);
+			output.set_type(BufferType::SHA256);
 		}
 
 		void SodiumBackend::gen_keypair_x25519(KeyPair& pair)
@@ -68,8 +68,8 @@ namespace ssp21
 			randombytes_buf(dest, crypto_scalarmult_BYTES);
 			crypto_scalarmult_base(pair.public_key.get_write_slice(), dest);
 
-			pair.public_key.set_key_type(KeyType::X25519);
-			pair.private_key.set_key_type(KeyType::X25519);
+			pair.public_key.set_type(BufferType::X25519_KEY);
+			pair.private_key.set_type(BufferType::X25519_KEY);
 		}
 
 		void SodiumBackend::dh_x25519(const PrivateKey& priv_key, const PublicKey& pub_key, DHOutput& output, std::error_code& ec)
@@ -80,7 +80,7 @@ namespace ssp21
 				return;
 			}
 
-			output.set_key_type(KeyType::X25519);
+			output.set_type(BufferType::X25519_KEY);
 		}
 	}
 }

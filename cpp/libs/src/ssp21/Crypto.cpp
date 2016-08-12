@@ -47,8 +47,8 @@ namespace ssp21
 		assert(backend_);
 
 		// TODO: make error codes for these since user has to check error anyway
-		assert(priv_key.get_key_type() == KeyType::X25519);
-		assert(pub_key.get_key_type() == KeyType::X25519);
+		assert(priv_key.get_type() == BufferType::X25519_KEY);
+		assert(pub_key.get_type() == BufferType::X25519_KEY);
 				
 		backend_->dh_x25519(priv_key, pub_key, output, ec);
 	}
