@@ -12,10 +12,10 @@ namespace ssp21
 	// the buffer_ type also defines the length
 	enum class BufferType
 	{
-		EMPTY,
-		X25519_KEY,
-		SHA256,
-		SYMMETRIC_KEY
+		empty,
+		x25519_key,
+		sha256,
+		symmetric_key
 	};
 
 	class BufferBase : private openpal::Uncopyable

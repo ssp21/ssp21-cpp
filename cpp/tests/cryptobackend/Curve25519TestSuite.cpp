@@ -21,11 +21,11 @@ TEST_CASE(SUITE("DH_X25519"))
 	// derive two key pairs 
 	KeyPair kp1;
 	Crypto::gen_keypair_x25519(kp1);
-	CheckKeys(kp1, BufferType::X25519_KEY);
+	CheckKeys(kp1, BufferType::x25519_key);
 
 	KeyPair kp2;
 	Crypto::gen_keypair_x25519(kp2);
-	CheckKeys(kp2, BufferType::X25519_KEY);
+	CheckKeys(kp2, BufferType::x25519_key);
 
 	std::error_code ec;
 
@@ -33,12 +33,12 @@ TEST_CASE(SUITE("DH_X25519"))
 	DHOutput shared_secret1;
 	Crypto::dh_x25519(kp2.private_key, kp1.public_key, shared_secret1, ec);
 	REQUIRE(!ec);
-	REQUIRE(shared_secret1.get_type() == BufferType::X25519_KEY);
+	REQUIRE(shared_secret1.get_type() == BufferType::x25519_key);
 	
 	DHOutput shared_secret2;
 	Crypto::dh_x25519(kp1.private_key, kp2.public_key, shared_secret2, ec);
 	REQUIRE(!ec);
-	REQUIRE(shared_secret2.get_type() == BufferType::X25519_KEY);
+	REQUIRE(shared_secret2.get_type() == BufferType::x25519_key);
 
 	// compare the shared secrets
 	REQUIRE(Crypto::secure_equals(shared_secret1.as_slice(), shared_secret2.as_slice()));

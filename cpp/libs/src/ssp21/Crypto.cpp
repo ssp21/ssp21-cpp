@@ -48,9 +48,9 @@ namespace ssp21
 	{
 		assert(backend_);
 
-		if ((priv_key.get_type() != BufferType::X25519_KEY) || (pub_key.get_type() != BufferType::X25519_KEY))
+		if ((priv_key.get_type() != BufferType::x25519_key) || (pub_key.get_type() != BufferType::x25519_key))
 		{
-			ec = Error::BAD_KEY_TYPE;
+			ec = Error::bad_key_type;
 			return;
 		}
 
@@ -86,8 +86,8 @@ namespace ssp21
 		
 		// this will truncate the lengths in the event that the hmac-output length_ is > the symmetric key length_ we need
 		// TODO: research how noise implementations handle this
-		output1.set_type(BufferType::SYMMETRIC_KEY);
-		output2.set_type(BufferType::SYMMETRIC_KEY);
+		output1.set_type(BufferType::symmetric_key);
+		output2.set_type(BufferType::symmetric_key);
 	}	
 
 	void Crypto::inititalize(ICryptoBackend& backend)

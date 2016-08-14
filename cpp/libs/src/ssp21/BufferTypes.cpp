@@ -8,7 +8,7 @@
 namespace ssp21
 {		
 
-BufferBase::BufferBase() : length_(0), buffer_type_(BufferType::EMPTY)
+BufferBase::BufferBase() : length_(0), buffer_type_(BufferType::empty)
 {}
 	
 openpal::RSlice BufferBase::as_slice() const
@@ -36,11 +36,11 @@ uint32_t BufferBase::get_buffer_length(BufferType key_type)
 {
 	switch (key_type)
 	{
-		case(BufferType::X25519_KEY) :
+		case(BufferType::x25519_key) :
 			return consts::x25519_key_length;
-		case(BufferType::SHA256) :
+		case(BufferType::sha256) :
 			return consts::sha256_hash_output_length;
-		case(BufferType::SYMMETRIC_KEY) :
+		case(BufferType::symmetric_key) :
 			return consts::symmetric_ley_length;
 		default:
 			return 0;

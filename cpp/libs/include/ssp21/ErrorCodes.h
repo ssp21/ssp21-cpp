@@ -15,8 +15,8 @@ namespace ssp21
 {				
 	enum class Error : int
 	{
-		BAD_KEY_TYPE,
-		DH_X25519_FAIL
+		bad_key_type,
+		dh_x25519_fail
 	};		
 
 	class ErrorCategory final : public std::error_category
@@ -30,7 +30,7 @@ namespace ssp21
 
 		virtual const char* name() const NOEXCEPT
 		{
-			return "Crypto Errors";
+			return "crypto-backend errors";
 		}
 		virtual std::string message(int ev) const;
 

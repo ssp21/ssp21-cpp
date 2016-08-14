@@ -12,9 +12,9 @@ namespace ssp21
 	namespace sodium
 	{
 		/// assertions for SHA-256 related constants
-		static_assert(crypto_hash_sha256_BYTES == crypto_auth_hmacsha256_BYTES, "SHA256 hash and HMAC length mismatch");
-		static_assert(consts::sha256_hash_output_length == crypto_hash_sha256_BYTES, "SHA256 length mismatch");
-		static_assert(consts::sha256_hash_output_length == crypto_auth_hmacsha256_BYTES, "SHA256-HMAC length mismatch");
+		static_assert(crypto_hash_sha256_BYTES == crypto_auth_hmacsha256_BYTES, "sha256 hash and HMAC length mismatch");
+		static_assert(consts::sha256_hash_output_length == crypto_hash_sha256_BYTES, "sha256 length mismatch");
+		static_assert(consts::sha256_hash_output_length == crypto_auth_hmacsha256_BYTES, "sha256-HMAC length mismatch");
 
 		/// assertions for DH key lengths
 		static_assert(consts::x25519_key_length == crypto_scalarmult_BYTES, "X25519 key length mismatch");
@@ -45,7 +45,7 @@ namespace ssp21
 
 			crypto_hash_sha256_final(&state, output.get_write_slice());
 
-			output.set_type(BufferType::SHA256);
+			output.set_type(BufferType::sha256);
 		}
 
 		void SodiumBackend::hmac_sha256(const openpal::RSlice &key, std::initializer_list<openpal::RSlice> data,
@@ -62,7 +62,7 @@ namespace ssp21
 
 			crypto_auth_hmacsha256_final(&state, output.get_write_slice());
 
-			output.set_type(BufferType::SHA256);
+			output.set_type(BufferType::sha256);
 		}
 
 		void SodiumBackend::gen_keypair_x25519(KeyPair& pair)
@@ -71,19 +71,19 @@ namespace ssp21
 			randombytes_buf(dest, crypto_scalarmult_BYTES);
 			crypto_scalarmult_base(pair.public_key.get_write_slice(), dest);
 
-			pair.public_key.set_type(BufferType::X25519_KEY);
-			pair.private_key.set_type(BufferType::X25519_KEY);
+			pair.public_key.set_type(BufferType::x25519_key);
+			pair.private_key.set_type(BufferType::x25519_key);
 		}
 
 		void SodiumBackend::dh_x25519(const PrivateKey& priv_key, const PublicKey& pub_key, DHOutput& output, std::error_code& ec)
 		{
 			if (crypto_scalarmult(output.get_write_slice(), priv_key.as_slice(), pub_key.as_slice()) != 0)
 			{
-				ec = ssp21::Error::DH_X25519_FAIL;
+				ec = ssp21::Error::dh_x25519_fail;
 				return;
 			}
 
-			output.set_type(BufferType::X25519_KEY);
+			output.set_type(BufferType::x25519_key);
 		}
 	}
 }

@@ -10,9 +10,9 @@ std::string ErrorCategory::message(int ev) const
 {
 	switch (static_cast<Error>(ev))
 	{
-	case(Error::BAD_KEY_TYPE) :
+	case(Error::bad_key_type) :
 		return "bad key type";
-	case(Error::DH_X25519_FAIL) :
+	case(Error::dh_x25519_fail) :
 		return "X25519 DH operation failed. Bad public key?";
 	default:
 		return "unknown error";

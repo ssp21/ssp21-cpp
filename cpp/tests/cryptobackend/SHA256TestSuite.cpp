@@ -11,7 +11,7 @@
 
 using namespace ssp21;
 
-TEST_CASE(SUITE("SHA256"))
+TEST_CASE(SUITE("sha256"))
 {
 	std::string text("The quick brown fox");
 
@@ -19,13 +19,13 @@ TEST_CASE(SUITE("SHA256"))
 
 	SymmetricKey output;
 	Crypto::hash_sha256({slice}, output);
-	REQUIRE(output.get_type() == BufferType::SHA256);
+	REQUIRE(output.get_type() == BufferType::sha256);
 
 	auto hex = testlib::ToHex(output.as_slice(), false);
 	REQUIRE(hex == "5CAC4F980FEDC3D3F1F99B4BE3472C9B30D56523E632D151237EC9309048BDA9");	
 }
 
-TEST_CASE(SUITE("HMAC-SHA256"))
+TEST_CASE(SUITE("HMAC-sha256"))
 {
 	std::string text("The quick brown fox");
 	std::string key("somesecret");
@@ -35,7 +35,7 @@ TEST_CASE(SUITE("HMAC-SHA256"))
 
 	SymmetricKey output;
 	Crypto::hmac_sha256(key_slice, { text_slice }, output);
-	REQUIRE(output.get_type() == BufferType::SHA256);
+	REQUIRE(output.get_type() == BufferType::sha256);
 
 	auto hex = testlib::ToHex(output.as_slice(), false);
 	REQUIRE(hex == "9F93EAF321335A7F3B4F9FBB872123F37E51F494F4062D32588295FEEDB08F82");
@@ -43,7 +43,7 @@ TEST_CASE(SUITE("HMAC-SHA256"))
 
 // TODO: Find a proper test vector. The RFC formulates things differently. See what noise implementations do.
 // for now, we'll just run it and check that it doesn't blow up.
-TEST_CASE(SUITE("HKDF-SHA256"))
+TEST_CASE(SUITE("HKDF-sha256"))
 {
 	std::string secret1("The quick brown fox");
 	std::string secret2("somesecret");
@@ -55,8 +55,8 @@ TEST_CASE(SUITE("HKDF-SHA256"))
 	SymmetricKey key2;
 	
 	Crypto::hkdf_sha256(secret1_slice, { secret2_slice }, key1, key2);
-	REQUIRE(key1.get_type() == BufferType::SYMMETRIC_KEY);
-	REQUIRE(key2.get_type() == BufferType::SYMMETRIC_KEY);
+	REQUIRE(key1.get_type() == BufferType::symmetric_key);
+	REQUIRE(key2.get_type() == BufferType::symmetric_key);
 
 }
 
