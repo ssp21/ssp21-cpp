@@ -84,7 +84,7 @@ namespace ssp21
 		hmac(temp_key.as_slice(), { openpal::RSlice(&ONE, 1) }, output1);
 		hmac(temp_key.as_slice(), { output1.as_slice(), openpal::RSlice(&TWO, 1) }, output2);
 		
-		// this will truncate the lengths in the event that the hmac-output size is > the symmetric key size we need
+		// this will truncate the lengths in the event that the hmac-output length_ is > the symmetric key length_ we need
 		// TODO: research how noise implementations handle this
 		output1.set_type(BufferType::SYMMETRIC_KEY);
 		output2.set_type(BufferType::SYMMETRIC_KEY);

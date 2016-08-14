@@ -9,7 +9,7 @@
 
 namespace ssp21
 {		
-	// the buffer type also defines the length
+	// the buffer_ type also defines the length
 	enum class BufferType
 	{
 		EMPTY,
@@ -47,7 +47,7 @@ namespace ssp21
 			openpal::StaticBuffer<consts::max_primitive_buffer_length> buffer_;
 	};
 
-	// A secure key zeros its buffer upon destruction
+	// A secure key zeros its buffer_ upon destruction
 	class SecureBuffer : public BufferBase
 	{
 	public:

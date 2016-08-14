@@ -58,6 +58,13 @@ target_link_libraries(testlib openpal)
 install(TARGETS testlib DESTINATION lib)
 set_target_properties(testlib PROPERTIES FOLDER tests)
 
+# ---- testopenpal ----
+file(GLOB_RECURSE testopenpal_SRC ./deps/openpal/cpp/tests/openpaltests/src/*.cpp ./deps/openpal/cpp/tests/openpaltests/src/*.h)
+add_executable (testopenpal ${testopenpal_SRC})
+target_link_libraries (testopenpal testlib)
+set_target_properties(testopenpal PROPERTIES FOLDER tests)
+add_test(testopenpal testopenpal)
+
 # ---- cryptobackends tests ----
 file(GLOB_RECURSE cryptobackend_SRC ./cpp/tests/cryptobackend/*.cpp ./cpp/tests/cryptobackend/*.h)
 add_executable (testcryptobackend ${cryptobackend_SRC})

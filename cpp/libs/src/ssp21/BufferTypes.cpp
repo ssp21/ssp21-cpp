@@ -13,7 +13,7 @@ BufferBase::BufferBase() : length_(0), buffer_type_(BufferType::EMPTY)
 	
 openpal::RSlice BufferBase::as_slice() const
 {
-	return buffer_.ToRSlice().Take(length_);
+	return buffer_.as_rslice().take(length_);
 }
 
 BufferType BufferBase::get_type() const
@@ -23,7 +23,7 @@ BufferType BufferBase::get_type() const
 
 openpal::WSlice BufferBase::get_write_slice()
 {
-	return buffer_.GetWSlice();
+	return buffer_.as_wslice();
 }
 
 void BufferBase::set_type(BufferType buffer_type)
@@ -49,7 +49,7 @@ uint32_t BufferBase::get_buffer_length(BufferType key_type)
 
 SecureBuffer::~SecureBuffer()
 {
-	Crypto::zero_memory(buffer_.GetWSlice());
+	Crypto::zero_memory(buffer_.as_wslice());
 }
 		
 }

@@ -23,14 +23,14 @@ namespace ssp21
 
 		void SodiumBackend::zero_memory(openpal::WSlice data)
 		{
-			sodium_memzero(data, data.Size());
+			sodium_memzero(data, data.length());
 		}
 
 		bool SodiumBackend::secure_equals(const openpal::RSlice& lhs, const openpal::RSlice& rhs)
 		{
-			if (lhs.Size() != rhs.Size()) return false;
+			if (lhs.length() != rhs.length()) return false;
 
-			return sodium_memcmp(lhs, rhs, lhs.Size()) == 0;
+			return sodium_memcmp(lhs, rhs, lhs.length()) == 0;
 		}
 
 		void SodiumBackend::hash_sha256(std::initializer_list<openpal::RSlice> data, SecureBuffer &output)
@@ -40,7 +40,7 @@ namespace ssp21
 
 			for (auto& item : data)
 			{
-				crypto_hash_sha256_update(&state, item, item.Size());
+				crypto_hash_sha256_update(&state, item, item.length());
 			}
 
 			crypto_hash_sha256_final(&state, output.get_write_slice());
@@ -52,11 +52,11 @@ namespace ssp21
 										SecureBuffer &output)
 		{			
 			crypto_auth_hmacsha256_state state;
-			crypto_auth_hmacsha256_init(&state, key, key.Size());
+			crypto_auth_hmacsha256_init(&state, key, key.length());
 
 			for (auto& item : data)
 			{
-				crypto_auth_hmacsha256_update(&state, item, item.Size());
+				crypto_auth_hmacsha256_update(&state, item, item.length());
 			}
 
 
