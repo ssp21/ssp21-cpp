@@ -52,6 +52,9 @@ namespace ssp21
 	{
 	public:
 		virtual ~SecureBuffer();
+
+    protected:
+        SecureBuffer() {}
 	};
 
 	// specialized types that actually get used
