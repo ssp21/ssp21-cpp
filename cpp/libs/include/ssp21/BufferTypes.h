@@ -18,11 +18,11 @@ namespace ssp21
 		SYMMETRIC_KEY
 	};
 
-	class Buffer : private openpal::Uncopyable
+	class BufferBase : private openpal::Uncopyable
 	{
 		public:	
 
-			virtual ~Buffer() {}
+			virtual ~BufferBase() {}
 
 			openpal::RSlice as_slice() const;
 			
@@ -34,7 +34,7 @@ namespace ssp21
 
 		protected:
 
-			Buffer();
+			BufferBase();
 
 		private:	
 
@@ -48,7 +48,7 @@ namespace ssp21
 	};
 
 	// A secure key zeros its buffer upon destruction
-	class SecureBuffer : public Buffer
+	class SecureBuffer : public BufferBase
 	{
 	public:
 		virtual ~SecureBuffer();
@@ -56,7 +56,7 @@ namespace ssp21
 
 	// specialized types that actually get used
 
-	class PublicKey final : public Buffer {};
+	class PublicKey final : public BufferBase {};
 
 	class PrivateKey final : public SecureBuffer {};
 	

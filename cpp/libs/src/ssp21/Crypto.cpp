@@ -23,7 +23,7 @@ namespace ssp21
 
 	void Crypto::hash_sha256(
             std::initializer_list<openpal::RSlice> data,
-			SymmetricKey& output)
+            SecureBuffer &output)
 	{
 		assert(backend_);
 		backend_->hash_sha256(data, output);
@@ -32,7 +32,7 @@ namespace ssp21
 	void Crypto::hmac_sha256(
 			const openpal::RSlice &key,
 			std::initializer_list<openpal::RSlice> data,
-			SymmetricKey& output)
+			SecureBuffer &output)
 	{
 		assert(backend_);
 		backend_->hmac_sha256(key, data, output);

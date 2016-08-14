@@ -33,7 +33,7 @@ namespace ssp21
 			return sodium_memcmp(lhs, rhs, lhs.Size()) == 0;
 		}
 
-		void SodiumBackend::hash_sha256(std::initializer_list<openpal::RSlice> data, SymmetricKey& output)
+		void SodiumBackend::hash_sha256(std::initializer_list<openpal::RSlice> data, SecureBuffer &output)
 		{			
 			crypto_hash_sha256_state state;
 			crypto_hash_sha256_init(&state);
@@ -48,7 +48,8 @@ namespace ssp21
 			output.set_type(BufferType::SHA256);
 		}
 
-		void SodiumBackend::hmac_sha256(const openpal::RSlice& key, std::initializer_list<openpal::RSlice> data, SymmetricKey& output)
+		void SodiumBackend::hmac_sha256(const openpal::RSlice &key, std::initializer_list<openpal::RSlice> data,
+										SecureBuffer &output)
 		{			
 			crypto_auth_hmacsha256_state state;
 			crypto_auth_hmacsha256_init(&state, key, key.Size());

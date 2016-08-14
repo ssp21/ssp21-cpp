@@ -8,31 +8,31 @@
 namespace ssp21
 {		
 
-Buffer::Buffer() : length_(0), buffer_type_(BufferType::EMPTY)
+BufferBase::BufferBase() : length_(0), buffer_type_(BufferType::EMPTY)
 {}
 	
-openpal::RSlice Buffer::as_slice() const
+openpal::RSlice BufferBase::as_slice() const
 {
 	return buffer_.ToRSlice().Take(length_);
 }
 
-BufferType Buffer::get_type() const
+BufferType BufferBase::get_type() const
 {
 	return buffer_type_;
 }
 
-openpal::WSlice Buffer::get_write_slice()
+openpal::WSlice BufferBase::get_write_slice()
 {
 	return buffer_.GetWSlice();
 }
 
-void Buffer::set_type(BufferType buffer_type)
+void BufferBase::set_type(BufferType buffer_type)
 {
 	buffer_type_ = buffer_type;
 	length_ = get_buffer_length(buffer_type);
 }
 
-uint32_t Buffer::get_buffer_length(BufferType key_type)
+uint32_t BufferBase::get_buffer_length(BufferType key_type)
 {
 	switch (key_type)
 	{

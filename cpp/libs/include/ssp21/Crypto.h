@@ -26,13 +26,13 @@ namespace ssp21
 		
 		static void hash_sha256(
 				std::initializer_list<openpal::RSlice> data,
-				SymmetricKey& output
+				SecureBuffer &output
 		);
 
 		static void hmac_sha256(
 				const openpal::RSlice &key,
 				std::initializer_list<openpal::RSlice> data,
-				SymmetricKey& output
+				SecureBuffer &output
 		);
 
 		static void gen_keypair_x25519(KeyPair& pair);
@@ -64,7 +64,7 @@ namespace ssp21
 		typedef void(*hmac_func_t)(
 			const openpal::RSlice& key,
 			std::initializer_list<openpal::RSlice> data,
-			SymmetricKey& output
+			SecureBuffer& output
 		);
 
 		static void hkdf(
