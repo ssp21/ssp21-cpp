@@ -51,7 +51,7 @@ enable_testing()
 include_directories(./cpp/tests/catch)
 include_directories(./deps/openpal/cpp/tests)
 
-# ---- testlib ----
+# ---- openpal ----
 file(GLOB_RECURSE testlib_SRC ./deps/openpal/cpp/tests/testlib/*.cpp ./deps/openpal/cpp/tests/testlib/*.h)
 add_library(testlib ${LIB_TYPE} ${testlib_SRC})
 target_link_libraries(testlib openpal)
