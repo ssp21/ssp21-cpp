@@ -13,6 +13,7 @@ object SSP21Enums {
 
   private def fullEnums = List(
     Function(),
+    HashMode(),
     NonceMode(),
     DHMode(),
     SessionMode(),
