@@ -31,9 +31,9 @@ enum class SessionMode : uint8_t
   undefined = 0xFF
 };
 
-uint8_t sessionmode_to_type(SessionMode arg);
-SessionMode sessionmode_from_type(uint8_t arg);
-char const* sessionmode_to_string(SessionMode arg);
+uint8_t session_mode_to_type(SessionMode arg);
+SessionMode session_mode_from_type(uint8_t arg);
+char const* session_mode_to_string(SessionMode arg);
 
 }
 

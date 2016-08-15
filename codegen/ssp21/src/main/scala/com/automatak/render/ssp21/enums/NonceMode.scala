@@ -9,7 +9,7 @@ object NonceMode {
 
   private val comments = List("Determines how nonces are verified during the session")
 
-  def apply(): EnumModel = EnumModel("NonceMode", comments, EnumModel.UInt8, codes, Some(defaultValue), Hex)
+  def apply(): EnumModel = EnumModel("NonceMode", "nonce_mode", comments, EnumModel.UInt8, codes, Some(defaultValue), Hex)
 
   private val defaultValue = EnumValue("undefined", 255, "undefined mode")
 

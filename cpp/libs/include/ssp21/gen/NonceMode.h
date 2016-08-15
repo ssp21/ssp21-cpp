@@ -33,9 +33,9 @@ enum class NonceMode : uint8_t
   undefined = 0xFF
 };
 
-uint8_t noncemode_to_type(NonceMode arg);
-NonceMode noncemode_from_type(uint8_t arg);
-char const* noncemode_to_string(NonceMode arg);
+uint8_t nonce_mode_to_type(NonceMode arg);
+NonceMode nonce_mode_from_type(uint8_t arg);
+char const* nonce_mode_to_string(NonceMode arg);
 
 }
 

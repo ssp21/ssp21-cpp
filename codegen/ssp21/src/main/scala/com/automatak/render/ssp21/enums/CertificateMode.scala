@@ -9,7 +9,7 @@ object CertificateMode {
 
   private val comments = List("specifies what type of certificate is exchanged by both parties to authenticate each other")
 
-  def apply(): EnumModel = EnumModel("CertificateMode", comments, EnumModel.UInt8, codes, Some(defaultValue), Hex)
+  def apply(): EnumModel = EnumModel("CertificateMode", "certificate_mode", comments, EnumModel.UInt8, codes, Some(defaultValue), Hex)
 
   private val defaultValue = EnumValue("undefined", 255, "undefined mode")
 

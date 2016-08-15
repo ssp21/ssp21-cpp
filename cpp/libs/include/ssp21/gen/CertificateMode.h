@@ -33,9 +33,9 @@ enum class CertificateMode : uint8_t
   undefined = 0xFF
 };
 
-uint8_t certificatemode_to_type(CertificateMode arg);
-CertificateMode certificatemode_from_type(uint8_t arg);
-char const* certificatemode_to_string(CertificateMode arg);
+uint8_t certificate_mode_to_type(CertificateMode arg);
+CertificateMode certificate_mode_from_type(uint8_t arg);
+char const* certificate_mode_to_string(CertificateMode arg);
 
 }
 

@@ -31,9 +31,9 @@ enum class DHMode : uint8_t
   undefined = 0xFF
 };
 
-uint8_t dhmode_to_type(DHMode arg);
-DHMode dhmode_from_type(uint8_t arg);
-char const* dhmode_to_string(DHMode arg);
+uint8_t dh_mode_to_type(DHMode arg);
+DHMode dh_mode_from_type(uint8_t arg);
+char const* dh_mode_to_string(DHMode arg);
 
 }
 

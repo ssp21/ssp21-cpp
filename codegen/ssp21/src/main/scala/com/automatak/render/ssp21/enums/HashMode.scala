@@ -9,7 +9,7 @@ object HashMode {
 
   private val comments = List("Specifies which hash algorithm is used for the handshake hash and handshake authentication")
 
-  def apply(): EnumModel = EnumModel("HashMode", comments, EnumModel.UInt8, codes, Some(defaultValue), Hex)
+  def apply(): EnumModel = EnumModel("HashMode", "hash_mode", comments, EnumModel.UInt8, codes, Some(defaultValue), Hex)
 
   private val defaultValue = EnumValue("undefined", 255, "undefined mode")
 

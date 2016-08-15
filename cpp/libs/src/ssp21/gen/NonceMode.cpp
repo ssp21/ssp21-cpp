@@ -17,11 +17,11 @@
 
 namespace ssp21 {
 
-uint8_t noncemode_to_type(NonceMode arg)
+uint8_t nonce_mode_to_type(NonceMode arg)
 {
   return static_cast<uint8_t>(arg);
 }
-NonceMode noncemode_from_type(uint8_t arg)
+NonceMode nonce_mode_from_type(uint8_t arg)
 {
   switch(arg)
   {
@@ -33,7 +33,7 @@ NonceMode noncemode_from_type(uint8_t arg)
       return NonceMode::undefined;
   }
 }
-char const* noncemode_to_string(NonceMode arg)
+char const* nonce_mode_to_string(NonceMode arg)
 {
   switch(arg)
   {
