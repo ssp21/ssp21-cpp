@@ -1,3 +1,8 @@
 *~
 /build
 /.idea
+
+# codegen stuff
+/codegen/.idea
+/codegen/**/*.iml
+/codegen/**/target
