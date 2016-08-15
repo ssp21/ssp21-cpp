@@ -19,7 +19,7 @@ object Generate {
     Files.createDirectories(ssp21GenImplPath)
 
     // generate the C++ ssp21 enums
-    CppEnumGenerator(SSP21Enums(), "ssp21", "ssp21/gen/%s", ssp21GenHeaderPath, ssp21GenImplPath)
+    CppEnumGenerator(AllEnums(), "ssp21", "ssp21/gen/%s", ssp21GenHeaderPath, ssp21GenImplPath)
 
   }
 

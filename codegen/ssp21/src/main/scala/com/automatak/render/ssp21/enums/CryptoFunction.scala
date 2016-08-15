@@ -5,7 +5,7 @@ package com.automatak.render.ssp21.enums
 
 import com.automatak.render._
 
-object Function {
+object CryptoFunction {
 
   private val comments = List("Crypto layer function code")
 
