@@ -16,7 +16,8 @@ object SSP21Enums {
     NonceMode(),
     DHMode(),
     SessionMode(),
-    CertificateMode()
+    CertificateMode(),
+    HandshakeError()
   ).map(x => EnumConfig(x, true, true))
 
 }
