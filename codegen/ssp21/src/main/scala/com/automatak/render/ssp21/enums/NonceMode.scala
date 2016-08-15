@@ -11,7 +11,7 @@ object NonceMode {
 
   def apply(): EnumModel = EnumModel("NonceMode", comments, EnumModel.UInt8, codes, Some(defaultValue), Hex)
 
-  private val defaultValue = EnumValue("undefined", 255, "Undefined mode")
+  private val defaultValue = EnumValue("undefined", 255, "undefined mode")
 
   private val codes = List(
     EnumValue("increment_last_rx", 0, "new nonce must strictly be equal to last nonce plus one"),

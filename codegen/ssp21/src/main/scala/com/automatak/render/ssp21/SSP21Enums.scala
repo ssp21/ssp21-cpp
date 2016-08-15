@@ -13,7 +13,8 @@ object SSP21Enums {
 
   private def fullEnums = List(
     Function(),
-    NonceMode()
+    NonceMode(),
+    DHMode()
   ).map(x => EnumConfig(x, true, true))
 
 }

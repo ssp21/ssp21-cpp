@@ -13,29 +13,27 @@
 // License TBD
 //
 
-#ifndef SSP21_NONCEMODE_H
-#define SSP21_NONCEMODE_H
+#ifndef SSP21_DHMODE_H
+#define SSP21_DHMODE_H
 
 #include <cstdint>
 
 namespace ssp21 {
 
 /**
-  Determines how nonces are verified during the session
+  Specifies which Diffie Hellman function is used
 */
-enum class NonceMode : uint8_t
+enum class DHMode : uint8_t
 {
-  /// new nonce must strictly be equal to last nonce plus one
-  increment_last_rx = 0x0,
-  /// new nonce must be greater than last nonce
-  greater_than_last_rx = 0x1,
+  /// Use the x25519 algorithm
+  x25519 = 0x0,
   /// undefined mode
   undefined = 0xFF
 };
 
-uint8_t noncemode_to_type(NonceMode arg);
-NonceMode noncemode_from_type(uint8_t arg);
-char const* noncemode_to_string(NonceMode arg);
+uint8_t dhmode_to_type(DHMode arg);
+DHMode dhmode_from_type(uint8_t arg);
+char const* dhmode_to_string(DHMode arg);
 
 }
 

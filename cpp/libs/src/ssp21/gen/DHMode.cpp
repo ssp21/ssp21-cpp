@@ -13,30 +13,33 @@
 // License TBD
 //
 
-#ifndef SSP21_NONCEMODE_H
-#define SSP21_NONCEMODE_H
-
-#include <cstdint>
+#include "ssp21/gen/DHMode.h"
 
 namespace ssp21 {
 
-/**
-  Determines how nonces are verified during the session
-*/
-enum class NonceMode : uint8_t
+uint8_t dhmode_to_type(DHMode arg)
 {
-  /// new nonce must strictly be equal to last nonce plus one
-  increment_last_rx = 0x0,
-  /// new nonce must be greater than last nonce
-  greater_than_last_rx = 0x1,
-  /// undefined mode
-  undefined = 0xFF
-};
-
-uint8_t noncemode_to_type(NonceMode arg);
-NonceMode noncemode_from_type(uint8_t arg);
-char const* noncemode_to_string(NonceMode arg);
-
+  return static_cast<uint8_t>(arg);
+}
+DHMode dhmode_from_type(uint8_t arg)
+{
+  switch(arg)
+  {
+    case(0x0):
+      return DHMode::x25519;
+    default:
+      return DHMode::undefined;
+  }
+}
+char const* dhmode_to_string(DHMode arg)
+{
+  switch(arg)
+  {
+    case(DHMode::x25519):
+      return "x25519";
+    default:
+      return "undefined";
+  }
 }
 
-#endif
+}
