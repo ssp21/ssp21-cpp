@@ -14,7 +14,9 @@ object SSP21Enums {
   private def fullEnums = List(
     Function(),
     NonceMode(),
-    DHMode()
+    DHMode(),
+    SessionMode(),
+    CertificateMode()
   ).map(x => EnumConfig(x, true, true))
 
 }
