@@ -6,7 +6,6 @@ package com.automatak.render.ssp21
 import java.nio.file.{Files, Paths}
 
 import com.automatak.render.ssp21.enums.generators.CppEnumGenerator
-import com.automatak.render.ssp21.enums.groups.SSP21Enums
 
 object Generate {
 
