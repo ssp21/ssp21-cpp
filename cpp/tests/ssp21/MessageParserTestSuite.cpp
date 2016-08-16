@@ -4,8 +4,8 @@
 
 #include "ssp21/MessageParser.h"
 
-#include <testlib\BufferHelpers.h>
-#include <testlib\HexConversions.h>
+#include <testlib/BufferHelpers.h>
+#include <testlib/HexConversions.h>
 
 #define SUITE(name) "MessageParserTestSuite - " name
 
@@ -19,7 +19,8 @@ TEST_CASE(SUITE("reads integer fields successfully"))
 
 	HexSequence hex("01 00 03 00 00 00");
 
-	auto err = MessageParser::read_fields(hex.as_rslice(), a, b);
+	auto input = hex.as_rslice();
+	auto err = MessageParser::read_fields(input, a, b);
 
 	REQUIRE_FALSE(any(err));
 	REQUIRE(a == 1);
@@ -33,7 +34,8 @@ TEST_CASE(SUITE("returns error if too little data"))
 
 	HexSequence hex("01 00 03 00 00");
 
-	auto err = MessageParser::read_fields(hex.as_rslice(), a, b);
+	auto input = hex.as_rslice();
+	auto err = MessageParser::read_fields(input, a, b);
 
 	REQUIRE(err == ParseError::insufficient_bytes);
 }
@@ -45,7 +47,8 @@ TEST_CASE(SUITE("returns error if extra data after fields"))
 
 	HexSequence hex("01 00 03 00 00 00 FF");
 
-	auto err = MessageParser::read_fields(hex.as_rslice(), a, b);
+	auto input = hex.as_rslice();
+	auto err = MessageParser::read_fields(input, a, b);
 
 	REQUIRE(err == ParseError::too_many_bytes);
 }
@@ -66,7 +69,8 @@ TEST_CASE(SUITE("reads Seq8 correctly"))
 TEST_CASE(SUITE("returns error if Seq8 empty"))
 {
 	Seq8 seq;		
-	auto err = MessageParser::read(RSlice::empty_slice(), seq);
+	auto input = RSlice::empty_slice();
+	auto err = MessageParser::read(input, seq);
 	REQUIRE(err == ParseError::insufficient_bytes);
 }
 
@@ -74,7 +78,8 @@ TEST_CASE(SUITE("returns error if Seq8 incomplete"))
 {
 	Seq8 seq;
 	HexSequence hex("04 00 01 02");
-	auto err = MessageParser::read(RSlice::empty_slice(), seq);
+	auto input = hex.as_rslice();
+	auto err = MessageParser::read(input, seq);
 	REQUIRE(err == ParseError::insufficient_bytes);
 }
 

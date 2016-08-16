@@ -4,8 +4,8 @@
 
 #include "ssp21/msg/RequestHandshakeBegin.h"
 
-#include "testlib\BufferHelpers.h"
-#include "testlib\HexConversions.h"
+#include "testlib/BufferHelpers.h"
+#include "testlib/HexConversions.h"
 
 #define SUITE(name) "RequestHandshakeBeginTestSuite - " name
 
@@ -15,7 +15,8 @@ using namespace openpal;
 TEST_CASE(SUITE("returns error on empty message"))
 {		
 	RequestHandshakeBegin msg;
-	REQUIRE(msg.read(RSlice::empty_slice()) == ParseError::insufficient_bytes);
+	auto input = RSlice::empty_slice();
+	REQUIRE(msg.read(input) == ParseError::insufficient_bytes);
 }
 
 TEST_CASE(SUITE("returns error on undefined enum"))
