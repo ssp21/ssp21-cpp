@@ -10,7 +10,7 @@
 
 namespace ssp21
 {				
-	class Seq8 final : public openpal::RSlice 
+	class Seq8 final : public openpal::RSlice
 	{
 	public:
 
