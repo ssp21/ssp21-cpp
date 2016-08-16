@@ -10,8 +10,26 @@
 
 namespace ssp21
 {				
-	class Seq8 final : public openpal::RSlice {};
-	class Seq16 final : public openpal::RSlice {};
+	class Seq8 final : public openpal::RSlice 
+	{
+	public:
+
+		Seq8() : openpal::RSlice()
+		{}
+
+		explicit Seq8(const openpal::RSlice& other) : RSlice(other)
+		{}
+	};
+	
+	class Seq16 final : public openpal::RSlice 
+	{
+	public:
+		Seq16() : openpal::RSlice()
+		{}
+
+		explicit Seq16(const openpal::RSlice& other) : RSlice(other)
+		{}
+	};
 
 	class SeqRSlice : openpal::Uncopyable
 	{

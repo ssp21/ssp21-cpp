@@ -15,7 +15,8 @@ object ParseResult {
     EnumValue("ok", 0, "message was parsed successfully"),
     EnumValue("insufficient_bytes", 1, "parser ran out of bytes before completion"),
     EnumValue("undefined_enum", 2, "an enumeration value was undefined"),
-    EnumValue("too_many_bytes", 3, "parser completed with bytes still remaining")
+    EnumValue("too_many_bytes", 3, "parser completed with bytes still remaining"),
+    EnumValue("impl_capacity_limit", 4, "reached an implementation specific capacity limit")
   )
 
 }

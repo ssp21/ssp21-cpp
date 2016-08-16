@@ -37,6 +37,29 @@ namespace ssp21 {
 		}
 	}
 
+	template <class CountType, class SeqType>
+	ParseResult read_seq(openpal::RSlice& input, SeqType& value)
+	{
+		typename CountType::type_t count;
+		auto result = read_integer<CountType>(input, count);
+		if (result != ParseResult::ok) {
+			return result;
+		}
+
+		if (input.length() < count) {
+			return ParseResult::insufficient_bytes;
+		}
+
+		value = SeqType(input.take(count));
+		input.advance(count);
+		return ParseResult::ok;
+	}
+
+	ParseResult MessageParser::read(openpal::RSlice& input, uint8_t& value)
+	{
+		return read_integer<UInt8>(input, value);
+	}
+
 	ParseResult MessageParser::read(RSlice& input, uint16_t& value)
 	{
 		return read_integer<UInt16>(input, value);
@@ -75,6 +98,42 @@ namespace ssp21 {
 	ParseResult MessageParser::read(openpal::RSlice& input, HashMode& value)
 	{
 		return read_enum<HashModeSpec>(input, value);
+	}
+
+	ParseResult MessageParser::read(openpal::RSlice& input, Seq8& value)
+	{
+		return read_seq<UInt8, Seq8>(input, value);		
+	}
+	
+	ParseResult MessageParser::read(openpal::RSlice& input, Seq16& value)
+	{
+		return read_seq<UInt16, Seq16>(input, value);
+	}
+	
+	ParseResult MessageParser::read(openpal::RSlice& input, Seq8Seq16& value)
+	{
+		value.clear();
+
+		uint8_t count;
+		
+		auto cresult = read(input, count);
+		if (cresult != ParseResult::ok) {
+			return cresult;
+		}
+		
+		while (count > 0) {
+			Seq16 slice;
+			auto sresult = read(input, slice);
+			if (sresult != ParseResult::ok) {
+				return sresult;
+			}
+			if (!value.push(slice)) {
+				return ParseResult::impl_capacity_limit;
+			}
+			--count;
+		}		
+		
+		return ParseResult::ok;
 	}
 }
 

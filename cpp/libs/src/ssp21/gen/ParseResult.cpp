@@ -29,6 +29,8 @@ char const* ParseResultSpec::to_string(ParseResult arg)
       return "undefined_enum";
     case(ParseResult::too_many_bytes):
       return "too_many_bytes";
+    case(ParseResult::impl_capacity_limit):
+      return "impl_capacity_limit";
     default:
       return "undefined";
   }
