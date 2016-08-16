@@ -20,11 +20,17 @@ object MessageGenerator {
 
     def writeToFiles(message: Message): Unit = {
 
+      def includes : Iterator[String] = {
+        val includes : Set[Include] = message.fields.flatMap(f => f.cpp.includes).toSet
+
+        includes.map(_.line).toIterator
+      }
+
       def writeHeader() {
         def license = commented(LicenseHeader())
         //def enum = EnumModelRenderer.render(cfg.model)
         //def signatures = renders.map(c => c.header.render(cfg.model)).flatten.toIterator
-        def lines = license ++ space ++ includeGuards(message.name)(cstdint ++ space ++ namespace(cppNamespace)(space))
+        def lines = license ++ space ++ includeGuards(message.name)(includes ++ space ++ namespace(cppNamespace)(space))
         val path = headerPath(message)
         writeTo(path)(lines)
         println("Wrote: " + path)
