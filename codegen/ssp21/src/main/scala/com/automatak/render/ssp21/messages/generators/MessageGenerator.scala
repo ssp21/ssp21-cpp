@@ -26,11 +26,17 @@ object MessageGenerator {
         )
       }
 
+      def defaultConstructorSig : Iterator[String] = Iterator(message.name + "();")
+
+      def fieldDefintions : Iterator[String] = message.fields.map { f =>
+        "%s %s;".format(f.cpp.cppType, f.name);
+      }.toIterator
+
       def struct : Iterator[String] = {
         Iterator("struct " + message.name + " : openpal::Uncopyable") ++ bracketSemiColon {
-          message.fields.map { f =>
-            "%s %s;".format(f.cpp.cppType, f.name);
-          }.toIterator
+          defaultConstructorSig ++
+          space ++
+          fieldDefintions
         }
       }
 
@@ -46,11 +52,30 @@ object MessageGenerator {
         println("Wrote: " + path)
       }
 
+      def defaultConstructorImpl : Iterator[String] = {
+        val defaults : List[(String,String)] = message.fields.flatMap(f => f.cpp.defaultValue.map((f.name, _)))
+
+        if(defaults.isEmpty) {
+          Iterator("%s::%s()".format(message.name, message.name)) ++ bracket(Iterator.empty)
+        }
+        else {
+          val sig = "%s::%s() : ".format(message.name, message.name)
+          def initFirst(s: (String, String)) = "%s(%s),".format(s._1, s._2)
+          def initLast(s: (String, String)) = "%s(%s)".format(s._1, s._2)
+          val leading = defaults.dropRight(1).map(initFirst).toIterator
+          val last = Iterator(initLast(defaults.last))
+
+          Iterator(sig) ++ indent {
+            leading ++ last
+          } ++ bracket(Iterator.empty)
+        }
+      }
+
       def writeImpl() {
         def license = commented(LicenseHeader())
-        //def funcs = renders.map(r => r.impl.render(cfg.model)).flatten.toIterator
+        def funcs = defaultConstructorImpl
         def inc = quoted(String.format(incFormatString, headerName(message)))
-        def lines = license ++ space ++ Iterator(include(inc)) ++ space ++ namespace(cppNamespace)(Iterator.empty)
+        def lines = license ++ space ++ Iterator(include(inc)) ++ space ++ namespace(cppNamespace)(funcs)
 
         val path = implPath(message)
         writeTo(path)(lines)

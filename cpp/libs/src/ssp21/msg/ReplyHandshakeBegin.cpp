@@ -17,5 +17,10 @@
 
 namespace ssp21 {
 
+ReplyHandshakeBegin::ReplyHandshakeBegin() : 
+  function(Function::undefined),
+  version(0)
+{
+}
 
 }

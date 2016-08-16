@@ -26,6 +26,8 @@ namespace ssp21 {
 
 struct ReplyHandshakeBegin : openpal::Uncopyable
 {
+  ReplyHandshakeBegin();
+
   Function function;
   uint16_t version;
   openpal::RSlice ephemeral_public_key;

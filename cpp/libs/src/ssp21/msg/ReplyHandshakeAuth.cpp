@@ -17,5 +17,9 @@
 
 namespace ssp21 {
 
+ReplyHandshakeAuth::ReplyHandshakeAuth() : 
+  function(Function::undefined)
+{
+}
 
 }

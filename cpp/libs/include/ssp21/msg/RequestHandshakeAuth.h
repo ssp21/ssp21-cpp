@@ -24,6 +24,8 @@ namespace ssp21 {
 
 struct RequestHandshakeAuth : openpal::Uncopyable
 {
+  RequestHandshakeAuth();
+
   Function function;
   openpal::RSlice mac;
 };

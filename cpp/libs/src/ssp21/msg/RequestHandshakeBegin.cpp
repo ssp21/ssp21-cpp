@@ -17,5 +17,15 @@
 
 namespace ssp21 {
 
+RequestHandshakeBegin::RequestHandshakeBegin() : 
+  function(Function::undefined),
+  version(0),
+  nonce_mode(NonceMode::undefined),
+  dh_mode(DHMode::undefined),
+  hash_mode(HashMode::undefined),
+  session_mode(SessionMode::undefined),
+  certificate_mode(CertificateMode::undefined)
+{
+}
 
 }

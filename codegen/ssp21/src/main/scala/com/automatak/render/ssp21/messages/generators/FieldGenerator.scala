@@ -30,41 +30,49 @@ object Includes {
 sealed trait FieldGenerator {
   def includes : Set[Include]
   def cppType : String
+  def defaultValue: Option[String]
 }
 
 object U16FieldGenerator extends FieldGenerator {
   override def includes = Set(Includes.cstdint)
   override def cppType : String = "uint16_t"
+  def defaultValue: Option[String] = Some("0")
 }
 
 object U32FieldGenerator extends FieldGenerator {
   override def includes = Set(Includes.cstdint)
   override def cppType : String = "uint32_t"
+  def defaultValue: Option[String] = Some("0")
 }
 
 case class EnumFieldGenerator(enum: EnumModel) extends FieldGenerator {
   override def includes = Set(Include(quoted("ssp21/gen/%s.h").format(enum.name), Ordering.ssp21))
   override def cppType : String = enum.name
+  def defaultValue: Option[String] = Some("%s::undefined".format(enum.name))
 }
 
 case class FixedEnumFieldGenerator(enum: EnumModel, value: EnumValue) extends FieldGenerator {
   override def includes = Set(Include(quoted("ssp21/gen/%s.h").format(enum.name), Ordering.ssp21))
   override def cppType : String = enum.name
+  def defaultValue: Option[String] = Some("%s::undefined".format(enum.name))
 }
 
 object Seq8FieldGenerator extends FieldGenerator {
   override def includes = Set(Includes.rslice)
   override def cppType : String = "openpal::RSlice"
+  def defaultValue: Option[String] = None
 }
 
 object Seq16FieldGenerator extends FieldGenerator {
   override def includes = Set(Includes.rslice)
   override def cppType : String = "openpal::RSlice"
+  def defaultValue: Option[String] = None
 }
 
 object Seq8Seq16FieldGenerator extends FieldGenerator {
   override def includes = Set(Includes.seqRSlice)
   override def cppType : String = "SeqRSlice"
+  def defaultValue: Option[String] = None
 }
 
 
