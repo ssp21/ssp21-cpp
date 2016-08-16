@@ -25,7 +25,7 @@ object MessageGenerator {
       }
 
       def struct : Iterator[String] = {
-        Iterator("struct " + message.name + " : openpal::Uncopyable") ++ bracket {
+        Iterator("struct " + message.name + " : openpal::Uncopyable") ++ bracketSemiColon {
           message.fields.map { f =>
             "%s %s;".format(f.cpp.cppType, f.name);
           }.toIterator

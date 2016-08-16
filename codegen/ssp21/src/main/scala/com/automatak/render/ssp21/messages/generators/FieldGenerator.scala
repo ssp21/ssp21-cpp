@@ -11,6 +11,7 @@ case class Include(file: String) {
 object Includes {
   val cstdint = Include("<cstdint>")
   val rslice = Include(quoted("openpal/container/RSlice.h"))
+  val seqRSlice = Include(quoted("ssp21/SeqRSlice.h"))
 }
 
 sealed trait FieldGenerator {
@@ -49,8 +50,8 @@ object Seq16FieldGenerator extends FieldGenerator {
 }
 
 object Seq8Seq16FieldGenerator extends FieldGenerator {
-  override def includes = Set(Includes.rslice)
-  override def cppType : String = "TBD"
+  override def includes = Set(Includes.seqRSlice)
+  override def cppType : String = "SeqRSlice"
 }
 
 
