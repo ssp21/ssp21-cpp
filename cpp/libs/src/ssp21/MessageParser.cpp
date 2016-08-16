@@ -56,5 +56,25 @@ namespace ssp21 {
 	{
 		return read_enum<DHModeSpec>(input, value);
 	}
+
+	ParseResult MessageParser::read(openpal::RSlice& input, HandshakeError& value)
+	{
+		return read_enum<HandshakeErrorSpec>(input, value);
+	}
+	
+	ParseResult MessageParser::read(openpal::RSlice& input, NonceMode& value)
+	{
+		return read_enum<NonceModeSpec>(input, value);
+	}
+	
+	ParseResult MessageParser::read(openpal::RSlice& input, SessionMode& value)
+	{
+		return read_enum<SessionModeSpec>(input, value);
+	}
+	
+	ParseResult MessageParser::read(openpal::RSlice& input, HashMode& value)
+	{
+		return read_enum<HashModeSpec>(input, value);
+	}
 }
 
