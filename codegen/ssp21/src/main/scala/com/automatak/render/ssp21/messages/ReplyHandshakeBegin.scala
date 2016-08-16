@@ -8,7 +8,7 @@ object ReplyHandshakeBegin extends Message {
   override def name : String = "ReplyHandshakeBegin"
 
   override def fields: List[Field] = List(
-      Enum(CryptoFunction()),
+      FixedEnum(CryptoFunction(), CryptoFunction.replyHandshakeBegin),
       U16("version"),
       Seq8("ephemeral_public_key"),
       Seq8Seq16("certificates")

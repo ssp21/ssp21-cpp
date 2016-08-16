@@ -7,7 +7,7 @@ object RequestHandshakeAuth extends Message {
   override def name : String = "RequestHandshakeAuth"
 
   override def fields: List[Field] = List(
-      Enum(CryptoFunction()),
+      FixedEnum(CryptoFunction(), CryptoFunction.requestHandshakeAuth),
       Seq8("mac")
   )
 

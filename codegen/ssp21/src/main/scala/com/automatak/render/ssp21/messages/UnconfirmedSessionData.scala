@@ -8,7 +8,7 @@ object UnconfirmedSessionData extends Message {
   override def name : String = "UnconfirmedSessionData"
 
   override def fields: List[Field] = List(
-      Enum(CryptoFunction()),
+      FixedEnum(CryptoFunction(), CryptoFunction.unconfirmedSessionData),
       U32("valid_until_ms"),
       U16("nonce"),
       Seq16("payload")

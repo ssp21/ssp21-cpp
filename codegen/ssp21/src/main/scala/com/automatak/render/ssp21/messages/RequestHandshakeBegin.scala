@@ -8,7 +8,7 @@ object RequestHandshakeBegin extends Message {
   override def name : String = "RequestHandshakeBegin"
 
   override def fields: List[Field] = List(
-      Enum(CryptoFunction()),
+      FixedEnum(CryptoFunction(), CryptoFunction.requestHandshakeBegin),
       U16("version"),
       Enum(NonceMode()),
       Enum(DHMode()),
