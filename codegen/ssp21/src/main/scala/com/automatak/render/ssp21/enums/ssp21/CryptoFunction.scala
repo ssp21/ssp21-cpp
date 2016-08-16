@@ -9,7 +9,7 @@ object CryptoFunction {
 
   private val comments = List("Crypto layer function code")
 
-  def apply(): EnumModel = EnumModel("Function", "function", comments, EnumModel.UInt8, codes, Some(defaultValue), Hex)
+  def apply(): EnumModel = EnumModel("Function", "function", comments, EnumModel.UInt8, codes, Some(defaultValue), None, Hex)
 
   private val defaultValue = EnumValue("undefined", 255, "Unknown function code. Used internally in ssp21 to indicate the code didn't match anything known")
 

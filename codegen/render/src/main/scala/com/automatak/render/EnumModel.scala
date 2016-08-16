@@ -43,7 +43,15 @@ sealed trait IntRender { def apply(i: Int): String }
 case object Hex extends IntRender { def apply(i: Int): String = "0x"+Integer.toHexString(i).toUpperCase }
 case object Base10 extends IntRender { def apply(i: Int): String = i.toString }
 
-case class EnumModel(name: String, underscoredName: String, comments: List[String], enumType: EnumModel.Type, nonDefaultValues: List[EnumValue], defaultValue: Option[EnumValue], render: IntRender = Base10) {
+case class EnumModel(
+                      name: String,
+                      underscoredName: String,
+                      comments: List[String],
+                      enumType: EnumModel.Type,
+                      nonDefaultValues: List[EnumValue],
+                      defaultValue: Option[EnumValue],
+                      boolCastValue: Option[EnumValue] = None,
+                      render: IntRender = Base10) {
 
   def specName = name + "Spec"
 

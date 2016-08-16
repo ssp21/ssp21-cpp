@@ -37,7 +37,19 @@ object EnumGenerator {
           signatures
         }
         def signatures = renders.map(c => c.header.render(cfg.model)).flatten.toIterator
-        def lines = license ++ space ++ includeGuards(cfg.model.name)(uncopyable ++ cstdint ++ space ++ namespace(cppNamespace)(enum ++ space ++ spec))
+        def castFunc : Iterator[String] = {
+          cfg.model.boolCastValue match {
+            case Some(value) => {
+              space ++
+              Iterator("inline bool any(%s value)".format(cfg.model.name)) ++ bracket {
+                Iterator("return value != %s::%s;".format(cfg.model.name, value.name))
+              }
+            }
+            case None => Iterator.empty
+          }
+        }
+
+        def lines = license ++ space ++ includeGuards(cfg.model.name)(uncopyable ++ cstdint ++ space ++ namespace(cppNamespace)(enum ++ castFunc ++ space ++ spec))
         writeTo(headerPath(cfg.model))(lines)
         println("Wrote: " + headerPath(cfg.model))
       }

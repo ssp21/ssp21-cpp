@@ -25,8 +25,8 @@ namespace ssp21 {
 		static ParseError read_message(openpal::RSlice& input, T& value, Args& ... args)
 		{
 			Function func;
-			auto result = read(input, func);
-			if (ret != ParseResult::ok) return ret;
+			auto err = read(input, func);
+			if (any(err)) return err;
 			if (func != expected) return ParseResult::unexpected_function;
 
 			return read_fields(input, value, args...)
@@ -37,8 +37,8 @@ namespace ssp21 {
 		template <typename T, typename... Args>
 		static ParseError read_fields(openpal::RSlice& input, T& value, Args& ... args)
 		{
-			auto ret = read(input, value);
-			if (ret != ParseResult::ok) return ret;
+			auto err = read(input, value);
+			if (any(err)) return err;
 			return read_fields(input, args...);
 		}
 

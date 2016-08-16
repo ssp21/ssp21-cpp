@@ -9,7 +9,7 @@ object SessionMode {
 
   private val comments = List("Specifies the complete set of algorithms used to secure the session")
 
-  def apply(): EnumModel = EnumModel("SessionMode", "session_mode", comments, EnumModel.UInt8, codes, Some(defaultValue), Hex)
+  def apply(): EnumModel = EnumModel("SessionMode", "session_mode", comments, EnumModel.UInt8, codes, Some(defaultValue), None, Hex)
 
   private val defaultValue = EnumValue("undefined", 255, "undefined mode")
 

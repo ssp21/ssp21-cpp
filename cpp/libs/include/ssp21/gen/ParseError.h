@@ -40,6 +40,11 @@ enum class ParseError : uint8_t
   impl_capacity_limit = 0x5
 };
 
+inline bool any(ParseError value)
+{
+  return value != ParseError::ok;
+}
+
 struct ParseErrorSpec : private openpal::StaticOnly
 {
   typedef ParseError enum_type_t;

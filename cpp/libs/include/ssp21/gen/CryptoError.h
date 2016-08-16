@@ -27,9 +27,9 @@ namespace ssp21 {
 enum class CryptoError : uint8_t
 {
   /// attempted operation with bad key type
-  bad_key_type = 0x0,
+  bad_key_type = 0,
   /// X25519 DH operation failed. Bad public key?
-  dh_x25519_fail = 0x1
+  dh_x25519_fail = 1
 };
 
 struct CryptoErrorSpec : private openpal::StaticOnly

@@ -9,7 +9,7 @@ object DHMode {
 
   private val comments = List("Specifies which Diffie Hellman function is used")
 
-  def apply(): EnumModel = EnumModel("DHMode", "dh_mode", comments, EnumModel.UInt8, codes, Some(defaultValue), Hex)
+  def apply(): EnumModel = EnumModel("DHMode", "dh_mode", comments, EnumModel.UInt8, codes, Some(defaultValue), None, Hex)
 
   private val defaultValue = EnumValue("undefined", 255, "undefined mode")
 

@@ -9,7 +9,7 @@ object HandshakeError {
 
   private val comments = List("Denotes an error condition that occurred during the handshake process")
 
-  def apply(): EnumModel = EnumModel("HandshakeError", "handshake_error", comments, EnumModel.UInt8, codes, Some(defaultValue), Hex)
+  def apply(): EnumModel = EnumModel("HandshakeError", "handshake_error", comments, EnumModel.UInt8, codes, Some(defaultValue), None, Hex)
 
   private val defaultValue = EnumValue("undefined", 254, "undefined error")
 

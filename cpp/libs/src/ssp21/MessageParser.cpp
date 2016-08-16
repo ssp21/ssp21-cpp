@@ -41,10 +41,8 @@ namespace ssp21 {
 	ParseError read_seq(openpal::RSlice& input, SeqType& value)
 	{
 		typename CountType::type_t count;
-		auto result = read_integer<CountType>(input, count);
-		if (result != ParseError::ok) {
-			return result;
-		}
+		auto err = read_integer<CountType>(input, count);
+		if (any(err)) return err;
 
 		if (input.length() < count) {
 			return ParseError::insufficient_bytes;
@@ -116,17 +114,14 @@ namespace ssp21 {
 
 		uint8_t count;
 		
-		auto cresult = read(input, count);
-		if (cresult != ParseError::ok) {
-			return cresult;
-		}
+		auto cerr = read(input, count);
+		if (any(cerr)) return cerr;
 		
 		while (count > 0) {
 			Seq16 slice;
-			auto sresult = read(input, slice);
-			if (sresult != ParseError::ok) {
-				return sresult;
-			}
+			auto serr = read(input, slice);
+			if (any(serr)) return serr;
+
 			if (!value.push(slice)) {
 				return ParseError::impl_capacity_limit;
 			}
