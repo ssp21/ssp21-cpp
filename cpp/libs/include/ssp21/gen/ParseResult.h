@@ -32,10 +32,12 @@ enum class ParseResult : uint8_t
   insufficient_bytes = 0x1,
   /// an enumeration value was undefined
   undefined_enum = 0x2,
+  /// the message function was not the expected value
+  unexpected_function = 0x3,
   /// parser completed with bytes still remaining
-  too_many_bytes = 0x3,
+  too_many_bytes = 0x4,
   /// reached an implementation specific capacity limit
-  impl_capacity_limit = 0x4
+  impl_capacity_limit = 0x5
 };
 
 struct ParseResultSpec : private openpal::StaticOnly
