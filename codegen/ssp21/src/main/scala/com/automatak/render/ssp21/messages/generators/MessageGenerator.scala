@@ -21,16 +21,24 @@ object MessageGenerator {
     def writeToFiles(message: Message): Unit = {
 
       def includes : Iterator[String] = {
-        val includes : Set[Include] = message.fields.flatMap(f => f.cpp.includes).toSet
+        Iterator(Include(quoted("openpal/util/Uncopyable.h")).line) ++ message.fields.flatMap(f => f.cpp.includes).toSet.map((inc : Include) => inc.line).toIterator
+      }
 
-        includes.map(_.line).toIterator
+      def struct : Iterator[String] = {
+        Iterator("struct " + message.name + " : openpal::Uncopyable") ++ bracket {
+          message.fields.map { f =>
+            "%s %s;".format(f.cpp.cppType, f.name);
+          }.toIterator
+        }
       }
 
       def writeHeader() {
         def license = commented(LicenseHeader())
         //def enum = EnumModelRenderer.render(cfg.model)
         //def signatures = renders.map(c => c.header.render(cfg.model)).flatten.toIterator
-        def lines = license ++ space ++ includeGuards(message.name)(includes ++ space ++ namespace(cppNamespace)(space))
+        def content = struct
+
+        def lines = license ++ space ++ includeGuards(message.name)(includes ++ space ++ namespace(cppNamespace)(content))
         val path = headerPath(message)
         writeTo(path)(lines)
         println("Wrote: " + path)
