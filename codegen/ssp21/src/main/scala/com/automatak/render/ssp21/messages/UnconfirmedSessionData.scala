@@ -11,7 +11,7 @@ object UnconfirmedSessionData extends Message {
       Enum(CryptoFunction()),
       U32("valid_until_ms"),
       U16("nonce"),
-      Seq16ofU8("payload")
+      Seq16("payload")
   )
 
 }

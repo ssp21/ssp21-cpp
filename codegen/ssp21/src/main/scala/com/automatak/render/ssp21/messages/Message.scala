@@ -13,9 +13,9 @@ sealed case class Enum(model: EnumModel) extends Field {
   def name : String = model.underscoredName
 }
 
-sealed case class Seq8ofU8(name: String) extends Field
-sealed case class Seq16ofU8(name: String) extends Field
-sealed case class Seq8ofSeq16ofU8(name: String) extends Field
+sealed case class Seq8(name: String) extends Field
+sealed case class Seq16(name: String) extends Field
+sealed case class Seq8Seq16(name: String) extends Field
 
 trait Message {
   def name : String

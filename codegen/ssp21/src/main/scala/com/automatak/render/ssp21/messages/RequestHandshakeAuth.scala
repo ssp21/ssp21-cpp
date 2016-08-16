@@ -8,7 +8,7 @@ object RequestHandshakeAuth extends Message {
 
   override def fields: List[Field] = List(
       Enum(CryptoFunction()),
-      Seq8ofU8("mac")
+      Seq8("mac")
   )
 
 }
