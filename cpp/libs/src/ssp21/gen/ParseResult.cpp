@@ -17,7 +17,7 @@
 
 namespace ssp21 {
 
-char const* parse_result_to_string(ParseResult arg)
+char const* ParseResultSpec::to_string(ParseResult arg)
 {
   switch(arg)
   {

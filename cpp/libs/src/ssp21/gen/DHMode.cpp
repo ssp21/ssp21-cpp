@@ -17,11 +17,11 @@
 
 namespace ssp21 {
 
-uint8_t dh_mode_to_type(DHMode arg)
+uint8_t DHModeSpec::to_type(DHMode arg)
 {
   return static_cast<uint8_t>(arg);
 }
-DHMode dh_mode_from_type(uint8_t arg)
+DHMode DHModeSpec::from_type(uint8_t arg)
 {
   switch(arg)
   {
@@ -31,7 +31,7 @@ DHMode dh_mode_from_type(uint8_t arg)
       return DHMode::undefined;
   }
 }
-char const* dh_mode_to_string(DHMode arg)
+char const* DHModeSpec::to_string(DHMode arg)
 {
   switch(arg)
   {

@@ -16,6 +16,7 @@
 #ifndef SSP21_DHMODE_H
 #define SSP21_DHMODE_H
 
+#include "openpal/util/Uncopyable.h"
 #include <cstdint>
 
 namespace ssp21 {
@@ -31,9 +32,14 @@ enum class DHMode : uint8_t
   undefined = 0xFF
 };
 
-uint8_t dh_mode_to_type(DHMode arg);
-DHMode dh_mode_from_type(uint8_t arg);
-char const* dh_mode_to_string(DHMode arg);
+struct DHModeSpec : private openpal::StaticOnly
+{
+  typedef DHMode enum_type_t;
+
+  static uint8_t to_type(DHMode arg);
+  static DHMode from_type(uint8_t arg);
+  static char const* to_string(DHMode arg);
+};
 
 }
 

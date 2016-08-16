@@ -16,6 +16,7 @@
 #ifndef SSP21_CRYPTOERROR_H
 #define SSP21_CRYPTOERROR_H
 
+#include "openpal/util/Uncopyable.h"
 #include <cstdint>
 
 namespace ssp21 {
@@ -31,7 +32,12 @@ enum class CryptoError : uint8_t
   dh_x25519_fail = 0x1
 };
 
-char const* crypto_error_to_string(CryptoError arg);
+struct CryptoErrorSpec : private openpal::StaticOnly
+{
+  typedef CryptoError enum_type_t;
+
+  static char const* to_string(CryptoError arg);
+};
 
 }
 

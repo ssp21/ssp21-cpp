@@ -16,6 +16,7 @@
 #ifndef SSP21_HASHMODE_H
 #define SSP21_HASHMODE_H
 
+#include "openpal/util/Uncopyable.h"
 #include <cstdint>
 
 namespace ssp21 {
@@ -31,9 +32,14 @@ enum class HashMode : uint8_t
   undefined = 0xFF
 };
 
-uint8_t hash_mode_to_type(HashMode arg);
-HashMode hash_mode_from_type(uint8_t arg);
-char const* hash_mode_to_string(HashMode arg);
+struct HashModeSpec : private openpal::StaticOnly
+{
+  typedef HashMode enum_type_t;
+
+  static uint8_t to_type(HashMode arg);
+  static HashMode from_type(uint8_t arg);
+  static char const* to_string(HashMode arg);
+};
 
 }
 

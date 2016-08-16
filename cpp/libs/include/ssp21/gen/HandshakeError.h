@@ -16,6 +16,7 @@
 #ifndef SSP21_HANDSHAKEERROR_H
 #define SSP21_HANDSHAKEERROR_H
 
+#include "openpal/util/Uncopyable.h"
 #include <cstdint>
 
 namespace ssp21 {
@@ -47,9 +48,14 @@ enum class HandshakeError : uint8_t
   undefined = 0xFE
 };
 
-uint8_t handshake_error_to_type(HandshakeError arg);
-HandshakeError handshake_error_from_type(uint8_t arg);
-char const* handshake_error_to_string(HandshakeError arg);
+struct HandshakeErrorSpec : private openpal::StaticOnly
+{
+  typedef HandshakeError enum_type_t;
+
+  static uint8_t to_type(HandshakeError arg);
+  static HandshakeError from_type(uint8_t arg);
+  static char const* to_string(HandshakeError arg);
+};
 
 }
 

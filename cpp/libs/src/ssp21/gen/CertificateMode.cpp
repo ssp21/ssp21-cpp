@@ -17,11 +17,11 @@
 
 namespace ssp21 {
 
-uint8_t certificate_mode_to_type(CertificateMode arg)
+uint8_t CertificateModeSpec::to_type(CertificateMode arg)
 {
   return static_cast<uint8_t>(arg);
 }
-CertificateMode certificate_mode_from_type(uint8_t arg)
+CertificateMode CertificateModeSpec::from_type(uint8_t arg)
 {
   switch(arg)
   {
@@ -33,7 +33,7 @@ CertificateMode certificate_mode_from_type(uint8_t arg)
       return CertificateMode::undefined;
   }
 }
-char const* certificate_mode_to_string(CertificateMode arg)
+char const* CertificateModeSpec::to_string(CertificateMode arg)
 {
   switch(arg)
   {

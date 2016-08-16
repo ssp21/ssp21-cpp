@@ -8,7 +8,7 @@ ErrorCategory ErrorCategory::instance;
 
 std::string ErrorCategory::message(int ev) const
 {
-	return crypto_error_to_string(static_cast<CryptoError>(ev));
+	return CryptoErrorSpec::to_string(static_cast<CryptoError>(ev));
 }
 
 std::error_code make_error_code(CryptoError err)

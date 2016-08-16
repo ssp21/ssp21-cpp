@@ -17,11 +17,11 @@
 
 namespace ssp21 {
 
-uint8_t hash_mode_to_type(HashMode arg)
+uint8_t HashModeSpec::to_type(HashMode arg)
 {
   return static_cast<uint8_t>(arg);
 }
-HashMode hash_mode_from_type(uint8_t arg)
+HashMode HashModeSpec::from_type(uint8_t arg)
 {
   switch(arg)
   {
@@ -31,7 +31,7 @@ HashMode hash_mode_from_type(uint8_t arg)
       return HashMode::undefined;
   }
 }
-char const* hash_mode_to_string(HashMode arg)
+char const* HashModeSpec::to_string(HashMode arg)
 {
   switch(arg)
   {

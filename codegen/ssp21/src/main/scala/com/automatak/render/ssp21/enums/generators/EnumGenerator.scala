@@ -27,11 +27,17 @@ object EnumGenerator {
 
       val renders = conversions ::: stringify
 
+      val uncopyable : Iterator[String] = Iterator("#include %s".format(quoted("openpal/util/Uncopyable.h")))
+
       def writeHeader() {
         def license = commented(LicenseHeader())
         def enum = EnumModelRenderer.render(cfg.model)
+        def spec = Iterator("struct %s".format(cfg.model.specName) + " : private openpal::StaticOnly") ++ bracketSemiColon {
+          Iterator("typedef %s enum_type_t;".format(cfg.model.name)) ++ space ++
+          signatures
+        }
         def signatures = renders.map(c => c.header.render(cfg.model)).flatten.toIterator
-        def lines = license ++ space ++ includeGuards(cfg.model.name)(cstdint ++ space ++ namespace(cppNamespace)(enum ++ space ++ signatures))
+        def lines = license ++ space ++ includeGuards(cfg.model.name)(uncopyable ++ cstdint ++ space ++ namespace(cppNamespace)(enum ++ space ++ spec))
         writeTo(headerPath(cfg.model))(lines)
         println("Wrote: " + headerPath(cfg.model))
       }

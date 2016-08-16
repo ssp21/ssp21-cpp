@@ -16,6 +16,7 @@
 #ifndef SSP21_PARSERESULT_H
 #define SSP21_PARSERESULT_H
 
+#include "openpal/util/Uncopyable.h"
 #include <cstdint>
 
 namespace ssp21 {
@@ -33,7 +34,12 @@ enum class ParseResult : uint8_t
   too_many_bytes = 0x2
 };
 
-char const* parse_result_to_string(ParseResult arg);
+struct ParseResultSpec : private openpal::StaticOnly
+{
+  typedef ParseResult enum_type_t;
+
+  static char const* to_string(ParseResult arg);
+};
 
 }
 

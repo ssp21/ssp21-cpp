@@ -10,7 +10,11 @@ object EnumToType extends HeaderImplModelRender[EnumModel] {
   def header: ModelRenderer[EnumModel] = HeaderRender
   def impl: ModelRenderer[EnumModel] =  ImplRender
 
-  private def signature(em: EnumModel) : String = List(getEnumType(em.enumType), List("to_type(", em.name," arg)").mkString).mkString(" ")
+  private def signature(em: EnumModel) : String = List("static", getEnumType(em.enumType), List("to_type(", em.name," arg)").mkString).mkString(" ")
+
+  private def implSignature(em: EnumModel) : String = {
+    List(getEnumType(em.enumType), List(em.specName, "::to_type(", em.name," arg)").mkString).mkString(" ")
+  }
 
   private object HeaderRender extends ModelRenderer[EnumModel] {
     def render(em: EnumModel)(implicit indent: Indentation) : Iterator[String] = Iterator(signature(em)+";")
@@ -18,7 +22,7 @@ object EnumToType extends HeaderImplModelRender[EnumModel] {
 
   private object ImplRender extends ModelRenderer[EnumModel] {
     def render(em: EnumModel)(implicit indent: Indentation) : Iterator[String] = {
-      Iterator(signature(em)) ++ bracket {
+      Iterator(implSignature(em)) ++ bracket {
         Iterator(List("return ", staticCast(em.enumType)("arg"),";").mkString)
       }
     }

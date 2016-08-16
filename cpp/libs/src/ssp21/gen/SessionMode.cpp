@@ -17,11 +17,11 @@
 
 namespace ssp21 {
 
-uint8_t session_mode_to_type(SessionMode arg)
+uint8_t SessionModeSpec::to_type(SessionMode arg)
 {
   return static_cast<uint8_t>(arg);
 }
-SessionMode session_mode_from_type(uint8_t arg)
+SessionMode SessionModeSpec::from_type(uint8_t arg)
 {
   switch(arg)
   {
@@ -31,7 +31,7 @@ SessionMode session_mode_from_type(uint8_t arg)
       return SessionMode::undefined;
   }
 }
-char const* session_mode_to_string(SessionMode arg)
+char const* SessionModeSpec::to_string(SessionMode arg)
 {
   switch(arg)
   {

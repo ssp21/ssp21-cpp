@@ -17,11 +17,11 @@
 
 namespace ssp21 {
 
-uint8_t function_to_type(Function arg)
+uint8_t FunctionSpec::to_type(Function arg)
 {
   return static_cast<uint8_t>(arg);
 }
-Function function_from_type(uint8_t arg)
+Function FunctionSpec::from_type(uint8_t arg)
 {
   switch(arg)
   {
@@ -41,7 +41,7 @@ Function function_from_type(uint8_t arg)
       return Function::undefined;
   }
 }
-char const* function_to_string(Function arg)
+char const* FunctionSpec::to_string(Function arg)
 {
   switch(arg)
   {

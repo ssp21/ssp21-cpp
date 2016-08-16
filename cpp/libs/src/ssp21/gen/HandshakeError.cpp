@@ -17,11 +17,11 @@
 
 namespace ssp21 {
 
-uint8_t handshake_error_to_type(HandshakeError arg)
+uint8_t HandshakeErrorSpec::to_type(HandshakeError arg)
 {
   return static_cast<uint8_t>(arg);
 }
-HandshakeError handshake_error_from_type(uint8_t arg)
+HandshakeError HandshakeErrorSpec::from_type(uint8_t arg)
 {
   switch(arg)
   {
@@ -47,7 +47,7 @@ HandshakeError handshake_error_from_type(uint8_t arg)
       return HandshakeError::undefined;
   }
 }
-char const* handshake_error_to_string(HandshakeError arg)
+char const* HandshakeErrorSpec::to_string(HandshakeError arg)
 {
   switch(arg)
   {

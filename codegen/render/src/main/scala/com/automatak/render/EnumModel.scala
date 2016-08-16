@@ -45,6 +45,8 @@ case object Base10 extends IntRender { def apply(i: Int): String = i.toString }
 
 case class EnumModel(name: String, underscoredName: String, comments: List[String], enumType: EnumModel.Type, nonDefaultValues: List[EnumValue], defaultValue: Option[EnumValue], render: IntRender = Base10) {
 
+  def specName = name + "Spec"
+
   def allValues: List[EnumValue] = defaultValue match {
     case Some(d) => nonDefaultValues ::: List(d)
     case None => nonDefaultValues
