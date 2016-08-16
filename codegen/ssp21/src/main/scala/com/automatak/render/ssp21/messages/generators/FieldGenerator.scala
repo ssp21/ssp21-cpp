@@ -31,6 +31,7 @@ sealed trait FieldGenerator {
   def includes : Set[Include]
   def cppType : String
   def defaultValue: Option[String]
+  def isMember : Boolean = true
 }
 
 object U16FieldGenerator extends FieldGenerator {
@@ -55,6 +56,7 @@ case class FixedEnumFieldGenerator(enum: EnumModel, value: EnumValue) extends Fi
   override def includes = Set(Include(quoted("ssp21/gen/%s.h").format(enum.name), Ordering.ssp21))
   override def cppType : String = enum.name
   def defaultValue: Option[String] = Some("%s::%s".format(enum.name, value.name))
+  override def isMember : Boolean = false
 }
 
 object Seq8FieldGenerator extends FieldGenerator {

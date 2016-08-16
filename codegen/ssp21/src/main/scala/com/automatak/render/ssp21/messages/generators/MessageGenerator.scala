@@ -28,7 +28,7 @@ object MessageGenerator {
 
       def defaultConstructorSig : Iterator[String] = Iterator(message.name + "();")
 
-      def fieldDefintions : Iterator[String] = message.fields.map { f =>
+      def fieldDefintions : Iterator[String] = message.fields.filter(_.cpp.isMember).map { f =>
         "%s %s;".format(f.cpp.cppType, f.name);
       }.toIterator
 
@@ -53,7 +53,8 @@ object MessageGenerator {
       }
 
       def defaultConstructorImpl : Iterator[String] = {
-        val defaults : List[(String,String)] = message.fields.flatMap(f => f.cpp.defaultValue.map((f.name, _)))
+
+        val defaults : List[(String,String)] = message.fields.filter(_.cpp.isMember).flatMap(f => f.cpp.defaultValue.map((f.name, _)))
 
         if(defaults.isEmpty) {
           Iterator("%s::%s()".format(message.name, message.name)) ++ bracket(Iterator.empty)

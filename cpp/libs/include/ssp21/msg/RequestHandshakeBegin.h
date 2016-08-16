@@ -33,7 +33,6 @@ struct RequestHandshakeBegin : openpal::Uncopyable
 {
   RequestHandshakeBegin();
 
-  Function function;
   uint16_t version;
   NonceMode nonce_mode;
   DHMode dh_mode;

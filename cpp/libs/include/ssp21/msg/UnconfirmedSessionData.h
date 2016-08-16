@@ -27,7 +27,6 @@ struct UnconfirmedSessionData : openpal::Uncopyable
 {
   UnconfirmedSessionData();
 
-  Function function;
   uint32_t valid_until_ms;
   uint16_t nonce;
   openpal::RSlice payload;

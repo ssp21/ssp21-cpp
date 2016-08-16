@@ -26,7 +26,6 @@ struct ReplyHandshakeAuth : openpal::Uncopyable
 {
   ReplyHandshakeAuth();
 
-  Function function;
   openpal::RSlice mac;
 };
 

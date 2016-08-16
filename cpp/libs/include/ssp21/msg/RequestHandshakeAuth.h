@@ -26,7 +26,6 @@ struct RequestHandshakeAuth : openpal::Uncopyable
 {
   RequestHandshakeAuth();
 
-  Function function;
   openpal::RSlice mac;
 };
 
