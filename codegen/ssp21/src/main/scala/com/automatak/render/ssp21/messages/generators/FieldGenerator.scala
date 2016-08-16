@@ -54,7 +54,7 @@ case class EnumFieldGenerator(enum: EnumModel) extends FieldGenerator {
 case class FixedEnumFieldGenerator(enum: EnumModel, value: EnumValue) extends FieldGenerator {
   override def includes = Set(Include(quoted("ssp21/gen/%s.h").format(enum.name), Ordering.ssp21))
   override def cppType : String = enum.name
-  def defaultValue: Option[String] = Some("%s::undefined".format(enum.name))
+  def defaultValue: Option[String] = Some("%s::%s".format(enum.name, value.name))
 }
 
 object Seq8FieldGenerator extends FieldGenerator {

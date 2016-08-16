@@ -18,7 +18,7 @@
 namespace ssp21 {
 
 RequestHandshakeBegin::RequestHandshakeBegin() : 
-  function(Function::undefined),
+  function(Function::request_handshake_begin),
   version(0),
   nonce_mode(NonceMode::undefined),
   dh_mode(DHMode::undefined),

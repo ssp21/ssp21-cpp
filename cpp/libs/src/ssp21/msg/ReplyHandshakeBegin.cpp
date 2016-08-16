@@ -18,7 +18,7 @@
 namespace ssp21 {
 
 ReplyHandshakeBegin::ReplyHandshakeBegin() : 
-  function(Function::undefined),
+  function(Function::reply_handshake_begin),
   version(0)
 {
 }
