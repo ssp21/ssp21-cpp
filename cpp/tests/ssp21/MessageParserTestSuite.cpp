@@ -97,3 +97,11 @@ TEST_CASE(SUITE("reads Seq8Seq16 correctly"))
 	REQUIRE_FALSE(seqs.read(2, slice));
 }
 
+TEST_CASE(SUITE("returns err if Seq8Seq16 reaches limit"))
+{
+	Seq8Seq16 seqs;
+	HexSequence hex("07 01 00 00 01 00 00 01 00 00 01 00 00 01 00 00");
+	auto input = hex.as_rslice();
+	auto err = MessageParser::read(input, seqs);
+	REQUIRE(err == ParseError::impl_capacity_limit);
+}
