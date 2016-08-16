@@ -16,11 +16,11 @@
 #ifndef SSP21_REPLYHANDSHAKEBEGIN_H
 #define SSP21_REPLYHANDSHAKEBEGIN_H
 
-#include "openpal/util/Uncopyable.h"
-#include "ssp21/gen/Function.h"
-#include <cstdint>
-#include "openpal/container/RSlice.h"
 #include "ssp21/SeqRSlice.h"
+#include "ssp21/gen/Function.h"
+#include "openpal/util/Uncopyable.h"
+#include "openpal/container/RSlice.h"
+#include <cstdint>
 
 namespace ssp21 {
 

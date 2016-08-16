@@ -16,10 +16,10 @@
 #ifndef SSP21_UNCONFIRMEDSESSIONDATA_H
 #define SSP21_UNCONFIRMEDSESSIONDATA_H
 
-#include "openpal/util/Uncopyable.h"
 #include "ssp21/gen/Function.h"
-#include <cstdint>
+#include "openpal/util/Uncopyable.h"
 #include "openpal/container/RSlice.h"
+#include <cstdint>
 
 namespace ssp21 {
 

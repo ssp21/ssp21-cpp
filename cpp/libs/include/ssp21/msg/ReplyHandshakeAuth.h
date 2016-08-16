@@ -16,8 +16,8 @@
 #ifndef SSP21_REPLYHANDSHAKEAUTH_H
 #define SSP21_REPLYHANDSHAKEAUTH_H
 
-#include "openpal/util/Uncopyable.h"
 #include "ssp21/gen/Function.h"
+#include "openpal/util/Uncopyable.h"
 #include "openpal/container/RSlice.h"
 
 namespace ssp21 {

@@ -21,7 +21,9 @@ object MessageGenerator {
     def writeToFiles(message: Message): Unit = {
 
       def includes : Iterator[String] = {
-        Iterator(Include(quoted("openpal/util/Uncopyable.h")).line) ++ message.fields.flatMap(f => f.cpp.includes).toSet.map((inc : Include) => inc.line).toIterator
+        Includes.lines(
+          Includes.uncopyable :: message.fields.flatMap(f => f.cpp.includes.toList)
+        )
       }
 
       def struct : Iterator[String] = {
