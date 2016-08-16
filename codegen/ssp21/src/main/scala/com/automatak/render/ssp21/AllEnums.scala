@@ -5,7 +5,7 @@ package com.automatak.render.ssp21
 
 import com.automatak.render.cpp.EnumConfig
 import com.automatak.render.ssp21.enums._
-import com.automatak.render.ssp21.enums.internal.{CryptoError, ParseResult}
+import com.automatak.render.ssp21.enums.internal.{CryptoError, ParseError}
 import com.automatak.render.ssp21.enums.ssp21._
 
 
@@ -24,7 +24,7 @@ object AllEnums {
   ).map(x => EnumConfig(x, true, true))
 
   private def internalEnums = List(
-    ParseResult(),
+    ParseError(),
     CryptoError()
   ).map(x => EnumConfig(x, false, true))
 

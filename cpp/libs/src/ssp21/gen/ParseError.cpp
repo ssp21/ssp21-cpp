@@ -13,25 +13,25 @@
 // License TBD
 //
 
-#include "ssp21/gen/ParseResult.h"
+#include "ssp21/gen/ParseError.h"
 
 namespace ssp21 {
 
-char const* ParseResultSpec::to_string(ParseResult arg)
+char const* ParseErrorSpec::to_string(ParseError arg)
 {
   switch(arg)
   {
-    case(ParseResult::ok):
+    case(ParseError::ok):
       return "ok";
-    case(ParseResult::insufficient_bytes):
+    case(ParseError::insufficient_bytes):
       return "insufficient_bytes";
-    case(ParseResult::undefined_enum):
+    case(ParseError::undefined_enum):
       return "undefined_enum";
-    case(ParseResult::unexpected_function):
+    case(ParseError::unexpected_function):
       return "unexpected_function";
-    case(ParseResult::too_many_bytes):
+    case(ParseError::too_many_bytes):
       return "too_many_bytes";
-    case(ParseResult::impl_capacity_limit):
+    case(ParseError::impl_capacity_limit):
       return "impl_capacity_limit";
     default:
       return "undefined";

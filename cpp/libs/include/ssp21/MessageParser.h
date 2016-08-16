@@ -1,7 +1,7 @@
 #ifndef SSP21_MESSAGE_PARSER_H
 #define SSP21_MESSAGE_PARSER_H
 
-#include "ssp21/gen/ParseResult.h"
+#include "ssp21/gen/ParseError.h"
 
 #include "ssp21/gen/Function.h"
 #include "ssp21/gen/CertificateMode.h"
@@ -22,7 +22,7 @@ namespace ssp21 {
 	{
 		
 		template <Function expected, typename T, typename... Args>
-		static ParseResult read_message(openpal::RSlice& input, T& value, Args& ... args)
+		static ParseError read_message(openpal::RSlice& input, T& value, Args& ... args)
 		{
 			Function func;
 			auto result = read(input, func);
@@ -35,7 +35,7 @@ namespace ssp21 {
 	private:
 
 		template <typename T, typename... Args>
-		static ParseResult read_fields(openpal::RSlice& input, T& value, Args& ... args)
+		static ParseError read_fields(openpal::RSlice& input, T& value, Args& ... args)
 		{
 			auto ret = read(input, value);
 			if (ret != ParseResult::ok) return ret;
@@ -43,28 +43,28 @@ namespace ssp21 {
 		}
 
 		// when we reach the base case of the recursion there shouldn't be any remaining data
-		static ParseResult read_fields(openpal::RSlice& input) {
-			return input.is_empty() ? ParseResult::ok : ParseResult::too_many_bytes;
+		static ParseError read_fields(openpal::RSlice& input) {
+			return input.is_empty() ? ParseError::ok : ParseError::too_many_bytes;
 		}
 		
 
 		// integers
-		static ParseResult read(openpal::RSlice& input, uint8_t& value);
-		static ParseResult read(openpal::RSlice& input, uint16_t& value);
-		static ParseResult read(openpal::RSlice& input, uint32_t& value);			
+		static ParseError read(openpal::RSlice& input, uint8_t& value);
+		static ParseError read(openpal::RSlice& input, uint16_t& value);
+		static ParseError read(openpal::RSlice& input, uint32_t& value);
 
 		// enums
-		static ParseResult read(openpal::RSlice& input, CertificateMode& value);
-		static ParseResult read(openpal::RSlice& input, DHMode& value);
-		static ParseResult read(openpal::RSlice& input, HandshakeError& value);
-		static ParseResult read(openpal::RSlice& input, NonceMode& value);
-		static ParseResult read(openpal::RSlice& input, SessionMode& value);
-		static ParseResult read(openpal::RSlice& input, HashMode& value);
+		static ParseError read(openpal::RSlice& input, CertificateMode& value);
+		static ParseError read(openpal::RSlice& input, DHMode& value);
+		static ParseError read(openpal::RSlice& input, HandshakeError& value);
+		static ParseError read(openpal::RSlice& input, NonceMode& value);
+		static ParseError read(openpal::RSlice& input, SessionMode& value);
+		static ParseError read(openpal::RSlice& input, HashMode& value);
 
 		// sequences
-		static ParseResult read(openpal::RSlice& input, Seq8& value);
-		static ParseResult read(openpal::RSlice& input, Seq16& value);
-		static ParseResult read(openpal::RSlice& input, Seq8Seq16& value);
+		static ParseError read(openpal::RSlice& input, Seq8& value);
+		static ParseError read(openpal::RSlice& input, Seq16& value);
+		static ParseError read(openpal::RSlice& input, Seq8Seq16& value);
 	};
 }
 

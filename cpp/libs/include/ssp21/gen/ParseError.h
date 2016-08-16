@@ -13,8 +13,8 @@
 // License TBD
 //
 
-#ifndef SSP21_PARSERESULT_H
-#define SSP21_PARSERESULT_H
+#ifndef SSP21_PARSEERROR_H
+#define SSP21_PARSEERROR_H
 
 #include "openpal/util/Uncopyable.h"
 #include <cstdint>
@@ -24,7 +24,7 @@ namespace ssp21 {
 /**
   The result of a message parse operation
 */
-enum class ParseResult : uint8_t
+enum class ParseError : uint8_t
 {
   /// message was parsed successfully
   ok = 0x0,
@@ -40,11 +40,11 @@ enum class ParseResult : uint8_t
   impl_capacity_limit = 0x5
 };
 
-struct ParseResultSpec : private openpal::StaticOnly
+struct ParseErrorSpec : private openpal::StaticOnly
 {
-  typedef ParseResult enum_type_t;
+  typedef ParseError enum_type_t;
 
-  static char const* to_string(ParseResult arg);
+  static char const* to_string(ParseError arg);
 };
 
 }

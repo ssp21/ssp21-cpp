@@ -5,11 +5,11 @@ package com.automatak.render.ssp21.enums.internal
 
 import com.automatak.render._
 
-object ParseResult {
+object ParseError {
 
   private val comments = List("The result of a message parse operation")
 
-  def apply(): EnumModel = EnumModel("ParseResult", "parse_result", comments, EnumModel.UInt8, codes, None, Hex)
+  def apply(): EnumModel = EnumModel("ParseError", "parse_error", comments, EnumModel.UInt8, codes, None, Hex)
 
   private val codes = List(
     EnumValue("ok", 0, "message was parsed successfully"),
