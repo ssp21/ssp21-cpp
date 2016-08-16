@@ -20,11 +20,6 @@ sealed case class Enum(model: EnumModel) extends Field {
   def cpp = EnumFieldGenerator(model)
 }
 
-sealed case class FixedEnum(model: EnumModel, value: EnumValue) extends Field {
-  def name : String = model.underscoredName
-  def cpp = FixedEnumFieldGenerator(model, value)
-}
-
 sealed case class Seq8(name: String) extends Field {
   def cpp = Seq8FieldGenerator
 }
@@ -40,5 +35,5 @@ sealed case class Seq8Seq16(name: String) extends Field {
 trait Message {
   def name : String
   def fields : List[Field]
-  def enumValue : EnumValue
+  def function : EnumValue
 }

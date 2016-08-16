@@ -30,7 +30,7 @@ object MessageGenerator {
 
       def readSigHeader : Iterator[String] = Iterator("ParseError read(openpal::RSlice& input);");
 
-      def fieldDefintions : Iterator[String] = message.fields.filter(_.cpp.isMember).map { f =>
+      def fieldDefintions : Iterator[String] = message.fields.map { f =>
         "%s %s;".format(f.cpp.cppType, f.name);
       }.toIterator
 
@@ -58,7 +58,7 @@ object MessageGenerator {
 
       def defaultConstructorImpl : Iterator[String] = {
 
-        val defaults : List[(String,String)] = message.fields.filter(_.cpp.isMember).flatMap(f => f.cpp.defaultValue.map((f.name, _)))
+        val defaults : List[(String,String)] = message.fields.flatMap(f => f.cpp.defaultValue.map((f.name, _)))
 
         if(defaults.isEmpty) {
           Iterator("%s::%s()".format(message.name, message.name)) ++ bracket(Iterator.empty)
@@ -90,14 +90,13 @@ object MessageGenerator {
      */
 
       def readFunc : Iterator[String] = {
-        val members = message.fields.filter(f => f.cpp.isMember)
 
-        def first = members.dropRight(1).map(f => f.name + ",").toIterator
-        def last = Iterator(members.last.name)
+        def first = message.fields.dropRight(1).map(f => f.name + ",").toIterator
+        def last = Iterator(message.fields.last.name)
         def args = first ++ last
 
         Iterator("ParseError %s::read(openpal::RSlice& input)".format(message.name)) ++ bracket {
-          Iterator("return MessageParser::read_message<Function::%s>(".format(message.enumValue.name)) ++ indent {
+          Iterator("return MessageParser::read_message<Function::%s>(".format(message.function.name)) ++ indent {
             Iterator("input,") ++
             args
           } ++ Iterator(");")

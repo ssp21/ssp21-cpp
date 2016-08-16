@@ -17,7 +17,6 @@
 #define SSP21_REQUESTHANDSHAKEBEGIN_H
 
 #include "ssp21/gen/ParseError.h"
-#include "ssp21/gen/Function.h"
 #include "ssp21/gen/CertificateMode.h"
 #include "ssp21/gen/DHMode.h"
 #include "ssp21/gen/HashMode.h"

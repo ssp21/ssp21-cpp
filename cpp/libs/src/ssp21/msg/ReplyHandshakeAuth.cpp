@@ -25,7 +25,7 @@ ReplyHandshakeAuth::ReplyHandshakeAuth()
 
 ParseError ReplyHandshakeAuth::read(openpal::RSlice& input)
 {
-  return MessageParser::read_message<Function::reply_handshake_auth>(
+  return MessageParser::read_message<Function::request_handshake_auth>(
     input,
     mac
   );

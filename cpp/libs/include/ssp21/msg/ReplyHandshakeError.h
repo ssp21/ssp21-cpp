@@ -17,10 +17,9 @@
 #define SSP21_REPLYHANDSHAKEERROR_H
 
 #include "ssp21/gen/ParseError.h"
-#include "ssp21/gen/Function.h"
 #include "ssp21/gen/HandshakeError.h"
-#include "openpal/util/Uncopyable.h"
 #include "openpal/container/RSlice.h"
+#include "openpal/util/Uncopyable.h"
 
 namespace ssp21 {
 
