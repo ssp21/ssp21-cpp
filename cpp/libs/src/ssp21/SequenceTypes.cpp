@@ -1,5 +1,5 @@
 
-#include "ssp21/SeqRSlice.h"
+#include "ssp21/SequenceTypes.h"
 
 namespace ssp21
 {						
@@ -15,7 +15,7 @@ void SeqRSlice::clear()
 
 bool SeqRSlice::push(const openpal::RSlice& slice)
 {
-	if (count_ == consts::max_certificate_chain) {
+	if (count_ == consts::max_seq_of_seq) {
 		return false;
 	}
 

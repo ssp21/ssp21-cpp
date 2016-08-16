@@ -9,6 +9,7 @@ namespace ssp21
 	{
 		// implementation constants
 		const uint8_t max_certificate_chain = 3;
+		const uint8_t max_seq_of_seq = max_certificate_chain;
 
 		// cryptographic constants
 		const uint8_t sha256_hash_output_length = 32;

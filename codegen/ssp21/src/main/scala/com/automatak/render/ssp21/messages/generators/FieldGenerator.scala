@@ -18,7 +18,7 @@ object Includes {
 
   val cstdint = Include("<cstdint>", Ordering.system)
   val rslice = Include(quoted("openpal/container/RSlice.h"), Ordering.openpal)
-  val seqRSlice = Include(quoted("ssp21/SeqRSlice.h"), Ordering.ssp21)
+  val seqTypes = Include(quoted("ssp21/SequenceTypes.h"), Ordering.ssp21)
   val uncopyable = Include(quoted("openpal/util/Uncopyable.h"), Ordering.openpal)
 
   def lines(i : Seq[Include]) : Iterator[String] = {
@@ -60,20 +60,20 @@ case class FixedEnumFieldGenerator(enum: EnumModel, value: EnumValue) extends Fi
 }
 
 object Seq8FieldGenerator extends FieldGenerator {
-  override def includes = Set(Includes.rslice)
-  override def cppType : String = "openpal::RSlice"
+  override def includes = Set(Includes.seqTypes)
+  override def cppType : String = "Seq8"
   def defaultValue: Option[String] = None
 }
 
 object Seq16FieldGenerator extends FieldGenerator {
-  override def includes = Set(Includes.rslice)
-  override def cppType : String = "openpal::RSlice"
+  override def includes = Set(Includes.seqTypes)
+  override def cppType : String = "Seq16"
   def defaultValue: Option[String] = None
 }
 
 object Seq8Seq16FieldGenerator extends FieldGenerator {
-  override def includes = Set(Includes.seqRSlice)
-  override def cppType : String = "SeqRSlice"
+  override def includes = Set(Includes.seqTypes)
+  override def cppType : String = "Seq8Seq16"
   def defaultValue: Option[String] = None
 }
 

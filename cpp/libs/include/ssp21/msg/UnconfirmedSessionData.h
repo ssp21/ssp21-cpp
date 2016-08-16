@@ -17,8 +17,8 @@
 #define SSP21_UNCONFIRMEDSESSIONDATA_H
 
 #include "ssp21/gen/Function.h"
+#include "ssp21/SequenceTypes.h"
 #include "openpal/util/Uncopyable.h"
-#include "openpal/container/RSlice.h"
 #include <cstdint>
 
 namespace ssp21 {
@@ -29,7 +29,7 @@ struct UnconfirmedSessionData : openpal::Uncopyable
 
   uint32_t valid_until_ms;
   uint16_t nonce;
-  openpal::RSlice payload;
+  Seq16 payload;
 };
 
 }

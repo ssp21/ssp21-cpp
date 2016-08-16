@@ -16,10 +16,9 @@
 #ifndef SSP21_REPLYHANDSHAKEBEGIN_H
 #define SSP21_REPLYHANDSHAKEBEGIN_H
 
-#include "ssp21/SeqRSlice.h"
 #include "ssp21/gen/Function.h"
+#include "ssp21/SequenceTypes.h"
 #include "openpal/util/Uncopyable.h"
-#include "openpal/container/RSlice.h"
 #include <cstdint>
 
 namespace ssp21 {
@@ -29,8 +28,8 @@ struct ReplyHandshakeBegin : openpal::Uncopyable
   ReplyHandshakeBegin();
 
   uint16_t version;
-  openpal::RSlice ephemeral_public_key;
-  SeqRSlice certificates;
+  Seq8 ephemeral_public_key;
+  Seq8Seq16 certificates;
 };
 
 }
