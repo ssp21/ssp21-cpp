@@ -20,16 +20,18 @@ namespace ssp21 {
 
 	class MessageParser : private openpal::StaticOnly
 	{
-		
+
+	public:
+
 		template <Function expected, typename T, typename... Args>
 		static ParseError read_message(openpal::RSlice& input, T& value, Args& ... args)
 		{
 			Function func;
 			auto err = read(input, func);
 			if (any(err)) return err;
-			if (func != expected) return ParseResult::unexpected_function;
+			if (func != expected) return ParseError::unexpected_function;
 
-			return read_fields(input, value, args...)
+			return read_fields(input, value, args...);
 		}
 
 	private:
@@ -54,6 +56,7 @@ namespace ssp21 {
 		static ParseError read(openpal::RSlice& input, uint32_t& value);
 
 		// enums
+		static ParseError read(openpal::RSlice& input, Function& value);
 		static ParseError read(openpal::RSlice& input, CertificateMode& value);
 		static ParseError read(openpal::RSlice& input, DHMode& value);
 		static ParseError read(openpal::RSlice& input, HandshakeError& value);

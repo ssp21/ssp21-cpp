@@ -16,15 +16,19 @@
 #ifndef SSP21_REPLYHANDSHAKEAUTH_H
 #define SSP21_REPLYHANDSHAKEAUTH_H
 
+#include "ssp21/gen/ParseError.h"
 #include "ssp21/gen/Function.h"
 #include "ssp21/SequenceTypes.h"
 #include "openpal/util/Uncopyable.h"
+#include "openpal/container/RSlice.h"
 
 namespace ssp21 {
 
 struct ReplyHandshakeAuth : openpal::Uncopyable
 {
   ReplyHandshakeAuth();
+
+  ParseError read(openpal::RSlice& input);
 
   Seq8 mac;
 };

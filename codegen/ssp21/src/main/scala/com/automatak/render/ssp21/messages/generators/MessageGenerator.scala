@@ -22,11 +22,13 @@ object MessageGenerator {
 
       def includes : Iterator[String] = {
         Includes.lines(
-          Includes.uncopyable :: message.fields.flatMap(f => f.cpp.includes.toList)
+          Includes.rslice :: Includes.uncopyable :: Includes.parseError :: message.fields.flatMap(f => f.cpp.includes.toList)
         )
       }
 
       def defaultConstructorSig : Iterator[String] = Iterator(message.name + "();")
+
+      def readSigHeader : Iterator[String] = Iterator("ParseError read(openpal::RSlice& input);");
 
       def fieldDefintions : Iterator[String] = message.fields.filter(_.cpp.isMember).map { f =>
         "%s %s;".format(f.cpp.cppType, f.name);
@@ -35,6 +37,8 @@ object MessageGenerator {
       def struct : Iterator[String] = {
         Iterator("struct " + message.name + " : openpal::Uncopyable") ++ bracketSemiColon {
           defaultConstructorSig ++
+          space ++
+          readSigHeader ++
           space ++
           fieldDefintions
         }
@@ -72,11 +76,42 @@ object MessageGenerator {
         }
       }
 
+      /*
+      return MessageParser::read_message<Function::request_handshake_begin>(
+        input,
+        version,
+        nonce_mode,
+        dh_mode,
+        hash_mode,
+        session_mode,
+        certificate_mode
+      );
+
+     */
+
+      def readFunc : Iterator[String] = {
+        val members = message.fields.filter(f => f.cpp.isMember)
+
+        def first = members.dropRight(1).map(f => f.name + ",").toIterator
+        def last = Iterator(members.last.name)
+        def args = first ++ last
+
+        Iterator("ParseError %s::read(openpal::RSlice& input)".format(message.name)) ++ bracket {
+          Iterator("return MessageParser::read_message<Function::%s>(".format(message.enumValue.name)) ++ indent {
+            Iterator("input,") ++
+            args
+          } ++ Iterator(");")
+        }
+      }
+
       def writeImpl() {
+
+
         def license = commented(LicenseHeader())
-        def funcs = defaultConstructorImpl
-        def inc = quoted(String.format(incFormatString, headerName(message)))
-        def lines = license ++ space ++ Iterator(include(inc)) ++ space ++ namespace(cppNamespace)(funcs)
+        def funcs = defaultConstructorImpl ++ space ++ readFunc
+        def selfInclude = quoted(String.format(incFormatString, headerName(message)))
+        def includes = Iterator(include(selfInclude)) ++ space ++ Iterator(include(quoted("ssp21/MessageParser.h")))
+        def lines = license ++ space ++ includes ++ space ++ namespace(cppNamespace)(funcs)
 
         val path = implPath(message)
         writeTo(path)(lines)

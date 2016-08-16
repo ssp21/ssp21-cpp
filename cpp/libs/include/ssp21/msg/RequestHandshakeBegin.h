@@ -16,6 +16,7 @@
 #ifndef SSP21_REQUESTHANDSHAKEBEGIN_H
 #define SSP21_REQUESTHANDSHAKEBEGIN_H
 
+#include "ssp21/gen/ParseError.h"
 #include "ssp21/gen/Function.h"
 #include "ssp21/gen/CertificateMode.h"
 #include "ssp21/gen/DHMode.h"
@@ -24,6 +25,7 @@
 #include "ssp21/gen/SessionMode.h"
 #include "ssp21/gen/NonceMode.h"
 #include "openpal/util/Uncopyable.h"
+#include "openpal/container/RSlice.h"
 #include <cstdint>
 
 namespace ssp21 {
@@ -31,6 +33,8 @@ namespace ssp21 {
 struct RequestHandshakeBegin : openpal::Uncopyable
 {
   RequestHandshakeBegin();
+
+  ParseError read(openpal::RSlice& input);
 
   uint16_t version;
   NonceMode nonce_mode;

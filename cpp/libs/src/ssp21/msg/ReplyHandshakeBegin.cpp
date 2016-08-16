@@ -15,11 +15,23 @@
 
 #include "ssp21/msg/ReplyHandshakeBegin.h"
 
+#include "ssp21/MessageParser.h"
+
 namespace ssp21 {
 
 ReplyHandshakeBegin::ReplyHandshakeBegin() : 
   version(0)
 {
+}
+
+ParseError ReplyHandshakeBegin::read(openpal::RSlice& input)
+{
+  return MessageParser::read_message<Function::reply_handshake_begin>(
+    input,
+    version,
+    ephemeral_public_key,
+    certificates
+  );
 }
 
 }

@@ -15,11 +15,21 @@
 
 #include "ssp21/msg/ReplyHandshakeError.h"
 
+#include "ssp21/MessageParser.h"
+
 namespace ssp21 {
 
 ReplyHandshakeError::ReplyHandshakeError() : 
   handshake_error(HandshakeError::undefined)
 {
+}
+
+ParseError ReplyHandshakeError::read(openpal::RSlice& input)
+{
+  return MessageParser::read_message<Function::reply_handshake_error>(
+    input,
+    handshake_error
+  );
 }
 
 }

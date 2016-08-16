@@ -68,6 +68,11 @@ namespace ssp21 {
 		return read_integer<UInt32>(input, value);
 	}
 
+	ParseError MessageParser::read(openpal::RSlice& input, Function& value)
+	{
+		return read_enum<FunctionSpec>(input, value);
+	}
+
 	ParseError MessageParser::read(openpal::RSlice& input, CertificateMode& value)
 	{
 		return read_enum<CertificateModeSpec>(input, value);

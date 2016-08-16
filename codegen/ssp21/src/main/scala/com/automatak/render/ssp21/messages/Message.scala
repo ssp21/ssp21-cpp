@@ -40,4 +40,5 @@ sealed case class Seq8Seq16(name: String) extends Field {
 trait Message {
   def name : String
   def fields : List[Field]
+  def enumValue : EnumValue
 }

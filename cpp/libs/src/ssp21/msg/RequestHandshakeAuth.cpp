@@ -15,10 +15,20 @@
 
 #include "ssp21/msg/RequestHandshakeAuth.h"
 
+#include "ssp21/MessageParser.h"
+
 namespace ssp21 {
 
 RequestHandshakeAuth::RequestHandshakeAuth()
 {
+}
+
+ParseError RequestHandshakeAuth::read(openpal::RSlice& input)
+{
+  return MessageParser::read_message<Function::request_handshake_auth>(
+    input,
+    mac
+  );
 }
 
 }

@@ -15,6 +15,8 @@
 
 #include "ssp21/msg/RequestHandshakeBegin.h"
 
+#include "ssp21/MessageParser.h"
+
 namespace ssp21 {
 
 RequestHandshakeBegin::RequestHandshakeBegin() : 
@@ -25,6 +27,21 @@ RequestHandshakeBegin::RequestHandshakeBegin() :
   session_mode(SessionMode::undefined),
   certificate_mode(CertificateMode::undefined)
 {
+}
+
+ParseError RequestHandshakeBegin::read(openpal::RSlice& input)
+{
+  return MessageParser::read_message<Function::request_handshake_begin>(
+    input,
+    version,
+    nonce_mode,
+    dh_mode,
+    hash_mode,
+    session_mode,
+    certificate_mode,
+    ephemeral_public_key,
+    certificates
+  );
 }
 
 }
