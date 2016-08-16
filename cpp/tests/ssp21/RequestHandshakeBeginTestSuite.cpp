@@ -75,3 +75,24 @@ TEST_CASE(SUITE("successfully parses message"))
 	REQUIRE(to_hex(cert) == "BB BB");
 }
 
+TEST_CASE(SUITE("rejects unknown enum"))
+{
+	RequestHandshakeBegin msg;
+
+	HexSequence hex("00 D2 D1 00 CC 00 00 00 03 AA AA AA 01 02 00 BB BB");
+
+	auto input = hex.as_rslice();
+	auto err = msg.read(input);
+	REQUIRE(err == ParseError::undefined_enum);
+}
+
+TEST_CASE(SUITE("rejects trailing data"))
+{
+	RequestHandshakeBegin msg;
+
+	HexSequence hex("00 D2 D1 00 00 00 00 00 03 AA AA AA 01 02 00 BB BB FF FF FF");
+
+	auto input = hex.as_rslice();
+	auto err = msg.read(input);
+	REQUIRE(err == ParseError::too_many_bytes);
+}
