@@ -5,6 +5,8 @@
 #include <system_error>
 #include <string>
 
+#include "ssp21/gen/CryptoError.h"
+
 #if (defined _MSC_VER && (_MSC_VER < 1900))
 #define NOEXCEPT
 #else
@@ -12,12 +14,7 @@
 #endif
 
 namespace ssp21
-{				
-	enum class Error : int
-	{
-		bad_key_type,
-		dh_x25519_fail
-	};		
+{					
 
 	class ErrorCategory final : public std::error_category
 	{
@@ -43,13 +40,13 @@ namespace ssp21
 	};
 
 	
-	std::error_code make_error_code(Error err);		
+	std::error_code make_error_code(CryptoError err);		
 }
 
 namespace std
 {
 	template <>
-	struct is_error_code_enum<ssp21::Error> : public true_type{};
+	struct is_error_code_enum<ssp21::CryptoError> : public true_type{};
 }
 
 #endif

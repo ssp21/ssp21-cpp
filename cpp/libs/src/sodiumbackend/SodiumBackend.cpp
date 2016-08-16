@@ -79,7 +79,7 @@ namespace ssp21
 		{
 			if (crypto_scalarmult(output.get_write_slice(), priv_key.as_slice(), pub_key.as_slice()) != 0)
 			{
-				ec = ssp21::Error::dh_x25519_fail;
+				ec = ssp21::CryptoError::dh_x25519_fail;
 				return;
 			}
 

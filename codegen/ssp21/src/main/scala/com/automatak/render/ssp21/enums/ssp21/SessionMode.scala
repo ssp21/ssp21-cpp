@@ -1,7 +1,7 @@
 /**
  * License TBD
  */
-package com.automatak.render.ssp21.enums
+package com.automatak.render.ssp21.enums.ssp21
 
 import com.automatak.render._
 

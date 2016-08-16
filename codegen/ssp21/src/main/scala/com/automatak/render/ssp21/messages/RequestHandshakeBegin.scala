@@ -1,6 +1,7 @@
 package com.automatak.render.ssp21.messages
 
 import com.automatak.render.ssp21.enums._
+import com.automatak.render.ssp21.enums.ssp21._
 
 
 object RequestHandshakeBegin extends Message {

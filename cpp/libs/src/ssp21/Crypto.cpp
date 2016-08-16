@@ -50,7 +50,7 @@ namespace ssp21
 
 		if ((priv_key.get_type() != BufferType::x25519_key) || (pub_key.get_type() != BufferType::x25519_key))
 		{
-			ec = Error::bad_key_type;
+			ec = CryptoError::bad_key_type;
 			return;
 		}
 
