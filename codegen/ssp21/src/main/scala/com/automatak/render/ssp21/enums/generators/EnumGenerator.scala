@@ -8,7 +8,7 @@ import _root_.java.nio.file.Path
 import com.automatak.render._
 import com.automatak.render.cpp._
 
-object CppEnumGenerator {
+object EnumGenerator {
 
   def apply(enums: List[EnumConfig], cppNamespace : String, incFormatString: String, incDirectory: Path, implDirectory: Path): Unit = {
 
