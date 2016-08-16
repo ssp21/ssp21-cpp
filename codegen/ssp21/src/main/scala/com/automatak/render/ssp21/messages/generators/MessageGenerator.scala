@@ -76,19 +76,6 @@ object MessageGenerator {
         }
       }
 
-      /*
-      return MessageParser::read_message<Function::request_handshake_begin>(
-        input,
-        version,
-        nonce_mode,
-        dh_mode,
-        hash_mode,
-        session_mode,
-        certificate_mode
-      );
-
-     */
-
       def readFunc : Iterator[String] = {
 
         def first = message.fields.dropRight(1).map(f => f.name + ",").toIterator
