@@ -78,3 +78,22 @@ TEST_CASE(SUITE("returns error if Seq8 incomplete"))
 	REQUIRE(err == ParseError::insufficient_bytes);
 }
 
+TEST_CASE(SUITE("reads Seq8Seq16 correctly"))
+{
+	Seq8Seq16 seqs;
+	HexSequence hex("02 01 00 BB 02 00 CA FE DD");
+	auto input = hex.as_rslice();
+	auto err = MessageParser::read(input, seqs);
+	REQUIRE(!any(err));
+	REQUIRE(to_hex(input) == "DD"); // remainder
+	REQUIRE(seqs.count() == 2);
+	
+
+	Seq16 slice;
+	REQUIRE(seqs.read(0, slice));
+	REQUIRE(to_hex(slice) == "BB");
+	REQUIRE(seqs.read(1, slice));
+	REQUIRE(to_hex(slice) == "CA FE");
+	REQUIRE_FALSE(seqs.read(2, slice));
+}
+
