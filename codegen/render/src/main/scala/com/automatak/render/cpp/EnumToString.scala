@@ -10,7 +10,7 @@ object EnumToString extends HeaderImplModelRender[EnumModel] {
   def impl: ModelRenderer[EnumModel]  = ImplRender
   def header: ModelRenderer[EnumModel]  = HeaderRender
 
-  private def signature(enum: EnumModel) : String = List(cString, List(enum.underscoredName,"_to_string(", enum.name," arg)").mkString).mkString(" ")
+  private def signature(enum: EnumModel) : String = List(cString, List("to_string(", enum.name," arg)").mkString).mkString(" ")
 
   private object HeaderRender extends ModelRenderer[EnumModel] {
     def render(em: EnumModel)(implicit indent: Indentation) : Iterator[String] = Iterator(signature(em)+";")
