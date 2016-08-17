@@ -40,7 +40,7 @@ package object render {
 
     def commented(lines: Iterator[String]): Iterator[String] = {
       Iterator("//") ++ lines.map(l => "// " + l) ++ Iterator("//")
-    }   
+    }
 
     def bracketWithCap(indent: Indentation, cap: String)(inner: => Iterator[String]): Iterator[String] = {
       Iterator("{") ++
