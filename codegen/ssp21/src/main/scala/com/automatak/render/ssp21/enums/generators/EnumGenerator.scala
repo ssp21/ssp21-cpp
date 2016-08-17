@@ -7,7 +7,7 @@ import _root_.java.nio.file.Path
 
 import com.automatak.render._
 import com.automatak.render.cpp._
-import com.automatak.render.ssp21.{Include, Includes}
+import com.automatak.render.ssp21._
 
 object EnumGenerator {
 
@@ -31,8 +31,9 @@ object EnumGenerator {
       def writeHeader() {
         def license = commented(LicenseHeader())
         def enum = EnumModelRenderer.render(cfg.model)
-        def spec = Iterator("struct %s".format(cfg.model.specName) + " : private openpal::StaticOnly") ++ bracketSemiColon {
-          Iterator("typedef %s enum_type_t;".format(cfg.model.name)) ++ space ++
+        def spec = "struct %s : private openpal::StaticOnly".format(cfg.model.specName).iter ++ bracketSemiColon {
+          "typedef %s enum_type_t;".format(cfg.model.name).iter ++
+          space ++
           signatures
         }
         def signatures = renders.map(c => c.header.render(cfg.model)).flatten.toIterator
@@ -41,8 +42,8 @@ object EnumGenerator {
           cfg.model.boolCastValue match {
             case Some(value) => {
               space ++
-              Iterator("inline bool any(%s value)".format(cfg.model.name)) ++ bracket {
-                Iterator("return value != %s::%s;".format(cfg.model.name, value.name))
+              "inline bool any(%s value)".format(cfg.model.name).iter ++ bracket {
+                "return value != %s::%s;".format(cfg.model.name, value.name).iter
               }
             }
             case None => Iterator.empty
@@ -65,9 +66,9 @@ object EnumGenerator {
         def license = commented(LicenseHeader())
         def funcs = renders.map(r => r.impl.render(cfg.model)).flatten.toIterator
         def inc = quoted(String.format(incFormatString, headerName(cfg.model)))
-        def lines = license ++ space ++ Iterator(include(inc)) ++ space ++ namespace(cppNamespace)(funcs)
+        def lines = license ++ space ++ include(inc).iter ++ space ++ namespace(cppNamespace)(funcs)
 
-        if(cfg.conversions || cfg.stringConv)
+        if(cfg.anyOptionalFunctions)
         {
           writeTo(implPath(cfg.model))(lines)
           println("Wrote: " + implPath(cfg.model))
