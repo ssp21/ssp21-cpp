@@ -102,11 +102,19 @@ TEST_CASE(SUITE("rejects trailing data"))
 
 TEST_CASE(SUITE("formats default value"))
 {
-	openpal::StaticBuffer<64> buffer;
+	openpal::StaticBuffer<10> buffer;
 	RequestHandshakeBegin msg;
 	auto dest = buffer.as_wslice();
 	auto res = msg.write_msg(dest);
 	
 	REQUIRE(!res.is_error());
 	REQUIRE(to_hex(res.written) == "00 00 00 FF FF FF FF FF 00 00");	
+}
+
+TEST_CASE(SUITE("returns error if insufficient buffer space"))
+{
+	openpal::StaticBuffer<9> buffer;
+	RequestHandshakeBegin msg;
+	auto dest = buffer.as_wslice();
+	REQUIRE(msg.write_msg(dest).err == FormatError::insufficient_space);
 }
