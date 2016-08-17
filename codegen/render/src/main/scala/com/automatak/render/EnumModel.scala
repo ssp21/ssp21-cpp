@@ -26,24 +26,24 @@ case class EnumValue(name: String, value: Int, comment: Option[String] = None, s
 
 object EnumModel {
 
-  sealed trait Type {
+  sealed trait CppType {
     def sizeInBytes: Int
-    def cppType : String
+    def typ : String
   }
 
-  case object UInt8 extends Type {
+  case object UInt8 extends CppType {
     def sizeInBytes = 1
-    def cppType = "uint8_t"
+    def typ = "uint8_t"
   }
 
-  case object UInt16 extends Type {
+  case object UInt16 extends CppType {
     def sizeInBytes = 2
-    def cppType = "uint16_t"
+    def typ = "uint16_t"
   }
 
-  case object UInt32 extends Type {
+  case object UInt32 extends CppType {
     def sizeInBytes = 4
-    def cppType = "uint32_t"
+    def typ = "uint32_t"
   }
 
   def BitfieldValues(names: List[String]) : List[EnumValue] = names.zipWithIndex.map { pair =>
@@ -59,7 +59,7 @@ case class EnumModel(
                       name: String,
                       underscoredName: String,
                       comments: List[String],
-                      enumType: EnumModel.Type,
+                      cpp: EnumModel.CppType,
                       nonDefaultValues: List[EnumValue],
                       defaultValue: Option[EnumValue],
                       boolCastValue: Option[EnumValue] = None,
