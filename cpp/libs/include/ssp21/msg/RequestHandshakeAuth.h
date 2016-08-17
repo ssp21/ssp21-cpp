@@ -31,7 +31,7 @@ struct RequestHandshakeAuth : openpal::Uncopyable
 
   ParseError read(openpal::RSlice& input);
 
-  FormatError write(openpal::WSlice& dest);
+  FormatError write(openpal::WSlice& output);
 
   Seq8 mac;
 };

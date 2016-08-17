@@ -38,7 +38,6 @@ namespace ssp21 {
 			if (any(err)) return err;
 			return write_fields(dest, args...);
 		}
-
 		
 		static FormatError write_fields(openpal::WSlice& output) {
 			return FormatError::ok;

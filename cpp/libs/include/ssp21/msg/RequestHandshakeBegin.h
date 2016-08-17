@@ -37,7 +37,7 @@ struct RequestHandshakeBegin : openpal::Uncopyable
 
   ParseError read(openpal::RSlice& input);
 
-  FormatError write(openpal::WSlice& dest);
+  FormatError write(openpal::WSlice& output);
 
   uint16_t version;
   NonceMode nonce_mode;

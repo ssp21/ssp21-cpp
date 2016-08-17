@@ -36,10 +36,10 @@ ParseError UnconfirmedSessionData::read(openpal::RSlice& input)
   );
 }
 
-FormatError UnconfirmedSessionData::write(openpal::WSlice& dest)
+FormatError UnconfirmedSessionData::write(openpal::WSlice& output)
 {
   return MessageFormatter::write_message<Function::unconfirmed_session_data>(
-    dest,
+    output,
     valid_until_ms,
     nonce,
     payload

@@ -33,10 +33,10 @@ ParseError ReplyHandshakeError::read(openpal::RSlice& input)
   );
 }
 
-FormatError ReplyHandshakeError::write(openpal::WSlice& dest)
+FormatError ReplyHandshakeError::write(openpal::WSlice& output)
 {
   return MessageFormatter::write_message<Function::reply_handshake_error>(
-    dest,
+    output,
     handshake_error
   );
 }

@@ -35,10 +35,10 @@ ParseError ReplyHandshakeBegin::read(openpal::RSlice& input)
   );
 }
 
-FormatError ReplyHandshakeBegin::write(openpal::WSlice& dest)
+FormatError ReplyHandshakeBegin::write(openpal::WSlice& output)
 {
   return MessageFormatter::write_message<Function::reply_handshake_begin>(
-    dest,
+    output,
     version,
     ephemeral_public_key,
     certificates

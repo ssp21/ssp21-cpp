@@ -28,7 +28,7 @@ object MessageGenerator {
             Includes.uncopyable,
             Includes.parseError,
             Includes.formatError
-          ) ::: message.fields.flatMap(f => f.cpp.includes.toList)           
+          ) ::: message.fields.flatMap(f => f.cpp.includes.toList)
         )
       }
 
@@ -36,7 +36,7 @@ object MessageGenerator {
 
       def readSigHeader : Iterator[String] = Iterator("ParseError read(openpal::RSlice& input);");
 
-      def writeSigHeader : Iterator[String] = Iterator("FormatError write(openpal::WSlice& dest);");
+      def writeSigHeader : Iterator[String] = Iterator("FormatError write(openpal::WSlice& output);");
 
       def fieldDefintions : Iterator[String] = message.fields.map { f =>
         "%s %s;".format(f.cpp.cppType, f.name);
@@ -104,9 +104,9 @@ object MessageGenerator {
         def last = Iterator(message.fields.last.name)
         def args = first ++ last
 
-        Iterator("FormatError %s::write(openpal::WSlice& dest)".format(message.name)) ++ bracket {
+        Iterator("FormatError %s::write(openpal::WSlice& output)".format(message.name)) ++ bracket {
           Iterator("return MessageFormatter::write_message<Function::%s>(".format(message.function.name)) ++ indent {
-            Iterator("dest,") ++
+            Iterator("output,") ++
               args
           } ++ Iterator(");")
         }

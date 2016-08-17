@@ -45,10 +45,10 @@ ParseError RequestHandshakeBegin::read(openpal::RSlice& input)
   );
 }
 
-FormatError RequestHandshakeBegin::write(openpal::WSlice& dest)
+FormatError RequestHandshakeBegin::write(openpal::WSlice& output)
 {
   return MessageFormatter::write_message<Function::request_handshake_begin>(
-    dest,
+    output,
     version,
     nonce_mode,
     dh_mode,
