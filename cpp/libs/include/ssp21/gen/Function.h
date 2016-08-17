@@ -48,7 +48,7 @@ struct FunctionSpec : private openpal::StaticOnly
 
   static uint8_t to_type(Function arg);
   static Function from_type(uint8_t arg);
-  static char const* to_string(Function arg);
+  static const char* to_string(Function arg);
 };
 
 }

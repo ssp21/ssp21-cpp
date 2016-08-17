@@ -17,7 +17,7 @@
 
 namespace ssp21 {
 
-char const* ParseErrorSpec::to_string(ParseError arg)
+const char* ParseErrorSpec::to_string(ParseError arg)
 {
   switch(arg)
   {

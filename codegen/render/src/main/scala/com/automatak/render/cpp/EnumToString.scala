@@ -10,9 +10,13 @@ object EnumToString extends HeaderImplModelRender[EnumModel] {
   def impl: ModelRenderer[EnumModel]  = ImplRender
   def header: ModelRenderer[EnumModel]  = HeaderRender
 
-  private def signature(enum: EnumModel) : String = List("static", cString, List("to_string(", enum.name," arg)").mkString).mkString(" ")
+  private def signature(enum: EnumModel) : String = {
+    "static const char* to_string(%s arg)".format(enum.name)
+  }
 
-  private def implSignature(enum: EnumModel) : String = List(cString, List(enum.specName, "::to_string(", enum.name," arg)").mkString).mkString(" ")
+  private def implSignature(enum: EnumModel) : String = {
+    "const char* %s::to_string(%s arg)".format(enum.specName, enum.name)
+  }
 
   private object HeaderRender extends ModelRenderer[EnumModel] {
     def render(em: EnumModel)(implicit indent: Indentation) : Iterator[String] = Iterator(signature(em)+";")

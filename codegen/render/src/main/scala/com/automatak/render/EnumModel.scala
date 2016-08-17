@@ -28,11 +28,23 @@ object EnumModel {
 
   sealed trait Type {
     def sizeInBytes: Int
+    def cppType : String
   }
 
-  case object UInt8 extends Type { def sizeInBytes = 1 }
-  case object UInt16 extends Type { def sizeInBytes = 2 }
-  case object UInt32 extends Type { def sizeInBytes = 4 }
+  case object UInt8 extends Type {
+    def sizeInBytes = 1
+    def cppType = "uint8_t"
+  }
+
+  case object UInt16 extends Type {
+    def sizeInBytes = 2
+    def cppType = "uint16_t"
+  }
+
+  case object UInt32 extends Type {
+    def sizeInBytes = 4
+    def cppType = "uint32_t"
+  }
 
   def BitfieldValues(names: List[String]) : List[EnumValue] = names.zipWithIndex.map { pair =>
     EnumValue(pair._1, 1 << pair._2)

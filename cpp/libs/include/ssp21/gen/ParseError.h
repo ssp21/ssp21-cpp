@@ -49,7 +49,7 @@ struct ParseErrorSpec : private openpal::StaticOnly
 {
   typedef ParseError enum_type_t;
 
-  static char const* to_string(ParseError arg);
+  static const char* to_string(ParseError arg);
 };
 
 }

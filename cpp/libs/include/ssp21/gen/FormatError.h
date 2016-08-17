@@ -43,7 +43,7 @@ struct FormatErrorSpec : private openpal::StaticOnly
 {
   typedef FormatError enum_type_t;
 
-  static char const* to_string(FormatError arg);
+  static const char* to_string(FormatError arg);
 };
 
 }

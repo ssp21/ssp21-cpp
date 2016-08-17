@@ -38,7 +38,7 @@ struct SessionModeSpec : private openpal::StaticOnly
 
   static uint8_t to_type(SessionMode arg);
   static SessionMode from_type(uint8_t arg);
-  static char const* to_string(SessionMode arg);
+  static const char* to_string(SessionMode arg);
 };
 
 }

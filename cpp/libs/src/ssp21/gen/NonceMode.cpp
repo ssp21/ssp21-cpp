@@ -33,7 +33,7 @@ NonceMode NonceModeSpec::from_type(uint8_t arg)
       return NonceMode::undefined;
   }
 }
-char const* NonceModeSpec::to_string(NonceMode arg)
+const char* NonceModeSpec::to_string(NonceMode arg)
 {
   switch(arg)
   {

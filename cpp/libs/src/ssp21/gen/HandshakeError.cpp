@@ -47,7 +47,7 @@ HandshakeError HandshakeErrorSpec::from_type(uint8_t arg)
       return HandshakeError::undefined;
   }
 }
-char const* HandshakeErrorSpec::to_string(HandshakeError arg)
+const char* HandshakeErrorSpec::to_string(HandshakeError arg)
 {
   switch(arg)
   {

@@ -40,7 +40,7 @@ struct CertificateModeSpec : private openpal::StaticOnly
 
   static uint8_t to_type(CertificateMode arg);
   static CertificateMode from_type(uint8_t arg);
-  static char const* to_string(CertificateMode arg);
+  static const char* to_string(CertificateMode arg);
 };
 
 }

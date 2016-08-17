@@ -33,7 +33,7 @@ CertificateMode CertificateModeSpec::from_type(uint8_t arg)
       return CertificateMode::undefined;
   }
 }
-char const* CertificateModeSpec::to_string(CertificateMode arg)
+const char* CertificateModeSpec::to_string(CertificateMode arg)
 {
   switch(arg)
   {

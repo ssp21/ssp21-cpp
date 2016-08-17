@@ -31,7 +31,7 @@ HashMode HashModeSpec::from_type(uint8_t arg)
       return HashMode::undefined;
   }
 }
-char const* HashModeSpec::to_string(HashMode arg)
+const char* HashModeSpec::to_string(HashMode arg)
 {
   switch(arg)
   {

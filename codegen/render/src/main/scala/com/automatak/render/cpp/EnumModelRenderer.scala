@@ -11,7 +11,7 @@ object EnumModelRenderer extends ModelRenderer[EnumModel] {
 
     def pair(ir: IntRender)(ev: EnumValue): String = List(ev.name, "=", ir(ev.value)).spaced
 
-    def header: Iterator[String] = Iterator(List("enum","class", enum.name, ":", getEnumType(enum.enumType)).spaced)
+    def header: Iterator[String] = Iterator(List("enum","class", enum.name, ":", enum.enumType.cppType).spaced)
 
     def comments: Iterator[Option[Iterator[String]]] = enum.allValues.map(ev => ev.comment.map(c => Iterator("/// " + c))).iterator
 

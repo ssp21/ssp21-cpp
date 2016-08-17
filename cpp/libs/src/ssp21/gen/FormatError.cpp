@@ -17,7 +17,7 @@
 
 namespace ssp21 {
 
-char const* FormatErrorSpec::to_string(FormatError arg)
+const char* FormatErrorSpec::to_string(FormatError arg)
 {
   switch(arg)
   {

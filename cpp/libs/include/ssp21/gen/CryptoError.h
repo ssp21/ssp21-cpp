@@ -36,7 +36,7 @@ struct CryptoErrorSpec : private openpal::StaticOnly
 {
   typedef CryptoError enum_type_t;
 
-  static char const* to_string(CryptoError arg);
+  static const char* to_string(CryptoError arg);
 };
 
 }

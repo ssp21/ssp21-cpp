@@ -31,7 +31,7 @@ DHMode DHModeSpec::from_type(uint8_t arg)
       return DHMode::undefined;
   }
 }
-char const* DHModeSpec::to_string(DHMode arg)
+const char* DHModeSpec::to_string(DHMode arg)
 {
   switch(arg)
   {

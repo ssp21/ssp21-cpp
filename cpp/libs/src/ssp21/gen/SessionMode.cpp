@@ -31,7 +31,7 @@ SessionMode SessionModeSpec::from_type(uint8_t arg)
       return SessionMode::undefined;
   }
 }
-char const* SessionModeSpec::to_string(SessionMode arg)
+const char* SessionModeSpec::to_string(SessionMode arg)
 {
   switch(arg)
   {

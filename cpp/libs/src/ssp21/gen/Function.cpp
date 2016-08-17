@@ -41,7 +41,7 @@ Function FunctionSpec::from_type(uint8_t arg)
       return Function::undefined;
   }
 }
-char const* FunctionSpec::to_string(Function arg)
+const char* FunctionSpec::to_string(Function arg)
 {
   switch(arg)
   {

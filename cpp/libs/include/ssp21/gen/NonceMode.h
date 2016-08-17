@@ -40,7 +40,7 @@ struct NonceModeSpec : private openpal::StaticOnly
 
   static uint8_t to_type(NonceMode arg);
   static NonceMode from_type(uint8_t arg);
-  static char const* to_string(NonceMode arg);
+  static const char* to_string(NonceMode arg);
 };
 
 }
