@@ -95,17 +95,17 @@ object MessageGenerator {
 
       def defaultConstructorImpl : Iterator[String] = {
 
-        val defaults : List[(String,String)] = message.fields.flatMap(f => f.cpp.defaultValue.map((f.name, _)))
+        val defaults : List[String] = message.fields.flatMap { f =>
+          f.cpp.defaultValue.map(d => "%s(%s)".format(f.name, d))
+        }
 
         if(defaults.isEmpty) {
           Iterator("%s::%s()".format(message.name, message.name)) ++ bracket(Iterator.empty)
         }
         else {
           def sig = "%s::%s() : ".format(message.name, message.name)
-          def initFirst(s: (String, String)) = "%s(%s),".format(s._1, s._2)
-          def initLast(s: (String, String)) = "%s(%s)".format(s._1, s._2)
-          def leading = defaults.dropRight(1).map(initFirst).toIterator
-          def last = Iterator(initLast(defaults.last))
+          def leading = defaults.dropRight(1).map(_ + ",").toIterator
+          def last = Iterator(defaults.last)
 
           Iterator(sig) ++ indent {
             leading ++ last
