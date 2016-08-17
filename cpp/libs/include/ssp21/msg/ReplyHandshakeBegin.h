@@ -27,7 +27,7 @@
 
 namespace ssp21 {
 
-struct ReplyHandshakeBegin : openpal::Uncopyable
+struct ReplyHandshakeBegin : private openpal::Uncopyable
 {
   ReplyHandshakeBegin();
 

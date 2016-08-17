@@ -9,7 +9,7 @@ object Ordering {
 }
 
 case class Include(file: String, order: Int) {
-  def line : String = "#include " + file
+  def line : Iterator[String] = include(file)
 }
 
 object Includes {
@@ -27,7 +27,7 @@ object Includes {
 
   def lines(i : Seq[Include]) : Iterator[String] = {
     val sorted : List[Include] = i.toSet.toList.sortWith((lhs, rhs) => lhs.order > rhs.order)
-    sorted.map(_.line).toIterator
+    sorted.flatMap(_.line).toIterator
   }
 }
 

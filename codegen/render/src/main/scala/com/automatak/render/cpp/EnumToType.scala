@@ -22,8 +22,8 @@ object EnumToType extends HeaderImplModelRender[EnumModel] {
 
   private object ImplRender extends ModelRenderer[EnumModel] {
     def render(em: EnumModel)(implicit indent: Indentation) : Iterator[String] = {
-      Iterator(implSignature(em)) ++ bracket {
-        Iterator(List("return ", staticCast(em.enumType)("arg"),";").mkString)
+      implSignature(em).iter ++ bracket {
+        "return static_cast<%s>(arg);".format(getEnumType(em.enumType)).iter
       }
     }
   }

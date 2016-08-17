@@ -26,7 +26,7 @@
 
 namespace ssp21 {
 
-struct RequestHandshakeAuth : openpal::Uncopyable
+struct RequestHandshakeAuth : private openpal::Uncopyable
 {
   RequestHandshakeAuth();
 

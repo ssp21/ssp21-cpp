@@ -68,7 +68,8 @@ object MessageGenerator {
       }.toIterator
 
       def struct : Iterator[String] = {
-        ("struct " + message.name + " : openpal::Uncopyable").iter ++ bracketSemiColon {
+
+        "struct %s : private openpal::Uncopyable".format(message.name).iter ++ bracketSemiColon {
           defaultConstructorSig ++
           space ++
           fullConstructorSig(false) ++
@@ -156,7 +157,7 @@ object MessageGenerator {
         def license = commented(LicenseHeader())
         def funcs = defaultConstructorImpl ++ space ++ fullConstructorImpl ++ space ++ readFunc ++ space ++ writeFunc ++ space ++ writeMsgFunc
 
-        def selfInclude = include(quoted(String.format(incFormatString, headerName(message)))).iter
+        def selfInclude = include(quoted(String.format(incFormatString, headerName(message))))
 
         def includes = {
           selfInclude ++

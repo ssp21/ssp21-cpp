@@ -50,10 +50,10 @@ object EnumGenerator {
           }
         }
 
-        def includes : List[Include] = List(Includes.uncopyable)
+        def includes : List[Include] = List(Includes.uncopyable, Includes.cstdint)
 
         def lines = license ++ space ++ includeGuards(cfg.model.name) (
-          Includes.lines(includes) ++ cstdint ++ space ++ namespace(cppNamespace)(
+          Includes.lines(includes) ++ space ++ namespace(cppNamespace)(
             enum ++ castFunc ++ space ++ spec
           )
         )
@@ -66,7 +66,7 @@ object EnumGenerator {
         def license = commented(LicenseHeader())
         def funcs = renders.map(r => r.impl.render(cfg.model)).flatten.toIterator
         def inc = quoted(String.format(incFormatString, headerName(cfg.model)))
-        def lines = license ++ space ++ include(inc).iter ++ space ++ namespace(cppNamespace)(funcs)
+        def lines = license ++ space ++ include(inc) ++ space ++ namespace(cppNamespace)(funcs)
 
         if(cfg.anyOptionalFunctions)
         {

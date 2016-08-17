@@ -32,7 +32,7 @@
 
 namespace ssp21 {
 
-struct RequestHandshakeBegin : openpal::Uncopyable
+struct RequestHandshakeBegin : private openpal::Uncopyable
 {
   RequestHandshakeBegin();
 

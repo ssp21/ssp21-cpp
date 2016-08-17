@@ -26,7 +26,7 @@
 
 namespace ssp21 {
 
-struct ReplyHandshakeError : openpal::Uncopyable
+struct ReplyHandshakeError : private openpal::Uncopyable
 {
   ReplyHandshakeError();
 

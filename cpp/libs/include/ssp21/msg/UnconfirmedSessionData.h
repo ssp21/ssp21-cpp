@@ -27,7 +27,7 @@
 
 namespace ssp21 {
 
-struct UnconfirmedSessionData : openpal::Uncopyable
+struct UnconfirmedSessionData : private openpal::Uncopyable
 {
   UnconfirmedSessionData();
 
