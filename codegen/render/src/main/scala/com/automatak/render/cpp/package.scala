@@ -5,8 +5,6 @@ package com.automatak.render
 
 package object cpp {
 
-  def quoted(s: String): String = """"%s"""".format(s)
-
   def namespace(ns: String)(internals: Iterator[String]): Iterator[String] = {
 
     "namespace %s {".format(ns).iter ++

@@ -12,6 +12,8 @@ package object render {
       def iter : Iterator[String] = Iterator(s)
     }
 
+    def quoted(s: String): String = """"%s"""".format(s)
+
     def mapAllButLast(items : Seq[String])(func: String => String) : Iterator[String] = {
       if(items.isEmpty) items.toIterator
       else (items.dropRight(1).map(func) ++ List(items.last)).toIterator
