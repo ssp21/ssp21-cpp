@@ -47,7 +47,6 @@ object MessageGenerator {
           defaultConstructorSig ++
           space ++
           readSigHeader ++
-          space ++
           writeSigHeader ++
           space ++
           fieldDefintions

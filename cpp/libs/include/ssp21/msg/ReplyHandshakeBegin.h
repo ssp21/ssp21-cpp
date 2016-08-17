@@ -31,7 +31,6 @@ struct ReplyHandshakeBegin : openpal::Uncopyable
   ReplyHandshakeBegin();
 
   ParseError read(openpal::RSlice& input);
-
   FormatError write(openpal::WSlice& output);
 
   uint16_t version;

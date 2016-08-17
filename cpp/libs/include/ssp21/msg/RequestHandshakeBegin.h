@@ -36,7 +36,6 @@ struct RequestHandshakeBegin : openpal::Uncopyable
   RequestHandshakeBegin();
 
   ParseError read(openpal::RSlice& input);
-
   FormatError write(openpal::WSlice& output);
 
   uint16_t version;

@@ -30,7 +30,6 @@ struct ReplyHandshakeAuth : openpal::Uncopyable
   ReplyHandshakeAuth();
 
   ParseError read(openpal::RSlice& input);
-
   FormatError write(openpal::WSlice& output);
 
   Seq8 mac;

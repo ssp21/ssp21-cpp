@@ -31,7 +31,6 @@ struct UnconfirmedSessionData : openpal::Uncopyable
   UnconfirmedSessionData();
 
   ParseError read(openpal::RSlice& input);
-
   FormatError write(openpal::WSlice& output);
 
   uint32_t valid_until_ms;
