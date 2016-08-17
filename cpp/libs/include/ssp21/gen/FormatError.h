@@ -13,30 +13,37 @@
 // License TBD
 //
 
-#ifndef SSP21_REPLYHANDSHAKEBEGIN_H
-#define SSP21_REPLYHANDSHAKEBEGIN_H
+#ifndef SSP21_FORMATERROR_H
+#define SSP21_FORMATERROR_H
 
-#include "ssp21/gen/ParseError.h"
-#include "ssp21/gen/FormatError.h"
-#include "ssp21/SequenceTypes.h"
-#include "openpal/container/WSlice.h"
 #include "openpal/util/Uncopyable.h"
-#include "openpal/container/RSlice.h"
 #include <cstdint>
 
 namespace ssp21 {
 
-struct ReplyHandshakeBegin : openpal::Uncopyable
+/**
+  The result of a message format operation
+*/
+enum class FormatError : uint8_t
 {
-  ReplyHandshakeBegin();
+  /// message was formatted successfully
+  ok = 0x0,
+  /// not enough output buffer space
+  insufficient_space = 0x1,
+  /// a message sequence length overflowed its serialized representation
+  bad_sequence_length = 0x2
+};
 
-  ParseError read(openpal::RSlice& input);
+inline bool any(FormatError value)
+{
+  return value != FormatError::ok;
+}
 
-  FormatError write(openpal::WSlice& dest);
+struct FormatErrorSpec : private openpal::StaticOnly
+{
+  typedef FormatError enum_type_t;
 
-  uint16_t version;
-  Seq8 ephemeral_public_key;
-  Seq8Seq16 certificates;
+  static char const* to_string(FormatError arg);
 };
 
 }

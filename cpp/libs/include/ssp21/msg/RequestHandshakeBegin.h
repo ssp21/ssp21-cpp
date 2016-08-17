@@ -19,6 +19,7 @@
 #include "ssp21/gen/ParseError.h"
 #include "ssp21/gen/CertificateMode.h"
 #include "ssp21/gen/DHMode.h"
+#include "ssp21/gen/FormatError.h"
 #include "ssp21/gen/HashMode.h"
 #include "ssp21/SequenceTypes.h"
 #include "ssp21/gen/SessionMode.h"
@@ -36,7 +37,7 @@ struct RequestHandshakeBegin : openpal::Uncopyable
 
   ParseError read(openpal::RSlice& input);
 
-  bool write(openpal::WSlice& dest);
+  FormatError write(openpal::WSlice& dest);
 
   uint16_t version;
   NonceMode nonce_mode;

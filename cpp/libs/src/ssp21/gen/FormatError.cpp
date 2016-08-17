@@ -13,32 +13,23 @@
 // License TBD
 //
 
-#ifndef SSP21_REPLYHANDSHAKEBEGIN_H
-#define SSP21_REPLYHANDSHAKEBEGIN_H
-
-#include "ssp21/gen/ParseError.h"
 #include "ssp21/gen/FormatError.h"
-#include "ssp21/SequenceTypes.h"
-#include "openpal/container/WSlice.h"
-#include "openpal/util/Uncopyable.h"
-#include "openpal/container/RSlice.h"
-#include <cstdint>
 
 namespace ssp21 {
 
-struct ReplyHandshakeBegin : openpal::Uncopyable
+char const* FormatErrorSpec::to_string(FormatError arg)
 {
-  ReplyHandshakeBegin();
-
-  ParseError read(openpal::RSlice& input);
-
-  FormatError write(openpal::WSlice& dest);
-
-  uint16_t version;
-  Seq8 ephemeral_public_key;
-  Seq8Seq16 certificates;
-};
-
+  switch(arg)
+  {
+    case(FormatError::ok):
+      return "ok";
+    case(FormatError::insufficient_space):
+      return "insufficient_space";
+    case(FormatError::bad_sequence_length):
+      return "bad_sequence_length";
+    default:
+      return "undefined";
+  }
 }
 
-#endif
+}

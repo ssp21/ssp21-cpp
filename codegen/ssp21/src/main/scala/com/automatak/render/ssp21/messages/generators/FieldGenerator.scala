@@ -22,6 +22,7 @@ object Includes {
   val seqTypes = Include(quoted("ssp21/SequenceTypes.h"), Ordering.ssp21)
   val uncopyable = Include(quoted("openpal/util/Uncopyable.h"), Ordering.openpal)
   val parseError = Include(quoted("ssp21/gen/ParseError.h"), Ordering.ssp21)
+  val formatError = Include(quoted("ssp21/gen/FormatError.h"), Ordering.ssp21)
 
   def lines(i : Seq[Include]) : Iterator[String] = {
     val sorted : List[Include] = i.toSet.toList.sortWith((lhs, rhs) => lhs.order > rhs.order)

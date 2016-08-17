@@ -17,6 +17,7 @@
 #define SSP21_REPLYHANDSHAKEERROR_H
 
 #include "ssp21/gen/ParseError.h"
+#include "ssp21/gen/FormatError.h"
 #include "ssp21/gen/HandshakeError.h"
 #include "openpal/container/WSlice.h"
 #include "openpal/util/Uncopyable.h"
@@ -30,7 +31,7 @@ struct ReplyHandshakeError : openpal::Uncopyable
 
   ParseError read(openpal::RSlice& input);
 
-  bool write(openpal::WSlice& dest);
+  FormatError write(openpal::WSlice& dest);
 
   HandshakeError handshake_error;
 };

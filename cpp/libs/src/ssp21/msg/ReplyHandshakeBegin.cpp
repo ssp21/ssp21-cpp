@@ -35,7 +35,7 @@ ParseError ReplyHandshakeBegin::read(openpal::RSlice& input)
   );
 }
 
-bool ReplyHandshakeBegin::write(openpal::WSlice& dest)
+FormatError ReplyHandshakeBegin::write(openpal::WSlice& dest)
 {
   return MessageFormatter::write_message<Function::reply_handshake_begin>(
     dest,

@@ -32,7 +32,7 @@ ParseError ReplyHandshakeAuth::read(openpal::RSlice& input)
   );
 }
 
-bool ReplyHandshakeAuth::write(openpal::WSlice& dest)
+FormatError ReplyHandshakeAuth::write(openpal::WSlice& dest)
 {
   return MessageFormatter::write_message<Function::request_handshake_auth>(
     dest,

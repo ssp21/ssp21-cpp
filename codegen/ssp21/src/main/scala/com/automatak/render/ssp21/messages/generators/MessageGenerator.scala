@@ -22,7 +22,13 @@ object MessageGenerator {
 
       def includes : Iterator[String] = {
         Includes.lines(
-          Includes.rslice :: Includes.wslice :: Includes.uncopyable :: Includes.parseError :: message.fields.flatMap(f => f.cpp.includes.toList)
+          List(
+            Includes.rslice,
+            Includes.wslice,
+            Includes.uncopyable,
+            Includes.parseError,
+            Includes.formatError
+          ) ::: message.fields.flatMap(f => f.cpp.includes.toList)           
         )
       }
 
@@ -30,7 +36,7 @@ object MessageGenerator {
 
       def readSigHeader : Iterator[String] = Iterator("ParseError read(openpal::RSlice& input);");
 
-      def writeSigHeader : Iterator[String] = Iterator("bool write(openpal::WSlice& dest);");
+      def writeSigHeader : Iterator[String] = Iterator("FormatError write(openpal::WSlice& dest);");
 
       def fieldDefintions : Iterator[String] = message.fields.map { f =>
         "%s %s;".format(f.cpp.cppType, f.name);
@@ -50,11 +56,9 @@ object MessageGenerator {
 
       def writeHeader() {
         def license = commented(LicenseHeader())
-        //def enum = EnumModelRenderer.render(cfg.model)
-        //def signatures = renders.map(c => c.header.render(cfg.model)).flatten.toIterator
         def content = struct
-
         def lines = license ++ space ++ includeGuards(message.name)(includes ++ space ++ namespace(cppNamespace)(content))
+
         val path = headerPath(message)
         writeTo(path)(lines)
         println("Wrote: " + path)
@@ -68,11 +72,11 @@ object MessageGenerator {
           Iterator("%s::%s()".format(message.name, message.name)) ++ bracket(Iterator.empty)
         }
         else {
-          val sig = "%s::%s() : ".format(message.name, message.name)
+          def sig = "%s::%s() : ".format(message.name, message.name)
           def initFirst(s: (String, String)) = "%s(%s),".format(s._1, s._2)
           def initLast(s: (String, String)) = "%s(%s)".format(s._1, s._2)
-          val leading = defaults.dropRight(1).map(initFirst).toIterator
-          val last = Iterator(initLast(defaults.last))
+          def leading = defaults.dropRight(1).map(initFirst).toIterator
+          def last = Iterator(initLast(defaults.last))
 
           Iterator(sig) ++ indent {
             leading ++ last
@@ -100,7 +104,7 @@ object MessageGenerator {
         def last = Iterator(message.fields.last.name)
         def args = first ++ last
 
-        Iterator("bool %s::write(openpal::WSlice& dest)".format(message.name)) ++ bracket {
+        Iterator("FormatError %s::write(openpal::WSlice& dest)".format(message.name)) ++ bracket {
           Iterator("return MessageFormatter::write_message<Function::%s>(".format(message.function.name)) ++ indent {
             Iterator("dest,") ++
               args
