@@ -8,18 +8,8 @@ import java.nio.charset.Charset
 
 package object render {
 
-    class RichString(s : String) {
+    implicit class RichString(s : String) {
       def iter : Iterator[String] = Iterator(s)
-    }
-
-    implicit def stringToRichString(s : String) : RichString = new RichString(s)
-
-    // a custom flatten that adds a blank line in between blocks
-    def spaced(i: Iterator[Iterator[String]]): Iterator[String] = {
-
-      def map(iter: Iterator[String]): Iterator[String] = if(iter.hasNext) iter ++ space else iter
-
-      i.foldLeft(Iterator.apply[String]())((sum, i) => sum ++ map(i))
     }
 
     // adds commas to all but the last item
@@ -30,13 +20,7 @@ package object render {
 
     def commas(items : Seq[String]) : Iterator[String] = mapAllButLast(items)(_ + ",")
 
-    def space: Iterator[String] = Iterator.apply("")
-
-    def externC(inner: => Iterator[String]): Iterator[String] = {
-      Iterator("#ifdef __cplusplus", """extern "C" {""", "#endif") ++ space ++
-      inner ++ space ++
-      Iterator("#ifdef __cplusplus", """}""", "#endif")
-    }
+    def space: Iterator[String] = "".iter
 
     def commented(lines: Iterator[String]): Iterator[String] = {
       Iterator("//") ++ lines.map(l => "// " + l) ++ Iterator("//")
@@ -51,34 +35,12 @@ package object render {
     }
 
     def bracket(inner: => Iterator[String])(implicit indent: Indentation): Iterator[String] = bracketWithCap(indent,"")(inner)
-    def bracketsOnly : Iterator[String] = Iterator("{}")
 
+    def bracketsOnly : Iterator[String] = Iterator("{}")
 
     def bracketSemiColon(inner: => Iterator[String])(implicit indent: Indentation): Iterator[String] = bracketWithCap(indent,";")(inner)
 
     def bracketSemiColon(cap: String)(inner: => Iterator[String])(implicit indent: Indentation): Iterator[String] = bracketWithCap(indent," %s;".format(cap))(inner)
-
-    implicit class RichStringList(list: List[String]) {
-      def spaced : String = list.mkString(" ")
-    }
-
-    def delimited(delim: String, last: Option[String] = None)(s: Iterator[String]) : Iterator[String] = new Iterator[String] {
-      def hasNext: Boolean = s.hasNext
-
-      def next(): String = {
-        val ret = s.next()
-        if(s.hasNext) (ret + delim) else {
-          last match {
-            case Some(l) => ret + l
-            case None => ret
-          }
-        }
-      }
-    }
-
-    def commaDelimitedWithSemicolon(s: Iterator[String]) : Iterator[String] = delimited(",", Some(";"))(s)
-
-    def commaDelimited(s: Iterator[String]) : Iterator[String] = delimited(",")(s)
 
     def writeTo(path: Path)(lines: Iterator[String]): Unit = {
 
