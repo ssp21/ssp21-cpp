@@ -34,7 +34,7 @@ object MessageGenerator {
         )
       }
 
-      def defaultConstructorSig = (message.name + "();").iter
+      def defaultConstructorSig = "%s();".format(message.name).iter
 
       def fullConstructorSig(impl: Boolean) : Iterator[String] = {
 
@@ -100,13 +100,13 @@ object MessageGenerator {
         }
 
         if(defaults.isEmpty) {
-          "%s::%s()".format(message.name, message.name).iter ++ bracket(Iterator.empty)
+          "%s::%s()".format(message.name, message.name).iter ++ bracketsOnly
         }
         else {
 
           def sig = "%s::%s() : ".format(message.name, message.name).iter
 
-          sig ++ indent(commas(defaults)) ++ bracket(Iterator.empty)
+          sig ++ indent(commas(defaults)) ++ bracketsOnly
         }
       }
 
@@ -117,7 +117,7 @@ object MessageGenerator {
 
         fullConstructorSig(true) ++ indent {
           commas(names)
-        } ++ "{}".iter
+        } ++ bracketsOnly
       }
 
       def readFunc : Iterator[String] = {

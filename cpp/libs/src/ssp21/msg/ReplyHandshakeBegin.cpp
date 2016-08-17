@@ -22,8 +22,7 @@ namespace ssp21 {
 
 ReplyHandshakeBegin::ReplyHandshakeBegin() : 
   version(0)
-{
-}
+{}
 
 ReplyHandshakeBegin::ReplyHandshakeBegin(
   uint16_t version,

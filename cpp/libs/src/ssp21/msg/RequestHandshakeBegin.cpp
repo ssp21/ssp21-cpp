@@ -27,8 +27,7 @@ RequestHandshakeBegin::RequestHandshakeBegin() :
   hash_mode(HashMode::undefined),
   session_mode(SessionMode::undefined),
   certificate_mode(CertificateMode::undefined)
-{
-}
+{}
 
 RequestHandshakeBegin::RequestHandshakeBegin(
   uint16_t version,

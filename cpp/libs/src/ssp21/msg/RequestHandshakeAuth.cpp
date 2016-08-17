@@ -21,8 +21,7 @@
 namespace ssp21 {
 
 RequestHandshakeAuth::RequestHandshakeAuth()
-{
-}
+{}
 
 RequestHandshakeAuth::RequestHandshakeAuth(
   const Seq8& mac

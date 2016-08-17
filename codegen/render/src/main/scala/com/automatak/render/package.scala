@@ -8,6 +8,12 @@ import java.nio.charset.Charset
 
 package object render {
 
+    class RichString(s : String) {
+      def iter : Iterator[String] = Iterator(s)
+    }
+
+    implicit def stringToRichString(s : String) : RichString = new RichString(s)
+
     // a custom flatten that adds a blank line in between blocks
     def spaced(i: Iterator[Iterator[String]]): Iterator[String] = {
 
@@ -53,7 +59,7 @@ package object render {
       iter.flatten
     }
 
-    def bracketWithCap[A](indent: Indentation, cap: String)(inner: => Iterator[String]): Iterator[String] = {
+    def bracketWithCap(indent: Indentation, cap: String)(inner: => Iterator[String]): Iterator[String] = {
       Iterator("{") ++
         indent(
           inner
@@ -61,17 +67,16 @@ package object render {
         Iterator("}"+cap)
     }
 
-    def bracket[A](inner: => Iterator[String])(implicit indent: Indentation): Iterator[String] = bracketWithCap(indent,"")(inner)
+    def bracket(inner: => Iterator[String])(implicit indent: Indentation): Iterator[String] = bracketWithCap(indent,"")(inner)
+    def bracketsOnly : Iterator[String] = Iterator("{}")
 
 
-    def bracketSemiColon[A](inner: => Iterator[String])(implicit indent: Indentation): Iterator[String] = bracketWithCap(indent,";")(inner)
+    def bracketSemiColon(inner: => Iterator[String])(implicit indent: Indentation): Iterator[String] = bracketWithCap(indent,";")(inner)
 
-  def bracketSemiColon[A](cap: String)(inner: => Iterator[String])(implicit indent: Indentation): Iterator[String] = bracketWithCap(indent," %s;".format(cap))(inner)
+    def bracketSemiColon(cap: String)(inner: => Iterator[String])(implicit indent: Indentation): Iterator[String] = bracketWithCap(indent," %s;".format(cap))(inner)
 
     implicit class RichStringList(list: List[String]) {
-
       def spaced : String = list.mkString(" ")
-
     }
 
     def delimited(delim: String, last: Option[String] = None)(s: Iterator[String]) : Iterator[String] = new Iterator[String] {

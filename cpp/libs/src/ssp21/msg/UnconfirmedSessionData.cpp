@@ -23,8 +23,7 @@ namespace ssp21 {
 UnconfirmedSessionData::UnconfirmedSessionData() : 
   valid_until_ms(0),
   nonce(0)
-{
-}
+{}
 
 UnconfirmedSessionData::UnconfirmedSessionData(
   uint32_t valid_until_ms,

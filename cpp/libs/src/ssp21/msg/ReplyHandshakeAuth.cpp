@@ -21,8 +21,7 @@
 namespace ssp21 {
 
 ReplyHandshakeAuth::ReplyHandshakeAuth()
-{
-}
+{}
 
 ReplyHandshakeAuth::ReplyHandshakeAuth(
   const Seq8& mac
