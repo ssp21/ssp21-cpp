@@ -4,6 +4,7 @@ import java.nio.file.Path
 
 import com.automatak.render._
 import com.automatak.render.cpp._
+import com.automatak.render.ssp21.Includes
 import com.automatak.render.ssp21.messages.Message
 
 object MessageGenerator {

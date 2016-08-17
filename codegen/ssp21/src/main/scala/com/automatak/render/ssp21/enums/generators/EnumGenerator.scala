@@ -7,6 +7,7 @@ import _root_.java.nio.file.Path
 
 import com.automatak.render._
 import com.automatak.render.cpp._
+import com.automatak.render.ssp21.{Include, Includes}
 
 object EnumGenerator {
 
@@ -27,8 +28,6 @@ object EnumGenerator {
 
       val renders = conversions ::: stringify
 
-      val uncopyable : Iterator[String] = Iterator("#include %s".format(quoted("openpal/util/Uncopyable.h")))
-
       def writeHeader() {
         def license = commented(LicenseHeader())
         def enum = EnumModelRenderer.render(cfg.model)
@@ -37,6 +36,7 @@ object EnumGenerator {
           signatures
         }
         def signatures = renders.map(c => c.header.render(cfg.model)).flatten.toIterator
+
         def castFunc : Iterator[String] = {
           cfg.model.boolCastValue match {
             case Some(value) => {
@@ -49,7 +49,14 @@ object EnumGenerator {
           }
         }
 
-        def lines = license ++ space ++ includeGuards(cfg.model.name)(uncopyable ++ cstdint ++ space ++ namespace(cppNamespace)(enum ++ castFunc ++ space ++ spec))
+        def includes : List[Include] = List(Includes.uncopyable)
+
+        def lines = license ++ space ++ includeGuards(cfg.model.name) (
+          Includes.lines(includes) ++ cstdint ++ space ++ namespace(cppNamespace)(
+            enum ++ castFunc ++ space ++ spec
+          )
+        )
+
         writeTo(headerPath(cfg.model))(lines)
         println("Wrote: " + headerPath(cfg.model))
       }
