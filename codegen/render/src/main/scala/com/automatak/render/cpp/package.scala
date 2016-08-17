@@ -7,6 +7,14 @@ package object cpp {
 
   private val quote : String = "\""
 
+  class StringToIter(s : String) {
+    def iter : Iterator[String] = Iterator(s)
+  }
+
+  implicit def stringToIterator(s : String) : StringToIter = new StringToIter(s)
+
+
+
   def getEnumType(typ: EnumModel.Type): String = typ match {
     case EnumModel.UInt8 => "uint8_t"
     case EnumModel.UInt16 => "uint16_t"

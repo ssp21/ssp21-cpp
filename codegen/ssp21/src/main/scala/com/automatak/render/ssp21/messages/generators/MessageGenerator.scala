@@ -34,7 +34,7 @@ object MessageGenerator {
         )
       }
 
-      def defaultConstructorSig : Iterator[String] = Iterator(message.name + "();")
+      def defaultConstructorSig = (message.name + "();").iter
 
       def fullConstructorSig(impl: Boolean) : Iterator[String] = {
 
@@ -45,9 +45,9 @@ object MessageGenerator {
         val last = fields.last
         val lastArgs : Iterator[String] = Iterator(last.cpp.asArgument(last.name))
 
-        def funcName = if(impl) Iterator("%s::%s(".format(message.name, message.name)) else Iterator(message.name + "(")
+        def funcName = if(impl) "%s::%s(".format(message.name, message.name).iter else (message.name + "(").iter
 
-        def terminator : Iterator[String] = if(impl) Iterator(") :") else Iterator(");")
+        def terminator = if(impl) ") :".iter else ");".iter
 
         funcName ++ indent {
           firstArgs ++ lastArgs
@@ -55,20 +55,20 @@ object MessageGenerator {
       }
 
 
-      def readSigHeader : Iterator[String] = Iterator("ParseError read(openpal::RSlice& input);");
+      def readSigHeader = "ParseError read(openpal::RSlice& input);".iter
 
-      def writeSigHeader : Iterator[String] = Iterator("FormatError write(openpal::WSlice& output);");
+      def writeSigHeader = "FormatError write(openpal::WSlice& output);".iter
 
-      def writeMsgSig : Iterator[String] = Iterator("FormatResult write_msg(openpal::WSlice& output);");
+      def writeMsgSig = "FormatResult write_msg(openpal::WSlice& output);".iter
 
-      def minSizeBytes : Iterator[String] = Iterator("static const uint32_t min_size_bytes = %s;".format(message.minSizeBytes))
+      def minSizeBytes = "static const uint32_t min_size_bytes = %s;".format(message.minSizeBytes).iter
 
       def fieldDefintions : Iterator[String] = message.fields.map { f =>
         "%s %s;".format(f.cpp.cppType, f.name);
       }.toIterator
 
       def struct : Iterator[String] = {
-        Iterator("struct " + message.name + " : openpal::Uncopyable") ++ bracketSemiColon {
+        ("struct " + message.name + " : openpal::Uncopyable").iter ++ bracketSemiColon {
           defaultConstructorSig ++
           space ++
           fullConstructorSig(false) ++
@@ -95,77 +95,59 @@ object MessageGenerator {
 
       def defaultConstructorImpl : Iterator[String] = {
 
-        val defaults : List[String] = message.fields.flatMap { f =>
+        val defaults = message.fields.flatMap { f =>
           f.cpp.defaultValue.map(d => "%s(%s)".format(f.name, d))
         }
 
         if(defaults.isEmpty) {
-          Iterator("%s::%s()".format(message.name, message.name)) ++ bracket(Iterator.empty)
+          "%s::%s()".format(message.name, message.name).iter ++ bracket(Iterator.empty)
         }
         else {
-          def sig = "%s::%s() : ".format(message.name, message.name)
-          def leading = defaults.dropRight(1).map(_ + ",").toIterator
-          def last = Iterator(defaults.last)
 
-          Iterator(sig) ++ indent {
-            leading ++ last
-          } ++ bracket(Iterator.empty)
+          def sig = "%s::%s() : ".format(message.name, message.name).iter
+
+          sig ++ indent(commas(defaults)) ++ bracket(Iterator.empty)
         }
       }
 
       def fullConstructorImpl : Iterator[String] = {
 
-        val names = message.fields.filter(_.cpp.initializeInFullConstructor).map(_.name)
-
-        def initFirst(name: String) = "%s(%s),".format(name, name)
-        def initLast(name: String) = "%s(%s)".format(name, name)
-
-        def leadingArgs = names.dropRight(1).map(initFirst).toIterator
-        def lastArg = Iterator(initLast(names.last))
-
+        def constructedFields = message.fields.filter(_.cpp.initializeInFullConstructor)
+        def names : List[String] = constructedFields.map(f => "%s(%s)".format(f.name, f.name))
 
         fullConstructorSig(true) ++ indent {
-          leadingArgs ++ lastArg
-        } ++ Iterator("{}")
+          commas(names)
+        } ++ "{}".iter
       }
 
       def readFunc : Iterator[String] = {
 
-        def first = message.fields.dropRight(1).map(f => f.name + ",").toIterator
-        def last = Iterator(message.fields.last.name)
-        def args = first ++ last
+        def args = message.fields.map(_.name)
 
-        Iterator("ParseError %s::read(openpal::RSlice& input)".format(message.name)) ++ bracket {
-          Iterator("return MessageParser::read_message<Function::%s>(".format(message.function.name)) ++ indent {
-            Iterator("input,") ++
-            args
-          } ++ Iterator(");")
+        "ParseError %s::read(openpal::RSlice& input)".format(message.name).iter ++ bracket {
+          "return MessageParser::read_message<Function::%s>(".format(message.function.name).iter ++ indent {
+            "input,".iter ++
+              commas(args)
+          } ++ ");".iter
         }
       }
 
       def writeFunc : Iterator[String] = {
 
-        def first = message.fields.dropRight(1).map(f => f.name + ",").toIterator
-        def last = Iterator(message.fields.last.name)
-        def args = first ++ last
-
-        Iterator("FormatError %s::write(openpal::WSlice& output)".format(message.name)) ++ bracket {
-          Iterator("return MessageFormatter::write_message<Function::%s>(".format(message.function.name)) ++ indent {
-            Iterator("output,") ++
-              args
-          } ++ Iterator(");")
+        "FormatError %s::write(openpal::WSlice& output)".format(message.name).iter ++ bracket {
+          "return MessageFormatter::write_message<Function::%s>(".format(message.function.name).iter ++ indent {
+            "output,".iter ++ commas(message.fields.map(_.name))
+          } ++ ");".iter
         }
+
       }
 
       def writeMsgFunc : Iterator[String] = {
 
-
-          Iterator("FormatResult %s::write_msg(openpal::WSlice& output)".format(message.name)) ++ bracket {
-            Iterator("auto write = [this](openpal::WSlice& output) { return this->write(output); };") ++
-            Iterator("return FormatResult::write_any(write, output);")
+          "FormatResult %s::write_msg(openpal::WSlice& output)".format(message.name).iter ++ bracket {
+            "auto write = [this](openpal::WSlice& output) { return this->write(output); };".iter ++
+            "return FormatResult::write_any(write, output);".iter
           }
-
-
       }
 
       def writeImpl() {
@@ -174,10 +156,10 @@ object MessageGenerator {
         def license = commented(LicenseHeader())
         def funcs = defaultConstructorImpl ++ space ++ fullConstructorImpl ++ space ++ readFunc ++ space ++ writeFunc ++ space ++ writeMsgFunc
 
-        def selfInclude = include(quoted(String.format(incFormatString, headerName(message))))
+        def selfInclude = include(quoted(String.format(incFormatString, headerName(message)))).iter
 
         def includes = {
-          Iterator(selfInclude) ++
+          selfInclude ++
           space ++
           Includes.lines(List(Includes.msgParser, Includes.msgFormatter))
         }

@@ -16,6 +16,14 @@ package object render {
       i.foldLeft(Iterator.apply[String]())((sum, i) => sum ++ map(i))
     }
 
+    // adds commas to all but the last item
+    def mapAllButLast(items : Seq[String])(func: String => String) : Iterator[String] = {
+      if(items.isEmpty) items.toIterator
+      else (items.dropRight(1).map(func) ++ List(items.last)).toIterator
+    }
+
+    def commas(items : Seq[String]) : Iterator[String] = mapAllButLast(items)(_ + ",")
+
     def space: Iterator[String] = Iterator.apply("")
 
     def externC(inner: => Iterator[String]): Iterator[String] = {
