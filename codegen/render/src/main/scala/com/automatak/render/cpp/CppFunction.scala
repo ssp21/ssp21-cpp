@@ -3,8 +3,7 @@
  */
 package com.automatak.render.cpp
 
-import com.automatak.render.Indentation
-import com.automatak.render.space
+import com.automatak.render.{Indentation, space}
 
 import scala.annotation.tailrec
 

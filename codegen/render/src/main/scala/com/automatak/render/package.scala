@@ -3,8 +3,8 @@
  */
 package com.automatak
 
-import java.nio.file.{Files, StandardOpenOption, Path}
 import java.nio.charset.Charset
+import java.nio.file.{Files, Path, StandardOpenOption}
 
 package object render {
 

@@ -4,7 +4,6 @@
 package com.automatak.render.ssp21
 
 import com.automatak.render.cpp.EnumConfig
-
 import com.automatak.render.ssp21.enums.internal._
 import com.automatak.render.ssp21.enums.ssp21._
 

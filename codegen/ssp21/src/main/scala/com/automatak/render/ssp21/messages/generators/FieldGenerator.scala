@@ -1,8 +1,7 @@
 package com.automatak.render.ssp21.messages.generators
 
-import com.automatak.render._
+import com.automatak.render.{EnumModel, _}
 import com.automatak.render.ssp21.{Include, Includes, Ordering}
-import com.automatak.render.EnumModel
 
 
 sealed trait FieldGenerator {
