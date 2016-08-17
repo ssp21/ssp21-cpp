@@ -9,16 +9,22 @@ object EnumModelRenderer extends ModelRenderer[EnumModel] {
 
   def render(enum: EnumModel)(implicit indent: Indentation) : Iterator[String] = {
 
-    def pair(ir: IntRender)(ev: EnumValue): String = List(ev.name, "=", ir(ev.value)).spaced
+    def pair(ir: IntRender)(ev: EnumValue): String = "%s = %s".format(ev.name, ir(ev.value))
 
-    def header: Iterator[String] = Iterator(List("enum","class", enum.name, ":", enum.enumType.cppType).spaced)
+    def header: Iterator[String] = {
+      "enum class %s : %s".format(enum.name, enum.enumType.cppType).iter
+    }
 
-    def comments: Iterator[Option[Iterator[String]]] = enum.allValues.map(ev => ev.comment.map(c => Iterator("/// " + c))).iterator
+    def comments: Iterator[Option[Iterator[String]]] = {
+      enum.allValues.map(ev => ev.comment.map(c => "/// %s".format(c).iter)).iterator
+    }
 
     def definitions : Iterator[String] = commaDelimited(enum.allValues.map(pair(enum.render)).iterator)
 
     def summary = if(enum.comments.isEmpty) Iterator.empty else {
-      Iterator("/**") ++ indent(enum.comments.toIterator) ++ Iterator("*/")
+      "/**".iter ++ indent {
+        enum.comments.toIterator
+      } ++ "*/".iter
     }
 
     summary ++
