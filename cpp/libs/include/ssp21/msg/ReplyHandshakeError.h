@@ -18,6 +18,7 @@
 
 #include "ssp21/gen/ParseError.h"
 #include "ssp21/gen/FormatError.h"
+#include "ssp21/FormatResult.h"
 #include "ssp21/gen/HandshakeError.h"
 #include "openpal/container/WSlice.h"
 #include "openpal/util/Uncopyable.h"
@@ -35,6 +36,7 @@ struct ReplyHandshakeError : openpal::Uncopyable
 
   ParseError read(openpal::RSlice& input);
   FormatError write(openpal::WSlice& output);
+  FormatResult write_msg(openpal::WSlice& output);
 
   HandshakeError handshake_error;
 };

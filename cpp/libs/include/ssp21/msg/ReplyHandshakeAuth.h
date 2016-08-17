@@ -19,6 +19,7 @@
 #include "ssp21/gen/ParseError.h"
 #include "ssp21/gen/FormatError.h"
 #include "ssp21/SequenceTypes.h"
+#include "ssp21/FormatResult.h"
 #include "openpal/container/WSlice.h"
 #include "openpal/util/Uncopyable.h"
 #include "openpal/container/RSlice.h"
@@ -35,6 +36,7 @@ struct ReplyHandshakeAuth : openpal::Uncopyable
 
   ParseError read(openpal::RSlice& input);
   FormatError write(openpal::WSlice& output);
+  FormatResult write_msg(openpal::WSlice& output);
 
   Seq8 mac;
 };

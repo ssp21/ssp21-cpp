@@ -23,6 +23,7 @@ object Includes {
   val formatError = Include(quoted("ssp21/gen/FormatError.h"), Ordering.ssp21)
   val msgParser = Include(quoted("ssp21/MessageParser.h"), Ordering.ssp21)
   val msgFormatter = Include(quoted("ssp21/MessageFormatter.h"), Ordering.ssp21)
+  val formatResult = Include(quoted("ssp21/FormatResult.h"), Ordering.ssp21)
 
   def lines(i : Seq[Include]) : Iterator[String] = {
     val sorted : List[Include] = i.toSet.toList.sortWith((lhs, rhs) => lhs.order > rhs.order)

@@ -22,6 +22,7 @@
 #include "ssp21/gen/FormatError.h"
 #include "ssp21/gen/HashMode.h"
 #include "ssp21/SequenceTypes.h"
+#include "ssp21/FormatResult.h"
 #include "ssp21/gen/SessionMode.h"
 #include "ssp21/gen/NonceMode.h"
 #include "openpal/container/WSlice.h"
@@ -47,6 +48,7 @@ struct RequestHandshakeBegin : openpal::Uncopyable
 
   ParseError read(openpal::RSlice& input);
   FormatError write(openpal::WSlice& output);
+  FormatResult write_msg(openpal::WSlice& output);
 
   uint16_t version;
   NonceMode nonce_mode;

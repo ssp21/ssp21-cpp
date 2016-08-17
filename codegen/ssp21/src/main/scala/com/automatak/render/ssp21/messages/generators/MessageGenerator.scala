@@ -28,7 +28,8 @@ object MessageGenerator {
             Includes.wslice,
             Includes.uncopyable,
             Includes.parseError,
-            Includes.formatError
+            Includes.formatError,
+            Includes.formatResult
           ) ::: message.fields.flatMap(f => f.cpp.includes.toList)
         )
       }
@@ -58,6 +59,8 @@ object MessageGenerator {
 
       def writeSigHeader : Iterator[String] = Iterator("FormatError write(openpal::WSlice& output);");
 
+      def writeMsgSig : Iterator[String] = Iterator("FormatResult write_msg(openpal::WSlice& output);");
+
       def fieldDefintions : Iterator[String] = message.fields.map { f =>
         "%s %s;".format(f.cpp.cppType, f.name);
       }.toIterator
@@ -70,6 +73,7 @@ object MessageGenerator {
           space ++
           readSigHeader ++
           writeSigHeader ++
+          writeMsgSig ++
           space ++
           fieldDefintions
         }
@@ -149,11 +153,22 @@ object MessageGenerator {
         }
       }
 
+      def writeMsgFunc : Iterator[String] = {
+
+
+          Iterator("FormatResult %s::write_msg(openpal::WSlice& output)".format(message.name)) ++ bracket {
+            Iterator("auto write = [this](openpal::WSlice& output) { return this->write(output); };") ++
+            Iterator("return FormatResult::write_any(write, output);")
+          }
+
+
+      }
+
       def writeImpl() {
 
 
         def license = commented(LicenseHeader())
-        def funcs = defaultConstructorImpl ++ space ++ fullConstructorImpl ++ space ++ readFunc ++ space ++ writeFunc
+        def funcs = defaultConstructorImpl ++ space ++ fullConstructorImpl ++ space ++ readFunc ++ space ++ writeFunc ++ space ++ writeMsgFunc
 
         def selfInclude = include(quoted(String.format(incFormatString, headerName(message))))
 

@@ -61,6 +61,25 @@ namespace ssp21 {
 		static FormatError write(openpal::WSlice& dest, const Seq8& value);
 		static FormatError write(openpal::WSlice& dest, const Seq16& value);
 		static FormatError write(openpal::WSlice& dest, const Seq8Seq16& value);
+
+
+		template <class WriteFunc>
+		static FormatError write_any_with_written(const WriteFunc& write, openpal::WSlice& dest, openpal::RSlice& written)
+		{
+			const auto start = dest;
+			auto err = write(dest);
+			if (any(err)) {
+				written = openpal::RSlice::empty_slice();
+				return err;
+			}
+			else {
+				const auto num_written = start.length() - dest.length();
+				written = start.as_rslice().take(num_written);
+				return err;
+			}
+		}
+		
+		
 	};
 }
 

@@ -46,4 +46,10 @@ FormatError ReplyHandshakeAuth::write(openpal::WSlice& output)
   );
 }
 
+FormatResult ReplyHandshakeAuth::write_msg(openpal::WSlice& output)
+{
+  auto write = [this](openpal::WSlice& output) { return this->write(output); };
+  return FormatResult::write_any(write, output);
+}
+
 }

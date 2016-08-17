@@ -7,6 +7,8 @@
 #include "testlib/BufferHelpers.h"
 #include "testlib/HexConversions.h"
 
+#include <openpal/container/StaticBuffer.h>
+
 #define SUITE(name) "RequestHandshakeBeginTestSuite - " name
 
 using namespace ssp21;
@@ -96,4 +98,15 @@ TEST_CASE(SUITE("rejects trailing data"))
 	auto input = hex.as_rslice();
 	auto err = msg.read(input);
 	REQUIRE(err == ParseError::too_many_bytes);
+}
+
+TEST_CASE(SUITE("formats default value"))
+{
+	openpal::StaticBuffer<64> buffer;
+	RequestHandshakeBegin msg;
+	auto dest = buffer.as_wslice();
+	auto res = msg.write_msg(dest);
+	
+	REQUIRE(!res.is_error());
+	REQUIRE(to_hex(res.written) == "00 00 00 FF FF FF FF FF 00 00");	
 }
