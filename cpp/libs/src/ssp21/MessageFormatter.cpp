@@ -90,7 +90,7 @@ FormatError write_seq(openpal::WSlice& dest, const SeqType& value)
 		return FormatError::bad_sequence_length;
 	}
 
-	const auto count = static_cast<CountType::type_t>(value.length());
+	const auto count = static_cast<typename CountType::type_t>(value.length());
 
 	auto err = MessageFormatter::write(dest, count);
 	if (any(err)) return err;
