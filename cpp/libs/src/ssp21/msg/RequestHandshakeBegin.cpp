@@ -37,8 +37,7 @@ RequestHandshakeBegin::RequestHandshakeBegin(
   HashMode hash_mode,
   SessionMode session_mode,
   CertificateMode certificate_mode,
-  const Seq8& ephemeral_public_key,
-  const Seq8Seq16& certificates
+  const Seq8& ephemeral_public_key
 ) :
   version(version),
   nonce_mode(nonce_mode),
@@ -46,8 +45,7 @@ RequestHandshakeBegin::RequestHandshakeBegin(
   hash_mode(hash_mode),
   session_mode(session_mode),
   certificate_mode(certificate_mode),
-  ephemeral_public_key(ephemeral_public_key),
-  certificates(certificates)
+  ephemeral_public_key(ephemeral_public_key)
 {}
 
 ParseError RequestHandshakeBegin::read(openpal::RSlice& input)

@@ -37,9 +37,11 @@ object MessageGenerator {
 
       def fullConstructorSig(impl: Boolean) : Iterator[String] = {
 
-        val firstArgs : Iterator[String] = message.fields.dropRight(1).map(f => f.cpp.asArgument(f.name)+",").toIterator
+        val fields = message.fields.filter(_.cpp.initializeInFullConstructor)
 
-        val last = message.fields.last
+        val firstArgs : Iterator[String] = fields.dropRight(1).map(f => f.cpp.asArgument(f.name)+",").toIterator
+
+        val last = fields.last
         val lastArgs : Iterator[String] = Iterator(last.cpp.asArgument(last.name))
 
         def funcName = if(impl) Iterator("%s::%s(".format(message.name, message.name)) else Iterator(message.name + "(")
@@ -105,7 +107,7 @@ object MessageGenerator {
 
       def fullConstructorImpl : Iterator[String] = {
 
-        val names = message.fields.map(_.name)
+        val names = message.fields.filter(_.cpp.initializeInFullConstructor).map(_.name)
 
         def initFirst(name: String) = "%s(%s),".format(name, name)
         def initLast(name: String) = "%s(%s)".format(name, name)

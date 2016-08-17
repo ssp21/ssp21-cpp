@@ -10,6 +10,7 @@ sealed trait FieldGenerator {
   def cppType : String
   def defaultValue: Option[String]
   def asArgument(name: String) : String
+  def initializeInFullConstructor : Boolean = true
 }
 
 sealed trait PassByValue {
@@ -56,6 +57,7 @@ object Seq8Seq16FieldGenerator extends FieldGenerator with PassByConstRef {
   override def includes = Set(Includes.seqTypes)
   override def cppType : String = "Seq8Seq16"
   def defaultValue: Option[String] = None
+  override def initializeInFullConstructor : Boolean = false
 }
 
 

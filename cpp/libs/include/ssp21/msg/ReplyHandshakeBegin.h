@@ -32,8 +32,7 @@ struct ReplyHandshakeBegin : openpal::Uncopyable
 
   ReplyHandshakeBegin(
     uint16_t version,
-    const Seq8& ephemeral_public_key,
-    const Seq8Seq16& certificates
+    const Seq8& ephemeral_public_key
   );
 
   ParseError read(openpal::RSlice& input);

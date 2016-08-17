@@ -42,8 +42,7 @@ struct RequestHandshakeBegin : openpal::Uncopyable
     HashMode hash_mode,
     SessionMode session_mode,
     CertificateMode certificate_mode,
-    const Seq8& ephemeral_public_key,
-    const Seq8Seq16& certificates
+    const Seq8& ephemeral_public_key
   );
 
   ParseError read(openpal::RSlice& input);
