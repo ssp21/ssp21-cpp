@@ -102,7 +102,7 @@ TEST_CASE(SUITE("rejects trailing data"))
 
 TEST_CASE(SUITE("formats default value"))
 {
-	openpal::StaticBuffer<10> buffer;
+	openpal::StaticBuffer<RequestHandshakeBegin::min_size_bytes> buffer;
 	RequestHandshakeBegin msg;
 	auto dest = buffer.as_wslice();
 	auto res = msg.write_msg(dest);
@@ -113,7 +113,7 @@ TEST_CASE(SUITE("formats default value"))
 
 TEST_CASE(SUITE("returns error if insufficient buffer space"))
 {
-	openpal::StaticBuffer<9> buffer;
+	openpal::StaticBuffer<RequestHandshakeBegin::min_size_bytes - 1> buffer;
 	RequestHandshakeBegin msg;
 	auto dest = buffer.as_wslice();
 	REQUIRE(msg.write_msg(dest).err == FormatError::insufficient_space);

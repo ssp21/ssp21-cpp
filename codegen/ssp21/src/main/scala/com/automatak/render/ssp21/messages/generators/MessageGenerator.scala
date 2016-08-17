@@ -61,6 +61,8 @@ object MessageGenerator {
 
       def writeMsgSig : Iterator[String] = Iterator("FormatResult write_msg(openpal::WSlice& output);");
 
+      def minSizeBytes : Iterator[String] = Iterator("static const uint32_t min_size_bytes = %s;".format(message.minSizeBytes))
+
       def fieldDefintions : Iterator[String] = message.fields.map { f =>
         "%s %s;".format(f.cpp.cppType, f.name);
       }.toIterator
@@ -74,6 +76,8 @@ object MessageGenerator {
           readSigHeader ++
           writeSigHeader ++
           writeMsgSig ++
+          space ++
+          minSizeBytes ++
           space ++
           fieldDefintions
         }

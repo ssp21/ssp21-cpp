@@ -38,6 +38,8 @@ struct ReplyHandshakeError : openpal::Uncopyable
   FormatError write(openpal::WSlice& output);
   FormatResult write_msg(openpal::WSlice& output);
 
+  static const uint32_t min_size_bytes = 2;
+
   HandshakeError handshake_error;
 };
 

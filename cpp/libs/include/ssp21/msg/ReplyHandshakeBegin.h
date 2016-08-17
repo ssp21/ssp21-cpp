@@ -40,6 +40,8 @@ struct ReplyHandshakeBegin : openpal::Uncopyable
   FormatError write(openpal::WSlice& output);
   FormatResult write_msg(openpal::WSlice& output);
 
+  static const uint32_t min_size_bytes = 5;
+
   uint16_t version;
   Seq8 ephemeral_public_key;
   Seq8Seq16 certificates;

@@ -38,6 +38,8 @@ struct ReplyHandshakeAuth : openpal::Uncopyable
   FormatError write(openpal::WSlice& output);
   FormatResult write_msg(openpal::WSlice& output);
 
+  static const uint32_t min_size_bytes = 2;
+
   Seq8 mac;
 };
 

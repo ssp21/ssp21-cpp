@@ -50,6 +50,8 @@ struct RequestHandshakeBegin : openpal::Uncopyable
   FormatError write(openpal::WSlice& output);
   FormatResult write_msg(openpal::WSlice& output);
 
+  static const uint32_t min_size_bytes = 10;
+
   uint16_t version;
   NonceMode nonce_mode;
   DHMode dh_mode;

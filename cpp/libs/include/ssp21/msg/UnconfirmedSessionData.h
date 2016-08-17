@@ -41,6 +41,8 @@ struct UnconfirmedSessionData : openpal::Uncopyable
   FormatError write(openpal::WSlice& output);
   FormatResult write_msg(openpal::WSlice& output);
 
+  static const uint32_t min_size_bytes = 9;
+
   uint32_t valid_until_ms;
   uint16_t nonce;
   Seq16 payload;
