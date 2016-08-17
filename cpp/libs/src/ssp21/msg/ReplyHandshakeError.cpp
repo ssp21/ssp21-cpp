@@ -16,6 +16,7 @@
 #include "ssp21/msg/ReplyHandshakeError.h"
 
 #include "ssp21/MessageParser.h"
+#include "ssp21/MessageFormatter.h"
 
 namespace ssp21 {
 
@@ -28,6 +29,14 @@ ParseError ReplyHandshakeError::read(openpal::RSlice& input)
 {
   return MessageParser::read_message<Function::reply_handshake_error>(
     input,
+    handshake_error
+  );
+}
+
+bool ReplyHandshakeError::write(openpal::WSlice& dest)
+{
+  return MessageFormatter::write_message<Function::reply_handshake_error>(
+    dest,
     handshake_error
   );
 }

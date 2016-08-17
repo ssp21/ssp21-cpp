@@ -18,6 +18,7 @@ object Includes {
 
   val cstdint = Include("<cstdint>", Ordering.system)
   val rslice = Include(quoted("openpal/container/RSlice.h"), Ordering.openpal)
+  val wslice = Include(quoted("openpal/container/WSlice.h"), Ordering.openpal)
   val seqTypes = Include(quoted("ssp21/SequenceTypes.h"), Ordering.ssp21)
   val uncopyable = Include(quoted("openpal/util/Uncopyable.h"), Ordering.openpal)
   val parseError = Include(quoted("ssp21/gen/ParseError.h"), Ordering.ssp21)

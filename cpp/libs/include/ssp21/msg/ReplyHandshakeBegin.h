@@ -18,6 +18,7 @@
 
 #include "ssp21/gen/ParseError.h"
 #include "ssp21/SequenceTypes.h"
+#include "openpal/container/WSlice.h"
 #include "openpal/util/Uncopyable.h"
 #include "openpal/container/RSlice.h"
 #include <cstdint>
@@ -29,6 +30,8 @@ struct ReplyHandshakeBegin : openpal::Uncopyable
   ReplyHandshakeBegin();
 
   ParseError read(openpal::RSlice& input);
+
+  bool write(openpal::WSlice& dest);
 
   uint16_t version;
   Seq8 ephemeral_public_key;

@@ -18,6 +18,7 @@
 
 #include "ssp21/gen/ParseError.h"
 #include "ssp21/SequenceTypes.h"
+#include "openpal/container/WSlice.h"
 #include "openpal/util/Uncopyable.h"
 #include "openpal/container/RSlice.h"
 #include <cstdint>
@@ -29,6 +30,8 @@ struct UnconfirmedSessionData : openpal::Uncopyable
   UnconfirmedSessionData();
 
   ParseError read(openpal::RSlice& input);
+
+  bool write(openpal::WSlice& dest);
 
   uint32_t valid_until_ms;
   uint16_t nonce;

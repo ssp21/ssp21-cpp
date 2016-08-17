@@ -22,13 +22,15 @@ object MessageGenerator {
 
       def includes : Iterator[String] = {
         Includes.lines(
-          Includes.rslice :: Includes.uncopyable :: Includes.parseError :: message.fields.flatMap(f => f.cpp.includes.toList)
+          Includes.rslice :: Includes.wslice :: Includes.uncopyable :: Includes.parseError :: message.fields.flatMap(f => f.cpp.includes.toList)
         )
       }
 
       def defaultConstructorSig : Iterator[String] = Iterator(message.name + "();")
 
       def readSigHeader : Iterator[String] = Iterator("ParseError read(openpal::RSlice& input);");
+
+      def writeSigHeader : Iterator[String] = Iterator("bool write(openpal::WSlice& dest);");
 
       def fieldDefintions : Iterator[String] = message.fields.map { f =>
         "%s %s;".format(f.cpp.cppType, f.name);
@@ -39,6 +41,8 @@ object MessageGenerator {
           defaultConstructorSig ++
           space ++
           readSigHeader ++
+          space ++
+          writeSigHeader ++
           space ++
           fieldDefintions
         }
@@ -90,13 +94,30 @@ object MessageGenerator {
         }
       }
 
+      def writeFunc : Iterator[String] = {
+
+        def first = message.fields.dropRight(1).map(f => f.name + ",").toIterator
+        def last = Iterator(message.fields.last.name)
+        def args = first ++ last
+
+        Iterator("bool %s::write(openpal::WSlice& dest)".format(message.name)) ++ bracket {
+          Iterator("return MessageFormatter::write_message<Function::%s>(".format(message.function.name)) ++ indent {
+            Iterator("dest,") ++
+              args
+          } ++ Iterator(");")
+        }
+      }
+
       def writeImpl() {
 
 
         def license = commented(LicenseHeader())
-        def funcs = defaultConstructorImpl ++ space ++ readFunc
+        def funcs = defaultConstructorImpl ++ space ++ readFunc ++ space ++ writeFunc
         def selfInclude = quoted(String.format(incFormatString, headerName(message)))
-        def includes = Iterator(include(selfInclude)) ++ space ++ Iterator(include(quoted("ssp21/MessageParser.h")))
+        def includes = Iterator(include(selfInclude)) ++ space ++ Iterator(
+          include(quoted("ssp21/MessageParser.h")),
+          include(quoted("ssp21/MessageFormatter.h"))
+        )
         def lines = license ++ space ++ includes ++ space ++ namespace(cppNamespace)(funcs)
 
         val path = implPath(message)

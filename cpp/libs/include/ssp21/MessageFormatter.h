@@ -27,15 +27,15 @@ namespace ssp21 {
 			auto result = write(input, function);
 			if (!result) return result;
 
-			return read_fields(input, value, args...);
+			return write_fields(input, value, args...);
 		}	
 
 		template <typename T, typename... Args>
 		static bool write_fields(openpal::WSlice& dest, const T& value, Args& ... args)
 		{
-			auto result = write(input, value);
+			auto result = write(dest, value);
 			if (!result) return result;
-			return write_fields(input, args...);
+			return write_fields(dest, args...);
 		}
 
 		

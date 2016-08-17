@@ -16,6 +16,7 @@
 #include "ssp21/msg/RequestHandshakeBegin.h"
 
 #include "ssp21/MessageParser.h"
+#include "ssp21/MessageFormatter.h"
 
 namespace ssp21 {
 
@@ -33,6 +34,21 @@ ParseError RequestHandshakeBegin::read(openpal::RSlice& input)
 {
   return MessageParser::read_message<Function::request_handshake_begin>(
     input,
+    version,
+    nonce_mode,
+    dh_mode,
+    hash_mode,
+    session_mode,
+    certificate_mode,
+    ephemeral_public_key,
+    certificates
+  );
+}
+
+bool RequestHandshakeBegin::write(openpal::WSlice& dest)
+{
+  return MessageFormatter::write_message<Function::request_handshake_begin>(
+    dest,
     version,
     nonce_mode,
     dh_mode,

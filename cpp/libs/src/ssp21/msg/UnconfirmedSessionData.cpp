@@ -16,6 +16,7 @@
 #include "ssp21/msg/UnconfirmedSessionData.h"
 
 #include "ssp21/MessageParser.h"
+#include "ssp21/MessageFormatter.h"
 
 namespace ssp21 {
 
@@ -29,6 +30,16 @@ ParseError UnconfirmedSessionData::read(openpal::RSlice& input)
 {
   return MessageParser::read_message<Function::unconfirmed_session_data>(
     input,
+    valid_until_ms,
+    nonce,
+    payload
+  );
+}
+
+bool UnconfirmedSessionData::write(openpal::WSlice& dest)
+{
+  return MessageFormatter::write_message<Function::unconfirmed_session_data>(
+    dest,
     valid_until_ms,
     nonce,
     payload

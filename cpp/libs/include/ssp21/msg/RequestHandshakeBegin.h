@@ -23,6 +23,7 @@
 #include "ssp21/SequenceTypes.h"
 #include "ssp21/gen/SessionMode.h"
 #include "ssp21/gen/NonceMode.h"
+#include "openpal/container/WSlice.h"
 #include "openpal/util/Uncopyable.h"
 #include "openpal/container/RSlice.h"
 #include <cstdint>
@@ -34,6 +35,8 @@ struct RequestHandshakeBegin : openpal::Uncopyable
   RequestHandshakeBegin();
 
   ParseError read(openpal::RSlice& input);
+
+  bool write(openpal::WSlice& dest);
 
   uint16_t version;
   NonceMode nonce_mode;
