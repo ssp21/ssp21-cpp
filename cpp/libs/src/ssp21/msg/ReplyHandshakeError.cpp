@@ -25,6 +25,12 @@ ReplyHandshakeError::ReplyHandshakeError() :
 {
 }
 
+ReplyHandshakeError::ReplyHandshakeError(
+  HandshakeError handshake_error
+) :
+  handshake_error(handshake_error)
+{}
+
 ParseError ReplyHandshakeError::read(openpal::RSlice& input)
 {
   return MessageParser::read_message<Function::reply_handshake_error>(

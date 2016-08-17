@@ -31,7 +31,7 @@ namespace ssp21
 		{}
 	};
 
-	class SeqRSlice : openpal::Uncopyable
+	class SeqRSlice
 	{
 
 	public:

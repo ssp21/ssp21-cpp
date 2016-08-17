@@ -24,6 +24,12 @@ RequestHandshakeAuth::RequestHandshakeAuth()
 {
 }
 
+RequestHandshakeAuth::RequestHandshakeAuth(
+  const Seq8& mac
+) :
+  mac(mac)
+{}
+
 ParseError RequestHandshakeAuth::read(openpal::RSlice& input)
 {
   return MessageParser::read_message<Function::request_handshake_auth>(

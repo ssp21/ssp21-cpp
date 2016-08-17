@@ -29,6 +29,10 @@ struct ReplyHandshakeError : openpal::Uncopyable
 {
   ReplyHandshakeError();
 
+  ReplyHandshakeError(
+    HandshakeError handshake_error
+  );
+
   ParseError read(openpal::RSlice& input);
   FormatError write(openpal::WSlice& output);
 

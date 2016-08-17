@@ -30,6 +30,26 @@ RequestHandshakeBegin::RequestHandshakeBegin() :
 {
 }
 
+RequestHandshakeBegin::RequestHandshakeBegin(
+  uint16_t version,
+  NonceMode nonce_mode,
+  DHMode dh_mode,
+  HashMode hash_mode,
+  SessionMode session_mode,
+  CertificateMode certificate_mode,
+  const Seq8& ephemeral_public_key,
+  const Seq8Seq16& certificates
+) :
+  version(version),
+  nonce_mode(nonce_mode),
+  dh_mode(dh_mode),
+  hash_mode(hash_mode),
+  session_mode(session_mode),
+  certificate_mode(certificate_mode),
+  ephemeral_public_key(ephemeral_public_key),
+  certificates(certificates)
+{}
+
 ParseError RequestHandshakeBegin::read(openpal::RSlice& input)
 {
   return MessageParser::read_message<Function::request_handshake_begin>(

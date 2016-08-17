@@ -35,6 +35,23 @@ object MessageGenerator {
 
       def defaultConstructorSig : Iterator[String] = Iterator(message.name + "();")
 
+      def fullConstructorSig(impl: Boolean) : Iterator[String] = {
+
+        val firstArgs : Iterator[String] = message.fields.dropRight(1).map(f => f.cpp.asArgument(f.name)+",").toIterator
+
+        val last = message.fields.last
+        val lastArgs : Iterator[String] = Iterator(last.cpp.asArgument(last.name))
+
+        def funcName = if(impl) Iterator("%s::%s(".format(message.name, message.name)) else Iterator(message.name + "(")
+
+        def terminator : Iterator[String] = if(impl) Iterator(") :") else Iterator(");")
+
+        funcName ++ indent {
+          firstArgs ++ lastArgs
+        } ++ terminator
+      }
+
+
       def readSigHeader : Iterator[String] = Iterator("ParseError read(openpal::RSlice& input);");
 
       def writeSigHeader : Iterator[String] = Iterator("FormatError write(openpal::WSlice& output);");
@@ -46,6 +63,8 @@ object MessageGenerator {
       def struct : Iterator[String] = {
         Iterator("struct " + message.name + " : openpal::Uncopyable") ++ bracketSemiColon {
           defaultConstructorSig ++
+          space ++
+          fullConstructorSig(false) ++
           space ++
           readSigHeader ++
           writeSigHeader ++
@@ -84,6 +103,22 @@ object MessageGenerator {
         }
       }
 
+      def fullConstructorImpl : Iterator[String] = {
+
+        val names = message.fields.map(_.name)
+
+        def initFirst(name: String) = "%s(%s),".format(name, name)
+        def initLast(name: String) = "%s(%s)".format(name, name)
+
+        def leadingArgs = names.dropRight(1).map(initFirst).toIterator
+        def lastArg = Iterator(initLast(names.last))
+
+
+        fullConstructorSig(true) ++ indent {
+          leadingArgs ++ lastArg
+        } ++ Iterator("{}")
+      }
+
       def readFunc : Iterator[String] = {
 
         def first = message.fields.dropRight(1).map(f => f.name + ",").toIterator
@@ -116,13 +151,19 @@ object MessageGenerator {
 
 
         def license = commented(LicenseHeader())
-        def funcs = defaultConstructorImpl ++ space ++ readFunc ++ space ++ writeFunc
-        def selfInclude = quoted(String.format(incFormatString, headerName(message)))
-        def includes = Iterator(include(selfInclude)) ++ space ++ Iterator(
-          include(quoted("ssp21/MessageParser.h")),
-          include(quoted("ssp21/MessageFormatter.h"))
+        def funcs = defaultConstructorImpl ++ space ++ fullConstructorImpl ++ space ++ readFunc ++ space ++ writeFunc
+
+        def selfInclude = include(quoted(String.format(incFormatString, headerName(message))))
+
+        def includes = {
+          Iterator(selfInclude) ++
+          space ++
+          Includes.lines(List(Includes.msgParser, Includes.msgFormatter))
+        }
+
+        def lines = license ++ space ++ includes ++ space ++ namespace(cppNamespace)(
+          funcs
         )
-        def lines = license ++ space ++ includes ++ space ++ namespace(cppNamespace)(funcs)
 
         val path = implPath(message)
         writeTo(path)(lines)

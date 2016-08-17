@@ -26,6 +26,16 @@ UnconfirmedSessionData::UnconfirmedSessionData() :
 {
 }
 
+UnconfirmedSessionData::UnconfirmedSessionData(
+  uint32_t valid_until_ms,
+  uint16_t nonce,
+  const Seq16& payload
+) :
+  valid_until_ms(valid_until_ms),
+  nonce(nonce),
+  payload(payload)
+{}
+
 ParseError UnconfirmedSessionData::read(openpal::RSlice& input)
 {
   return MessageParser::read_message<Function::unconfirmed_session_data>(

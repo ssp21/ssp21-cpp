@@ -25,6 +25,16 @@ ReplyHandshakeBegin::ReplyHandshakeBegin() :
 {
 }
 
+ReplyHandshakeBegin::ReplyHandshakeBegin(
+  uint16_t version,
+  const Seq8& ephemeral_public_key,
+  const Seq8Seq16& certificates
+) :
+  version(version),
+  ephemeral_public_key(ephemeral_public_key),
+  certificates(certificates)
+{}
+
 ParseError ReplyHandshakeBegin::read(openpal::RSlice& input)
 {
   return MessageParser::read_message<Function::reply_handshake_begin>(

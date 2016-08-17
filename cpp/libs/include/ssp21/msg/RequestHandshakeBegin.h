@@ -35,6 +35,17 @@ struct RequestHandshakeBegin : openpal::Uncopyable
 {
   RequestHandshakeBegin();
 
+  RequestHandshakeBegin(
+    uint16_t version,
+    NonceMode nonce_mode,
+    DHMode dh_mode,
+    HashMode hash_mode,
+    SessionMode session_mode,
+    CertificateMode certificate_mode,
+    const Seq8& ephemeral_public_key,
+    const Seq8Seq16& certificates
+  );
+
   ParseError read(openpal::RSlice& input);
   FormatError write(openpal::WSlice& output);
 

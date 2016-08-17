@@ -30,6 +30,12 @@ struct UnconfirmedSessionData : openpal::Uncopyable
 {
   UnconfirmedSessionData();
 
+  UnconfirmedSessionData(
+    uint32_t valid_until_ms,
+    uint16_t nonce,
+    const Seq16& payload
+  );
+
   ParseError read(openpal::RSlice& input);
   FormatError write(openpal::WSlice& output);
 

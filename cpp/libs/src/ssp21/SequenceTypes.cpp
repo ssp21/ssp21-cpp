@@ -5,7 +5,7 @@ namespace ssp21
 {						
 	
 
-SeqRSlice::SeqRSlice()
+SeqRSlice::SeqRSlice() : count_(0)
 {}
 
 void SeqRSlice::clear()
