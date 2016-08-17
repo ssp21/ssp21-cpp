@@ -12,26 +12,24 @@ package object render {
       def iter : Iterator[String] = Iterator(s)
     }
 
-    // adds commas to all but the last item
     def mapAllButLast(items : Seq[String])(func: String => String) : Iterator[String] = {
       if(items.isEmpty) items.toIterator
       else (items.dropRight(1).map(func) ++ List(items.last)).toIterator
     }
 
+    // adds commas to all but the last item
     def commas(items : Seq[String]) : Iterator[String] = mapAllButLast(items)(_ + ",")
 
     def space: Iterator[String] = "".iter
 
     def commented(lines: Iterator[String]): Iterator[String] = {
-      Iterator("//") ++ lines.map(l => "// " + l) ++ Iterator("//")
+        "//".iter ++
+        lines.map(l => "// " + l) ++
+        "//".iter
     }
 
     def bracketWithCap(indent: Indentation, cap: String)(inner: => Iterator[String]): Iterator[String] = {
-      Iterator("{") ++
-        indent(
-          inner
-        ) ++
-        Iterator("}"+cap)
+        "{".iter ++ indent(inner) ++ ("}"+cap).iter
     }
 
     def bracket(inner: => Iterator[String])(implicit indent: Indentation): Iterator[String] = bracketWithCap(indent,"")(inner)
