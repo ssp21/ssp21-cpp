@@ -5,8 +5,6 @@ package com.automatak.render.ssp21
 
 import java.nio.file.{Files, Paths}
 
-import com.automatak.render.ssp21.messages.generators.MessageGenerator
-
 object Generate {
 
   val basePath = "../cpp/libs";
@@ -22,7 +20,6 @@ object Generate {
   def main(args: Array[String]): Unit = {
 
     paths.foreach(p => Files.createDirectories(p))
-
 
     AllEnums.files.foreach(_.write(ssp21GenHeaderPath, ssp21GenImplPath))
     AllMessages.files.foreach(_.write(ssp21MsgHeaderPath, ssp21MsgImplPath))
