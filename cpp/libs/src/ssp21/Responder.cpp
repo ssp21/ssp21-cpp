@@ -40,7 +40,7 @@ namespace ssp21
 			case(Function::request_handshake_begin) :
 				this->read_any<RequestHandshakeBegin>(data);
 				break;
-			case(Function::reply_handshake_auth) :
+			case(Function::request_handshake_auth) :
 				this->read_any<RequestHandshakeAuth>(data);
 				break;
 			
