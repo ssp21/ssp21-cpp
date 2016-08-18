@@ -37,8 +37,7 @@ struct UnconfirmedSessionData : private openpal::Uncopyable
     const Seq16& payload
   );
 
-  ParseError read(openpal::RSlice& input);
-  FormatError write(openpal::WSlice& output);
+  ParseError read_msg(openpal::RSlice& input);
   FormatResult write_msg(openpal::WSlice& output);
 
   static const uint32_t min_size_bytes = 9;
@@ -46,6 +45,10 @@ struct UnconfirmedSessionData : private openpal::Uncopyable
   uint32_t valid_until_ms;
   uint16_t nonce;
   Seq16 payload;
+
+  private: 
+
+  FormatError write(openpal::WSlice& output);
 };
 
 }

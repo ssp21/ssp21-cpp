@@ -18,7 +18,7 @@ TEST_CASE(SUITE("returns error on empty message"))
 {		
 	RequestHandshakeBegin msg;
 	auto input = RSlice::empty_slice();
-	REQUIRE(msg.read(input) == ParseError::insufficient_bytes);
+	REQUIRE(msg.read_msg(input) == ParseError::insufficient_bytes);
 }
 
 TEST_CASE(SUITE("returns error on undefined enum"))
@@ -28,7 +28,7 @@ TEST_CASE(SUITE("returns error on undefined enum"))
 	HexSequence hex("DD");
 
 	auto input = hex.as_rslice();
-	auto err = msg.read(input);
+	auto err = msg.read_msg(input);
 	REQUIRE(err == ParseError::undefined_enum);
 }
 
@@ -39,7 +39,7 @@ TEST_CASE(SUITE("returns error on unexpected function"))
 	HexSequence hex("03");
 
 	auto input = hex.as_rslice();
-	auto err = msg.read(input);
+	auto err = msg.read_msg(input);
 	REQUIRE(err == ParseError::unexpected_function);
 }
 
@@ -50,7 +50,7 @@ TEST_CASE(SUITE("returns error if too little data"))
 	HexSequence hex("00");
 
 	auto input = hex.as_rslice();
-	auto err = msg.read(input);
+	auto err = msg.read_msg(input);
 	REQUIRE(err == ParseError::insufficient_bytes);
 }
 
@@ -61,7 +61,7 @@ TEST_CASE(SUITE("successfully parses message"))
 	HexSequence hex("00 D2 D1 00 00 00 00 00 03 AA AA AA 01 02 00 BB BB");
 
 	auto input = hex.as_rslice();
-	auto err = msg.read(input);
+	auto err = msg.read_msg(input);
 	REQUIRE(!any(err));
 	REQUIRE(msg.version == 0xD1D2);
 	REQUIRE(msg.nonce_mode == NonceMode::increment_last_rx);
@@ -85,7 +85,7 @@ TEST_CASE(SUITE("rejects unknown enum"))
 	HexSequence hex("00 D2 D1 00 CC 00 00 00 03 AA AA AA 01 02 00 BB BB");
 
 	auto input = hex.as_rslice();
-	auto err = msg.read(input);
+	auto err = msg.read_msg(input);
 	REQUIRE(err == ParseError::undefined_enum);
 }
 
@@ -96,7 +96,7 @@ TEST_CASE(SUITE("rejects trailing data"))
 	HexSequence hex("00 D2 D1 00 00 00 00 00 03 AA AA AA 01 02 00 BB BB FF FF FF");
 
 	auto input = hex.as_rslice();
-	auto err = msg.read(input);
+	auto err = msg.read_msg(input);
 	REQUIRE(err == ParseError::too_many_bytes);
 }
 

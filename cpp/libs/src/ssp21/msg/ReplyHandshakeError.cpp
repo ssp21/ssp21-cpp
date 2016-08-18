@@ -30,7 +30,7 @@ ReplyHandshakeError::ReplyHandshakeError(
   handshake_error(handshake_error)
 {}
 
-ParseError ReplyHandshakeError::read(openpal::RSlice& input)
+ParseError ReplyHandshakeError::read_msg(openpal::RSlice& input)
 {
   return MessageParser::read_message<Function::reply_handshake_error>(
     input,

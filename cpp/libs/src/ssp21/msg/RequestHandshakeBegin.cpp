@@ -47,7 +47,7 @@ RequestHandshakeBegin::RequestHandshakeBegin(
   ephemeral_public_key(ephemeral_public_key)
 {}
 
-ParseError RequestHandshakeBegin::read(openpal::RSlice& input)
+ParseError RequestHandshakeBegin::read_msg(openpal::RSlice& input)
 {
   return MessageParser::read_message<Function::request_handshake_begin>(
     input,

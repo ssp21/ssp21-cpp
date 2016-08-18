@@ -16,7 +16,7 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
 
   override def header(implicit indent: Indentation) : Iterator[String] = {
 
-    def readSigHeader = "ParseError read(openpal::RSlice& input);".iter
+    def readSigHeader = "ParseError read_msg(openpal::RSlice& input);".iter
     def writeMsgSig = "FormatResult write_msg(openpal::WSlice& output);".iter
     def writeSigHeader = "FormatError write(openpal::WSlice& output);".iter
     def defaultConstructorSig = "%s();".format(msg.name).iter
@@ -35,12 +35,15 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
           fullConstructorSig(false) ++
           space ++
           readSigHeader ++
-          writeSigHeader ++
           writeMsgSig ++
           space ++
           minSizeBytes ++
           space ++
-          fieldDefintions
+          fieldDefintions ++
+          space ++
+          "private: ".iter ++
+          space ++
+          writeSigHeader
       }
     }
 
@@ -71,7 +74,7 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
 
     def readFunc(implicit indent: Indentation) : Iterator[String] = {
 
-      "ParseError %s::read(openpal::RSlice& input)".format(msg.name).iter ++ bracket {
+      "ParseError %s::read_msg(openpal::RSlice& input)".format(msg.name).iter ++ bracket {
         "return MessageParser::read_message<Function::%s>(".format(msg.function.name).iter ++ indent {
           "input,".iter ++ args
         } ++ ");".iter

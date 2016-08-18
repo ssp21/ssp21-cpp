@@ -32,7 +32,7 @@ ReplyHandshakeBegin::ReplyHandshakeBegin(
   ephemeral_public_key(ephemeral_public_key)
 {}
 
-ParseError ReplyHandshakeBegin::read(openpal::RSlice& input)
+ParseError ReplyHandshakeBegin::read_msg(openpal::RSlice& input)
 {
   return MessageParser::read_message<Function::reply_handshake_begin>(
     input,

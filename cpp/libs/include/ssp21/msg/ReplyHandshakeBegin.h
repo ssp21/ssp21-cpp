@@ -36,8 +36,7 @@ struct ReplyHandshakeBegin : private openpal::Uncopyable
     const Seq8& ephemeral_public_key
   );
 
-  ParseError read(openpal::RSlice& input);
-  FormatError write(openpal::WSlice& output);
+  ParseError read_msg(openpal::RSlice& input);
   FormatResult write_msg(openpal::WSlice& output);
 
   static const uint32_t min_size_bytes = 5;
@@ -45,6 +44,10 @@ struct ReplyHandshakeBegin : private openpal::Uncopyable
   uint16_t version;
   Seq8 ephemeral_public_key;
   Seq8Seq16 certificates;
+
+  private: 
+
+  FormatError write(openpal::WSlice& output);
 };
 
 }

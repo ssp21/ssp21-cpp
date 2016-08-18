@@ -35,7 +35,7 @@ UnconfirmedSessionData::UnconfirmedSessionData(
   payload(payload)
 {}
 
-ParseError UnconfirmedSessionData::read(openpal::RSlice& input)
+ParseError UnconfirmedSessionData::read_msg(openpal::RSlice& input)
 {
   return MessageParser::read_message<Function::unconfirmed_session_data>(
     input,
