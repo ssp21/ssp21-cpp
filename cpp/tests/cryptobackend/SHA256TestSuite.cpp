@@ -17,12 +17,27 @@ TEST_CASE(SUITE("sha256"))
 
 	auto slice = openpal::RSlice(reinterpret_cast<const uint8_t*>(text.c_str()), text.size());
 
-	SymmetricKey output;
+	HashOutput output;
 	Crypto::hash_sha256({slice}, output);
 	REQUIRE(output.get_type() == BufferType::sha256);
 
 	auto hex = openpal::to_hex(output.as_slice(), false);
 	REQUIRE(hex == "5CAC4F980FEDC3D3F1F99B4BE3472C9B30D56523E632D151237EC9309048BDA9");	
+}
+
+TEST_CASE(SUITE("sha256 can safely be invoked on its own output buffer"))
+{
+	std::string text("The quick brown fox");
+	auto slice = openpal::RSlice(reinterpret_cast<const uint8_t*>(text.c_str()), text.size());
+
+	HashOutput output;
+	Crypto::hash_sha256({ slice }, output);
+	
+	// now mix the hash
+	Crypto::hash_sha256({ output.as_slice(), slice }, output);
+
+	auto hex = openpal::to_hex(output.as_slice(), false);
+	REQUIRE(hex == "A40F5F6A51B38D29F07846CE1753042920C0F8E871BBCBDDC99B785D2C4C25F7");
 }
 
 TEST_CASE(SUITE("HMAC-sha256"))
@@ -33,7 +48,7 @@ TEST_CASE(SUITE("HMAC-sha256"))
 	auto text_slice = openpal::RSlice(reinterpret_cast<const uint8_t*>(text.c_str()), text.size());
 	auto key_slice = openpal::RSlice(reinterpret_cast<const uint8_t*>(key.c_str()), key.size());
 
-	SymmetricKey output;
+	HashOutput output;
 	Crypto::hmac_sha256(key_slice, { text_slice }, output);
 	REQUIRE(output.get_type() == BufferType::sha256);
 
