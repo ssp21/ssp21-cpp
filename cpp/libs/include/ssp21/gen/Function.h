@@ -38,7 +38,7 @@ enum class Function : uint8_t
   reply_handshake_error = 0x4,
   /// Either party transmits an unconfirmed session message
   unconfirmed_session_data = 0x5,
-  /// Unknown function code. Used internally in ssp21 to indicate the code didn't match anything known
+  /// value not defined
   undefined = 0xFF
 };
 

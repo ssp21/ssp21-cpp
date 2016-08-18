@@ -19,9 +19,8 @@ object EnumModelRenderer extends ModelRenderer[EnumModel] {
       "enum class %s : %s".format(enum.name, enum.cpp.typ).iter
     }
 
-    def lines(definition: String, comment: Option[String]) : Iterator[String] = comment match {
-      case Some(c) => Iterator("/// %s".format(c), definition)
-      case None => definition.iter
+    def lines(definition: String, comment: String) : Iterator[String] = {
+      Iterator("/// %s".format(comment), definition)
     }
 
     def definitionLines : Iterator[String] = {

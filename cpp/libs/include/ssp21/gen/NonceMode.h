@@ -30,7 +30,7 @@ enum class NonceMode : uint8_t
   increment_last_rx = 0x0,
   /// new nonce must be greater than last nonce
   greater_than_last_rx = 0x1,
-  /// undefined mode
+  /// value not defined
   undefined = 0xFF
 };
 

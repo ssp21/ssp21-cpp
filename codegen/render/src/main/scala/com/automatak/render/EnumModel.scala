@@ -3,22 +3,12 @@
  */
 package com.automatak.render
 
-object EnumValues {
-
-  def bitmask(list: List[String]): List[EnumValue] = from(list, Iterator.iterate(1)(i => i << 1))
-  def from(list: List[String], i: Int = 0) : List[EnumValue] = from(list, Iterator.from(i,1))
-  def from(list: List[String], iterator: Iterator[Int]) : List[EnumValue] = list.map(s => EnumValue(s, iterator.next(), None))
-
-
-  def fromPairs(list: List[Tuple2[String,String]], iterator: Iterator[Int]): List[EnumValue] = list.map(x => EnumValue(x._1, iterator.next(), Some(x._2)))
-  def fromPairs(list: List[Tuple2[String,String]], i: Int = 0): List[EnumValue] = fromPairs(list, Iterator.from(i,1))
-}
 
 object EnumValue {
-  def apply(name: String, value: Int, comment: String): EnumValue = EnumValue(name, value, Some(comment))
+  def undefined(value: Int) = EnumValue("undefined", value, "value not defined")
 }
 
-case class EnumValue(name: String, value: Int, comment: Option[String] = None, strName: Option[String] = None) {
+case class EnumValue(name: String, value: Int, comment: String, strName: Option[String] = None) {
 
   def displayName : String = strName.getOrElse(name)
 
@@ -44,10 +34,6 @@ object EnumModel {
   case object UInt32 extends CppType {
     def sizeInBytes = 4
     def typ = "uint32_t"
-  }
-
-  def BitfieldValues(names: List[String]) : List[EnumValue] = names.zipWithIndex.map { pair =>
-    EnumValue(pair._1, 1 << pair._2)
   }
 }
 

@@ -28,7 +28,7 @@ enum class HashMode : uint8_t
 {
   /// Use SHA256 and HMAC-SHA256
   sha256 = 0x0,
-  /// undefined mode
+  /// value not defined
   undefined = 0xFF
 };
 

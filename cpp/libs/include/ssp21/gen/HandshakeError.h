@@ -44,8 +44,8 @@ enum class HandshakeError : uint8_t
   authentication_error = 0x7,
   /// internal error
   internal = 0xFF,
-  /// undefined error
-  undefined = 0xFE
+  /// value not defined
+  undefined = 0xFF
 };
 
 struct HandshakeErrorSpec : private openpal::StaticOnly

@@ -22,7 +22,7 @@ object EnumToString extends HeaderImplModelRender[EnumModel] {
 
       def sig = "const char* %s::to_string(%s arg)".format(em.specName, em.name).iter
       def smr = new SwitchModelRenderer[EnumValue](ev => em.qualified(ev))(ev => quoted(ev.displayName))
-      def getDefault : EnumValue = em.defaultValue.getOrElse(EnumValue("undefined",0))
+      def getDefault : EnumValue = em.defaultValue.getOrElse(EnumValue.undefined(0))
       def switch = smr.render(em.nonDefaultValues, getDefault)
 
       sig ++ bracket {

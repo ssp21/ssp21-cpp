@@ -28,7 +28,7 @@ enum class DHMode : uint8_t
 {
   /// Use the x25519 algorithm
   x25519 = 0x0,
-  /// undefined mode
+  /// value not defined
   undefined = 0xFF
 };
 
