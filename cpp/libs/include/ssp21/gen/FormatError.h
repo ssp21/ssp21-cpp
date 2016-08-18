@@ -16,8 +16,8 @@
 #ifndef SSP21_FORMATERROR_H
 #define SSP21_FORMATERROR_H
 
-#include "openpal/util/Uncopyable.h"
 #include <cstdint>
+#include "openpal/util/Uncopyable.h"
 
 namespace ssp21 {
 

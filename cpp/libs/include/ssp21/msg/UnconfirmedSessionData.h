@@ -16,14 +16,14 @@
 #ifndef SSP21_UNCONFIRMEDSESSIONDATA_H
 #define SSP21_UNCONFIRMEDSESSIONDATA_H
 
+#include <cstdint>
+#include "openpal/util/Uncopyable.h"
+#include "openpal/container/WSlice.h"
+#include "openpal/container/RSlice.h"
+#include "ssp21/FormatResult.h"
+#include "ssp21/SequenceTypes.h"
 #include "ssp21/gen/ParseError.h"
 #include "ssp21/gen/FormatError.h"
-#include "ssp21/SequenceTypes.h"
-#include "ssp21/FormatResult.h"
-#include "openpal/container/WSlice.h"
-#include "openpal/util/Uncopyable.h"
-#include "openpal/container/RSlice.h"
-#include <cstdint>
 
 namespace ssp21 {
 

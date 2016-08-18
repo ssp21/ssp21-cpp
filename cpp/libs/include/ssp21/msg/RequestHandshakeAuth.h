@@ -16,13 +16,13 @@
 #ifndef SSP21_REQUESTHANDSHAKEAUTH_H
 #define SSP21_REQUESTHANDSHAKEAUTH_H
 
+#include "openpal/util/Uncopyable.h"
+#include "openpal/container/WSlice.h"
+#include "openpal/container/RSlice.h"
+#include "ssp21/FormatResult.h"
+#include "ssp21/SequenceTypes.h"
 #include "ssp21/gen/ParseError.h"
 #include "ssp21/gen/FormatError.h"
-#include "ssp21/SequenceTypes.h"
-#include "ssp21/FormatResult.h"
-#include "openpal/container/WSlice.h"
-#include "openpal/util/Uncopyable.h"
-#include "openpal/container/RSlice.h"
 
 namespace ssp21 {
 

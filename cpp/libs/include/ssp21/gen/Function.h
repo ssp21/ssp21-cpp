@@ -16,8 +16,8 @@
 #ifndef SSP21_FUNCTION_H
 #define SSP21_FUNCTION_H
 
-#include "openpal/util/Uncopyable.h"
 #include <cstdint>
+#include "openpal/util/Uncopyable.h"
 
 namespace ssp21 {
 

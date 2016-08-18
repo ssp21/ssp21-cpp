@@ -16,8 +16,8 @@
 #ifndef SSP21_SESSIONMODE_H
 #define SSP21_SESSIONMODE_H
 
-#include "openpal/util/Uncopyable.h"
 #include <cstdint>
+#include "openpal/util/Uncopyable.h"
 
 namespace ssp21 {
 
