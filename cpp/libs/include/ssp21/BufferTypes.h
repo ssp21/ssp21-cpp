@@ -32,7 +32,7 @@ namespace ssp21
 			
 			void set_type(BufferType key_type);
 
-			void clone(const BufferBase& other);
+			//void clone(const BufferBase& other);
 
 		protected:
 
@@ -77,9 +77,7 @@ namespace ssp21
 	class SymmetricKey final : public SecureBuffer {};
 
 	struct KeyPair final
-	{
-		void clone(const KeyPair& other);
-
+	{		
 		PublicKey public_key;
 		PrivateKey private_key;
 	};		

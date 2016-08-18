@@ -74,7 +74,7 @@ namespace ssp21
 		SymmetricKey& output2)
 	{
 		// extract
-		SymmetricKey temp_key;
+		HashOutput temp_key;
 		hmac(chaining_key, input_key_material, temp_key);
 
 		const uint8_t ONE = 0x01;
@@ -86,6 +86,7 @@ namespace ssp21
 		
 		// this will truncate the lengths in the event that the hmac-output length_ is > the symmetric key length_ we need
 		// TODO: research how noise implementations handle this
+		// Should we always have 256-bit keys?
 		output1.set_type(BufferType::symmetric_key);
 		output2.set_type(BufferType::symmetric_key);
 	}	

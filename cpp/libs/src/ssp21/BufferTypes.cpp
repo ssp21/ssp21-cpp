@@ -32,13 +32,6 @@ void BufferBase::set_type(BufferType buffer_type)
 	length_ = get_buffer_length(buffer_type);
 }
 
-void BufferBase::clone(const BufferBase& other)
-{
-	buffer_type_ = other.buffer_type_;
-	length_ = other.length_;
-	other.buffer_.as_rslice().take(other.length_).copy_to(buffer_.as_wslice());
-}
-
 uint32_t BufferBase::get_buffer_length(BufferType key_type)
 {
 	switch (key_type)
@@ -57,12 +50,6 @@ uint32_t BufferBase::get_buffer_length(BufferType key_type)
 void SecureBuffer::clear()
 {
 	Crypto::zero_memory(buffer_.as_wslice());
-}
-		
-void KeyPair::clone(const KeyPair& other)
-{
-	private_key.clone(other.private_key);
-	public_key.clone(other.public_key);
 }
 
 }
