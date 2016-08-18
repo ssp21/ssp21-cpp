@@ -56,17 +56,17 @@ namespace ssp21
 
 	void Responder::on_message(const RSlice& data, const RequestHandshakeBegin& msg)
 	{
-	
+		SIMPLE_LOG_BLOCK(logger_, logflags::INFO, "request handshake begin");
 	}
 
 	void Responder::on_message(const RSlice& data, const RequestHandshakeAuth& msg)
 	{
-	
+		SIMPLE_LOG_BLOCK(logger_, logflags::INFO, "request handshake auth");
 	}
 	
 	void Responder::on_message(const RSlice& data, const UnconfirmedSessionData& msg)
 	{
-	
+		SIMPLE_LOG_BLOCK(logger_, logflags::INFO, "unconfirmed session data");
 	}
 
 }
