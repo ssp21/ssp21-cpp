@@ -40,7 +40,7 @@ TEST_CASE(SUITE("returns error if too little data"))
 	REQUIRE(err == ParseError::insufficient_bytes);
 }
 
-TEST_CASE(SUITE("returns error if extra data after fields"))
+TEST_CASE(SUITE("ignores extra data after fields"))
 {
 	uint16_t a;
 	uint32_t b;
@@ -50,7 +50,7 @@ TEST_CASE(SUITE("returns error if extra data after fields"))
 	auto input = hex.as_rslice();
 	auto err = MessageParser::read_fields(input, a, b);
 
-	REQUIRE(err == ParseError::too_many_bytes);
+	REQUIRE(err == ParseError::ok);
 }
 
 TEST_CASE(SUITE("reads Seq8 correctly"))

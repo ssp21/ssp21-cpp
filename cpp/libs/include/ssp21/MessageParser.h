@@ -31,7 +31,11 @@ namespace ssp21 {
 			if (any(err)) return err;
 			if (func != expected) return ParseError::unexpected_function;
 
-			return read_fields(input, value, args...);
+			err = read_fields(input, value, args...);
+			if (any(err)) return err;
+			
+			// top level messages must always fully read the input
+			return input.is_empty() ? ParseError::ok : ParseError::too_many_bytes;
 		}	
 
 		template <typename T, typename... Args>
@@ -41,10 +45,9 @@ namespace ssp21 {
 			if (any(err)) return err;
 			return read_fields(input, args...);
 		}
-
-		// when we reach the base case of the recursion there shouldn't be any remaining data
-		static ParseError read_fields(openpal::RSlice& input) {
-			return input.is_empty() ? ParseError::ok : ParseError::too_many_bytes;
+		
+		static ParseError read_fields(openpal::RSlice&) {
+			return ParseError::ok;
 		}		
 
 		// integers
