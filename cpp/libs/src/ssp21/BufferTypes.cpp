@@ -47,7 +47,7 @@ uint32_t BufferBase::get_buffer_length(BufferType key_type)
 	}
 }
 
-void SecureBuffer::clear()
+SecureBuffer::~SecureBuffer()
 {
 	Crypto::zero_memory(buffer_.as_wslice());
 }

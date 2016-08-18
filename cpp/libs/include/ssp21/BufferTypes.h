@@ -30,9 +30,7 @@ namespace ssp21
 
 			openpal::WSlice get_write_slice();
 			
-			void set_type(BufferType key_type);
-
-			//void clone(const BufferBase& other);
+			void set_type(BufferType key_type);			
 
 		protected:
 
@@ -56,9 +54,7 @@ namespace ssp21
 	class SecureBuffer : public BufferBase
 	{
 	public:
-		virtual ~SecureBuffer() { clear(); }
-
-		void clear();
+		virtual ~SecureBuffer();		
 
     protected:
         SecureBuffer() {}
