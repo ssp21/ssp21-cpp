@@ -4,13 +4,16 @@
 package com.automatak.render.ssp21
 
 import com.automatak.render.cpp.EnumConfig
+import com.automatak.render.ssp21.enums.generators.EnumGenerator
 import com.automatak.render.ssp21.enums.internal._
 import com.automatak.render.ssp21.enums.ssp21._
 
 
 object AllEnums {
 
-  def apply() : List[EnumConfig] = ssp21Enums ::: internalEnums
+  def files() : List[CppFiles] = enums.map(e => EnumGenerator(e))
+
+  private def enums() : List[EnumConfig] = ssp21Enums ::: internalEnums
 
   private def ssp21Enums = List(
     CryptoFunction(),

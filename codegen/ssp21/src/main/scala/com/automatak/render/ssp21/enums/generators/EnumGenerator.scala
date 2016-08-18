@@ -9,9 +9,13 @@ import com.automatak.render._
 import com.automatak.render.cpp._
 import com.automatak.render.ssp21._
 
-case class EnumGenerator(enums: List[EnumConfig], cppNamespace : String) {
+case class EnumGenerator(cfg: EnumConfig) extends CppFiles {
 
-  private def renderers(cfg: EnumConfig): List[HeaderImplModelRender[EnumModel]] = {
+  def cppNamespace = "ssp21"
+
+  override def hasImpl : Boolean = cfg.anyOptionalFunctions
+
+  private val renderers : List[HeaderImplModelRender[EnumModel]] = {
 
     def conversions = if (cfg.conversions) List(EnumToType, EnumFromType) else Nil
     def stringify = if (cfg.stringConv) List(EnumToString) else Nil
@@ -19,39 +23,13 @@ case class EnumGenerator(enums: List[EnumConfig], cppNamespace : String) {
     conversions ::: stringify
   }
 
-  private def headerName(model: EnumModel) = model.name + ".h"
-  private def implName(model: EnumModel) = model.name + ".cpp"
+  override def mainClassName : String = cfg.model.name
 
-  def write(incDirectory: Path, implDirectory: Path): Unit = {
-
-    implicit val indent = CppIndentation()
-
-    def headerPath(model: EnumModel) = incDirectory.resolve(headerName(model))
-    def implPath(model: EnumModel) = implDirectory.resolve(implName(model))
-
-    def writeHeader(e: EnumConfig): Unit =  {
-      writeTo(headerPath(e.model))(header(e))
-      println("Wrote: " + headerPath(e.model))
-    }
-
-    def writeImpl(e: EnumConfig): Unit =  {
-      if(e.anyOptionalFunctions) {
-        writeTo(implPath(e.model))(impl(e))
-        println("Wrote: " + implPath(e.model))
-      }
-    }
-
-    enums.foreach { e =>
-      writeHeader(e)
-      writeImpl(e)
-    }
-  }
-
-  private def header(cfg: EnumConfig)(implicit i : Indentation) : Iterator[String] = {
+  override def header(implicit i : Indentation) : Iterator[String] = {
 
     def license = commented(LicenseHeader())
     def enum = EnumModelRenderer.render(cfg.model)
-    def signatures = renderers(cfg).map(c => c.header.render(cfg.model)).flatten.toIterator
+    def signatures = renderers.map(c => c.header.render(cfg.model)).flatten.toIterator
     def spec = "struct %s : private openpal::StaticOnly".format(cfg.model.specName).iter ++ bracketSemiColon {
       "typedef %s enum_type_t;".format(cfg.model.name).iter ++
         space ++
@@ -79,11 +57,11 @@ case class EnumGenerator(enums: List[EnumConfig], cppNamespace : String) {
     )
   }
 
-  private def impl(cfg: EnumConfig)(implicit i : Indentation) : Iterator[String] = {
+  override def impl(implicit i : Indentation) : Iterator[String] = {
 
     def license = commented(LicenseHeader())
-    def funcs = renderers(cfg).map(r => r.impl.render(cfg.model)).flatten.toIterator
-    def inc = quoted("ssp21/gen/%s".format(headerName(cfg.model)))
+    def funcs = renderers.map(r => r.impl.render(cfg.model)).flatten.toIterator
+    def inc = quoted("ssp21/gen/%s".format(headerFileName))
 
     license ++ space ++ include(inc) ++ space ++ namespace(cppNamespace)(funcs)
   }
