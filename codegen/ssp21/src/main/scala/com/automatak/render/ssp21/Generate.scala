@@ -24,12 +24,8 @@ object Generate {
     paths.foreach(p => Files.createDirectories(p))
 
 
-    AllEnums.files().foreach(_.write(ssp21GenHeaderPath, ssp21GenImplPath))
-
-
-    AllMessages().map(m => MessageGenerator(m)).foreach {
-      _.write(ssp21MsgHeaderPath, ssp21MsgImplPath)
-    }
+    AllEnums.files.foreach(_.write(ssp21GenHeaderPath, ssp21GenImplPath))
+    AllMessages.files.foreach(_.write(ssp21MsgHeaderPath, ssp21MsgImplPath))
 
   }
 
