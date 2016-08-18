@@ -3,8 +3,6 @@
 
 #include "ssp21/Crypto.h"
 
-#include <assert.h>
-
 namespace ssp21
 {		
 
