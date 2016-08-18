@@ -18,7 +18,7 @@ namespace ssp21
 
 	void Handshake::set_hash(const RSlice& input)
 	{		
-		algorithms_.hash({ input }, handshake_hash_);
+		algorithms_.hash({ input }, chaining_key_);
 	}	
 
 	void Handshake::derive_authentication_key(
@@ -30,8 +30,8 @@ namespace ssp21
 	{
 		// mix the hash: h = hash(h || input)
 		algorithms_.hash(
-			{ handshake_hash_.as_slice(), message },
-			handshake_hash_
+			{ chaining_key_.as_slice(), message },
+			chaining_key_
 		);
 
 		DHOutput dh1;
@@ -47,9 +47,9 @@ namespace ssp21
 		if (ec) return;
 
 		algorithms_.hkdf(
-			handshake_hash_.as_slice(),
+			chaining_key_.as_slice(),
 			{ dh1.as_slice(), dh2.as_slice(), dh3.as_slice() },
-			handshake_hash_,
+			chaining_key_,
 			authentication_key_
 		);		
 	}
@@ -61,7 +61,7 @@ namespace ssp21
 
 	void Handshake::derive_session_keys(SymmetricKey& rx_key, SymmetricKey& tx_key) const
 	{
-		algorithms_.hkdf(handshake_hash_.as_slice(), {}, rx_key, tx_key);
+		algorithms_.hkdf(chaining_key_.as_slice(), {}, rx_key, tx_key);
 	}
 }
 

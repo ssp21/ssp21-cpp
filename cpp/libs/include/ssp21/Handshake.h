@@ -60,8 +60,8 @@ namespace ssp21
 		/// specific algorithms used to perform steps
 		Algorithms algorithms_;
 
-		/// running hash value (and chaining key after the derive_authentication_key(...) step)
-		SymmetricKey handshake_hash_;
+		/// running hash value and chaining key after the derive_authentication_key(...) step
+		SymmetricKey chaining_key_;
 
 		/// authentication key derived during derive_authentication_key(...)
 		SymmetricKey authentication_key_;
