@@ -70,7 +70,9 @@ namespace ssp21
 
 	class PrivateKey final : public SecureBuffer {};
 	
-	class DHOutput final : public SecureBuffer {};	
+	class DHOutput final : public SecureBuffer {};
+
+	class HashOutput final : public SecureBuffer {};
 
 	class SymmetricKey final : public SecureBuffer {};
 
