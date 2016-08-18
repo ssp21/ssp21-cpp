@@ -28,7 +28,7 @@ object Generate {
 
 
     AllMessages().map(m => MessageGenerator(m)).foreach {
-      _.write("ssp21/msg/%s", ssp21MsgHeaderPath, ssp21MsgImplPath)
+      _.write(ssp21MsgHeaderPath, ssp21MsgImplPath)
     }
 
   }
