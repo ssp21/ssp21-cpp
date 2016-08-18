@@ -1,27 +1,27 @@
 
-#include "ssp21/HandshakeData.h"
+#include "ssp21/Handshake.h"
 
 using namespace openpal;
 
 namespace ssp21
 {		
 	
-	HandshakeData::HandshakeData(const HandshakeAlgorithms& algorithms) : algorithms_(algorithms)
+	Handshake::Handshake(const Algorithms& algorithms) : algorithms_(algorithms)
 	{
 		
 	}
 
-	void HandshakeData::initialize()
+	void Handshake::initialize()
 	{		
 		algorithms_.gen_keypair(local_ephemeral_keys_);
 	}	
 
-	void HandshakeData::set_hash(const RSlice& input)
+	void Handshake::set_hash(const RSlice& input)
 	{		
 		algorithms_.hash({ input }, handshake_hash_);
 	}	
 
-	void HandshakeData::derive_authentication_key(
+	void Handshake::derive_authentication_key(
 		const RSlice& message,
 		const PrivateKey& priv_s_dh_key,
 		const RSlice& pub_e_dh_key,
@@ -54,12 +54,12 @@ namespace ssp21
 		);		
 	}
 
-	openpal::RSlice HandshakeData::get_auth_key() const
+	openpal::RSlice Handshake::get_auth_key() const
 	{
 		return authentication_key_.as_slice();
 	}
 
-	void HandshakeData::derive_session_keys(SymmetricKey& rx_key, SymmetricKey& tx_key) const
+	void Handshake::derive_session_keys(SymmetricKey& rx_key, SymmetricKey& tx_key) const
 	{
 		algorithms_.hkdf(handshake_hash_.as_slice(), {}, rx_key, tx_key);
 	}

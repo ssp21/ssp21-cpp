@@ -1,8 +1,8 @@
 
-#ifndef SSP21_HANDSHAKE_DATA_H
-#define SSP21_HANDSHAKE_DATA_H
+#ifndef SSP21_HANDSHAKE_H
+#define SSP21_HANDSHAKE_H
 
-#include "ssp21/HandshakeAlgorithms.h"
+#include "CryptoTypedefs.h"
 
 namespace ssp21
 {		
@@ -10,13 +10,29 @@ namespace ssp21
 	/**
 	* Class that holds all of the data during the handshake process
 	*/
-	class HandshakeData : private openpal::Uncopyable
+	class Handshake : private openpal::Uncopyable
 	{
-		public:	
+		public:
 
-		HandshakeData(			
-			const HandshakeAlgorithms& algorithms
-		);
+		struct Algorithms
+		{
+
+		public:
+
+			Algorithms(dh_func_t dh, hkdf_func_t hkdf, hash_func_t hash, gen_keypair_func_t gen_keypair) :
+				dh(dh),
+				hkdf(hkdf),
+				hash(hash),
+				gen_keypair(gen_keypair)
+			{}
+
+			dh_func_t dh;
+			hkdf_func_t hkdf;
+			hash_func_t hash;
+			gen_keypair_func_t gen_keypair;
+		};
+
+		Handshake(const Algorithms& algorithms);
 
 		/// generates new ephemeral keys and resets all state
 		void initialize();		
@@ -42,7 +58,7 @@ namespace ssp21
 		private:		
 
 		/// specific algorithms used to perform steps
-		HandshakeAlgorithms algorithms_;
+		Algorithms algorithms_;
 
 		/// running hash value (and chaining key after the derive_authentication_key(...) step)
 		SymmetricKey handshake_hash_;
