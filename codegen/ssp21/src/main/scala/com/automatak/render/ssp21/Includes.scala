@@ -24,6 +24,7 @@ object Includes {
   val seqTypes = Include(quoted("ssp21/SequenceTypes.h"), Ordering.ssp21)
   val parseError = Include(quoted("ssp21/gen/ParseError.h"), Ordering.ssp21)
   val formatError = Include(quoted("ssp21/gen/FormatError.h"), Ordering.ssp21)
+  val function = Include(quoted("ssp21/gen/Function.h"), Ordering.ssp21)
   val msgParser = Include(quoted("ssp21/MessageParser.h"), Ordering.ssp21)
   val msgFormatter = Include(quoted("ssp21/MessageFormatter.h"), Ordering.ssp21)
   val formatResult = Include(quoted("ssp21/FormatResult.h"), Ordering.ssp21)

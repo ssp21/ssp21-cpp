@@ -19,6 +19,7 @@
 #include "openpal/util/Uncopyable.h"
 #include "openpal/container/WSlice.h"
 #include "openpal/container/RSlice.h"
+#include "ssp21/gen/Function.h"
 #include "ssp21/FormatResult.h"
 #include "ssp21/SequenceTypes.h"
 #include "ssp21/gen/ParseError.h"
@@ -38,6 +39,8 @@ struct ReplyHandshakeAuth : private openpal::Uncopyable
   FormatResult write_msg(openpal::WSlice& output);
 
   static const uint32_t min_size_bytes = 2;
+
+  static const Function function = Function::request_handshake_auth;
 
   Seq8 mac;
 

@@ -22,9 +22,16 @@ namespace ssp21
 
 	private:
 
+		template <class MsgType>
+		inline void read_any(const openpal::RSlice& data);
+
+		/*
+		
+		*/		
+
 		void on_message(const openpal::RSlice& data, const RequestHandshakeBegin& msg);		
 		void on_message(const openpal::RSlice& data, const UnconfirmedSessionData& msg);
-		void on_message(const RequestHandshakeAuth& msg);
+		void on_message(const openpal::RSlice& data, const RequestHandshakeAuth& msg);
 
 		openpal::Logger logger_;
 	};

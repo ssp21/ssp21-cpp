@@ -23,6 +23,8 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
 
     def minSizeBytes = "static const uint32_t min_size_bytes = %s;".format(msg.minSizeBytes).iter
 
+    def functionConst = "static const Function function = Function::%s;".format(msg.function.name).iter
+
     def struct(implicit indent: Indentation) : Iterator[String] = {
 
       def fieldDefintions : Iterator[String] = msg.fields.map { f =>
@@ -38,6 +40,8 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
           writeMsgSig ++
           space ++
           minSizeBytes ++
+          space ++
+          functionConst ++
           space ++
           fieldDefintions ++
           space ++
@@ -55,7 +59,8 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
           Includes.uncopyable,
           Includes.parseError,
           Includes.formatError,
-          Includes.formatResult
+          Includes.formatResult,
+          Includes.function
         ) ::: msg.fields.flatMap(f => f.cpp.includes.toList)
       )
     }
