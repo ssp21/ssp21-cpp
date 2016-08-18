@@ -1,6 +1,8 @@
 
 #include "ssp21/HandshakeData.h"
 
+using namespace openpal;
+
 namespace ssp21
 {		
 	
@@ -14,16 +16,16 @@ namespace ssp21
 		algorithms_.gen_keypair(local_ephemeral_keys_);
 	}	
 
-	void HandshakeData::set_hash(const openpal::RSlice& input)
+	void HandshakeData::set_hash(const RSlice& input)
 	{		
 		algorithms_.hash({ input }, handshake_hash_);
 	}	
 
 	void HandshakeData::derive_authentication_key(
-		const openpal::RSlice& message,
+		const RSlice& message,
 		const PrivateKey& priv_s_dh_key,
-		const openpal::RSlice& pub_e_dh_key,
-		const openpal::RSlice& pub_s_dh_key,
+		const RSlice& pub_e_dh_key,
+		const RSlice& pub_s_dh_key,
 		std::error_code& ec)
 	{
 		// mix the hash: h = hash(h || input)
@@ -49,7 +51,12 @@ namespace ssp21
 			{ dh1.as_slice(), dh2.as_slice(), dh3.as_slice() },
 			handshake_hash_,
 			authentication_key_
-		);
+		);		
+	}
+
+	openpal::RSlice HandshakeData::get_auth_key() const
+	{
+		return authentication_key_.as_slice();
 	}
 
 	void HandshakeData::derive_session_keys(SymmetricKey& rx_key, SymmetricKey& tx_key) const

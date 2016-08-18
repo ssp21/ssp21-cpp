@@ -33,13 +33,16 @@ namespace ssp21
 			std::error_code& ec
 		);
 
+		/// return a slice pointing to the authentication key
+		openpal::RSlice get_auth_key() const;
+
 		/// derive the session keys
-		void derive_session_keys(SymmetricKey& rx_key, SymmetricKey& tx_key) const;
+		void derive_session_keys(SymmetricKey& rx_key, SymmetricKey& tx_key) const;		
 	
 		private:		
 
 		/// specific algorithms used to perform steps
-		HandshakeAlgorithms algorithms_;		
+		HandshakeAlgorithms algorithms_;
 
 		/// running hash value (and chaining key after the derive_authentication_key(...) step)
 		SymmetricKey handshake_hash_;
