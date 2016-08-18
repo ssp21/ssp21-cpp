@@ -11,6 +11,9 @@
 
 namespace ssp21
 {
+	/**
+		WIP - this class will implement the stateful part of the responder.
+	*/
 	class Responder
 	{
 
