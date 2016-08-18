@@ -28,8 +28,8 @@ namespace ssp21
 		void derive_authentication_key(
 			const openpal::RSlice& message,
 			const PrivateKey& priv_s_dh_key,
-			const PublicKey& pub_e_dh_key,
-			const PublicKey& pub_s_dh_key,
+			const openpal::RSlice& pub_e_dh_key,
+			const openpal::RSlice& pub_s_dh_key,
 			std::error_code& ec
 		);
 

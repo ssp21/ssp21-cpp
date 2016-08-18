@@ -39,7 +39,7 @@ namespace ssp21
 
 		static void dh_x25519(
 			const PrivateKey& priv_key,
-			const PublicKey& pub_key,
+			const openpal::RSlice& pub_key,
 			DHOutput& output,
 			std::error_code& ec
 		);

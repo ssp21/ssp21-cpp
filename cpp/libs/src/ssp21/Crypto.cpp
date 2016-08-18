@@ -44,11 +44,11 @@ namespace ssp21
 		backend_->gen_keypair_x25519(pair);
 	}
 
-	void Crypto::dh_x25519(const PrivateKey& priv_key, const PublicKey& pub_key, DHOutput& output, std::error_code& ec)
+	void Crypto::dh_x25519(const PrivateKey& priv_key, const openpal::RSlice& pub_key, DHOutput& output, std::error_code& ec)
 	{
 		assert(backend_);
 
-		if ((priv_key.get_type() != BufferType::x25519_key) || (pub_key.get_type() != BufferType::x25519_key))
+		if ((priv_key.get_type() != BufferType::x25519_key) || (pub_key.length() != consts::x25519_key_length))
 		{
 			ec = CryptoError::bad_key_type;
 			return;

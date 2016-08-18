@@ -25,7 +25,7 @@ namespace ssp21
 
 		void dh(
 			const PrivateKey& priv_key,
-			const PublicKey& pub_key,
+			const openpal::RSlice& pub_key,
 			DHOutput& output,
 			std::error_code& ec) const
 		{

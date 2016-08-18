@@ -24,7 +24,7 @@ namespace ssp21
 
 		virtual void gen_keypair_x25519(KeyPair& pair) = 0;
 
-		virtual void dh_x25519(const PrivateKey& priv_key, const PublicKey& pub_key, DHOutput& output, std::error_code& ec) = 0;		
+		virtual void dh_x25519(const PrivateKey& priv_key, const openpal::RSlice& pub_key, DHOutput& output, std::error_code& ec) = 0;		
 	};	
 }
 
