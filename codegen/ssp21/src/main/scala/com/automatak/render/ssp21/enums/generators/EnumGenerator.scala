@@ -9,78 +9,82 @@ import com.automatak.render._
 import com.automatak.render.cpp._
 import com.automatak.render.ssp21._
 
-object EnumGenerator {
+case class EnumGenerator(enums: List[EnumConfig], cppNamespace : String) {
 
-  def apply(enums: List[EnumConfig], cppNamespace : String, incFormatString: String, incDirectory: Path, implDirectory: Path): Unit = {
+  private def renderers(cfg: EnumConfig): List[HeaderImplModelRender[EnumModel]] = {
+
+    def conversions = if (cfg.conversions) List(EnumToType, EnumFromType) else Nil
+    def stringify = if (cfg.stringConv) List(EnumToString) else Nil
+
+    conversions ::: stringify
+  }
+
+  private def headerName(model: EnumModel) = model.name + ".h"
+  private def implName(model: EnumModel) = model.name + ".cpp"
+
+  def write(incDirectory: Path, implDirectory: Path): Unit = {
 
     implicit val indent = CppIndentation()
 
     def headerPath(model: EnumModel) = incDirectory.resolve(headerName(model))
     def implPath(model: EnumModel) = implDirectory.resolve(implName(model))
 
-    def headerName(model: EnumModel) = model.name + ".h"
-    def implName(model: EnumModel) = model.name + ".cpp"
+    def writeHeader(e: EnumConfig): Unit =  {
+      writeTo(headerPath(e.model))(header(e))
+      println("Wrote: " + headerPath(e.model))
+    }
 
-    def writeEnumToFiles(cfg: EnumConfig): Unit = {
-
-      val conversions = if(cfg.conversions) List(EnumToType, EnumFromType) else Nil
-      val stringify = if(cfg.stringConv) List(EnumToString) else Nil
-
-      val renders = conversions ::: stringify
-
-      def writeHeader() {
-        def license = commented(LicenseHeader())
-        def enum = EnumModelRenderer.render(cfg.model)
-        def spec = "struct %s : private openpal::StaticOnly".format(cfg.model.specName).iter ++ bracketSemiColon {
-          "typedef %s enum_type_t;".format(cfg.model.name).iter ++
-          space ++
-          signatures
-        }
-        def signatures = renders.map(c => c.header.render(cfg.model)).flatten.toIterator
-
-        def castFunc : Iterator[String] = {
-          cfg.model.boolCastValue match {
-            case Some(value) => {
-              space ++
-              "inline bool any(%s value)".format(cfg.model.name).iter ++ bracket {
-                "return value != %s::%s;".format(cfg.model.name, value.name).iter
-              }
-            }
-            case None => Iterator.empty
-          }
-        }
-
-        def includes : List[Include] = List(Includes.uncopyable, Includes.cstdint)
-
-        def lines = license ++ space ++ includeGuards(cfg.model.name) (
-          Includes.lines(includes) ++ space ++ namespace(cppNamespace)(
-            enum ++ castFunc ++ space ++ spec
-          )
-        )
-
-        writeTo(headerPath(cfg.model))(lines)
-        println("Wrote: " + headerPath(cfg.model))
+    def writeImpl(e: EnumConfig): Unit =  {
+      if(e.anyOptionalFunctions) {
+        writeTo(implPath(e.model))(impl(e))
+        println("Wrote: " + implPath(e.model))
       }
-
-      def writeImpl() {
-        def license = commented(LicenseHeader())
-        def funcs = renders.map(r => r.impl.render(cfg.model)).flatten.toIterator
-        def inc = quoted(String.format(incFormatString, headerName(cfg.model)))
-        def lines = license ++ space ++ include(inc) ++ space ++ namespace(cppNamespace)(funcs)
-
-        if(cfg.anyOptionalFunctions)
-        {
-          writeTo(implPath(cfg.model))(lines)
-          println("Wrote: " + implPath(cfg.model))
-        }
-      }
-
-      writeHeader()
-      writeImpl()
     }
 
     enums.foreach { e =>
-      writeEnumToFiles(e)
+      writeHeader(e)
+      writeImpl(e)
     }
+  }
+
+  private def header(cfg: EnumConfig)(implicit i : Indentation) : Iterator[String] = {
+
+    def license = commented(LicenseHeader())
+    def enum = EnumModelRenderer.render(cfg.model)
+    def signatures = renderers(cfg).map(c => c.header.render(cfg.model)).flatten.toIterator
+    def spec = "struct %s : private openpal::StaticOnly".format(cfg.model.specName).iter ++ bracketSemiColon {
+      "typedef %s enum_type_t;".format(cfg.model.name).iter ++
+        space ++
+        signatures
+    }
+
+    def castFunc : Iterator[String] = {
+      cfg.model.boolCastValue match {
+        case Some(value) => {
+          space ++
+            "inline bool any(%s value)".format(cfg.model.name).iter ++ bracket {
+            "return value != %s::%s;".format(cfg.model.name, value.name).iter
+          }
+        }
+        case None => Iterator.empty
+      }
+    }
+
+    def includes : List[Include] = List(Includes.uncopyable, Includes.cstdint)
+
+    license ++ space ++ includeGuards(cfg.model.name) (
+      Includes.lines(includes) ++ space ++ namespace(cppNamespace)(
+        enum ++ castFunc ++ space ++ spec
+      )
+    )
+  }
+
+  private def impl(cfg: EnumConfig)(implicit i : Indentation) : Iterator[String] = {
+
+    def license = commented(LicenseHeader())
+    def funcs = renderers(cfg).map(r => r.impl.render(cfg.model)).flatten.toIterator
+    def inc = quoted("ssp21/gen/%s".format(headerName(cfg.model)))
+
+    license ++ space ++ include(inc) ++ space ++ namespace(cppNamespace)(funcs)
   }
 }

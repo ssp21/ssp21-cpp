@@ -25,7 +25,7 @@ object Generate {
     paths.foreach(p => Files.createDirectories(p))
 
     // generate the C++ ssp21 enums
-    EnumGenerator(AllEnums(), "ssp21", "ssp21/gen/%s", ssp21GenHeaderPath, ssp21GenImplPath)
+    EnumGenerator(AllEnums(), "ssp21").write(ssp21GenHeaderPath, ssp21GenImplPath)
     MessageGenerator(AllMessages(), "ssp21", "ssp21/msg/%s", ssp21MsgHeaderPath, ssp21MsgImplPath)
   }
 
