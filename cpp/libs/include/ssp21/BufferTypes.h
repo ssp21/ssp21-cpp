@@ -32,6 +32,8 @@ namespace ssp21
 			
 			void set_type(BufferType key_type);
 
+			void clone(const BufferBase& other);
+
 		protected:
 
 			BufferBase();
@@ -47,11 +49,16 @@ namespace ssp21
 			openpal::StaticBuffer<consts::max_primitive_buffer_length> buffer_;
 	};
 
-	// A secure key zeros its buffer_ upon destruction
+	/** 
+		A secure key zeros its buffer upon destruction
+		and provides a clear method
+	*/
 	class SecureBuffer : public BufferBase
 	{
 	public:
-		virtual ~SecureBuffer();
+		virtual ~SecureBuffer() { clear(); }
+
+		void clear();
 
     protected:
         SecureBuffer() {}
@@ -69,6 +76,8 @@ namespace ssp21
 
 	struct KeyPair final
 	{
+		void clone(const KeyPair& other);
+
 		PublicKey public_key;
 		PrivateKey private_key;
 	};

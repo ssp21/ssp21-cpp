@@ -7,7 +7,7 @@
 #include <openpal/util/Uncopyable.h>
 
 namespace ssp21
-{					
+{				
 	/**
 	* Assumming for the time being that a static backend is fine 
 	* to keep dependency injection simple.
