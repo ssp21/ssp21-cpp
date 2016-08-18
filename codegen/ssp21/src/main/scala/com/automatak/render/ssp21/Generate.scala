@@ -27,8 +27,10 @@ object Generate {
     AllEnums.files().foreach(_.write(ssp21GenHeaderPath, ssp21GenImplPath))
 
 
+    AllMessages().map(m => MessageGenerator(m)).foreach {
+      _.write("ssp21/msg/%s", ssp21MsgHeaderPath, ssp21MsgImplPath)
+    }
 
-    MessageGenerator(AllMessages(), "ssp21", "ssp21/msg/%s", ssp21MsgHeaderPath, ssp21MsgImplPath)
   }
 
 }
