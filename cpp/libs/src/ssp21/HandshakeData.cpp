@@ -17,15 +17,7 @@ namespace ssp21
 	void HandshakeData::set_hash(const openpal::RSlice& input)
 	{		
 		algorithms_.hash({ input }, handshake_hash_);
-	}
-	
-	void HandshakeData::mix_hash(const openpal::RSlice& input)
-	{
-		algorithms_.hash(
-			{ handshake_hash_.as_slice(), input },
-			handshake_hash_
-		);
-	}
+	}	
 
 	void HandshakeData::derive_authentication_key(
 		const openpal::RSlice& message,
@@ -34,7 +26,11 @@ namespace ssp21
 		const PublicKey& pub_s_dh_key,
 		std::error_code& ec)
 	{
-		mix_hash(message);
+		// mix the hash: h = hash(h || input)
+		algorithms_.hash(
+			{ handshake_hash_.as_slice(), message },
+			handshake_hash_
+		);
 
 		DHOutput dh1;
 		algorithms_.dh(local_ephemeral_keys_.private_key, pub_e_dh_key, dh1, ec);

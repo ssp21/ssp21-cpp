@@ -36,10 +36,7 @@ namespace ssp21
 		/// derive the session keys
 		void derive_session_keys(SymmetricKey& rx_key, SymmetricKey& tx_key) const;
 	
-		private:
-
-		/// mix the data into the handshake_hash: h = hash(h || input)
-		void mix_hash(const openpal::RSlice& input);		
+		private:		
 
 		/// specific algorithms used to perform steps
 		HandshakeAlgorithms algorithms_;		
