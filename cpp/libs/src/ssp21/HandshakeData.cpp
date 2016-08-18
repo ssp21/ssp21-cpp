@@ -4,12 +4,9 @@
 namespace ssp21
 {		
 	
-	HandshakeData::HandshakeData(
-		const KeyPair& local_static_keys,
-		const HandshakeAlgorithms& algorithms
-		) : algorithms_(algorithms)
+	HandshakeData::HandshakeData(const HandshakeAlgorithms& algorithms) : algorithms_(algorithms)
 	{
-		local_static_keys_.clone(local_static_keys);
+		
 	}
 
 	void HandshakeData::initialize()
@@ -32,6 +29,7 @@ namespace ssp21
 
 	void HandshakeData::derive_authentication_key(
 		const openpal::RSlice& message,
+		const PrivateKey& priv_s_dh_key,
 		const PublicKey& pub_e_dh_key,
 		const PublicKey& pub_s_dh_key,
 		std::error_code& ec)
@@ -47,7 +45,7 @@ namespace ssp21
 		if (ec) return;
 		
 		DHOutput dh3;
-		algorithms_.dh(local_static_keys_.private_key, pub_e_dh_key, dh3, ec);
+		algorithms_.dh(priv_s_dh_key, pub_e_dh_key, dh3, ec);
 		if (ec) return;
 
 		algorithms_.hkdf(

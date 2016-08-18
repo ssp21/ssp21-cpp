@@ -14,8 +14,7 @@ namespace ssp21
 	{
 		public:	
 
-		HandshakeData(
-			const KeyPair& local_static_keys, 
+		HandshakeData(			
 			const HandshakeAlgorithms& algorithms
 		);
 
@@ -28,6 +27,7 @@ namespace ssp21
 		/// derive the authentication key from the DH keys and the handshake_hash_
 		void derive_authentication_key(
 			const openpal::RSlice& message,
+			const PrivateKey& priv_s_dh_key,
 			const PublicKey& pub_e_dh_key,
 			const PublicKey& pub_s_dh_key,
 			std::error_code& ec
@@ -39,10 +39,7 @@ namespace ssp21
 		private:
 
 		/// mix the data into the handshake_hash: h = hash(h || input)
-		void mix_hash(const openpal::RSlice& input);
-
-		/// this only gets cleared on destruction
-		KeyPair local_static_keys_;
+		void mix_hash(const openpal::RSlice& input);		
 
 		/// specific algorithms used to perform steps
 		HandshakeAlgorithms algorithms_;		
