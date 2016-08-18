@@ -34,7 +34,7 @@ struct ReplyHandshakeError : private openpal::Uncopyable
     HandshakeError handshake_error
   );
 
-  ParseError read_msg(openpal::RSlice& input);
+  ParseError read_msg(const openpal::RSlice& input);
   FormatResult write_msg(openpal::WSlice& output);
 
   static const uint32_t min_size_bytes = 2;

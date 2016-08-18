@@ -29,7 +29,7 @@ ReplyHandshakeAuth::ReplyHandshakeAuth(
   mac(mac)
 {}
 
-ParseError ReplyHandshakeAuth::read_msg(openpal::RSlice& input)
+ParseError ReplyHandshakeAuth::read_msg(const openpal::RSlice& input)
 {
   return MessageParser::read_message<Function::request_handshake_auth>(
     input,

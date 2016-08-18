@@ -36,7 +36,7 @@ struct ReplyHandshakeBegin : private openpal::Uncopyable
     const Seq8& ephemeral_public_key
   );
 
-  ParseError read_msg(openpal::RSlice& input);
+  ParseError read_msg(const openpal::RSlice& input);
   FormatResult write_msg(openpal::WSlice& output);
 
   static const uint32_t min_size_bytes = 5;

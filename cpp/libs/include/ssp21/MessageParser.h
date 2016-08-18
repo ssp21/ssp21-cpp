@@ -24,18 +24,20 @@ namespace ssp21 {
 	public:
 
 		template <Function expected, typename T, typename... Args>
-		static ParseError read_message(openpal::RSlice& input, T& value, Args& ... args)
+		static ParseError read_message(const openpal::RSlice& input, T& value, Args& ... args)
 		{
+			openpal::RSlice copy(input);
+
 			Function func;
-			auto err = read(input, func);
+			auto err = read(copy, func);
 			if (any(err)) return err;
 			if (func != expected) return ParseError::unexpected_function;
 
-			err = read_fields(input, value, args...);
+			err = read_fields(copy, value, args...);
 			if (any(err)) return err;
 			
 			// top level messages must always fully read the input
-			return input.is_empty() ? ParseError::ok : ParseError::too_many_bytes;
+			return copy.is_empty() ? ParseError::ok : ParseError::too_many_bytes;
 		}	
 
 		template <typename T, typename... Args>
