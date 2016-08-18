@@ -19,28 +19,33 @@ namespace ssp21
 			const HandshakeAlgorithms& algorithms
 		);
 
-		// generates new ephemeral keys and resets all state
-		void initialize();
+		/// generates new ephemeral keys and resets all state
+		void initialize();		
 
-		// wipes ephemeral private key data
-		void clear();
+		/// calculate a new handshake hash: h = hash(message)
+		void set_hash(const openpal::RSlice& message);		
 
-		// calculate a new handshake hash: h = hash(input)
-		void set_hash(const openpal::RSlice& input);
-
-		// mix the data into the handshake_hash: h = hash(h || input)
-		void mix_hash(const openpal::RSlice& input);
+		/// derive the authentication key from the DH keys and the handshake_hash_
+		void derive_authentication_key(
+			const openpal::RSlice& message,
+			const PublicKey& pub_e_dh_key,
+			const PublicKey& pub_s_dh_key,
+			std::error_code& ec
+		);
 	
 		private:
 
-		// running hash value
-		HashOutput handshake_hash_;
+		/// mix the data into the handshake_hash: h = hash(h || input)
+		void mix_hash(const openpal::RSlice& input);
 
-		// ephemeral keys
-		KeyPair local_ephemeral_keys_;
-		PublicKey remote_ephemeral_key_;		
+		/// running hash value (and chaining key after the derive_keys(...) step)
+		SymmetricKey handshake_hash_;
+		SymmetricKey authentication_key_;
 
-		// this only gets cleared on destruction
+		/// ephemeral keys
+		KeyPair local_ephemeral_keys_;		
+
+		/// this only gets cleared on destruction
 		KeyPair local_static_keys_;
 		HandshakeAlgorithms algorithms_;
 	};
