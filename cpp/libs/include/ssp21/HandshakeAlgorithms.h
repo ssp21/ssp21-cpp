@@ -27,7 +27,7 @@ namespace ssp21
 			const PrivateKey& priv_key,
 			const PublicKey& pub_key,
 			DHOutput& output,
-			std::error_code& ec)
+			std::error_code& ec) const
 		{
 			dh_(priv_key, pub_key, output, ec);
 		}
@@ -36,18 +36,17 @@ namespace ssp21
 			const openpal::RSlice& chaining_key,
 			std::initializer_list<openpal::RSlice> input_key_material,
 			SymmetricKey& key1,
-			SymmetricKey& key2
-			)
+			SymmetricKey& key2) const
 		{
 			hkdf_(chaining_key, input_key_material, key1, key2);
 		}
 
-		void hash(std::initializer_list<openpal::RSlice> data, SecureBuffer &output)
+		void hash(std::initializer_list<openpal::RSlice> data, SecureBuffer &output) const
 		{
 			hash_(data, output);
 		}
 
-		void gen_keypair(KeyPair& pair)
+		void gen_keypair(KeyPair& pair) const
 		{
 			gen_keypair_(pair);
 		}

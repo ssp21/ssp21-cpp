@@ -58,6 +58,10 @@ namespace ssp21
 		);
 	}
 
+	void HandshakeData::derive_session_keys(SymmetricKey& rx_key, SymmetricKey& tx_key) const
+	{
+		algorithms_.hkdf(handshake_hash_.as_slice(), {}, rx_key, tx_key);
+	}
 }
 
 

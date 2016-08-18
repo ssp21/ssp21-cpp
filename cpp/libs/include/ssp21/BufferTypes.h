@@ -82,8 +82,7 @@ namespace ssp21
 
 		PublicKey public_key;
 		PrivateKey private_key;
-	};
-	
+	};		
 }
 
 #endif

@@ -32,22 +32,29 @@ namespace ssp21
 			const PublicKey& pub_s_dh_key,
 			std::error_code& ec
 		);
+
+		/// derive the session keys
+		void derive_session_keys(SymmetricKey& rx_key, SymmetricKey& tx_key) const;
 	
 		private:
 
 		/// mix the data into the handshake_hash: h = hash(h || input)
 		void mix_hash(const openpal::RSlice& input);
 
-		/// running hash value (and chaining key after the derive_keys(...) step)
+		/// this only gets cleared on destruction
+		KeyPair local_static_keys_;
+
+		/// specific algorithms used to perform steps
+		HandshakeAlgorithms algorithms_;		
+
+		/// running hash value (and chaining key after the derive_authentication_key(...) step)
 		SymmetricKey handshake_hash_;
+
+		/// authentication key derived during derive_authentication_key(...)
 		SymmetricKey authentication_key_;
 
 		/// ephemeral keys
-		KeyPair local_ephemeral_keys_;		
-
-		/// this only gets cleared on destruction
-		KeyPair local_static_keys_;
-		HandshakeAlgorithms algorithms_;
+		KeyPair local_ephemeral_keys_;				
 	};
 
 
