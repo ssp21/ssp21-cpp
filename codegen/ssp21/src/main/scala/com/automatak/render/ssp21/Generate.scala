@@ -5,7 +5,6 @@ package com.automatak.render.ssp21
 
 import java.nio.file.{Files, Paths}
 
-import com.automatak.render.ssp21.enums.generators.EnumGenerator
 import com.automatak.render.ssp21.messages.generators.MessageGenerator
 
 object Generate {
@@ -24,9 +23,8 @@ object Generate {
 
     paths.foreach(p => Files.createDirectories(p))
 
-    val allCppFiles = AllEnums.files()
 
-    allCppFiles.foreach(files => files.write(ssp21GenHeaderPath, ssp21GenImplPath))
+    AllEnums.files().foreach(_.write(ssp21GenHeaderPath, ssp21GenImplPath))
 
 
 

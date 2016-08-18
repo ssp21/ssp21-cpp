@@ -6,7 +6,7 @@ import com.automatak.render._
 import com.automatak.render.cpp.CppIndentation
 
 
-trait CppFiles {
+trait WriteCppFiles {
 
   def mainClassName : String
   def header(implicit i : Indentation) : Iterator[String]

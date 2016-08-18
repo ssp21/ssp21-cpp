@@ -3,13 +3,12 @@
  */
 package com.automatak.render.ssp21.enums.generators
 
-import _root_.java.nio.file.Path
 
 import com.automatak.render._
 import com.automatak.render.cpp._
 import com.automatak.render.ssp21._
 
-case class EnumGenerator(cfg: EnumConfig) extends CppFiles {
+case class EnumGenerator(cfg: EnumConfig) extends WriteCppFiles {
 
   def cppNamespace = "ssp21"
 

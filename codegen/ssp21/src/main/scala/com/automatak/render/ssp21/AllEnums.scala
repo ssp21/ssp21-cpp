@@ -11,7 +11,7 @@ import com.automatak.render.ssp21.enums.ssp21._
 
 object AllEnums {
 
-  def files() : List[CppFiles] = enums.map(e => EnumGenerator(e))
+  def files() : List[WriteCppFiles] = enums.map(e => EnumGenerator(e))
 
   private def enums() : List[EnumConfig] = ssp21Enums ::: internalEnums
 
