@@ -8,8 +8,13 @@ using namespace std;
 
 
 // koopman
+// typedef uint32_t crc_t;
+// const crc_t polynomial = 0x32583499;
+
+
+// Castagnoli
 typedef uint32_t crc_t;
-const crc_t polynomial = 0x32583499;
+const crc_t polynomial = 0xF4ACFB13;
 
 // DNP3
 // typedef uint16_t crc_t;

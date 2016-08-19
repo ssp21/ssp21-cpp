@@ -3,7 +3,7 @@
 
 namespace ssp21
 {
-	uint32_t CRC32Koopman::calc(const openpal::RSlice& data)
+	uint32_t KoopmanCRC32::calc(const openpal::RSlice& data)
 	{
 		uint32_t remainder = 0;
 
@@ -16,7 +16,7 @@ namespace ssp21
 		return remainder;
 	}
 
-	const uint32_t CRC32Koopman::table[256] = {
+	const uint32_t KoopmanCRC32::table[256] = {
 		0x00000000, 0x32583499, 0x64b06932, 0x56e85dab, 0xc960d264, 0xfb38e6fd, 0xadd0bb56, 0x9f888fcf,
 		0xa0999051, 0x92c1a4c8, 0xc429f963, 0xf671cdfa, 0x69f94235, 0x5ba176ac, 0x0d492b07, 0x3f111f9e,
 		0x736b143b, 0x413320a2, 0x17db7d09, 0x25834990, 0xba0bc65f, 0x8853f2c6, 0xdebbaf6d, 0xece39bf4,
