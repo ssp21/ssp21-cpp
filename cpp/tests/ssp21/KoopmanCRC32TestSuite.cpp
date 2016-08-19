@@ -10,6 +10,15 @@
 using namespace ssp21;
 using namespace openpal;
 
+/*
+
+These test vector both agree with:
+
+https://www.ghsi.de/CRC/
+http://www.sunshine2k.de/coding/javascript/crc/crc_js.html
+
+**/
+
 TEST_CASE(SUITE("test vector 1"))
 {		
 	HexSequence hex("31 32 33 34 35 36 37 38 39");

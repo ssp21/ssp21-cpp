@@ -17,7 +17,7 @@ namespace ssp21 {
 	* 
 	* 0x32583499 (MSB-first)
 	* 0x992C1A4C (Koopman)
-	* 	
+	*
 	*/
 	struct CRC32Koopman : private openpal::StaticOnly
 	{
