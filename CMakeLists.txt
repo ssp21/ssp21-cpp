@@ -4,28 +4,6 @@ set(SSP21CPP_VERSION 0.0.1)
 
 include(${PROJECT_SOURCE_DIR}/cmake/settings.cmake)
 
-if(DEFINED SSP21_LIBSODIUM_DIR)
-  
-  if(${MSVC_VERSION} EQUAL 1800)
-	set(SODIUM_MSVC_PATH v120)
-  else()
-    MESSAGE( FATAL_ERROR "Unknown MSVC version: ${MSVC_VERSION}")
-  endif()
-
-  include_directories(${SSP21_LIBSODIUM_DIR}/include) 
-  link_directories(${SSP21_LIBSODIUM_DIR}/Win32/Debug/${SODIUM_MSVC_PATH}/static)
-
-endif()
-
-
-if(WIN32)
-	set(SODIUM_LIB_NAME libsodium)
-	# these definitions are required when linking libsodium statically on Windows
-	add_definitions(-DSODIUM_STATIC=1 -DSODIUM_EXPORT=)
-else()
-	set(SODIUM_LIB_NAME sodium)
-endif()
-
 include_directories(./cpp/libs/include)
 include_directories(./deps/openpal/cpp/libs/include)
 
