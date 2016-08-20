@@ -61,20 +61,6 @@ namespace ssp21
 
 	private:
 
-		typedef void(*hmac_func_t)(
-			const openpal::RSlice& key,
-			std::initializer_list<openpal::RSlice> data,
-			SecureBuffer& output
-		);
-
-		static void hkdf(
-			hmac_func_t hmac,
-			const openpal::RSlice& chaining_key,
-			std::initializer_list<openpal::RSlice> input_key_material,
-			SymmetricKey& key1,
-			SymmetricKey& key2
-		);
-
 		/// Function typedefs all initialized to nullptr. Concrete backends will initialize these.		
 
 		static ICryptoBackend* backend_;
