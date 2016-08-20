@@ -4,14 +4,17 @@ set(SSP21CPP_VERSION 0.0.1)
 
 include(${PROJECT_SOURCE_DIR}/cmake/settings.cmake)
 
-# libsodium include dir
-if(DEFINED SSP21_LIBSODIUM_INCLUDE_DIR)
-  include_directories(${SSP21_LIBSODIUM_INCLUDE_DIR}) 
-endif()
+if(DEFINED SSP21_LIBSODIUM_DIR)
+  
+  if(${MSVC_VERSION} EQUAL 1800)
+	set(SODIUM_MSVC_PATH v120)
+  else()
+    MESSAGE( FATAL_ERROR "Unknown MSVC version: ${MSVC_VERSION}")
+  endif()
 
-# libsodium lib dir
-if(DEFINED SSP21_LIBSODIUM_LIB_DIR)
-  link_directories(${SSP21_LIBSODIUM_LIB_DIR}) 
+  include_directories(${SSP21_LIBSODIUM_DIR}/include) 
+  link_directories(${SSP21_LIBSODIUM_DIR}/Win32/Debug/${SODIUM_MSVC_PATH}/static)
+
 endif()
 
 
