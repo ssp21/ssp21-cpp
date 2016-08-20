@@ -27,9 +27,9 @@ target_link_libraries(sodiumbackend ssp21 ${SODIUM_LIB_NAME})
 install(TARGETS sodiumbackend DESTINATION lib)
 set_target_properties(sodiumbackend PROPERTIES FOLDER libs)
 
-# ---- ssp21 tests ----
-add_executable (crctable ./cpp/tests/crc_table/main.cpp)
-set_target_properties(crctable PROPERTIES FOLDER tests)
+# ---- crc table generator ----
+# add_executable (crctable ./cpp/tests/crc_table/main.cpp)
+# set_target_properties(crctable PROPERTIES FOLDER tests)
 
 enable_testing()
 
