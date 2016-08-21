@@ -65,13 +65,13 @@ FormatResult UnconfirmedSessionData::write_msg(openpal::WSlice& output)
 void UnconfirmedSessionData::print(ILinePrinter& printer)
 {
   MessagePrinter::print_fields(
-  printer,
-  "valid_until_ms",
-  valid_until_ms,
-  "nonce",
-  nonce,
-  "payload",
-  payload
+    printer,
+    "valid_until_ms",
+    valid_until_ms,
+    "nonce",
+    nonce,
+    "payload",
+    payload
   );
 }
 

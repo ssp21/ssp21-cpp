@@ -55,9 +55,9 @@ FormatResult ReplyHandshakeAuth::write_msg(openpal::WSlice& output)
 void ReplyHandshakeAuth::print(ILinePrinter& printer)
 {
   MessagePrinter::print_fields(
-  printer,
-  "mac",
-  mac
+    printer,
+    "mac",
+    mac
   );
 }
 

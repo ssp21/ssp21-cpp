@@ -87,23 +87,23 @@ FormatResult RequestHandshakeBegin::write_msg(openpal::WSlice& output)
 void RequestHandshakeBegin::print(ILinePrinter& printer)
 {
   MessagePrinter::print_fields(
-  printer,
-  "version",
-  version,
-  "nonce_mode",
-  nonce_mode,
-  "dh_mode",
-  dh_mode,
-  "hash_mode",
-  hash_mode,
-  "session_mode",
-  session_mode,
-  "certificate_mode",
-  certificate_mode,
-  "ephemeral_public_key",
-  ephemeral_public_key,
-  "certificates",
-  certificates
+    printer,
+    "version",
+    version,
+    "nonce_mode",
+    nonce_mode,
+    "dh_mode",
+    dh_mode,
+    "hash_mode",
+    hash_mode,
+    "session_mode",
+    session_mode,
+    "certificate_mode",
+    certificate_mode,
+    "ephemeral_public_key",
+    ephemeral_public_key,
+    "certificates",
+    certificates
   );
 }
 

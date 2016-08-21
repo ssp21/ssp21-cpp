@@ -56,9 +56,9 @@ FormatResult ReplyHandshakeError::write_msg(openpal::WSlice& output)
 void ReplyHandshakeError::print(ILinePrinter& printer)
 {
   MessagePrinter::print_fields(
-  printer,
-  "handshake_error",
-  handshake_error
+    printer,
+    "handshake_error",
+    handshake_error
   );
 }
 

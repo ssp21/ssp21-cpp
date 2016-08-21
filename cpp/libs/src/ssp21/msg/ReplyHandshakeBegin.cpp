@@ -57,11 +57,11 @@ FormatResult ReplyHandshakeBegin::write_msg(openpal::WSlice& output)
 void ReplyHandshakeBegin::print(ILinePrinter& printer)
 {
   MessagePrinter::print_fields(
-  printer,
-  "ephemeral_public_key",
-  ephemeral_public_key,
-  "certificates",
-  certificates
+    printer,
+    "ephemeral_public_key",
+    ephemeral_public_key,
+    "certificates",
+    certificates
   );
 }
 

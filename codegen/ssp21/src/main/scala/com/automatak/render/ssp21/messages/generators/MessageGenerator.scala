@@ -102,9 +102,9 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
     }
 
     def printFunc = "void %s::print(ILinePrinter& printer)".format(msg.name).iter ++ bracket {
-      "MessagePrinter::print_fields(".iter ++
-        "printer,".iter ++ printArgs ++
-      ");".iter
+      "MessagePrinter::print_fields(".iter ++ indent {
+        "printer,".iter ++ printArgs
+      } ++ ");".iter
     }
 
     def writeMsgFunc(implicit indent: Indentation) : Iterator[String] = {
