@@ -28,8 +28,8 @@ TEST_CASE(SUITE("Koopman test vector #1"))
 
 TEST_CASE(SUITE("Koopman test vector #2"))
 {
-	Hex hex("DE AD BE EF");
-	REQUIRE(KoopmanCRC32::calc(hex) == 0xFDBCA758);
+	//Hex hex("DE AD BE EF");
+	REQUIRE(KoopmanCRC32::calc(Hex("DE AD BE EF")) == 0xFDBCA758);
 }
 
 TEST_CASE(SUITE("Castagnoli test vector #1"))
