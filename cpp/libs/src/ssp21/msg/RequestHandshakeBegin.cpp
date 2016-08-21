@@ -83,4 +83,9 @@ FormatResult RequestHandshakeBegin::write_msg(openpal::WSlice& output)
   return FormatResult::write_any(write, output);
 }
 
+void RequestHandshakeBegin::print(ILinePrinter& printer)
+{
+
+}
+
 }

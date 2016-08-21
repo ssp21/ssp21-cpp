@@ -20,6 +20,7 @@
 #include "openpal/container/WSlice.h"
 #include "openpal/container/RSlice.h"
 #include "ssp21/gen/Function.h"
+#include "ssp21/ILinePrinter.h"
 #include "ssp21/FormatResult.h"
 #include "ssp21/gen/ParseError.h"
 #include "ssp21/gen/FormatError.h"
@@ -37,6 +38,8 @@ struct ReplyHandshakeError : private openpal::Uncopyable
 
   ParseError read_msg(const openpal::RSlice& input);
   FormatResult write_msg(openpal::WSlice& output);
+
+  void print(ILinePrinter& printer);
 
   static const uint32_t min_size_bytes = 2;
 

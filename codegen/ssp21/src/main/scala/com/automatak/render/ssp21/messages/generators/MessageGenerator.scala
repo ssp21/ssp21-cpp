@@ -19,10 +19,10 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
     def readSigHeader = "ParseError read_msg(const openpal::RSlice& input);".iter
     def writeMsgSig = "FormatResult write_msg(openpal::WSlice& output);".iter
     def writeSigHeader = "FormatError write(openpal::WSlice& output);".iter
+    def printSig = "void print(ILinePrinter& printer);".iter
     def defaultConstructorSig = "%s();".format(msg.name).iter
 
     def minSizeBytes = "static const uint32_t min_size_bytes = %s;".format(msg.minSizeBytes).iter
-
     def functionConst = "static const Function function = Function::%s;".format(msg.function.name).iter
 
     def struct(implicit indent: Indentation) : Iterator[String] = {
@@ -32,12 +32,14 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
       }.toIterator
 
       "struct %s : private openpal::Uncopyable".format(msg.name).iter ++ bracketSemiColon {
-        defaultConstructorSig ++
+          defaultConstructorSig ++
           space ++
           fullConstructorSig(false) ++
           space ++
           readSigHeader ++
           writeMsgSig ++
+          space ++
+          printSig ++
           space ++
           minSizeBytes ++
           space ++
@@ -60,6 +62,7 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
           Includes.parseError,
           Includes.formatError,
           Includes.formatResult,
+          Includes.linePrinter,
           Includes.function
         ) ::: msg.fields.flatMap(f => f.cpp.includes.toList)
       )
@@ -94,6 +97,10 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
         } ++ ");".iter
       }
 
+    }
+
+    def printFunc = "void %s::print(ILinePrinter& printer)".format(msg.name).iter ++ bracket {
+      "".iter
     }
 
     def writeMsgFunc(implicit indent: Indentation) : Iterator[String] = {
@@ -131,7 +138,19 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
       } ++ bracketsOnly
     }
 
-    def funcs = defaultConstructorImpl ++ space ++ fullConstructorImpl ++ space ++ readFunc ++ space ++ writeFunc ++ space ++ writeMsgFunc
+    def funcs = {
+        defaultConstructorImpl ++
+        space ++
+        fullConstructorImpl ++
+        space ++
+        readFunc ++
+        space ++
+        writeFunc ++
+        space ++
+        writeMsgFunc ++
+        space ++
+        printFunc
+    }
 
     def selfInclude = include(quoted("ssp21/msg/%s".format(headerName)))
 

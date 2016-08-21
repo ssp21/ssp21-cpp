@@ -51,4 +51,9 @@ FormatResult ReplyHandshakeAuth::write_msg(openpal::WSlice& output)
   return FormatResult::write_any(write, output);
 }
 
+void ReplyHandshakeAuth::print(ILinePrinter& printer)
+{
+
+}
+
 }

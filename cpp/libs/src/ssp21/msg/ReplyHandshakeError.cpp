@@ -52,4 +52,9 @@ FormatResult ReplyHandshakeError::write_msg(openpal::WSlice& output)
   return FormatResult::write_any(write, output);
 }
 
+void ReplyHandshakeError::print(ILinePrinter& printer)
+{
+
+}
+
 }

@@ -61,4 +61,9 @@ FormatResult UnconfirmedSessionData::write_msg(openpal::WSlice& output)
   return FormatResult::write_any(write, output);
 }
 
+void UnconfirmedSessionData::print(ILinePrinter& printer)
+{
+
+}
+
 }

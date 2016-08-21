@@ -53,4 +53,9 @@ FormatResult ReplyHandshakeBegin::write_msg(openpal::WSlice& output)
   return FormatResult::write_any(write, output);
 }
 
+void ReplyHandshakeBegin::print(ILinePrinter& printer)
+{
+
+}
+
 }
