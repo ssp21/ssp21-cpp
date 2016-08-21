@@ -8,11 +8,7 @@ object EnumValue {
   def undefined(value: Int) = EnumValue("undefined", value, "value not defined")
 }
 
-case class EnumValue(name: String, value: Int, comment: String, strName: Option[String] = None) {
-
-  def displayName : String = strName.getOrElse(name)
-
-}
+case class EnumValue(name: String, value: Int, comment: String)
 
 object EnumModel {
 
