@@ -25,7 +25,7 @@ TEST_CASE(SUITE("returns error on undefined enum"))
 {
 	RequestHandshakeBegin msg;
 
-	HexSequence hex("DD");
+	Hex hex("DD");
 
 	auto input = hex.as_rslice();
 	auto err = msg.read_msg(input);
@@ -36,7 +36,7 @@ TEST_CASE(SUITE("returns error on unexpected function"))
 {
 	RequestHandshakeBegin msg;
 
-	HexSequence hex("03");
+	Hex hex("03");
 
 	auto input = hex.as_rslice();
 	auto err = msg.read_msg(input);
@@ -47,7 +47,7 @@ TEST_CASE(SUITE("returns error if too little data"))
 {
 	RequestHandshakeBegin msg;
 
-	HexSequence hex("00");
+	Hex hex("00");
 
 	auto input = hex.as_rslice();
 	auto err = msg.read_msg(input);
@@ -58,7 +58,7 @@ TEST_CASE(SUITE("successfully parses message"))
 {
 	RequestHandshakeBegin msg;
 
-	HexSequence hex("00 D2 D1 00 00 00 00 00 03 AA AA AA 01 02 00 BB BB");
+	Hex hex("00 D2 D1 00 00 00 00 00 03 AA AA AA 01 02 00 BB BB");
 
 	auto input = hex.as_rslice();
 	auto err = msg.read_msg(input);
@@ -82,7 +82,7 @@ TEST_CASE(SUITE("rejects unknown enum"))
 {
 	RequestHandshakeBegin msg;
 
-	HexSequence hex("00 D2 D1 00 CC 00 00 00 03 AA AA AA 01 02 00 BB BB");
+	Hex hex("00 D2 D1 00 CC 00 00 00 03 AA AA AA 01 02 00 BB BB");
 
 	auto input = hex.as_rslice();
 	auto err = msg.read_msg(input);
@@ -93,7 +93,7 @@ TEST_CASE(SUITE("rejects trailing data"))
 {
 	RequestHandshakeBegin msg;
 
-	HexSequence hex("00 D2 D1 00 00 00 00 00 03 AA AA AA 01 02 00 BB BB FF FF FF");
+	Hex hex("00 D2 D1 00 00 00 00 00 03 AA AA AA 01 02 00 BB BB FF FF FF");
 
 	auto input = hex.as_rslice();
 	auto err = msg.read_msg(input);

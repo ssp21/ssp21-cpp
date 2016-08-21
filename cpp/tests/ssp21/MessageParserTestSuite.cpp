@@ -17,7 +17,7 @@ TEST_CASE(SUITE("reads integer fields successfully"))
 	uint16_t a;
 	uint32_t b;
 
-	HexSequence hex("01 00 03 00 00 00");
+	Hex hex("01 00 03 00 00 00");
 
 	auto input = hex.as_rslice();
 	auto err = MessageParser::read_fields(input, a, b);
@@ -32,7 +32,7 @@ TEST_CASE(SUITE("returns error if too little data"))
 	uint16_t a;
 	uint32_t b;
 
-	HexSequence hex("01 00 03 00 00");
+	Hex hex("01 00 03 00 00");
 
 	auto input = hex.as_rslice();
 	auto err = MessageParser::read_fields(input, a, b);
@@ -45,7 +45,7 @@ TEST_CASE(SUITE("ignores extra data after fields"))
 	uint16_t a;
 	uint32_t b;
 
-	HexSequence hex("01 00 03 00 00 00 FF");
+	Hex hex("01 00 03 00 00 00 FF");
 
 	auto input = hex.as_rslice();
 	auto err = MessageParser::read_fields(input, a, b);
@@ -56,7 +56,7 @@ TEST_CASE(SUITE("ignores extra data after fields"))
 TEST_CASE(SUITE("reads Seq8 correctly"))
 {
 	Seq8 seq;
-	HexSequence hex("04 00 01 02 03 FF");
+	Hex hex("04 00 01 02 03 FF");
 
 	auto input = hex.as_rslice();
 	auto err = MessageParser::read(input, seq);
@@ -77,7 +77,7 @@ TEST_CASE(SUITE("returns error if Seq8 empty"))
 TEST_CASE(SUITE("returns error if Seq8 incomplete"))
 {
 	Seq8 seq;
-	HexSequence hex("04 00 01 02");
+	Hex hex("04 00 01 02");
 	auto input = hex.as_rslice();
 	auto err = MessageParser::read(input, seq);
 	REQUIRE(err == ParseError::insufficient_bytes);
@@ -86,7 +86,7 @@ TEST_CASE(SUITE("returns error if Seq8 incomplete"))
 TEST_CASE(SUITE("reads Seq8Seq16 correctly"))
 {
 	Seq8Seq16 seqs;
-	HexSequence hex("02 01 00 BB 02 00 CA FE DD");
+	Hex hex("02 01 00 BB 02 00 CA FE DD");
 	auto input = hex.as_rslice();
 	auto err = MessageParser::read(input, seqs);
 	REQUIRE(!any(err));
@@ -105,7 +105,7 @@ TEST_CASE(SUITE("reads Seq8Seq16 correctly"))
 TEST_CASE(SUITE("returns err if Seq8Seq16 reaches limit"))
 {
 	Seq8Seq16 seqs;
-	HexSequence hex("07 01 00 00 01 00 00 01 00 00 01 00 00 01 00 00");
+	Hex hex("07 01 00 00 01 00 00 01 00 00 01 00 00 01 00 00");
 	auto input = hex.as_rslice();
 	auto err = MessageParser::read(input, seqs);
 	REQUIRE(err == ParseError::impl_capacity_limit);
