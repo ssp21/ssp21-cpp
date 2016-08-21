@@ -15,8 +15,8 @@ object RequestHandshakeBegin extends Message {
       Enum(HashMode()),
       Enum(SessionMode()),
       Enum(CertificateMode()),
-      Seq8("ephemeral_public_key"),
-      Seq8Seq16("certificates")
+      CommonFields.ephemerialPublicKey,
+      CommonFields.certificates
   )
 
 }

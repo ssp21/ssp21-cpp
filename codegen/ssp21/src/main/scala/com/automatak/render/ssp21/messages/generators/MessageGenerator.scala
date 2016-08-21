@@ -65,7 +65,7 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
       )
     }
 
-    def license = commented(LicenseHeader())
+    def license = commented(LicenseHeader.lines)
     def content = struct
 
     license ++ space ++ includeGuards(msg.name)(includes ++ space ++ namespace(cppNamespace)(content))
@@ -73,7 +73,7 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
 
   override def impl(implicit indent: Indentation) : Iterator[String] = {
 
-    def license = commented(LicenseHeader())
+    def license = commented(LicenseHeader.lines)
 
     def args = commas(msg.fields.map(_.name))
 

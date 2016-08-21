@@ -8,7 +8,7 @@ package com.automatak.render
  */
 object LicenseHeader {
 
-  def apply(): Iterator[String] = list.iterator
+  def lines: Iterator[String] = list.iterator
 
   private val list = List(
 

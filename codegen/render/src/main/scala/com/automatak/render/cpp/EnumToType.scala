@@ -7,16 +7,16 @@ import com.automatak.render._
 
 object EnumToType extends HeaderImplModelRender[EnumModel] {
 
-  def header: ModelRenderer[EnumModel] = HeaderRender
-  def impl: ModelRenderer[EnumModel] =  ImplRender
+  def header: Renderer[EnumModel] = HeaderRender
+  def impl: Renderer[EnumModel] =  ImplRender
 
-  private object HeaderRender extends ModelRenderer[EnumModel] {
+  private object HeaderRender extends Renderer[EnumModel] {
     def render(em: EnumModel)(implicit indent: Indentation) : Iterator[String] = {
       "static %s to_type(%s arg);".format(em.cpp.typ, em.name).iter
     }
   }
 
-  private object ImplRender extends ModelRenderer[EnumModel] {
+  private object ImplRender extends Renderer[EnumModel] {
     def render(em: EnumModel)(implicit indent: Indentation) : Iterator[String] = {
 
       def sig = "%s %s::to_type(%s arg)".format(em.cpp.typ, em.specName, em.name).iter

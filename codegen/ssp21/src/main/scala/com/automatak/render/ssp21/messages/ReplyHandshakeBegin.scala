@@ -10,8 +10,8 @@ object ReplyHandshakeBegin extends Message {
 
   override def fields: List[Field] = List(
       U16("version"),
-      Seq8("ephemeral_public_key"),
-      Seq8Seq16("certificates")
+      CommonFields.ephemerialPublicKey,
+      CommonFields.certificates
   )
 
 }

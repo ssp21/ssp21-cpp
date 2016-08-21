@@ -3,9 +3,9 @@
  */
 package com.automatak.render.cpp
 
-import com.automatak.render.ModelRenderer
+import com.automatak.render.Renderer
 
 trait HeaderImplModelRender[A] {
-  def header: ModelRenderer[A]
-  def impl: ModelRenderer[A]
+  def header: Renderer[A]
+  def impl: Renderer[A]
 }

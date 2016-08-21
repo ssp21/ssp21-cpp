@@ -26,7 +26,7 @@ case class EnumGenerator(cfg: EnumConfig) extends WriteCppFiles {
 
   override def header(implicit i : Indentation) : Iterator[String] = {
 
-    def license = commented(LicenseHeader())
+    def license = commented(LicenseHeader.lines)
     def enum = EnumModelRenderer.render(cfg.model)
     def signatures = renderers.map(c => c.header.render(cfg.model)).flatten.toIterator
     def spec = "struct %s : private openpal::StaticOnly".format(cfg.model.specName).iter ++ bracketSemiColon {
@@ -58,7 +58,7 @@ case class EnumGenerator(cfg: EnumConfig) extends WriteCppFiles {
 
   override def impl(implicit i : Indentation) : Iterator[String] = {
 
-    def license = commented(LicenseHeader())
+    def license = commented(LicenseHeader.lines)
     def funcs = renderers.map(r => r.impl.render(cfg.model)).flatten.toIterator
     def inc = quoted("ssp21/gen/%s".format(headerFileName))
 

@@ -7,16 +7,16 @@ import com.automatak.render._
 
 object EnumToString extends HeaderImplModelRender[EnumModel] {
 
-  def impl: ModelRenderer[EnumModel]  = ImplRender
-  def header: ModelRenderer[EnumModel]  = HeaderRender
+  def impl: Renderer[EnumModel]  = ImplRender
+  def header: Renderer[EnumModel]  = HeaderRender
 
-  private object HeaderRender extends ModelRenderer[EnumModel] {
+  private object HeaderRender extends Renderer[EnumModel] {
     def render(em: EnumModel)(implicit indent: Indentation) : Iterator[String] = {
       "static const char* to_string(%s arg);".format(em.name).iter
     }
   }
 
-  private object ImplRender extends ModelRenderer[EnumModel] {
+  private object ImplRender extends Renderer[EnumModel] {
 
     def render(em: EnumModel)(implicit indent: Indentation) : Iterator[String] = {
 

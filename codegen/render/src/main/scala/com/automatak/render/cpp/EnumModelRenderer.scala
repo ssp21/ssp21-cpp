@@ -5,7 +5,7 @@ package com.automatak.render.cpp
 
 import com.automatak.render._
 
-object EnumModelRenderer extends ModelRenderer[EnumModel] {
+object EnumModelRenderer extends Renderer[EnumModel] {
 
   def render(enum: EnumModel)(implicit indent: Indentation) : Iterator[String] = {
 
