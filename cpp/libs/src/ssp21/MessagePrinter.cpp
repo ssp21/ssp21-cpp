@@ -32,16 +32,19 @@ namespace ssp21 {
 		uint32_t count = 0;
 
 		while ((count < max_hex_per_line) && (count < data.length())) {
-			auto pos = count * 3;
-			buffer[pos] = to_hex_char((data[pos] & 0xf0) >> 4);
-			buffer[pos + 1] = to_hex_char((data[pos] & 0xf0) >> 4);
-			buffer[pos + 2] = ' ';
+			auto pos = count * 3;			
+			buffer[pos] = to_hex_char((data[count] & 0xF0) >> 4);
+			buffer[pos + 1] = to_hex_char(data[count] & 0x0F);
+			buffer[pos + 2] = ':';
 			++count;
 		}
 
 		static_assert((3 * max_hex_per_line) < max_line_size, "bad configuration");
 
-		buffer[3 * count] = '\0';
+		buffer[(3 * count) - 1] = '\0';
+
+		printer.print(buffer);
+
 		return data.skip(count);
 	}
 
@@ -109,7 +112,7 @@ namespace ssp21 {
 	void MessagePrinter::print(ILinePrinter& printer, const char* name, const Seq8& value)
 	{
 		char buffer[max_line_size];
-		SAFE_STRING_FORMAT(buffer, max_line_size, "%s, length = %u", name, value.length());
+		SAFE_STRING_FORMAT(buffer, max_line_size, "%s (length = %u)", name, value.length());
 		printer.print(buffer);
 		print_hex(printer, value);
 	}
@@ -117,7 +120,7 @@ namespace ssp21 {
 	void MessagePrinter::print(ILinePrinter& printer, const char* name, const Seq16& value)
 	{
 		char buffer[max_line_size];
-		SAFE_STRING_FORMAT(buffer, max_line_size, "%s, length = %u", name, value.length());
+		SAFE_STRING_FORMAT(buffer, max_line_size, "%s (length = %u)", name, value.length());
 		printer.print(buffer);
 		print_hex(printer, value);
 	}
@@ -125,16 +128,17 @@ namespace ssp21 {
 	void MessagePrinter::print(ILinePrinter& printer, const char* name, const Seq8Seq16& value)
 	{
 		char buffer[max_line_size];
-		SAFE_STRING_FORMAT(buffer, max_line_size, "%s, count = %u", name, value.count());
+		SAFE_STRING_FORMAT(buffer, max_line_size, "%s (count = %u)", name, value.count());
 		printer.print(buffer);
 		
 		for (uint32_t i = 0; i < value.count(); ++i)
 		{
-			SAFE_STRING_FORMAT(buffer, max_line_size, "# %u:", i);
-			printer.print(buffer);
-
 			RSlice entry;
 			value.read(i, entry);
+
+			SAFE_STRING_FORMAT(buffer, max_line_size, "#%u (length = %u)", i+1, entry.length());
+			printer.print(buffer);
+		
 			print_hex(printer, entry);
 		}
 	}

@@ -13,7 +13,7 @@ class ILinePrinter
 
 public:
 
-  virtual void print(const char* line);
+	virtual void print(const char* line) = 0;
 
 };
 

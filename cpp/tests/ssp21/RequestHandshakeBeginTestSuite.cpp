@@ -7,6 +7,8 @@
 #include "testlib/BufferHelpers.h"
 #include "testlib/HexConversions.h"
 
+#include "mocks/MockLinePrinter.h"
+
 #include <openpal/container/StaticBuffer.h>
 
 #define SUITE(name) "RequestHandshakeBeginTestSuite - " name
@@ -76,6 +78,48 @@ TEST_CASE(SUITE("successfully parses message"))
 	Seq16 cert;
 	REQUIRE(msg.certificates.read(0, cert));
 	REQUIRE(to_hex(cert) == "BB BB");
+}
+
+TEST_CASE(SUITE("pretty prints message"))
+{
+	
+	Hex publicKey("CA FE");
+	Hex cert1("AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA");
+	Hex cert2("CC DD");
+
+	RequestHandshakeBegin msg(
+		7,
+		NonceMode::greater_than_last_rx,
+		DHMode::x25519,
+		HashMode::sha256,
+		SessionMode::hmac_sha256_16,
+		CertificateMode::preshared_keys,
+		Seq8(publicKey)
+	);
+
+	REQUIRE(msg.certificates.push(cert1));
+	REQUIRE(msg.certificates.push(cert2));
+
+	MockLinePrinter printer;
+	msg.print(printer);
+	
+	printer.validate(
+		"version: 7",
+		"nonce_mode: greater_than_last_rx",
+		"dh_mode: x25519",
+		"hash_mode: sha256",
+		"session_mode: hmac_sha256_16",
+		"certificate_mode: preshared_keys",
+		"ephemeral_public_key (length = 2)",
+		"CA:FE",
+		"certificates (count = 2)",
+		"#1 (length = 32)",
+		"AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA",
+		"AA:AA:AA:AA:AA:AA",
+		"#2 (length = 2)",
+		"CC:DD"
+	);
+	
 }
 
 TEST_CASE(SUITE("rejects unknown enum"))
