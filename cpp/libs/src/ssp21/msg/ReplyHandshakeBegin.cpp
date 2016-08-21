@@ -20,15 +20,12 @@
 
 namespace ssp21 {
 
-ReplyHandshakeBegin::ReplyHandshakeBegin() : 
-  version(0)
+ReplyHandshakeBegin::ReplyHandshakeBegin()
 {}
 
 ReplyHandshakeBegin::ReplyHandshakeBegin(
-  uint16_t version,
   const Seq8& ephemeral_public_key
 ) :
-  version(version),
   ephemeral_public_key(ephemeral_public_key)
 {}
 
@@ -36,7 +33,6 @@ ParseError ReplyHandshakeBegin::read_msg(const openpal::RSlice& input)
 {
   return MessageParser::read_message<Function::reply_handshake_begin>(
     input,
-    version,
     ephemeral_public_key,
     certificates
   );
@@ -46,7 +42,6 @@ FormatError ReplyHandshakeBegin::write(openpal::WSlice& output)
 {
   return MessageFormatter::write_message<Function::reply_handshake_begin>(
     output,
-    version,
     ephemeral_public_key,
     certificates
   );

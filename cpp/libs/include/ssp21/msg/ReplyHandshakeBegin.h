@@ -16,7 +16,6 @@
 #ifndef SSP21_REPLYHANDSHAKEBEGIN_H
 #define SSP21_REPLYHANDSHAKEBEGIN_H
 
-#include <cstdint>
 #include "openpal/util/Uncopyable.h"
 #include "openpal/container/WSlice.h"
 #include "openpal/container/RSlice.h"
@@ -33,18 +32,16 @@ struct ReplyHandshakeBegin : private openpal::Uncopyable
   ReplyHandshakeBegin();
 
   ReplyHandshakeBegin(
-    uint16_t version,
     const Seq8& ephemeral_public_key
   );
 
   ParseError read_msg(const openpal::RSlice& input);
   FormatResult write_msg(openpal::WSlice& output);
 
-  static const uint32_t min_size_bytes = 5;
+  static const uint32_t min_size_bytes = 3;
 
   static const Function function = Function::reply_handshake_begin;
 
-  uint16_t version;
   Seq8 ephemeral_public_key;
   Seq8Seq16 certificates;
 
