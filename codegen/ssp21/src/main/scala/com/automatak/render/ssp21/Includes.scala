@@ -29,6 +29,7 @@ object Includes {
   val msgFormatter = Include(quoted("ssp21/MessageFormatter.h"), Ordering.ssp21)
   val formatResult = Include(quoted("ssp21/FormatResult.h"), Ordering.ssp21)
   val linePrinter = Include(quoted("ssp21/ILinePrinter.h"), Ordering.ssp21)
+  val msgPrinter = Include(quoted("ssp21/MessagePrinter.h"), Ordering.ssp21)
 
   def sort(lhs : Include, rhs : Include) : Boolean = {
     if(lhs.order == rhs.order) {

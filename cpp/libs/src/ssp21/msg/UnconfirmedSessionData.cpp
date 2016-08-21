@@ -16,6 +16,7 @@
 #include "ssp21/msg/UnconfirmedSessionData.h"
 
 #include "ssp21/MessageParser.h"
+#include "ssp21/MessagePrinter.h"
 #include "ssp21/MessageFormatter.h"
 
 namespace ssp21 {
@@ -63,7 +64,15 @@ FormatResult UnconfirmedSessionData::write_msg(openpal::WSlice& output)
 
 void UnconfirmedSessionData::print(ILinePrinter& printer)
 {
-
+  MessagePrinter::print_fields(
+  printer,
+  "valid_until_ms",
+  valid_until_ms,
+  "nonce",
+  nonce,
+  "payload",
+  payload
+  );
 }
 
 }

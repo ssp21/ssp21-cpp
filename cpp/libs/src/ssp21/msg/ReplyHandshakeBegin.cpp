@@ -16,6 +16,7 @@
 #include "ssp21/msg/ReplyHandshakeBegin.h"
 
 #include "ssp21/MessageParser.h"
+#include "ssp21/MessagePrinter.h"
 #include "ssp21/MessageFormatter.h"
 
 namespace ssp21 {
@@ -55,7 +56,13 @@ FormatResult ReplyHandshakeBegin::write_msg(openpal::WSlice& output)
 
 void ReplyHandshakeBegin::print(ILinePrinter& printer)
 {
-
+  MessagePrinter::print_fields(
+  printer,
+  "ephemeral_public_key",
+  ephemeral_public_key,
+  "certificates",
+  certificates
+  );
 }
 
 }

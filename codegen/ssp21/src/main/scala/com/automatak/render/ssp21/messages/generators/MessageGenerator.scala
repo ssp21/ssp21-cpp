@@ -80,6 +80,8 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
 
     def args = commas(msg.fields.map(_.name))
 
+    def printArgs = commas(msg.fields.map(f => List(quoted(f.name), f.name)).flatten)
+
     def readFunc(implicit indent: Indentation) : Iterator[String] = {
 
       "ParseError %s::read_msg(const openpal::RSlice& input)".format(msg.name).iter ++ bracket {
@@ -100,7 +102,9 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
     }
 
     def printFunc = "void %s::print(ILinePrinter& printer)".format(msg.name).iter ++ bracket {
-      "".iter
+      "MessagePrinter::print_fields(".iter ++
+        "printer,".iter ++ printArgs ++
+      ");".iter
     }
 
     def writeMsgFunc(implicit indent: Indentation) : Iterator[String] = {
@@ -157,7 +161,7 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
     def includes = {
       selfInclude ++
       space ++
-      Includes.lines(List(Includes.msgParser, Includes.msgFormatter))
+      Includes.lines(List(Includes.msgParser, Includes.msgFormatter, Includes.msgPrinter))
     }
 
     license ++ space ++ includes ++ space ++ namespace(cppNamespace)(funcs)

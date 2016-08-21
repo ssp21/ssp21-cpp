@@ -16,6 +16,7 @@
 #include "ssp21/msg/ReplyHandshakeAuth.h"
 
 #include "ssp21/MessageParser.h"
+#include "ssp21/MessagePrinter.h"
 #include "ssp21/MessageFormatter.h"
 
 namespace ssp21 {
@@ -53,7 +54,11 @@ FormatResult ReplyHandshakeAuth::write_msg(openpal::WSlice& output)
 
 void ReplyHandshakeAuth::print(ILinePrinter& printer)
 {
-
+  MessagePrinter::print_fields(
+  printer,
+  "mac",
+  mac
+  );
 }
 
 }
