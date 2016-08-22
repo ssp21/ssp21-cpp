@@ -100,7 +100,8 @@ namespace ssp21
 		{
 			const auto remaining = link_header_total_size - num_rx_;
 			const auto num_to_copy = min<uint32_t>(remaining, input.length());
-			input.take(num_to_copy).copy_to(buffer_.as_wslice().skip(num_rx_));
+			auto dest = buffer_.as_wslice().skip(num_rx_);
+			input.take(num_to_copy).copy_to(dest);
 			
 			num_rx_ += num_to_copy;
 			input.advance(num_to_copy);
@@ -142,11 +143,12 @@ namespace ssp21
 		
 		LinkParser::State LinkParser::parse_body(openpal::RSlice& input)
 		{
-			const auto total_frame_size = link_header_total_size + this->payload_length_ + crc_size;
-			const auto remaining = total_frame_size - this->num_rx_;
+			const uint32_t total_frame_size = link_header_total_size + this->payload_length_ + crc_size;
+			const uint32_t remaining = total_frame_size - this->num_rx_;
 
 			const auto num_to_copy = min<uint32_t>(remaining, input.length());
-			input.take(num_to_copy).copy_to(buffer_.as_wslice().skip(num_rx_));
+			auto dest = buffer_.as_wslice().skip(num_rx_);
+			input.take(num_to_copy).copy_to(dest);
 
 			num_rx_ += num_to_copy;
 			input.advance(num_to_copy);

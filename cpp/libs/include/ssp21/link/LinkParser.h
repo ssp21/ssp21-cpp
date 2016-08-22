@@ -66,12 +66,13 @@ namespace ssp21
 		LinkParser() = delete;		
 
 		const uint16_t max_payload_length_;
+		openpal::Buffer buffer_;
 
 		State state_;
 
 		uint32_t num_rx_;
 		uint16_t num_crc_error_;
-		openpal::Buffer buffer_;
+		
 		openpal::RSlice payload_;
 		Addresses addresses_;
 		uint16_t payload_length_;
