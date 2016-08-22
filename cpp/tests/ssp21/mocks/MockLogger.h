@@ -20,7 +20,7 @@ namespace ssp21
 
 	public:
 		MockLogger(const char* id, LogLevels levels = LogLevels::everything()) : 
-			root(ssp21::moduleid, this, id, levels),
+			root(ssp21::Module::id, this, id, levels),
 			print_output_(false)
 		{}
 

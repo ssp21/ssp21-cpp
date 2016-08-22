@@ -3,10 +3,16 @@
 #define SSP21_LOGLEVELS_H
 
 #include "openpal/logging/LogLevels.h"
+#include "openpal/util/Uncopyable.h"
 
 namespace ssp21 
 {
-	const openpal::ModuleId moduleid = openpal::ModuleId(0xAAAAAAAA);
+	struct Module : openpal::StaticOnly
+	{		
+		// can be changed at runtime if there's ever a collision
+		static openpal::ModuleId id;
+	};
+	
 
 	namespace levels 
 	{
