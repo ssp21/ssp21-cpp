@@ -71,6 +71,21 @@ TEST_CASE(SUITE("detects header crc failure properly"))
 	REQUIRE(input.is_empty());
 }
 
+TEST_CASE(SUITE("recursively processes header crc failure"))
+{
+	LinkParser parser(1024);
+
+	// packet in a packet
+
+	Hex hex("07 AA 07 AA 01 00 02 00 06 00 F9 9F A2 C3 DD DD DD DD DD DD 6B 37 0D 51");
+	auto input = hex.as_rslice();
+
+	auto result = parser.parse(input);
+	REQUIRE(result.read_frame);
+	REQUIRE(result.num_crc_error == 1);
+	REQUIRE(input.is_empty());
+}
+
 TEST_CASE(SUITE("detects body crc failure properly"))
 {
 	LinkParser parser(1024);
