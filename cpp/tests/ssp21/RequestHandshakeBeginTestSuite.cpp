@@ -3,11 +3,14 @@
 #include "catch.hpp"
 
 #include "ssp21/msg/RequestHandshakeBegin.h"
+#include "ssp21/LogLinePrinter.h"
 
 #include "testlib/BufferHelpers.h"
 #include "testlib/HexConversions.h"
 
-#include <openpal/container/StaticBuffer.h>
+#include "openpal/container/StaticBuffer.h"
+
+#include "mocks/MockLogger.h"
 
 #define SUITE(name) "RequestHandshakeBeginTestSuite - " name
 
@@ -98,11 +101,14 @@ TEST_CASE(SUITE("pretty prints message"))
 	REQUIRE(msg.certificates.push(cert1));
 	REQUIRE(msg.certificates.push(cert2));
 
-	//MockLinePrinter printer;
-	//msg.print(printer);
+
+	MockLogger log("log", ~0);
+	LogLinePrinter printer(log.root.logger, 1);
+
+	msg.print(printer);
 	
-	/*
-	printer.validate(
+	
+	log.validate(
 		"version: 7",
 		"nonce_mode: greater_than_last_rx",
 		"dh_mode: x25519",
@@ -113,13 +119,11 @@ TEST_CASE(SUITE("pretty prints message"))
 		"CA:FE",
 		"certificates (count = 2)",
 		"#1 (length = 32)",
-		"AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA",
-		"AA:AA:AA:AA:AA:AA",
+		"AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA",		
 		"#2 (length = 2)",
 		"CC:DD"
 	);
-	*/
-	
+		
 }
 
 TEST_CASE(SUITE("rejects unknown enum"))
