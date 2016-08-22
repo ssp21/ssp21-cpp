@@ -19,7 +19,6 @@ TEST_CASE(SUITE("can be constructed"))
 {		
 	MockLogger log("responder");
 	
-
 	Responder resp(log.root.logger);	
 
 	resp.on_rx_data(RSlice::empty_slice());

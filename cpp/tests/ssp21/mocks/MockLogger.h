@@ -4,9 +4,12 @@
 #include "openpal/logging/LogRoot.h"
 #include "openpal/util/Uncopyable.h"
 
+#include "ssp21/LogLevels.h"
+
 #include "catch.hpp"
 
 #include <deque>
+#include <iostream>
 
 using namespace openpal;
 
@@ -16,11 +19,23 @@ namespace ssp21
 	{
 
 	public:
-		MockLogger(const char* id, LogLevels levels = LogLevels::everything()) : root(ModuleId(0), this, id, levels)
+		MockLogger(const char* id, LogLevels levels = LogLevels::everything()) : 
+			root(ssp21::moduleid, this, id, levels),
+			print_output_(false)
 		{}
+
+		void print_output()
+		{
+			print_output_ = true;
+		}
 		
 		virtual void log(ModuleId module, const char* id, LogLevel level, char const *location, char const *message)  override
 		{
+			if (print_output_)
+			{
+				std::cout << message << std::endl;
+			}
+
 			lines.push_back(message);
 		}
 
@@ -41,6 +56,8 @@ namespace ssp21
 		openpal::LogRoot root;
 
 	private :
+
+		bool print_output_;
 
 		MockLogger() = delete;
 
