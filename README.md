@@ -5,7 +5,7 @@ SSP21 depends on [libsodium](https://download.libsodium.org/doc/). You can subst
 On Windows, download and install the prebuilt binaries. You'll need to tell cmake where to find the distribution:
 
 ```
-> cmake .. -DSSP21_LIBSODIUM_DIR=C:\libs\libsodium-1.0.10-msvc
+> cmake .. -DSSP21_SODIUM_DIR=C:\libs\libsodium-1.0.10-msvc
 ```
 
 On Linux, your best bet is to build libsodium from source and install it.
