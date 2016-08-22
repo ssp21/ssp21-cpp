@@ -56,3 +56,31 @@ TEST_CASE(SUITE("discards leading data properly"))
 	REQUIRE(result.num_crc_error == 0);
 	REQUIRE(input.is_empty());
 }
+
+TEST_CASE(SUITE("detects header crc failure properly"))
+{
+	LinkParser parser(1024);
+	
+	/// -----------------------------VV-----------------------------------------
+	Hex hex("07 AA 01 00 02 00 06 00 F8 9F A2 C3 DD DD DD DD DD DD 6B 37 0D 51");
+	auto input = hex.as_rslice();
+
+	auto result = parser.parse(input);
+	REQUIRE_FALSE(result.read_frame);
+	REQUIRE(result.num_crc_error == 1);
+	REQUIRE(input.is_empty());
+}
+
+TEST_CASE(SUITE("detects body crc failure properly"))
+{
+	LinkParser parser(1024);
+
+	/// --------------------------------------------------------------VV--------
+	Hex hex("07 AA 01 00 02 00 06 00 F8 9F A2 C3 DD DD DD DD DD DD 6B 38 0D 51");
+	auto input = hex.as_rslice();
+
+	auto result = parser.parse(input);
+	REQUIRE_FALSE(result.read_frame);
+	REQUIRE(result.num_crc_error == 1);
+	REQUIRE(input.is_empty());
+}
