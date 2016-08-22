@@ -19,7 +19,7 @@ namespace ssp21
 		MsgType msg;
 		auto err = msg.read_msg(data);
 		if (any(err)) {
-			FORMAT_LOG_BLOCK(logger_, levels::WARN, "error reading %s: %s", FunctionSpec::to_string(MsgType::function), ParseErrorSpec::to_string(err));
+			FORMAT_LOG_BLOCK(logger_, levels::warn, "error reading %s: %s", FunctionSpec::to_string(MsgType::function), ParseErrorSpec::to_string(err));
 		}
 		else {
 			this->on_message(data, msg);
@@ -29,7 +29,7 @@ namespace ssp21
 	void Responder::on_rx_data(const RSlice& data)
 	{
 		if (data.is_empty()) {
-			SIMPLE_LOG_BLOCK(logger_, levels::WARN, "Received zero length message");
+			SIMPLE_LOG_BLOCK(logger_, levels::warn, "Received zero length message");
 			return;
 		}
 
@@ -49,24 +49,24 @@ namespace ssp21
 				break;
 			
 			default:
-				FORMAT_LOG_BLOCK(logger_, levels::WARN, "Received unknown function id: %u", data[0]);
+				FORMAT_LOG_BLOCK(logger_, levels::warn, "Received unknown function id: %u", data[0]);
 				break;
 		}
 	}
 
 	void Responder::on_message(const RSlice& data, const RequestHandshakeBegin& msg)
 	{
-		SIMPLE_LOG_BLOCK(logger_, levels::INFO, "request handshake begin");
+		SIMPLE_LOG_BLOCK(logger_, levels::info, "request handshake begin");
 	}
 
 	void Responder::on_message(const RSlice& data, const RequestHandshakeAuth& msg)
 	{
-		SIMPLE_LOG_BLOCK(logger_, levels::INFO, "request handshake auth");
+		SIMPLE_LOG_BLOCK(logger_, levels::info, "request handshake auth");
 	}
 	
 	void Responder::on_message(const RSlice& data, const UnconfirmedSessionData& msg)
 	{
-		SIMPLE_LOG_BLOCK(logger_, levels::INFO, "unconfirmed session data");
+		SIMPLE_LOG_BLOCK(logger_, levels::info, "unconfirmed session data");
 	}
 
 }

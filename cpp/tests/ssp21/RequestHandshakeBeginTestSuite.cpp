@@ -103,7 +103,7 @@ TEST_CASE(SUITE("pretty prints message"))
 
 
 	MockLogger log("log");
-	LogLinePrinter printer(log.root.logger, levels::INFO, 16);
+	LogLinePrinter printer(log.root.logger, levels::info, 16);
 
 	msg.print(printer);
 		
