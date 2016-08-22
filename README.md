@@ -2,8 +2,7 @@
 
 SSP21 depends on [libsodium](https://download.libsodium.org/doc/). You can substitute another cryptographic backend if you really must.
 
-On Windows, download and install the prebuilt binaries. You'll need to tell cmake where to find the distribution.
-For instance, if you're building a 32-bit debug build, you can invoke cmake with:
+On Windows, download and install the prebuilt binaries. You'll need to tell cmake where to find the distribution:
 
 ```
 > cmake .. -DSSP21_LIBSODIUM_DIR=C:\libs\libsodium-1.0.10-msvc
