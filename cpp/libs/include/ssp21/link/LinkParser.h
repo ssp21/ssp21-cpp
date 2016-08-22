@@ -33,33 +33,38 @@ namespace ssp21
 
 	public:
 
-		struct Stats
+		struct Result
 		{
-			Stats() : num_crc_failures(0)
+			Result(bool read_frame, uint16_t num_crc_error) : read_frame(read_frame), num_crc_error(num_crc_error)
 			{}
+
+			Result() : read_frame(false), num_crc_error(0)
+			{}			
 			
-			uint16_t num_crc_failures;			
+			bool read_frame;
+			uint16_t num_crc_error;			
 		};
 
 		LinkParser(uint16_t max_payload_size);
 
-		bool parse(openpal::RSlice& input, Stats& stats);
+		Result parse(openpal::RSlice& input);
 
 		bool read(Addresses& addresses, openpal::RSlice& payload);
 
 	private:
 
-		State parse_one(openpal::RSlice& input, Stats& stats);
+		State parse_one(openpal::RSlice& input);
 
 		State parse_sync1(openpal::RSlice& input);
 		State parse_sync2(openpal::RSlice& input);
-		State parse_header(openpal::RSlice& input, Stats& stats);
-		State parse_body(openpal::RSlice& input, Stats& stats);
+		State parse_header(openpal::RSlice& input);
+		State parse_body(openpal::RSlice& input);
 
 		LinkParser() = delete;		
 
 		State state_;
 		uint32_t num_rx_;
+		uint16_t num_crc_error_;
 		
 		const uint16_t max_payload_length_;
 		openpal::Buffer buffer_;

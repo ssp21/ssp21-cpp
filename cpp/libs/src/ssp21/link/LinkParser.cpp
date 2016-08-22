@@ -21,33 +21,39 @@ namespace ssp21
 			buffer_(min_link_frame_size + max_payload_length_),			
 			state_(State::wait_sync1),
 			num_rx_(0),
+			num_crc_error_(0),
 			payload_length_(0)
 		{
 			buffer_[0] = sync1;
 			buffer_[1] = sync2;
 		}
 
-		bool LinkParser::parse(RSlice& input, Stats& stats)
+		LinkParser::Result LinkParser::parse(RSlice& input)
 		{						
+			this->num_crc_error_ = 0;
+
 			while (true)
-			{
+			{				
+				auto start_length = input.length();
+
 				if (input.is_empty())
 				{
-					return false;
+					return Result(state_ == State::wait_read, num_crc_error_);
 				}
 				
 				const auto start_state = state_;
-				const auto new_state = parse_one(input, stats);				
+				const auto new_state = parse_one(input);
+				const auto consumed = start_length - input.length();
 				state_ = new_state;
 				
-				if (start_state == new_state) // failed to transition states
+				if (start_state == new_state && (consumed == 0)) // failed to transition states
 				{
-					return new_state == State::wait_read;
+					return Result(new_state == State::wait_read, num_crc_error_);					
 				}				
 			}
 		}
 
-		LinkParser::State LinkParser::parse_one(RSlice& input, Stats& stats)
+		LinkParser::State LinkParser::parse_one(RSlice& input)
 		{
 			switch (state_)
 			{
@@ -56,9 +62,9 @@ namespace ssp21
 			case(State::wait_sync2) :
 				return parse_sync2(input);
 			case(State::wait_header) :
-				return parse_header(input, stats);
+				return parse_header(input);
 			case(State::wait_body) :
-				return parse_body(input, stats);
+				return parse_body(input);
 			default: // wait_read				
 				return State::wait_read;
 			}
@@ -93,7 +99,7 @@ namespace ssp21
 			}
 		}
 		
-		LinkParser::State LinkParser::parse_header(openpal::RSlice& input, Stats& stats)
+		LinkParser::State LinkParser::parse_header(openpal::RSlice& input)
 		{
 			const auto remaining = link_header_total_size - num_rx_;
 			const auto num_to_copy = min<uint32_t>(remaining, input.length());
@@ -113,7 +119,7 @@ namespace ssp21
 
 			if (expected_crc != actual_crc)
 			{				
-				++stats.num_crc_failures;
+				++this->num_crc_error_;
 				return State::wait_sync1;
 			}
 
@@ -131,7 +137,7 @@ namespace ssp21
 			return State::wait_body;
 		}
 		
-		LinkParser::State LinkParser::parse_body(openpal::RSlice& input, Stats& stats)
+		LinkParser::State LinkParser::parse_body(openpal::RSlice& input)
 		{
 			const auto total_frame_size = link_header_total_size + this->payload_length_ + crc_size;
 			const auto remaining = total_frame_size - this->num_rx_;
@@ -149,11 +155,11 @@ namespace ssp21
 			
 			const auto payload_bytes = buffer_.as_rslice().skip(link_header_total_size).take(payload_length_);
 			const auto expected_crc = CastagnoliCRC32::calc(payload_bytes);
-			const auto actual_crc = UInt16::read(buffer_.as_rslice().skip(link_header_total_size + payload_length_));
+			const auto actual_crc = UInt32::read(buffer_.as_rslice().skip(link_header_total_size + payload_length_));
 
 			if (expected_crc != actual_crc)
 			{
-				++stats.num_crc_failures;
+				++this->num_crc_error_;
 				return State::wait_sync1;
 			}
 
