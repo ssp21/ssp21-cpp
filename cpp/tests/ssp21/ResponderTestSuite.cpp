@@ -6,8 +6,9 @@
 
 #include "openpal/container/StaticBuffer.h"
 
-#include "testlib/MockLogHandler.h"
 #include "testlib/BufferHelpers.h"
+
+#include "mocks/MockLogger.h"
 
 #define SUITE(name) "ResponderTestSuite - " name
 
@@ -16,11 +17,10 @@ using namespace openpal;
 
 TEST_CASE(SUITE("can be constructed"))
 {		
-	MockLogHandler handler;
-	LogRoot root(&handler, "responder", ~0);
-	//handler.write_to_stdio();
+	MockLogger log("responder");
+	
 
-	Responder resp(root.logger);	
+	Responder resp(log.root.logger);	
 
 	resp.on_rx_data(RSlice::empty_slice());
 }

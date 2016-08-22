@@ -17,7 +17,7 @@ class LogLinePrinter : public ILinePrinter, private openpal::Uncopyable
 
 public:
 
-	LogLinePrinter(const openpal::Logger& logger, openpal::LogFilters filters, uint32_t max_hex_bytes_per_line = 20);
+	LogLinePrinter(const openpal::Logger& logger, openpal::LogLevel level, uint32_t max_hex_bytes_per_line = 20);
 
 	virtual void print(const char* name, uint32_t value) override;
 	virtual void print(const char* name, const char* value) override;
@@ -27,7 +27,7 @@ public:
 private:
 
 	openpal::Logger logger_;
-	openpal::LogFilters filters_;
+	openpal::LogLevel level_;
 	const uint32_t max_hex_bytes_per_line_;
 };
 

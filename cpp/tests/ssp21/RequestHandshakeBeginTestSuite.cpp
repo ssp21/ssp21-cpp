@@ -102,12 +102,11 @@ TEST_CASE(SUITE("pretty prints message"))
 	REQUIRE(msg.certificates.push(cert2));
 
 
-	MockLogger log("log", ~0);
-	LogLinePrinter printer(log.root.logger, 1, 16);
+	MockLogger log("log");
+	LogLinePrinter printer(log.root.logger, levels::INFO, 16);
 
 	msg.print(printer);
-	
-	
+		
 	log.validate(
 		"version: 7",
 		"nonce_mode: greater_than_last_rx",

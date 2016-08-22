@@ -8,18 +8,20 @@
 
 #include <deque>
 
+using namespace openpal;
+
 namespace ssp21
 {
 	class MockLogger : public openpal::ILogHandler, openpal::Uncopyable
 	{
 
 	public:
-		MockLogger(const char* id, openpal::LogFilters filters) : root(this, id , filters)
+		MockLogger(const char* id, LogLevels levels = LogLevels::everything()) : root(ModuleId(0), this, id, levels)
 		{}
 		
-		virtual void log(const openpal::LogEntry &entry)  override
+		virtual void log(ModuleId module, const char* id, LogLevel level, char const *location, char const *message)  override
 		{
-			lines.push_back(entry.get_message());
+			lines.push_back(message);
 		}
 
 		template <typename... Args>
