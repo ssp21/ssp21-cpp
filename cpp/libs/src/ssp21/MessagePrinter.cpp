@@ -8,68 +8,28 @@
 using namespace openpal;
 
 namespace ssp21 {
-	
-	void MessagePrinter::print_unsigned(ILinePrinter& printer, const char* name, uint32_t value)
-	{
-		char buffer[max_line_size];
-		SAFE_STRING_FORMAT(buffer, max_line_size, "%s: %u", name, value);
-		printer.print(buffer);
-	}
-
-	void MessagePrinter::print_hex(ILinePrinter& printer, const openpal::RSlice& data)
-	{
-		auto copy = data;
-		while (copy.is_not_empty())
-		{
-			copy = print_hex_line(printer, copy);
-		}
-	}
-
-	openpal::RSlice MessagePrinter::print_hex_line(ILinePrinter& printer, const openpal::RSlice& data)
-	{
-		char buffer[max_line_size];
-				
-		uint32_t count = 0;
-
-		while ((count < max_hex_per_line) && (count < data.length())) {
-			auto pos = count * 3;			
-			buffer[pos] = to_hex_char((data[count] & 0xF0) >> 4);
-			buffer[pos + 1] = to_hex_char(data[count] & 0x0F);
-			buffer[pos + 2] = ':';
-			++count;
-		}
-
-		static_assert((3 * max_hex_per_line) < max_line_size, "bad configuration");
-
-		buffer[(3 * count) - 1] = '\0';
-
-		printer.print(buffer);
-
-		return data.skip(count);
-	}
+		
 
 	template <int size, class EnumSpec>
 	void print_any_enum(ILinePrinter& printer, const char* name, typename EnumSpec::enum_type_t value)
 	{
-		char buffer[size];
-		SAFE_STRING_FORMAT(buffer, size, "%s: %s", name, EnumSpec::to_string(value));
-		printer.print(buffer);
+		printer.print(name, EnumSpec::to_string(value));
 	}
 
 	
 	// integers
 	void MessagePrinter::print(ILinePrinter& printer, const char* name, uint8_t value)
 	{
-		print_unsigned(printer, name, value);	
+		printer.print(name, value);		
 	}
 
 	void MessagePrinter::print(ILinePrinter& printer, const char* name, uint16_t value)
 	{
-		print_unsigned(printer, name, value);
+		printer.print(name, value);
 	}
 	void MessagePrinter::print(ILinePrinter& printer, const char* name, uint32_t value)
 	{
-		print_unsigned(printer, name, value);
+		printer.print(name, value);
 	}
 
 	// enums
@@ -111,36 +71,17 @@ namespace ssp21 {
 	// sequences
 	void MessagePrinter::print(ILinePrinter& printer, const char* name, const Seq8& value)
 	{
-		char buffer[max_line_size];
-		SAFE_STRING_FORMAT(buffer, max_line_size, "%s (length = %u)", name, value.length());
-		printer.print(buffer);
-		print_hex(printer, value);
+		printer.print(name, value);		
 	}
 	
 	void MessagePrinter::print(ILinePrinter& printer, const char* name, const Seq16& value)
 	{
-		char buffer[max_line_size];
-		SAFE_STRING_FORMAT(buffer, max_line_size, "%s (length = %u)", name, value.length());
-		printer.print(buffer);
-		print_hex(printer, value);
+		printer.print(name, value);
 	}
 	
 	void MessagePrinter::print(ILinePrinter& printer, const char* name, const Seq8Seq16& value)
 	{
-		char buffer[max_line_size];
-		SAFE_STRING_FORMAT(buffer, max_line_size, "%s (count = %u)", name, value.count());
-		printer.print(buffer);
-		
-		for (uint32_t i = 0; i < value.count(); ++i)
-		{
-			RSlice entry;
-			value.read(i, entry);
-
-			SAFE_STRING_FORMAT(buffer, max_line_size, "#%u (length = %u)", i+1, entry.length());
-			printer.print(buffer);
-		
-			print_hex(printer, entry);
-		}
+		printer.print(name, value);
 	}
 	
 }
