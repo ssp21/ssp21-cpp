@@ -50,18 +50,6 @@ struct Polynomial
 			table[i] = remainder;
 		}
 
-		for (int i = 0; i < 256; ++i)
-		{
-			std::cout << "0x" << std::setfill('0') << std::setw(output_width) << std::hex << table[i];
-
-			if (i % 8 == 7) {
-				std::cout << "," << std::endl;
-			}
-			else {
-				std::cout << ", ";
-			}
-		}
-
 		const uint8_t input[9] = { 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39 };
 
 
@@ -73,7 +61,19 @@ struct Polynomial
 			remainder = table[index] ^ (remainder << 8);
 		}
 
-		std::cout << std::endl << "CRC: 0x" << remainder << std::endl;
+		std::cout << "test vector: " << "0x" << std::setfill('0') << std::setw(output_width) << std::hex << remainder << std::endl;
+
+		for (int i = 0; i < 256; ++i)
+		{
+			std::cout << "0x" << std::setfill('0') << std::setw(output_width) << std::hex << table[i];
+
+			if (i % 8 == 7) {
+				std::cout << "," << std::endl;
+			}
+			else {
+				std::cout << ", ";
+			}
+		}		
 	}
 
 	const crc_t polynomial;
@@ -92,6 +92,9 @@ int main(int argc, char*  argv[])
 	Polynomial<uint32_t> ethernet(to_msb_first<uint32_t>(0x82608EDB));
 	Polynomial<uint16_t> dnp3(0x3D65);
 
+	koopman.print();
+	castagnoli.print();
+	ethernet.print();
 	dnp3.print();
 	
 	return 0;
