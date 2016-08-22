@@ -119,9 +119,11 @@ namespace ssp21
 				++this->num_crc_error_;
 
 				// reprocess all header bytes except for the first
-				auto recursive_input = this->buffer_.as_rslice().take(link_header_total_size).skip(1);
+				// b/c it has (link_header_total_size - 1) size we're guaranteed it'll
+				// all be processed from wait_sync1
+				auto header = this->buffer_.as_rslice().take(link_header_total_size).skip(1);
 
-				return parse_many(State::wait_sync1, recursive_input);
+				return parse_many(State::wait_sync1, header);
 			}
 
 			this->addresses_.destination = UInt16::read(buffer_.as_rslice().skip(2));
