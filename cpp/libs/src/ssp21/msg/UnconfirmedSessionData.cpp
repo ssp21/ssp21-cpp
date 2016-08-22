@@ -46,7 +46,7 @@ ParseError UnconfirmedSessionData::read_msg(const openpal::RSlice& input)
   );
 }
 
-FormatError UnconfirmedSessionData::write(openpal::WSlice& output)
+FormatError UnconfirmedSessionData::write(openpal::WSlice& output) const
 {
   return MessageFormatter::write_message<Function::unconfirmed_session_data>(
     output,
@@ -56,13 +56,13 @@ FormatError UnconfirmedSessionData::write(openpal::WSlice& output)
   );
 }
 
-FormatResult UnconfirmedSessionData::write_msg(openpal::WSlice& output)
+FormatResult UnconfirmedSessionData::write_msg(openpal::WSlice& output) const
 {
   auto write = [this](openpal::WSlice& output) { return this->write(output); };
   return FormatResult::write_any(write, output);
 }
 
-void UnconfirmedSessionData::print(ILinePrinter& printer)
+void UnconfirmedSessionData::print(ILinePrinter& printer) const
 {
   MessagePrinter::print_fields(
     printer,

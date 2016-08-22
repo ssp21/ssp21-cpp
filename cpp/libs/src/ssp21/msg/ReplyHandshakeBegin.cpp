@@ -39,7 +39,7 @@ ParseError ReplyHandshakeBegin::read_msg(const openpal::RSlice& input)
   );
 }
 
-FormatError ReplyHandshakeBegin::write(openpal::WSlice& output)
+FormatError ReplyHandshakeBegin::write(openpal::WSlice& output) const
 {
   return MessageFormatter::write_message<Function::reply_handshake_begin>(
     output,
@@ -48,13 +48,13 @@ FormatError ReplyHandshakeBegin::write(openpal::WSlice& output)
   );
 }
 
-FormatResult ReplyHandshakeBegin::write_msg(openpal::WSlice& output)
+FormatResult ReplyHandshakeBegin::write_msg(openpal::WSlice& output) const
 {
   auto write = [this](openpal::WSlice& output) { return this->write(output); };
   return FormatResult::write_any(write, output);
 }
 
-void ReplyHandshakeBegin::print(ILinePrinter& printer)
+void ReplyHandshakeBegin::print(ILinePrinter& printer) const
 {
   MessagePrinter::print_fields(
     printer,

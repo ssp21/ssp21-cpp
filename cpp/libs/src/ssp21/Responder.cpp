@@ -2,7 +2,9 @@
 #include "ssp21/Responder.h"
 
 #include "openpal/logging/LogMacros.h"
-#include "openpal/logging/LogLevels.h"
+
+#include "ssp21/LogLevels.h"
+#include "ssp21/LogLinePrinter.h"
 
 using namespace openpal;
 
@@ -21,7 +23,7 @@ namespace ssp21
 		if (any(err)) {
 			FORMAT_LOG_BLOCK(logger_, levels::warn, "error reading %s: %s", FunctionSpec::to_string(MsgType::function), ParseErrorSpec::to_string(err));
 		}
-		else {
+		else {			
 			this->on_message(data, msg);
 		}
 	}
@@ -56,17 +58,35 @@ namespace ssp21
 
 	void Responder::on_message(const RSlice& data, const RequestHandshakeBegin& msg)
 	{
-		SIMPLE_LOG_BLOCK(logger_, levels::info, "request handshake begin");
+		FORMAT_LOG_BLOCK(logger_, levels::rx_crypto_msg, "request handshake begin (length = %u)", data.length());
+
+		if (logger_.is_enabled(levels::rx_crypto_msg_fields))
+		{
+			LogLinePrinter printer(logger_, levels::rx_crypto_msg_fields);
+			msg.print(printer);
+		}
 	}
 
 	void Responder::on_message(const RSlice& data, const RequestHandshakeAuth& msg)
 	{
-		SIMPLE_LOG_BLOCK(logger_, levels::info, "request handshake auth");
+		FORMAT_LOG_BLOCK(logger_, levels::rx_crypto_msg, "request handshake auth (length = %u)", data.length());
+
+		if (logger_.is_enabled(levels::rx_crypto_msg_fields))
+		{
+			LogLinePrinter printer(logger_, levels::rx_crypto_msg_fields);
+			msg.print(printer);
+		}
 	}
 	
 	void Responder::on_message(const RSlice& data, const UnconfirmedSessionData& msg)
 	{
-		SIMPLE_LOG_BLOCK(logger_, levels::info, "unconfirmed session data");
+		FORMAT_LOG_BLOCK(logger_, levels::rx_crypto_msg, "unconfirmed session data (length = %u)", data.length());
+
+		if (logger_.is_enabled(levels::rx_crypto_msg_fields))
+		{
+			LogLinePrinter printer(logger_, levels::rx_crypto_msg_fields);
+			msg.print(printer);
+		}
 	}
 
 }

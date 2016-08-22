@@ -49,9 +49,9 @@ struct RequestHandshakeBegin : private openpal::Uncopyable
   );
 
   ParseError read_msg(const openpal::RSlice& input);
-  FormatResult write_msg(openpal::WSlice& output);
+  FormatResult write_msg(openpal::WSlice& output) const;
 
-  void print(ILinePrinter& printer);
+  void print(ILinePrinter& printer) const;
 
   static const uint32_t min_size_bytes = 10;
 
@@ -68,7 +68,7 @@ struct RequestHandshakeBegin : private openpal::Uncopyable
 
   private: 
 
-  FormatError write(openpal::WSlice& output);
+  FormatError write(openpal::WSlice& output) const;
 };
 
 }

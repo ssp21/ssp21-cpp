@@ -17,9 +17,9 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
   override def header(implicit indent: Indentation) : Iterator[String] = {
 
     def readSigHeader = "ParseError read_msg(const openpal::RSlice& input);".iter
-    def writeMsgSig = "FormatResult write_msg(openpal::WSlice& output);".iter
-    def writeSigHeader = "FormatError write(openpal::WSlice& output);".iter
-    def printSig = "void print(ILinePrinter& printer);".iter
+    def writeMsgSig = "FormatResult write_msg(openpal::WSlice& output) const;".iter
+    def writeSigHeader = "FormatError write(openpal::WSlice& output) const;".iter
+    def printSig = "void print(ILinePrinter& printer) const;".iter
     def defaultConstructorSig = "%s();".format(msg.name).iter
 
     def minSizeBytes = "static const uint32_t min_size_bytes = %s;".format(msg.minSizeBytes).iter
@@ -93,7 +93,7 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
 
     def writeFunc(implicit indent: Indentation) : Iterator[String] = {
 
-      "FormatError %s::write(openpal::WSlice& output)".format(msg.name).iter ++ bracket {
+      "FormatError %s::write(openpal::WSlice& output) const".format(msg.name).iter ++ bracket {
         "return MessageFormatter::write_message<Function::%s>(".format(msg.function.name).iter ++ indent {
           "output,".iter ++ args
         } ++ ");".iter
@@ -101,7 +101,7 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
 
     }
 
-    def printFunc = "void %s::print(ILinePrinter& printer)".format(msg.name).iter ++ bracket {
+    def printFunc = "void %s::print(ILinePrinter& printer) const".format(msg.name).iter ++ bracket {
       "MessagePrinter::print_fields(".iter ++ indent {
         "printer,".iter ++ printArgs
       } ++ ");".iter
@@ -109,7 +109,7 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
 
     def writeMsgFunc(implicit indent: Indentation) : Iterator[String] = {
 
-      "FormatResult %s::write_msg(openpal::WSlice& output)".format(msg.name).iter ++ bracket {
+      "FormatResult %s::write_msg(openpal::WSlice& output) const".format(msg.name).iter ++ bracket {
         "auto write = [this](openpal::WSlice& output) { return this->write(output); };".iter ++
           "return FormatResult::write_any(write, output);".iter
       }
