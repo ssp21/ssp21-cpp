@@ -24,25 +24,33 @@ namespace ssp21
 			num_crc_error_(0),
 			payload_length_(0)
 		{
-			buffer_[0] = sync1;
-			buffer_[1] = sync2;
+			
 		}
 
 		LinkParser::Result LinkParser::parse(RSlice& input)
-		{						
+		{	
 			this->num_crc_error_ = 0;
 
-			while (input.is_not_empty() && (this->state_ != State::wait_read))
-			{						
-				this->state_ = parse_one(input);
-			}
-
+			this->state_ = parse_many(this->state_, input);
+			
 			return Result(state_ == State::wait_read, num_crc_error_);
 		}
 
-		LinkParser::State LinkParser::parse_one(RSlice& input)
+		LinkParser::State LinkParser::parse_many(State state, openpal::RSlice& input)
 		{
-			switch (state_)
+			auto current_state = state;
+
+			while (input.is_not_empty() && (current_state != State::wait_read))
+			{
+				current_state = parse_one(current_state, input);
+			}
+
+			return current_state;
+		}
+
+		LinkParser::State LinkParser::parse_one(State state, RSlice& input)
+		{
+			switch (state)
 			{
 			case(State::wait_sync1) :
 				return parse_sync1(input);
@@ -63,6 +71,7 @@ namespace ssp21
 			input.advance(1);
 			if (value == sync1)
 			{
+				this->buffer_[0] = value;
 				return State::wait_sync2;
 			}
 			else
@@ -77,6 +86,7 @@ namespace ssp21
 			input.advance(1);
 			if (value == sync2)
 			{
+				this->buffer_[1] = value;
 				num_rx_ = 2;
 				return State::wait_header;				
 			}
@@ -107,7 +117,11 @@ namespace ssp21
 			if (expected_crc != actual_crc)
 			{				
 				++this->num_crc_error_;
-				return State::wait_sync1;
+
+				// reprocess all header bytes except for the first
+				auto recursive_input = this->buffer_.as_rslice().take(link_header_total_size).skip(1);
+
+				return parse_many(State::wait_sync1, recursive_input);
 			}
 
 			this->addresses_.destination = UInt16::read(buffer_.as_rslice().skip(2));

@@ -45,6 +45,7 @@ namespace ssp21
 			uint16_t num_crc_error;			
 		};
 
+
 		LinkParser(uint16_t max_payload_size);
 
 		Result parse(openpal::RSlice& input);
@@ -53,7 +54,9 @@ namespace ssp21
 
 	private:
 
-		State parse_one(openpal::RSlice& input);
+		State parse_one(State state, openpal::RSlice& input);
+
+		State parse_many(State state, openpal::RSlice& input);
 
 		State parse_sync1(openpal::RSlice& input);
 		State parse_sync2(openpal::RSlice& input);
