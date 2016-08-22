@@ -32,25 +32,12 @@ namespace ssp21
 		{						
 			this->num_crc_error_ = 0;
 
-			while (true)
-			{				
-				auto start_length = input.length();
-
-				if (input.is_empty())
-				{
-					return Result(state_ == State::wait_read, num_crc_error_);
-				}
-				
-				const auto start_state = state_;
-				const auto new_state = parse_one(input);
-				const auto consumed = start_length - input.length();
-				state_ = new_state;
-				
-				if (start_state == new_state && (consumed == 0)) // failed to transition states
-				{
-					return Result(new_state == State::wait_read, num_crc_error_);					
-				}				
+			while (input.is_not_empty() && (this->state_ != State::wait_read))
+			{						
+				this->state_ = parse_one(input);
 			}
+
+			return Result(state_ == State::wait_read, num_crc_error_);
 		}
 
 		LinkParser::State LinkParser::parse_one(RSlice& input)
@@ -65,7 +52,7 @@ namespace ssp21
 				return parse_header(input);
 			case(State::wait_body) :
 				return parse_body(input);
-			default: // wait_read				
+			default:
 				return State::wait_read;
 			}
 		}
