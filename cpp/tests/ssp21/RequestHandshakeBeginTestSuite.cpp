@@ -103,7 +103,7 @@ TEST_CASE(SUITE("pretty prints message"))
 
 
 	MockLogger log("log", ~0);
-	LogLinePrinter printer(log.root.logger, 1);
+	LogLinePrinter printer(log.root.logger, 1, 16);
 
 	msg.print(printer);
 	
@@ -119,7 +119,8 @@ TEST_CASE(SUITE("pretty prints message"))
 		"CA:FE",
 		"certificates (count = 2)",
 		"#1 (length = 32)",
-		"AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA",		
+		"AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA",	
+		"AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA",
 		"#2 (length = 2)",
 		"CC:DD"
 	);

@@ -8,9 +8,10 @@ using namespace openpal;
 
 namespace ssp21 {
 
-	LogLinePrinter::LogLinePrinter(const Logger& logger, LogFilters filters) :
+	LogLinePrinter::LogLinePrinter(const Logger& logger, LogFilters filters, uint32_t max_hex_bytes_per_line) :
 		logger_(logger),
-		filters_(filters)
+		filters_(filters),
+		max_hex_bytes_per_line_(max_hex_bytes_per_line)
 	{
 	
 	}
@@ -35,7 +36,7 @@ namespace ssp21 {
 		SAFE_STRING_FORMAT(message, max_log_entry_size, "%s (length = %u)", name, data.length());
 		logger_.log(filters_, LOCATION, message);
 
-		HexLogging::log(logger_, filters_, data, ':', 16, 16);
+		HexLogging::log(logger_, filters_, data, ':', max_hex_bytes_per_line_, max_hex_bytes_per_line_);
 	}
 	
 	void LogLinePrinter::print(const char* name, const Seq8Seq16& items)
@@ -53,7 +54,7 @@ namespace ssp21 {
 			SAFE_STRING_FORMAT(message, max_log_entry_size, "#%u (length = %u)", i + 1, item.length());
 			logger_.log(filters_, LOCATION, message);
 
-			HexLogging::log(logger_, filters_, item, ':', 16, 16);
+			HexLogging::log(logger_, filters_, item, ':', max_hex_bytes_per_line_, max_hex_bytes_per_line_);
 		}		
 	}
 
