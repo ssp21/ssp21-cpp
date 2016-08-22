@@ -28,7 +28,7 @@ namespace ssp21
 		}
 	}
 
-	void Responder::on_rx_data(const RSlice& data)
+	void Responder::process_msg(const RSlice& data)
 	{
 		if (data.is_empty()) {
 			SIMPLE_LOG_BLOCK(logger_, levels::warn, "Received zero length message");

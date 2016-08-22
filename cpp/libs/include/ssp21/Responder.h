@@ -20,14 +20,13 @@ namespace ssp21
 	public:
 
 		Responder(openpal::Logger logger);
-
-		void on_rx_data(const openpal::RSlice& data);
-
+		
 	private:
+
+		void process_msg(const openpal::RSlice& data);
 
 		template <class MsgType>
 		inline void read_any(const openpal::RSlice& data);
-
 
 		void on_message(const openpal::RSlice& data, const RequestHandshakeBegin& msg);		
 		void on_message(const openpal::RSlice& data, const UnconfirmedSessionData& msg);
