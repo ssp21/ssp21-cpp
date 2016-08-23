@@ -49,7 +49,8 @@ namespace ssp21
 		UInt32::write(dest.skip(consts::link_header_fields_size), crc_h);
 
 		// copy the payload
-		payload.copy_to(dest.skip(consts::link_header_total_size)); 
+		auto payload_start = dest.skip(consts::link_header_total_size);
+		payload.copy_to(payload_start);
 
 		// append the body crc
 		UInt32::write(dest.skip(consts::link_header_total_size + payload_length), CastagnoliCRC32::calc(payload));
