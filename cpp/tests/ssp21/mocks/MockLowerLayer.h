@@ -14,16 +14,8 @@ namespace ssp21
 {
 	class MockLowerLayer : public ILowerLayer, private openpal::Uncopyable
 	{
-		struct MessagePair
-		{
-			MessagePair(Addresses addresses, const openpal::RSlice& message) :
-				addresses(addresses),
-				buffer(message)
-			{}
-
-			Addresses addresses;
-			openpal::Buffer buffer;
-		};
+		
+		typedef std::pair<Addresses, openpal::Buffer> message_pair_t;
 
 
 	public:
@@ -32,7 +24,7 @@ namespace ssp21
 		{
 			assert(!this->is_transmitting_);
 			this->tx_messages_.push_back(
-				std::make_unique<MessagePair>(addr, message)
+				std::make_unique<message_pair_t>(addr, message)
 			);
 			this->is_transmitting_ = true;
 		}
@@ -45,7 +37,7 @@ namespace ssp21
 			}
 
 			auto& front = rx_messages_.front();
-			consumer.consume_message(front->addresses, front->buffer.as_rslice());			
+			consumer.consume_message(front->first, front->second.as_rslice());			
 			rx_messages_.pop_front();
 			
 			return true;
@@ -55,7 +47,7 @@ namespace ssp21
 		{	
 			openpal::Hex hexdata(hex);
 			this->rx_messages_.push_back(
-				std::make_unique<MessagePair>(addr, hexdata)
+				std::make_unique<message_pair_t>(addr, hexdata.as_rslice())
 			);
 		}
 
@@ -67,7 +59,7 @@ namespace ssp21
 			}
 			else
 			{ 
-				auto hex = openpal::to_hex(tx_messages_.front()->buffer.as_rslice());
+				auto hex = openpal::to_hex(tx_messages_.front()->second.as_rslice());
 				tx_messages_.pop_front();
 				return hex;
 			}
@@ -75,11 +67,11 @@ namespace ssp21
 		
 	private:
 
-		std::deque<std::unique_ptr<MessagePair>> tx_messages_;
+		std::deque<std::unique_ptr<message_pair_t>> tx_messages_;
 
-		std::unique_ptr<MessagePair> current_rx_message_;
+		std::unique_ptr<message_pair_t> current_rx_message_;
 
-		std::deque<std::unique_ptr<MessagePair>> rx_messages_;
+		std::deque<std::unique_ptr<message_pair_t>> rx_messages_;
 	};
 
 }
