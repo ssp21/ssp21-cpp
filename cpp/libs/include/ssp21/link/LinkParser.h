@@ -11,15 +11,7 @@ namespace ssp21
 {		
 	class LinkParser : openpal::Uncopyable
 	{
-		enum class State
-		{
-			wait_sync1,
-			wait_sync2,
-			wait_header,
-			wait_body,
-			wait_read
-		};
-
+		
 	public:
 
 		class IReporter
@@ -38,26 +30,48 @@ namespace ssp21
 
 	private:
 
-		struct FullState
+		class State
 		{
-			FullState(State state, uint32_t num_buffered) :
+
+		public:
+
+			enum class Value
+			{
+				wait_sync1,
+				wait_sync2,
+				wait_header,
+				wait_body,
+				wait_read
+			};
+				
+			State() {}
+
+			static State wait_sync1() { return State(Value::wait_sync1, 0); }
+			static State wait_sync2() { return State(Value::wait_sync2, 1); }
+			static State wait_header(uint32_t num) { return State(Value::wait_header, num); }
+			static State wait_body(uint32_t num) { return State(Value::wait_body, num); }
+			static State wait_read(uint32_t num) { return State(Value::wait_read, num); }
+			
+			Value value = Value::wait_sync1;			
+			uint32_t num_buffered = 0;
+
+			bool is_wait_read() const { return value == Value::wait_read; }
+
+		private:
+
+			State(Value state, uint32_t num_buffered) :
 				value(state),
 				num_buffered(num_buffered)
-			{}	
-
-			FullState() {}
-			
-			State value = State::wait_sync1;			
-			uint32_t num_buffered = 0;
+			{}
 		};
 
-		FullState parse_one(const FullState& state, openpal::RSlice& input);
-		FullState parse_many(const FullState& state, openpal::RSlice& input);
+		State parse_one(const State& state, openpal::RSlice& input);
+		State parse_many(const State& state, openpal::RSlice& input);
 
-		FullState parse_sync1(const FullState& state, openpal::RSlice& input);
-		FullState parse_sync2(const FullState& state, openpal::RSlice& input);
-		FullState parse_header(const FullState& state, openpal::RSlice& input);
-		FullState parse_body(const FullState& state, openpal::RSlice& input);
+		State parse_sync1(const State& state, openpal::RSlice& input);
+		State parse_sync2(const State& state, openpal::RSlice& input);
+		State parse_header(const State& state, openpal::RSlice& input);
+		State parse_body(const State& state, openpal::RSlice& input);
 
 		LinkParser() = delete;		
 
@@ -65,7 +79,7 @@ namespace ssp21
 		IReporter* reporter_;
 		openpal::Buffer buffer_;
 
-		FullState state_;		
+		State state_;		
 				
 		openpal::RSlice payload_;
 		Addresses addresses_;

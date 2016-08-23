@@ -29,14 +29,14 @@ namespace ssp21
 		{							
 			this->state_ = parse_many(this->state_, input);
 			
-			return state_.value == State::wait_read;
+			return state_.value == State::Value::wait_read;
 		}
 
-		LinkParser::FullState LinkParser::parse_many(const FullState& state, openpal::RSlice& input)
+		LinkParser::State LinkParser::parse_many(const State& state, openpal::RSlice& input)
 		{
 			auto current_state = state;
 
-			while (input.is_not_empty() && (current_state.value != State::wait_read))
+			while (input.is_not_empty() && !current_state.is_wait_read())
 			{
                 current_state = parse_one(current_state, input);
             }
@@ -44,54 +44,54 @@ namespace ssp21
 			return current_state;
 		}
 
-		LinkParser::FullState LinkParser::parse_one(const FullState& state, RSlice& input)
+		LinkParser::State LinkParser::parse_one(const State& state, RSlice& input)
 		{
 			switch (state.value)
 			{
-			case(State::wait_sync1) :
+			case(State::Value::wait_sync1) :
 				return parse_sync1(state, input);
-			case(State::wait_sync2) :
+			case(State::Value::wait_sync2) :
 				return parse_sync2(state, input);
-			case(State::wait_header) :
+			case(State::Value::wait_header) :
 				return parse_header(state, input);
-			case(State::wait_body) :
+			case(State::Value::wait_body) :
 				return parse_body(state, input);
 			default:
 				return state; // wait_read
 			}
 		}
 
-		LinkParser::FullState LinkParser::parse_sync1(const FullState& state, openpal::RSlice& input)
+		LinkParser::State LinkParser::parse_sync1(const State& state, openpal::RSlice& input)
 		{
 			const auto value = input[0];
 			input.advance(1);
 			if (value == consts::sync1)
 			{
 				this->buffer_[0] = value;
-				return FullState(State::wait_sync2, 1);
+				return State::wait_sync2();
 			}
 			else
 			{				
-				return FullState(State::wait_sync1, 0);
+				return State::wait_sync1();
 			}			
 		}
 		
-		LinkParser::FullState LinkParser::parse_sync2(const FullState& state, openpal::RSlice& input)
+		LinkParser::State LinkParser::parse_sync2(const State& state, openpal::RSlice& input)
 		{
 			const auto value = input[0];
 			input.advance(1);
 			if (value == consts::sync2)
 			{
-				this->buffer_[1] = value;				
-				return FullState(State::wait_header, 2);				
+				this->buffer_[1] = value;
+				return State::wait_header(2);
 			}
 			else
 			{					
-				return FullState(State::wait_header, 0);
+				return State::wait_sync1();
 			}
 		}
 		
-		LinkParser::FullState LinkParser::parse_header(const FullState& state, openpal::RSlice& input)
+		LinkParser::State LinkParser::parse_header(const State& state, openpal::RSlice& input)
 		{
 			const auto remaining = consts::link_header_total_size - state.num_buffered;
 			const auto num_to_copy = min<uint32_t>(remaining, input.length());
@@ -104,7 +104,7 @@ namespace ssp21
 
 			if (new_num_buffered != consts::link_header_total_size)
 			{
-				return FullState(State::wait_header, new_num_buffered);
+				return State::wait_header(new_num_buffered);
 			}
 
 			// now read and validate the header
@@ -121,7 +121,7 @@ namespace ssp21
 				// 
 				// Since this segment has length (link_header_total_size - 2) we're
 				// guaranteed it'll all be processed from wait_sync1
-				return parse_many(FullState(State::wait_sync1, 0), header);
+				return parse_many(State::wait_sync1(), header);
 			}
 
 			this->addresses_.destination = UInt16::read(buffer_.as_rslice().skip(2));
@@ -132,15 +132,15 @@ namespace ssp21
 			if (payload_length > this->max_payload_length_)
 			{			
 				this->reporter_->on_bad_body_length(this->max_payload_length_, payload_length);
-				return FullState(State::wait_sync1, 0);
+				return State::wait_sync1();
 			}
 
 			this->payload_length_ = payload_length;
 
-			return FullState(State::wait_body, new_num_buffered);
+			return State::wait_body(new_num_buffered);
 		}
 		
-		LinkParser::FullState LinkParser::parse_body(const FullState& state, openpal::RSlice& input)
+		LinkParser::State LinkParser::parse_body(const State& state, openpal::RSlice& input)
 		{
 			const uint32_t total_frame_size = consts::link_header_total_size + this->payload_length_ + consts::crc_size;
 			const uint32_t remaining = total_frame_size - state.num_buffered;
@@ -153,7 +153,7 @@ namespace ssp21
 
 			if (new_num_buffered != total_frame_size)
 			{
-				return FullState(State::wait_body, new_num_buffered);
+				return State::wait_body(new_num_buffered);
 			}
 			
 			const auto payload_bytes = buffer_.as_rslice().skip(consts::link_header_total_size).take(payload_length_);
@@ -163,22 +163,22 @@ namespace ssp21
 			if (expected_crc != actual_crc)
 			{
 				reporter_->on_bad_body_crc(expected_crc, actual_crc);
-				return FullState(State::wait_sync1, 0);
+				return State::wait_sync1();
 			}
 
 			this->payload_ = payload_bytes;
 
-			return FullState(State::wait_read, new_num_buffered);
+			return State::wait_read(new_num_buffered);
 		}
 
 		bool LinkParser::read(Addresses& addresses, RSlice& payload)
 		{
-			if (state_.value != State::wait_read)
+			if (!state_.is_wait_read())
 			{
 				return false;
 			}
 
-			state_ = FullState(State::wait_sync1, 0);
+			state_ = State::wait_sync1();
 			
 			addresses = addresses_;
 			payload = payload_;
