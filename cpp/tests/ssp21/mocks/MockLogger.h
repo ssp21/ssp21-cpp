@@ -11,15 +11,13 @@
 #include <deque>
 #include <iostream>
 
-using namespace openpal;
-
 namespace ssp21
 {
 	class MockLogger : public openpal::ILogHandler, openpal::Uncopyable
 	{
 
 	public:
-		MockLogger(const char* id, LogLevels levels = LogLevels::everything()) : 
+		MockLogger(const char* id, openpal::LogLevels levels = openpal::LogLevels::everything()) :
 			root(ssp21::Module::id, this, id, levels),
 			print_output_(false)
 		{}
@@ -29,7 +27,7 @@ namespace ssp21
 			print_output_ = true;
 		}
 		
-		virtual void log(ModuleId module, const char* id, LogLevel level, char const *location, char const *message)  override
+		virtual void log(openpal::ModuleId module, const char* id, openpal::LogLevel level, char const *location, char const *message)  override
 		{
 			if (print_output_)
 			{

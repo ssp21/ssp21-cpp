@@ -10,7 +10,28 @@ using namespace openpal;
 
 namespace ssp21
 {
-	Responder::Responder(Logger logger) : logger_(logger)
+	Responder::Responder(Logger logger, ILowerLayer& lower) : 
+		logger_(logger), lower_(&lower)
+	{
+	
+	}
+
+	void Responder::on_open_impl()
+	{
+	
+	}
+	
+	void Responder::on_close_impl()
+	{
+	
+	}
+	
+	void Responder::on_tx_ready_impl()
+	{
+	
+	}
+	
+	void Responder::on_rx_ready_impl()
 	{
 	
 	}
