@@ -130,6 +130,7 @@ namespace ssp21
 
 			if (payload_length > this->max_payload_length_)
 			{			
+				this->reporter_->on_bad_body_length(this->max_payload_length_, payload_length);
 				return FullState(State::wait_sync1, 0);
 			}
 

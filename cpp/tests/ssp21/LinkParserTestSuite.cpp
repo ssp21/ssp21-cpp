@@ -151,3 +151,31 @@ TEST_CASE(SUITE("detects body crc failure properly"))
 	REQUIRE(reporter.num_bad_body_crc == 1);
 	REQUIRE(input.is_empty());
 }
+
+TEST_CASE(SUITE("allows frame with maximum body length"))
+{
+	CountingReporter reporter;
+	LinkParser parser(6, reporter);
+
+	Hex hex("07 AA 01 00 02 00 06 00 F9 9F A2 C3 DD DD DD DD DD DD 6B 37 0D 51");
+	auto input = hex.as_rslice();
+
+	REQUIRE(parser.parse(input));
+	REQUIRE(reporter.no_errors());
+	REQUIRE(input.is_empty());
+}
+
+TEST_CASE(SUITE("fails if length exceeds maximum body length"))
+{
+	CountingReporter reporter;
+	LinkParser parser(5, reporter);
+
+	Hex hex("07 AA 01 00 02 00 06 00 F9 9F A2 C3 DD DD DD DD DD DD 6B 37 0D 51");
+	auto input = hex.as_rslice();
+
+	REQUIRE_FALSE(parser.parse(input));
+	REQUIRE(reporter.num_bad_length == 1);
+	REQUIRE(reporter.num_bad_header_crc == 0);
+	REQUIRE(reporter.num_bad_body_crc == 0);	
+	REQUIRE(input.is_empty());
+}
