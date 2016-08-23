@@ -3,7 +3,7 @@
 #ifndef SODIUMBACKEND_BACKEND_H
 #define SODIUMBACKEND_BACKEND_H
 
-#include "ssp21/ICryptoBackend.h"
+#include "ssp21/crypto/ICryptoBackend.h"
 
 namespace ssp21
 {	

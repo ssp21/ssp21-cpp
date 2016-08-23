@@ -15,9 +15,9 @@
 
 #include "ssp21/msg/ReplyHandshakeAuth.h"
 
-#include "ssp21/MessageParser.h"
-#include "ssp21/MessagePrinter.h"
-#include "ssp21/MessageFormatter.h"
+#include "ssp21/crypto/MessageParser.h"
+#include "ssp21/crypto/MessagePrinter.h"
+#include "ssp21/crypto/MessageFormatter.h"
 
 namespace ssp21 {
 

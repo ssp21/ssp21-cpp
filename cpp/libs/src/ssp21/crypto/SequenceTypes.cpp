@@ -1,5 +1,5 @@
 
-#include "ssp21/SequenceTypes.h"
+#include "ssp21/crypto/SequenceTypes.h"
 
 namespace ssp21
 {						

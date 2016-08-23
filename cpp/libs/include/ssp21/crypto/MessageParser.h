@@ -11,7 +11,7 @@
 #include "ssp21/gen/SessionMode.h"
 #include "ssp21/gen/HashMode.h"
 
-#include "ssp21/SequenceTypes.h"
+#include "ssp21/crypto/SequenceTypes.h"
 
 #include "openpal/container/RSlice.h"
 #include "openpal/util/Uncopyable.h"

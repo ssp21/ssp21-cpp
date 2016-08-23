@@ -1,7 +1,8 @@
 
 #include "sodiumbackend/Initialize.h"
 
-#include "ssp21/Crypto.h"
+#include "ssp21/crypto/Crypto.h"
+
 #include "SodiumBackend.h"
 
 #include <sodium.h>

@@ -10,7 +10,7 @@
 #include "ssp21/gen/HashMode.h"
 #include "ssp21/gen/FormatError.h"
 
-#include "ssp21/SequenceTypes.h"
+#include "ssp21/crypto/SequenceTypes.h"
 
 #include "openpal/container/WSlice.h"
 #include "openpal/util/Uncopyable.h"

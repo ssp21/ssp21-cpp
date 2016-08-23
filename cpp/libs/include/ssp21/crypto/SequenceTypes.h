@@ -6,7 +6,7 @@
 
 #include <openpal/container/RSlice.h>
 
-#include "ssp21/Constants.h"
+#include "ssp21/crypto/Constants.h"
 
 namespace ssp21
 {				

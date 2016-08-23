@@ -1,5 +1,5 @@
 
-#include "ssp21/Handshake.h"
+#include "ssp21/crypto/Handshake.h"
 
 using namespace openpal;
 

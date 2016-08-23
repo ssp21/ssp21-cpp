@@ -2,7 +2,7 @@
 
 #include "catch.hpp"
 
-#include "ssp21/Crypto.h"
+#include "ssp21/crypto/Crypto.h"
 
 #define SUITE(name) "SecureMemoryTestSuite - " name
 

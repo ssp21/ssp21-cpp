@@ -22,15 +22,15 @@
 #include "openpal/container/RSlice.h"
 #include "ssp21/gen/DHMode.h"
 #include "ssp21/gen/Function.h"
-#include "ssp21/ILinePrinter.h"
 #include "ssp21/gen/HashMode.h"
-#include "ssp21/FormatResult.h"
-#include "ssp21/SequenceTypes.h"
 #include "ssp21/gen/NonceMode.h"
 #include "ssp21/gen/ParseError.h"
 #include "ssp21/gen/FormatError.h"
 #include "ssp21/gen/SessionMode.h"
 #include "ssp21/gen/CertificateMode.h"
+#include "ssp21/crypto/FormatResult.h"
+#include "ssp21/crypto/ILinePrinter.h"
+#include "ssp21/crypto/SequenceTypes.h"
 
 namespace ssp21 {
 

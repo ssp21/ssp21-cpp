@@ -2,7 +2,7 @@
 #ifndef SSP21_ILINEPRINTER_H
 #define SSP21_ILINEPRINTER_H
 
-#include "ssp21/SequenceTypes.h"
+#include "ssp21/crypto/SequenceTypes.h"
 
 namespace ssp21 {
 

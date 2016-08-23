@@ -1,5 +1,5 @@
 
-#include "ssp21/ErrorCodes.h"
+#include "ssp21/crypto/ErrorCodes.h"
 
 namespace ssp21
 {					

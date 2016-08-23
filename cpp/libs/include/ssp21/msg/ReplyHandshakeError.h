@@ -20,11 +20,11 @@
 #include "openpal/container/WSlice.h"
 #include "openpal/container/RSlice.h"
 #include "ssp21/gen/Function.h"
-#include "ssp21/ILinePrinter.h"
-#include "ssp21/FormatResult.h"
 #include "ssp21/gen/ParseError.h"
 #include "ssp21/gen/FormatError.h"
 #include "ssp21/gen/HandshakeError.h"
+#include "ssp21/crypto/FormatResult.h"
+#include "ssp21/crypto/ILinePrinter.h"
 
 namespace ssp21 {
 

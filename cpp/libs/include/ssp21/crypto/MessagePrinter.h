@@ -9,8 +9,8 @@
 #include "ssp21/gen/SessionMode.h"
 #include "ssp21/gen/HashMode.h"
 
-#include "ssp21/SequenceTypes.h"
-#include "ssp21/ILinePrinter.h"
+#include "ssp21/crypto/SequenceTypes.h"
+#include "ssp21/crypto/ILinePrinter.h"
 
 #include "openpal/util/Uncopyable.h"
 

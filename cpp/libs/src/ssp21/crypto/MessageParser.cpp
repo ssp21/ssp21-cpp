@@ -1,5 +1,5 @@
 
-#include "ssp21/MessageParser.h"
+#include "ssp21/crypto/MessageParser.h"
 
 #include <openpal/serialization/Serialization.h>
 

@@ -2,7 +2,7 @@
 #ifndef SSP21_LOGLINEPRINTER_H
 #define SSP21_LOGLINEPRINTER_H
 
-#include "ssp21/ILinePrinter.h"
+#include "ssp21/crypto/ILinePrinter.h"
 
 #include "openpal/logging/Logger.h"
 

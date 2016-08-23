@@ -2,7 +2,7 @@
 
 #include "catch.hpp"
 
-#include "ssp21/MessageParser.h"
+#include "ssp21/crypto/MessageParser.h"
 
 #include <testlib/BufferHelpers.h>
 #include <testlib/HexConversions.h>

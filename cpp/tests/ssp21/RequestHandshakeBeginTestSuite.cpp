@@ -3,7 +3,7 @@
 #include "catch.hpp"
 
 #include "ssp21/msg/RequestHandshakeBegin.h"
-#include "ssp21/LogLinePrinter.h"
+#include "ssp21/crypto/LogLinePrinter.h"
 
 #include "testlib/BufferHelpers.h"
 #include "testlib/HexConversions.h"

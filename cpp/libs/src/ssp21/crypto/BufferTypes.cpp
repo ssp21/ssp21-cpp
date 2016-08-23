@@ -1,7 +1,7 @@
 
-#include "ssp21/BufferTypes.h"
+#include "ssp21/crypto/BufferTypes.h"
 
-#include "ssp21/Crypto.h"
+#include "ssp21/crypto/Crypto.h"
 
 namespace ssp21
 {		

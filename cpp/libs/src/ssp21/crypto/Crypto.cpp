@@ -1,9 +1,9 @@
 
-#include "ssp21/Crypto.h"
+#include "ssp21/crypto/Crypto.h"
 
-#include "ssp21/ErrorCodes.h"
+#include "ssp21/crypto/ErrorCodes.h"
 
-#include "ssp21/HKDF.h"
+#include "ssp21/crypto/HKDF.h"
 
 #include <assert.h>
 

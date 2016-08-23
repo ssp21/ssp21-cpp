@@ -1,5 +1,5 @@
 
-#include "ssp21/MessagePrinter.h"
+#include "ssp21/crypto/MessagePrinter.h"
 
 #include "openpal/logging/LogMacros.h"
 

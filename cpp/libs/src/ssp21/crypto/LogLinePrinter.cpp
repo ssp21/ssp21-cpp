@@ -1,5 +1,5 @@
 
-#include "ssp21/LogLinePrinter.h"
+#include "ssp21/crypto/LogLinePrinter.h"
 
 #include "openpal/logging/LogMacros.h"
 #include "openpal/logging/HexLogging.h"

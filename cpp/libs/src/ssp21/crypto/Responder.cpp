@@ -1,10 +1,10 @@
 
-#include "ssp21/Responder.h"
+#include "ssp21/crypto/Responder.h"
 
 #include "openpal/logging/LogMacros.h"
 
 #include "ssp21/LogLevels.h"
-#include "ssp21/LogLinePrinter.h"
+#include "ssp21/crypto/LogLinePrinter.h"
 
 using namespace openpal;
 

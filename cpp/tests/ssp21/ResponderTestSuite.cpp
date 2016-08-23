@@ -2,7 +2,7 @@
 
 #include "catch.hpp"
 
-#include "ssp21/Responder.h"
+#include "ssp21/crypto/Responder.h"
 
 #include "openpal/container/StaticBuffer.h"
 
