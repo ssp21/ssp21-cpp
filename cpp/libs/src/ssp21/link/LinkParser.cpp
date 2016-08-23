@@ -5,6 +5,7 @@
 #include "openpal/serialization/Serialization.h"
 
 #include "ssp21/link/CastagnoliCRC32.h"
+#include "ssp21/link/LinkConstants.h"
 
 using namespace openpal;
 
@@ -14,11 +15,11 @@ namespace ssp21
 			max_payload_length_(
 				min<uint32_t>(
 					max_payload_length,					
-					max_config_link_payload_size
+					consts::max_config_link_payload_size
 				)
 			),
 			reporter_(&reporter),
-			buffer_(min_link_frame_size + max_payload_length_),						
+			buffer_(consts::min_link_frame_size + max_payload_length_),
 			payload_length_(0)
 		{
 			
@@ -64,7 +65,7 @@ namespace ssp21
 		{
 			const auto value = input[0];
 			input.advance(1);
-			if (value == sync1)
+			if (value == consts::sync1)
 			{
 				this->buffer_[0] = value;
 				return FullState(State::wait_sync2, 1);
@@ -79,7 +80,7 @@ namespace ssp21
 		{
 			const auto value = input[0];
 			input.advance(1);
-			if (value == sync2)
+			if (value == consts::sync2)
 			{
 				this->buffer_[1] = value;				
 				return FullState(State::wait_header, 2);				
@@ -92,7 +93,7 @@ namespace ssp21
 		
 		LinkParser::FullState LinkParser::parse_header(const FullState& state, openpal::RSlice& input)
 		{
-			const auto remaining = link_header_total_size - state.num_buffered;
+			const auto remaining = consts::link_header_total_size - state.num_buffered;
 			const auto num_to_copy = min<uint32_t>(remaining, input.length());
 			auto dest = buffer_.as_wslice().skip(state.num_buffered);
 			
@@ -101,20 +102,20 @@ namespace ssp21
 
 			const auto new_num_buffered = num_to_copy + state.num_buffered;
 
-			if (new_num_buffered != link_header_total_size)
+			if (new_num_buffered != consts::link_header_total_size)
 			{
 				return FullState(State::wait_header, new_num_buffered);
 			}
 
 			// now read and validate the header
-			auto expected_crc = CastagnoliCRC32::calc(buffer_.as_rslice().take(link_header_fields_size));
-			auto actual_crc = UInt32::read(buffer_.as_rslice().skip(link_header_fields_size));
+			auto expected_crc = CastagnoliCRC32::calc(buffer_.as_rslice().take(consts::link_header_fields_size));
+			auto actual_crc = UInt32::read(buffer_.as_rslice().skip(consts::link_header_fields_size));
 
 			if (expected_crc != actual_crc)
 			{				
 				reporter_->on_bad_header_crc(expected_crc, actual_crc);
 				
-				auto header = this->buffer_.as_rslice().take(link_header_total_size).skip(2);
+				auto header = this->buffer_.as_rslice().take(consts::link_header_total_size).skip(2);
 
 				// reprocess all header bytes except for the synchronization bytes.
 				// 
@@ -141,7 +142,7 @@ namespace ssp21
 		
 		LinkParser::FullState LinkParser::parse_body(const FullState& state, openpal::RSlice& input)
 		{
-			const uint32_t total_frame_size = link_header_total_size + this->payload_length_ + crc_size;
+			const uint32_t total_frame_size = consts::link_header_total_size + this->payload_length_ + consts::crc_size;
 			const uint32_t remaining = total_frame_size - state.num_buffered;
 
 			const auto num_to_copy = min<uint32_t>(remaining, input.length());
@@ -155,9 +156,9 @@ namespace ssp21
 				return FullState(State::wait_body, new_num_buffered);
 			}
 			
-			const auto payload_bytes = buffer_.as_rslice().skip(link_header_total_size).take(payload_length_);
+			const auto payload_bytes = buffer_.as_rslice().skip(consts::link_header_total_size).take(payload_length_);
 			const auto expected_crc = CastagnoliCRC32::calc(payload_bytes);
-			const auto actual_crc = UInt32::read(buffer_.as_rslice().skip(link_header_total_size + payload_length_));
+			const auto actual_crc = UInt32::read(buffer_.as_rslice().skip(consts::link_header_total_size + payload_length_));
 
 			if (expected_crc != actual_crc)
 			{
