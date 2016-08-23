@@ -157,6 +157,7 @@ TEST_CASE(SUITE("allows frame with maximum body length"))
 	CountingReporter reporter;
 	LinkParser parser(6, reporter);
 
+	/// -----------------------LL-LL--------------------------------------------
 	Hex hex("07 AA 01 00 02 00 06 00 F9 9F A2 C3 DD DD DD DD DD DD 6B 37 0D 51");
 	auto input = hex.as_rslice();
 
@@ -170,6 +171,7 @@ TEST_CASE(SUITE("fails if length exceeds maximum body length"))
 	CountingReporter reporter;
 	LinkParser parser(5, reporter);
 
+	/// -----------------------LL-LL--------------------------------------------
 	Hex hex("07 AA 01 00 02 00 06 00 F9 9F A2 C3 DD DD DD DD DD DD 6B 37 0D 51");
 	auto input = hex.as_rslice();
 
