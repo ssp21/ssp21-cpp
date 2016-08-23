@@ -113,12 +113,13 @@ namespace ssp21
 			if (expected_crc != actual_crc)
 			{				
 				reporter_->on_bad_header_crc(expected_crc, actual_crc);
+				
+				auto header = this->buffer_.as_rslice().take(link_header_total_size).skip(2);
 
-				// reprocess all header bytes except for the first
-				// b/c it has (link_header_total_size - 1) size we're guaranteed it'll
-				// all be processed from wait_sync1
-				auto header = this->buffer_.as_rslice().take(link_header_total_size).skip(1);
-
+				// reprocess all header bytes except for the synchronization bytes.
+				// 
+				// Since this segment has length (link_header_total_size - 2) we're
+				// guaranteed it'll all be processed from wait_sync1
 				return parse_many(FullState(State::wait_sync1, 0), header);
 			}
 
