@@ -10,30 +10,27 @@ using namespace openpal;
 
 namespace ssp21
 {					
-		LinkParser::LinkParser(uint16_t max_payload_size) : 
+		LinkParser::LinkParser(uint16_t max_payload_length, IReporter& reporter) :
 			max_payload_length_(
-				bounded<uint32_t>(
-					max_payload_size,
-					min_config_link_payload_size,
+				min<uint32_t>(
+					max_payload_length,					
 					max_config_link_payload_size
 				)
 			),
+			reporter_(&reporter),
 			buffer_(min_link_frame_size + max_payload_length_),			
 			state_(State::wait_sync1),
-			num_rx_(0),
-			num_crc_error_(0),
+			num_rx_(0),			
 			payload_length_(0)
 		{
 			
 		}
 
-		LinkParser::Result LinkParser::parse(RSlice& input)
-		{	
-			this->num_crc_error_ = 0;
-
+		bool LinkParser::parse(RSlice& input)
+		{				
 			this->state_ = parse_many(this->state_, input);
 			
-			return Result(state_ == State::wait_read, num_crc_error_);
+			return state_ == State::wait_read;
 		}
 
 		LinkParser::State LinkParser::parse_many(State state, openpal::RSlice& input)
@@ -117,7 +114,7 @@ namespace ssp21
 
 			if (expected_crc != actual_crc)
 			{				
-				++this->num_crc_error_;
+				reporter_->on_bad_header_crc(expected_crc, actual_crc);
 
 				// reprocess all header bytes except for the first
 				// b/c it has (link_header_total_size - 1) size we're guaranteed it'll
@@ -164,7 +161,7 @@ namespace ssp21
 
 			if (expected_crc != actual_crc)
 			{
-				++this->num_crc_error_;
+				reporter_->on_bad_body_crc(expected_crc, actual_crc);
 				return State::wait_sync1;
 			}
 

@@ -12,27 +12,64 @@
 using namespace ssp21;
 using namespace openpal;
 
+class CountingReporter : public LinkParser::IReporter
+{
+
+public:
+
+	virtual void on_bad_header_crc(uint32_t expected, uint32_t actual) override
+	{
+		++num_bad_header_crc;
+	}
+
+	virtual void on_bad_body_crc(uint32_t expected, uint32_t actual) override
+	{
+		++num_bad_body_crc;
+	}
+
+	virtual void on_bad_body_length(uint32_t max_allowed, uint32_t actual) override
+	{
+		++num_bad_length;
+	}
+
+	bool no_errors() const
+	{
+		return (num_bad_header_crc | num_bad_body_crc | num_bad_length) == 0;
+	}
+
+	void clear()
+	{
+		num_bad_header_crc = num_bad_body_crc = num_bad_length = 0;
+	}
+
+
+	uint32_t num_bad_header_crc = 0;
+	uint32_t num_bad_body_crc = 0;
+	uint32_t num_bad_length = 0;
+};
+
 TEST_CASE(SUITE("gracefully handles empty message"))
 {				
-	LinkParser parser(1024);	
+	CountingReporter reporter;
+	LinkParser parser(1024, reporter);
 
 	Hex hex("");
 	auto input = hex.as_rslice();
 		
-	REQUIRE(!parser.parse(input).read_frame);
+	REQUIRE(!parser.parse(input));
 	REQUIRE(input.is_empty());
 }
 
 TEST_CASE(SUITE("reads a full message properly"))
 {	
-	LinkParser parser(1024);
+	CountingReporter reporter;
+	LinkParser parser(1024, reporter);
 	
 	Hex hex("07 AA 01 00 02 00 06 00 F9 9F A2 C3 DD DD DD DD DD DD 6B 37 0D 51");
 	auto input = hex.as_rslice();
-
-	auto result = parser.parse(input);
-	REQUIRE(result.read_frame);
-	REQUIRE(result.num_crc_error == 0);
+	
+	REQUIRE(parser.parse(input));
+	REQUIRE(reporter.no_errors());
 	REQUIRE(input.is_empty());
 	
 	Addresses addr;
@@ -46,66 +83,70 @@ TEST_CASE(SUITE("reads a full message properly"))
 
 TEST_CASE(SUITE("discards leading data properly"))
 {
-	LinkParser parser(1024);
+	CountingReporter reporter;
+	LinkParser parser(1024, reporter);
 
 	Hex hex("FF FF FF FF 07 AA 01 00 02 00 06 00 F9 9F A2 C3 DD DD DD DD DD DD 6B 37 0D 51");
 	auto input = hex.as_rslice();
 
-	auto result = parser.parse(input);
-	REQUIRE(result.read_frame);
-	REQUIRE(result.num_crc_error == 0);
+	REQUIRE(parser.parse(input));	
+	REQUIRE(reporter.no_errors());
 	REQUIRE(input.is_empty());
 }
 
 TEST_CASE(SUITE("detects header crc failure properly"))
 {
-	LinkParser parser(1024);
+	CountingReporter reporter;
+	LinkParser parser(1024, reporter);
 	
 	/// -----------------------------VV-----------------------------------------
 	Hex hex("07 AA 01 00 02 00 06 00 F8 9F A2 C3 DD DD DD DD DD DD 6B 37 0D 51");
 	auto input = hex.as_rslice();
-
-	auto result = parser.parse(input);
-	REQUIRE_FALSE(result.read_frame);
-	REQUIRE(result.num_crc_error == 1);
+	
+	REQUIRE_FALSE(parser.parse(input));
+	REQUIRE(reporter.num_bad_header_crc == 1);
 	REQUIRE(input.is_empty());
 }
 
 TEST_CASE(SUITE("recursively processes header crc failure"))
 {
-	LinkParser parser(1024);
+	CountingReporter reporter;
+	LinkParser parser(1024, reporter);
 
 	{
 		// packet in a packet
 		Hex hex("07 AA 07 AA 01 00 02 00 06 00 F9 9F A2 C3 DD DD DD DD DD DD 6B");
 		auto input = hex.as_rslice();
-		auto result = parser.parse(input);
-		REQUIRE_FALSE(result.read_frame);
-		REQUIRE(result.num_crc_error == 1);
+		
+		REQUIRE_FALSE(parser.parse(input));
+		REQUIRE(reporter.num_bad_header_crc == 1);
 		REQUIRE(input.is_empty());
 	}
+
+	reporter.clear();
 
 	{
 		// last 3 bytes of body CRC will complete the frame
 		Hex trailing("37 0D 51");
 		auto input = trailing.as_rslice();
-		auto result = parser.parse(input);
-		REQUIRE(result.read_frame);
-		REQUIRE(result.num_crc_error == 0);
+		
+		REQUIRE(parser.parse(input));
+		REQUIRE(reporter.no_errors());
 		REQUIRE(input.is_empty());
 	}
 }
 
 TEST_CASE(SUITE("detects body crc failure properly"))
 {
-	LinkParser parser(1024);
+	CountingReporter reporter;
+	LinkParser parser(1024, reporter);
 
+		
 	/// --------------------------------------------------------------VV--------
-	Hex hex("07 AA 01 00 02 00 06 00 F8 9F A2 C3 DD DD DD DD DD DD 6B 38 0D 51");
+	Hex hex("07 AA 01 00 02 00 06 00 F9 9F A2 C3 DD DD DD DD DD DD 6B 38 0D 51");
 	auto input = hex.as_rslice();
-
-	auto result = parser.parse(input);
-	REQUIRE_FALSE(result.read_frame);
-	REQUIRE(result.num_crc_error == 1);
+	
+	REQUIRE_FALSE(parser.parse(input));
+	REQUIRE(reporter.num_bad_body_crc == 1);
 	REQUIRE(input.is_empty());
 }

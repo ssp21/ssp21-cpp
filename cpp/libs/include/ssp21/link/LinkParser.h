@@ -10,8 +10,7 @@
 namespace ssp21
 {	
 	const uint8_t sync1 = 0x07;
-	const uint8_t sync2 = 0xAA;
-	const uint16_t min_config_link_payload_size = 512;
+	const uint8_t sync2 = 0xAA;	
 	const uint16_t max_config_link_payload_size = 4092;
 	
 	
@@ -33,22 +32,17 @@ namespace ssp21
 
 	public:
 
-		struct Result
+		class IReporter
 		{
-			Result(bool read_frame, uint16_t num_crc_error) : read_frame(read_frame), num_crc_error(num_crc_error)
-			{}
+		public:
+			virtual void on_bad_header_crc(uint32_t expected, uint32_t actual) = 0;
+			virtual void on_bad_body_crc(uint32_t expected, uint32_t actual) = 0;
+			virtual void on_bad_body_length(uint32_t max_allowed, uint32_t actual) = 0;
+		};		
 
-			Result() : read_frame(false), num_crc_error(0)
-			{}			
-			
-			bool read_frame;
-			uint16_t num_crc_error;			
-		};
+		LinkParser(uint16_t max_payload_length, IReporter& reporter);
 
-
-		LinkParser(uint16_t max_payload_size);
-
-		Result parse(openpal::RSlice& input);
+		bool parse(openpal::RSlice& input);
 
 		bool read(Addresses& addresses, openpal::RSlice& payload);
 
@@ -66,13 +60,13 @@ namespace ssp21
 		LinkParser() = delete;		
 
 		const uint16_t max_payload_length_;
+		IReporter* reporter_;
 		openpal::Buffer buffer_;
 
 		State state_;
 
 		uint32_t num_rx_;
-		uint16_t num_crc_error_;
-		
+				
 		openpal::RSlice payload_;
 		Addresses addresses_;
 		uint16_t payload_length_;
