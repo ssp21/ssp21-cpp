@@ -48,14 +48,26 @@ namespace ssp21
 
 	private:
 
-		State parse_one(State state, openpal::RSlice& input);
+		struct FullState
+		{
+			FullState(State state, uint32_t num_buffered) :
+				value(state),
+				num_buffered(num_buffered)
+			{}	
 
-		State parse_many(State state, openpal::RSlice& input);
+			FullState() {}
+			
+			State value = State::wait_sync1;			
+			uint32_t num_buffered = 0;
+		};
 
-		State parse_sync1(openpal::RSlice& input);
-		State parse_sync2(openpal::RSlice& input);
-		State parse_header(openpal::RSlice& input);
-		State parse_body(openpal::RSlice& input);
+		FullState parse_one(const FullState& state, openpal::RSlice& input);
+		FullState parse_many(const FullState& state, openpal::RSlice& input);
+
+		FullState parse_sync1(const FullState& state, openpal::RSlice& input);
+		FullState parse_sync2(const FullState& state, openpal::RSlice& input);
+		FullState parse_header(const FullState& state, openpal::RSlice& input);
+		FullState parse_body(const FullState& state, openpal::RSlice& input);
 
 		LinkParser() = delete;		
 
@@ -63,9 +75,7 @@ namespace ssp21
 		IReporter* reporter_;
 		openpal::Buffer buffer_;
 
-		State state_;
-
-		uint32_t num_rx_;
+		FullState state_;		
 				
 		openpal::RSlice payload_;
 		Addresses addresses_;
