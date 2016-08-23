@@ -11,6 +11,9 @@
 #include "ssp21/LayerInterfaces.h"
 
 #include "openpal/logging/Logger.h"
+#include "openpal/container/Buffer.h"
+
+#include "ssp21/link/LinkConstants.h"
 
 namespace ssp21
 {
@@ -22,7 +25,12 @@ namespace ssp21
 
 	public:
 
-		Responder(openpal::Logger logger, ILowerLayer& lower);
+		struct Config
+		{
+			uint16_t max_tx_message_size = consts::max_config_link_payload_size;
+		};
+
+		Responder(const Config& config, openpal::Logger logger, ILowerLayer& lower);
 
 		// ---- implement IUpperLayer -----
 
@@ -42,8 +50,11 @@ namespace ssp21
 		void on_message(const openpal::RSlice& data, const UnconfirmedSessionData& msg);
 		void on_message(const openpal::RSlice& data, const RequestHandshakeAuth& msg);
 
+		Config config_;
 		openpal::Logger logger_;
 		ILowerLayer* lower_;
+		openpal::Buffer tx_buffer_;
+
 	};
 }
 

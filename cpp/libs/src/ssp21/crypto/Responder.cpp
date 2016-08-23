@@ -10,8 +10,11 @@ using namespace openpal;
 
 namespace ssp21
 {
-	Responder::Responder(Logger logger, ILowerLayer& lower) : 
-		logger_(logger), lower_(&lower)
+	Responder::Responder(const Config& config, Logger logger, ILowerLayer& lower) :
+		config_(config),
+		logger_(logger), 
+		lower_(&lower),
+		tx_buffer_(config.max_tx_message_size)
 	{
 	
 	}

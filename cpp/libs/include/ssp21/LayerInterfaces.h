@@ -23,9 +23,15 @@ namespace ssp21
 			return is_transmitting_;
 		}
 
+		bool is_read_ready() const
+		{
+			return is_read_ready_;
+		}
+
 	protected:
 
 		bool is_transmitting_ = false;
+		bool is_read_ready_ = false;
 
 	};
 

@@ -18,8 +18,8 @@ using namespace openpal;
 
 TEST_CASE(SUITE("can be constructed"))
 {		
-	MockLogger log("responder");	
+	MockLogger log("responder");
 	MockLowerLayer lower;
 
-	Responder resp(log.root.logger, lower);	
+	Responder responder(Responder::Config(), log.root.logger, lower);	
 }
