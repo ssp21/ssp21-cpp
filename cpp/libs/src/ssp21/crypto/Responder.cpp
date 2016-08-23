@@ -5,6 +5,7 @@
 
 #include "ssp21/LogLevels.h"
 #include "ssp21/crypto/LogLinePrinter.h"
+#include "ssp21/msg/ReplyHandshakeError.h"
 
 using namespace openpal;
 
@@ -46,6 +47,7 @@ namespace ssp21
 		auto err = msg.read_msg(data);
 		if (any(err)) {
 			FORMAT_LOG_BLOCK(logger_, levels::warn, "error reading %s: %s", FunctionSpec::to_string(MsgType::function), ParseErrorSpec::to_string(err));
+			this->handle_parse_error<MsgType>(err);
 		}
 		else {			
 			this->on_message(data, msg);
@@ -66,6 +68,7 @@ namespace ssp21
 			case(Function::request_handshake_begin) :
 				this->read_any<RequestHandshakeBegin>(data);
 				break;
+
 			case(Function::request_handshake_auth) :
 				this->read_any<RequestHandshakeAuth>(data);
 				break;
@@ -77,6 +80,19 @@ namespace ssp21
 			default:
 				FORMAT_LOG_BLOCK(logger_, levels::warn, "Received unknown function id: %u", data[0]);
 				break;
+		}
+	}	
+
+	void Responder::reply_with_handshake_error(HandshakeError err)
+	{
+		ReplyHandshakeError msg(err);
+
+		auto dest = this->tx_buffer_.as_wslice();
+		auto result = msg.write_msg(dest);
+
+		if (!result.is_error())
+		{
+			this->lower_->begin_transmit(Addresses(), result.written);
 		}
 	}
 

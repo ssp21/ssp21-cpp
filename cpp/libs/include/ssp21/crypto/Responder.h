@@ -7,6 +7,7 @@
 #include "ssp21/msg/UnconfirmedSessionData.h"
 
 #include "ssp21/gen/Function.h"
+#include "ssp21/gen/HandshakeError.h"
 
 #include "ssp21/LayerInterfaces.h"
 
@@ -49,6 +50,26 @@ namespace ssp21
 		void on_message(const openpal::RSlice& data, const RequestHandshakeBegin& msg);		
 		void on_message(const openpal::RSlice& data, const UnconfirmedSessionData& msg);
 		void on_message(const openpal::RSlice& data, const RequestHandshakeAuth& msg);
+
+		template <class MsgType>
+		void handle_parse_error(ParseError err);
+
+		template <>
+		inline void handle_parse_error<RequestHandshakeBegin>(ParseError err)
+		{ 
+			this->reply_with_handshake_error(HandshakeError::bad_message_format);
+		}
+
+		template <>
+		inline void handle_parse_error<RequestHandshakeAuth>(ParseError err)
+		{ 
+			this->reply_with_handshake_error(HandshakeError::bad_message_format); 
+		}
+
+		template <>
+		inline void handle_parse_error<UnconfirmedSessionData>(ParseError err) {}
+
+		inline void reply_with_handshake_error(HandshakeError err);
 
 		Config config_;
 		openpal::Logger logger_;
