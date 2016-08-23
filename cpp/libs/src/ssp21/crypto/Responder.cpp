@@ -32,12 +32,16 @@ namespace ssp21
 	
 	void Responder::on_tx_ready_impl()
 	{
-	
+		// possibly try to read a buffered message
+		lower_->read_message(*this);
 	}
 	
 	void Responder::on_rx_ready_impl()
 	{
-	
+		if (!lower_->is_transmitting())
+		{
+			lower_->read_message(*this);
+		}
 	}
 
 	template <class MsgType>
@@ -54,7 +58,7 @@ namespace ssp21
 		}
 	}
 
-	void Responder::process_msg(const RSlice& data)
+	void Responder::consume_message(const Addresses& addr, const openpal::RSlice& data)
 	{
 		if (data.is_empty()) {
 			SIMPLE_LOG_BLOCK(logger_, levels::warn, "Received zero length message");

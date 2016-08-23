@@ -19,7 +19,16 @@ using namespace openpal;
 TEST_CASE(SUITE("can be constructed"))
 {		
 	MockLogger log("responder");
+	
 	MockLowerLayer lower;
 
 	Responder responder(Responder::Config(), log.root.logger, lower);	
+	responder.on_open();
+
+	// request handshake begin with header only
+	lower.enqueue_message(Addresses(5, 5), "00");	
+	responder.on_rx_ready();
+
+	// ReplyHandshakeError w/ error = bad message format
+	REQUIRE(lower.pop_tx_message() == "04 00");
 }

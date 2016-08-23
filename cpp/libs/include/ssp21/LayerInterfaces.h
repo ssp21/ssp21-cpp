@@ -8,6 +8,11 @@
 
 namespace ssp21
 {	
+	class IMessageConsumer
+	{
+	public:
+		virtual void consume_message(const Addresses& addr, const openpal::RSlice& message) = 0;
+	};
 
 	class ILowerLayer
 	{
@@ -16,7 +21,7 @@ namespace ssp21
 
 		virtual void begin_transmit(const Addresses& addr, const openpal::RSlice& message) = 0;
 
-		virtual bool read_message(Addresses& addr, openpal::RSlice& message) = 0;
+		virtual bool read_message(IMessageConsumer& consumer) = 0;
 
 		bool is_transmitting() const 
 		{
@@ -62,7 +67,7 @@ namespace ssp21
 		{
 			if (is_open_)
 			{
-				this->on_tx_ready();				
+				this->on_tx_ready_impl();
 			}
 		}
 
@@ -70,7 +75,7 @@ namespace ssp21
 		{
 			if (is_open_)
 			{
-				this->on_rx_ready();
+				this->on_rx_ready_impl();
 			}
 		}
 
