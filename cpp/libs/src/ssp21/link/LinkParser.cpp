@@ -37,8 +37,8 @@ namespace ssp21
 
 			while (input.is_not_empty() && (current_state.value != State::wait_read))
 			{
-				current_state = parse_one(current_state, input);
-			}
+                current_state = parse_one(current_state, input);
+            }
 
 			return current_state;
 		}
@@ -96,7 +96,7 @@ namespace ssp21
 			const auto num_to_copy = min<uint32_t>(remaining, input.length());
 			auto dest = buffer_.as_wslice().skip(state.num_buffered);
 			
-			input.take(num_to_copy).copy_to(dest);						
+			input.take(num_to_copy).move_to(dest);
 			input.advance(num_to_copy);
 
 			const auto new_num_buffered = num_to_copy + state.num_buffered;
@@ -118,6 +118,7 @@ namespace ssp21
 				// b/c it has (link_header_total_size - 1) size we're guaranteed it'll
 				// all be processed from wait_sync1
 				auto header = this->buffer_.as_rslice().take(link_header_total_size).skip(1);
+
 				return parse_many(FullState(State::wait_sync1, 0), header);
 			}
 

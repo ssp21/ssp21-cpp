@@ -115,6 +115,7 @@ TEST_CASE(SUITE("recursively processes header crc failure"))
 
 	{
 		// packet in a packet
+		//             07 AA 01 00 02 00 06 00 F9 9F A2 C3 DD DD DD DD DD DD 6B 37 0D 51 < - valid packet
 		Hex hex("07 AA 07 AA 01 00 02 00 06 00 F9 9F A2 C3 DD DD DD DD DD DD 6B");
 		auto input = hex.as_rslice();
 		
