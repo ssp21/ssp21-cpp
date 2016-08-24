@@ -30,47 +30,47 @@ namespace ssp21
 
 		bool LinkParser::parse(RSlice& input)
 		{							
-			this->state_ = parse_many(this->state_, input);
+			this->state_ = parse_many(this->state_, this->context_, input);
 			
 			return state_.value == State::Value::wait_read;
 		}
 
-		LinkParser::State LinkParser::parse_many(const State& state, openpal::RSlice& input)
+		LinkParser::State LinkParser::parse_many(const State& state, Context& ctx, openpal::RSlice& input)
 		{
 			auto current_state = state;
 
 			while (input.is_not_empty() && !current_state.is_wait_read())
 			{
-                current_state = parse_one(current_state, input);
+                current_state = parse_one(current_state, ctx, input);
             }
 
 			return current_state;
 		}
 
-		LinkParser::State LinkParser::parse_one(const State& state, RSlice& input)
+		LinkParser::State LinkParser::parse_one(const State& state, Context& ctx, RSlice& input)
 		{
 			switch (state.value)
 			{
 			case(State::Value::wait_sync1) :
-				return parse_sync1(state, input);
+				return parse_sync1(state, ctx, input);
 			case(State::Value::wait_sync2) :
-				return parse_sync2(state, input);
+				return parse_sync2(state, ctx, input);
 			case(State::Value::wait_header) :
-				return parse_header(state, input);
+				return parse_header(state, ctx, input);
 			case(State::Value::wait_body) :
-				return parse_body(state, input);
+				return parse_body(state, ctx, input);
 			default:
 				return state; // wait_read
 			}
 		}
 
-		LinkParser::State LinkParser::parse_sync1(const State& state, openpal::RSlice& input)
+		LinkParser::State LinkParser::parse_sync1(const State& state, Context& ctx, openpal::RSlice& input)
 		{
 			const auto value = input[0];
 			input.advance(1);
 			if (value == consts::sync1)
 			{
-				this->context_.buffer[0] = value;
+				ctx.buffer[0] = value;
 				return State::wait_sync2();
 			}
 			else
@@ -79,13 +79,13 @@ namespace ssp21
 			}			
 		}
 		
-		LinkParser::State LinkParser::parse_sync2(const State& state, openpal::RSlice& input)
+		LinkParser::State LinkParser::parse_sync2(const State& state, Context& ctx, openpal::RSlice& input)
 		{
 			const auto value = input[0];
 			input.advance(1);
 			if (value == consts::sync2)
 			{
-				this->context_.buffer[1] = value;
+				ctx.buffer[1] = value;
 				return State::wait_header(2);
 			}
 			else
@@ -94,11 +94,11 @@ namespace ssp21
 			}
 		}
 		
-		LinkParser::State LinkParser::parse_header(const State& state, openpal::RSlice& input)
+		LinkParser::State LinkParser::parse_header(const State& state, Context& ctx, openpal::RSlice& input)
 		{
 			const auto remaining = consts::link_header_total_size - state.num_buffered;
 			const auto num_to_copy = min<uint32_t>(remaining, input.length());
-			auto dest = this->context_.buffer.as_wslice().skip(state.num_buffered);
+			auto dest = ctx.buffer.as_wslice().skip(state.num_buffered);
 			
 			input.take(num_to_copy).move_to(dest);
 			input.advance(num_to_copy);
@@ -111,45 +111,45 @@ namespace ssp21
 			}
 
 			// now read and validate the header
-			auto expected_crc = CastagnoliCRC32::calc(context_.buffer.as_rslice().take(consts::link_header_fields_size));
-			auto actual_crc = UInt32::read(context_.buffer.as_rslice().skip(consts::link_header_fields_size));
+			auto expected_crc = CastagnoliCRC32::calc(ctx.buffer.as_rslice().take(consts::link_header_fields_size));
+			auto actual_crc = UInt32::read(ctx.buffer.as_rslice().skip(consts::link_header_fields_size));
 
 			if (expected_crc != actual_crc)
 			{				
-				context_.reporter->on_bad_header_crc(expected_crc, actual_crc);
+				ctx.reporter->on_bad_header_crc(expected_crc, actual_crc);
 				
-				auto header = this->context_.buffer.as_rslice().take(consts::link_header_total_size).skip(2);
+				auto header = ctx.buffer.as_rslice().take(consts::link_header_total_size).skip(2);
 
 				// reprocess all header bytes except for the synchronization bytes.
 				// 
 				// Since this segment has length (link_header_total_size - 2) we're
 				// guaranteed it'll all be processed from wait_sync1
-				return parse_many(State::wait_sync1(), header);
+				return parse_many(State::wait_sync1(), ctx, header);
 			}
 
-			this->context_.addresses.destination = UInt16::read(context_.buffer.as_rslice().skip(2));
-			this->context_.addresses.source = UInt16::read(context_.buffer.as_rslice().skip(4));
+			ctx.addresses.destination = UInt16::read(ctx.buffer.as_rslice().skip(2));
+			ctx.addresses.source = UInt16::read(ctx.buffer.as_rslice().skip(4));
 
-			const auto payload_length = UInt16::read(context_.buffer.as_rslice().skip(6));
+			const auto payload_length = UInt16::read(ctx.buffer.as_rslice().skip(6));
 
-			if (payload_length > this->context_.max_payload_length)
+			if (payload_length > ctx.max_payload_length)
 			{			
-				this->context_.reporter->on_bad_body_length(this->context_.max_payload_length, payload_length);
+				ctx.reporter->on_bad_body_length(ctx.max_payload_length, payload_length);
 				return State::wait_sync1();
 			}
 
-			this->context_.payload_length = payload_length;
+			ctx.payload_length = payload_length;
 
 			return State::wait_body(new_num_buffered);
 		}
 		
-		LinkParser::State LinkParser::parse_body(const State& state, openpal::RSlice& input)
+		LinkParser::State LinkParser::parse_body(const State& state, Context& ctx, openpal::RSlice& input)
 		{
-			const uint32_t total_frame_size = consts::link_header_total_size + this->context_.payload_length + consts::crc_size;
+			const uint32_t total_frame_size = consts::link_header_total_size + ctx.payload_length + consts::crc_size;
 			const uint32_t remaining = total_frame_size - state.num_buffered;
 
 			const auto num_to_copy = min<uint32_t>(remaining, input.length());
-			auto dest = context_.buffer.as_wslice().skip(state.num_buffered);
+			auto dest = ctx.buffer.as_wslice().skip(state.num_buffered);
 			input.take(num_to_copy).copy_to(dest);			
 			input.advance(num_to_copy);
 			const auto new_num_buffered = num_to_copy + state.num_buffered;
@@ -159,17 +159,17 @@ namespace ssp21
 				return State::wait_body(new_num_buffered);
 			}
 			
-			const auto payload_bytes = context_.buffer.as_rslice().skip(consts::link_header_total_size).take(context_.payload_length);
+			const auto payload_bytes = ctx.buffer.as_rslice().skip(consts::link_header_total_size).take(ctx.payload_length);
 			const auto expected_crc = CastagnoliCRC32::calc(payload_bytes);
-			const auto actual_crc = UInt32::read(context_.buffer.as_rslice().skip(consts::link_header_total_size + context_.payload_length));
+			const auto actual_crc = UInt32::read(ctx.buffer.as_rslice().skip(consts::link_header_total_size + ctx.payload_length));
 
 			if (expected_crc != actual_crc)
 			{
-				context_.reporter->on_bad_body_crc(expected_crc, actual_crc);
+				ctx.reporter->on_bad_body_crc(expected_crc, actual_crc);
 				return State::wait_sync1();
 			}
 
-			this->context_.payload = payload_bytes;
+			ctx.payload = payload_bytes;
 
 			return State::wait_read(new_num_buffered);
 		}

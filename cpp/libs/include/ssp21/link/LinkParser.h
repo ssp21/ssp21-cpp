@@ -83,13 +83,13 @@ namespace ssp21
 			{}
 		};
 
-		State parse_one(const State& state, openpal::RSlice& input);
-		State parse_many(const State& state, openpal::RSlice& input);
+		static State parse_one(const State& state, Context& ctx, openpal::RSlice& input);
+		static State parse_many(const State& state, Context& ctx, openpal::RSlice& input);
 
-		State parse_sync1(const State& state, openpal::RSlice& input);
-		State parse_sync2(const State& state, openpal::RSlice& input);
-		State parse_header(const State& state, openpal::RSlice& input);
-		State parse_body(const State& state, openpal::RSlice& input);
+		static State parse_sync1(const State& state, Context& ctx, openpal::RSlice& input);
+		static State parse_sync2(const State& state, Context& ctx, openpal::RSlice& input);
+		static State parse_header(const State& state, Context& ctx, openpal::RSlice& input);
+		static State parse_body(const State& state, Context& ctx, openpal::RSlice& input);
 
 		LinkParser() = delete;		
 
