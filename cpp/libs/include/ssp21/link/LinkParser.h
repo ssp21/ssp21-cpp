@@ -12,6 +12,7 @@ namespace ssp21
 	class LinkParser : openpal::Uncopyable
 	{
 		
+		
 	public:
 
 		class IReporter
@@ -21,6 +22,23 @@ namespace ssp21
 			virtual void on_bad_body_crc(uint32_t expected, uint32_t actual) = 0;
 			virtual void on_bad_body_length(uint32_t max_allowed, uint32_t actual) = 0;
 		};		
+
+	private:
+
+		struct Context
+		{
+			Context(uint16_t max_payload_length, IReporter& reporter);
+
+			const uint16_t max_payload_length;
+			IReporter* reporter;
+			openpal::Buffer buffer;
+
+			openpal::RSlice payload;
+			Addresses addresses;
+			uint16_t payload_length = 0;
+		};
+
+	public:
 
 		LinkParser(uint16_t max_payload_length, IReporter& reporter);
 
@@ -75,15 +93,10 @@ namespace ssp21
 
 		LinkParser() = delete;		
 
-		const uint16_t max_payload_length_;
-		IReporter* reporter_;
-		openpal::Buffer buffer_;
+		Context context_;
 
-		State state_;		
-				
-		openpal::RSlice payload_;
-		Addresses addresses_;
-		uint16_t payload_length_;
+		State state_ = State::wait_sync1();
+
 	};
 
 

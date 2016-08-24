@@ -11,16 +11,19 @@ using namespace openpal;
 
 namespace ssp21
 {					
+	LinkParser::Context::Context(uint16_t max_payload_length, IReporter& reporter) :
+		max_payload_length(
+			min<uint32_t>(
+			max_payload_length,
+			consts::max_config_link_payload_size
+			)
+		),
+		reporter(&reporter),
+		buffer(consts::min_link_frame_size + max_payload_length)
+	{}
+
 		LinkParser::LinkParser(uint16_t max_payload_length, IReporter& reporter) :
-			max_payload_length_(
-				min<uint32_t>(
-					max_payload_length,					
-					consts::max_config_link_payload_size
-				)
-			),
-			reporter_(&reporter),
-			buffer_(consts::min_link_frame_size + max_payload_length_),
-			payload_length_(0)
+			context_(max_payload_length, reporter)
 		{
 			
 		}
@@ -67,7 +70,7 @@ namespace ssp21
 			input.advance(1);
 			if (value == consts::sync1)
 			{
-				this->buffer_[0] = value;
+				this->context_.buffer[0] = value;
 				return State::wait_sync2();
 			}
 			else
@@ -82,7 +85,7 @@ namespace ssp21
 			input.advance(1);
 			if (value == consts::sync2)
 			{
-				this->buffer_[1] = value;
+				this->context_.buffer[1] = value;
 				return State::wait_header(2);
 			}
 			else
@@ -95,7 +98,7 @@ namespace ssp21
 		{
 			const auto remaining = consts::link_header_total_size - state.num_buffered;
 			const auto num_to_copy = min<uint32_t>(remaining, input.length());
-			auto dest = buffer_.as_wslice().skip(state.num_buffered);
+			auto dest = this->context_.buffer.as_wslice().skip(state.num_buffered);
 			
 			input.take(num_to_copy).move_to(dest);
 			input.advance(num_to_copy);
@@ -108,14 +111,14 @@ namespace ssp21
 			}
 
 			// now read and validate the header
-			auto expected_crc = CastagnoliCRC32::calc(buffer_.as_rslice().take(consts::link_header_fields_size));
-			auto actual_crc = UInt32::read(buffer_.as_rslice().skip(consts::link_header_fields_size));
+			auto expected_crc = CastagnoliCRC32::calc(context_.buffer.as_rslice().take(consts::link_header_fields_size));
+			auto actual_crc = UInt32::read(context_.buffer.as_rslice().skip(consts::link_header_fields_size));
 
 			if (expected_crc != actual_crc)
 			{				
-				reporter_->on_bad_header_crc(expected_crc, actual_crc);
+				context_.reporter->on_bad_header_crc(expected_crc, actual_crc);
 				
-				auto header = this->buffer_.as_rslice().take(consts::link_header_total_size).skip(2);
+				auto header = this->context_.buffer.as_rslice().take(consts::link_header_total_size).skip(2);
 
 				// reprocess all header bytes except for the synchronization bytes.
 				// 
@@ -124,29 +127,29 @@ namespace ssp21
 				return parse_many(State::wait_sync1(), header);
 			}
 
-			this->addresses_.destination = UInt16::read(buffer_.as_rslice().skip(2));
-			this->addresses_.source = UInt16::read(buffer_.as_rslice().skip(4));
+			this->context_.addresses.destination = UInt16::read(context_.buffer.as_rslice().skip(2));
+			this->context_.addresses.source = UInt16::read(context_.buffer.as_rslice().skip(4));
 
-			const auto payload_length = UInt16::read(buffer_.as_rslice().skip(6));
+			const auto payload_length = UInt16::read(context_.buffer.as_rslice().skip(6));
 
-			if (payload_length > this->max_payload_length_)
+			if (payload_length > this->context_.max_payload_length)
 			{			
-				this->reporter_->on_bad_body_length(this->max_payload_length_, payload_length);
+				this->context_.reporter->on_bad_body_length(this->context_.max_payload_length, payload_length);
 				return State::wait_sync1();
 			}
 
-			this->payload_length_ = payload_length;
+			this->context_.payload_length = payload_length;
 
 			return State::wait_body(new_num_buffered);
 		}
 		
 		LinkParser::State LinkParser::parse_body(const State& state, openpal::RSlice& input)
 		{
-			const uint32_t total_frame_size = consts::link_header_total_size + this->payload_length_ + consts::crc_size;
+			const uint32_t total_frame_size = consts::link_header_total_size + this->context_.payload_length + consts::crc_size;
 			const uint32_t remaining = total_frame_size - state.num_buffered;
 
 			const auto num_to_copy = min<uint32_t>(remaining, input.length());
-			auto dest = buffer_.as_wslice().skip(state.num_buffered);
+			auto dest = context_.buffer.as_wslice().skip(state.num_buffered);
 			input.take(num_to_copy).copy_to(dest);			
 			input.advance(num_to_copy);
 			const auto new_num_buffered = num_to_copy + state.num_buffered;
@@ -156,17 +159,17 @@ namespace ssp21
 				return State::wait_body(new_num_buffered);
 			}
 			
-			const auto payload_bytes = buffer_.as_rslice().skip(consts::link_header_total_size).take(payload_length_);
+			const auto payload_bytes = context_.buffer.as_rslice().skip(consts::link_header_total_size).take(context_.payload_length);
 			const auto expected_crc = CastagnoliCRC32::calc(payload_bytes);
-			const auto actual_crc = UInt32::read(buffer_.as_rslice().skip(consts::link_header_total_size + payload_length_));
+			const auto actual_crc = UInt32::read(context_.buffer.as_rslice().skip(consts::link_header_total_size + context_.payload_length));
 
 			if (expected_crc != actual_crc)
 			{
-				reporter_->on_bad_body_crc(expected_crc, actual_crc);
+				context_.reporter->on_bad_body_crc(expected_crc, actual_crc);
 				return State::wait_sync1();
 			}
 
-			this->payload_ = payload_bytes;
+			this->context_.payload = payload_bytes;
 
 			return State::wait_read(new_num_buffered);
 		}
@@ -180,8 +183,8 @@ namespace ssp21
 
 			state_ = State::wait_sync1();
 			
-			addresses = addresses_;
-			payload = payload_;
+			addresses = context_.addresses;
+			payload = context_.payload;
 
 			return true;
 		}
