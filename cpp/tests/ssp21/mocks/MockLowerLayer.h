@@ -24,7 +24,7 @@ namespace ssp21
 		{
 			assert(!this->is_transmitting_);
 			this->tx_messages_.push_back(
-				std::make_unique<message_pair_t>(addr, message)
+				std::unique_ptr<message_pair_t>(new message_pair_t(addr, message))
 			);
 			this->is_transmitting_ = true;
 		}
@@ -47,7 +47,7 @@ namespace ssp21
 		{	
 			openpal::Hex hexdata(hex);
 			this->rx_messages_.push_back(
-				std::make_unique<message_pair_t>(addr, hexdata.as_rslice())
+				std::unique_ptr<message_pair_t>(new message_pair_t(addr, hexdata.as_rslice()))
 			);
 		}
 

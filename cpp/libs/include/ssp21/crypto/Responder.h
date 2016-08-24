@@ -54,22 +54,7 @@ namespace ssp21
 		template <class MsgType>
 		void handle_parse_error(ParseError err);
 
-		template <>
-		inline void handle_parse_error<RequestHandshakeBegin>(ParseError err)
-		{ 
-			this->reply_with_handshake_error(HandshakeError::bad_message_format);
-		}
-
-		template <>
-		inline void handle_parse_error<RequestHandshakeAuth>(ParseError err)
-		{ 
-			this->reply_with_handshake_error(HandshakeError::bad_message_format); 
-		}
-
-		template <>
-		inline void handle_parse_error<UnconfirmedSessionData>(ParseError err) {}
-
-		inline void reply_with_handshake_error(HandshakeError err);
+		void reply_with_handshake_error(HandshakeError err);
 
 		Config config_;
 		openpal::Logger logger_;
@@ -77,6 +62,21 @@ namespace ssp21
 		openpal::Buffer tx_buffer_;
 
 	};
+
+	template <>
+	inline void Responder::handle_parse_error<RequestHandshakeBegin>(ParseError err)
+	{ 
+		this->reply_with_handshake_error(HandshakeError::bad_message_format);
+	}
+
+	template <>
+	inline void Responder::handle_parse_error<RequestHandshakeAuth>(ParseError err)
+	{ 
+		this->reply_with_handshake_error(HandshakeError::bad_message_format); 
+	}
+
+	template <>
+	inline void Responder::handle_parse_error<UnconfirmedSessionData>(ParseError err) {}
 }
 
 #endif
