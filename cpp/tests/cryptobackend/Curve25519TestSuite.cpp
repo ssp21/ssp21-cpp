@@ -14,9 +14,7 @@ void CheckKeys(KeyPair& kp, BufferType type)
 	REQUIRE(kp.private_key.get_type() == type);
 }
 
-// TODO: check that implementations map the null public key to null output as in Nosie spec
-
-TEST_CASE(SUITE("DH_X25519"))
+TEST_CASE(SUITE("key pair generation and dh operations result in same shared key"))
 {
 	// derive two key pairs 
 	KeyPair kp1;
@@ -44,3 +42,19 @@ TEST_CASE(SUITE("DH_X25519"))
 	REQUIRE(Crypto::secure_equals(shared_secret1.as_slice(), shared_secret2.as_slice()));
 }
 
+TEST_CASE(SUITE("performing dh operation on null public key fails"))
+{
+	KeyPair kp1;
+	Crypto::gen_keypair_x25519(kp1);
+
+	PublicKey pub;
+	pub.get_write_slice().set_all_to(0);
+	pub.set_type(BufferType::x25519_key);
+
+	std::error_code ec;
+
+	// derive the shared secrets
+	DHOutput shared_secret;
+	Crypto::dh_x25519(kp1.private_key, pub.as_slice(), shared_secret, ec);
+	REQUIRE(ec);
+}
