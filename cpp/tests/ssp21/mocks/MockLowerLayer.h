@@ -68,11 +68,11 @@ namespace ssp21
 		
 	private:
 
-		std::deque<std::unique_ptr<message_t>> tx_messages_;
+		typedef std::deque<std::unique_ptr<message_t>> message_queue_t;
 
-		std::unique_ptr<message_t> current_rx_message_;
+		message_queue_t tx_messages_;
 
-		std::deque<std::unique_ptr<message_t>> rx_messages_;
+		message_queue_t rx_messages_;
 	};
 
 }
