@@ -174,21 +174,6 @@ namespace ssp21
 			return State::wait_read(new_num_buffered);
 		}
 
-		bool LinkParser::read(Addresses& addresses, RSlice& payload)
-		{
-			if (!state_.is_wait_read())
-			{
-				return false;
-			}
-
-			state_ = State::wait_sync1();
-			
-			addresses = context_.addresses;
-			payload = context_.payload;
-
-			return true;
-		}
-
 }
 
 

@@ -74,7 +74,12 @@ TEST_CASE(SUITE("reads a full message properly"))
 	
 	Addresses addr;
 	RSlice payload;
-	REQUIRE(parser.read(addr, payload));
+	auto read_fun = [&](const Addresses& a, const RSlice& p) {
+		addr = a;
+		payload = p;
+	};
+
+	REQUIRE(parser.read(read_fun));
 	REQUIRE(addr.destination == 1);
 	REQUIRE(addr.source == 2);
 	REQUIRE(to_hex(payload) == "DD DD DD DD DD DD");

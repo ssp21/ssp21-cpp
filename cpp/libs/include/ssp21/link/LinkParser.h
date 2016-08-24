@@ -44,7 +44,20 @@ namespace ssp21
 
 		bool parse(openpal::RSlice& input);
 
-		bool read(Addresses& addresses, openpal::RSlice& payload);
+		template <class Fun>
+		bool read(const Fun& fun)
+		{
+			if (!this->state_.is_wait_read())
+			{
+				return false;
+			}
+
+			this->state_ = State::wait_sync1();
+
+			fun(this->context_.addresses, this->context_.payload);
+
+			return true;
+		}
 
 	private:
 
