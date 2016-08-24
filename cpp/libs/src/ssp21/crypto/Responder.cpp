@@ -58,31 +58,31 @@ namespace ssp21
 		}
 	}
 
-	void Responder::consume_message(const Addresses& addr, const openpal::RSlice& data)
+	void Responder::consume(const Message& message)
 	{
-		if (data.is_empty()) {
+		if (message.payload.is_empty()) {
 			SIMPLE_LOG_BLOCK(logger_, levels::warn, "Received zero length message");
 			return;
 		}
 
-		const auto function = FunctionSpec::from_type(data[0]);
+		const auto function = message.payload[0];
 		
-		switch (function)
+		switch (FunctionSpec::from_type(function))
 		{
 			case(Function::request_handshake_begin) :
-				this->read_any<RequestHandshakeBegin>(data);
+				this->read_any<RequestHandshakeBegin>(message.payload);
 				break;
 
 			case(Function::request_handshake_auth) :
-				this->read_any<RequestHandshakeAuth>(data);
+				this->read_any<RequestHandshakeAuth>(message.payload);
 				break;
 			
 			case(Function::unconfirmed_session_data) :
-				this->read_any<UnconfirmedSessionData>(data);
+				this->read_any<UnconfirmedSessionData>(message.payload);
 				break;
 			
 			default:
-				FORMAT_LOG_BLOCK(logger_, levels::warn, "Received unknown function id: %u", data[0]);
+				FORMAT_LOG_BLOCK(logger_, levels::warn, "Received unknown function id: %u", function);
 				break;
 		}
 	}	

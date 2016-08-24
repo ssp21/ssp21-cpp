@@ -32,6 +32,8 @@ namespace ssp21
 		};
 
 		Responder(const Config& config, openpal::Logger logger, ILowerLayer& lower);
+		
+	private:
 
 		// ---- implement IUpperLayer -----
 
@@ -39,10 +41,10 @@ namespace ssp21
 		virtual void on_close_impl() override;
 		virtual void on_tx_ready_impl() override;
 		virtual void on_rx_ready_impl() override;
-		
-	private:
 
-		virtual void consume_message(const Addresses& addr, const openpal::RSlice& message) override;
+		// ---- implement IMessageConsumer -----
+
+		virtual void consume(const Message& message) override;
 
 		template <class MsgType>
 		inline void read_any(const openpal::RSlice& data);

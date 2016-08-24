@@ -8,10 +8,16 @@
 
 namespace ssp21
 {	
+	struct Message
+	{
+		Addresses addresses;
+		openpal::RSlice payload;
+	};
+
 	class IMessageConsumer
 	{
 	public:
-		virtual void consume_message(const Addresses& addr, const openpal::RSlice& message) = 0;
+		virtual void consume(const Message& message) = 0;
 	};
 
 	class ILowerLayer
