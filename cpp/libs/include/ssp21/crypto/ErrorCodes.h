@@ -14,39 +14,39 @@
 #endif
 
 namespace ssp21
-{					
+{
 
-	class ErrorCategory final : public std::error_category
-	{
-	public:
+class ErrorCategory final : public std::error_category
+{
+public:
 
-		static const std::error_category& Instance()
-		{
-			return instance;
-		}
+    static const std::error_category& Instance()
+    {
+        return instance;
+    }
 
-		virtual const char* name() const NOEXCEPT
-		{
-			return "crypto-backend errors";
-		}
-		virtual std::string message(int ev) const;
+    virtual const char* name() const NOEXCEPT
+    {
+        return "crypto-backend errors";
+    }
+    virtual std::string message(int ev) const;
 
-	private:
+private:
 
-		ErrorCategory() {}
-		ErrorCategory(const ErrorCategory&) = delete;
+    ErrorCategory() {}
+    ErrorCategory(const ErrorCategory&) = delete;
 
-		static ErrorCategory instance;
-	};
+    static ErrorCategory instance;
+};
 
-	
-	std::error_code make_error_code(CryptoError err);		
+
+std::error_code make_error_code(CryptoError err);
 }
 
 namespace std
 {
-	template <>
-	struct is_error_code_enum<ssp21::CryptoError> : public true_type{};
+template <>
+struct is_error_code_enum<ssp21::CryptoError> : public true_type {};
 }
 
 #endif

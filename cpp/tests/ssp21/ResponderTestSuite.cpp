@@ -17,18 +17,18 @@ using namespace ssp21;
 using namespace openpal;
 
 TEST_CASE(SUITE("can be constructed"))
-{		
-	MockLogger log("responder");
-	
-	MockLowerLayer lower;
+{
+    MockLogger log("responder");
 
-	Responder responder(Responder::Config(), log.root.logger, lower);	
-	responder.on_open();
+    MockLowerLayer lower;
 
-	// request handshake begin with header only
-	lower.enqueue_message(Addresses(5, 5), "00");	
-	responder.on_rx_ready();
+    Responder responder(Responder::Config(), log.root.logger, lower);
+    responder.on_open();
 
-	// ReplyHandshakeError w/ error = bad message format
-	REQUIRE(lower.pop_tx_message() == "04 00");
+    // request handshake begin with header only
+    lower.enqueue_message(Addresses(5, 5), "00");
+    responder.on_rx_ready();
+
+    // ReplyHandshakeError w/ error = bad message format
+    REQUIRE(lower.pop_tx_message() == "04 00");
 }

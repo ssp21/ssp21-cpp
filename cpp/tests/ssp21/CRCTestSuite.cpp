@@ -21,26 +21,26 @@ http://www.sunshine2k.de/coding/javascript/crc/crc_js.html
 **/
 
 TEST_CASE(SUITE("Koopman test vector #1"))
-{		
-	Hex hex("31 32 33 34 35 36 37 38 39");
-	REQUIRE(KoopmanCRC32::calc(hex) == 0x9601DDA9);
+{
+    Hex hex("31 32 33 34 35 36 37 38 39");
+    REQUIRE(KoopmanCRC32::calc(hex) == 0x9601DDA9);
 }
 
 TEST_CASE(SUITE("Koopman test vector #2"))
 {
-	Hex hex("DE AD BE EF");
-	REQUIRE(KoopmanCRC32::calc(hex) == 0xFDBCA758);
+    Hex hex("DE AD BE EF");
+    REQUIRE(KoopmanCRC32::calc(hex) == 0xFDBCA758);
 }
 
 TEST_CASE(SUITE("Castagnoli test vector #1"))
 {
-	Hex hex("31 32 33 34 35 36 37 38 39");
-	REQUIRE(CastagnoliCRC32::calc(hex) == 0x6C9F84A8);
+    Hex hex("31 32 33 34 35 36 37 38 39");
+    REQUIRE(CastagnoliCRC32::calc(hex) == 0x6C9F84A8);
 }
 
 TEST_CASE(SUITE("Castagnoli test vector #2"))
 {
-	Hex hex("DE AD BE EF");
-	REQUIRE(CastagnoliCRC32::calc(hex) == 0xBB4E2049);
+    Hex hex("DE AD BE EF");
+    REQUIRE(CastagnoliCRC32::calc(hex) == 0xBB4E2049);
 }
 

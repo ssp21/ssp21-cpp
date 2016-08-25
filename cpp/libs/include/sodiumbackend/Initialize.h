@@ -4,10 +4,10 @@
 
 namespace ssp21
 {
-	namespace sodium
-	{
-		bool initialize();		
-	}
+namespace sodium
+{
+bool initialize();
+}
 }
 
 #endif

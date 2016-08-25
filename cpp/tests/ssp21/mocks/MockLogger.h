@@ -13,53 +13,54 @@
 
 namespace ssp21
 {
-	class MockLogger : public openpal::ILogHandler, openpal::Uncopyable
-	{
+class MockLogger : public openpal::ILogHandler, openpal::Uncopyable
+{
 
-	public:
-		MockLogger(const char* id, openpal::LogLevels levels = openpal::LogLevels::everything()) :
-			root(ssp21::Module::id, this, id, levels),
-			print_output_(false)
-		{}
+public:
+    MockLogger(const char* id, openpal::LogLevels levels = openpal::LogLevels::everything()) :
+        root(ssp21::Module::id, this, id, levels),
+        print_output_(false)
+    {}
 
-		void print_output()
-		{
-			print_output_ = true;
-		}
-		
-		virtual void log(openpal::ModuleId module, const char* id, openpal::LogLevel level, char const *location, char const *message)  override
-		{
-			if (print_output_)
-			{
-				std::cout << message << std::endl;
-			}
+    void print_output()
+    {
+        print_output_ = true;
+    }
 
-			lines.push_back(message);
-		}
+    virtual void log(openpal::ModuleId module, const char* id, openpal::LogLevel level, char const* location, char const* message)  override
+    {
+        if (print_output_)
+        {
+            std::cout << message << std::endl;
+        }
 
-		template <typename... Args>
-		void validate(const std::string& expected, const Args& ... args)
-		{
-			REQUIRE_FALSE(lines.empty());
-			REQUIRE(expected == lines.front());
-			lines.pop_front();
-			validate(args ...);
-		}
+        lines.push_back(message);
+    }
 
-		void validate() {
-			REQUIRE(lines.empty());
-		}
+    template <typename... Args>
+    void validate(const std::string& expected, const Args& ... args)
+    {
+        REQUIRE_FALSE(lines.empty());
+        REQUIRE(expected == lines.front());
+        lines.pop_front();
+        validate(args ...);
+    }
 
-		std::deque<std::string> lines;
-		openpal::LogRoot root;
+    void validate()
+    {
+        REQUIRE(lines.empty());
+    }
 
-	private :
+    std::deque<std::string> lines;
+    openpal::LogRoot root;
 
-		bool print_output_;
+private :
 
-		MockLogger() = delete;
+    bool print_output_;
 
-	};
+    MockLogger() = delete;
+
+};
 
 }
 

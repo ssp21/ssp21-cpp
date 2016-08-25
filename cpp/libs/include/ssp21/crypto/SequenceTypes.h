@@ -9,51 +9,51 @@
 #include "ssp21/crypto/Constants.h"
 
 namespace ssp21
-{				
-	class Seq8 final : public openpal::RSlice
-	{
-	public:
+{
+class Seq8 final : public openpal::RSlice
+{
+public:
 
-		Seq8() : openpal::RSlice()
-		{}
+    Seq8() : openpal::RSlice()
+    {}
 
-		explicit Seq8(const openpal::RSlice& other) : RSlice(other)
-		{}
-	};
-	
-	class Seq16 final : public openpal::RSlice 
-	{
-	public:
-		Seq16() : openpal::RSlice()
-		{}
+    explicit Seq8(const openpal::RSlice& other) : RSlice(other)
+    {}
+};
 
-		explicit Seq16(const openpal::RSlice& other) : RSlice(other)
-		{}
-	};
+class Seq16 final : public openpal::RSlice
+{
+public:
+    Seq16() : openpal::RSlice()
+    {}
 
-	class SeqRSlice
-	{
+    explicit Seq16(const openpal::RSlice& other) : RSlice(other)
+    {}
+};
 
-	public:
+class SeqRSlice
+{
 
-		SeqRSlice();
+public:
 
-		void clear();
+    SeqRSlice();
 
-		bool push(const openpal::RSlice& slice);
+    void clear();
 
-		bool read(uint32_t i, openpal::RSlice& slice) const;
+    bool push(const openpal::RSlice& slice);
 
-		uint32_t count() const;
+    bool read(uint32_t i, openpal::RSlice& slice) const;
 
-	private:
+    uint32_t count() const;
 
-		uint32_t count_;
-		openpal::RSlice slices_[consts::max_seq_of_seq];
-	};
+private:
 
-	// specialized types with type dependent constraints
-	class Seq8Seq16 final : public SeqRSlice { };
+    uint32_t count_;
+    openpal::RSlice slices_[consts::max_seq_of_seq];
+};
+
+// specialized types with type dependent constraints
+class Seq8Seq16 final : public SeqRSlice { };
 }
 
 #endif

@@ -8,75 +8,75 @@
 #include <openpal/container/StaticBuffer.h>
 
 namespace ssp21
-{		
-	// the buffer_ type also defines the length
-	enum class BufferType
-	{
-		empty,
-		x25519_key,
-		sha256,
-		symmetric_key
-	};
+{
+// the buffer_ type also defines the length
+enum class BufferType
+{
+    empty,
+    x25519_key,
+    sha256,
+    symmetric_key
+};
 
-	class BufferBase : private openpal::Uncopyable
-	{
-		public:	
+class BufferBase : private openpal::Uncopyable
+{
+public:
 
-			virtual ~BufferBase() {}
+    virtual ~BufferBase() {}
 
-			openpal::RSlice as_slice() const;
-			
-			BufferType get_type() const;
+    openpal::RSlice as_slice() const;
 
-			openpal::WSlice get_write_slice();
-			
-			void set_type(BufferType key_type);			
+    BufferType get_type() const;
 
-		protected:
+    openpal::WSlice get_write_slice();
 
-			BufferBase();
+    void set_type(BufferType key_type);
 
-		private:	
+protected:
 
-			static uint32_t get_buffer_length(BufferType);
+    BufferBase();
 
-			uint32_t length_;
-			BufferType buffer_type_;
+private:
 
-		protected:
-			openpal::StaticBuffer<consts::max_primitive_buffer_length> buffer_;
-	};
+    static uint32_t get_buffer_length(BufferType);
 
-	/** 
-		A secure key zeros its buffer upon destruction
-		and provides a clear method
-	*/
-	class SecureBuffer : public BufferBase
-	{
-	public:
-		virtual ~SecureBuffer();		
+    uint32_t length_;
+    BufferType buffer_type_;
 
-    protected:
-        SecureBuffer() {}
-	};
+protected:
+    openpal::StaticBuffer<consts::max_primitive_buffer_length> buffer_;
+};
 
-	// specialized types that actually get used
+/**
+	A secure key zeros its buffer upon destruction
+	and provides a clear method
+*/
+class SecureBuffer : public BufferBase
+{
+public:
+    virtual ~SecureBuffer();
 
-	class PublicKey final : public BufferBase {};
+protected:
+    SecureBuffer() {}
+};
 
-	class PrivateKey final : public SecureBuffer {};
-	
-	class DHOutput final : public SecureBuffer {};
+// specialized types that actually get used
 
-	class HashOutput final : public SecureBuffer {};
+class PublicKey final : public BufferBase {};
 
-	class SymmetricKey final : public SecureBuffer {};
+class PrivateKey final : public SecureBuffer {};
 
-	struct KeyPair final
-	{		
-		PublicKey public_key;
-		PrivateKey private_key;
-	};		
+class DHOutput final : public SecureBuffer {};
+
+class HashOutput final : public SecureBuffer {};
+
+class SymmetricKey final : public SecureBuffer {};
+
+struct KeyPair final
+{
+    PublicKey public_key;
+    PrivateKey private_key;
+};
 }
 
 #endif

@@ -15,72 +15,76 @@
 #include "openpal/container/WSlice.h"
 #include "openpal/util/Uncopyable.h"
 
-namespace ssp21 {
+namespace ssp21
+{
 
-	class MessageFormatter : private openpal::StaticOnly
-	{
+class MessageFormatter : private openpal::StaticOnly
+{
 
-	public:
+public:
 
-		template <Function function, typename T, typename... Args>
-		static FormatError write_message(openpal::WSlice& dest, const T& value, Args& ... args)
-		{			
-			auto err = write(dest, function);
-			if (any(err)) return err;
+    template <Function function, typename T, typename... Args>
+    static FormatError write_message(openpal::WSlice& dest, const T& value, Args& ... args)
+    {
+        auto err = write(dest, function);
+        if (any(err)) return err;
 
-			return write_fields(dest, value, args...);
-		}	
+        return write_fields(dest, value, args...);
+    }
 
-		template <typename T, typename... Args>
-		static FormatError write_fields(openpal::WSlice& dest, const T& value, Args& ... args)
-		{
-			auto err = write(dest, value);
-			if (any(err)) return err;
-			return write_fields(dest, args...);
-		}
-		
-		static FormatError write_fields(openpal::WSlice& output) {
-			return FormatError::ok;
-		}		
+    template <typename T, typename... Args>
+    static FormatError write_fields(openpal::WSlice& dest, const T& value, Args& ... args)
+    {
+        auto err = write(dest, value);
+        if (any(err)) return err;
+        return write_fields(dest, args...);
+    }
 
-		// integers
-		static FormatError write(openpal::WSlice& dest, uint8_t value);
-		static FormatError write(openpal::WSlice& dest, uint16_t value);
-		static FormatError write(openpal::WSlice& dest, uint32_t value);
+    static FormatError write_fields(openpal::WSlice& output)
+    {
+        return FormatError::ok;
+    }
 
-		// enums
-		static FormatError write(openpal::WSlice& dest, Function value);
-		static FormatError write(openpal::WSlice& dest, CertificateMode value);
-		static FormatError write(openpal::WSlice& dest, DHMode value);
-		static FormatError write(openpal::WSlice& dest, HandshakeError value);
-		static FormatError write(openpal::WSlice& dest, NonceMode value);
-		static FormatError write(openpal::WSlice& dest, SessionMode value);
-		static FormatError write(openpal::WSlice& dest, HashMode value);
+    // integers
+    static FormatError write(openpal::WSlice& dest, uint8_t value);
+    static FormatError write(openpal::WSlice& dest, uint16_t value);
+    static FormatError write(openpal::WSlice& dest, uint32_t value);
 
-		// sequences
-		static FormatError write(openpal::WSlice& dest, const Seq8& value);
-		static FormatError write(openpal::WSlice& dest, const Seq16& value);
-		static FormatError write(openpal::WSlice& dest, const Seq8Seq16& value);
+    // enums
+    static FormatError write(openpal::WSlice& dest, Function value);
+    static FormatError write(openpal::WSlice& dest, CertificateMode value);
+    static FormatError write(openpal::WSlice& dest, DHMode value);
+    static FormatError write(openpal::WSlice& dest, HandshakeError value);
+    static FormatError write(openpal::WSlice& dest, NonceMode value);
+    static FormatError write(openpal::WSlice& dest, SessionMode value);
+    static FormatError write(openpal::WSlice& dest, HashMode value);
+
+    // sequences
+    static FormatError write(openpal::WSlice& dest, const Seq8& value);
+    static FormatError write(openpal::WSlice& dest, const Seq16& value);
+    static FormatError write(openpal::WSlice& dest, const Seq8Seq16& value);
 
 
-		template <class WriteFunc>
-		static FormatError write_any_with_written(const WriteFunc& write, openpal::WSlice& dest, openpal::RSlice& written)
-		{
-			const auto start = dest;
-			auto err = write(dest);
-			if (any(err)) {
-				written = openpal::RSlice::empty_slice();
-				return err;
-			}
-			else {
-				const auto num_written = start.length() - dest.length();
-				written = start.as_rslice().take(num_written);
-				return err;
-			}
-		}
-		
-		
-	};
+    template <class WriteFunc>
+    static FormatError write_any_with_written(const WriteFunc& write, openpal::WSlice& dest, openpal::RSlice& written)
+    {
+        const auto start = dest;
+        auto err = write(dest);
+        if (any(err))
+        {
+            written = openpal::RSlice::empty_slice();
+            return err;
+        }
+        else
+        {
+            const auto num_written = start.length() - dest.length();
+            written = start.as_rslice().take(num_written);
+            return err;
+        }
+    }
+
+
+};
 }
 
 #endif

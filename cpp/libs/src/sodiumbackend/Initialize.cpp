@@ -9,23 +9,23 @@
 
 namespace ssp21
 {
-	namespace sodium
-	{
+namespace sodium
+{
 
-		bool initialize()
-		{
-			if (sodium_init() == -1)
-			{
-				return false;
-			}
-						
-			Crypto::inititalize(SodiumBackend::Instance());
+bool initialize()
+{
+    if (sodium_init() == -1)
+    {
+        return false;
+    }
 
-			return true;
-		}
+    Crypto::inititalize(SodiumBackend::Instance());
 
-		
-	}
+    return true;
+}
+
+
+}
 }
 
 
