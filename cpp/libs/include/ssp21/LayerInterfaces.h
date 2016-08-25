@@ -56,20 +56,20 @@ namespace ssp21
 
 		virtual bool read_message(IMessageProcessor& processor) = 0;
 
-        bool is_transmitting() const
+        bool is_tx_ready() const
         {
-            return is_transmitting_;
+            return !is_transmitting_;
         }
 
-        bool is_read_ready() const
+        bool is_rx_ready() const
         {
-            return is_read_ready_;
+            return is_rx_ready_;
         }
 
     protected:
 
         bool is_transmitting_ = false;
-        bool is_read_ready_ = false;
+        bool is_rx_ready_ = false;
 
     };
 

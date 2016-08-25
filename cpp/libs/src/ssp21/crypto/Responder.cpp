@@ -33,13 +33,19 @@ namespace ssp21
 
     void Responder::on_tx_ready_impl()
     {
-        // possibly try to read a buffered message
-        lower_->read_message(*this);
+        // if there's message to be read, read it
+		// since we can now transmit responses
+		if (lower_->is_rx_ready())
+		{
+			lower_->read_message(*this);
+		}
     }
 
     void Responder::on_rx_ready_impl()
     {
-        if (!lower_->is_transmitting())
+		// only read a message if the lower layer 
+		// can transmit a response
+        if (lower_->is_tx_ready()) 
         {
             lower_->read_message(*this);
         }
