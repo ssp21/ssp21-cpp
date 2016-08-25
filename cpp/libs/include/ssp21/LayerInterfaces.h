@@ -5,11 +5,19 @@
 #include "ssp21/link/Addresses.h"
 
 #include "openpal/container/RSlice.h"
+#include "openpal/util/Uncopyable.h"
 
 namespace ssp21
 {
-    struct Message
+    struct Message : openpal::Uncopyable
     {
+		Message(const Addresses& addresses, const openpal::RSlice& payload) :
+			addresses(addresses),
+			payload(payload)
+		{
+			
+		}
+
         Addresses addresses;
         openpal::RSlice payload;
     };

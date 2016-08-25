@@ -37,8 +37,11 @@ namespace ssp21
             }
 
             auto& front = rx_messages_.front();
-            Message msg = { front->first, front->second.as_rslice() };
-            processor.process(msg);
+
+			processor.process(
+				Message(front->first, front->second.as_rslice())
+			);
+
             rx_messages_.pop_front();
 
             return true;
