@@ -25,6 +25,8 @@ if(WIN32)
 
 	if(${MSVC_VERSION} EQUAL 1800)
 		set(SODIUM_MSVC_PATH v120)
+        elseif(${MSVC_VERSION} EQUAL 1900)
+		set(SODIUM_MSVC_PATH v140)
 	else()
 		MESSAGE( FATAL_ERROR "Unknown MSVC version: ${MSVC_VERSION}")
 	endif()
