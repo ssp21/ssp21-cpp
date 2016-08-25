@@ -1,5 +1,5 @@
-#ifndef SSP21_MOCKLOGGER_H
-#define SSP21_MOCKLOGGER_H
+#ifndef SSP21_MOCKLOGHANDLER_H
+#define SSP21_MOCKLOGHANDLER_H
 
 #include "openpal/logging/LogRoot.h"
 #include "openpal/util/Uncopyable.h"
@@ -13,11 +13,11 @@
 
 namespace ssp21
 {
-    class MockLogger : public openpal::ILogHandler, openpal::Uncopyable
+    class MockLogHandler : public openpal::ILogHandler, openpal::Uncopyable
     {
 
     public:
-        MockLogger(const char* id, openpal::LogLevels levels = openpal::LogLevels::everything()) :
+		MockLogHandler(const char* id, openpal::LogLevels levels = openpal::LogLevels::everything()) :
             root(ssp21::Module::id, this, id, levels),
             print_output_(false)
         {}
@@ -58,7 +58,7 @@ namespace ssp21
 
         bool print_output_;
 
-        MockLogger() = delete;
+		MockLogHandler() = delete;
 
     };
 

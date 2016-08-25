@@ -9,7 +9,7 @@
 #include "testlib/BufferHelpers.h"
 #include "testlib/MockExecutor.h"
 
-#include "mocks/MockLogger.h"
+#include "mocks/MockLogHandler.h"
 #include "mocks/MockLowerLayer.h"
 
 #define SUITE(name) "ResponderTestSuite - " name
@@ -19,7 +19,7 @@ using namespace openpal;
 
 TEST_CASE(SUITE("can be constructed"))
 {
-    MockLogger log("responder");
+    MockLogHandler log("responder");
 
 	MockExecutor exe;
     MockLowerLayer lower;

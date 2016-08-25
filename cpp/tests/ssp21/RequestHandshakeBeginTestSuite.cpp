@@ -10,7 +10,7 @@
 
 #include "openpal/container/StaticBuffer.h"
 
-#include "mocks/MockLogger.h"
+#include "mocks/MockLogHandler.h"
 
 #define SUITE(name) "RequestHandshakeBeginTestSuite - " name
 
@@ -102,7 +102,7 @@ TEST_CASE(SUITE("pretty prints message"))
     REQUIRE(msg.certificates.push(cert2));
 
 
-    MockLogger log("log");
+    MockLogHandler log("log");
     LogMessagePrinter printer(log.root.logger, ssp21::levels::info, 16);
 
     msg.print(printer);
