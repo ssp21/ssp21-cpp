@@ -130,8 +130,8 @@ namespace ssp21
             return parse_many(State::wait_sync1(), ctx, header);
         }
 
-        ctx.addresses.destination = UInt16::read(ctx.buffer.as_rslice().skip(2));
-        ctx.addresses.source = UInt16::read(ctx.buffer.as_rslice().skip(4));
+        ctx.message.addresses.destination = UInt16::read(ctx.buffer.as_rslice().skip(2));
+        ctx.message.addresses.source = UInt16::read(ctx.buffer.as_rslice().skip(4));
 
         const auto payload_length = UInt16::read(ctx.buffer.as_rslice().skip(6));
 
@@ -172,7 +172,7 @@ namespace ssp21
             return State::wait_sync1();
         }
 
-        ctx.payload = payload_bytes;
+        ctx.message.payload = payload_bytes;
 
         return State::wait_read(new_num_buffered);
     }

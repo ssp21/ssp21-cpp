@@ -6,12 +6,12 @@
 #include "openpal/container/Buffer.h"
 
 #include "Addresses.h"
+#include "ssp21/LayerInterfaces.h"
 
 namespace ssp21
 {
     class LinkParser : openpal::Uncopyable
     {
-
 
     public:
 
@@ -40,10 +40,21 @@ namespace ssp21
 
             this->state_ = State::wait_sync1();
 
-            fun(this->context_.addresses, this->context_.payload);
+			fun(this->context_.message);
 
             return true;
         }
+
+		bool read(Message& message)
+		{
+			auto fun = [&message](const Message& m) -> void
+			{
+				message.addresses = m.addresses;
+				message.payload = m.payload;
+			};
+
+			return read(fun);
+		}
 
     private:
 
@@ -108,8 +119,7 @@ namespace ssp21
             IReporter* reporter;
             openpal::Buffer buffer;
 
-            openpal::RSlice payload;
-            Addresses addresses;
+			Message message;
             uint16_t payload_length = 0;
         };
 

@@ -72,18 +72,12 @@ TEST_CASE(SUITE("reads a full message properly"))
     REQUIRE(reporter.no_errors());
     REQUIRE(input.is_empty());
 
-    Addresses addr;
-    RSlice payload;
-    auto read_fun = [&](const Addresses & a, const RSlice & p)
-    {
-        addr = a;
-        payload = p;
-    };
-
-    REQUIRE(parser.read(read_fun));
-    REQUIRE(addr.destination == 1);
-    REQUIRE(addr.source == 2);
-    REQUIRE(to_hex(payload) == "DD DD DD DD DD DD");
+	Message msg;
+   
+    REQUIRE(parser.read(msg));
+    REQUIRE(msg.addresses.destination == 1);
+	REQUIRE(msg.addresses.source == 2);
+    REQUIRE(to_hex(msg.payload) == "DD DD DD DD DD DD");
 
 }
 

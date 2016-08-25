@@ -18,6 +18,8 @@ namespace ssp21
 			
 		}
 
+		Message() {}
+
         Addresses addresses;
         openpal::RSlice payload;
     };
