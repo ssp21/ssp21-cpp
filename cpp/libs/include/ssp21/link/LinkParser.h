@@ -23,20 +23,6 @@ namespace ssp21
 			virtual void on_bad_body_length(uint32_t max_allowed, uint32_t actual) = 0;
 		};		
 
-	private:
-
-		struct Context
-		{
-			Context(uint16_t max_payload_length, IReporter& reporter);
-
-			const uint16_t max_payload_length;
-			IReporter* reporter;
-			openpal::Buffer buffer;
-
-			openpal::RSlice payload;
-			Addresses addresses;
-			uint16_t payload_length = 0;
-		};
 
 	public:
 
@@ -94,6 +80,19 @@ namespace ssp21
 				value(state),
 				num_buffered(num_buffered)
 			{}
+		};
+
+		struct Context
+		{
+			Context(uint16_t max_payload_length, IReporter& reporter);
+
+			const uint16_t max_payload_length;
+			IReporter* reporter;
+			openpal::Buffer buffer;
+
+			openpal::RSlice payload;
+			Addresses addresses;
+			uint16_t payload_length = 0;
 		};
 
 		static State parse_one(const State& state, Context& ctx, openpal::RSlice& input);
