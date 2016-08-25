@@ -22,7 +22,7 @@ namespace ssp21
         }
     }
 
-// integers
+    // integers
     FormatError MessageFormatter::write(openpal::WSlice& dest, uint8_t value)
     {
         return write_integer<UInt8>(dest, value);
@@ -52,7 +52,7 @@ namespace ssp21
         }
     }
 
-// enums
+    // enums
     FormatError MessageFormatter::write(openpal::WSlice& dest, Function value)
     {
         return write_enum<FunctionSpec>(dest, value);

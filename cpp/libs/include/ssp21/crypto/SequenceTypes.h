@@ -52,7 +52,7 @@ namespace ssp21
         openpal::RSlice slices_[consts::max_seq_of_seq];
     };
 
-// specialized types with type dependent constraints
+    // specialized types with type dependent constraints
     class Seq8Seq16 final : public SeqRSlice { };
 }
 

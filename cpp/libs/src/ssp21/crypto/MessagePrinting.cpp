@@ -18,7 +18,7 @@ namespace ssp21
     }
 
 
-// integers
+    // integers
     void MessagePrinting::print(IMessagePrinter& printer, const char* name, uint8_t value)
     {
         printer.print(name, value);
@@ -33,7 +33,7 @@ namespace ssp21
         printer.print(name, value);
     }
 
-// enums
+    // enums
     void MessagePrinting::print(IMessagePrinter& printer, const char* name, Function value)
     {
         print_any_enum<max_line_size, FunctionSpec>(printer, name, value);
@@ -69,7 +69,7 @@ namespace ssp21
         print_any_enum<max_line_size, HashModeSpec>(printer, name, value);
     }
 
-// sequences
+    // sequences
     void MessagePrinting::print(IMessagePrinter& printer, const char* name, const Seq8& value)
     {
         printer.print(name, value);

@@ -9,7 +9,7 @@
 
 namespace ssp21
 {
-// the buffer_ type also defines the length
+    // the buffer_ type also defines the length
     enum class BufferType
     {
         empty,
@@ -60,7 +60,7 @@ namespace ssp21
         SecureBuffer() {}
     };
 
-// specialized types that actually get used
+    // specialized types that actually get used
 
     class PublicKey final : public BufferBase {};
 
