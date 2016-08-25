@@ -19,27 +19,27 @@ namespace ssp21 {
 
 uint8_t SessionModeSpec::to_type(SessionMode arg)
 {
-  return static_cast<uint8_t>(arg);
+    return static_cast<uint8_t>(arg);
 }
 SessionMode SessionModeSpec::from_type(uint8_t arg)
 {
-  switch(arg)
-  {
-    case(0x0):
-      return SessionMode::hmac_sha256_16;
-    default:
-      return SessionMode::undefined;
-  }
+    switch(arg)
+    {
+        case(0x0):
+            return SessionMode::hmac_sha256_16;
+        default:
+            return SessionMode::undefined;
+    }
 }
 const char* SessionModeSpec::to_string(SessionMode arg)
 {
-  switch(arg)
-  {
-    case(SessionMode::hmac_sha256_16):
-      return "hmac_sha256_16";
-    default:
-      return "undefined";
-  }
+    switch(arg)
+    {
+        case(SessionMode::hmac_sha256_16):
+            return "hmac_sha256_16";
+        default:
+            return "undefined";
+    }
 }
 
 }

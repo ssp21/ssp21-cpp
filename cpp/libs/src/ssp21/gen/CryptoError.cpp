@@ -19,15 +19,15 @@ namespace ssp21 {
 
 const char* CryptoErrorSpec::to_string(CryptoError arg)
 {
-  switch(arg)
-  {
-    case(CryptoError::bad_key_type):
-      return "bad_key_type";
-    case(CryptoError::dh_x25519_fail):
-      return "dh_x25519_fail";
-    default:
-      return "undefined";
-  }
+    switch(arg)
+    {
+        case(CryptoError::bad_key_type):
+            return "bad_key_type";
+        case(CryptoError::dh_x25519_fail):
+            return "dh_x25519_fail";
+        default:
+            return "undefined";
+    }
 }
 
 }

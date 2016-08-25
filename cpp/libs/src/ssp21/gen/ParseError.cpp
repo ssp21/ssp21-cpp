@@ -19,23 +19,23 @@ namespace ssp21 {
 
 const char* ParseErrorSpec::to_string(ParseError arg)
 {
-  switch(arg)
-  {
-    case(ParseError::ok):
-      return "ok";
-    case(ParseError::insufficient_bytes):
-      return "insufficient_bytes";
-    case(ParseError::undefined_enum):
-      return "undefined_enum";
-    case(ParseError::unexpected_function):
-      return "unexpected_function";
-    case(ParseError::too_many_bytes):
-      return "too_many_bytes";
-    case(ParseError::impl_capacity_limit):
-      return "impl_capacity_limit";
-    default:
-      return "undefined";
-  }
+    switch(arg)
+    {
+        case(ParseError::ok):
+            return "ok";
+        case(ParseError::insufficient_bytes):
+            return "insufficient_bytes";
+        case(ParseError::undefined_enum):
+            return "undefined_enum";
+        case(ParseError::unexpected_function):
+            return "unexpected_function";
+        case(ParseError::too_many_bytes):
+            return "too_many_bytes";
+        case(ParseError::impl_capacity_limit):
+            return "impl_capacity_limit";
+        default:
+            return "undefined";
+    }
 }
 
 }

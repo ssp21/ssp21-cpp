@@ -31,30 +31,30 @@ namespace ssp21 {
 
 struct UnconfirmedSessionData : private openpal::Uncopyable
 {
-  UnconfirmedSessionData();
+    UnconfirmedSessionData();
 
-  UnconfirmedSessionData(
-    uint32_t valid_until_ms,
-    uint16_t nonce,
-    const Seq16& payload
-  );
+    UnconfirmedSessionData(
+        uint32_t valid_until_ms,
+        uint16_t nonce,
+        const Seq16& payload
+    );
 
-  ParseError read_msg(const openpal::RSlice& input);
-  FormatResult write_msg(openpal::WSlice& output) const;
+    ParseError read_msg(const openpal::RSlice& input);
+    FormatResult write_msg(openpal::WSlice& output) const;
 
-  void print(IMessagePrinter& printer) const;
+    void print(IMessagePrinter& printer) const;
 
-  static const uint32_t min_size_bytes = 9;
+    static const uint32_t min_size_bytes = 9;
 
-  static const Function function = Function::unconfirmed_session_data;
+    static const Function function = Function::unconfirmed_session_data;
 
-  uint32_t valid_until_ms;
-  uint16_t nonce;
-  Seq16 payload;
+    uint32_t valid_until_ms;
+    uint16_t nonce;
+    Seq16 payload;
 
-  private: 
+    private: 
 
-  FormatError write(openpal::WSlice& output) const;
+    FormatError write(openpal::WSlice& output) const;
 };
 
 }

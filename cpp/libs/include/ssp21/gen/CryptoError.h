@@ -22,21 +22,21 @@
 namespace ssp21 {
 
 /**
-  The result of a message parse operation
+    The result of a message parse operation
 */
 enum class CryptoError : uint8_t
 {
-  /// attempted operation with bad key type
-  bad_key_type = 0,
-  /// X25519 DH operation failed. Bad public key?
-  dh_x25519_fail = 1
+    /// attempted operation with bad key type
+    bad_key_type = 0,
+    /// X25519 DH operation failed. Bad public key?
+    dh_x25519_fail = 1
 };
 
 struct CryptoErrorSpec : private openpal::StaticOnly
 {
-  typedef CryptoError enum_type_t;
+    typedef CryptoError enum_type_t;
 
-  static const char* to_string(CryptoError arg);
+    static const char* to_string(CryptoError arg);
 };
 
 }

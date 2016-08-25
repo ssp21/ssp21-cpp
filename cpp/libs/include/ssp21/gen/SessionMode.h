@@ -22,23 +22,23 @@
 namespace ssp21 {
 
 /**
-  Specifies the complete set of algorithms used to secure the session
+    Specifies the complete set of algorithms used to secure the session
 */
 enum class SessionMode : uint8_t
 {
-  /// HMAC-SHA256 truncated to 16 bytes
-  hmac_sha256_16 = 0x0,
-  /// value not defined
-  undefined = 0xFF
+    /// HMAC-SHA256 truncated to 16 bytes
+    hmac_sha256_16 = 0x0,
+    /// value not defined
+    undefined = 0xFF
 };
 
 struct SessionModeSpec : private openpal::StaticOnly
 {
-  typedef SessionMode enum_type_t;
+    typedef SessionMode enum_type_t;
 
-  static uint8_t to_type(SessionMode arg);
-  static SessionMode from_type(uint8_t arg);
-  static const char* to_string(SessionMode arg);
+    static uint8_t to_type(SessionMode arg);
+    static SessionMode from_type(uint8_t arg);
+    static const char* to_string(SessionMode arg);
 };
 
 }

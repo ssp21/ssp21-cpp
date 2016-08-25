@@ -22,33 +22,33 @@
 namespace ssp21 {
 
 /**
-  Crypto layer function code
+    Crypto layer function code
 */
 enum class Function : uint8_t
 {
-  /// Master sends this initiate a handshake
-  request_handshake_begin = 0x0,
-  /// Outstation replies to the handshake begin from the master
-  reply_handshake_begin = 0x1,
-  /// Master authenticates to the outstation
-  request_handshake_auth = 0x2,
-  /// Outstation authenticates to the master
-  reply_handshake_auth = 0x3,
-  /// Outstation returns an error code to the master
-  reply_handshake_error = 0x4,
-  /// Either party transmits an unconfirmed session message
-  unconfirmed_session_data = 0x5,
-  /// value not defined
-  undefined = 0xFF
+    /// Master sends this initiate a handshake
+    request_handshake_begin = 0x0,
+    /// Outstation replies to the handshake begin from the master
+    reply_handshake_begin = 0x1,
+    /// Master authenticates to the outstation
+    request_handshake_auth = 0x2,
+    /// Outstation authenticates to the master
+    reply_handshake_auth = 0x3,
+    /// Outstation returns an error code to the master
+    reply_handshake_error = 0x4,
+    /// Either party transmits an unconfirmed session message
+    unconfirmed_session_data = 0x5,
+    /// value not defined
+    undefined = 0xFF
 };
 
 struct FunctionSpec : private openpal::StaticOnly
 {
-  typedef Function enum_type_t;
+    typedef Function enum_type_t;
 
-  static uint8_t to_type(Function arg);
-  static Function from_type(uint8_t arg);
-  static const char* to_string(Function arg);
+    static uint8_t to_type(Function arg);
+    static Function from_type(uint8_t arg);
+    static const char* to_string(Function arg);
 };
 
 }

@@ -36,39 +36,39 @@ namespace ssp21 {
 
 struct RequestHandshakeBegin : private openpal::Uncopyable
 {
-  RequestHandshakeBegin();
+    RequestHandshakeBegin();
 
-  RequestHandshakeBegin(
-    uint16_t version,
-    NonceMode nonce_mode,
-    DHMode dh_mode,
-    HashMode hash_mode,
-    SessionMode session_mode,
-    CertificateMode certificate_mode,
-    const Seq8& ephemeral_public_key
-  );
+    RequestHandshakeBegin(
+        uint16_t version,
+        NonceMode nonce_mode,
+        DHMode dh_mode,
+        HashMode hash_mode,
+        SessionMode session_mode,
+        CertificateMode certificate_mode,
+        const Seq8& ephemeral_public_key
+    );
 
-  ParseError read_msg(const openpal::RSlice& input);
-  FormatResult write_msg(openpal::WSlice& output) const;
+    ParseError read_msg(const openpal::RSlice& input);
+    FormatResult write_msg(openpal::WSlice& output) const;
 
-  void print(IMessagePrinter& printer) const;
+    void print(IMessagePrinter& printer) const;
 
-  static const uint32_t min_size_bytes = 10;
+    static const uint32_t min_size_bytes = 10;
 
-  static const Function function = Function::request_handshake_begin;
+    static const Function function = Function::request_handshake_begin;
 
-  uint16_t version;
-  NonceMode nonce_mode;
-  DHMode dh_mode;
-  HashMode hash_mode;
-  SessionMode session_mode;
-  CertificateMode certificate_mode;
-  Seq8 ephemeral_public_key;
-  Seq8Seq16 certificates;
+    uint16_t version;
+    NonceMode nonce_mode;
+    DHMode dh_mode;
+    HashMode hash_mode;
+    SessionMode session_mode;
+    CertificateMode certificate_mode;
+    Seq8 ephemeral_public_key;
+    Seq8Seq16 certificates;
 
-  private: 
+    private: 
 
-  FormatError write(openpal::WSlice& output) const;
+    FormatError write(openpal::WSlice& output) const;
 };
 
 }

@@ -25,40 +25,40 @@ RequestHandshakeAuth::RequestHandshakeAuth()
 {}
 
 RequestHandshakeAuth::RequestHandshakeAuth(
-  const Seq8& mac
+    const Seq8& mac
 ) :
-  mac(mac)
+    mac(mac)
 {}
 
 ParseError RequestHandshakeAuth::read_msg(const openpal::RSlice& input)
 {
-  return MessageParser::read_message<Function::request_handshake_auth>(
-    input,
-    mac
-  );
+    return MessageParser::read_message<Function::request_handshake_auth>(
+        input,
+        mac
+    );
 }
 
 FormatError RequestHandshakeAuth::write(openpal::WSlice& output) const
 {
-  return MessageFormatter::write_message<Function::request_handshake_auth>(
-    output,
-    mac
-  );
+    return MessageFormatter::write_message<Function::request_handshake_auth>(
+        output,
+        mac
+    );
 }
 
 FormatResult RequestHandshakeAuth::write_msg(openpal::WSlice& output) const
 {
-  auto write = [this](openpal::WSlice& output) { return this->write(output); };
-  return FormatResult::write_any(write, output);
+    auto write = [this](openpal::WSlice& output) { return this->write(output); };
+    return FormatResult::write_any(write, output);
 }
 
 void RequestHandshakeAuth::print(IMessagePrinter& printer) const
 {
-  MessagePrinting::print_fields(
-    printer,
-    "mac",
-    mac
-  );
+    MessagePrinting::print_fields(
+        printer,
+        "mac",
+        mac
+    );
 }
 
 }

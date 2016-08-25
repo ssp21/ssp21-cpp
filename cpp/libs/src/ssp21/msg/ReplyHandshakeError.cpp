@@ -22,44 +22,44 @@
 namespace ssp21 {
 
 ReplyHandshakeError::ReplyHandshakeError() : 
-  handshake_error(HandshakeError::undefined)
+    handshake_error(HandshakeError::undefined)
 {}
 
 ReplyHandshakeError::ReplyHandshakeError(
-  HandshakeError handshake_error
+    HandshakeError handshake_error
 ) :
-  handshake_error(handshake_error)
+    handshake_error(handshake_error)
 {}
 
 ParseError ReplyHandshakeError::read_msg(const openpal::RSlice& input)
 {
-  return MessageParser::read_message<Function::reply_handshake_error>(
-    input,
-    handshake_error
-  );
+    return MessageParser::read_message<Function::reply_handshake_error>(
+        input,
+        handshake_error
+    );
 }
 
 FormatError ReplyHandshakeError::write(openpal::WSlice& output) const
 {
-  return MessageFormatter::write_message<Function::reply_handshake_error>(
-    output,
-    handshake_error
-  );
+    return MessageFormatter::write_message<Function::reply_handshake_error>(
+        output,
+        handshake_error
+    );
 }
 
 FormatResult ReplyHandshakeError::write_msg(openpal::WSlice& output) const
 {
-  auto write = [this](openpal::WSlice& output) { return this->write(output); };
-  return FormatResult::write_any(write, output);
+    auto write = [this](openpal::WSlice& output) { return this->write(output); };
+    return FormatResult::write_any(write, output);
 }
 
 void ReplyHandshakeError::print(IMessagePrinter& printer) const
 {
-  MessagePrinting::print_fields(
-    printer,
-    "handshake_error",
-    handshake_error
-  );
+    MessagePrinting::print_fields(
+        printer,
+        "handshake_error",
+        handshake_error
+    );
 }
 
 }

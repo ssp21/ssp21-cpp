@@ -22,25 +22,25 @@
 namespace ssp21 {
 
 /**
-  Determines how nonces are verified during the session
+    Determines how nonces are verified during the session
 */
 enum class NonceMode : uint8_t
 {
-  /// new nonce must strictly be equal to last nonce plus one
-  increment_last_rx = 0x0,
-  /// new nonce must be greater than last nonce
-  greater_than_last_rx = 0x1,
-  /// value not defined
-  undefined = 0xFF
+    /// new nonce must strictly be equal to last nonce plus one
+    increment_last_rx = 0x0,
+    /// new nonce must be greater than last nonce
+    greater_than_last_rx = 0x1,
+    /// value not defined
+    undefined = 0xFF
 };
 
 struct NonceModeSpec : private openpal::StaticOnly
 {
-  typedef NonceMode enum_type_t;
+    typedef NonceMode enum_type_t;
 
-  static uint8_t to_type(NonceMode arg);
-  static NonceMode from_type(uint8_t arg);
-  static const char* to_string(NonceMode arg);
+    static uint8_t to_type(NonceMode arg);
+    static NonceMode from_type(uint8_t arg);
+    static const char* to_string(NonceMode arg);
 };
 
 }

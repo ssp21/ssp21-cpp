@@ -19,27 +19,27 @@ namespace ssp21 {
 
 uint8_t DHModeSpec::to_type(DHMode arg)
 {
-  return static_cast<uint8_t>(arg);
+    return static_cast<uint8_t>(arg);
 }
 DHMode DHModeSpec::from_type(uint8_t arg)
 {
-  switch(arg)
-  {
-    case(0x0):
-      return DHMode::x25519;
-    default:
-      return DHMode::undefined;
-  }
+    switch(arg)
+    {
+        case(0x0):
+            return DHMode::x25519;
+        default:
+            return DHMode::undefined;
+    }
 }
 const char* DHModeSpec::to_string(DHMode arg)
 {
-  switch(arg)
-  {
-    case(DHMode::x25519):
-      return "x25519";
-    default:
-      return "undefined";
-  }
+    switch(arg)
+    {
+        case(DHMode::x25519):
+            return "x25519";
+        default:
+            return "undefined";
+    }
 }
 
 }

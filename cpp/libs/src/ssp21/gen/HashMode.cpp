@@ -19,27 +19,27 @@ namespace ssp21 {
 
 uint8_t HashModeSpec::to_type(HashMode arg)
 {
-  return static_cast<uint8_t>(arg);
+    return static_cast<uint8_t>(arg);
 }
 HashMode HashModeSpec::from_type(uint8_t arg)
 {
-  switch(arg)
-  {
-    case(0x0):
-      return HashMode::sha256;
-    default:
-      return HashMode::undefined;
-  }
+    switch(arg)
+    {
+        case(0x0):
+            return HashMode::sha256;
+        default:
+            return HashMode::undefined;
+    }
 }
 const char* HashModeSpec::to_string(HashMode arg)
 {
-  switch(arg)
-  {
-    case(HashMode::sha256):
-      return "sha256";
-    default:
-      return "undefined";
-  }
+    switch(arg)
+    {
+        case(HashMode::sha256):
+            return "sha256";
+        default:
+            return "undefined";
+    }
 }
 
 }

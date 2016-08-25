@@ -22,23 +22,23 @@
 namespace ssp21 {
 
 /**
-  Specifies which Diffie Hellman function is used
+    Specifies which Diffie Hellman function is used
 */
 enum class DHMode : uint8_t
 {
-  /// Use the x25519 algorithm
-  x25519 = 0x0,
-  /// value not defined
-  undefined = 0xFF
+    /// Use the x25519 algorithm
+    x25519 = 0x0,
+    /// value not defined
+    undefined = 0xFF
 };
 
 struct DHModeSpec : private openpal::StaticOnly
 {
-  typedef DHMode enum_type_t;
+    typedef DHMode enum_type_t;
 
-  static uint8_t to_type(DHMode arg);
-  static DHMode from_type(uint8_t arg);
-  static const char* to_string(DHMode arg);
+    static uint8_t to_type(DHMode arg);
+    static DHMode from_type(uint8_t arg);
+    static const char* to_string(DHMode arg);
 };
 
 }

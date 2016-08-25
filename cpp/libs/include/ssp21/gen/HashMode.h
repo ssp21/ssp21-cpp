@@ -22,23 +22,23 @@
 namespace ssp21 {
 
 /**
-  Specifies which hash algorithm is used for the handshake hash and handshake authentication
+    Specifies which hash algorithm is used for the handshake hash and handshake authentication
 */
 enum class HashMode : uint8_t
 {
-  /// Use SHA256 and HMAC-SHA256
-  sha256 = 0x0,
-  /// value not defined
-  undefined = 0xFF
+    /// Use SHA256 and HMAC-SHA256
+    sha256 = 0x0,
+    /// value not defined
+    undefined = 0xFF
 };
 
 struct HashModeSpec : private openpal::StaticOnly
 {
-  typedef HashMode enum_type_t;
+    typedef HashMode enum_type_t;
 
-  static uint8_t to_type(HashMode arg);
-  static HashMode from_type(uint8_t arg);
-  static const char* to_string(HashMode arg);
+    static uint8_t to_type(HashMode arg);
+    static HashMode from_type(uint8_t arg);
+    static const char* to_string(HashMode arg);
 };
 
 }

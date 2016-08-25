@@ -30,26 +30,26 @@ namespace ssp21 {
 
 struct ReplyHandshakeError : private openpal::Uncopyable
 {
-  ReplyHandshakeError();
+    ReplyHandshakeError();
 
-  ReplyHandshakeError(
-    HandshakeError handshake_error
-  );
+    ReplyHandshakeError(
+        HandshakeError handshake_error
+    );
 
-  ParseError read_msg(const openpal::RSlice& input);
-  FormatResult write_msg(openpal::WSlice& output) const;
+    ParseError read_msg(const openpal::RSlice& input);
+    FormatResult write_msg(openpal::WSlice& output) const;
 
-  void print(IMessagePrinter& printer) const;
+    void print(IMessagePrinter& printer) const;
 
-  static const uint32_t min_size_bytes = 2;
+    static const uint32_t min_size_bytes = 2;
 
-  static const Function function = Function::reply_handshake_error;
+    static const Function function = Function::reply_handshake_error;
 
-  HandshakeError handshake_error;
+    HandshakeError handshake_error;
 
-  private: 
+    private: 
 
-  FormatError write(openpal::WSlice& output) const;
+    FormatError write(openpal::WSlice& output) const;
 };
 
 }

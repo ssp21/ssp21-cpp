@@ -22,57 +22,57 @@
 namespace ssp21 {
 
 UnconfirmedSessionData::UnconfirmedSessionData() : 
-  valid_until_ms(0),
-  nonce(0)
+    valid_until_ms(0),
+    nonce(0)
 {}
 
 UnconfirmedSessionData::UnconfirmedSessionData(
-  uint32_t valid_until_ms,
-  uint16_t nonce,
-  const Seq16& payload
+    uint32_t valid_until_ms,
+    uint16_t nonce,
+    const Seq16& payload
 ) :
-  valid_until_ms(valid_until_ms),
-  nonce(nonce),
-  payload(payload)
+    valid_until_ms(valid_until_ms),
+    nonce(nonce),
+    payload(payload)
 {}
 
 ParseError UnconfirmedSessionData::read_msg(const openpal::RSlice& input)
 {
-  return MessageParser::read_message<Function::unconfirmed_session_data>(
-    input,
-    valid_until_ms,
-    nonce,
-    payload
-  );
+    return MessageParser::read_message<Function::unconfirmed_session_data>(
+        input,
+        valid_until_ms,
+        nonce,
+        payload
+    );
 }
 
 FormatError UnconfirmedSessionData::write(openpal::WSlice& output) const
 {
-  return MessageFormatter::write_message<Function::unconfirmed_session_data>(
-    output,
-    valid_until_ms,
-    nonce,
-    payload
-  );
+    return MessageFormatter::write_message<Function::unconfirmed_session_data>(
+        output,
+        valid_until_ms,
+        nonce,
+        payload
+    );
 }
 
 FormatResult UnconfirmedSessionData::write_msg(openpal::WSlice& output) const
 {
-  auto write = [this](openpal::WSlice& output) { return this->write(output); };
-  return FormatResult::write_any(write, output);
+    auto write = [this](openpal::WSlice& output) { return this->write(output); };
+    return FormatResult::write_any(write, output);
 }
 
 void UnconfirmedSessionData::print(IMessagePrinter& printer) const
 {
-  MessagePrinting::print_fields(
-    printer,
-    "valid_until_ms",
-    valid_until_ms,
-    "nonce",
-    nonce,
-    "payload",
-    payload
-  );
+    MessagePrinting::print_fields(
+        printer,
+        "valid_until_ms",
+        valid_until_ms,
+        "nonce",
+        nonce,
+        "payload",
+        payload
+    );
 }
 
 }

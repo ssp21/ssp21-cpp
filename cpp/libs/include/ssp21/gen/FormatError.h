@@ -22,28 +22,28 @@
 namespace ssp21 {
 
 /**
-  The result of a message format operation
+    The result of a message format operation
 */
 enum class FormatError : uint8_t
 {
-  /// message was formatted successfully
-  ok = 0x0,
-  /// not enough output buffer space
-  insufficient_space = 0x1,
-  /// a message sequence length overflowed its serialized representation
-  bad_sequence_length = 0x2
+    /// message was formatted successfully
+    ok = 0x0,
+    /// not enough output buffer space
+    insufficient_space = 0x1,
+    /// a message sequence length overflowed its serialized representation
+    bad_sequence_length = 0x2
 };
 
 inline bool any(FormatError value)
 {
-  return value != FormatError::ok;
+    return value != FormatError::ok;
 }
 
 struct FormatErrorSpec : private openpal::StaticOnly
 {
-  typedef FormatError enum_type_t;
+    typedef FormatError enum_type_t;
 
-  static const char* to_string(FormatError arg);
+    static const char* to_string(FormatError arg);
 };
 
 }
