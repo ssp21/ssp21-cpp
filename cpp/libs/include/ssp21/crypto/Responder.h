@@ -22,7 +22,7 @@ namespace ssp21
     /**
     	WIP - this class will implement the stateful part of the responder.
     */
-    class Responder final : public IUpperLayer, private IMessageConsumer
+    class Responder final : public IUpperLayer, private IMessageProcessor
     {
 
     public:
@@ -46,9 +46,9 @@ namespace ssp21
         virtual void on_tx_ready_impl() override;
         virtual void on_rx_ready_impl() override;
 
-        // ---- implement IMessageConsumer -----
+        // ---- implement IMessageProcessor -----
 
-        virtual void consume(const Message& message) override;
+        virtual void process(const Message& message) override;
 
         template <class MsgType>
         inline void read_any(const openpal::RSlice& data);

@@ -61,7 +61,7 @@ namespace ssp21
         }
     }
 
-    void Responder::consume(const Message& message)
+    void Responder::process(const Message& message)
     {
         if (message.payload.is_empty())
         {

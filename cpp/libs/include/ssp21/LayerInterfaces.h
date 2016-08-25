@@ -14,10 +14,10 @@ namespace ssp21
         openpal::RSlice payload;
     };
 
-    class IMessageConsumer
+    class IMessageProcessor
     {
     public:
-        virtual void consume(const Message& message) = 0;
+        virtual void process(const Message& message) = 0;
     };
 
     class ILowerLayer
@@ -27,7 +27,7 @@ namespace ssp21
 
         virtual void begin_transmit(const Addresses& addr, const openpal::RSlice& message) = 0;
 
-        virtual bool read_message(IMessageConsumer& consumer) = 0;
+		virtual bool read_message(IMessageProcessor& processor) = 0;
 
         bool is_transmitting() const
         {

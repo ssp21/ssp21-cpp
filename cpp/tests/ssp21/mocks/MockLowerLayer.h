@@ -29,7 +29,7 @@ namespace ssp21
             this->is_transmitting_ = true;
         }
 
-        virtual bool read_message(IMessageConsumer& consumer)
+        virtual bool read_message(IMessageProcessor& processor)
         {
             if (rx_messages_.empty())
             {
@@ -38,7 +38,7 @@ namespace ssp21
 
             auto& front = rx_messages_.front();
             Message msg = { front->first, front->second.as_rslice() };
-            consumer.consume(msg);
+            processor.process(msg);
             rx_messages_.pop_front();
 
             return true;

@@ -9,7 +9,7 @@
 
 namespace ssp21
 {
-    // the buffer_ type also defines the length
+    // the BufferType also indirectly defines the length
     enum class BufferType
     {
         empty,
