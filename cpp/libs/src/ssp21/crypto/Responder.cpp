@@ -11,8 +11,9 @@ using namespace openpal;
 
 namespace ssp21
 {
-    Responder::Responder(const Config& config, Logger logger, ILowerLayer& lower) :
+	Responder::Responder(const Config& config, openpal::IExecutor& executor, Logger logger, ILowerLayer& lower) :
         config_(config),
+		executor_(&executor),
         logger_(logger),
         lower_(&lower),
         tx_buffer_(config.max_tx_message_size)

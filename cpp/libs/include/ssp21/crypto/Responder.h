@@ -9,12 +9,13 @@
 #include "ssp21/gen/Function.h"
 #include "ssp21/gen/HandshakeError.h"
 
+#include "ssp21/link/LinkConstants.h"
 #include "ssp21/LayerInterfaces.h"
 
 #include "openpal/logging/Logger.h"
 #include "openpal/container/Buffer.h"
+#include "openpal/executor/IExecutor.h"
 
-#include "ssp21/link/LinkConstants.h"
 
 namespace ssp21
 {
@@ -28,10 +29,13 @@ namespace ssp21
 
         struct Config
         {
+			/// The maximum message size that this layer should transmit to the link layer
+			/// This constant determines the size of a buffer allocated when the responder
+			/// is constructed
             uint16_t max_tx_message_size = consts::max_config_link_payload_size;
         };
 
-        Responder(const Config& config, openpal::Logger logger, ILowerLayer& lower);
+        Responder(const Config& config, openpal::IExecutor& executor, openpal::Logger logger, ILowerLayer& lower);
 
     private:
 
@@ -59,8 +63,9 @@ namespace ssp21
         void reply_with_handshake_error(HandshakeError err);
 
         Config config_;
+		openpal::IExecutor* const executor_;
         openpal::Logger logger_;
-        ILowerLayer* lower_;
+        ILowerLayer* const lower_;
         openpal::Buffer tx_buffer_;
 
     };

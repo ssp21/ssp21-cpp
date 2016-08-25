@@ -7,6 +7,7 @@
 #include "openpal/container/StaticBuffer.h"
 
 #include "testlib/BufferHelpers.h"
+#include "testlib/MockExecutor.h"
 
 #include "mocks/MockLogger.h"
 #include "mocks/MockLowerLayer.h"
@@ -20,9 +21,10 @@ TEST_CASE(SUITE("can be constructed"))
 {
     MockLogger log("responder");
 
+	MockExecutor exe;
     MockLowerLayer lower;
 
-    Responder responder(Responder::Config(), log.root.logger, lower);
+    Responder responder(Responder::Config(), exe, log.root.logger, lower);
     responder.on_open();
 
     // request handshake begin with header only
