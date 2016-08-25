@@ -3,7 +3,7 @@
 #include "catch.hpp"
 
 #include "ssp21/msg/RequestHandshakeBegin.h"
-#include "ssp21/crypto/LogLinePrinter.h"
+#include "ssp21/crypto/LogMessagePrinter.h"
 
 #include "testlib/BufferHelpers.h"
 #include "testlib/HexConversions.h"
@@ -103,7 +103,7 @@ TEST_CASE(SUITE("pretty prints message"))
 
 
 	MockLogger log("log");
-	LogLinePrinter printer(log.root.logger, ssp21::levels::info, 16);
+	LogMessagePrinter printer(log.root.logger, ssp21::levels::info, 16);
 
 	msg.print(printer);
 		

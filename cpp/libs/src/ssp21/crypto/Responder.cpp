@@ -4,7 +4,7 @@
 #include "openpal/logging/LogMacros.h"
 
 #include "ssp21/LogLevels.h"
-#include "ssp21/crypto/LogLinePrinter.h"
+#include "ssp21/crypto/LogMessagePrinter.h"
 #include "ssp21/msg/ReplyHandshakeError.h"
 
 using namespace openpal;
@@ -106,7 +106,7 @@ namespace ssp21
 
 		if (logger_.is_enabled(levels::rx_crypto_msg_fields))
 		{
-			LogLinePrinter printer(logger_, levels::rx_crypto_msg_fields);
+			LogMessagePrinter printer(logger_, levels::rx_crypto_msg_fields);
 			msg.print(printer);
 		}
 	}
@@ -117,7 +117,7 @@ namespace ssp21
 
 		if (logger_.is_enabled(levels::rx_crypto_msg_fields))
 		{
-			LogLinePrinter printer(logger_, levels::rx_crypto_msg_fields);
+			LogMessagePrinter printer(logger_, levels::rx_crypto_msg_fields);
 			msg.print(printer);
 		}
 	}
@@ -128,7 +128,7 @@ namespace ssp21
 
 		if (logger_.is_enabled(levels::rx_crypto_msg_fields))
 		{
-			LogLinePrinter printer(logger_, levels::rx_crypto_msg_fields);
+			LogMessagePrinter printer(logger_, levels::rx_crypto_msg_fields);
 			msg.print(printer);
 		}
 	}

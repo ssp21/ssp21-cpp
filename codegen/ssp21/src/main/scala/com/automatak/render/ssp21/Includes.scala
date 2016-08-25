@@ -29,8 +29,8 @@ object Includes {
   val seqTypes = Include(quoted("ssp21/crypto/SequenceTypes.h"), Ordering.crypto)
   val msgFormatter = Include(quoted("ssp21/crypto/MessageFormatter.h"), Ordering.crypto)
   val formatResult = Include(quoted("ssp21/crypto/FormatResult.h"), Ordering.crypto)
-  val linePrinter = Include(quoted("ssp21/crypto/ILinePrinter.h"), Ordering.crypto)
-  val msgPrinter = Include(quoted("ssp21/crypto/MessagePrinter.h"), Ordering.crypto)
+  val msgPrinter = Include(quoted("ssp21/crypto/IMessagePrinter.h"), Ordering.crypto)
+  val msgPrinting = Include(quoted("ssp21/crypto/MessagePrinting.h"), Ordering.crypto)
   val msgParser = Include(quoted("ssp21/crypto/MessageParser.h"), Ordering.crypto)
 
   def sort(lhs : Include, rhs : Include) : Boolean = {

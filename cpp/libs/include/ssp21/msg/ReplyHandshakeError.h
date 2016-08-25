@@ -24,7 +24,7 @@
 #include "ssp21/gen/FormatError.h"
 #include "ssp21/gen/HandshakeError.h"
 #include "ssp21/crypto/FormatResult.h"
-#include "ssp21/crypto/ILinePrinter.h"
+#include "ssp21/crypto/IMessagePrinter.h"
 
 namespace ssp21 {
 
@@ -39,7 +39,7 @@ struct ReplyHandshakeError : private openpal::Uncopyable
   ParseError read_msg(const openpal::RSlice& input);
   FormatResult write_msg(openpal::WSlice& output) const;
 
-  void print(ILinePrinter& printer) const;
+  void print(IMessagePrinter& printer) const;
 
   static const uint32_t min_size_bytes = 2;
 

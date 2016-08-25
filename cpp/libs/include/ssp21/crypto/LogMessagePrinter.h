@@ -1,8 +1,8 @@
 
-#ifndef SSP21_LOGLINEPRINTER_H
-#define SSP21_LOGLINEPRINTER_H
+#ifndef SSP21_LOGMESSAGEPRINTER_H
+#define SSP21_LOGMESSAGEPRINTER_H
 
-#include "ssp21/crypto/ILinePrinter.h"
+#include "ssp21/crypto/IMessagePrinter.h"
 
 #include "openpal/logging/Logger.h"
 
@@ -12,12 +12,12 @@ namespace ssp21 {
 * A simple interface for pretty prininting
 * complex messages as a sequence of lines
 */
-class LogLinePrinter : public ILinePrinter, private openpal::Uncopyable
+class LogMessagePrinter : public IMessagePrinter, private openpal::Uncopyable
 {
 
 public:
 
-	LogLinePrinter(const openpal::Logger& logger, openpal::LogLevel level, uint32_t max_hex_bytes_per_line = 20);
+	LogMessagePrinter(const openpal::Logger& logger, openpal::LogLevel level, uint32_t max_hex_bytes_per_line = 20);
 
 	virtual void print(const char* name, uint32_t value) override;
 	virtual void print(const char* name, const char* value) override;

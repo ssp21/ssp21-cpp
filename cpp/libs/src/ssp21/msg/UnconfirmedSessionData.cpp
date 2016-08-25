@@ -16,7 +16,7 @@
 #include "ssp21/msg/UnconfirmedSessionData.h"
 
 #include "ssp21/crypto/MessageParser.h"
-#include "ssp21/crypto/MessagePrinter.h"
+#include "ssp21/crypto/MessagePrinting.h"
 #include "ssp21/crypto/MessageFormatter.h"
 
 namespace ssp21 {
@@ -62,9 +62,9 @@ FormatResult UnconfirmedSessionData::write_msg(openpal::WSlice& output) const
   return FormatResult::write_any(write, output);
 }
 
-void UnconfirmedSessionData::print(ILinePrinter& printer) const
+void UnconfirmedSessionData::print(IMessagePrinter& printer) const
 {
-  MessagePrinter::print_fields(
+  MessagePrinting::print_fields(
     printer,
     "valid_until_ms",
     valid_until_ms,

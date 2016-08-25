@@ -16,7 +16,7 @@
 #include "ssp21/msg/RequestHandshakeAuth.h"
 
 #include "ssp21/crypto/MessageParser.h"
-#include "ssp21/crypto/MessagePrinter.h"
+#include "ssp21/crypto/MessagePrinting.h"
 #include "ssp21/crypto/MessageFormatter.h"
 
 namespace ssp21 {
@@ -52,9 +52,9 @@ FormatResult RequestHandshakeAuth::write_msg(openpal::WSlice& output) const
   return FormatResult::write_any(write, output);
 }
 
-void RequestHandshakeAuth::print(ILinePrinter& printer) const
+void RequestHandshakeAuth::print(IMessagePrinter& printer) const
 {
-  MessagePrinter::print_fields(
+  MessagePrinting::print_fields(
     printer,
     "mac",
     mac

@@ -19,7 +19,7 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
     def readSigHeader = "ParseError read_msg(const openpal::RSlice& input);".iter
     def writeMsgSig = "FormatResult write_msg(openpal::WSlice& output) const;".iter
     def writeSigHeader = "FormatError write(openpal::WSlice& output) const;".iter
-    def printSig = "void print(ILinePrinter& printer) const;".iter
+    def printSig = "void print(IMessagePrinter& printer) const;".iter
     def defaultConstructorSig = "%s();".format(msg.name).iter
 
     def minSizeBytes = "static const uint32_t min_size_bytes = %s;".format(msg.minSizeBytes).iter
@@ -62,7 +62,7 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
           Includes.parseError,
           Includes.formatError,
           Includes.formatResult,
-          Includes.linePrinter,
+          Includes.msgPrinter,
           Includes.function
         ) ::: msg.fields.flatMap(f => f.cpp.includes.toList)
       )
@@ -101,8 +101,8 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
 
     }
 
-    def printFunc = "void %s::print(ILinePrinter& printer) const".format(msg.name).iter ++ bracket {
-      "MessagePrinter::print_fields(".iter ++ indent {
+    def printFunc = "void %s::print(IMessagePrinter& printer) const".format(msg.name).iter ++ bracket {
+      "MessagePrinting::print_fields(".iter ++ indent {
         "printer,".iter ++ printArgs
       } ++ ");".iter
     }
@@ -161,7 +161,7 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
     def includes = {
       selfInclude ++
       space ++
-      Includes.lines(List(Includes.msgParser, Includes.msgFormatter, Includes.msgPrinter))
+      Includes.lines(List(Includes.msgParser, Includes.msgFormatter, Includes.msgPrinting))
     }
 
     license ++ space ++ includes ++ space ++ namespace(cppNamespace)(funcs)

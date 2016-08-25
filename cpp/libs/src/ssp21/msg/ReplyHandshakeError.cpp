@@ -16,7 +16,7 @@
 #include "ssp21/msg/ReplyHandshakeError.h"
 
 #include "ssp21/crypto/MessageParser.h"
-#include "ssp21/crypto/MessagePrinter.h"
+#include "ssp21/crypto/MessagePrinting.h"
 #include "ssp21/crypto/MessageFormatter.h"
 
 namespace ssp21 {
@@ -53,9 +53,9 @@ FormatResult ReplyHandshakeError::write_msg(openpal::WSlice& output) const
   return FormatResult::write_any(write, output);
 }
 
-void ReplyHandshakeError::print(ILinePrinter& printer) const
+void ReplyHandshakeError::print(IMessagePrinter& printer) const
 {
-  MessagePrinter::print_fields(
+  MessagePrinting::print_fields(
     printer,
     "handshake_error",
     handshake_error
