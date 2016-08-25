@@ -4,7 +4,7 @@
 
 namespace ssp21
 {
-openpal::ModuleId Module::id(0xAAAAAAAA);
+    openpal::ModuleId Module::id(0xAAAAAAAA);
 }
 
 

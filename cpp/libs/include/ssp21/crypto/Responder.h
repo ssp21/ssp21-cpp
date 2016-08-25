@@ -18,67 +18,67 @@
 
 namespace ssp21
 {
-/**
-	WIP - this class will implement the stateful part of the responder.
-*/
-class Responder final : public IUpperLayer, private IMessageConsumer
-{
-
-public:
-
-    struct Config
+    /**
+    	WIP - this class will implement the stateful part of the responder.
+    */
+    class Responder final : public IUpperLayer, private IMessageConsumer
     {
-        uint16_t max_tx_message_size = consts::max_config_link_payload_size;
+
+    public:
+
+        struct Config
+        {
+            uint16_t max_tx_message_size = consts::max_config_link_payload_size;
+        };
+
+        Responder(const Config& config, openpal::Logger logger, ILowerLayer& lower);
+
+    private:
+
+        // ---- implement IUpperLayer -----
+
+        virtual void on_open_impl() override;
+        virtual void on_close_impl() override;
+        virtual void on_tx_ready_impl() override;
+        virtual void on_rx_ready_impl() override;
+
+        // ---- implement IMessageConsumer -----
+
+        virtual void consume(const Message& message) override;
+
+        template <class MsgType>
+        inline void read_any(const openpal::RSlice& data);
+
+        void on_message(const openpal::RSlice& data, const RequestHandshakeBegin& msg);
+        void on_message(const openpal::RSlice& data, const UnconfirmedSessionData& msg);
+        void on_message(const openpal::RSlice& data, const RequestHandshakeAuth& msg);
+
+        template <class MsgType>
+        void handle_parse_error(ParseError err);
+
+        void reply_with_handshake_error(HandshakeError err);
+
+        Config config_;
+        openpal::Logger logger_;
+        ILowerLayer* lower_;
+        openpal::Buffer tx_buffer_;
+
     };
 
-    Responder(const Config& config, openpal::Logger logger, ILowerLayer& lower);
+    template <>
+    inline void Responder::handle_parse_error<RequestHandshakeBegin>(ParseError err)
+    {
+        this->reply_with_handshake_error(HandshakeError::bad_message_format);
+    }
 
-private:
+    template <>
+    inline void Responder::handle_parse_error<RequestHandshakeAuth>(ParseError err)
+    {
+        this->reply_with_handshake_error(HandshakeError::bad_message_format);
+    }
 
-    // ---- implement IUpperLayer -----
-
-    virtual void on_open_impl() override;
-    virtual void on_close_impl() override;
-    virtual void on_tx_ready_impl() override;
-    virtual void on_rx_ready_impl() override;
-
-    // ---- implement IMessageConsumer -----
-
-    virtual void consume(const Message& message) override;
-
-    template <class MsgType>
-    inline void read_any(const openpal::RSlice& data);
-
-    void on_message(const openpal::RSlice& data, const RequestHandshakeBegin& msg);
-    void on_message(const openpal::RSlice& data, const UnconfirmedSessionData& msg);
-    void on_message(const openpal::RSlice& data, const RequestHandshakeAuth& msg);
-
-    template <class MsgType>
-    void handle_parse_error(ParseError err);
-
-    void reply_with_handshake_error(HandshakeError err);
-
-    Config config_;
-    openpal::Logger logger_;
-    ILowerLayer* lower_;
-    openpal::Buffer tx_buffer_;
-
-};
-
-template <>
-inline void Responder::handle_parse_error<RequestHandshakeBegin>(ParseError err)
-{
-    this->reply_with_handshake_error(HandshakeError::bad_message_format);
-}
-
-template <>
-inline void Responder::handle_parse_error<RequestHandshakeAuth>(ParseError err)
-{
-    this->reply_with_handshake_error(HandshakeError::bad_message_format);
-}
-
-template <>
-inline void Responder::handle_parse_error<UnconfirmedSessionData>(ParseError err) {}
+    template <>
+    inline void Responder::handle_parse_error<UnconfirmedSessionData>(ParseError err) {}
 }
 
 #endif

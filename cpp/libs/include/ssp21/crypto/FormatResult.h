@@ -9,51 +9,51 @@
 namespace ssp21
 {
 
-struct FormatResult
-{
-    static FormatResult Error(FormatError err)
+    struct FormatResult
     {
-        return FormatResult(err, openpal::RSlice::empty_slice());
-    }
-
-    static FormatResult Succes(const openpal::RSlice& written)
-    {
-        return FormatResult(FormatError::ok, written);
-    }
-
-    FormatError err;
-    openpal::RSlice written;
-
-    bool is_error() const
-    {
-        return any(err);
-    }
-
-    template <class WriteFunc>
-    static FormatResult write_any(const WriteFunc& write, openpal::WSlice& dest)
-    {
-        const auto start = dest;
-        auto err = write(dest);
-        if (any(err))
+        static FormatResult Error(FormatError err)
         {
-            return FormatResult::Error(err);
+            return FormatResult(err, openpal::RSlice::empty_slice());
         }
-        else
+
+        static FormatResult Succes(const openpal::RSlice& written)
         {
-            const auto num_written = start.length() - dest.length();
-            return FormatResult::Succes(start.as_rslice().take(num_written));
+            return FormatResult(FormatError::ok, written);
         }
-    }
 
-private:
+        FormatError err;
+        openpal::RSlice written;
 
-    FormatResult() = delete;
+        bool is_error() const
+        {
+            return any(err);
+        }
 
-    FormatResult(FormatError err, const openpal::RSlice& written) :
-        err(err),
-        written(written)
-    {}
-};
+        template <class WriteFunc>
+        static FormatResult write_any(const WriteFunc& write, openpal::WSlice& dest)
+        {
+            const auto start = dest;
+            auto err = write(dest);
+            if (any(err))
+            {
+                return FormatResult::Error(err);
+            }
+            else
+            {
+                const auto num_written = start.length() - dest.length();
+                return FormatResult::Succes(start.as_rslice().take(num_written));
+            }
+        }
+
+    private:
+
+        FormatResult() = delete;
+
+        FormatResult(FormatError err, const openpal::RSlice& written) :
+            err(err),
+            written(written)
+        {}
+    };
 }
 
 #endif

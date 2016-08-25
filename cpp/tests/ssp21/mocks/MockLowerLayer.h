@@ -12,68 +12,68 @@
 
 namespace ssp21
 {
-class MockLowerLayer : public ILowerLayer, private openpal::Uncopyable
-{
-
-    typedef std::pair<Addresses, openpal::Buffer> message_t;
-
-
-public:
-
-    virtual void begin_transmit(const Addresses& addr, const openpal::RSlice& message)
+    class MockLowerLayer : public ILowerLayer, private openpal::Uncopyable
     {
-        assert(!this->is_transmitting_);
-        this->tx_messages_.push_back(
-            std::unique_ptr<message_t>(new message_t(addr, message))
-        );
-        this->is_transmitting_ = true;
-    }
 
-    virtual bool read_message(IMessageConsumer& consumer)
-    {
-        if (rx_messages_.empty())
+        typedef std::pair<Addresses, openpal::Buffer> message_t;
+
+
+    public:
+
+        virtual void begin_transmit(const Addresses& addr, const openpal::RSlice& message)
         {
-            return false;
+            assert(!this->is_transmitting_);
+            this->tx_messages_.push_back(
+                std::unique_ptr<message_t>(new message_t(addr, message))
+            );
+            this->is_transmitting_ = true;
         }
 
-        auto& front = rx_messages_.front();
-        Message msg = { front->first, front->second.as_rslice() };
-        consumer.consume(msg);
-        rx_messages_.pop_front();
-
-        return true;
-    }
-
-    void enqueue_message(const Addresses& addr, const std::string& hex)
-    {
-        openpal::Hex hexdata(hex);
-        this->rx_messages_.push_back(
-            std::unique_ptr<message_t>(new message_t(addr, hexdata.as_rslice()))
-        );
-    }
-
-    std::string pop_tx_message()
-    {
-        if (this->tx_messages_.empty())
+        virtual bool read_message(IMessageConsumer& consumer)
         {
-            return "";
+            if (rx_messages_.empty())
+            {
+                return false;
+            }
+
+            auto& front = rx_messages_.front();
+            Message msg = { front->first, front->second.as_rslice() };
+            consumer.consume(msg);
+            rx_messages_.pop_front();
+
+            return true;
         }
-        else
+
+        void enqueue_message(const Addresses& addr, const std::string& hex)
         {
-            auto hex = openpal::to_hex(tx_messages_.front()->second.as_rslice());
-            tx_messages_.pop_front();
-            return hex;
+            openpal::Hex hexdata(hex);
+            this->rx_messages_.push_back(
+                std::unique_ptr<message_t>(new message_t(addr, hexdata.as_rslice()))
+            );
         }
-    }
 
-private:
+        std::string pop_tx_message()
+        {
+            if (this->tx_messages_.empty())
+            {
+                return "";
+            }
+            else
+            {
+                auto hex = openpal::to_hex(tx_messages_.front()->second.as_rslice());
+                tx_messages_.pop_front();
+                return hex;
+            }
+        }
 
-    typedef std::deque<std::unique_ptr<message_t>> message_queue_t;
+    private:
 
-    message_queue_t tx_messages_;
+        typedef std::deque<std::unique_ptr<message_t>> message_queue_t;
 
-    message_queue_t rx_messages_;
-};
+        message_queue_t tx_messages_;
+
+        message_queue_t rx_messages_;
+    };
 
 }
 

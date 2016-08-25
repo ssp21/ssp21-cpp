@@ -8,103 +8,103 @@
 
 namespace ssp21
 {
-struct Message
-{
-    Addresses addresses;
-    openpal::RSlice payload;
-};
-
-class IMessageConsumer
-{
-public:
-    virtual void consume(const Message& message) = 0;
-};
-
-class ILowerLayer
-{
-
-public:
-
-    virtual void begin_transmit(const Addresses& addr, const openpal::RSlice& message) = 0;
-
-    virtual bool read_message(IMessageConsumer& consumer) = 0;
-
-    bool is_transmitting() const
+    struct Message
     {
-        return is_transmitting_;
-    }
+        Addresses addresses;
+        openpal::RSlice payload;
+    };
 
-    bool is_read_ready() const
+    class IMessageConsumer
     {
-        return is_read_ready_;
-    }
+    public:
+        virtual void consume(const Message& message) = 0;
+    };
 
-protected:
-
-    bool is_transmitting_ = false;
-    bool is_read_ready_ = false;
-
-};
-
-class IUpperLayer
-{
-
-public:
-
-    void on_open()
+    class ILowerLayer
     {
-        if (!is_open_)
+
+    public:
+
+        virtual void begin_transmit(const Addresses& addr, const openpal::RSlice& message) = 0;
+
+        virtual bool read_message(IMessageConsumer& consumer) = 0;
+
+        bool is_transmitting() const
         {
-            is_open_ = true;
-            this->on_open_impl();
+            return is_transmitting_;
         }
-    }
 
-    void on_close()
-    {
-        if (is_open_)
+        bool is_read_ready() const
         {
-            is_open_ = false;
-            this->on_close_impl();
+            return is_read_ready_;
         }
-    }
 
-    void on_tx_ready()
+    protected:
+
+        bool is_transmitting_ = false;
+        bool is_read_ready_ = false;
+
+    };
+
+    class IUpperLayer
     {
-        if (is_open_)
+
+    public:
+
+        void on_open()
         {
-            this->on_tx_ready_impl();
+            if (!is_open_)
+            {
+                is_open_ = true;
+                this->on_open_impl();
+            }
         }
-    }
 
-    void on_rx_ready()
-    {
-        if (is_open_)
+        void on_close()
         {
-            this->on_rx_ready_impl();
+            if (is_open_)
+            {
+                is_open_ = false;
+                this->on_close_impl();
+            }
         }
-    }
 
-protected:
+        void on_tx_ready()
+        {
+            if (is_open_)
+            {
+                this->on_tx_ready_impl();
+            }
+        }
 
-    virtual void on_open_impl() = 0;
+        void on_rx_ready()
+        {
+            if (is_open_)
+            {
+                this->on_rx_ready_impl();
+            }
+        }
 
-    virtual void on_close_impl() = 0;
+    protected:
 
-    virtual void on_tx_ready_impl() = 0;
+        virtual void on_open_impl() = 0;
 
-    virtual void on_rx_ready_impl() = 0;
+        virtual void on_close_impl() = 0;
 
-    bool is_open() const
-    {
-        return is_open_;
-    }
+        virtual void on_tx_ready_impl() = 0;
 
-private:
+        virtual void on_rx_ready_impl() = 0;
 
-    bool is_open_ = false;
+        bool is_open() const
+        {
+            return is_open_;
+        }
 
-};
+    private:
+
+        bool is_open_ = false;
+
+    };
 
 }
 

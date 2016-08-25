@@ -19,60 +19,60 @@
 namespace ssp21
 {
 
-class MessageParser : private openpal::StaticOnly
-{
-
-public:
-
-    template <Function expected, typename T, typename... Args>
-    static ParseError read_message(const openpal::RSlice& input, T& value, Args& ... args)
+    class MessageParser : private openpal::StaticOnly
     {
-        openpal::RSlice copy(input);
 
-        Function func;
-        auto err = read(copy, func);
-        if (any(err)) return err;
-        if (func != expected) return ParseError::unexpected_function;
+    public:
 
-        err = read_fields(copy, value, args...);
-        if (any(err)) return err;
+        template <Function expected, typename T, typename... Args>
+        static ParseError read_message(const openpal::RSlice& input, T& value, Args& ... args)
+        {
+            openpal::RSlice copy(input);
 
-        // top level messages must always fully read the input
-        return copy.is_empty() ? ParseError::ok : ParseError::too_many_bytes;
-    }
+            Function func;
+            auto err = read(copy, func);
+            if (any(err)) return err;
+            if (func != expected) return ParseError::unexpected_function;
 
-    template <typename T, typename... Args>
-    static ParseError read_fields(openpal::RSlice& input, T& value, Args& ... args)
-    {
-        auto err = read(input, value);
-        if (any(err)) return err;
-        return read_fields(input, args...);
-    }
+            err = read_fields(copy, value, args...);
+            if (any(err)) return err;
 
-    static ParseError read_fields(openpal::RSlice&)
-    {
-        return ParseError::ok;
-    }
+            // top level messages must always fully read the input
+            return copy.is_empty() ? ParseError::ok : ParseError::too_many_bytes;
+        }
 
-    // integers
-    static ParseError read(openpal::RSlice& input, uint8_t& value);
-    static ParseError read(openpal::RSlice& input, uint16_t& value);
-    static ParseError read(openpal::RSlice& input, uint32_t& value);
+        template <typename T, typename... Args>
+        static ParseError read_fields(openpal::RSlice& input, T& value, Args& ... args)
+        {
+            auto err = read(input, value);
+            if (any(err)) return err;
+            return read_fields(input, args...);
+        }
 
-    // enums
-    static ParseError read(openpal::RSlice& input, Function& value);
-    static ParseError read(openpal::RSlice& input, CertificateMode& value);
-    static ParseError read(openpal::RSlice& input, DHMode& value);
-    static ParseError read(openpal::RSlice& input, HandshakeError& value);
-    static ParseError read(openpal::RSlice& input, NonceMode& value);
-    static ParseError read(openpal::RSlice& input, SessionMode& value);
-    static ParseError read(openpal::RSlice& input, HashMode& value);
+        static ParseError read_fields(openpal::RSlice&)
+        {
+            return ParseError::ok;
+        }
 
-    // sequences
-    static ParseError read(openpal::RSlice& input, Seq8& value);
-    static ParseError read(openpal::RSlice& input, Seq16& value);
-    static ParseError read(openpal::RSlice& input, Seq8Seq16& value);
-};
+        // integers
+        static ParseError read(openpal::RSlice& input, uint8_t& value);
+        static ParseError read(openpal::RSlice& input, uint16_t& value);
+        static ParseError read(openpal::RSlice& input, uint32_t& value);
+
+        // enums
+        static ParseError read(openpal::RSlice& input, Function& value);
+        static ParseError read(openpal::RSlice& input, CertificateMode& value);
+        static ParseError read(openpal::RSlice& input, DHMode& value);
+        static ParseError read(openpal::RSlice& input, HandshakeError& value);
+        static ParseError read(openpal::RSlice& input, NonceMode& value);
+        static ParseError read(openpal::RSlice& input, SessionMode& value);
+        static ParseError read(openpal::RSlice& input, HashMode& value);
+
+        // sequences
+        static ParseError read(openpal::RSlice& input, Seq8& value);
+        static ParseError read(openpal::RSlice& input, Seq16& value);
+        static ParseError read(openpal::RSlice& input, Seq8Seq16& value);
+    };
 }
 
 #endif
