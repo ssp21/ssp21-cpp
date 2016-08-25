@@ -52,13 +52,13 @@ namespace ssp21
 
     public:
 
-        virtual void begin_transmit(const Message& message) = 0;
+        virtual bool transmit(const Message& message) = 0;
 
-		virtual bool read_message(IMessageProcessor& processor) = 0;
+		virtual bool receive(IMessageProcessor& processor) = 0;
 
         bool is_tx_ready() const
         {
-            return !is_transmitting_;
+            return is_tx_ready_;
         }
 
         bool is_rx_ready() const
@@ -68,7 +68,7 @@ namespace ssp21
 
     protected:
 
-        bool is_transmitting_ = false;
+        bool is_tx_ready_ = true;
         bool is_rx_ready_ = false;
 
     };

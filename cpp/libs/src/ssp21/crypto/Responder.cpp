@@ -37,7 +37,7 @@ namespace ssp21
 		// since we can now transmit responses
 		if (lower_->is_rx_ready())
 		{
-			lower_->read_message(*this);
+			lower_->receive(*this);
 		}
     }
 
@@ -47,7 +47,7 @@ namespace ssp21
 		// can transmit a response
         if (lower_->is_tx_ready()) 
         {
-            lower_->read_message(*this);
+            lower_->receive(*this);
         }
     }
 
@@ -106,7 +106,7 @@ namespace ssp21
 
         if (!result.is_error())
         {
-            this->lower_->begin_transmit(Message(Addresses(), result.written));
+            this->lower_->transmit(Message(Addresses(), result.written));
         }
     }
 

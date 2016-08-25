@@ -20,16 +20,17 @@ namespace ssp21
 
     public:
 
-        virtual void begin_transmit(const Message& message) override
+        virtual bool transmit(const Message& message) override
         {
-            assert(!this->is_transmitting_);
+            assert(this->is_tx_ready_);
             this->tx_messages_.push_back(
 				std::unique_ptr<message_t>(new message_t(message.addresses, message.payload))
             );
-            this->is_transmitting_ = true;
+            this->is_tx_ready_ = false;
+			return true;
         }
 
-        virtual bool read_message(IMessageProcessor& processor) override
+        virtual bool receive(IMessageProcessor& processor) override
         {
             if (rx_messages_.empty())
             {
