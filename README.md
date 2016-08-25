@@ -1,4 +1,21 @@
+## About
+
+A reference implementation of Secure SCADA Protocol for the 21st century (SSP21) in C++.  
+
 ## Dependencies
+
+### openpal ### 
+
+[openpal](https://github.com/automatak/openpal) is a BSD licensed API for abstracting protocol stack development.
+
+The dependency is defined as a git submodule and built from source. You can check ssp21-cpp out recursively to checkout 
+openpal automatically.
+
+```
+git clone --recursive https://github.com/aegis4ics/ssp21-cpp.git
+```
+
+### libsodium ### 
 
 SSP21 depends on [libsodium](https://download.libsodium.org/doc/). You can substitute another cryptographic backend if you really must.
 
@@ -10,7 +27,10 @@ On Windows, download and install the prebuilt binaries. You'll need to tell cmak
 
 On Linux, your best bet is to build libsodium from source and install it.
 
-## Coding style
+## Coding style and guidelines
 
-We're playing around with the [CppCoreGuidelines](http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines) right now, but this is
-subject to change.
+We're using the [CppCoreGuidelines](http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines).
+
+## Formatting
+
+So we don't fight over formatting, use *format-cpp.sh* in the root directory which invokes [AStyle](http://astyle.sourceforge.net/).
