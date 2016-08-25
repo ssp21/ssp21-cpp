@@ -66,17 +66,20 @@ namespace ssp21
 
 		LinkParser::State LinkParser::parse_sync1(const State& state, Context& ctx, openpal::RSlice& input)
 		{
-			const auto value = input[0];
-			input.advance(1);
-			if (value == consts::sync1)
+			// scan the input one byte at a time looking
+			// for the first synchronization character
+			while (input.is_not_empty())
 			{
-				ctx.buffer[0] = value;
-				return State::wait_sync2();
-			}
-			else
-			{				
-				return State::wait_sync1();
-			}			
+				const auto value = input[0];
+				input.advance(1);
+				if (value == consts::sync1)
+				{
+					ctx.buffer[0] = value;
+					return State::wait_sync2();
+				}
+			}				
+			
+			return State::wait_sync1();			
 		}
 		
 		LinkParser::State LinkParser::parse_sync2(const State& state, Context& ctx, openpal::RSlice& input)
