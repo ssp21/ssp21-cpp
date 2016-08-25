@@ -20,16 +20,16 @@ namespace ssp21
 
     public:
 
-        virtual void begin_transmit(const Addresses& addr, const openpal::RSlice& message)
+        virtual void begin_transmit(const Message& message) override
         {
             assert(!this->is_transmitting_);
             this->tx_messages_.push_back(
-                std::unique_ptr<message_t>(new message_t(addr, message))
+				std::unique_ptr<message_t>(new message_t(message.addresses, message.payload))
             );
             this->is_transmitting_ = true;
         }
 
-        virtual bool read_message(IMessageProcessor& processor)
+        virtual bool read_message(IMessageProcessor& processor) override
         {
             if (rx_messages_.empty())
             {

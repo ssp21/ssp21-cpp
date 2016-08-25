@@ -13,7 +13,7 @@ using namespace openpal;
 
 namespace ssp21
 {
-    RSlice LinkFormatter::write(WSlice dest, const Addresses& addr, const RSlice& payload)
+	RSlice LinkFormatter::write(WSlice dest, const Message& message)
     {
         if (dest.length() < consts::min_link_frame_size)
         {
@@ -27,13 +27,13 @@ namespace ssp21
                                                 dest.length() - consts::min_link_frame_size
                                             );
 
-        if (payload.length() > max_payload_length)
+        if (message.payload.length() > max_payload_length)
         {
             return RSlice::empty_slice();
         }
 
         // safe cast since we've already validated the payload length relative to the maximum allowed
-        const auto payload_length = static_cast<uint16_t>(payload.length());
+		const auto payload_length = static_cast<uint16_t>(message.payload.length());
 
         // there's enough space to write the entire frame
         // const auto frame_size = consts::min_link_frame_size + payload.length();
@@ -41,8 +41,8 @@ namespace ssp21
         dest[0] = consts::sync1;
         dest[1] = consts::sync2;
 
-        UInt16::write(dest.skip(2), addr.destination);
-        UInt16::write(dest.skip(4), addr.source);
+        UInt16::write(dest.skip(2), message.addresses.destination);
+		UInt16::write(dest.skip(4), message.addresses.source);
         UInt16::write(dest.skip(6), payload_length);
 
         // append the header crc
@@ -51,10 +51,10 @@ namespace ssp21
 
         // copy the payload
         auto payload_start = dest.skip(consts::link_header_total_size);
-        payload.copy_to(payload_start);
+		message.payload.copy_to(payload_start);
 
         // append the body crc
-        UInt32::write(dest.skip(consts::link_header_total_size + payload_length), CastagnoliCRC32::calc(payload));
+        UInt32::write(dest.skip(consts::link_header_total_size + payload_length), CastagnoliCRC32::calc(message.payload));
 
         return dest.as_rslice().take(consts::min_link_frame_size + payload_length);
     }

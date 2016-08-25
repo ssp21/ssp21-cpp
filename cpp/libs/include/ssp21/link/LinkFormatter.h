@@ -7,7 +7,7 @@
 #include "openpal/container/RSlice.h"
 #include "openpal/container/WSlice.h"
 
-#include "ssp21/link/Addresses.h"
+#include "ssp21/LayerInterfaces.h"
 
 namespace ssp21
 {
@@ -16,7 +16,7 @@ namespace ssp21
     public:
 
         // returns an empty slice if there wasn't sufficient space to write the frame
-        static openpal::RSlice write(openpal::WSlice dest, const Addresses& addr, const openpal::RSlice& payload);
+        static openpal::RSlice write(openpal::WSlice dest, const Message& message);
     };
 }
 

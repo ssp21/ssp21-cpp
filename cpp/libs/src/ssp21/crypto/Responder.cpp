@@ -100,7 +100,7 @@ namespace ssp21
 
         if (!result.is_error())
         {
-            this->lower_->begin_transmit(Addresses(), result.written);
+            this->lower_->begin_transmit(Message(Addresses(), result.written));
         }
     }
 

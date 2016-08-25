@@ -21,7 +21,7 @@ TEST_CASE(SUITE("correctly formats output"))
 
     Hex payload("DD DD DD DD DD DD");
 
-    auto result = LinkFormatter::write(buffer.as_wslice(), Addresses(1, 2), payload);
+    auto result = LinkFormatter::write(buffer.as_wslice(), Message(Addresses(1, 2), payload));
     REQUIRE(result.length() == consts::min_link_frame_size + 6);
     REQUIRE(to_hex(result) == "07 AA 01 00 02 00 06 00 F9 9F A2 C3 DD DD DD DD DD DD 6B 37 0D 51");
 }
@@ -30,7 +30,7 @@ TEST_CASE(SUITE("returns empty buffer if less space than minimum frame size"))
 {
     StaticBuffer < consts::min_link_frame_size - 1 > buffer;
 
-    auto result = LinkFormatter::write(buffer.as_wslice(), Addresses(1, 2), RSlice::empty_slice());
+	auto result = LinkFormatter::write(buffer.as_wslice(), Message(Addresses(1, 2), RSlice::empty_slice()));
 
     REQUIRE(result.is_empty());
 }
@@ -41,7 +41,7 @@ TEST_CASE(SUITE("returns empty buffer if insufficient space for payload"))
 
     Hex payload("DD DD DD DD DD DD");
 
-    auto result = LinkFormatter::write(buffer.as_wslice(), Addresses(1, 2), payload);
+	auto result = LinkFormatter::write(buffer.as_wslice(), Message(Addresses(1, 2), payload));
 
     REQUIRE(result.is_empty());
 }
