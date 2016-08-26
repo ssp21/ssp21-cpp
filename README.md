@@ -4,7 +4,7 @@ A reference implementation of Secure SCADA Protocol for the 21st century (SSP21)
 
 ## Dependencies
 
-### openpal ### 
+### openpal
 
 [openpal](https://github.com/automatak/openpal) is a BSD licensed API for abstracting protocol stack development.
 
@@ -15,7 +15,7 @@ openpal automatically.
 git clone --recursive https://github.com/aegis4ics/ssp21-cpp.git
 ```
 
-### libsodium ### 
+### libsodium 
 
 SSP21 depends on [libsodium](https://download.libsodium.org/doc/). You can substitute another cryptographic backend if you really must.
 
