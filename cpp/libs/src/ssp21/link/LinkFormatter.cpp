@@ -5,7 +5,7 @@
 #include "ssp21/link/CastagnoliCRC32.h"
 
 #include "openpal/util/Comparisons.h"
-#include "openpal/serialization/Serialization.h"
+#include "openpal/serialization/LittleEndian.h"
 
 
 

@@ -1,7 +1,7 @@
 
 #include "ssp21/crypto/MessageFormatter.h"
 
-#include "openpal/serialization/Serialization.h"
+#include "openpal/serialization/LittleEndian.h"
 
 using namespace openpal;
 
