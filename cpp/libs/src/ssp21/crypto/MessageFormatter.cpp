@@ -11,15 +11,7 @@ namespace ssp21
     template <class T>
     FormatError write_integer(WSlice& dest, typename T::type_t value)
     {
-        if (dest.length() < T::size)
-        {
-            return FormatError::insufficient_space;
-        }
-        else
-        {
-            T::write_to_slice(dest, value);
-            return FormatError::ok;
-        }
+        return T::write_to(dest, value) ? FormatError::ok : FormatError::insufficient_space;
     }
 
     // integers
@@ -41,15 +33,7 @@ namespace ssp21
     template <class Spec>
     FormatError write_enum(WSlice& dest, typename Spec::enum_type_t value)
     {
-        if (dest.length() < UInt8::size)
-        {
-            return FormatError::insufficient_space;
-        }
-        else
-        {
-            UInt8::write_to_slice(dest, Spec::to_type(value));
-            return FormatError::ok;
-        }
+        return UInt8::write_to(dest, Spec::to_type(value)) ? FormatError::ok : FormatError::insufficient_space;
     }
 
     // enums

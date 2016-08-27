@@ -11,15 +11,7 @@ namespace ssp21
     template <class T>
     ParseError read_integer(RSlice& input, typename T::type_t& value)
     {
-        if (input.length() < T::size)
-        {
-            return ParseError::insufficient_bytes;
-        }
-        else
-        {
-            value = T::read_from_slice(input);
-            return ParseError::ok;
-        }
+        return T::read_from(input, value) ? ParseError::ok : ParseError::insufficient_bytes;
     }
 
     template <class Spec>
