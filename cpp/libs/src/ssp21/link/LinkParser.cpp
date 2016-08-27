@@ -99,14 +99,7 @@ namespace ssp21
 
     LinkParser::State LinkParser::parse_header(const State& state, Context& ctx, openpal::RSlice& input)
     {
-        const auto remaining = consts::link_header_total_size - state.num_buffered;
-        const auto num_to_copy = min<uint32_t>(remaining, input.length());
-        auto dest = ctx.buffer.as_wslice().skip(state.num_buffered);
-
-        input.take(num_to_copy).move_to(dest);
-        input.advance(num_to_copy);
-
-        const auto new_num_buffered = num_to_copy + state.num_buffered;
+		const auto new_num_buffered = transfer_data(state, ctx, input, consts::link_header_total_size);
 
         if (new_num_buffered != consts::link_header_total_size)
         {
@@ -146,16 +139,23 @@ namespace ssp21
         return State::wait_body(new_num_buffered);
     }
 
+	uint32_t LinkParser::transfer_data(const State& state, Context& ctx, openpal::RSlice& input, uint32_t max_bytes_to_buffer)
+	{
+		const auto remaining = max_bytes_to_buffer - state.num_buffered;
+		const auto num_to_copy = min<uint32_t>(remaining, input.length());
+		auto dest = ctx.buffer.as_wslice().skip(state.num_buffered);
+
+		input.take(num_to_copy).move_to(dest);
+		input.advance(num_to_copy);
+
+		return num_to_copy + state.num_buffered;
+	}
+
     LinkParser::State LinkParser::parse_body(const State& state, Context& ctx, openpal::RSlice& input)
     {
         const uint32_t total_frame_size = consts::link_header_total_size + ctx.payload_length + consts::crc_size;
-        const uint32_t remaining = total_frame_size - state.num_buffered;
-
-        const auto num_to_copy = min<uint32_t>(remaining, input.length());
-        auto dest = ctx.buffer.as_wslice().skip(state.num_buffered);
-        input.take(num_to_copy).copy_to(dest);
-        input.advance(num_to_copy);
-        const auto new_num_buffered = num_to_copy + state.num_buffered;
+       
+		const auto new_num_buffered = transfer_data(state, ctx, input, total_frame_size);
 
         if (new_num_buffered != total_frame_size)
         {

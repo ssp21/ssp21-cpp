@@ -130,6 +130,9 @@ namespace ssp21
         static State parse_header(const State& state, Context& ctx, openpal::RSlice& input);
         static State parse_body(const State& state, Context& ctx, openpal::RSlice& input);
 
+		// helpers
+		static uint32_t transfer_data(const State& state, Context& ctx, openpal::RSlice& input, uint32_t max);
+
         LinkParser() = delete;
 
         Context context_;
