@@ -65,7 +65,7 @@ TEST_CASE(SUITE("reads a full message properly"))
     CountingReporter reporter;
     LinkParser parser(1024, reporter);
 
-    Hex hex("07 AA 01 00 02 00 06 00 F9 9F A2 C3 DD DD DD DD DD DD 6B 37 0D 51");
+    Hex hex("07 AA 00 01 00 02 00 06 11 FB E3 40 DD DD DD DD DD DD 51 0D 37 6B");
     auto input = hex.as_rslice();
 
     REQUIRE(parser.parse(input));
@@ -86,7 +86,7 @@ TEST_CASE(SUITE("discards leading data properly"))
     CountingReporter reporter;
     LinkParser parser(1024, reporter);
 
-    Hex hex("FF FF FF FF 07 AA 01 00 02 00 06 00 F9 9F A2 C3 DD DD DD DD DD DD 6B 37 0D 51");
+    Hex hex("FF FF FF FF 07 AA 00 01 00 02 00 06 11 FB E3 40 DD DD DD DD DD DD 51 0D 37 6B");
     auto input = hex.as_rslice();
 
     REQUIRE(parser.parse(input));
@@ -100,7 +100,7 @@ TEST_CASE(SUITE("detects header crc failure properly"))
     LinkParser parser(1024, reporter);
 
     /// -----------------------------VV-----------------------------------------
-    Hex hex("07 AA 01 00 02 00 06 00 F8 9F A2 C3 DD DD DD DD DD DD 6B 37 0D 51");
+    Hex hex("07 AA 00 01 00 02 00 06 12 FB E3 40 DD DD DD DD DD DD 51 0D 37 6B");
     auto input = hex.as_rslice();
 
     REQUIRE_FALSE(parser.parse(input));
@@ -115,8 +115,8 @@ TEST_CASE(SUITE("recursively processes header crc failure"))
 
     {
         // packet in a packet
-        //             07 AA 01 00 02 00 06 00 F9 9F A2 C3 DD DD DD DD DD DD 6B 37 0D 51 < - valid packet
-        Hex hex("07 AA 07 AA 01 00 02 00 06 00 F9 9F A2 C3 DD DD DD DD DD DD 6B");
+        //             07 AA 00 01 00 02 00 06 11 FB E3 40 DD DD DD DD DD DD 51 0D 37 6B < - valid packet
+        Hex hex("07 AA 07 AA 00 01 00 02 00 06 11 FB E3 40 DD DD DD DD DD DD 51");
         auto input = hex.as_rslice();
 
         REQUIRE_FALSE(parser.parse(input));
@@ -128,7 +128,7 @@ TEST_CASE(SUITE("recursively processes header crc failure"))
 
     {
         // last 3 bytes of body CRC will complete the frame
-        Hex trailing("37 0D 51");
+        Hex trailing("0D 37 6B");
         auto input = trailing.as_rslice();
 
         REQUIRE(parser.parse(input));
@@ -144,7 +144,7 @@ TEST_CASE(SUITE("detects body crc failure properly"))
 
 
     /// --------------------------------------------------------------VV--------
-    Hex hex("07 AA 01 00 02 00 06 00 F9 9F A2 C3 DD DD DD DD DD DD 6B 38 0D 51");
+    Hex hex("07 AA 00 01 00 02 00 06 11 FB E3 40 DD DD DD DD DD DD 51 0E 37 6B");
     auto input = hex.as_rslice();
 
     REQUIRE_FALSE(parser.parse(input));
@@ -158,7 +158,7 @@ TEST_CASE(SUITE("allows frame with maximum body length"))
     LinkParser parser(6, reporter);
 
     /// -----------------------LL-LL--------------------------------------------
-    Hex hex("07 AA 01 00 02 00 06 00 F9 9F A2 C3 DD DD DD DD DD DD 6B 37 0D 51");
+    Hex hex("07 AA 00 01 00 02 00 06 11 FB E3 40 DD DD DD DD DD DD 51 0D 37 6B");
     auto input = hex.as_rslice();
 
     REQUIRE(parser.parse(input));
@@ -172,7 +172,7 @@ TEST_CASE(SUITE("fails if length exceeds maximum body length"))
     LinkParser parser(5, reporter);
 
     /// -----------------------LL-LL--------------------------------------------
-    Hex hex("07 AA 01 00 02 00 06 00 F9 9F A2 C3 DD DD DD DD DD DD 6B 37 0D 51");
+    Hex hex("07 AA 00 01 00 02 00 06 11 FB E3 40 DD DD DD DD DD DD 51 0D 37 6B");
     auto input = hex.as_rslice();
 
     REQUIRE_FALSE(parser.parse(input));

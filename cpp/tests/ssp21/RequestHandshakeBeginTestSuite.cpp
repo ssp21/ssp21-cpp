@@ -61,7 +61,7 @@ TEST_CASE(SUITE("successfully parses message"))
 {
     RequestHandshakeBegin msg;
 
-    Hex hex("00 D2 D1 00 00 00 00 00 03 AA AA AA 01 02 00 BB BB");
+    Hex hex("00 D1 D2 00 00 00 00 00 03 AA AA AA 01 00 02 BB BB");
 
     auto input = hex.as_rslice();
     auto err = msg.read_msg(input);
@@ -130,7 +130,8 @@ TEST_CASE(SUITE("rejects unknown enum"))
 {
     RequestHandshakeBegin msg;
 
-    Hex hex("00 D2 D1 00 CC 00 00 00 03 AA AA AA 01 02 00 BB BB");
+	// ------------------VV--------------------------------------
+    Hex hex("00 D1 D2 00 CC 00 00 00 03 AA AA AA 01 00 02 BB BB");
 
     auto input = hex.as_rslice();
     auto err = msg.read_msg(input);
@@ -141,7 +142,7 @@ TEST_CASE(SUITE("rejects trailing data"))
 {
     RequestHandshakeBegin msg;
 
-    Hex hex("00 D2 D1 00 00 00 00 00 03 AA AA AA 01 02 00 BB BB FF FF FF");
+    Hex hex("00 D1 D2 00 00 00 00 00 03 AA AA AA 01 00 02 BB BB FF FF FF");
 
     auto input = hex.as_rslice();
     auto err = msg.read_msg(input);

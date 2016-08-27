@@ -23,7 +23,7 @@ TEST_CASE(SUITE("correctly formats output"))
 
     auto result = LinkFormatter::write(buffer.as_wslice(), Message(Addresses(1, 2), payload));
     REQUIRE(result.length() == consts::min_link_frame_size + 6);
-    REQUIRE(to_hex(result) == "07 AA 01 00 02 00 06 00 F9 9F A2 C3 DD DD DD DD DD DD 6B 37 0D 51");
+    REQUIRE(to_hex(result) == "07 AA 00 01 00 02 00 06 11 FB E3 40 DD DD DD DD DD DD 51 0D 37 6B");
 }
 
 TEST_CASE(SUITE("returns empty buffer if less space than minimum frame size"))

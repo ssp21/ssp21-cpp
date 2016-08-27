@@ -2,7 +2,7 @@
 #include "ssp21/link/LinkParser.h"
 
 #include "openpal/util/Comparisons.h"
-#include "openpal/serialization/LittleEndian.h"
+#include "openpal/serialization/BigEndian.h"
 
 #include "ssp21/link/CastagnoliCRC32.h"
 #include "ssp21/link/LinkConstants.h"

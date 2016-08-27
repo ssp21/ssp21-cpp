@@ -17,7 +17,7 @@ TEST_CASE(SUITE("reads integer fields successfully"))
     uint16_t a;
     uint32_t b;
 
-    Hex hex("01 00 03 00 00 00");
+    Hex hex("00 01 00 00 00 03");
 
     auto input = hex.as_rslice();
     auto err = MessageParser::read_fields(input, a, b);
@@ -32,7 +32,7 @@ TEST_CASE(SUITE("returns error if too little data"))
     uint16_t a;
     uint32_t b;
 
-    Hex hex("01 00 03 00 00");
+    Hex hex("00 01 00 00 00");
 
     auto input = hex.as_rslice();
     auto err = MessageParser::read_fields(input, a, b);
@@ -45,7 +45,7 @@ TEST_CASE(SUITE("ignores extra data after fields"))
     uint16_t a;
     uint32_t b;
 
-    Hex hex("01 00 03 00 00 00 FF");
+    Hex hex("00 01 00 00 00 03 FF");
 
     auto input = hex.as_rslice();
     auto err = MessageParser::read_fields(input, a, b);
@@ -86,7 +86,7 @@ TEST_CASE(SUITE("returns error if Seq8 incomplete"))
 TEST_CASE(SUITE("reads Seq8Seq16 correctly"))
 {
     Seq8Seq16 seqs;
-    Hex hex("02 01 00 BB 02 00 CA FE DD");
+    Hex hex("02 00 01 BB 00 02 CA FE DD");
     auto input = hex.as_rslice();
     auto err = MessageParser::read(input, seqs);
     REQUIRE(!any(err));
@@ -105,7 +105,7 @@ TEST_CASE(SUITE("reads Seq8Seq16 correctly"))
 TEST_CASE(SUITE("returns err if Seq8Seq16 reaches limit"))
 {
     Seq8Seq16 seqs;
-    Hex hex("07 01 00 00 01 00 00 01 00 00 01 00 00 01 00 00");
+    Hex hex("07 00 01 00 00 01 00 00 01 00 00 01 00 00 01 00");
     auto input = hex.as_rslice();
     auto err = MessageParser::read(input, seqs);
     REQUIRE(err == ParseError::impl_capacity_limit);

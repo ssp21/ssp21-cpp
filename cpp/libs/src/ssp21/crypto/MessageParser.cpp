@@ -1,7 +1,7 @@
 
 #include "ssp21/crypto/MessageParser.h"
 
-#include "openpal/serialization/LittleEndian.h"
+#include "openpal/serialization/BigEndian.h"
 
 using namespace openpal;
 
