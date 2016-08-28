@@ -55,7 +55,7 @@ namespace ssp21
 
         void on_message(const openpal::RSlice& data, const RequestHandshakeBegin& msg);
         void on_message(const openpal::RSlice& data, const UnconfirmedSessionData& msg);
-        void on_message(const openpal::RSlice& data, const RequestHandshakeAuth& msg);
+        void on_message(const openpal::RSlice& data, const RequestHandshakeAuth& msg);		
 
         template <class MsgType>
         void handle_parse_error(ParseError err);

@@ -28,18 +28,20 @@ HandshakeError HandshakeErrorSpec::from_type(uint8_t arg)
         case(0x0):
             return HandshakeError::bad_message_format;
         case(0x1):
-            return HandshakeError::unsupported_dh_mode;
+            return HandshakeError::unsupported_version;
         case(0x2):
-            return HandshakeError::unsupported_hash_mode;
+            return HandshakeError::unsupported_dh_mode;
         case(0x3):
-            return HandshakeError::unsupported_session_mode;
+            return HandshakeError::unsupported_hash_mode;
         case(0x4):
-            return HandshakeError::unsupported_certificate_mode;
+            return HandshakeError::unsupported_session_mode;
         case(0x5):
-            return HandshakeError::bad_certificate_format;
+            return HandshakeError::unsupported_certificate_mode;
         case(0x6):
-            return HandshakeError::unsupported_certificate_feature;
+            return HandshakeError::bad_certificate_format;
         case(0x7):
+            return HandshakeError::unsupported_certificate_feature;
+        case(0x8):
             return HandshakeError::authentication_error;
         case(0xFF):
             return HandshakeError::internal;
@@ -53,6 +55,8 @@ const char* HandshakeErrorSpec::to_string(HandshakeError arg)
     {
         case(HandshakeError::bad_message_format):
             return "bad_message_format";
+        case(HandshakeError::unsupported_version):
+            return "unsupported_version";
         case(HandshakeError::unsupported_dh_mode):
             return "unsupported_dh_mode";
         case(HandshakeError::unsupported_hash_mode):

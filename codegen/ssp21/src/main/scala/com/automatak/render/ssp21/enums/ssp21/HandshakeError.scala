@@ -13,13 +13,14 @@ object HandshakeError {
 
   private val codes = List(
     EnumValue("bad_message_format", 0, "A received handshake message was malformed in some manner"),
-    EnumValue("unsupported_dh_mode", 1, "The requested DH mode is not supported"),
-    EnumValue("unsupported_hash_mode", 2, "The requested hash mode is not supported"),
-    EnumValue("unsupported_session_mode", 3, "The requested session mode is not supported"),
-    EnumValue("unsupported_certificate_mode", 4, "The requested certificate mode is not supported"),
-    EnumValue("bad_certificate_format", 5, "One of the received certificates was improperly encoded"),
-    EnumValue("unsupported_certificate_feature", 6, "One of the received certificates utilizes an unsupported feature"),
-    EnumValue("authentication_error", 7, "The outstation was unable to authenticate the master"),
+    EnumValue("unsupported_version", 1, "The requested version is not supported"),
+    EnumValue("unsupported_dh_mode", 2, "The requested DH mode is not supported"),
+    EnumValue("unsupported_hash_mode", 3, "The requested hash mode is not supported"),
+    EnumValue("unsupported_session_mode", 4, "The requested session mode is not supported"),
+    EnumValue("unsupported_certificate_mode", 5, "The requested certificate mode is not supported"),
+    EnumValue("bad_certificate_format", 6, "One of the received certificates was improperly encoded"),
+    EnumValue("unsupported_certificate_feature", 7, "One of the received certificates utilizes an unsupported feature"),
+    EnumValue("authentication_error", 8, "The outstation was unable to authenticate the master"),
     EnumValue("internal", 255, "internal error")
   )
 

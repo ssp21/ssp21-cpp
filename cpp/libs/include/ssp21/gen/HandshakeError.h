@@ -28,20 +28,22 @@ enum class HandshakeError : uint8_t
 {
     /// A received handshake message was malformed in some manner
     bad_message_format = 0x0,
+    /// The requested version is not supported
+    unsupported_version = 0x1,
     /// The requested DH mode is not supported
-    unsupported_dh_mode = 0x1,
+    unsupported_dh_mode = 0x2,
     /// The requested hash mode is not supported
-    unsupported_hash_mode = 0x2,
+    unsupported_hash_mode = 0x3,
     /// The requested session mode is not supported
-    unsupported_session_mode = 0x3,
+    unsupported_session_mode = 0x4,
     /// The requested certificate mode is not supported
-    unsupported_certificate_mode = 0x4,
+    unsupported_certificate_mode = 0x5,
     /// One of the received certificates was improperly encoded
-    bad_certificate_format = 0x5,
+    bad_certificate_format = 0x6,
     /// One of the received certificates utilizes an unsupported feature
-    unsupported_certificate_feature = 0x6,
+    unsupported_certificate_feature = 0x7,
     /// The outstation was unable to authenticate the master
-    authentication_error = 0x7,
+    authentication_error = 0x8,
     /// internal error
     internal = 0xFF,
     /// value not defined

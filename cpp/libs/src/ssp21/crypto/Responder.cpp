@@ -119,6 +119,13 @@ namespace ssp21
             LogMessagePrinter printer(logger_, levels::rx_crypto_msg_fields);
             msg.print(printer);
         }
+
+		// validate the arguments
+		if (msg.version > 0) // TODO remove magic constant once version scheme is identified
+		{
+			this->reply_with_handshake_error(HandshakeError::unsupported_version);
+			return;
+		}
     }
 
     void Responder::on_message(const RSlice& data, const RequestHandshakeAuth& msg)
