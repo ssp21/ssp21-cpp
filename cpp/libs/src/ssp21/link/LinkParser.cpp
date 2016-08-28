@@ -106,9 +106,20 @@ namespace ssp21
             return State::wait_header(new_num_buffered);
         }
 
+		auto header_start = ctx.buffer.as_rslice().skip(2);
+
+		uint32_t actual_crc;
+
+		BigEndian::read(
+			header_start,
+			ctx.message.addresses.destination,
+			ctx.message.addresses.source,
+			ctx.payload_length,
+			actual_crc
+		);
+
         // now read and validate the header
         auto expected_crc = CastagnoliCRC32::calc(ctx.buffer.as_rslice().take(consts::link_header_fields_size));
-        auto actual_crc = UInt32::read(ctx.buffer.as_rslice().skip(consts::link_header_fields_size));
 
         if (expected_crc != actual_crc)
         {
@@ -123,33 +134,14 @@ namespace ssp21
             return parse_many(State::wait_sync1(), ctx, header);
         }
 
-        ctx.message.addresses.destination = UInt16::read(ctx.buffer.as_rslice().skip(2));
-        ctx.message.addresses.source = UInt16::read(ctx.buffer.as_rslice().skip(4));
-
-        const auto payload_length = UInt16::read(ctx.buffer.as_rslice().skip(6));
-
-        if (payload_length > ctx.max_payload_length)
+        if (ctx.payload_length > ctx.max_payload_length)
         {
-            ctx.reporter->on_bad_body_length(ctx.max_payload_length, payload_length);
+            ctx.reporter->on_bad_body_length(ctx.max_payload_length, ctx.payload_length);
             return State::wait_sync1();
         }
 
-        ctx.payload_length = payload_length;
-
         return State::wait_body(new_num_buffered);
     }
-
-	uint32_t LinkParser::transfer_data(const State& state, Context& ctx, openpal::RSlice& input, uint32_t max_bytes_to_buffer)
-	{
-		const auto remaining = max_bytes_to_buffer - state.num_buffered;
-		const auto num_to_copy = min<uint32_t>(remaining, input.length());
-		auto dest = ctx.buffer.as_wslice().skip(state.num_buffered);
-
-		input.take(num_to_copy).move_to(dest);
-		input.advance(num_to_copy);
-
-		return num_to_copy + state.num_buffered;
-	}
 
     LinkParser::State LinkParser::parse_body(const State& state, Context& ctx, openpal::RSlice& input)
     {
@@ -162,7 +154,7 @@ namespace ssp21
             return State::wait_body(new_num_buffered);
         }
 
-        const auto payload_bytes = ctx.buffer.as_rslice().skip(consts::link_header_total_size).take(ctx.payload_length);
+		const auto payload_bytes = ctx.buffer.as_rslice().skip(consts::link_header_total_size).take(ctx.payload_length);
         const auto expected_crc = CastagnoliCRC32::calc(payload_bytes);
         const auto actual_crc = UInt32::read(ctx.buffer.as_rslice().skip(consts::link_header_total_size + ctx.payload_length));
 
@@ -177,6 +169,17 @@ namespace ssp21
         return State::wait_read(new_num_buffered);
     }
 
+	uint32_t LinkParser::transfer_data(const State& state, Context& ctx, openpal::RSlice& input, uint32_t max_bytes_to_buffer)
+	{
+		const auto remaining = max_bytes_to_buffer - state.num_buffered;
+		const auto num_to_copy = min<uint32_t>(remaining, input.length());
+		auto dest = ctx.buffer.as_wslice().skip(state.num_buffered);
+
+		input.take(num_to_copy).move_to(dest);
+		input.advance(num_to_copy);
+
+		return num_to_copy + state.num_buffered;
+	}
 }
 
 
