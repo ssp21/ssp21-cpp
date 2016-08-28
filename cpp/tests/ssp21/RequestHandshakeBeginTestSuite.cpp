@@ -5,7 +5,7 @@
 #include "ssp21/msg/RequestHandshakeBegin.h"
 #include "ssp21/crypto/LogMessagePrinter.h"
 
-#include "testlib/BufferHelpers.h"
+#include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
 
 #include "openpal/container/StaticBuffer.h"

@@ -4,7 +4,7 @@
 
 #include "ssp21/link/KoopmanCRC32.h"
 #include "ssp21/link/CastagnoliCRC32.h"
-#include "testlib/BufferHelpers.h"
+#include "testlib/Hex.h"
 
 #define SUITE(name) "CRCTestSuite - " name
 

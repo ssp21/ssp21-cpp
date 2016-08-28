@@ -4,8 +4,8 @@
 
 #include "ssp21/crypto/MessageParser.h"
 
-#include <testlib/BufferHelpers.h>
-#include <testlib/HexConversions.h>
+#include "testlib/Hex.h"
+#include "testlib/HexConversions.h"
 
 #define SUITE(name) "MessageParserTestSuite - " name
 

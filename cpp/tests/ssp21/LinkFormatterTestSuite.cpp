@@ -5,8 +5,8 @@
 #include "ssp21/link/LinkFormatter.h"
 #include "ssp21/link/LinkConstants.h"
 
+#include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
-#include "testlib/BufferHelpers.h"
 
 #include "openpal/container/StaticBuffer.h"
 

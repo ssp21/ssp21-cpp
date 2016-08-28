@@ -6,7 +6,7 @@
 
 #include "openpal/container/StaticBuffer.h"
 
-#include "testlib/BufferHelpers.h"
+#include "testlib/Hex.h"
 #include "testlib/MockExecutor.h"
 
 #include "mocks/MockLogHandler.h"

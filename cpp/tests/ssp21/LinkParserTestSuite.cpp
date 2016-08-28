@@ -4,7 +4,7 @@
 
 #include "ssp21/link/LinkParser.h"
 
-#include "testlib/BufferHelpers.h"
+#include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
 
 #define SUITE(name) "LinkParserTestSuite - " name

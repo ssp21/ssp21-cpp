@@ -5,9 +5,7 @@
 
 #include "ssp21/LayerInterfaces.h"
 
-#include "openpal/container/Buffer.h"
-
-#include "testlib/BufferHelpers.h"
+#include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
 
 namespace ssp21
