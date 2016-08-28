@@ -154,17 +154,18 @@ namespace ssp21
             return State::wait_body(new_num_buffered);
         }
 
-		const auto payload_bytes = ctx.buffer.as_rslice().skip(consts::link_header_total_size).take(ctx.payload_length);
-        const auto expected_crc = CastagnoliCRC32::calc(payload_bytes);
-        const auto actual_crc = UInt32::read(ctx.buffer.as_rslice().skip(consts::link_header_total_size + ctx.payload_length));
+		ctx.message.payload = ctx.buffer.as_rslice().skip(consts::link_header_total_size).take(ctx.payload_length);
+        const auto expected_crc = CastagnoliCRC32::calc(ctx.message.payload);
+		auto crcb_start = ctx.buffer.as_rslice().skip(consts::link_header_total_size + ctx.payload_length);
+			
+		uint32_t actual_crc;
+		UInt32::read_from(crcb_start, actual_crc);
 
         if (expected_crc != actual_crc)
         {
             ctx.reporter->on_bad_body_crc(expected_crc, actual_crc);
             return State::wait_sync1();
         }
-
-        ctx.message.payload = payload_bytes;
 
         return State::wait_read(new_num_buffered);
     }
