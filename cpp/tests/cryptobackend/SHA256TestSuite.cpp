@@ -4,8 +4,8 @@
 
 #include "ssp21/crypto/Crypto.h"
 
+#include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
-#include "testlib/BufferHelpers.h"
 
 #include <cstring>
 
