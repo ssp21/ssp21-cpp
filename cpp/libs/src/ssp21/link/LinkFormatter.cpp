@@ -15,7 +15,7 @@ namespace ssp21
 {
 	RSlice LinkFormatter::write(WSlice dest, const Message& message)
     {
-		auto start = dest.as_rslice();
+		const auto start = dest.as_rslice();
 
         if (dest.length() < consts::min_link_frame_size)
         {
