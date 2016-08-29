@@ -4,22 +4,53 @@
 using namespace openpal;
 
 namespace ssp21
-{
+{   
+	HandshakeError Handshake::set_algorithms(DHMode dh_mode, HashMode hash_mode)
+	{
+		switch (dh_mode)
+		{
+		case(DHMode::x25519):
+			algorithms_.dh = &Crypto::dh_x25519;
+			algorithms_.gen_keypair = &Crypto::gen_keypair_x25519;
+			break;
+		default:
+			return HandshakeError::unsupported_dh_mode;
+		}
 
-    Handshake::Handshake(const Algorithms& algorithms) : algorithms_(algorithms)
-    {
+		switch (hash_mode)
+		{
+		case(HashMode::sha256):
+			algorithms_.hash = &Crypto::hash_sha256;
+			algorithms_.hkdf = &Crypto::hkdf_sha256;
+			break;
+		default:
+			return HandshakeError::unsupported_hash_mode;
+		}
 
-    }
+		return HandshakeError::none;
+	}
 
-    void Handshake::initialize()
+	openpal::RSlice Handshake::initialize()
     {
         algorithms_.gen_keypair(local_ephemeral_keys_);
+
+		return local_ephemeral_keys_.public_key.as_slice();
     }
 
-    void Handshake::set_hash(const RSlice& input)
+    void Handshake::set_ck(const RSlice& input)
     {
         algorithms_.hash({ input }, chaining_key_);
     }
+
+	void Handshake::mix_ck(const RSlice& input)
+	{
+		// ck = hash(ck || input)
+
+		algorithms_.hash(
+		{ chaining_key_.as_slice(), input },
+			chaining_key_
+		);
+	}	
 
     void Handshake::derive_authentication_key(
         const RSlice& message,
@@ -27,12 +58,8 @@ namespace ssp21
         const RSlice& pub_e_dh_key,
         const RSlice& pub_s_dh_key,
         std::error_code& ec)
-    {
-        // mix the hash: h = hash(h || input)
-        algorithms_.hash(
-        { chaining_key_.as_slice(), message },
-        chaining_key_
-        );
+    {        
+		this->mix_ck(message);
 
         DHOutput dh1;
         algorithms_.dh(local_ephemeral_keys_.private_key, pub_e_dh_key, dh1, ec);

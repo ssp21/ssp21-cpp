@@ -9,7 +9,9 @@ object HandshakeError {
 
   private val comments = List("Denotes an error condition that occurred during the handshake process")
 
-  def apply(): EnumModel = EnumModel("HandshakeError", "handshake_error", comments, EnumModel.UInt8, codes, Some(EnumValue.undefined(255)), None, Hex)
+  def apply(): EnumModel = EnumModel("HandshakeError", "handshake_error", comments, EnumModel.UInt8, codes, Some(EnumValue.undefined(255)), Some(falseValue), Hex)
+
+  private val falseValue = EnumValue("none", 254, "This value gets used internally in ssp21-cpp only")
 
   private val codes = List(
     EnumValue("bad_message_format", 0, "A received handshake message was malformed in some manner"),
@@ -21,7 +23,9 @@ object HandshakeError {
     EnumValue("bad_certificate_format", 6, "One of the received certificates was improperly encoded"),
     EnumValue("unsupported_certificate_feature", 7, "One of the received certificates utilizes an unsupported feature"),
     EnumValue("authentication_error", 8, "The outstation was unable to authenticate the master"),
-    EnumValue("internal", 255, "internal error")
+    EnumValue("internal", 9, "internal error"),
+
+    falseValue
   )
 
 }

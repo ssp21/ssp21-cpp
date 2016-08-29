@@ -43,8 +43,10 @@ HandshakeError HandshakeErrorSpec::from_type(uint8_t arg)
             return HandshakeError::unsupported_certificate_feature;
         case(0x8):
             return HandshakeError::authentication_error;
-        case(0xFF):
+        case(0x9):
             return HandshakeError::internal;
+        case(0xFE):
+            return HandshakeError::none;
         default:
             return HandshakeError::undefined;
     }
@@ -73,6 +75,8 @@ const char* HandshakeErrorSpec::to_string(HandshakeError arg)
             return "authentication_error";
         case(HandshakeError::internal):
             return "internal";
+        case(HandshakeError::none):
+            return "none";
         default:
             return "undefined";
     }

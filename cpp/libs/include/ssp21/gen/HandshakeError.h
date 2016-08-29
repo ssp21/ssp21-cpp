@@ -45,10 +45,17 @@ enum class HandshakeError : uint8_t
     /// The outstation was unable to authenticate the master
     authentication_error = 0x8,
     /// internal error
-    internal = 0xFF,
+    internal = 0x9,
+    /// This value gets used internally in ssp21-cpp only
+    none = 0xFE,
     /// value not defined
     undefined = 0xFF
 };
+
+inline bool any(HandshakeError value)
+{
+    return value != HandshakeError::none;
+}
 
 struct HandshakeErrorSpec : private openpal::StaticOnly
 {

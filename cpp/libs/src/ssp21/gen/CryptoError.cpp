@@ -25,6 +25,8 @@ const char* CryptoErrorSpec::to_string(CryptoError arg)
             return "bad_key_type";
         case(CryptoError::dh_x25519_fail):
             return "dh_x25519_fail";
+        case(CryptoError::undefined_algorithm):
+            return "undefined_algorithm";
         default:
             return "undefined";
     }

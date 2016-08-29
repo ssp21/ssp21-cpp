@@ -4,8 +4,12 @@
 #include "openpal/logging/LogMacros.h"
 
 #include "ssp21/LogLevels.h"
+
 #include "ssp21/crypto/LogMessagePrinter.h"
+#include "ssp21/crypto/Crypto.h"
+
 #include "ssp21/msg/ReplyHandshakeError.h"
+#include "ssp21/msg/ReplyHandshakeBegin.h"
 
 using namespace openpal;
 
@@ -16,7 +20,8 @@ namespace ssp21
         executor_(&executor),
         logger_(logger),
         lower_(&lower),
-        tx_buffer_(config.max_tx_message_size)
+        tx_buffer_(config.max_tx_message_size),
+		handshake_state_(HandshakeState::wait_for_handshake_begin)
     {
 
     }
@@ -110,9 +115,9 @@ namespace ssp21
         }
     }
 
-    void Responder::on_message(const RSlice& data, const RequestHandshakeBegin& msg)
+    void Responder::on_message(const RSlice& msg_bytes, const RequestHandshakeBegin& msg)
     {
-        FORMAT_LOG_BLOCK(logger_, levels::rx_crypto_msg, "request handshake begin (length = %u)", data.length());
+        FORMAT_LOG_BLOCK(logger_, levels::rx_crypto_msg, "request handshake begin (length = %u)", msg_bytes.length());
 
         if (logger_.is_enabled(levels::rx_crypto_msg_fields))
         {
@@ -120,13 +125,62 @@ namespace ssp21
             msg.print(printer);
         }
 
-        // validate the arguments
-        if (msg.version > 0) // TODO remove magic constant once version scheme is identified
-        {
-            this->reply_with_handshake_error(HandshakeError::unsupported_version);
-            return;
-        }
+		auto err = validate_handshake_begin(msg);
+
+		if (any(err))
+		{
+			FORMAT_LOG_BLOCK(logger_, levels::warn, "handshake error: %s", HandshakeErrorSpec::to_string(err));
+			this->reply_with_handshake_error(err);
+			return;
+		}
+
+		Seq8 public_ephem_dh_key(this->handshake_.initialize());	// generate our local ephemeral keys
+		this->handshake_.set_ck(msg_bytes);							// initialize the chaining key
+
+		// now format our response - in the future, this we'll add certificates after this call
+		ReplyHandshakeBegin reply(public_ephem_dh_key);
+
+		auto dest = this->tx_buffer_.as_wslice();
+		auto result = reply.write_msg(dest);
+
+		if (result.is_error()) {
+			FORMAT_LOG_BLOCK(logger_, levels::error, "error formatting reply: %s", FormatErrorSpec::to_string(result.err));
+			return;
+		}
+		
+		this->handshake_.mix_ck(result.written); // mix our response into the chaining key
+
+		this->lower_->transmit(Message(Addresses(), result.written));
     }
+
+	HandshakeError Responder::validate_handshake_begin(const RequestHandshakeBegin& msg)
+	{		
+		if (msg.version != 0) // TODO remove magic constant once version scheme is identified
+		{			
+			return HandshakeError::unsupported_version;
+		}
+
+		// verify that the public key length matches the DH mode
+		if (msg.ephemeral_public_key.length() != consts::x25519_key_length)
+		{
+			return HandshakeError::bad_message_format;
+		}
+
+		if (msg.certificate_mode != CertificateMode::preshared_keys)
+		{
+			return HandshakeError::unsupported_certificate_mode;
+		}
+
+		if (msg.certificates.count() == 0)
+		{
+			return HandshakeError::bad_message_format;
+		}
+
+		// TODO - configure the nonce and session modes
+
+		// last thing we should do is configure the requested handshake algorithms
+		return this->handshake_.set_algorithms(msg.dh_mode, msg.hash_mode);
+	}	
 
     void Responder::on_message(const RSlice& data, const RequestHandshakeAuth& msg)
     {

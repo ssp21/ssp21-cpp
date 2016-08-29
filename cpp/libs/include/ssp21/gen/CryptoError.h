@@ -29,7 +29,9 @@ enum class CryptoError : uint8_t
     /// attempted operation with bad key type
     bad_key_type = 0,
     /// X25519 DH operation failed. Bad public key?
-    dh_x25519_fail = 1
+    dh_x25519_fail = 1,
+    /// a procedure cannot be executed b/c of an undefined algorithm
+    undefined_algorithm = 2
 };
 
 struct CryptoErrorSpec : private openpal::StaticOnly

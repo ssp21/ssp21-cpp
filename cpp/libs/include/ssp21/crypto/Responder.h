@@ -11,6 +11,7 @@
 
 #include "ssp21/link/LinkConstants.h"
 #include "ssp21/LayerInterfaces.h"
+#include "ssp21/crypto/Handshake.h"
 
 #include "openpal/logging/Logger.h"
 #include "openpal/container/Buffer.h"
@@ -24,6 +25,12 @@ namespace ssp21
     */
     class Responder final : public IUpperLayer, private IMessageProcessor
     {
+		enum HandshakeState 
+		{
+			wait_for_handshake_begin,
+			wait_for_request_auth
+		};
+
 
     public:
 
@@ -62,11 +69,16 @@ namespace ssp21
 
         void reply_with_handshake_error(HandshakeError err);
 
+		HandshakeError validate_handshake_begin(const RequestHandshakeBegin& msg);		
+
         Config config_;
         openpal::IExecutor* const executor_;
         openpal::Logger logger_;
         ILowerLayer* const lower_;
         openpal::Buffer tx_buffer_;
+		
+		Handshake handshake_;
+		HandshakeState handshake_state_;
 
     };
 

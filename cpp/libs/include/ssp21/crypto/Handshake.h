@@ -4,6 +4,12 @@
 
 #include "CryptoTypedefs.h"
 
+#include "Crypto.h"
+
+#include "ssp21/gen/HandshakeError.h"
+#include "ssp21/gen/DHMode.h"
+#include "ssp21/gen/HashMode.h"
+
 namespace ssp21
 {
 
@@ -26,19 +32,33 @@ namespace ssp21
                 gen_keypair(gen_keypair)
             {}
 
-            dh_func_t dh;
+			// default algorithms
+			Algorithms() :
+				dh(&Crypto::dh_x25519),
+				hkdf(&Crypto::hkdf_sha256),
+				hash(&Crypto::hash_sha256),
+				gen_keypair(&Crypto::gen_keypair_x25519)
+			{}			
+
+			dh_func_t dh;
             hkdf_func_t hkdf;
             hash_func_t hash;
             gen_keypair_func_t gen_keypair;
         };
 
-        Handshake(const Algorithms& algorithms);
+		Handshake() {}
 
-        /// generates new ephemeral keys and resets all state
-        void initialize();
+		HandshakeError set_algorithms(DHMode dh_mode, HashMode hash_mode);
 
-        /// calculate a new handshake hash: h = hash(message)
-        void set_hash(const openpal::RSlice& message);
+        /// generates new ephemeral keys, resets all state, and returns a slice pointing
+		/// to the ephemeral public DH key
+        openpal::RSlice initialize();
+
+        /// calculate a new ck: ck = hash(input)
+        void set_ck(const openpal::RSlice& input);
+
+		/// mix the input input the chaining key: ck = hash(ck | input)
+		void mix_ck(const openpal::RSlice& input);
 
         /// derive the authentication key from the DH keys and the handshake_hash_
         void derive_authentication_key(
@@ -50,7 +70,7 @@ namespace ssp21
         );
 
         /// return a slice pointing to the authentication key
-        openpal::RSlice get_auth_key() const;
+        openpal::RSlice get_auth_key() const;		
 
         /// derive the session keys
         void derive_session_keys(SymmetricKey& rx_key, SymmetricKey& tx_key) const;
