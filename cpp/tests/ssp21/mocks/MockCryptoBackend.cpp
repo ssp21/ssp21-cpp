@@ -1,6 +1,8 @@
 
 #include "MockCryptoBackend.h"
 
+#include <cstring>
+
 namespace ssp21
 {
 
