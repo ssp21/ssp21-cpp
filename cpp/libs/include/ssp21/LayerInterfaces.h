@@ -7,35 +7,35 @@
 
 namespace ssp21
 {
-	/**
-	* Addressing information from a source to a destination
-	*/
-	struct Addresses
-	{
-		Addresses(uint16_t destination, uint16_t source) :
-			destination(destination), source(source)
-		{}
+    /**
+    * Addressing information from a source to a destination
+    */
+    struct Addresses
+    {
+        Addresses(uint16_t destination, uint16_t source) :
+            destination(destination), source(source)
+        {}
 
-		Addresses() : destination(0), source(0)
-		{}
+        Addresses() : destination(0), source(0)
+        {}
 
-		uint16_t destination;
-		uint16_t source;
-	};
+        uint16_t destination;
+        uint16_t source;
+    };
 
-	/**
-	*  A message between the link layer and the crypto layer
-	*/
+    /**
+    *  A message between the link layer and the crypto layer
+    */
     struct Message : openpal::Uncopyable
     {
-		Message(const Addresses& addresses, const openpal::RSlice& payload) :
-			addresses(addresses),
-			payload(payload)
-		{
-			
-		}
+        Message(const Addresses& addresses, const openpal::RSlice& payload) :
+            addresses(addresses),
+            payload(payload)
+        {
 
-		Message() {}
+        }
+
+        Message() {}
 
         Addresses addresses;
         openpal::RSlice payload;
@@ -54,7 +54,7 @@ namespace ssp21
 
         virtual bool transmit(const Message& message) = 0;
 
-		virtual bool receive(IMessageProcessor& processor) = 0;
+        virtual bool receive(IMessageProcessor& processor) = 0;
 
         bool is_tx_ready() const
         {

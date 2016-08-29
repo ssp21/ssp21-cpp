@@ -17,7 +17,7 @@ namespace ssp21
     {
 
     public:
-		MockLogHandler(const char* id, openpal::LogLevels levels = openpal::LogLevels::everything()) :
+        MockLogHandler(const char* id, openpal::LogLevels levels = openpal::LogLevels::everything()) :
             root(ssp21::Module::id, this, id, levels),
             print_output_(false)
         {}
@@ -58,7 +58,7 @@ namespace ssp21
 
         bool print_output_;
 
-		MockLogHandler() = delete;
+        MockLogHandler() = delete;
 
     };
 

@@ -39,21 +39,21 @@ namespace ssp21
 
             this->state_ = State::wait_sync1();
 
-			fun(this->context_.message);
+            fun(this->context_.message);
 
             return true;
         }
 
-		bool read(Message& message)
-		{
-			auto fun = [&message](const Message& m) -> void
-			{
-				message.addresses = m.addresses;
-				message.payload = m.payload;
-			};
+        bool read(Message& message)
+        {
+            auto fun = [&message](const Message & m) -> void
+            {
+                message.addresses = m.addresses;
+                message.payload = m.payload;
+            };
 
-			return read(fun);
-		}
+            return read(fun);
+        }
 
     private:
 
@@ -118,7 +118,7 @@ namespace ssp21
             IReporter* reporter;
             openpal::Buffer buffer;
 
-			Message message;
+            Message message;
             uint16_t payload_length = 0;
         };
 
@@ -130,8 +130,8 @@ namespace ssp21
         static State parse_header(const State& state, Context& ctx, openpal::RSlice& input);
         static State parse_body(const State& state, Context& ctx, openpal::RSlice& input);
 
-		// helpers
-		static uint32_t transfer_data(const State& state, Context& ctx, openpal::RSlice& input, uint32_t max);
+        // helpers
+        static uint32_t transfer_data(const State& state, Context& ctx, openpal::RSlice& input, uint32_t max);
 
         LinkParser() = delete;
 

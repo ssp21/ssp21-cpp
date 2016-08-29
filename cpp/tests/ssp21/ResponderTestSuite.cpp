@@ -19,29 +19,29 @@ using namespace openpal;
 
 struct ResponderFixture
 {
-	ResponderFixture(const Responder::Config& config = Responder::Config()) : 
-		log("responder"),
-		exe(),
-		lower(),
-		responder(config, exe, log.root.logger, lower)
-	{}
+    ResponderFixture(const Responder::Config& config = Responder::Config()) :
+        log("responder"),
+        exe(),
+        lower(),
+        responder(config, exe, log.root.logger, lower)
+    {}
 
-	MockLogHandler log;
-	MockExecutor exe;
-	MockLowerLayer lower;
-	Responder responder;
+    MockLogHandler log;
+    MockExecutor exe;
+    MockLowerLayer lower;
+    Responder responder;
 };
 
 TEST_CASE(SUITE("responds to malformed REQUEST_HANDSHAKE_BEGIN with bad_message_format"))
 {
-	ResponderFixture fix;
+    ResponderFixture fix;
 
-	fix.responder.on_open();
+    fix.responder.on_open();
 
     // request handshake begin (function only)
-	fix.lower.enqueue_message(Addresses(5, 5), "00");
-	fix.responder.on_rx_ready();
+    fix.lower.enqueue_message(Addresses(5, 5), "00");
+    fix.responder.on_rx_ready();
 
     // ReplyHandshakeError w/ error = bad message format
-	REQUIRE(fix.lower.pop_tx_message() == "04 00");
+    REQUIRE(fix.lower.pop_tx_message() == "04 00");
 }

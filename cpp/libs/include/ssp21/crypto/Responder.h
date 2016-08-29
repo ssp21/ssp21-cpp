@@ -29,9 +29,9 @@ namespace ssp21
 
         struct Config
         {
-			/// The maximum message size that this layer should transmit to the link layer
-			/// This constant determines the size of a buffer allocated when the responder
-			/// is constructed
+            /// The maximum message size that this layer should transmit to the link layer
+            /// This constant determines the size of a buffer allocated when the responder
+            /// is constructed
             uint16_t max_tx_message_size = consts::max_config_link_payload_size;
         };
 
@@ -55,7 +55,7 @@ namespace ssp21
 
         void on_message(const openpal::RSlice& data, const RequestHandshakeBegin& msg);
         void on_message(const openpal::RSlice& data, const UnconfirmedSessionData& msg);
-        void on_message(const openpal::RSlice& data, const RequestHandshakeAuth& msg);		
+        void on_message(const openpal::RSlice& data, const RequestHandshakeAuth& msg);
 
         template <class MsgType>
         void handle_parse_error(ParseError err);
@@ -63,7 +63,7 @@ namespace ssp21
         void reply_with_handshake_error(HandshakeError err);
 
         Config config_;
-		openpal::IExecutor* const executor_;
+        openpal::IExecutor* const executor_;
         openpal::Logger logger_;
         ILowerLayer* const lower_;
         openpal::Buffer tx_buffer_;

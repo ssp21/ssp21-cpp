@@ -130,7 +130,7 @@ TEST_CASE(SUITE("rejects unknown enum"))
 {
     RequestHandshakeBegin msg;
 
-	// ------------------VV--------------------------------------
+    // ------------------VV--------------------------------------
     Hex hex("00 D1 D2 00 CC 00 00 00 03 AA AA AA 01 00 02 BB BB");
 
     auto input = hex.as_rslice();

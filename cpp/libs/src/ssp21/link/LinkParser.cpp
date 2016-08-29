@@ -99,24 +99,24 @@ namespace ssp21
 
     LinkParser::State LinkParser::parse_header(const State& state, Context& ctx, openpal::RSlice& input)
     {
-		const auto new_num_buffered = transfer_data(state, ctx, input, consts::link_header_total_size);
+        const auto new_num_buffered = transfer_data(state, ctx, input, consts::link_header_total_size);
 
         if (new_num_buffered != consts::link_header_total_size)
         {
             return State::wait_header(new_num_buffered);
         }
 
-		auto header_start = ctx.buffer.as_rslice().skip(2);
+        auto header_start = ctx.buffer.as_rslice().skip(2);
 
-		uint32_t actual_crc;
+        uint32_t actual_crc = 0;
 
-		BigEndian::read(
-			header_start,
-			ctx.message.addresses.destination,
-			ctx.message.addresses.source,
-			ctx.payload_length,
-			actual_crc
-		);
+        BigEndian::read(
+            header_start,
+            ctx.message.addresses.destination,
+            ctx.message.addresses.source,
+            ctx.payload_length,
+            actual_crc
+        );
 
         // now read and validate the header
         auto expected_crc = CastagnoliCRC32::calc(ctx.buffer.as_rslice().take(consts::link_header_fields_size));
@@ -146,20 +146,20 @@ namespace ssp21
     LinkParser::State LinkParser::parse_body(const State& state, Context& ctx, openpal::RSlice& input)
     {
         const uint32_t total_frame_size = consts::link_header_total_size + ctx.payload_length + consts::crc_size;
-       
-		const auto new_num_buffered = transfer_data(state, ctx, input, total_frame_size);
+
+        const auto new_num_buffered = transfer_data(state, ctx, input, total_frame_size);
 
         if (new_num_buffered != total_frame_size)
         {
             return State::wait_body(new_num_buffered);
         }
 
-		ctx.message.payload = ctx.buffer.as_rslice().skip(consts::link_header_total_size).take(ctx.payload_length);
+        ctx.message.payload = ctx.buffer.as_rslice().skip(consts::link_header_total_size).take(ctx.payload_length);
         const auto expected_crc = CastagnoliCRC32::calc(ctx.message.payload);
-		auto crcb_start = ctx.buffer.as_rslice().skip(consts::link_header_total_size + ctx.payload_length);
-			
-		uint32_t actual_crc;
-		UInt32::read_from(crcb_start, actual_crc);
+        auto crcb_start = ctx.buffer.as_rslice().skip(consts::link_header_total_size + ctx.payload_length);
+
+        uint32_t actual_crc = 0;
+        UInt32::read_from(crcb_start, actual_crc);
 
         if (expected_crc != actual_crc)
         {
@@ -170,17 +170,17 @@ namespace ssp21
         return State::wait_read(new_num_buffered);
     }
 
-	uint32_t LinkParser::transfer_data(const State& state, Context& ctx, openpal::RSlice& input, uint32_t max_bytes_to_buffer)
-	{
-		const auto remaining = max_bytes_to_buffer - state.num_buffered;
-		const auto num_to_copy = min<uint32_t>(remaining, input.length());
-		auto dest = ctx.buffer.as_wslice().skip(state.num_buffered);
+    uint32_t LinkParser::transfer_data(const State& state, Context& ctx, openpal::RSlice& input, uint32_t max_bytes_to_buffer)
+    {
+        const auto remaining = max_bytes_to_buffer - state.num_buffered;
+        const auto num_to_copy = min<uint32_t>(remaining, input.length());
+        auto dest = ctx.buffer.as_wslice().skip(state.num_buffered);
 
-		input.take(num_to_copy).move_to(dest);
-		input.advance(num_to_copy);
+        input.take(num_to_copy).move_to(dest);
+        input.advance(num_to_copy);
 
-		return num_to_copy + state.num_buffered;
-	}
+        return num_to_copy + state.num_buffered;
+    }
 }
 
 

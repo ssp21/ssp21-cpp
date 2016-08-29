@@ -11,9 +11,9 @@ using namespace openpal;
 
 namespace ssp21
 {
-	Responder::Responder(const Config& config, openpal::IExecutor& executor, Logger logger, ILowerLayer& lower) :
+    Responder::Responder(const Config& config, openpal::IExecutor& executor, Logger logger, ILowerLayer& lower) :
         config_(config),
-		executor_(&executor),
+        executor_(&executor),
         logger_(logger),
         lower_(&lower),
         tx_buffer_(config.max_tx_message_size)
@@ -34,18 +34,18 @@ namespace ssp21
     void Responder::on_tx_ready_impl()
     {
         // if there's message to be read, read it
-		// since we can now transmit responses
-		if (lower_->is_rx_ready())
-		{
-			lower_->receive(*this);
-		}
+        // since we can now transmit responses
+        if (lower_->is_rx_ready())
+        {
+            lower_->receive(*this);
+        }
     }
 
     void Responder::on_rx_ready_impl()
     {
-		// only read a message if the lower layer 
-		// can transmit a response
-        if (lower_->is_tx_ready()) 
+        // only read a message if the lower layer
+        // can transmit a response
+        if (lower_->is_tx_ready())
         {
             lower_->receive(*this);
         }
@@ -120,12 +120,12 @@ namespace ssp21
             msg.print(printer);
         }
 
-		// validate the arguments
-		if (msg.version > 0) // TODO remove magic constant once version scheme is identified
-		{
-			this->reply_with_handshake_error(HandshakeError::unsupported_version);
-			return;
-		}
+        // validate the arguments
+        if (msg.version > 0) // TODO remove magic constant once version scheme is identified
+        {
+            this->reply_with_handshake_error(HandshakeError::unsupported_version);
+            return;
+        }
     }
 
     void Responder::on_message(const RSlice& data, const RequestHandshakeAuth& msg)

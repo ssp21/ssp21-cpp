@@ -13,9 +13,9 @@ using namespace openpal;
 
 namespace ssp21
 {
-	RSlice LinkFormatter::write(WSlice dest, const Message& message)
+    RSlice LinkFormatter::write(WSlice dest, const Message& message)
     {
-		const auto start = dest.as_rslice();
+        const auto start = dest.as_rslice();
 
         if (dest.length() < consts::min_link_frame_size)
         {
@@ -35,23 +35,23 @@ namespace ssp21
         }
 
         // safe cast since we've already validated the payload length relative to the maximum allowed
-		const auto payload_length = static_cast<uint16_t>(message.payload.length());
+        const auto payload_length = static_cast<uint16_t>(message.payload.length());
 
-		BigEndian::write(
-			dest,
-			consts::sync1,
-			consts::sync2,
-			message.addresses.destination,
-			message.addresses.source,
-			payload_length
-		);
+        BigEndian::write(
+            dest,
+            consts::sync1,
+            consts::sync2,
+            message.addresses.destination,
+            message.addresses.source,
+            payload_length
+        );
 
-		const auto crc_h = CastagnoliCRC32::calc(start.take(consts::link_header_fields_size));
+        const auto crc_h = CastagnoliCRC32::calc(start.take(consts::link_header_fields_size));
 
-		UInt32::write_to(dest, crc_h);
+        UInt32::write_to(dest, crc_h);
 
-		// copy the payload
-		message.payload.copy_to(dest);
+        // copy the payload
+        message.payload.copy_to(dest);
 
         // append the body crc
         UInt32::write_to(dest, CastagnoliCRC32::calc(message.payload));

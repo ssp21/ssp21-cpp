@@ -22,10 +22,10 @@ namespace ssp21
         {
             assert(this->is_tx_ready_);
             this->tx_messages_.push_back(
-				std::unique_ptr<message_t>(new message_t(message.addresses, message.payload))
+                std::unique_ptr<message_t>(new message_t(message.addresses, message.payload))
             );
             this->is_tx_ready_ = false;
-			return true;
+            return true;
         }
 
         virtual bool receive(IMessageProcessor& processor) override
@@ -37,9 +37,9 @@ namespace ssp21
 
             auto& front = rx_messages_.front();
 
-			processor.process(
-				Message(front->first, front->second.as_rslice())
-			);
+            processor.process(
+                Message(front->first, front->second.as_rslice())
+            );
 
             rx_messages_.pop_front();
 
