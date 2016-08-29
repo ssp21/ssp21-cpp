@@ -26,6 +26,8 @@ namespace ssp21
 		
 		virtual void dh_x25519(const PrivateKey& priv_key, const openpal::RSlice& pub_key, DHOutput& output, std::error_code& ec) override;
 
+		uint8_t fill_byte = 0xFF;
+
 	private:
 
 		MockCryptoBackend() {}
