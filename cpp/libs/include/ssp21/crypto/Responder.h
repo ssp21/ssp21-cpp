@@ -97,14 +97,9 @@ namespace ssp21
         virtual void process(const Message& message) override;
 
         template <class MsgType>
-        inline void read_any(const openpal::RSlice& data);
+        inline void handle_handshake_message(const openpal::RSlice& data);		
 
-        void on_message(const openpal::RSlice& data, const RequestHandshakeBegin& msg);
-        void on_message(const openpal::RSlice& data, const UnconfirmedSessionData& msg);
-        void on_message(const openpal::RSlice& data, const RequestHandshakeAuth& msg);
-
-        template <class MsgType>
-        void handle_parse_error(ParseError err);
+		void handle_session_message(const openpal::RSlice& data);
 
         void reply_with_handshake_error(HandshakeError err);
 
@@ -115,21 +110,7 @@ namespace ssp21
 		// state instance for the handshake
 		IHandshakeState* handshake_state;
     };
-
-    template <>
-    inline void Responder::handle_parse_error<RequestHandshakeBegin>(ParseError err)
-    {
-        this->reply_with_handshake_error(HandshakeError::bad_message_format);
-    }
-
-    template <>
-    inline void Responder::handle_parse_error<RequestHandshakeAuth>(ParseError err)
-    {
-        this->reply_with_handshake_error(HandshakeError::bad_message_format);
-    }
-
-    template <>
-    inline void Responder::handle_parse_error<UnconfirmedSessionData>(ParseError err) {}
+   
 }
 
 #endif

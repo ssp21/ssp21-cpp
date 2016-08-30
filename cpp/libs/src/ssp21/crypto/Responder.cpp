@@ -7,6 +7,7 @@
 
 #include "ssp21/crypto/LogMessagePrinter.h"
 #include "ssp21/crypto/Crypto.h"
+#include "ssp21/crypto/ResponderHandshakeStates.h"
 
 #include "ssp21/msg/ReplyHandshakeError.h"
 #include "ssp21/msg/ReplyHandshakeBegin.h"
@@ -42,7 +43,7 @@ namespace ssp21
 		ILowerLayer& lower
 	) :
 		ctx(config, std::move(local_static_key_pair), std::move(remote_static_public_key), logger, executor, lower),
-		handshake_state(nullptr) // TODO
+		handshake_state(&HandshakeStateIdle::get())
 	{}
 
     void Responder::on_open_impl()
@@ -52,7 +53,7 @@ namespace ssp21
 
     void Responder::on_close_impl()
     {
-
+		handshake_state = &HandshakeStateIdle::get();
     }
 
     void Responder::on_tx_ready_impl()
@@ -76,20 +77,50 @@ namespace ssp21
     }
 
     template <class MsgType>
-    inline void Responder::read_any(const openpal::RSlice& data)
+    inline void Responder::handle_handshake_message(const openpal::RSlice& data)
     {
         MsgType msg;
         auto err = msg.read_msg(data);
         if (any(err))
         {
             FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "error reading %s: %s", FunctionSpec::to_string(MsgType::function), ParseErrorSpec::to_string(err));
-            this->handle_parse_error<MsgType>(err);
+			this->reply_with_handshake_error(HandshakeError::bad_message_format);
         }
         else
         {
-            this->on_message(data, msg);
+			FORMAT_LOG_BLOCK(ctx.logger, levels::rx_crypto_msg, "%s (length = %u)", FunctionSpec::to_string(MsgType::function), data.length());
+
+			if (ctx.logger.is_enabled(levels::rx_crypto_msg_fields))
+			{
+				LogMessagePrinter printer(ctx.logger, levels::rx_crypto_msg_fields);
+				msg.print(printer);
+			}
+
+			this->handshake_state = &this->handshake_state->on_message(ctx, data, msg);
         }
     }
+
+	void Responder::handle_session_message(const openpal::RSlice& data)
+	{
+		UnconfirmedSessionData msg;
+		auto err = msg.read_msg(data);
+		if (any(err))
+		{
+			FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "error reading session message: %s", ParseErrorSpec::to_string(err));			
+		}
+		else
+		{
+			FORMAT_LOG_BLOCK(ctx.logger, levels::rx_crypto_msg, "%s (length = %u)", FunctionSpec::to_string(Function::unconfirmed_session_data), data.length());
+
+			if (ctx.logger.is_enabled(levels::rx_crypto_msg_fields))
+			{
+				LogMessagePrinter printer(ctx.logger, levels::rx_crypto_msg_fields);
+				msg.print(printer);
+			}
+
+			// TODO
+		}
+	}
 
     void Responder::process(const Message& message)
     {
@@ -116,15 +147,15 @@ namespace ssp21
         switch (FunctionSpec::from_type(function))
         {
         case(Function::request_handshake_begin) :
-            this->read_any<RequestHandshakeBegin>(message.payload);
+            this->handle_handshake_message<RequestHandshakeBegin>(message.payload);
             break;
 
         case(Function::request_handshake_auth) :
-            this->read_any<RequestHandshakeAuth>(message.payload);
+            this->handle_handshake_message<RequestHandshakeAuth>(message.payload);
             break;
 
         case(Function::unconfirmed_session_data) :
-            this->read_any<UnconfirmedSessionData>(message.payload);
+            this->handle_session_message(message.payload);
             break;
 
         default:
@@ -146,6 +177,7 @@ namespace ssp21
         }
     }
 
+	/*
     void Responder::on_message(const RSlice& msg_bytes, const RequestHandshakeBegin& msg)
     {
         FORMAT_LOG_BLOCK(ctx.logger, levels::rx_crypto_msg, "request handshake begin (length = %u)", msg_bytes.length());
@@ -197,7 +229,9 @@ namespace ssp21
 		
 		ctx.lower->transmit(Message(Addresses(), result.written)); // begin transmitting the response		
     }
+	*/
 
+	/*
 	HandshakeError Responder::validate_handshake_begin(const RequestHandshakeBegin& msg)
 	{		
 		if (msg.version != consts::crypto::protocol_version)
@@ -231,27 +265,6 @@ namespace ssp21
 			)
 		);
 	}	
-
-    void Responder::on_message(const RSlice& data, const RequestHandshakeAuth& msg)
-    {
-        FORMAT_LOG_BLOCK(ctx.logger, levels::rx_crypto_msg, "request handshake auth (length = %u)", data.length());
-
-        if (ctx.logger.is_enabled(levels::rx_crypto_msg_fields))
-        {
-            LogMessagePrinter printer(ctx.logger, levels::rx_crypto_msg_fields);
-            msg.print(printer);
-        }
-    }
-
-    void Responder::on_message(const RSlice& data, const UnconfirmedSessionData& msg)
-    {
-        FORMAT_LOG_BLOCK(ctx.logger, levels::rx_crypto_msg, "unconfirmed session data (length = %u)", data.length());
-
-        if (ctx.logger.is_enabled(levels::rx_crypto_msg_fields))
-        {
-            LogMessagePrinter printer(ctx.logger, levels::rx_crypto_msg_fields);
-            msg.print(printer);
-        }
-    }
+	*/	
 
 }
