@@ -25,13 +25,19 @@ private:
 
 	struct Keys
 	{
-		Keys() :
+		Keys(BufferType key_type) :
 			local_kp(std::make_unique<KeyPair>()),
 			remote_static_key(std::make_unique<PublicKey>())
 		{			
-			Crypto::gen_keypair_x25519(*local_kp);			
-			remote_static_key->get_write_slice().set_all_to(0xFF);
-			remote_static_key->set_type(BufferType::x25519_key);
+			init_key(local_kp->private_key, key_type);
+			init_key(local_kp->public_key, key_type);
+			init_key(*remote_static_key, key_type);
+		}
+		
+		static void init_key(BufferBase& buffer, BufferType key_type)
+		{
+			buffer.get_write_slice().set_all_to(0xFF);
+			buffer.set_type(key_type);
 		}
 
 		std::unique_ptr<KeyPair> local_kp;
@@ -41,8 +47,8 @@ private:
 
 public:
 
-    ResponderFixture(const Responder::Config& config = Responder::Config()) :
-        keys(),
+    ResponderFixture(BufferType key_type = BufferType::x25519_key, const Responder::Config& config = Responder::Config()) :
+        keys(key_type),
 		log("responder"),
         exe(),
         lower(),
