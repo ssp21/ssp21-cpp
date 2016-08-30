@@ -44,7 +44,7 @@ namespace ssp21
         BufferType buffer_type_;
 
     protected:
-        openpal::StaticBuffer<consts::max_primitive_buffer_length> buffer_;
+        openpal::StaticBuffer<consts::crypto::max_primitive_buffer_length> buffer_;
     };
 
     /**

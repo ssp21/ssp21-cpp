@@ -189,13 +189,13 @@ namespace ssp21
 
 	HandshakeError Responder::validate_handshake_begin(const RequestHandshakeBegin& msg)
 	{		
-		if (msg.version != consts::ssp21_protocol_version)
+		if (msg.version != consts::crypto::protocol_version)
 		{			
 			return HandshakeError::unsupported_version;
 		}
 
 		// verify that the public key length matches the DH mode
-		if (msg.ephemeral_public_key.length() != consts::x25519_key_length)
+		if (msg.ephemeral_public_key.length() != consts::crypto::x25519_key_length)
 		{
 			return HandshakeError::bad_message_format;
 		}		

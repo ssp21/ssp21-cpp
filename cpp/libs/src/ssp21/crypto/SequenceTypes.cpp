@@ -15,7 +15,7 @@ namespace ssp21
 
     bool SeqRSlice::push(const openpal::RSlice& slice)
     {
-        if (count_ == consts::max_seq_of_seq)
+        if (count_ == consts::crypto::max_seq_of_seq)
         {
             return false;
         }

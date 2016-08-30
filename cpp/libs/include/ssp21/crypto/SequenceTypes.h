@@ -49,7 +49,7 @@ namespace ssp21
     private:
 
         uint32_t count_;
-        openpal::RSlice slices_[consts::max_seq_of_seq];
+        openpal::RSlice slices_[consts::crypto::max_seq_of_seq];
     };
 
     // specialized types with type dependent constraints

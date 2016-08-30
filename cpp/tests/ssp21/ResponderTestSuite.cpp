@@ -99,7 +99,7 @@ TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_BEGIN with REPLY_HANDSHAKE_BEGIN"
 		HashMode::sha256,
 		SessionMode::hmac_sha256_16,
 		CertificateMode::preshared_keys,
-		hex::repeat(0xFF, consts::x25519_key_length)		
+		hex::repeat(0xFF, consts::crypto::x25519_key_length)
 	);
 	
 	fix.lower.enqueue_message(Addresses(1, 10), request);
@@ -112,7 +112,7 @@ TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_BEGIN with REPLY_HANDSHAKE_BEGIN"
 	REQUIRE(counters.num_dh_x25519 == 3);			// 3 DH operations to get the authentication key
 	REQUIRE(counters.num_hmac_sha256 == 3);			// 3 hmacs during the HKDF
 
-	auto reply = hex::reply_handshake_begin(hex::repeat(0xFF, consts::x25519_key_length));
+	auto reply = hex::reply_handshake_begin(hex::repeat(0xFF, consts::crypto::x25519_key_length));
 	
 	REQUIRE(fix.lower.pop_tx_message() == reply);
 }

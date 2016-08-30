@@ -50,7 +50,7 @@ namespace ssp21
     {
         assert(backend_);
 
-        if ((priv_key.get_type() != BufferType::x25519_key) || (pub_key.length() != consts::x25519_key_length))
+        if ((priv_key.get_type() != BufferType::x25519_key) || (pub_key.length() != consts::crypto::x25519_key_length))
         {
             ec = CryptoError::bad_key_type;
             return;

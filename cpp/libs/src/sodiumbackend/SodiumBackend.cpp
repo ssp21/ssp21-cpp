@@ -13,11 +13,11 @@ namespace ssp21
     {
         /// assertions for SHA-256 related constants
         static_assert(crypto_hash_sha256_BYTES == crypto_auth_hmacsha256_BYTES, "sha256 hash and HMAC length mismatch");
-        static_assert(consts::sha256_hash_output_length == crypto_hash_sha256_BYTES, "sha256 length mismatch");
-        static_assert(consts::sha256_hash_output_length == crypto_auth_hmacsha256_BYTES, "sha256-HMAC length mismatch");
+        static_assert(consts::crypto::sha256_hash_output_length == crypto_hash_sha256_BYTES, "sha256 length mismatch");
+        static_assert(consts::crypto::sha256_hash_output_length == crypto_auth_hmacsha256_BYTES, "sha256-HMAC length mismatch");
 
         /// assertions for DH key lengths
-        static_assert(consts::x25519_key_length == crypto_scalarmult_BYTES, "X25519 key length mismatch");
+        static_assert(consts::crypto::x25519_key_length == crypto_scalarmult_BYTES, "X25519 key length mismatch");
 
         SodiumBackend SodiumBackend::backend_;
 

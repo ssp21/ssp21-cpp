@@ -35,11 +35,11 @@ namespace ssp21
         switch (key_type)
         {
         case(BufferType::x25519_key) :
-            return consts::x25519_key_length;
+            return consts::crypto::x25519_key_length;
         case(BufferType::sha256) :
-            return consts::sha256_hash_output_length;
+            return consts::crypto::sha256_hash_output_length;
         case(BufferType::symmetric_key) :
-            return consts::symmetric_ley_length;
+            return consts::crypto::symmetric_ley_length;
         default:
             return 0;
         }
