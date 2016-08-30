@@ -55,6 +55,8 @@ namespace ssp21
 				ILowerLayer& lower
 			);
 
+			void reply_with_handshake_error(HandshakeError err);
+
 			Config config;
 
 			std::unique_ptr<KeyPair> local_static_key_pair;
@@ -99,9 +101,7 @@ namespace ssp21
         template <class MsgType>
         inline void handle_handshake_message(const openpal::RSlice& data);		
 
-		void handle_session_message(const openpal::RSlice& data);
-
-        void reply_with_handshake_error(HandshakeError err);
+		void handle_session_message(const openpal::RSlice& data);        
 
 		HandshakeError validate_handshake_begin(const RequestHandshakeBegin& msg);		
 

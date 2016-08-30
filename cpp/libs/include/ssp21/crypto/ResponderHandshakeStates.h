@@ -21,6 +21,8 @@ namespace ssp21
 
 		private:
 
+		HandshakeError validate_handshake_begin(Responder::Context& ctx, const RequestHandshakeBegin& msg);
+
 		HandshakeStateIdle() {}
 
 		static HandshakeStateIdle instance;

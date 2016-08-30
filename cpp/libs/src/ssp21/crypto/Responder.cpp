@@ -10,7 +10,6 @@
 #include "ssp21/crypto/ResponderHandshakeStates.h"
 
 #include "ssp21/msg/ReplyHandshakeError.h"
-#include "ssp21/msg/ReplyHandshakeBegin.h"
 
 using namespace openpal;
 
@@ -34,6 +33,19 @@ namespace ssp21
     {
 
     }
+
+	void Responder::Context::reply_with_handshake_error(HandshakeError err)
+	{
+		ReplyHandshakeError msg(err);
+
+		auto dest = this->tx_buffer.as_wslice();
+		auto result = msg.write_msg(dest);
+
+		if (!result.is_error())
+		{
+			this->lower->transmit(Message(Addresses(), result.written));
+		}
+	}
 
 	Responder::Responder(const Config& config,
 		std::unique_ptr<KeyPair> local_static_key_pair,
@@ -84,7 +96,7 @@ namespace ssp21
         if (any(err))
         {
             FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "error reading %s: %s", FunctionSpec::to_string(MsgType::function), ParseErrorSpec::to_string(err));
-			this->reply_with_handshake_error(HandshakeError::bad_message_format);
+			ctx.reply_with_handshake_error(HandshakeError::bad_message_format);
         }
         else
         {
@@ -162,109 +174,6 @@ namespace ssp21
             FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "Received unknown function id: %u", function);
             break;
         }
-    }
-
-    void Responder::reply_with_handshake_error(HandshakeError err)
-    {
-        ReplyHandshakeError msg(err);
-
-        auto dest = ctx.tx_buffer.as_wslice();
-        auto result = msg.write_msg(dest);
-
-        if (!result.is_error())
-        {
-			ctx.lower->transmit(Message(Addresses(), result.written));
-        }
-    }
-
-	/*
-    void Responder::on_message(const RSlice& msg_bytes, const RequestHandshakeBegin& msg)
-    {
-        FORMAT_LOG_BLOCK(ctx.logger, levels::rx_crypto_msg, "request handshake begin (length = %u)", msg_bytes.length());
-
-        if (ctx.logger.is_enabled(levels::rx_crypto_msg_fields))
-        {
-            LogMessagePrinter printer(ctx.logger, levels::rx_crypto_msg_fields);
-            msg.print(printer);
-        }
-
-		auto err = validate_handshake_begin(msg);
-
-		if (any(err))
-		{
-			FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "handshake error: %s", HandshakeErrorSpec::to_string(err));
-			this->reply_with_handshake_error(err);
-			return;
-		}
-
-		Seq8 public_ephem_dh_key(ctx.handshake.initialize());	// generate our local ephemeral keys
-		this->ctx.handshake.set_ck(msg_bytes);							// initialize the chaining key
-
-		// now format our response - in the future, this we'll add certificates after this call
-		ReplyHandshakeBegin reply(public_ephem_dh_key);
-
-		auto dest = ctx.tx_buffer.as_wslice();
-		auto result = reply.write_msg(dest);
-
-		if (result.is_error()) {
-			FORMAT_LOG_BLOCK(ctx.logger, levels::error, "error formatting reply: %s", FormatErrorSpec::to_string(result.err));
-			return;
-		}
-			
-		std::error_code ec;
-
-		ctx.handshake.derive_authentication_key(
-			result.written,
-			ctx.local_static_key_pair->private_key,
-			msg.ephemeral_public_key,
-			ctx.remote_static_public_key->as_slice(),
-			ec
-		);
-
-		if (ec)
-		{
-			FORMAT_LOG_BLOCK(ctx.logger, levels::error, "error deriving auth key: %s", ec.message().c_str());
-			this->reply_with_handshake_error(HandshakeError::internal);
-		}
-		
-		ctx.lower->transmit(Message(Addresses(), result.written)); // begin transmitting the response		
-    }
-	*/
-
-	/*
-	HandshakeError Responder::validate_handshake_begin(const RequestHandshakeBegin& msg)
-	{		
-		if (msg.version != consts::crypto::protocol_version)
-		{			
-			return HandshakeError::unsupported_version;
-		}
-
-		// verify that the public key length matches the DH mode
-		if (msg.ephemeral_public_key.length() != consts::crypto::x25519_key_length)
-		{
-			return HandshakeError::bad_message_format;
-		}		
-
-		if (msg.certificate_mode != CertificateMode::preshared_keys)
-		{
-			return HandshakeError::unsupported_certificate_mode;
-		}
-
-		if (msg.certificates.count() != 0)
-		{
-			return HandshakeError::bad_message_format;
-		}		
-
-		// last thing we should do is configure the requested algorithms
-		return ctx.handshake.set_algorithms(
-			Algorithms::Config(
-				msg.dh_mode,
-				msg.hash_mode,
-				msg.nonce_mode,
-				msg.session_mode
-			)
-		);
-	}	
-	*/	
+    }    
 
 }
