@@ -77,7 +77,7 @@ TEST_CASE(SUITE("responds to malformed REQUEST_HANDSHAKE_BEGIN with bad_message_
     fix.responder.on_open();
 
     // request handshake begin (function only)
-	fix.lower.enqueue_message(Addresses(5, 5), hex::func_to_hex(Function::request_handshake_begin));
+	fix.lower.enqueue_message(Addresses(1, 10), hex::func_to_hex(Function::request_handshake_begin));
     fix.responder.on_rx_ready();
 
 	auto err = hex::reply_handshake_error(HandshakeError::bad_message_format);
@@ -102,14 +102,15 @@ TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_BEGIN with REPLY_HANDSHAKE_BEGIN"
 		hex::repeat(0xFF, consts::x25519_key_length)		
 	);
 	
-	fix.lower.enqueue_message(Addresses(5, 5), request);
+	fix.lower.enqueue_message(Addresses(1, 10), request);
 	fix.responder.on_rx_ready();
 
+	auto& counters = MockCryptoBackend::instance.counters;
 	
-	REQUIRE(MockCryptoBackend::instance.counters.num_hash_sha256 == 2);			// two hashes for the chaining key
-	REQUIRE(MockCryptoBackend::instance.counters.num_gen_keypair_x25519 == 1);	// one ephemeral key pair generation
-	REQUIRE(MockCryptoBackend::instance.counters.num_dh_x25519 == 3);			// 3 DH operations to get the authentication key
-	REQUIRE(MockCryptoBackend::instance.counters.num_hmac_sha256 == 3);			// 3 hmacs during the HKDF
+	REQUIRE(counters.num_hash_sha256 == 2);			// two hashes for the chaining key
+	REQUIRE(counters.num_gen_keypair_x25519 == 1);	// one ephemeral key pair generation
+	REQUIRE(counters.num_dh_x25519 == 3);			// 3 DH operations to get the authentication key
+	REQUIRE(counters.num_hmac_sha256 == 3);			// 3 hmacs during the HKDF
 
 	auto reply = hex::reply_handshake_begin(hex::repeat(0xFF, consts::x25519_key_length));
 	

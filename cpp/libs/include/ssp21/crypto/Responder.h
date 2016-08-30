@@ -42,6 +42,12 @@ namespace ssp21
             /// This constant determines the size of a buffer allocated when the responder
             /// is constructed
             uint16_t max_tx_message_size = consts::max_config_link_payload_size;
+
+			/// expected remote address
+			uint16_t remote_address = 10;
+
+			/// local address
+			uint16_t local_address = 1;
         };
 
         Responder(	const Config& config, 

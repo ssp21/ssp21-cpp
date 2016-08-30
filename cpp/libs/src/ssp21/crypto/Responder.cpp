@@ -83,6 +83,18 @@ namespace ssp21
 
     void Responder::process(const Message& message)
     {
+		if (message.addresses.destination != this->config_.local_address)
+		{
+			FORMAT_LOG_BLOCK(logger_, levels::info, "unknown destination address: %u", message.addresses.destination);
+			return;
+		}
+
+		if (message.addresses.source != this->config_.remote_address)
+		{
+			FORMAT_LOG_BLOCK(logger_, levels::info, "unknown source address: %u", message.addresses.source);
+			return;
+		}
+
         if (message.payload.is_empty())
         {
             SIMPLE_LOG_BLOCK(logger_, levels::warn, "Received zero length message");
