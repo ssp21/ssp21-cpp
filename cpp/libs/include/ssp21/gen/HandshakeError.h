@@ -36,16 +36,18 @@ enum class HandshakeError : uint8_t
     unsupported_hash_mode = 0x3,
     /// The requested session mode is not supported
     unsupported_session_mode = 0x4,
+    /// The requested nonce verification mode is not supported
+    unsupported_nonce_mode = 0x5,
     /// The requested certificate mode is not supported
-    unsupported_certificate_mode = 0x5,
+    unsupported_certificate_mode = 0x6,
     /// One of the received certificates was improperly encoded
-    bad_certificate_format = 0x6,
+    bad_certificate_format = 0x7,
     /// One of the received certificates utilizes an unsupported feature
-    unsupported_certificate_feature = 0x7,
+    unsupported_certificate_feature = 0x8,
     /// The outstation was unable to authenticate the master
-    authentication_error = 0x8,
+    authentication_error = 0x9,
     /// internal error
-    internal = 0x9,
+    internal = 0xA,
     /// This value gets used internally in ssp21-cpp only
     none = 0xFE,
     /// value not defined

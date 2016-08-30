@@ -4,11 +4,12 @@
 
 #include "CryptoTypedefs.h"
 
-#include "Crypto.h"
-
 #include "ssp21/gen/HandshakeError.h"
 #include "ssp21/gen/DHMode.h"
 #include "ssp21/gen/HashMode.h"
+
+#include "ssp21/crypto/Crypto.h"
+#include "ssp21/crypto/NonceFunctions.h"
 
 namespace ssp21
 {
@@ -23,32 +24,27 @@ namespace ssp21
         struct Algorithms
         {
 
-        public:
-
-            Algorithms(dh_func_t dh, hkdf_func_t hkdf, hash_func_t hash, gen_keypair_func_t gen_keypair) :
-                dh(dh),
-                hkdf(hkdf),
-                hash(hash),
-                gen_keypair(gen_keypair)
-            {}
+        public:            
 
 			// default algorithms
 			Algorithms() :
 				dh(&Crypto::dh_x25519),
 				hkdf(&Crypto::hkdf_sha256),
 				hash(&Crypto::hash_sha256),
-				gen_keypair(&Crypto::gen_keypair_x25519)
+				gen_keypair(&Crypto::gen_keypair_x25519),
+				verify_nonce(NonceFunctions::default_verify())
 			{}			
 
 			dh_func_t dh;
             hkdf_func_t hkdf;
             hash_func_t hash;
             gen_keypair_func_t gen_keypair;
+			verify_nonce_func_t verify_nonce;
         };
 
 		Handshake() {}
 
-		HandshakeError set_algorithms(DHMode dh_mode, HashMode hash_mode);
+		HandshakeError set_algorithms(DHMode dh_mode, HashMode hash_mode, NonceMode nonce_mode);
 
         /// generates new ephemeral keys, resets all state, and returns a slice pointing
 		/// to the ephemeral public DH key

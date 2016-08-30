@@ -5,7 +5,7 @@ using namespace openpal;
 
 namespace ssp21
 {   
-	HandshakeError Handshake::set_algorithms(DHMode dh_mode, HashMode hash_mode)
+	HandshakeError Handshake::set_algorithms(DHMode dh_mode, HashMode hash_mode, NonceMode nonce_mode)
 	{
 		switch (dh_mode)
 		{
@@ -25,6 +25,18 @@ namespace ssp21
 			break;
 		default:
 			return HandshakeError::unsupported_hash_mode;
+		}
+
+		switch (nonce_mode)
+		{
+		case(NonceMode::greater_than_last_rx):
+			algorithms_.verify_nonce = &NonceFunctions::verify_greater_than_last;
+			break;
+		case(NonceMode::increment_last_rx):
+			algorithms_.verify_nonce = &NonceFunctions::verify_strict_increment;
+			break;
+		default:
+			return HandshakeError::unsupported_nonce_mode;
 		}
 
 		return HandshakeError::none;

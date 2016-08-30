@@ -179,7 +179,7 @@ namespace ssp21
 		// TODO - configure the nonce and session modes
 
 		// last thing we should do is configure the requested handshake algorithms
-		return this->handshake_.set_algorithms(msg.dh_mode, msg.hash_mode);
+		return this->handshake_.set_algorithms(msg.dh_mode, msg.hash_mode, msg.nonce_mode);
 	}	
 
     void Responder::on_message(const RSlice& data, const RequestHandshakeAuth& msg)
