@@ -62,4 +62,11 @@ if (UNIX)
 			SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,--no-as-needed" )            
 		endif()
 	endif()
+
+	if(CMAKE_COMPILER_IS_GNUCXX)      
+		if(CMAKE_CXX_COMPILER_VERSION MATCHES 4.8.*)		
+			add_definitions("-DNO_MAKE_UNIQUE_SUPPORT")			
+		endif()
+	endif()
+
 endif()

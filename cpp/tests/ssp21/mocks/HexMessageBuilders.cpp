@@ -10,8 +10,9 @@
 #include "ssp21/msg/ReplyHandshakeBegin.h"
 #include "ssp21/msg/ReplyHandshakeError.h"
 
+#include "MakeUnique.h"
+
 #include <vector>
-#include <memory>
 #include <assert.h>
 
 using namespace openpal;

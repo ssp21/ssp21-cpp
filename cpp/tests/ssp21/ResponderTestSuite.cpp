@@ -12,6 +12,7 @@
 #include "mocks/MockLogHandler.h"
 #include "mocks/MockLowerLayer.h"
 #include "mocks/HexMessageBuilders.h"
+#include "mocks/MakeUnique.h"
 
 #define SUITE(name) "ResponderTestSuite - " name
 
