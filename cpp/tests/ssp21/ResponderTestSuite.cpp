@@ -13,6 +13,7 @@
 #include "mocks/MockLowerLayer.h"
 #include "mocks/HexMessageBuilders.h"
 #include "mocks/MakeUnique.h"
+#include "mocks/MockCryptoBackend.h"
 
 #define SUITE(name) "ResponderTestSuite - " name
 
@@ -82,6 +83,7 @@ TEST_CASE(SUITE("responds to malformed REQUEST_HANDSHAKE_BEGIN with bad_message_
 	auto err = hex::reply_handshake_error(HandshakeError::bad_message_format);
     
     REQUIRE(fix.lower.pop_tx_message() == err);
+	REQUIRE(MockCryptoBackend::instance.counters.all_zero());
 }
 
 TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_BEGIN with REPLY_HANDSHAKE_BEGIN"))
@@ -102,6 +104,12 @@ TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_BEGIN with REPLY_HANDSHAKE_BEGIN"
 	
 	fix.lower.enqueue_message(Addresses(5, 5), request);
 	fix.responder.on_rx_ready();
+
+	
+	REQUIRE(MockCryptoBackend::instance.counters.num_hash_sha256 == 2);			// two hashes for the chaining key
+	REQUIRE(MockCryptoBackend::instance.counters.num_gen_keypair_x25519 == 1);	// one ephemeral key pair generation
+	REQUIRE(MockCryptoBackend::instance.counters.num_dh_x25519 == 3);			// 3 DH operations to get the authentication key
+	REQUIRE(MockCryptoBackend::instance.counters.num_hmac_sha256 == 3);			// 3 hmacs during the HKDF
 
 	auto reply = hex::reply_handshake_begin(hex::repeat(0xFF, consts::x25519_key_length));
 	
