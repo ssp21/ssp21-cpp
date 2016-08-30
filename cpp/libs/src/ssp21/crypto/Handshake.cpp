@@ -5,9 +5,9 @@ using namespace openpal;
 
 namespace ssp21
 {   
-	HandshakeError Handshake::set_algorithms(DHMode dh_mode, HashMode hash_mode, NonceMode nonce_mode)
+	HandshakeError Handshake::set_algorithms(const Algorithms::Config& config)
 	{
-		return this->algorithms_.configure(dh_mode, hash_mode, nonce_mode);
+		return this->algorithms_.configure(config);
 	}
 
 	openpal::RSlice Handshake::initialize()

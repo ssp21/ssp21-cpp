@@ -12,14 +12,15 @@ Algorithms::Algorithms() :
 	hkdf(&Crypto::hkdf_sha256),
 	hash(&Crypto::hash_sha256),
 	gen_keypair(&Crypto::gen_keypair_x25519),
-	verify_nonce(NonceFunctions::default_verify())
+	verify_nonce(NonceFunctions::default_verify()),
+	session_verify(SessionModes::default_session_mode())
 {}
 
-HandshakeError Algorithms::configure(DHMode dh_mode, HashMode hash_mode, NonceMode nonce_mode)
+HandshakeError Algorithms::configure(const Config& config)
 {
 	Algorithms algorithms;
 
-	switch (dh_mode)
+	switch (config.dh_mode)
 	{
 	case(DHMode::x25519):
 		algorithms.dh = &Crypto::dh_x25519;
@@ -29,7 +30,7 @@ HandshakeError Algorithms::configure(DHMode dh_mode, HashMode hash_mode, NonceMo
 		return HandshakeError::unsupported_dh_mode;
 	}
 
-	switch (hash_mode)
+	switch (config.hash_mode)
 	{
 	case(HashMode::sha256):
 		algorithms.hash = &Crypto::hash_sha256;
@@ -39,7 +40,7 @@ HandshakeError Algorithms::configure(DHMode dh_mode, HashMode hash_mode, NonceMo
 		return HandshakeError::unsupported_hash_mode;
 	}
 
-	switch (nonce_mode)
+	switch (config.nonce_mode)
 	{
 	case(NonceMode::greater_than_last_rx):
 		algorithms.verify_nonce = &NonceFunctions::verify_greater_than_last;
@@ -49,6 +50,15 @@ HandshakeError Algorithms::configure(DHMode dh_mode, HashMode hash_mode, NonceMo
 		break;
 	default:
 		return HandshakeError::unsupported_nonce_mode;
+	}
+
+	switch (config.session_mode)
+	{
+	case(SessionMode::hmac_sha256_16):
+		algorithms.session_verify = &SessionModes::verify_hmac_sha256_trunc16;
+		break;	
+	default:
+		return HandshakeError::unsupported_session_mode;
 	}
 
 	(*this) = algorithms;

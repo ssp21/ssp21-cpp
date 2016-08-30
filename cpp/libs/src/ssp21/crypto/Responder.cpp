@@ -177,7 +177,14 @@ namespace ssp21
 		}		
 
 		// last thing we should do is configure the requested algorithms
-		return this->handshake_.set_algorithms(msg.dh_mode, msg.hash_mode, msg.nonce_mode);
+		return this->handshake_.set_algorithms(
+			Algorithms::Config(
+				msg.dh_mode,
+				msg.hash_mode,
+				msg.nonce_mode,
+				msg.session_mode
+			)
+		);
 	}	
 
     void Responder::on_message(const RSlice& data, const RequestHandshakeAuth& msg)

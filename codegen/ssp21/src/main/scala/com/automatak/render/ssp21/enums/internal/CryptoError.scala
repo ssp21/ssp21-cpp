@@ -14,7 +14,8 @@ object CryptoError {
   private val codes = List(
     EnumValue("bad_key_type", 0, "attempted operation with bad key type"),
     EnumValue("dh_x25519_fail", 1, "X25519 DH operation failed. Bad public key?"),
-    EnumValue("undefined_algorithm", 2, "a procedure cannot be executed b/c of an undefined algorithm")
+    EnumValue("undefined_algorithm", 2, "a procedure cannot be executed b/c of an undefined algorithm"),
+    EnumValue("bad_hmac_authentication", 3, "An HMAC based tag did not match")
   )
 
 }

@@ -19,7 +19,7 @@ namespace ssp21
 
 		inline static bool verify_strict_increment(uint32_t last_nonce, uint32_t new_nonce)
 		{
-			if (last_nonce == openpal::max_value<uint32_t>()) 
+			if (last_nonce == openpal::max_value<uint32_t>()) // don't allow rollover below
 			{
 				return false;
 			}

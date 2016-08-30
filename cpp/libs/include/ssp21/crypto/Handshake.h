@@ -24,7 +24,7 @@ namespace ssp21
 
 		Handshake() {}
 
-		HandshakeError set_algorithms(DHMode dh_mode, HashMode hash_mode, NonceMode nonce_mode);
+		HandshakeError set_algorithms(const Algorithms::Config& config);
 
         /// generates new ephemeral keys, resets all state, and returns a slice pointing
 		/// to the ephemeral public DH key

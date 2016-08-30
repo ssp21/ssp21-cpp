@@ -31,7 +31,9 @@ enum class CryptoError : uint8_t
     /// X25519 DH operation failed. Bad public key?
     dh_x25519_fail = 1,
     /// a procedure cannot be executed b/c of an undefined algorithm
-    undefined_algorithm = 2
+    undefined_algorithm = 2,
+    /// An HMAC based tag did not match
+    bad_hmac_authentication = 3
 };
 
 struct CryptoErrorSpec : private openpal::StaticOnly

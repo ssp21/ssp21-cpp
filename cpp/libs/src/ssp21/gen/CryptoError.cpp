@@ -27,6 +27,8 @@ const char* CryptoErrorSpec::to_string(CryptoError arg)
             return "dh_x25519_fail";
         case(CryptoError::undefined_algorithm):
             return "undefined_algorithm";
+        case(CryptoError::bad_hmac_authentication):
+            return "bad_hmac_authentication";
         default:
             return "undefined";
     }
