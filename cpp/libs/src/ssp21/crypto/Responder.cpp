@@ -155,7 +155,7 @@ namespace ssp21
 
 	HandshakeError Responder::validate_handshake_begin(const RequestHandshakeBegin& msg)
 	{		
-		if (msg.version != 0) // TODO remove magic constant once version scheme is identified
+		if (msg.version != consts::ssp21_protocol_version)
 		{			
 			return HandshakeError::unsupported_version;
 		}

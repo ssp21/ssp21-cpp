@@ -7,6 +7,8 @@ namespace ssp21
 {
     namespace consts
     {
+		const uint16_t ssp21_protocol_version = 0x0000;
+
         // implementation constants
         const uint8_t max_certificate_chain = 3;
         const uint8_t max_seq_of_seq = max_certificate_chain;
