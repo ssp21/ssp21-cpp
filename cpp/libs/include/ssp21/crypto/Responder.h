@@ -104,9 +104,8 @@ namespace ssp21
         inline void handle_handshake_message(const openpal::RSlice& data);		
 
 		void handle_session_message(const openpal::RSlice& data);        
-
-		HandshakeError validate_handshake_begin(const RequestHandshakeBegin& msg);		
-
+			
+		// All of the state in the responder except for the actual state instances
 		Context ctx;
 		
 		// state instance for the handshake
