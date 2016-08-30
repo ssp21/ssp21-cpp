@@ -26,13 +26,7 @@ namespace ssp21
     	WIP - this class will implement the stateful part of the responder.
     */
     class Responder final : public IUpperLayer, private IMessageProcessor
-    {
-		enum HandshakeState 
-		{
-			wait_for_handshake_begin,
-			wait_for_request_auth
-		};
-
+    {		
 
     public:
 
@@ -50,13 +44,40 @@ namespace ssp21
 			uint16_t local_address = 1;
         };
 
-        Responder(	const Config& config, 
-					std::unique_ptr<KeyPair> local_static_key_pair,
-					std::unique_ptr<PublicKey> remote_static_public_key,
-					openpal::IExecutor& executor,
-					openpal::Logger logger, 
-					ILowerLayer& lower
-		);
+		struct Context
+		{
+			Context(
+				const Config& config,
+				std::unique_ptr<KeyPair> local_static_key_pair,
+				std::unique_ptr<PublicKey> remote_static_public_key,
+				openpal::Logger logger,
+				openpal::IExecutor& executor,
+				ILowerLayer& lower
+			);
+
+			Config config;
+
+			std::unique_ptr<KeyPair> local_static_key_pair;
+			std::unique_ptr<PublicKey> remote_static_public_key;
+
+			openpal::Logger logger;
+			
+			openpal::IExecutor* const executor;						
+			ILowerLayer* const lower;
+
+			openpal::Buffer tx_buffer;
+			Handshake handshake;
+		};
+
+		Responder(const Config& config,
+			std::unique_ptr<KeyPair> local_static_key_pair,
+			std::unique_ptr<PublicKey> remote_static_public_key,
+			openpal::Logger logger,
+			openpal::IExecutor& executor,
+			ILowerLayer& lower
+		) : 
+			ctx(config, std::move(local_static_key_pair), std::move(remote_static_public_key), logger, executor, lower)
+		{}
 
     private:
 
@@ -85,19 +106,7 @@ namespace ssp21
 
 		HandshakeError validate_handshake_begin(const RequestHandshakeBegin& msg);		
 
-        Config config_;
-		
-		std::unique_ptr<KeyPair> local_static_key_pair_;
-		std::unique_ptr<PublicKey> remote_static_public_key_;
-
-        openpal::IExecutor* const executor_;
-        openpal::Logger logger_;
-        ILowerLayer* const lower_;
-        openpal::Buffer tx_buffer_;
-		
-		Handshake handshake_;
-		HandshakeState handshake_state_;
-
+		Context ctx;
     };
 
     template <>
