@@ -17,16 +17,16 @@ namespace ssp21
     {
         const auto start = dest.as_rslice();
 
-        if (dest.length() < consts::min_link_frame_size)
+        if (dest.length() < consts::link::min_frame_size)
         {
             return RSlice::empty_slice();
         }
 
         const uint32_t max_payload_length = min<uint32_t>(
                                                 // don't let the user write anything bigger than configured maximum
-                                                consts::max_config_link_payload_size,
+                                                consts::link::max_config_payload_size,
                                                 // maximum determined by the output buffer
-                                                dest.length() - consts::min_link_frame_size
+                                                dest.length() - consts::link::min_frame_size
                                             );
 
         if (message.payload.length() > max_payload_length)
@@ -39,14 +39,14 @@ namespace ssp21
 
         BigEndian::write(
             dest,
-            consts::sync1,
-            consts::sync2,
+            consts::link::sync1,
+            consts::link::sync2,
             message.addresses.destination,
             message.addresses.source,
             payload_length
         );
 
-        const auto crc_h = CastagnoliCRC32::calc(start.take(consts::link_header_fields_size));
+        const auto crc_h = CastagnoliCRC32::calc(start.take(consts::link::header_fields_size));
 
         UInt32::write_to(dest, crc_h);
 
@@ -56,7 +56,7 @@ namespace ssp21
         // append the body crc
         UInt32::write_to(dest, CastagnoliCRC32::calc(message.payload));
 
-        return start.take(consts::min_link_frame_size + payload_length);
+        return start.take(consts::link::min_frame_size + payload_length);
     }
 }
 

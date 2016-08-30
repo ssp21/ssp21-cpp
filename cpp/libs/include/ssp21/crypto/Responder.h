@@ -35,7 +35,7 @@ namespace ssp21
             /// The maximum message size that this layer should transmit to the link layer
             /// This constant determines the size of a buffer allocated when the responder
             /// is constructed
-            uint16_t max_tx_message_size = consts::max_config_link_payload_size;
+			uint16_t max_tx_message_size = consts::link::max_config_payload_size;
 
 			/// expected remote address
 			uint16_t remote_address = 10;

@@ -15,11 +15,11 @@ namespace ssp21
         max_payload_length(
             min<uint32_t>(
                 max_payload_length,
-                consts::max_config_link_payload_size
+                consts::link::max_config_payload_size
             )
         ),
         reporter(&reporter),
-        buffer(consts::min_link_frame_size + max_payload_length)
+        buffer(consts::link::min_frame_size + max_payload_length)
     {}
 
     LinkParser::LinkParser(uint16_t max_payload_length, IReporter& reporter) :
@@ -72,7 +72,7 @@ namespace ssp21
         {
             const auto value = input[0];
             input.advance(1);
-            if (value == consts::sync1)
+            if (value == consts::link::sync1)
             {
                 ctx.buffer[0] = value;
                 return State::wait_sync2();
@@ -86,7 +86,7 @@ namespace ssp21
     {
         const auto value = input[0];
         input.advance(1);
-        if (value == consts::sync2)
+        if (value == consts::link::sync2)
         {
             ctx.buffer[1] = value;
             return State::wait_header(2);
@@ -99,9 +99,9 @@ namespace ssp21
 
     LinkParser::State LinkParser::parse_header(const State& state, Context& ctx, openpal::RSlice& input)
     {
-        const auto new_num_buffered = transfer_data(state, ctx, input, consts::link_header_total_size);
+        const auto new_num_buffered = transfer_data(state, ctx, input, consts::link::header_total_size);
 
-        if (new_num_buffered != consts::link_header_total_size)
+        if (new_num_buffered != consts::link::header_total_size)
         {
             return State::wait_header(new_num_buffered);
         }
@@ -119,13 +119,13 @@ namespace ssp21
         );
 
         // now read and validate the header
-        auto expected_crc = CastagnoliCRC32::calc(ctx.buffer.as_rslice().take(consts::link_header_fields_size));
+        auto expected_crc = CastagnoliCRC32::calc(ctx.buffer.as_rslice().take(consts::link::header_fields_size));
 
         if (expected_crc != actual_crc)
         {
             ctx.reporter->on_bad_header_crc(expected_crc, actual_crc);
 
-            auto header = ctx.buffer.as_rslice().take(consts::link_header_total_size).skip(2);
+            auto header = ctx.buffer.as_rslice().take(consts::link::header_total_size).skip(2);
 
             // reprocess all header bytes except for the synchronization bytes.
             //
@@ -145,7 +145,7 @@ namespace ssp21
 
     LinkParser::State LinkParser::parse_body(const State& state, Context& ctx, openpal::RSlice& input)
     {
-        const uint32_t total_frame_size = consts::link_header_total_size + ctx.payload_length + consts::crc_size;
+        const uint32_t total_frame_size = consts::link::header_total_size + ctx.payload_length + consts::link::crc_size;
 
         const auto new_num_buffered = transfer_data(state, ctx, input, total_frame_size);
 
@@ -154,9 +154,9 @@ namespace ssp21
             return State::wait_body(new_num_buffered);
         }
 
-        ctx.message.payload = ctx.buffer.as_rslice().skip(consts::link_header_total_size).take(ctx.payload_length);
+        ctx.message.payload = ctx.buffer.as_rslice().skip(consts::link::header_total_size).take(ctx.payload_length);
         const auto expected_crc = CastagnoliCRC32::calc(ctx.message.payload);
-        auto crcb_start = ctx.buffer.as_rslice().skip(consts::link_header_total_size + ctx.payload_length);
+        auto crcb_start = ctx.buffer.as_rslice().skip(consts::link::header_total_size + ctx.payload_length);
 
         uint32_t actual_crc = 0;
         UInt32::read_from(crcb_start, actual_crc);
