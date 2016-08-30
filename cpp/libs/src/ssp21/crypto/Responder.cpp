@@ -34,6 +34,17 @@ namespace ssp21
 
     }
 
+	Responder::Responder(const Config& config,
+		std::unique_ptr<KeyPair> local_static_key_pair,
+		std::unique_ptr<PublicKey> remote_static_public_key,
+		openpal::Logger logger,
+		openpal::IExecutor& executor,
+		ILowerLayer& lower
+	) :
+		ctx(config, std::move(local_static_key_pair), std::move(remote_static_public_key), logger, executor, lower),
+		handshake_state(nullptr) // TODO
+	{}
+
     void Responder::on_open_impl()
     {
 

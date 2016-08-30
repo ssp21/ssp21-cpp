@@ -28,7 +28,7 @@ namespace ssp21
     class Responder final : public IUpperLayer, private IMessageProcessor
     {		
 
-    public:
+    public:		
 
         struct Config
         {
@@ -38,10 +38,10 @@ namespace ssp21
 			uint16_t max_tx_message_size = consts::link::max_config_payload_size;
 
 			/// expected remote address
-			uint16_t remote_address = 10;
+			uint16_t remote_address = consts::link::default_responder_remote_address;
 
 			/// local address
-			uint16_t local_address = 1;
+			uint16_t local_address = consts::link::default_responder_local_address;
         };
 
 		struct Context
@@ -69,15 +69,19 @@ namespace ssp21
 			Handshake handshake;
 		};
 
+		struct IHandshakeState
+		{
+			virtual IHandshakeState& on_message(Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeBegin& msg) = 0;
+			virtual IHandshakeState& on_message(Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeAuth& msg) = 0;
+		};
+
 		Responder(const Config& config,
 			std::unique_ptr<KeyPair> local_static_key_pair,
 			std::unique_ptr<PublicKey> remote_static_public_key,
 			openpal::Logger logger,
 			openpal::IExecutor& executor,
 			ILowerLayer& lower
-		) : 
-			ctx(config, std::move(local_static_key_pair), std::move(remote_static_public_key), logger, executor, lower)
-		{}
+		);
 
     private:
 
@@ -107,6 +111,9 @@ namespace ssp21
 		HandshakeError validate_handshake_begin(const RequestHandshakeBegin& msg);		
 
 		Context ctx;
+		
+		// state instance for the handshake
+		IHandshakeState* handshake_state;
     };
 
     template <>
