@@ -25,7 +25,7 @@ namespace ssp21
         
 		config_(config),
 		local_static_key_pair_(std::move(local_static_key_pair)),
-		remote_static_public_key_(std::move(remote_static_public_key_)),
+		remote_static_public_key_(std::move(remote_static_public_key)),
         executor_(&executor),
         logger_(logger),
         lower_(&lower),
@@ -172,10 +172,8 @@ namespace ssp21
 			FORMAT_LOG_BLOCK(logger_, levels::error, "error deriving auth key: %s", ec.message().c_str());
 			this->reply_with_handshake_error(HandshakeError::internal);
 		}
-		else
-		{
-			this->lower_->transmit(Message(Addresses(), result.written)); // begin transmitting the response
-		}		
+		
+		this->lower_->transmit(Message(Addresses(), result.written)); // begin transmitting the response		
     }
 
 	HandshakeError Responder::validate_handshake_begin(const RequestHandshakeBegin& msg)
@@ -196,7 +194,7 @@ namespace ssp21
 			return HandshakeError::unsupported_certificate_mode;
 		}
 
-		if (msg.certificates.count() == 0)
+		if (msg.certificates.count() != 0)
 		{
 			return HandshakeError::bad_message_format;
 		}		
