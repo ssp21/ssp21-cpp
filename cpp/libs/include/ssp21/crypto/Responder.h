@@ -17,6 +17,8 @@
 #include "openpal/container/Buffer.h"
 #include "openpal/executor/IExecutor.h"
 
+#include <memory>
+
 
 namespace ssp21
 {
@@ -42,7 +44,13 @@ namespace ssp21
             uint16_t max_tx_message_size = consts::max_config_link_payload_size;
         };
 
-        Responder(const Config& config, openpal::IExecutor& executor, openpal::Logger logger, ILowerLayer& lower);
+        Responder(	const Config& config, 
+					std::unique_ptr<KeyPair> local_static_key_pair,
+					std::unique_ptr<PublicKey> remote_static_public_key,
+					openpal::IExecutor& executor,
+					openpal::Logger logger, 
+					ILowerLayer& lower
+		);
 
     private:
 
@@ -72,6 +80,10 @@ namespace ssp21
 		HandshakeError validate_handshake_begin(const RequestHandshakeBegin& msg);		
 
         Config config_;
+		
+		std::unique_ptr<KeyPair> local_static_key_pair_;
+		std::unique_ptr<PublicKey> remote_static_public_key_;
+
         openpal::IExecutor* const executor_;
         openpal::Logger logger_;
         ILowerLayer* const lower_;

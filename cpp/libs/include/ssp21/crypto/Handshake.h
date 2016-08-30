@@ -31,10 +31,7 @@ namespace ssp21
         openpal::RSlice initialize();
 
         /// calculate a new ck: ck = hash(input)
-        void set_ck(const openpal::RSlice& input);
-
-		/// mix the input input the chaining key: ck = hash(ck | input)
-		void mix_ck(const openpal::RSlice& input);
+        void set_ck(const openpal::RSlice& input);		
 
         /// derive the authentication key from the DH keys and the handshake_hash_
         void derive_authentication_key(
@@ -52,6 +49,9 @@ namespace ssp21
         void derive_session_keys(SymmetricKey& rx_key, SymmetricKey& tx_key) const;
 
     private:
+
+		/// mix the input input the chaining key: ck = hash(ck | input)
+		void mix_ck(const openpal::RSlice& input);
 
         /// specific algorithms used to perform steps
         Algorithms algorithms_;

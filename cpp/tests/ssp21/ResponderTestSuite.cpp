@@ -19,13 +19,15 @@ using namespace openpal;
 
 struct ResponderFixture
 {
-    ResponderFixture(const Responder::Config& config = Responder::Config()) :
+    ResponderFixture(std::unique_ptr<KeyPair> local_kp, std::unique_ptr<PublicKey> remote_static_key, const Responder::Config& config = Responder::Config()) :
         log("responder"),
         exe(),
         lower(),
-        responder(config, exe, log.root.logger, lower)
-    {}
-
+        responder(config, std::move(local_kp), std::move(remote_static_key), exe, log.root.logger, lower)
+    {
+	
+	}
+	
     MockLogHandler log;
     MockExecutor exe;
     MockLowerLayer lower;
@@ -34,7 +36,14 @@ struct ResponderFixture
 
 TEST_CASE(SUITE("responds to malformed REQUEST_HANDSHAKE_BEGIN with bad_message_format"))
 {
-    ResponderFixture fix;
+	std::unique_ptr<KeyPair> local_kp;
+	Crypto::gen_keypair_x25519(*local_kp);
+
+	std::unique_ptr<PublicKey> remote_key;
+	remote_key->get_write_slice().set_all_to(0xFF);
+	remote_key->set_type(BufferType::x25519_key);
+
+	ResponderFixture fix(std::move(local_kp), std::move(remote_key));
 
     fix.responder.on_open();
 

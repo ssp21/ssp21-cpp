@@ -15,8 +15,17 @@ using namespace openpal;
 
 namespace ssp21
 {
-    Responder::Responder(const Config& config, openpal::IExecutor& executor, Logger logger, ILowerLayer& lower) :
-        config_(config),
+    Responder::Responder(
+		const Config& config,
+		std::unique_ptr<KeyPair> local_static_key_pair,
+		std::unique_ptr<PublicKey> remote_static_public_key,
+		openpal::IExecutor& executor,
+		openpal::Logger logger,
+		ILowerLayer& lower) :
+        
+		config_(config),
+		local_static_key_pair_(std::move(local_static_key_pair)),
+		remote_static_public_key_(std::move(remote_static_public_key_)),
         executor_(&executor),
         logger_(logger),
         lower_(&lower),
@@ -147,10 +156,26 @@ namespace ssp21
 			FORMAT_LOG_BLOCK(logger_, levels::error, "error formatting reply: %s", FormatErrorSpec::to_string(result.err));
 			return;
 		}
-		
-		this->handshake_.mix_ck(result.written); // mix our response into the chaining key
+			
+		std::error_code ec;
 
-		this->lower_->transmit(Message(Addresses(), result.written));
+		this->handshake_.derive_authentication_key(
+			result.written,
+			this->local_static_key_pair_->private_key,
+			msg.ephemeral_public_key,
+			this->remote_static_public_key_->as_slice(),
+			ec
+		);
+
+		if (ec)
+		{
+			FORMAT_LOG_BLOCK(logger_, levels::error, "error deriving auth key: %s", ec.message().c_str());
+			this->reply_with_handshake_error(HandshakeError::internal);
+		}
+		else
+		{
+			this->lower_->transmit(Message(Addresses(), result.written)); // begin transmitting the response
+		}		
     }
 
 	HandshakeError Responder::validate_handshake_begin(const RequestHandshakeBegin& msg)
@@ -164,7 +189,7 @@ namespace ssp21
 		if (msg.ephemeral_public_key.length() != consts::x25519_key_length)
 		{
 			return HandshakeError::bad_message_format;
-		}
+		}		
 
 		if (msg.certificate_mode != CertificateMode::preshared_keys)
 		{
