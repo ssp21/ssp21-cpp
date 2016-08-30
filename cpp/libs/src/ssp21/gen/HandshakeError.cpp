@@ -46,6 +46,8 @@ HandshakeError HandshakeErrorSpec::from_type(uint8_t arg)
         case(0x9):
             return HandshakeError::authentication_error;
         case(0xA):
+            return HandshakeError::no_prior_handshake_begin;
+        case(0xB):
             return HandshakeError::internal;
         case(0xFE):
             return HandshakeError::none;
@@ -77,6 +79,8 @@ const char* HandshakeErrorSpec::to_string(HandshakeError arg)
             return "unsupported_certificate_feature";
         case(HandshakeError::authentication_error):
             return "authentication_error";
+        case(HandshakeError::no_prior_handshake_begin):
+            return "no_prior_handshake_begin";
         case(HandshakeError::internal):
             return "internal";
         case(HandshakeError::none):

@@ -10,11 +10,11 @@
 namespace ssp21
 {
 
-HandshakeStateIdle HandshakeStateIdle::instance;
+HandshakeIdle HandshakeIdle::instance;
 	
-Responder::IHandshakeState& HandshakeStateIdle::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeBegin& msg)
+Responder::IHandshakeState& HandshakeIdle::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeBegin& msg)
 {	
-	auto err = validate_handshake_begin(ctx, msg);
+	auto err = ctx.validate(msg);
 
 	if (any(err))
 	{
@@ -56,49 +56,32 @@ Responder::IHandshakeState& HandshakeStateIdle::on_message(Responder::Context& c
 
 	ctx.lower->transmit(Message(Addresses(), result.written)); // begin transmitting the response
 
-	return *this;
+	return HandshakeWaitForAuth::get();
 }
 
-Responder::IHandshakeState& HandshakeStateIdle::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeAuth& msg)
+Responder::IHandshakeState& HandshakeIdle::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeAuth& msg)
 {
+	SIMPLE_LOG_BLOCK(ctx.logger, levels::info, "no prior handshake begin");
+
+	ctx.reply_with_handshake_error(HandshakeError::no_prior_handshake_begin);
+
+	return *this;
+}	
+    
+HandshakeWaitForAuth HandshakeWaitForAuth::instance;
+
+Responder::IHandshakeState& HandshakeWaitForAuth::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeBegin& msg)
+{
+	// process via HandshakeIdle
+	return HandshakeIdle::get().on_message(ctx, msg_bytes, msg);
+}
+
+Responder::IHandshakeState& HandshakeWaitForAuth::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeAuth& msg)
+{
+	// TODO
 	return *this;
 }
 
-HandshakeError HandshakeStateIdle::validate_handshake_begin(Responder::Context& ctx, const RequestHandshakeBegin& msg)
-{	
-	if (msg.version != consts::crypto::protocol_version)
-	{
-		return HandshakeError::unsupported_version;
-	}
-
-	// verify that the public key length matches the DH mode
-	if (msg.ephemeral_public_key.length() != consts::crypto::x25519_key_length)
-	{
-		return HandshakeError::bad_message_format;
-	}
-
-	if (msg.certificate_mode != CertificateMode::preshared_keys)
-	{
-		return HandshakeError::unsupported_certificate_mode;
-	}
-
-	if (msg.certificates.count() != 0)
-	{
-		return HandshakeError::bad_message_format;
-	}
-
-	// last thing we should do is configure the requested algorithms
-	return ctx.handshake.set_algorithms(
-		Algorithms::Config(
-			msg.dh_mode,
-			msg.hash_mode,
-			msg.nonce_mode,
-			msg.session_mode
-		)
-	);
-}
-	
-      
 }
 
 

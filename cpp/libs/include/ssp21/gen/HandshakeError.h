@@ -46,8 +46,10 @@ enum class HandshakeError : uint8_t
     unsupported_certificate_feature = 0x8,
     /// The outstation was unable to authenticate the master
     authentication_error = 0x9,
+    /// The master requested handshake auth, but no prior handshake begin was received
+    no_prior_handshake_begin = 0xA,
     /// internal error
-    internal = 0xA,
+    internal = 0xB,
     /// This value gets used internally in ssp21-cpp only
     none = 0xFE,
     /// value not defined

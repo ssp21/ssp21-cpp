@@ -47,6 +47,40 @@ namespace ssp21
 		}
 	}
 
+	HandshakeError Responder::Context::validate(const RequestHandshakeBegin& msg)
+	{
+		if (msg.version != consts::crypto::protocol_version)
+		{
+			return HandshakeError::unsupported_version;
+		}
+
+		// verify that the public key length matches the DH mode
+		if (msg.ephemeral_public_key.length() != consts::crypto::x25519_key_length)
+		{
+			return HandshakeError::bad_message_format;
+		}
+
+		if (msg.certificate_mode != CertificateMode::preshared_keys)
+		{
+			return HandshakeError::unsupported_certificate_mode;
+		}
+
+		if (msg.certificates.count() != 0)
+		{
+			return HandshakeError::bad_message_format;
+		}
+
+		// last thing we should do is configure the requested algorithms
+		return handshake.set_algorithms(
+			Algorithms::Config(
+				msg.dh_mode,
+				msg.hash_mode,
+				msg.nonce_mode,
+				msg.session_mode
+			)
+		);
+	}
+
 	Responder::Responder(const Config& config,
 		std::unique_ptr<KeyPair> local_static_key_pair,
 		std::unique_ptr<PublicKey> remote_static_public_key,
@@ -55,7 +89,7 @@ namespace ssp21
 		ILowerLayer& lower
 	) :
 		ctx(config, std::move(local_static_key_pair), std::move(remote_static_public_key), logger, executor, lower),
-		handshake_state(&HandshakeStateIdle::get())
+		handshake_state(&HandshakeIdle::get())
 	{}
 
     void Responder::on_open_impl()
@@ -65,7 +99,7 @@ namespace ssp21
 
     void Responder::on_close_impl()
     {
-		handshake_state = &HandshakeStateIdle::get();
+		handshake_state = &HandshakeIdle::get();
     }
 
     void Responder::on_tx_ready_impl()

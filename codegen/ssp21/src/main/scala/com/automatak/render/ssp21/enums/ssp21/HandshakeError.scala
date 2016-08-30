@@ -24,7 +24,8 @@ object HandshakeError {
     EnumValue("bad_certificate_format", 7, "One of the received certificates was improperly encoded"),
     EnumValue("unsupported_certificate_feature", 8, "One of the received certificates utilizes an unsupported feature"),
     EnumValue("authentication_error", 9, "The outstation was unable to authenticate the master"),
-    EnumValue("internal", 10, "internal error"),
+    EnumValue("no_prior_handshake_begin", 10, "The master requested handshake auth, but no prior handshake begin was received"),
+    EnumValue("internal", 11, "internal error"),
 
     falseValue
   )

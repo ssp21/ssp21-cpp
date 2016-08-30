@@ -57,6 +57,8 @@ namespace ssp21
 
 			void reply_with_handshake_error(HandshakeError err);
 
+			HandshakeError validate(const RequestHandshakeBegin& msg);
+
 			Config config;
 
 			std::unique_ptr<KeyPair> local_static_key_pair;
