@@ -174,11 +174,9 @@ namespace ssp21
 		if (msg.certificates.count() == 0)
 		{
 			return HandshakeError::bad_message_format;
-		}
+		}		
 
-		// TODO - configure the nonce and session modes
-
-		// last thing we should do is configure the requested handshake algorithms
+		// last thing we should do is configure the requested algorithms
 		return this->handshake_.set_algorithms(msg.dh_mode, msg.hash_mode, msg.nonce_mode);
 	}	
 

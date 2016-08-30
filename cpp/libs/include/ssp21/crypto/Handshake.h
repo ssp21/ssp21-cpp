@@ -10,6 +10,7 @@
 
 #include "ssp21/crypto/Crypto.h"
 #include "ssp21/crypto/NonceFunctions.h"
+#include "ssp21/crypto/Algorithms.h"
 
 namespace ssp21
 {
@@ -19,28 +20,7 @@ namespace ssp21
     */
     class Handshake : private openpal::Uncopyable
     {
-    public:
-
-        struct Algorithms
-        {
-
-        public:            
-
-			// default algorithms
-			Algorithms() :
-				dh(&Crypto::dh_x25519),
-				hkdf(&Crypto::hkdf_sha256),
-				hash(&Crypto::hash_sha256),
-				gen_keypair(&Crypto::gen_keypair_x25519),
-				verify_nonce(NonceFunctions::default_verify())
-			{}			
-
-			dh_func_t dh;
-            hkdf_func_t hkdf;
-            hash_func_t hash;
-            gen_keypair_func_t gen_keypair;
-			verify_nonce_func_t verify_nonce;
-        };
+    public:        
 
 		Handshake() {}
 

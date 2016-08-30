@@ -7,39 +7,7 @@ namespace ssp21
 {   
 	HandshakeError Handshake::set_algorithms(DHMode dh_mode, HashMode hash_mode, NonceMode nonce_mode)
 	{
-		switch (dh_mode)
-		{
-		case(DHMode::x25519):
-			algorithms_.dh = &Crypto::dh_x25519;
-			algorithms_.gen_keypair = &Crypto::gen_keypair_x25519;
-			break;
-		default:
-			return HandshakeError::unsupported_dh_mode;
-		}
-
-		switch (hash_mode)
-		{
-		case(HashMode::sha256):
-			algorithms_.hash = &Crypto::hash_sha256;
-			algorithms_.hkdf = &Crypto::hkdf_sha256;
-			break;
-		default:
-			return HandshakeError::unsupported_hash_mode;
-		}
-
-		switch (nonce_mode)
-		{
-		case(NonceMode::greater_than_last_rx):
-			algorithms_.verify_nonce = &NonceFunctions::verify_greater_than_last;
-			break;
-		case(NonceMode::increment_last_rx):
-			algorithms_.verify_nonce = &NonceFunctions::verify_strict_increment;
-			break;
-		default:
-			return HandshakeError::unsupported_nonce_mode;
-		}
-
-		return HandshakeError::none;
+		return this->algorithms_.configure(dh_mode, hash_mode, nonce_mode);
 	}
 
 	openpal::RSlice Handshake::initialize()
