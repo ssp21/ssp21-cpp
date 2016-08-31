@@ -33,4 +33,6 @@ We're using the [CppCoreGuidelines](http://isocpp.github.io/CppCoreGuidelines/Cp
 
 ## Formatting
 
-So we don't fight over formatting, use *format-cpp.sh* in the root directory which invokes [AStyle](http://astyle.sourceforge.net/).
+There's custom build target called "FORMAT" that invokes [AStyle](http://astyle.sourceforge.net/).
+
+Please format code using this target before making any commits.
