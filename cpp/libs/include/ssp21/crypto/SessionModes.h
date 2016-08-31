@@ -13,17 +13,17 @@
 
 namespace ssp21
 {
-    typedef openpal::RSlice (*session_verify_t)(
+    typedef openpal::RSlice (*session_read_t)(
         const SymmetricKey& key,
         const openpal::RSlice& msg,
         const openpal::RSlice& payload,
         openpal::WSlice dest,
         std::error_code& ec
-    );
+    );	
 
     struct SessionModes : private openpal::StaticOnly
     {
-        static session_verify_t default_session_mode()
+        static session_read_t default_session_read()
         {
             return &verify_hmac_sha256_trunc16;
         }

@@ -13,7 +13,7 @@ namespace ssp21
         hash(&Crypto::hash_sha256),
         gen_keypair(&Crypto::gen_keypair_x25519),
         verify_nonce(NonceFunctions::default_verify()),
-        session_verify(SessionModes::default_session_mode())
+        session_read(SessionModes::default_session_read())
     {}
 
     HandshakeError Algorithms::configure(const Config& config)
@@ -55,7 +55,7 @@ namespace ssp21
         switch (config.session_mode)
         {
         case(SessionMode::hmac_sha256_16):
-            algorithms.session_verify = &SessionModes::verify_hmac_sha256_trunc16;
+            algorithms.session_read = &SessionModes::verify_hmac_sha256_trunc16;
             break;
         default:
             return HandshakeError::unsupported_session_mode;
