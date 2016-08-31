@@ -17,15 +17,8 @@ namespace ssp21
 		uint16_t nonce,
 		const openpal::RSlice& payload,
 		openpal::WSlice& dest,
-		std::error_code& ec
-    )
-    {        
-		// AD length must be a u16
-		if (ad.length() > UInt16::max_value) {
-			ec = CryptoError::bad_buffer_size;
-			return RSlice::empty_slice();
-		}
-
+		std::error_code& ec)
+    {        		
 		// payload must at least have the truncated HMAC
 		if (payload.length() < trunc_length)
 		{
@@ -39,28 +32,23 @@ namespace ssp21
 		{
 			ec = CryptoError::bad_buffer_size;
 			return RSlice::empty_slice();
+		}		
+								
+		nonce_and_ad_length_buffer_t buffer;
+		auto nonce_and_ad_length_bytes = get_nonce_and_ad_length_bytes(nonce, ad, buffer, ec);
+
+		if(ec)
+		{ 
+			return RSlice::empty_slice();
 		}
 
-		const uint16_t ad_length_u16 = static_cast<uint16_t>(ad.length());
-				
 		// split the payload into user data and MAC
 		const auto user_data = payload.take(user_data_length);
 		const auto read_mac = payload.skip(user_data_length);
-		
-		openpal::StaticBuffer<4> nonce_and_ad_length;
-		
-		{
-			auto dest = nonce_and_ad_length.as_wslice();
-			if (!BigEndian::write(dest, nonce, ad_length_u16) || dest.is_not_empty())
-			{
-				ec = CryptoError::bad_buffer_size;
-				return RSlice::empty_slice();
-			}
-		}
-
+				
 		// Now calculate the expected MAC
 		HashOutput calc_mac_buffer;
-		mac_func(key.as_slice(), { nonce_and_ad_length.as_rslice(), ad, user_data }, calc_mac_buffer);
+		mac_func(key.as_slice(), { nonce_and_ad_length_bytes, ad, user_data }, calc_mac_buffer);
 		const auto truncated = calc_mac_buffer.as_slice().take(trunc_length);
 		
 		if (!Crypto::secure_equals(read_mac, truncated)) // authentication failure
@@ -73,7 +61,81 @@ namespace ssp21
 		return user_data.copy_to(dest);        
     }
 
+	openpal::RSlice SessionModes::write_any_mac_with_truncation(
+		mac_func_t mac_func,
+		uint8_t trunc_length,
+		const SymmetricKey& key,
+		const openpal::RSlice& ad,
+		uint16_t nonce,
+		const openpal::RSlice& userdata,
+		openpal::WSlice& dest,
+		std::error_code& ec)
+	{		
+		// maximum userdata length
+		const uint16_t max_userdata_length = UInt16::max_value - trunc_length;
 
+		// payload must at least have the truncated HMAC
+		if (userdata.length() > max_userdata_length)
+		{
+			ec = CryptoError::bad_buffer_size;
+			return RSlice::empty_slice();
+		}
+
+		const uint16_t payload_length = userdata.length() + trunc_length;
+
+		if(dest.length() < payload_length)
+		{
+			ec = CryptoError::bad_buffer_size;
+			return RSlice::empty_slice();
+		}
+			
+		nonce_and_ad_length_buffer_t buffer;
+		auto nonce_and_ad_length_bytes = get_nonce_and_ad_length_bytes(nonce, ad, buffer, ec);
+
+		if (ec)
+		{
+			return RSlice::empty_slice();
+		}
+
+		// Now calculate the mac
+		HashOutput calc_mac_buffer;
+		mac_func(key.as_slice(), { nonce_and_ad_length_bytes, ad, userdata }, calc_mac_buffer);
+		const auto truncated = calc_mac_buffer.as_slice().take(trunc_length);
+
+		
+		const auto ret = dest.as_rslice().take(payload_length);
+		
+		// write the output buffer, advancing dest
+		userdata.copy_to(dest);
+		truncated.copy_to(dest);
+		
+		return ret;
+	}
+
+	openpal::RSlice SessionModes::get_nonce_and_ad_length_bytes(
+		uint16_t nonce,
+		const openpal::RSlice& ad,
+		nonce_and_ad_length_buffer_t& buffer,
+		std::error_code& ec
+	)
+	{		
+		// AD length must be a u16
+		if (ad.length() > UInt16::max_value) {
+			ec = CryptoError::bad_buffer_size;
+			return RSlice::empty_slice();
+		}
+
+		const uint16_t ad_length_u16 = static_cast<uint16_t>(ad.length());		
+		
+		auto dest = buffer.as_wslice();
+		if (!BigEndian::write(dest, nonce, ad_length_u16) || dest.is_not_empty())
+		{
+			ec = CryptoError::bad_buffer_size;
+			return RSlice::empty_slice();
+		}
+		
+		return buffer.as_rslice();
+	}
 }
 
 
