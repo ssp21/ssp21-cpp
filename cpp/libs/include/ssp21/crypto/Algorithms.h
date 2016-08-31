@@ -15,7 +15,7 @@
 #include "ssp21/gen/SessionMode.h"
 
 namespace ssp21
-{	
+{
     /**
     * Represents a complete set of algorithms for the handshake and the session
     */
@@ -48,19 +48,19 @@ namespace ssp21
 
         HandshakeError configure(const Config& config);
 
-		// handshake stuff
+        // handshake stuff
         dh_func_t dh;
         hkdf_func_t hkdf;
         hash_func_t hash;
-		mac_func_t session_auth_mac;
+        mac_func_t session_auth_mac;
         gen_keypair_func_t gen_keypair;
-		auth_handshake_t auth_handshake;
-		calc_handshake_mac_t calc_handshake_mac;
-        
-		// session stuff
-		verify_nonce_func_t verify_nonce;
+        auth_handshake_t auth_handshake;
+        calc_handshake_mac_t calc_handshake_mac;
+
+        // session stuff
+        verify_nonce_func_t verify_nonce;
         session_read_t session_read;
-		session_write_t session_write;
+        session_write_t session_write;
     };
 
 

@@ -32,15 +32,15 @@ namespace ssp21
         );
     }
 
-	bool Handshake::auth_handshake(const openpal::RSlice& mac) const
-	{
-		return algorithms_.auth_handshake(authentication_key_, id_, mac);
-	}
+    bool Handshake::auth_handshake(const openpal::RSlice& mac) const
+    {
+        return algorithms_.auth_handshake(authentication_key_, id_, mac);
+    }
 
-	void Handshake::calc_auth_handshake_reply_mac(HashOutput& output) const
-	{
-		return algorithms_.calc_handshake_mac(authentication_key_, id_, output);
-	}
+    void Handshake::calc_auth_handshake_reply_mac(HashOutput& output) const
+    {
+        return algorithms_.calc_handshake_mac(authentication_key_, id_, output);
+    }
 
     void Handshake::derive_authentication_key(
         const RSlice& message,
@@ -69,17 +69,19 @@ namespace ssp21
         chaining_key_,
         authentication_key_
         );
-    }    
+    }
 
     void Handshake::derive_session_keys(SessionKeys& keys) const
     {
-		if (this->id_ == EntityId::Initiator) {
-			algorithms_.hkdf(chaining_key_.as_slice(), {}, keys.tx_key, keys.rx_key);
-		}
-		else {
-			algorithms_.hkdf(chaining_key_.as_slice(), {}, keys.rx_key, keys.tx_key);
-		}
-        
+        if (this->id_ == EntityId::Initiator)
+        {
+            algorithms_.hkdf(chaining_key_.as_slice(), {}, keys.tx_key, keys.rx_key);
+        }
+        else
+        {
+            algorithms_.hkdf(chaining_key_.as_slice(), {}, keys.rx_key, keys.tx_key);
+        }
+
     }
 }
 

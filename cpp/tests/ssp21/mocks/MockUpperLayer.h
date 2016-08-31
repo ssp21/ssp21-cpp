@@ -8,59 +8,61 @@
 #include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
 
+#include "MakeUnique.h"
+
 namespace ssp21
 {
     class MockUpperLayer : public IUpperLayer, private IMessageProcessor, private openpal::Uncopyable
     {
 
-	public:
-        		
-		MockUpperLayer(ILowerLayer& lower) : lower_(&lower)
-		{}
+    public:
 
-		std::string pop_rx_message()
-		{
-			if (this->rx_messages_.empty())
-			{
-				return "";
-			}
-			else
-			{
-				auto hex = openpal::to_hex(rx_messages_.front()->second.as_rslice());
-				rx_messages_.pop_front();
-				return hex;
-			}
-		}
+        MockUpperLayer(ILowerLayer& lower) : lower_(&lower)
+        {}
 
-	private:
+        std::string pop_rx_message()
+        {
+            if (this->rx_messages_.empty())
+            {
+                return "";
+            }
+            else
+            {
+                auto hex = openpal::to_hex(rx_messages_.front()->second.as_rslice());
+                rx_messages_.pop_front();
+                return hex;
+            }
+        }
 
-		typedef std::pair<Addresses, openpal::Buffer> message_t;
+    private:
 
-		typedef std::deque<std::unique_ptr<message_t>> message_queue_t;
+        typedef std::pair<Addresses, openpal::Buffer> message_t;
 
-		message_queue_t rx_messages_;
+        typedef std::deque<std::unique_ptr<message_t>> message_queue_t;
 
-		ILowerLayer* const lower_;
+        message_queue_t rx_messages_;
 
-		virtual void process(const Message& message) override
-		{
-			rx_messages_.push_back(std::make_unique<message_t>(message.addresses, message.payload));
-		}
+        ILowerLayer* const lower_;
 
-		virtual void on_open_impl() override {}
+        virtual void process(const Message& message) override
+        {
+            rx_messages_.push_back(std::make_unique<message_t>(message.addresses, message.payload));
+        }
 
-		virtual void on_close_impl() override {}
+        virtual void on_open_impl() override {}
 
-		virtual void on_tx_ready_impl() override 
-		{
-		
-		}
+        virtual void on_close_impl() override {}
 
-		virtual void on_rx_ready_impl() override 
-		{
-			lower_->receive(*this);
-		}
-		
+        virtual void on_tx_ready_impl() override
+        {
+
+        }
+
+        virtual void on_rx_ready_impl() override
+        {
+            lower_->receive(*this);
+        }
+
     };
 
 }

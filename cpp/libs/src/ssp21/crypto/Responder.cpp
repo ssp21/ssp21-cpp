@@ -27,33 +27,33 @@ namespace ssp21
         local_static_key_pair(std::move(local_static_key_pair)),
         remote_static_public_key(std::move(remote_static_public_key)),
         logger(logger),
-        executor(&executor),                
-		handshake(EntityId::Responder),
-		lower(&lower),
-		tx_buffer(config.max_tx_message_size)
+        executor(&executor),
+        handshake(EntityId::Responder),
+        lower(&lower),
+        tx_buffer(config.max_tx_message_size)
     {
 
     }
 
-	void Responder::Context::transmit_to_lower(const openpal::RSlice& data)
-	{
-		this->lower->transmit(
-			Message(
-				Addresses(config.remote_address, config.local_address), 
-				data
-			)
-		);
-	}
+    void Responder::Context::transmit_to_lower(const openpal::RSlice& data)
+    {
+        this->lower->transmit(
+            Message(
+                Addresses(config.remote_address, config.local_address),
+                data
+            )
+        );
+    }
 
     void Responder::Context::reply_with_handshake_error(HandshakeError err)
     {
         ReplyHandshakeError msg(err);
-        
-		auto result = this->write_msg(msg);
+
+        auto result = this->write_msg(msg);
 
         if (!result.is_error())
         {
-			this->transmit_to_lower(result.written);
+            this->transmit_to_lower(result.written);
         }
     }
 
@@ -132,17 +132,17 @@ namespace ssp21
         }
     }
 
-	bool Responder::transmit(const Message& message)
-	{
-		// TODO
-		return false;
-	}
-	
-	bool Responder::receive(IMessageProcessor& processor)
-	{
-		// TODO
-		return false;
-	}
+    bool Responder::transmit(const Message& message)
+    {
+        // TODO
+        return false;
+    }
+
+    bool Responder::receive(IMessageProcessor& processor)
+    {
+        // TODO
+        return false;
+    }
 
     template <class MsgType>
     inline void Responder::handle_handshake_message(const openpal::RSlice& data)

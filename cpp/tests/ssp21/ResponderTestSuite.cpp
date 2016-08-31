@@ -55,7 +55,7 @@ public:
         exe(),
         lower(),
         responder(config, std::move(keys.local_kp), std::move(keys.remote_static_key), log.root.logger, exe, lower),
-		upper(responder)
+        upper(responder)
     {
 
     }
@@ -70,7 +70,7 @@ public:
     MockExecutor exe;
     MockLowerLayer lower;
     Responder responder;
-	MockUpperLayer upper;
+    MockUpperLayer upper;
 };
 
 TEST_CASE(SUITE("responds to malformed REQUEST_HANDSHAKE_BEGIN with bad_message_format"))
