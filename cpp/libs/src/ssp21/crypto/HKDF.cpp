@@ -5,7 +5,7 @@ namespace ssp21
 {
 
     void hkdf(
-        hmac_func_t hmac,
+        mac_func_t hmac,
         const openpal::RSlice& chaining_key,
         std::initializer_list<openpal::RSlice> input_key_material,
         SymmetricKey& output1,

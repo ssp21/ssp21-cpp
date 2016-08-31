@@ -13,7 +13,7 @@ namespace ssp21
         SecureBuffer& output
     );
 
-    typedef void (*hmac_func_t)(
+    typedef void (*mac_func_t)(
         const openpal::RSlice& key,
         std::initializer_list<openpal::RSlice> data,
         SecureBuffer& output
