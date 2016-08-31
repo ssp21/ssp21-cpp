@@ -63,7 +63,7 @@ namespace ssp21
 
             std::vector<std::unique_ptr<Hex>> certificate_slices;
 
-            for (auto & cert : certificates)
+            for (auto& cert : certificates)
             {
                 auto hex = std::make_unique<Hex>(cert);
                 msg.certificates.push(hex->as_rslice());
@@ -84,7 +84,7 @@ namespace ssp21
 
             std::vector<std::unique_ptr<Hex>> certificate_slices;
 
-            for (auto & cert : certificates)
+            for (auto& cert : certificates)
             {
                 auto hex = std::make_unique<Hex>(cert);
                 msg.certificates.push(hex->as_rslice());

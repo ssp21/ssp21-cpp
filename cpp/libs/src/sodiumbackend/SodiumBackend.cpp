@@ -38,7 +38,7 @@ namespace ssp21
             crypto_hash_sha256_state state;
             crypto_hash_sha256_init(&state);
 
-            for (auto & item : data)
+            for (auto& item : data)
             {
                 crypto_hash_sha256_update(&state, item, item.length());
             }
@@ -54,7 +54,7 @@ namespace ssp21
             crypto_auth_hmacsha256_state state;
             crypto_auth_hmacsha256_init(&state, key, key.length());
 
-            for (auto & item : data)
+            for (auto& item : data)
             {
                 crypto_auth_hmacsha256_update(&state, item, item.length());
             }
