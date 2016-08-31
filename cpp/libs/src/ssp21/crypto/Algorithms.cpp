@@ -13,6 +13,8 @@ namespace ssp21
         hash(&Crypto::hash_sha256),
 		session_auth_mac(&Crypto::hmac_sha256),
         gen_keypair(&Crypto::gen_keypair_x25519),
+		auth_handshake(HandshakeAuthentication::default_auth_handshake()),
+		calc_handshake_mac(HandshakeAuthentication::default_calc_handshake_mac()),
         verify_nonce(NonceFunctions::default_verify()),
         session_read(SessionModes::default_session_read()),
 		session_write(SessionModes::default_session_write())
@@ -37,7 +39,9 @@ namespace ssp21
         case(HashMode::sha256):
             algorithms.hash = &Crypto::hash_sha256;
 			algorithms.session_auth_mac = &Crypto::hmac_sha256;
-			algorithms.hkdf = &Crypto::hkdf_sha256;			
+			algorithms.hkdf = &Crypto::hkdf_sha256;
+			algorithms.auth_handshake = &HandshakeAuthentication::auth_handshake_hmac_sha256;
+			algorithms.calc_handshake_mac = &HandshakeAuthentication::calc_handshake_hmac_sha256;
             break;
         default:
             return HandshakeError::unsupported_hash_mode;
