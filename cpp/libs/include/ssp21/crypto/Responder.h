@@ -25,7 +25,7 @@ namespace ssp21
     /**
     	WIP - this class will implement the stateful part of the responder.
     */
-    class Responder final : public IUpperLayer, private IMessageProcessor
+    class Responder final : public IUpperLayer, public ILowerLayer, private IMessageProcessor
     {
 
     public:
@@ -68,10 +68,11 @@ namespace ssp21
 
             openpal::IExecutor* const executor;
             ILowerLayer* const lower;
+			IUpperLayer* upper = nullptr;
 
             openpal::Buffer tx_buffer;
             Handshake handshake;
-            openpal::Timestamp session_init_time;
+            openpal::Timestamp session_init_time = openpal::Timestamp::min_value();
         };
 
         struct IHandshakeState
@@ -86,7 +87,12 @@ namespace ssp21
                   openpal::Logger logger,
                   openpal::IExecutor& executor,
                   ILowerLayer& lower
-                 );
+		);
+
+		void set_upper_layer(IUpperLayer& upper) 
+		{
+			this->ctx.upper = &upper;
+		}
 
     private:
 
@@ -97,14 +103,23 @@ namespace ssp21
         virtual void on_tx_ready_impl() override;
         virtual void on_rx_ready_impl() override;
 
+		// ---- implement ILowerLayer -----
+
+		virtual bool transmit(const Message& message) override;
+		virtual bool receive(IMessageProcessor& processor) override;
+
         // ---- implement IMessageProcessor -----
 
         virtual void process(const Message& message) override;
+
+		// ---- private methods -----
 
         template <class MsgType>
         inline void handle_handshake_message(const openpal::RSlice& data);
 
         void handle_session_message(const openpal::RSlice& data);
+
+		// ---- private members -----
 
         // All of the state in the responder except for the actual state instances
         Context ctx;

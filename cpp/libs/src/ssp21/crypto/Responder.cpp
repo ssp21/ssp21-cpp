@@ -29,8 +29,7 @@ namespace ssp21
         logger(logger),
         executor(&executor),
         lower(&lower),
-        tx_buffer(config.max_tx_message_size),
-		session_init_time(Timestamp::min_value())
+        tx_buffer(config.max_tx_message_size)		
     {
 
     }
@@ -122,6 +121,18 @@ namespace ssp21
             ctx.lower->receive(*this);
         }
     }
+
+	bool Responder::transmit(const Message& message)
+	{
+		// TODO
+		return false;
+	}
+	
+	bool Responder::receive(IMessageProcessor& processor)
+	{
+		// TODO
+		return false;
+	}
 
     template <class MsgType>
     inline void Responder::handle_handshake_message(const openpal::RSlice& data)
