@@ -16,31 +16,37 @@
 namespace ssp21
 {
 
-    class ErrorCategory final : public std::error_category
+    class CryptoErrorCategory final : public std::error_category
     {
     public:
 
         static const std::error_category& Instance()
         {
+			static CryptoErrorCategory instance;
             return instance;
         }
 
         virtual const char* name() const NOEXCEPT
         {
-            return "crypto-backend errors";
+            return "crypto error";
         }
-        virtual std::string message(int ev) const;
+
+		virtual std::string message(int ev) const
+		{
+			return CryptoErrorSpec::to_string(static_cast<CryptoError>(ev));
+		}
 
     private:
 
-        ErrorCategory() {}
-        ErrorCategory(const ErrorCategory&) = delete;
-
-        static ErrorCategory instance;
+		CryptoErrorCategory() {}
+		CryptoErrorCategory(const CryptoErrorCategory&) = delete;       
     };
 
 
-    std::error_code make_error_code(CryptoError err);
+	inline std::error_code make_error_code(CryptoError err)
+	{
+		return std::error_code(static_cast<int>(err), CryptoErrorCategory::Instance());
+	}
 }
 
 namespace std

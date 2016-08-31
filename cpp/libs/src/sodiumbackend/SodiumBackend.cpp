@@ -2,7 +2,7 @@
 
 #include "SodiumBackend.h"
 
-#include "ssp21/crypto/ErrorCodes.h"
+#include "ssp21/crypto/CryptoErrorCategory.h"
 
 #include <sodium.h>
 #include <assert.h>
