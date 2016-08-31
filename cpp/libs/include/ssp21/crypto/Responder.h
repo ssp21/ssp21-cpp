@@ -44,50 +44,53 @@ namespace ssp21
             uint16_t local_address = consts::link::default_responder_local_address;
         };
 
-		struct Context
-		{
-			Context(
-				const Config& config,
-				std::unique_ptr<KeyPair> local_static_key_pair,
-				std::unique_ptr<PublicKey> remote_static_public_key,
-				openpal::Logger logger,
-				openpal::IExecutor& executor,
-				ILowerLayer& lower
-			);
+        struct Context
+        {
+            Context(
+                const Config& config,
+                std::unique_ptr<KeyPair> local_static_key_pair,
+                std::unique_ptr<PublicKey> remote_static_public_key,
+                openpal::Logger logger,
+                openpal::IExecutor& executor,
+                ILowerLayer& lower
+            );
 
-			void transmit_to_lower(const openpal::RSlice& msg);
+            void transmit_to_lower(const openpal::RSlice& msg);
 
-			void reply_with_handshake_error(HandshakeError err);
+            void reply_with_handshake_error(HandshakeError err);
 
-			void set_upper_layer(IUpperLayer& upper) { this->upper = &upper; }
+            void set_upper_layer(IUpperLayer& upper)
+            {
+                this->upper = &upper;
+            }
 
-			template <class T>
-			FormatResult write_msg(const T& msg)
-			{
-				auto dest = tx_buffer.as_wslice();
-				return msg.write_msg(dest);
-			}			
+            template <class T>
+            FormatResult write_msg(const T& msg)
+            {
+                auto dest = tx_buffer.as_wslice();
+                return msg.write_msg(dest);
+            }
 
-			HandshakeError validate(const RequestHandshakeBegin& msg);
+            HandshakeError validate(const RequestHandshakeBegin& msg);
 
-			Config config;
+            Config config;
 
-			std::unique_ptr<KeyPair> local_static_key_pair;
-			std::unique_ptr<PublicKey> remote_static_public_key;
+            std::unique_ptr<KeyPair> local_static_key_pair;
+            std::unique_ptr<PublicKey> remote_static_public_key;
 
-			openpal::Logger logger;
+            openpal::Logger logger;
 
-			openpal::IExecutor* const executor;
-			
-			Handshake handshake;
-			openpal::Timestamp session_init_time = openpal::Timestamp::min_value();					
+            openpal::IExecutor* const executor;
 
-	
-			ILowerLayer* const lower;	
-			IUpperLayer* upper = nullptr;
+            Handshake handshake;
+            openpal::Timestamp session_init_time = openpal::Timestamp::min_value();
 
-		private:
-			openpal::Buffer tx_buffer;
+
+            ILowerLayer* const lower;
+            IUpperLayer* upper = nullptr;
+
+        private:
+            openpal::Buffer tx_buffer;
         };
 
         struct IHandshakeState
@@ -102,12 +105,12 @@ namespace ssp21
                   openpal::Logger logger,
                   openpal::IExecutor& executor,
                   ILowerLayer& lower
-		);
+                 );
 
-		void set_upper_layer(IUpperLayer& upper) 
-		{
-			this->ctx.set_upper_layer(upper);
-		}
+        void set_upper_layer(IUpperLayer& upper)
+        {
+            this->ctx.set_upper_layer(upper);
+        }
 
     private:
 
@@ -118,23 +121,23 @@ namespace ssp21
         virtual void on_tx_ready_impl() override;
         virtual void on_rx_ready_impl() override;
 
-		// ---- implement ILowerLayer -----
+        // ---- implement ILowerLayer -----
 
-		virtual bool transmit(const Message& message) override;
-		virtual bool receive(IMessageProcessor& processor) override;
+        virtual bool transmit(const Message& message) override;
+        virtual bool receive(IMessageProcessor& processor) override;
 
         // ---- implement IMessageProcessor -----
 
         virtual void process(const Message& message) override;
 
-		// ---- private methods -----
+        // ---- private methods -----
 
         template <class MsgType>
         inline void handle_handshake_message(const openpal::RSlice& data);
 
         void handle_session_message(const openpal::RSlice& data);
 
-		// ---- private members -----
+        // ---- private members -----
 
         // All of the state in the responder except for the actual state instances
         Context ctx;

@@ -22,7 +22,7 @@ namespace ssp21
 
         static const std::error_category& get()
         {
-			static CryptoErrorCategory instance;
+            static CryptoErrorCategory instance;
             return instance;
         }
 
@@ -31,22 +31,22 @@ namespace ssp21
             return "crypto error";
         }
 
-		virtual std::string message(int ev) const
-		{
-			return CryptoErrorSpec::to_string(static_cast<CryptoError>(ev));
-		}
+        virtual std::string message(int ev) const
+        {
+            return CryptoErrorSpec::to_string(static_cast<CryptoError>(ev));
+        }
 
     private:
 
-		CryptoErrorCategory() {}
-		CryptoErrorCategory(const CryptoErrorCategory&) = delete;       
+        CryptoErrorCategory() {}
+        CryptoErrorCategory(const CryptoErrorCategory&) = delete;
     };
 
 
-	inline std::error_code make_error_code(CryptoError err)
-	{
-		return std::error_code(static_cast<int>(err), CryptoErrorCategory::get());
-	}
+    inline std::error_code make_error_code(CryptoError err)
+    {
+        return std::error_code(static_cast<int>(err), CryptoErrorCategory::get());
+    }
 }
 
 namespace std

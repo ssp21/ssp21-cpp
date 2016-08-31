@@ -10,15 +10,15 @@
 
 namespace ssp21
 {
-   
-	// -------------------------- HandshakeIdle -----------------------------
+
+    // -------------------------- HandshakeIdle -----------------------------
 
     Responder::IHandshakeState& HandshakeIdle::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeBegin& msg)
-    {        
-		// this won't actually be used unless the session becomes initialized
-		ctx.session_init_time = ctx.executor->get_time();
+    {
+        // this won't actually be used unless the session becomes initialized
+        ctx.session_init_time = ctx.executor->get_time();
 
-		auto err = ctx.validate(msg);
+        auto err = ctx.validate(msg);
 
         if (any(err))
         {
@@ -32,8 +32,8 @@ namespace ssp21
 
         // now format our response - in the future, this we'll add certificates after this call
         ReplyHandshakeBegin reply(public_ephem_dh_key);
-        
-		auto wresult = ctx.write_msg(reply);
+
+        auto wresult = ctx.write_msg(reply);
 
         if (wresult.is_error())
         {
@@ -58,7 +58,7 @@ namespace ssp21
             return *this;
         }
 
-        ctx.transmit_to_lower(wresult.written);	
+        ctx.transmit_to_lower(wresult.written);
 
         return HandshakeWaitForAuth::get();
     }
@@ -72,7 +72,7 @@ namespace ssp21
         return *this;
     }
 
-	// -------------------------- HandshakeWaitForAuth -----------------------------
+    // -------------------------- HandshakeWaitForAuth -----------------------------
 
     Responder::IHandshakeState& HandshakeWaitForAuth::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeBegin& msg)
     {
@@ -81,34 +81,34 @@ namespace ssp21
     }
 
     Responder::IHandshakeState& HandshakeWaitForAuth::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeAuth& msg)
-    {        
-		if (!ctx.handshake.auth_handshake(msg.mac)) // auth success
-		{
-			SIMPLE_LOG_BLOCK(ctx.logger, levels::warn, "RequestHandshakeAuth: authentication failure");
-			return HandshakeIdle::get();
-		}
+    {
+        if (!ctx.handshake.auth_handshake(msg.mac)) // auth success
+        {
+            SIMPLE_LOG_BLOCK(ctx.logger, levels::warn, "RequestHandshakeAuth: authentication failure");
+            return HandshakeIdle::get();
+        }
 
-		ctx.handshake.mix_ck(msg_bytes);
-			
-		HashOutput reply_mac;
-		ctx.handshake.calc_auth_handshake_reply_mac(reply_mac);
+        ctx.handshake.mix_ck(msg_bytes);
 
-		ReplyHandshakeAuth reply(Seq8(reply_mac.as_slice()));
-		
-		const auto wresult = ctx.write_msg(reply);
+        HashOutput reply_mac;
+        ctx.handshake.calc_auth_handshake_reply_mac(reply_mac);
 
-		if (wresult.is_error())
-		{
-			FORMAT_LOG_BLOCK(ctx.logger, levels::error, "Unable to format reply: %s", FormatErrorSpec::to_string(wresult.err));
-			return HandshakeIdle::get();
-		}
-		
-		ctx.handshake.mix_ck(wresult.written);
+        ReplyHandshakeAuth reply(Seq8(reply_mac.as_slice()));
 
-		// TODO - initialize the session!!!
+        const auto wresult = ctx.write_msg(reply);
 
-		ctx.transmit_to_lower(wresult.written);																
-						
+        if (wresult.is_error())
+        {
+            FORMAT_LOG_BLOCK(ctx.logger, levels::error, "Unable to format reply: %s", FormatErrorSpec::to_string(wresult.err));
+            return HandshakeIdle::get();
+        }
+
+        ctx.handshake.mix_ck(wresult.written);
+
+        // TODO - initialize the session!!!
+
+        ctx.transmit_to_lower(wresult.written);
+
         return HandshakeIdle::get();
     }
 
