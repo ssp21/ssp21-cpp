@@ -20,7 +20,7 @@ namespace ssp21
     {
     public:
 
-        static const std::error_category& Instance()
+        static const std::error_category& get()
         {
 			static CryptoErrorCategory instance;
             return instance;
@@ -45,7 +45,7 @@ namespace ssp21
 
 	inline std::error_code make_error_code(CryptoError err)
 	{
-		return std::error_code(static_cast<int>(err), CryptoErrorCategory::Instance());
+		return std::error_code(static_cast<int>(err), CryptoErrorCategory::get());
 	}
 }
 
