@@ -8,6 +8,8 @@
 #include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
 
+#include "MakeUnique.h"
+
 namespace ssp21
 {
     class MockUpperLayer : public IUpperLayer, private IMessageProcessor, private openpal::Uncopyable
