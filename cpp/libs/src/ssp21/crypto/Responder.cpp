@@ -29,7 +29,8 @@ namespace ssp21
         logger(logger),
         executor(&executor),
         lower(&lower),
-        tx_buffer(config.max_tx_message_size)
+        tx_buffer(config.max_tx_message_size),
+		session_init_time(Timestamp::min_value())
     {
 
     }

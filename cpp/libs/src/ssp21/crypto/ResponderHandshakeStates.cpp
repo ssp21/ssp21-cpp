@@ -16,6 +16,9 @@ namespace ssp21
     {
         auto err = ctx.validate(msg);
 
+		// this won't actually be used unless the session becomes initialized
+		ctx.session_init_time = ctx.executor->get_time();
+
         if (any(err))
         {
             FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "handshake error: %s", HandshakeErrorSpec::to_string(err));
@@ -55,14 +58,14 @@ namespace ssp21
             return *this;
         }
 
-        ctx.lower->transmit(Message(Addresses(), result.written)); // begin transmitting the response
+        ctx.lower->transmit(Message(Addresses(), result.written)); // begin transmitting the response		
 
         return HandshakeWaitForAuth::get();
     }
 
     Responder::IHandshakeState& HandshakeIdle::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeAuth& msg)
     {
-        SIMPLE_LOG_BLOCK(ctx.logger, levels::info, "no prior handshake begin");
+        SIMPLE_LOG_BLOCK(ctx.logger, levels::info, "no prior request_handshake_begin");
 
         ctx.reply_with_handshake_error(HandshakeError::no_prior_handshake_begin);
 
@@ -79,8 +82,8 @@ namespace ssp21
 
     Responder::IHandshakeState& HandshakeWaitForAuth::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeAuth& msg)
     {
-        // TODO
-        return *this;
+        /// TODO, authenticate the message!
+        return HandshakeIdle::get();
     }
 
 }

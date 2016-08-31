@@ -71,6 +71,7 @@ namespace ssp21
 
             openpal::Buffer tx_buffer;
             Handshake handshake;
+            openpal::Timestamp session_init_time;
         };
 
         struct IHandshakeState
