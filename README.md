@@ -35,4 +35,6 @@ We're using the [CppCoreGuidelines](http://isocpp.github.io/CppCoreGuidelines/Cp
 
 There's custom build target called "FORMAT" that invokes [AStyle](http://astyle.sourceforge.net/).
 
+Please install version **2.05** as there are subtle differences between versions.
+
 Please format code using this target before making any commits.
