@@ -54,6 +54,7 @@ namespace ssp21
         gen_keypair_func_t gen_keypair;
         verify_nonce_func_t verify_nonce;
         session_read_t session_read;
+		session_write_t session_write;
     };
 
 
