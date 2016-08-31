@@ -35,12 +35,8 @@ namespace ssp21
 		}		
 								
 		nonce_and_ad_length_buffer_t buffer;
-		auto nonce_and_ad_length_bytes = get_nonce_and_ad_length_bytes(nonce, ad, buffer, ec);
-
-		if(ec)
-		{ 
-			return RSlice::empty_slice();
-		}
+		auto nonce_and_ad_length_bytes = get_nonce_and_ad_length_bytes(nonce, ad, buffer);
+		
 
 		// split the payload into user data and MAC
 		const auto user_data = payload.take(user_data_length);
@@ -90,13 +86,8 @@ namespace ssp21
 		}
 			
 		nonce_and_ad_length_buffer_t buffer;
-		auto nonce_and_ad_length_bytes = get_nonce_and_ad_length_bytes(nonce, ad, buffer, ec);
-
-		if (ec)
-		{
-			return RSlice::empty_slice();
-		}
-
+		auto nonce_and_ad_length_bytes = get_nonce_and_ad_length_bytes(nonce, ad, buffer);
+		
 		// Now calculate the mac
 		HashOutput calc_mac_buffer;
 		mac_func(key.as_slice(), { nonce_and_ad_length_bytes, ad, userdata }, calc_mac_buffer);
@@ -115,25 +106,11 @@ namespace ssp21
 	openpal::RSlice SessionModes::get_nonce_and_ad_length_bytes(
 		uint16_t nonce,
 		const openpal::RSlice& ad,
-		nonce_and_ad_length_buffer_t& buffer,
-		std::error_code& ec
+		nonce_and_ad_length_buffer_t& buffer		
 	)
-	{		
-		// AD length must be a u16
-		if (ad.length() > UInt16::max_value) {
-			ec = CryptoError::bad_buffer_size;
-			return RSlice::empty_slice();
-		}
-
-		const uint16_t ad_length_u16 = static_cast<uint16_t>(ad.length());		
-		
+	{										
 		auto dest = buffer.as_wslice();
-		if (!BigEndian::write(dest, nonce, ad_length_u16) || dest.is_not_empty())
-		{
-			ec = CryptoError::bad_buffer_size;
-			return RSlice::empty_slice();
-		}
-		
+		BigEndian::write<uint16_t, uint32_t>(dest, nonce, ad.length());		
 		return buffer.as_rslice();
 	}
 }

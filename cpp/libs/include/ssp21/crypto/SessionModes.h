@@ -81,13 +81,13 @@ namespace ssp21
 			std::error_code& ec)
 		{
 			return read_any_mac_with_truncation(
-				&Crypto::hmac_sha256, 
-				consts::crypto::trunc16, 
-				key, 
-				ad, 
-				nonce, 
-				payload, 
-				dest, 
+				&Crypto::hmac_sha256,
+				consts::crypto::trunc16,
+				key,
+				ad,
+				nonce,
+				payload,
+				dest,
 				ec
 			);
 		}
@@ -136,14 +136,13 @@ namespace ssp21
 			std::error_code& ec
 		);
 
-		typedef openpal::StaticBuffer<4> nonce_and_ad_length_buffer_t;
+		typedef openpal::StaticBuffer<6> nonce_and_ad_length_buffer_t;
 
 		// helper function
 		static openpal::RSlice get_nonce_and_ad_length_bytes(
 			uint16_t nonce, 
 			const openpal::RSlice& ad,
-			nonce_and_ad_length_buffer_t& dest,
-			std::error_code& ec
+			nonce_and_ad_length_buffer_t& dest			
 		);
 		
     };
