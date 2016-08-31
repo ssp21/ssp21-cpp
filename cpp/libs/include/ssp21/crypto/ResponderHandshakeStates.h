@@ -11,9 +11,7 @@ namespace ssp21
 
     class HandshakeIdle : public Responder::IHandshakeState, private openpal::Uncopyable
     {
-        HandshakeIdle() {}
-
-        static HandshakeIdle instance;
+        HandshakeIdle() {}        
 
     public:
 
@@ -23,6 +21,7 @@ namespace ssp21
 
         static Responder::IHandshakeState& get()
         {
+			static HandshakeIdle instance;
             return instance;
         }
 
@@ -30,9 +29,7 @@ namespace ssp21
 
     class HandshakeWaitForAuth : public Responder::IHandshakeState, private openpal::Uncopyable
     {
-        HandshakeWaitForAuth() {}
-
-        static HandshakeWaitForAuth instance;
+        HandshakeWaitForAuth() {}       
 
     public:
 
@@ -42,6 +39,7 @@ namespace ssp21
 
         static Responder::IHandshakeState& get()
         {
+			static HandshakeWaitForAuth instance;
             return instance;
         }
 

@@ -32,8 +32,10 @@ enum class CryptoError : uint8_t
     dh_x25519_fail = 1,
     /// a procedure cannot be executed b/c of an undefined algorithm
     undefined_algorithm = 2,
-    /// An HMAC based tag did not match
-    bad_hmac_authentication = 3
+    /// A calculated MAC did not match the specified MAC
+    mac_auth_fail = 3,
+    /// A buffer had an insufficient or incorrect size
+    bad_buffer_size = 4
 };
 
 struct CryptoErrorSpec : private openpal::StaticOnly

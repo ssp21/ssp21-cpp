@@ -9,8 +9,8 @@
 
 namespace ssp21
 {
-
-    HandshakeIdle HandshakeIdle::instance;
+   
+	// -------------------------- HandshakeIdle -----------------------------
 
     Responder::IHandshakeState& HandshakeIdle::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeBegin& msg)
     {
@@ -72,7 +72,7 @@ namespace ssp21
         return *this;
     }
 
-    HandshakeWaitForAuth HandshakeWaitForAuth::instance;
+	// -------------------------- HandshakeWaitForAuth -----------------------------
 
     Responder::IHandshakeState& HandshakeWaitForAuth::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeBegin& msg)
     {
