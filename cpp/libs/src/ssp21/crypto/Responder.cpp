@@ -27,23 +27,33 @@ namespace ssp21
         local_static_key_pair(std::move(local_static_key_pair)),
         remote_static_public_key(std::move(remote_static_public_key)),
         logger(logger),
-        executor(&executor),
-        lower(&lower),
-        tx_buffer(config.max_tx_message_size)		
+        executor(&executor),                
+		handshake(EntityId::Responder),
+		lower(&lower),
+		tx_buffer(config.max_tx_message_size)
     {
 
     }
 
+	void Responder::Context::transmit_to_lower(const openpal::RSlice& data)
+	{
+		this->lower->transmit(
+			Message(
+				Addresses(config.remote_address, config.local_address), 
+				data
+			)
+		);
+	}
+
     void Responder::Context::reply_with_handshake_error(HandshakeError err)
     {
         ReplyHandshakeError msg(err);
-
-        auto dest = this->tx_buffer.as_wslice();
-        auto result = msg.write_msg(dest);
+        
+		auto result = this->write_msg(msg);
 
         if (!result.is_error())
         {
-            this->lower->transmit(Message(Addresses(), result.written));
+			this->transmit_to_lower(result.written);
         }
     }
 

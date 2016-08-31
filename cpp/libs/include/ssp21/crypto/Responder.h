@@ -44,35 +44,50 @@ namespace ssp21
             uint16_t local_address = consts::link::default_responder_local_address;
         };
 
-        struct Context
-        {
-            Context(
-                const Config& config,
-                std::unique_ptr<KeyPair> local_static_key_pair,
-                std::unique_ptr<PublicKey> remote_static_public_key,
-                openpal::Logger logger,
-                openpal::IExecutor& executor,
-                ILowerLayer& lower
-            );
+		struct Context
+		{
+			Context(
+				const Config& config,
+				std::unique_ptr<KeyPair> local_static_key_pair,
+				std::unique_ptr<PublicKey> remote_static_public_key,
+				openpal::Logger logger,
+				openpal::IExecutor& executor,
+				ILowerLayer& lower
+			);
 
-            void reply_with_handshake_error(HandshakeError err);
+			void transmit_to_lower(const openpal::RSlice& msg);
 
-            HandshakeError validate(const RequestHandshakeBegin& msg);
+			void reply_with_handshake_error(HandshakeError err);
 
-            Config config;
+			void set_upper_layer(IUpperLayer& upper) { this->upper = &upper; }
 
-            std::unique_ptr<KeyPair> local_static_key_pair;
-            std::unique_ptr<PublicKey> remote_static_public_key;
+			template <class T>
+			FormatResult write_msg(const T& msg)
+			{
+				auto dest = tx_buffer.as_wslice();
+				return msg.write_msg(dest);
+			}			
 
-            openpal::Logger logger;
+			HandshakeError validate(const RequestHandshakeBegin& msg);
 
-            openpal::IExecutor* const executor;
-            ILowerLayer* const lower;
+			Config config;
+
+			std::unique_ptr<KeyPair> local_static_key_pair;
+			std::unique_ptr<PublicKey> remote_static_public_key;
+
+			openpal::Logger logger;
+
+			openpal::IExecutor* const executor;
+			
+			Handshake handshake;
+			openpal::Timestamp session_init_time = openpal::Timestamp::min_value();					
+
+	
+			ILowerLayer* const lower;	
 			IUpperLayer* upper = nullptr;
 
-            openpal::Buffer tx_buffer;
-            Handshake handshake;
-            openpal::Timestamp session_init_time = openpal::Timestamp::min_value();
+		private:
+			openpal::Buffer tx_buffer;
         };
 
         struct IHandshakeState
@@ -91,7 +106,7 @@ namespace ssp21
 
 		void set_upper_layer(IUpperLayer& upper) 
 		{
-			this->ctx.upper = &upper;
+			this->ctx.set_upper_layer(upper);
 		}
 
     private:

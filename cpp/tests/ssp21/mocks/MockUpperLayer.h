@@ -14,9 +14,7 @@ namespace ssp21
     {
 
 	public:
-        
-		
-
+        		
 		MockUpperLayer(ILowerLayer& lower) : lower_(&lower)
 		{}
 
@@ -42,7 +40,7 @@ namespace ssp21
 
 		message_queue_t rx_messages_;
 
-		ILowerLayer* lower_;
+		ILowerLayer* const lower_;
 
 		virtual void process(const Message& message) override
 		{

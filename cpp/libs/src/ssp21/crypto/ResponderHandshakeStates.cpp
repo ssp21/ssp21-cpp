@@ -2,6 +2,7 @@
 #include "ssp21/crypto/ResponderHandshakeStates.h"
 
 #include "ssp21/msg/ReplyHandshakeBegin.h"
+#include "ssp21/msg/ReplyHandshakeAuth.h"
 
 #include "openpal/logging/LogMacros.h"
 #include "ssp21/LogLevels.h"
@@ -13,11 +14,11 @@ namespace ssp21
 	// -------------------------- HandshakeIdle -----------------------------
 
     Responder::IHandshakeState& HandshakeIdle::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeBegin& msg)
-    {
-        auto err = ctx.validate(msg);
-
+    {        
 		// this won't actually be used unless the session becomes initialized
 		ctx.session_init_time = ctx.executor->get_time();
+
+		auto err = ctx.validate(msg);
 
         if (any(err))
         {
@@ -31,9 +32,8 @@ namespace ssp21
 
         // now format our response - in the future, this we'll add certificates after this call
         ReplyHandshakeBegin reply(public_ephem_dh_key);
-
-        auto dest = ctx.tx_buffer.as_wslice();
-        auto result = reply.write_msg(dest);
+        
+		auto result = ctx.write_msg(reply);
 
         if (result.is_error())
         {
@@ -58,7 +58,7 @@ namespace ssp21
             return *this;
         }
 
-        ctx.lower->transmit(Message(Addresses(), result.written)); // begin transmitting the response		
+        ctx.transmit_to_lower(result.written);	
 
         return HandshakeWaitForAuth::get();
     }
@@ -81,8 +81,34 @@ namespace ssp21
     }
 
     Responder::IHandshakeState& HandshakeWaitForAuth::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeAuth& msg)
-    {
-        /// TODO, authenticate the message!
+    {        
+		if (!ctx.handshake.auth_handshake(msg.mac)) // auth success
+		{
+			SIMPLE_LOG_BLOCK(ctx.logger, levels::warn, "RequestHandshakeAuth: authentication failure");
+			return HandshakeIdle::get();
+		}
+
+		ctx.handshake.mix_ck(msg_bytes);
+			
+		HashOutput reply_mac;
+		ctx.handshake.calc_auth_handshake_reply_mac(reply_mac);
+
+		ReplyHandshakeAuth reply(Seq8(reply_mac.as_slice()));
+		
+		auto result = ctx.write_msg(reply);
+
+		if (result.is_error())
+		{
+			FORMAT_LOG_BLOCK(ctx.logger, levels::error, "Unable to format reply: %s", FormatErrorSpec::to_string(result.err));
+			return HandshakeIdle::get();
+		}
+		
+		ctx.handshake.mix_ck(result.written);
+
+		// TODO - initialize the session!!!
+
+		ctx.transmit_to_lower(result.written);																
+						
         return HandshakeIdle::get();
     }
 

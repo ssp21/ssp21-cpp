@@ -77,6 +77,14 @@ namespace ssp21
         PublicKey public_key;
         PrivateKey private_key;
     };
+
+	struct SessionKeys final
+	{
+		SymmetricKey rx_key;
+		SymmetricKey tx_key;
+	};
+
+
 }
 
 #endif

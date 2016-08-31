@@ -22,7 +22,8 @@ namespace ssp21
     {
     public:
 
-        Handshake() {}
+        Handshake(EntityId id) : id_(id)
+		{}
 
         HandshakeError set_algorithms(const Algorithms::Config& config);
 
@@ -33,6 +34,9 @@ namespace ssp21
         /// calculate a new ck: ck = hash(input)
         void set_ck(const openpal::RSlice& input);
 
+		/// mix the input input the chaining key: ck = hash(ck | input)
+		void mix_ck(const openpal::RSlice& input);
+
         /// derive the authentication key from the DH keys and the handshake_hash_
         void derive_authentication_key(
             const openpal::RSlice& message,
@@ -42,16 +46,17 @@ namespace ssp21
             std::error_code& ec
         );
 
-        /// return a slice pointing to the authentication key
-        openpal::RSlice get_auth_key() const;
-
         /// derive the session keys
-        void derive_session_keys(SymmetricKey& rx_key, SymmetricKey& tx_key) const;
+        void derive_session_keys(SessionKeys& keys) const;
+		
+		bool auth_handshake(const openpal::RSlice& mac) const;
 
-    private:
+		void calc_auth_handshake_reply_mac(HashOutput& output) const;
 
-        /// mix the input input the chaining key: ck = hash(ck | input)
-        void mix_ck(const openpal::RSlice& input);
+    private: 
+
+		/// configures the handshake for initiator or responder mode
+		EntityId id_;
 
         /// specific algorithms used to perform steps
         Algorithms algorithms_;
