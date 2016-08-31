@@ -33,7 +33,8 @@ We're using the [CppCoreGuidelines](http://isocpp.github.io/CppCoreGuidelines/Cp
 
 ## Formatting
 
-There's custom build target called "FORMAT" that invokes [AStyle](http://astyle.sourceforge.net/).
+There's a custom build target called "FORMAT" that invokes [AStyle](http://astyle.sourceforge.net/) and expects
+to find it on your PATH.
 
 Please install version **2.05** as there are subtle differences between versions.
 
