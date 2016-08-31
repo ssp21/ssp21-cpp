@@ -20,18 +20,18 @@ namespace ssp21
     */
     class Handshake : private openpal::Uncopyable
     {
-    public:        
+    public:
 
-		Handshake() {}
+        Handshake() {}
 
-		HandshakeError set_algorithms(const Algorithms::Config& config);
+        HandshakeError set_algorithms(const Algorithms::Config& config);
 
         /// generates new ephemeral keys, resets all state, and returns a slice pointing
-		/// to the ephemeral public DH key
+        /// to the ephemeral public DH key
         openpal::RSlice initialize();
 
         /// calculate a new ck: ck = hash(input)
-        void set_ck(const openpal::RSlice& input);		
+        void set_ck(const openpal::RSlice& input);
 
         /// derive the authentication key from the DH keys and the handshake_hash_
         void derive_authentication_key(
@@ -43,15 +43,15 @@ namespace ssp21
         );
 
         /// return a slice pointing to the authentication key
-        openpal::RSlice get_auth_key() const;		
+        openpal::RSlice get_auth_key() const;
 
         /// derive the session keys
         void derive_session_keys(SymmetricKey& rx_key, SymmetricKey& tx_key) const;
 
     private:
 
-		/// mix the input input the chaining key: ck = hash(ck | input)
-		void mix_ck(const openpal::RSlice& input);
+        /// mix the input input the chaining key: ck = hash(ck | input)
+        void mix_ck(const openpal::RSlice& input);
 
         /// specific algorithms used to perform steps
         Algorithms algorithms_;

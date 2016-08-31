@@ -26,66 +26,66 @@ namespace ssp21
     	WIP - this class will implement the stateful part of the responder.
     */
     class Responder final : public IUpperLayer, private IMessageProcessor
-    {		
+    {
 
-    public:		
+    public:
 
         struct Config
         {
             /// The maximum message size that this layer should transmit to the link layer
             /// This constant determines the size of a buffer allocated when the responder
             /// is constructed
-			uint16_t max_tx_message_size = consts::link::max_config_payload_size;
+            uint16_t max_tx_message_size = consts::link::max_config_payload_size;
 
-			/// expected remote address
-			uint16_t remote_address = consts::link::default_responder_remote_address;
+            /// expected remote address
+            uint16_t remote_address = consts::link::default_responder_remote_address;
 
-			/// local address
-			uint16_t local_address = consts::link::default_responder_local_address;
+            /// local address
+            uint16_t local_address = consts::link::default_responder_local_address;
         };
 
-		struct Context
-		{
-			Context(
-				const Config& config,
-				std::unique_ptr<KeyPair> local_static_key_pair,
-				std::unique_ptr<PublicKey> remote_static_public_key,
-				openpal::Logger logger,
-				openpal::IExecutor& executor,
-				ILowerLayer& lower
-			);
+        struct Context
+        {
+            Context(
+                const Config& config,
+                std::unique_ptr<KeyPair> local_static_key_pair,
+                std::unique_ptr<PublicKey> remote_static_public_key,
+                openpal::Logger logger,
+                openpal::IExecutor& executor,
+                ILowerLayer& lower
+            );
 
-			void reply_with_handshake_error(HandshakeError err);
+            void reply_with_handshake_error(HandshakeError err);
 
-			HandshakeError validate(const RequestHandshakeBegin& msg);
+            HandshakeError validate(const RequestHandshakeBegin& msg);
 
-			Config config;
+            Config config;
 
-			std::unique_ptr<KeyPair> local_static_key_pair;
-			std::unique_ptr<PublicKey> remote_static_public_key;
+            std::unique_ptr<KeyPair> local_static_key_pair;
+            std::unique_ptr<PublicKey> remote_static_public_key;
 
-			openpal::Logger logger;
-			
-			openpal::IExecutor* const executor;						
-			ILowerLayer* const lower;
+            openpal::Logger logger;
 
-			openpal::Buffer tx_buffer;
-			Handshake handshake;
-		};
+            openpal::IExecutor* const executor;
+            ILowerLayer* const lower;
 
-		struct IHandshakeState
-		{
-			virtual IHandshakeState& on_message(Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeBegin& msg) = 0;
-			virtual IHandshakeState& on_message(Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeAuth& msg) = 0;
-		};
+            openpal::Buffer tx_buffer;
+            Handshake handshake;
+        };
 
-		Responder(const Config& config,
-			std::unique_ptr<KeyPair> local_static_key_pair,
-			std::unique_ptr<PublicKey> remote_static_public_key,
-			openpal::Logger logger,
-			openpal::IExecutor& executor,
-			ILowerLayer& lower
-		);
+        struct IHandshakeState
+        {
+            virtual IHandshakeState& on_message(Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeBegin& msg) = 0;
+            virtual IHandshakeState& on_message(Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeAuth& msg) = 0;
+        };
+
+        Responder(const Config& config,
+                  std::unique_ptr<KeyPair> local_static_key_pair,
+                  std::unique_ptr<PublicKey> remote_static_public_key,
+                  openpal::Logger logger,
+                  openpal::IExecutor& executor,
+                  ILowerLayer& lower
+                 );
 
     private:
 
@@ -101,17 +101,17 @@ namespace ssp21
         virtual void process(const Message& message) override;
 
         template <class MsgType>
-        inline void handle_handshake_message(const openpal::RSlice& data);		
+        inline void handle_handshake_message(const openpal::RSlice& data);
 
-		void handle_session_message(const openpal::RSlice& data);        
-			
-		// All of the state in the responder except for the actual state instances
-		Context ctx;
-		
-		// state instance for the handshake
-		IHandshakeState* handshake_state;
+        void handle_session_message(const openpal::RSlice& data);
+
+        // All of the state in the responder except for the actual state instances
+        Context ctx;
+
+        // state instance for the handshake
+        IHandshakeState* handshake_state;
     };
-   
+
 }
 
 #endif

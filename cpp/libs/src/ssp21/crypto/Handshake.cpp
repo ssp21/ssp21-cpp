@@ -4,17 +4,17 @@
 using namespace openpal;
 
 namespace ssp21
-{   
-	HandshakeError Handshake::set_algorithms(const Algorithms::Config& config)
-	{
-		return this->algorithms_.configure(config);
-	}
+{
+    HandshakeError Handshake::set_algorithms(const Algorithms::Config& config)
+    {
+        return this->algorithms_.configure(config);
+    }
 
-	openpal::RSlice Handshake::initialize()
+    openpal::RSlice Handshake::initialize()
     {
         algorithms_.gen_keypair(local_ephemeral_keys_);
 
-		return local_ephemeral_keys_.public_key.as_slice();
+        return local_ephemeral_keys_.public_key.as_slice();
     }
 
     void Handshake::set_ck(const RSlice& input)
@@ -22,15 +22,15 @@ namespace ssp21
         algorithms_.hash({ input }, chaining_key_);
     }
 
-	void Handshake::mix_ck(const RSlice& input)
-	{
-		// ck = hash(ck || input)
+    void Handshake::mix_ck(const RSlice& input)
+    {
+        // ck = hash(ck || input)
 
-		algorithms_.hash(
-		{ chaining_key_.as_slice(), input },
-			chaining_key_
-		);
-	}	
+        algorithms_.hash(
+        { chaining_key_.as_slice(), input },
+        chaining_key_
+        );
+    }
 
     void Handshake::derive_authentication_key(
         const RSlice& message,
@@ -38,8 +38,8 @@ namespace ssp21
         const RSlice& pub_e_dh_key,
         const RSlice& pub_s_dh_key,
         std::error_code& ec)
-    {        
-		this->mix_ck(message);
+    {
+        this->mix_ck(message);
 
         DHOutput dh1;
         algorithms_.dh(local_ephemeral_keys_.private_key, pub_e_dh_key, dh1, ec);

@@ -13,28 +13,31 @@
 
 namespace ssp21
 {
-	typedef openpal::RSlice (*session_verify_t)(
-		const SymmetricKey& key,
-		const openpal::RSlice& msg,
-		const openpal::RSlice& payload,
-		openpal::WSlice dest,
-		std::error_code& ec
-	);
+    typedef openpal::RSlice (*session_verify_t)(
+        const SymmetricKey& key,
+        const openpal::RSlice& msg,
+        const openpal::RSlice& payload,
+        openpal::WSlice dest,
+        std::error_code& ec
+    );
 
-	struct SessionModes : private openpal::StaticOnly
-	{		
-		static session_verify_t default_session_mode() { return &verify_hmac_sha256_trunc16; }
+    struct SessionModes : private openpal::StaticOnly
+    {
+        static session_verify_t default_session_mode()
+        {
+            return &verify_hmac_sha256_trunc16;
+        }
 
-		static openpal::RSlice verify_hmac_sha256_trunc16(
-			const SymmetricKey& key,
-			const openpal::RSlice& msg,
-			const openpal::RSlice& payload,
-			openpal::WSlice dest,
-			std::error_code& ec
-		);
+        static openpal::RSlice verify_hmac_sha256_trunc16(
+            const SymmetricKey& key,
+            const openpal::RSlice& msg,
+            const openpal::RSlice& payload,
+            openpal::WSlice dest,
+            std::error_code& ec
+        );
 
-	};
-	
+    };
+
 }
 
 #endif

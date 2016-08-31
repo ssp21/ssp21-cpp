@@ -14,30 +14,31 @@
 
 namespace ssp21
 {
-	namespace hex {
+    namespace hex
+    {
 
-		std::string repeat(uint8_t value, uint8_t count);
+        std::string repeat(uint8_t value, uint8_t count);
 
-		std::string func_to_hex(Function func);
+        std::string func_to_hex(Function func);
 
-		std::string request_handshake_begin(
-			uint16_t version,
-			NonceMode nonce_mode,
-			DHMode dh_mode,
-			HashMode hash_mode,
-			SessionMode session_mode,
-			CertificateMode certificate_mode,
-			const std::string& hex_ephem_pub_key,
-			std::initializer_list<std::string> certificates = {}
-		);
+        std::string request_handshake_begin(
+            uint16_t version,
+            NonceMode nonce_mode,
+            DHMode dh_mode,
+            HashMode hash_mode,
+            SessionMode session_mode,
+            CertificateMode certificate_mode,
+            const std::string& hex_ephem_pub_key,
+            std::initializer_list<std::string> certificates = {}
+        );
 
-		std::string reply_handshake_begin(			
-			const std::string& hex_ephem_pub_key,
-			std::initializer_list<std::string> certificates = {}
-		);
+        std::string reply_handshake_begin(
+            const std::string& hex_ephem_pub_key,
+            std::initializer_list<std::string> certificates = {}
+        );
 
-		std::string reply_handshake_error(HandshakeError err);
-	}
+        std::string reply_handshake_error(HandshakeError err);
+    }
 }
 
 #endif

@@ -9,38 +9,44 @@
 namespace ssp21
 {
 
-	class HandshakeIdle : public Responder::IHandshakeState, private openpal::Uncopyable
-	{
-		HandshakeIdle() {}
+    class HandshakeIdle : public Responder::IHandshakeState, private openpal::Uncopyable
+    {
+        HandshakeIdle() {}
 
-		static HandshakeIdle instance;
-		
-		public:
+        static HandshakeIdle instance;
 
-		virtual Responder::IHandshakeState& on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeBegin& msg) override;
+    public:
 
-		virtual Responder::IHandshakeState& on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeAuth& msg) override;		
+        virtual Responder::IHandshakeState& on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeBegin& msg) override;
 
-		static Responder::IHandshakeState& get() { return instance; }
-		
-	};
+        virtual Responder::IHandshakeState& on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeAuth& msg) override;
 
-	class HandshakeWaitForAuth : public Responder::IHandshakeState, private openpal::Uncopyable
-	{
-		HandshakeWaitForAuth() {}
+        static Responder::IHandshakeState& get()
+        {
+            return instance;
+        }
 
-		static HandshakeWaitForAuth instance;
+    };
 
-	public:
+    class HandshakeWaitForAuth : public Responder::IHandshakeState, private openpal::Uncopyable
+    {
+        HandshakeWaitForAuth() {}
 
-		virtual Responder::IHandshakeState& on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeBegin& msg) override;
+        static HandshakeWaitForAuth instance;
 
-		virtual Responder::IHandshakeState& on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeAuth& msg) override;
+    public:
 
-		static Responder::IHandshakeState& get() { return instance; }
+        virtual Responder::IHandshakeState& on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeBegin& msg) override;
 
-	};
-      
+        virtual Responder::IHandshakeState& on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeAuth& msg) override;
+
+        static Responder::IHandshakeState& get()
+        {
+            return instance;
+        }
+
+    };
+
 }
 
 #endif

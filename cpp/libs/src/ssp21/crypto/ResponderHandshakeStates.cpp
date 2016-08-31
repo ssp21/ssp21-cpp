@@ -10,77 +10,78 @@
 namespace ssp21
 {
 
-HandshakeIdle HandshakeIdle::instance;
-	
-Responder::IHandshakeState& HandshakeIdle::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeBegin& msg)
-{	
-	auto err = ctx.validate(msg);
+    HandshakeIdle HandshakeIdle::instance;
 
-	if (any(err))
-	{
-		FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "handshake error: %s", HandshakeErrorSpec::to_string(err));
-		ctx.reply_with_handshake_error(err);
-		return *this;
-	}
+    Responder::IHandshakeState& HandshakeIdle::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeBegin& msg)
+    {
+        auto err = ctx.validate(msg);
 
-	Seq8 public_ephem_dh_key(ctx.handshake.initialize());	// generate our local ephemeral keys
-	ctx.handshake.set_ck(msg_bytes);						// initialize the chaining key
+        if (any(err))
+        {
+            FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "handshake error: %s", HandshakeErrorSpec::to_string(err));
+            ctx.reply_with_handshake_error(err);
+            return *this;
+        }
 
-	// now format our response - in the future, this we'll add certificates after this call
-	ReplyHandshakeBegin reply(public_ephem_dh_key);
+        Seq8 public_ephem_dh_key(ctx.handshake.initialize());	// generate our local ephemeral keys
+        ctx.handshake.set_ck(msg_bytes);						// initialize the chaining key
 
-	auto dest = ctx.tx_buffer.as_wslice();
-	auto result = reply.write_msg(dest);
+        // now format our response - in the future, this we'll add certificates after this call
+        ReplyHandshakeBegin reply(public_ephem_dh_key);
 
-	if (result.is_error()) {
-		FORMAT_LOG_BLOCK(ctx.logger, levels::error, "error formatting reply: %s", FormatErrorSpec::to_string(result.err));
-		return *this;
-	}
+        auto dest = ctx.tx_buffer.as_wslice();
+        auto result = reply.write_msg(dest);
 
-	std::error_code ec;
+        if (result.is_error())
+        {
+            FORMAT_LOG_BLOCK(ctx.logger, levels::error, "error formatting reply: %s", FormatErrorSpec::to_string(result.err));
+            return *this;
+        }
 
-	ctx.handshake.derive_authentication_key(
-		result.written,
-		ctx.local_static_key_pair->private_key,
-		msg.ephemeral_public_key,
-		ctx.remote_static_public_key->as_slice(),
-		ec
-	);
+        std::error_code ec;
 
-	if (ec)
-	{
-		FORMAT_LOG_BLOCK(ctx.logger, levels::error, "error deriving auth key: %s", ec.message().c_str());
-		ctx.reply_with_handshake_error(HandshakeError::internal);
-		return *this;
-	}
+        ctx.handshake.derive_authentication_key(
+            result.written,
+            ctx.local_static_key_pair->private_key,
+            msg.ephemeral_public_key,
+            ctx.remote_static_public_key->as_slice(),
+            ec
+        );
 
-	ctx.lower->transmit(Message(Addresses(), result.written)); // begin transmitting the response
+        if (ec)
+        {
+            FORMAT_LOG_BLOCK(ctx.logger, levels::error, "error deriving auth key: %s", ec.message().c_str());
+            ctx.reply_with_handshake_error(HandshakeError::internal);
+            return *this;
+        }
 
-	return HandshakeWaitForAuth::get();
-}
+        ctx.lower->transmit(Message(Addresses(), result.written)); // begin transmitting the response
 
-Responder::IHandshakeState& HandshakeIdle::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeAuth& msg)
-{
-	SIMPLE_LOG_BLOCK(ctx.logger, levels::info, "no prior handshake begin");
+        return HandshakeWaitForAuth::get();
+    }
 
-	ctx.reply_with_handshake_error(HandshakeError::no_prior_handshake_begin);
+    Responder::IHandshakeState& HandshakeIdle::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeAuth& msg)
+    {
+        SIMPLE_LOG_BLOCK(ctx.logger, levels::info, "no prior handshake begin");
 
-	return *this;
-}	
-    
-HandshakeWaitForAuth HandshakeWaitForAuth::instance;
+        ctx.reply_with_handshake_error(HandshakeError::no_prior_handshake_begin);
 
-Responder::IHandshakeState& HandshakeWaitForAuth::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeBegin& msg)
-{
-	// process via HandshakeIdle
-	return HandshakeIdle::get().on_message(ctx, msg_bytes, msg);
-}
+        return *this;
+    }
 
-Responder::IHandshakeState& HandshakeWaitForAuth::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeAuth& msg)
-{
-	// TODO
-	return *this;
-}
+    HandshakeWaitForAuth HandshakeWaitForAuth::instance;
+
+    Responder::IHandshakeState& HandshakeWaitForAuth::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeBegin& msg)
+    {
+        // process via HandshakeIdle
+        return HandshakeIdle::get().on_message(ctx, msg_bytes, msg);
+    }
+
+    Responder::IHandshakeState& HandshakeWaitForAuth::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeAuth& msg)
+    {
+        // TODO
+        return *this;
+    }
 
 }
 
