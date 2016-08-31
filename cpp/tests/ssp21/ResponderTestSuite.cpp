@@ -11,6 +11,7 @@
 
 #include "mocks/MockLogHandler.h"
 #include "mocks/MockLowerLayer.h"
+#include "mocks/MockUpperLayer.h"
 #include "mocks/HexMessageBuilders.h"
 #include "mocks/MakeUnique.h"
 #include "mocks/MockCryptoBackend.h"
@@ -53,7 +54,8 @@ public:
         log("responder"),
         exe(),
         lower(),
-        responder(config, std::move(keys.local_kp), std::move(keys.remote_static_key), log.root.logger, exe, lower)
+        responder(config, std::move(keys.local_kp), std::move(keys.remote_static_key), log.root.logger, exe, lower),
+		upper(responder)
     {
 
     }
@@ -68,6 +70,7 @@ public:
     MockExecutor exe;
     MockLowerLayer lower;
     Responder responder;
+	MockUpperLayer upper;
 };
 
 TEST_CASE(SUITE("responds to malformed REQUEST_HANDSHAKE_BEGIN with bad_message_format"))
