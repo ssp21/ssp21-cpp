@@ -33,18 +33,18 @@ namespace ssp21
         // now format our response - in the future, this we'll add certificates after this call
         ReplyHandshakeBegin reply(public_ephem_dh_key);
         
-		auto result = ctx.write_msg(reply);
+		auto wresult = ctx.write_msg(reply);
 
-        if (result.is_error())
+        if (wresult.is_error())
         {
-            FORMAT_LOG_BLOCK(ctx.logger, levels::error, "error formatting reply: %s", FormatErrorSpec::to_string(result.err));
+            FORMAT_LOG_BLOCK(ctx.logger, levels::error, "error formatting reply: %s", FormatErrorSpec::to_string(wresult.err));
             return *this;
         }
 
         std::error_code ec;
 
         ctx.handshake.derive_authentication_key(
-            result.written,
+            wresult.written,
             ctx.local_static_key_pair->private_key,
             msg.ephemeral_public_key,
             ctx.remote_static_public_key->as_slice(),
@@ -58,7 +58,7 @@ namespace ssp21
             return *this;
         }
 
-        ctx.transmit_to_lower(result.written);	
+        ctx.transmit_to_lower(wresult.written);	
 
         return HandshakeWaitForAuth::get();
     }
@@ -95,19 +95,19 @@ namespace ssp21
 
 		ReplyHandshakeAuth reply(Seq8(reply_mac.as_slice()));
 		
-		auto result = ctx.write_msg(reply);
+		const auto wresult = ctx.write_msg(reply);
 
-		if (result.is_error())
+		if (wresult.is_error())
 		{
-			FORMAT_LOG_BLOCK(ctx.logger, levels::error, "Unable to format reply: %s", FormatErrorSpec::to_string(result.err));
+			FORMAT_LOG_BLOCK(ctx.logger, levels::error, "Unable to format reply: %s", FormatErrorSpec::to_string(wresult.err));
 			return HandshakeIdle::get();
 		}
 		
-		ctx.handshake.mix_ck(result.written);
+		ctx.handshake.mix_ck(wresult.written);
 
 		// TODO - initialize the session!!!
 
-		ctx.transmit_to_lower(result.written);																
+		ctx.transmit_to_lower(wresult.written);																
 						
         return HandshakeIdle::get();
     }
