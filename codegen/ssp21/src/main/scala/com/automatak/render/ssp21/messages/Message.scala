@@ -1,5 +1,6 @@
 package com.automatak.render.ssp21.messages
 
+import com.automatak.render.ssp21.WriteCppFiles
 import com.automatak.render.ssp21.messages.generators._
 import com.automatak.render.{EnumModel, EnumValue}
 
@@ -11,12 +12,22 @@ sealed trait Field {
 
 case class Bit(name: String, default: Boolean)
 
-sealed case class Bitfield(name: String, structName: String, bits: List[Bit]) extends Field {
+trait Bitfield extends  Field {
+  def structName : String
+  def files : WriteCppFiles = BitfieldStructGenerator(this)
+  def bits: List[Bit]
+}
 
-  assert(bits.length > 0 && bits.length <= 8)
+object Bitfield {
 
-  def cpp = BitfieldGenerator(this)
-  def minSizeBytes : Int = 1
+  private case class Bits(name: String, structName: String, bits: List[Bit]) extends Bitfield {
+    def cpp = BitfieldGenerator(this)
+    def minSizeBytes : Int = 1
+  }
+
+  def apply(name: String, structName: String, bit1: Bit, bit2: Bit): Bitfield = {
+    Bits(name, structName, List(bit1, bit2))
+  }
 }
 
 sealed case class U16(name: String) extends Field {

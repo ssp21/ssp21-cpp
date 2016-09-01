@@ -9,16 +9,14 @@ import com.automatak.render.ssp21.messages.generators.BitfieldStructGenerator
 
 object Bitfields {
 
-  val payloadFlags = Bitfield(
+  val payloadFlags : Bitfield = Bitfield(
     "payload_flags", "PayloadFlags",
-    List(
       Bit("fir", true),
       Bit("fin", true)
-    )
   )
 
   def files : List[WriteCppFiles] = List(
     payloadFlags
-  ).map(BitfieldStructGenerator.apply)
+  ).map(_.files)
 
 }
