@@ -13,7 +13,7 @@
 
 namespace ssp21
 {
-    class Seq8 final : public openpal::RSlice, public IReadable, public IPrintable
+    class Seq8 final : public openpal::RSlice, public IReadable, public IWritable, public IPrintable
     {
     public:
 
@@ -21,6 +21,7 @@ namespace ssp21
         {}
 
 		virtual ParseError read(openpal::RSlice& input) override;
+		virtual FormatError write(openpal::WSlice& output) const override;
 		virtual void print(const char* name, IMessagePrinter& printer) const override;
 		
 
@@ -29,7 +30,7 @@ namespace ssp21
         {}
     };
 
-    class Seq16 final : public openpal::RSlice, public IReadable, public IPrintable
+    class Seq16 final : public openpal::RSlice, public IReadable, public IWritable, public IPrintable
     {
     public:
 
@@ -37,13 +38,14 @@ namespace ssp21
         {}
 
 		virtual ParseError read(openpal::RSlice& input) override;
+		virtual FormatError write(openpal::WSlice& output) const override;
 		virtual void print(const char* name, IMessagePrinter& printer) const override;
 
         explicit Seq16(const openpal::RSlice& other) : RSlice(other)
         {}
     };
 
-    class SeqRSlice : public IReadable, public IPrintable
+    class SeqRSlice : public IReadable, public IWritable, public IPrintable
     {
 
     public:
@@ -51,6 +53,7 @@ namespace ssp21
         SeqRSlice();
 
 		virtual ParseError read(openpal::RSlice& input) override;
+		virtual FormatError write(openpal::WSlice& output) const override;
 		virtual void print(const char* name, IMessagePrinter& printer) const override;
 
         void clear();

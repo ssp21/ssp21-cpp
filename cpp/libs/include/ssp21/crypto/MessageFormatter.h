@@ -63,13 +63,6 @@ namespace ssp21
 		// any writable
 		static FormatError write(openpal::WSlice& dest, const IWritable& value) { return value.write(dest); }
 
-
-        // sequences
-        static FormatError write(openpal::WSlice& dest, const Seq8& value);
-        static FormatError write(openpal::WSlice& dest, const Seq16& value);
-        static FormatError write(openpal::WSlice& dest, const Seq8Seq16& value);
-
-
         template <class WriteFunc>
         static FormatError write_any_with_written(const WriteFunc& write, openpal::WSlice& dest, openpal::RSlice& written)
         {

@@ -71,59 +71,6 @@ namespace ssp21
     {
         return write_enum<HashModeSpec>(dest, value);
     }
-
-    template <class CountType, class SeqType>
-    FormatError write_seq(openpal::WSlice& dest, const SeqType& value)
-    {
-        if (value.length() > CountType::max_value)
-        {
-            return FormatError::bad_sequence_length;
-        }
-
-        const auto count = static_cast<typename CountType::type_t>(value.length());
-
-        auto err = MessageFormatter::write(dest, count);
-        if (any(err)) return err;
-
-        if (dest.length() < value.length()) return FormatError::insufficient_space;
-
-        value.copy_to(dest);
-
-        return FormatError::ok;
-    }
-
-    FormatError MessageFormatter::write(openpal::WSlice& dest, const Seq8& value)
-    {
-        return write_seq<UInt8>(dest, value);
-    }
-
-    FormatError MessageFormatter::write(openpal::WSlice& dest, const Seq16& value)
-    {
-        return write_seq<UInt16>(dest, value);
-    }
-
-    FormatError MessageFormatter::write(openpal::WSlice& dest, const Seq8Seq16& value)
-    {
-        if (value.count() > UInt8::max_value)
-        {
-            return FormatError::bad_sequence_length;
-        }
-
-        const uint8_t count = static_cast<UInt8::type_t>(value.count());
-
-        auto err = write(dest, count);
-        if (any(err)) return err;
-
-        for (UInt8::type_t i = 0; i < count; ++i)
-        {
-            Seq16 slice;
-            value.read(i, slice);
-            auto serr = write(dest, slice);
-            if (any(serr)) return serr;
-        }
-
-        return FormatError::ok;
-    }
-
+   
 }
 

@@ -4,7 +4,9 @@
 #include "openpal/logging/LogMacros.h"
 
 #include "openpal/serialization/BigEndian.h"
+
 #include "ssp21/crypto/MessageParser.h"
+#include "ssp21/crypto/MessageFormatter.h"
 
 using namespace openpal;
 
@@ -27,9 +29,34 @@ namespace ssp21
 		return ParseError::ok;
 	}
 
+	template <class CountType, class SeqType>
+	FormatError write_seq(openpal::WSlice& dest, const SeqType& value)
+	{
+		if (value.length() > CountType::max_value)
+		{
+			return FormatError::bad_sequence_length;
+		}
+
+		const auto count = static_cast<typename CountType::type_t>(value.length());
+
+		auto err = MessageFormatter::write_fields(dest, count);
+		if (any(err)) return err;
+
+		if (dest.length() < value.length()) return FormatError::insufficient_space;
+
+		value.copy_to(dest);
+
+		return FormatError::ok;
+	}
+
 	ParseError Seq8::read(openpal::RSlice& input)
 	{
 		return read_seq<UInt8, Seq8>(input, *this);
+	}
+
+	FormatError Seq8::write(openpal::WSlice& output) const
+	{
+		return write_seq<UInt8, Seq8>(output, *this);
 	}
 
 	void Seq8::print(const char* name, IMessagePrinter& printer) const
@@ -40,6 +67,11 @@ namespace ssp21
 	ParseError Seq16::read(openpal::RSlice& input)
 	{
 		return read_seq<UInt16, Seq16>(input, *this);
+	}
+
+	FormatError Seq16::write(openpal::WSlice& output) const
+	{
+		return write_seq<UInt16, Seq16>(output, *this);
 	}
 
 	void Seq16::print(const char* name, IMessagePrinter& printer) const
@@ -73,6 +105,28 @@ namespace ssp21
 		}
 
 		return ParseError::ok;
+	}
+
+	FormatError SeqRSlice::write(openpal::WSlice& output) const
+	{
+		if (this->count() > UInt8::max_value)
+		{
+			return FormatError::bad_sequence_length;
+		}
+
+		const uint8_t count = static_cast<UInt8::type_t>(this->count());
+
+		auto err = MessageFormatter::write_fields(output, count);
+		if (any(err)) return err;
+
+		for (UInt8::type_t i = 0; i < count_; ++i)
+		{			
+			Seq16 slice(slices_[i]);
+			auto serr = slice.write(output);
+			if (any(serr)) return serr;
+		}
+
+		return FormatError::ok;
 	}
 
 	void SeqRSlice::print(const char* name, IMessagePrinter& printer) const
@@ -120,24 +174,5 @@ namespace ssp21
     {
         return count_;
     }
-
-	/*
-	
-
-	ParseError MessageParser::read(openpal::RSlice& input, Seq8& value)
-	{
-	return read_seq<UInt8, Seq8>(input, value);
-	}
-
-	ParseError MessageParser::read(openpal::RSlice& input, Seq16& value)
-	{
-	return read_seq<UInt16, Seq16>(input, value);
-	}
-
-	ParseError MessageParser::read(openpal::RSlice& input, Seq8Seq16& value)
-	{
-	
-	}
-	*/
 
 }
