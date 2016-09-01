@@ -13,6 +13,8 @@
 #include "ssp21/LayerInterfaces.h"
 #include "ssp21/crypto/Handshake.h"
 
+#include "ssp21/LogLevels.h"
+
 #include "openpal/logging/Logger.h"
 #include "openpal/container/Buffer.h"
 #include "openpal/executor/IExecutor.h"
