@@ -14,8 +14,6 @@
 
 #include "openpal/util/Uncopyable.h"
 
-
-
 namespace ssp21
 {
 
@@ -34,16 +32,8 @@ namespace ssp21
         static void print_fields(IMessagePrinter& printer) {}
 
     private:
-
-        static const int max_line_size = 80;
-        static const int max_hex_per_line = max_line_size / 3;
-
-
-        static void print_unsigned(IMessagePrinter& printer, const char* name, uint32_t value);
-
-        static void print_hex(IMessagePrinter& printer, const openpal::RSlice& data);
-        static openpal::RSlice print_hex_line(IMessagePrinter& printer, const openpal::RSlice& data);
-
+		
+        static const int max_line_size = 80;		
 
         // integers
         static void print(IMessagePrinter& printer, const char* name, uint8_t value);
@@ -60,15 +50,11 @@ namespace ssp21
         static void print(IMessagePrinter& printer, const char* name, HashMode value);
 
 		// any printable
-		static void print(IMessagePrinter& print, const char* name, const IPrintable& value)
+		static void print(IMessagePrinter& printer, const char* name, const IPrintable& value)
 		{
-			value.print(name, print);
+			value.print(name, printer);
 		}
 
-        // sequences
-        static void print(IMessagePrinter& printer, const char* name, const Seq8& value);
-        static void print(IMessagePrinter& printer, const char* name, const Seq16& value);
-        static void print(IMessagePrinter& printer, const char* name, const Seq8Seq16& value);
     };
 }
 

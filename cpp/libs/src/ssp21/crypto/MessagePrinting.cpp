@@ -67,23 +67,7 @@ namespace ssp21
     void MessagePrinting::print(IMessagePrinter& printer, const char* name, HashMode value)
     {
         print_any_enum<max_line_size, HashModeSpec>(printer, name, value);
-    }
-
-    // sequences
-    void MessagePrinting::print(IMessagePrinter& printer, const char* name, const Seq8& value)
-    {
-        printer.print(name, value);
-    }
-
-    void MessagePrinting::print(IMessagePrinter& printer, const char* name, const Seq16& value)
-    {
-        printer.print(name, value);
-    }
-
-    void MessagePrinting::print(IMessagePrinter& printer, const char* name, const Seq8Seq16& value)
-    {
-        printer.print(name, value);
-    }
+    }   
 
 }
 

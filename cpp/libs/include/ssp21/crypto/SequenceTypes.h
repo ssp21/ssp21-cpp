@@ -7,36 +7,44 @@
 #include <openpal/container/RSlice.h>
 
 #include "ssp21/crypto/Constants.h"
+#include "ssp21/crypto/IMessagePrinter.h"
 
 namespace ssp21
 {
-    class Seq8 final : public openpal::RSlice
+    class Seq8 final : public openpal::RSlice, public IPrintable
     {
     public:
 
         Seq8() : openpal::RSlice()
         {}
 
+		virtual void print(const char* name, IMessagePrinter& printer) const override;
+
         explicit Seq8(const openpal::RSlice& other) : RSlice(other)
         {}
     };
 
-    class Seq16 final : public openpal::RSlice
+    class Seq16 final : public openpal::RSlice, public IPrintable
     {
     public:
+
         Seq16() : openpal::RSlice()
         {}
+
+		virtual void print(const char* name, IMessagePrinter& printer) const override;
 
         explicit Seq16(const openpal::RSlice& other) : RSlice(other)
         {}
     };
 
-    class SeqRSlice
+    class SeqRSlice : public IPrintable
     {
 
     public:
 
         SeqRSlice();
+
+		virtual void print(const char* name, IMessagePrinter& printer) const override;
 
         void clear();
 

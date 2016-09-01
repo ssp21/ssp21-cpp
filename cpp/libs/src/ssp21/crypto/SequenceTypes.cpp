@@ -1,12 +1,38 @@
 
 #include "ssp21/crypto/SequenceTypes.h"
 
+#include "openpal/logging/LogMacros.h"
+
+using namespace openpal;
+
 namespace ssp21
 {
+	void Seq8::print(const char* name, IMessagePrinter& printer) const
+	{
+		printer.print(name, *this);
+	}
 
+	void Seq16::print(const char* name, IMessagePrinter& printer) const
+	{
+		printer.print(name, *this);
+	}
 
     SeqRSlice::SeqRSlice() : count_(0)
     {}
+
+	void SeqRSlice::print(const char* name, IMessagePrinter& printer) const
+	{		
+		char message[max_log_entry_size];
+		SAFE_STRING_FORMAT(message, max_log_entry_size, "%s (count = %u)", name, this->count());
+		printer.print(message);
+		
+		for (uint32_t i = 0; i < count_; ++i)
+		{						
+			SAFE_STRING_FORMAT(message, max_log_entry_size, "#%u", i + 1);			
+			printer.print(message, slices_[i]);
+		}
+		
+	}
 
     void SeqRSlice::clear()
     {
