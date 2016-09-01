@@ -37,7 +37,9 @@ enum class ParseError : uint8_t
     /// parser completed with bytes still remaining
     too_many_bytes = 0x4,
     /// reached an implementation specific capacity limit
-    impl_capacity_limit = 0x5
+    impl_capacity_limit = 0x5,
+    /// the bitfield contains a reserved bit(s) that is set
+    reserved_bit = 0x6
 };
 
 inline bool any(ParseError value)

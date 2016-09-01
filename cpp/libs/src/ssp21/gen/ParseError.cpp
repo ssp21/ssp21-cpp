@@ -33,6 +33,8 @@ const char* ParseErrorSpec::to_string(ParseError arg)
             return "too_many_bytes";
         case(ParseError::impl_capacity_limit):
             return "impl_capacity_limit";
+        case(ParseError::reserved_bit):
+            return "reserved_bit";
         default:
             return "undefined";
     }

@@ -73,9 +73,15 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
         "%s = (value & 0x%02X) != 0;".format(b.name, mask)
       }.toIterator
 
+      def reserved_mask : String = {
+        val valid_mask = field.bits.zipWithIndex.map { case (b, i) => (1 << (7-i)) }.foldLeft(0)((bit, sum) => bit | sum)
+        "0x%02X".format(~valid_mask.toByte)
+      }
+
       "ParseError %s::read(openpal::RSlice& input)".format(field.structName).iter ++ bracket {
         "uint8_t value = 0;".iter ++
         "if(!openpal::UInt8::read_from(input, value)) return ParseError::insufficient_bytes;".iter ++ space ++
+        "if((value & %s) != 0) return ParseError::reserved_bit;".format(reserved_mask).iter ++ space ++
           fields ++ space ++
           "return ParseError::ok;".iter
       }

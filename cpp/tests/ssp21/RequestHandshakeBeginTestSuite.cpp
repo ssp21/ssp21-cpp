@@ -107,7 +107,7 @@ TEST_CASE(SUITE("pretty prints message"))
 
     msg.print(printer);
 
-    log.validate(
+    log.expect(
         "version: 7",
         "nonce_mode: greater_than_last_rx",
         "dh_mode: x25519",

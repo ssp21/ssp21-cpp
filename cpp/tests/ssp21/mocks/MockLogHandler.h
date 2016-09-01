@@ -38,15 +38,15 @@ namespace ssp21
         }
 
         template <typename... Args>
-        void validate(const std::string& expected, const Args& ... args)
+        void expect(const std::string& expected, const Args& ... args)
         {
             REQUIRE_FALSE(lines.empty());
             REQUIRE(expected == lines.front());
             lines.pop_front();
-            validate(args ...);
+			expect(args ...);
         }
 
-        void validate()
+        void expect()
         {
             REQUIRE(lines.empty());
         }

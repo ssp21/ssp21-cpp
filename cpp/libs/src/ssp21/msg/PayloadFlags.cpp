@@ -25,6 +25,8 @@ ParseError PayloadFlags::read(openpal::RSlice& input)
     uint8_t value = 0;
     if(!openpal::UInt8::read_from(input, value)) return ParseError::insufficient_bytes;
 
+    if((value & 0x3F) != 0) return ParseError::reserved_bit;
+
     fir = (value & 0x80) != 0;
     fin = (value & 0x40) != 0;
 
