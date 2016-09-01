@@ -25,6 +25,11 @@ struct PayloadFlags final : public IReadable, public IWritable
 {
     PayloadFlags(){}
 
+    PayloadFlags(bool fir, bool fin) :
+        fir(fir),
+        fin(fin)
+    {}
+
     virtual ParseError read(openpal::RSlice& input) override;
     virtual FormatError write(openpal::WSlice& output) override;
 

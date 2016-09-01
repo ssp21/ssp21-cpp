@@ -3,7 +3,7 @@ package com.automatak.render.ssp21.messages.generators
 import com.automatak.render._
 import com.automatak.render.cpp._
 import com.automatak.render.ssp21.{Includes, WriteCppFiles}
-import com.automatak.render.ssp21.messages.Bitfield
+import com.automatak.render.ssp21.messages.{Bit, Bitfield}
 
 case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
 
@@ -15,7 +15,17 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
   def header(implicit indent: Indentation) : Iterator[String] = {
 
     def members : Iterator[String] = field.bits.map(b => "bool %s = %b;".format(b.name, b.default)).toIterator
+
     def defaultConstructor = "%s(){}".format(field.structName).iter
+
+    def fullConstructor = {
+      def decl(b: Bit) = "bool %s".format(b.name)
+
+      def init = commas(field.bits.map(b => "%s(%s)".format(b.name, b.name)))
+
+      "%s(%s) :".format(field.structName, commas(field.bits.map(decl)).mkString(" ")).iter ++ indent(init) ++ "{}".iter
+      
+    }
 
     def readFunc : Iterator[String] = {
       "virtual ParseError read(openpal::RSlice& input) override;".iter
@@ -27,6 +37,8 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
 
     def struct = "struct %s final : public IReadable, public IWritable".format(field.structName).iter ++ bracketSemiColon {
       defaultConstructor ++
+      space ++
+      fullConstructor ++
       space ++
       readFunc ++
       writeFunc ++
