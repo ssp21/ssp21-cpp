@@ -10,7 +10,6 @@ object UnconfirmedSessionData extends Message {
   def function = CryptoFunction.unconfirmedSessionData
 
   override def fields: List[Field] = List(
-      //Bitfield("flags", "Flags", List(Bit("fir", true), Bit("fin", true))),
       U32("valid_until_ms"),
       U16("nonce"),
       Seq16("payload")

@@ -10,9 +10,6 @@ sealed trait FieldGenerator {
   def cppType : String
   def defaultValue: Option[String]
   def asArgument(name: String) : String
-
-  def additionalDefine(implicit indent: Indentation) : Iterator[String] = Iterator.empty
-
   def initializeInFullConstructor : Boolean = true
 }
 
@@ -30,8 +27,6 @@ case class BitfieldGenerator(field: Bitfield) extends FieldGenerator with PassBy
   override def includes = Set(Includes.cstdint)
   override def cppType : String = field.structName
   def defaultValue: Option[String] = None
-
-  override def additionalDefine(implicit indent: Indentation) = BitfieldStruct.definition(field)
 }
 
 object U16FieldGenerator extends FieldGenerator with PassByValue {

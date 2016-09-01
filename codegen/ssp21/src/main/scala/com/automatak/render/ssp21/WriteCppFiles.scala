@@ -27,9 +27,10 @@ trait WriteCppFiles {
     writeTo(headerPath)(header)
     println("Wrote: " + headerPath)
 
-    if(hasImpl) {
-      writeTo(implPath)(impl)
+
+    if(hasImpl && writeTo(implPath)(impl)) {
       println("Wrote: " + implPath)
     }
+
   }
 }

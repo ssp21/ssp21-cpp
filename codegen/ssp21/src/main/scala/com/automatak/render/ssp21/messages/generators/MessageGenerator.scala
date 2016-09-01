@@ -25,13 +25,6 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
     def minSizeBytes = "static const uint32_t min_size_bytes = %s;".format(msg.minSizeBytes).iter
     def functionConst = "static const Function function = Function::%s;".format(msg.function.name).iter
 
-    def additionalDefines(implicit indent: Indentation) : Iterator[String] = {
-
-      def spaced(lines: Iterator[String]) : Iterator[String] = if(lines.nonEmpty) lines ++ space else lines
-
-      msg.fields.flatMap(f => spaced(f.cpp.additionalDefine)).toIterator
-    }
-
     def struct(implicit indent: Indentation) : Iterator[String] = {
 
       def fieldDefintions : Iterator[String] = msg.fields.map { f =>
@@ -76,7 +69,7 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
     }
 
     def license = commented(LicenseHeader.lines)
-    def content = additionalDefines ++ struct
+    def content = struct
 
     license ++ space ++ includeGuards(msg.name)(includes ++ space ++ namespace(cppNamespace)(content))
   }
