@@ -55,7 +55,20 @@ namespace ssp21
                 ILowerLayer& lower
             );
 
-            void transmit_to_lower(const openpal::RSlice& msg);
+            void log_message(openpal::LogLevel msg_level, openpal::LogLevel field_level, Function func, const IMessage& msg, uint32_t length);
+
+            template <class T>
+            void transmit_to_lower(const T& msg, const openpal::RSlice& data)
+            {
+                this->log_message(levels::tx_crypto_msg, levels::tx_crypto_msg_fields, T::function, msg, data.length());
+
+                this->lower->transmit(
+                    Message(
+                        Addresses(config.remote_address, config.local_address),
+                        data
+                    )
+                );
+            }
 
             void reply_with_handshake_error(HandshakeError err);
 
@@ -90,7 +103,10 @@ namespace ssp21
             IUpperLayer* upper = nullptr;
 
         private:
+
             openpal::Buffer tx_buffer;
+
+
         };
 
         struct IHandshakeState

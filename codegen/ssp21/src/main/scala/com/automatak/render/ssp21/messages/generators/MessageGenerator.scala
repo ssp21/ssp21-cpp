@@ -19,7 +19,7 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
     def readSigHeader = "ParseError read_msg(const openpal::RSlice& input);".iter
     def writeMsgSig = "FormatResult write_msg(openpal::WSlice& output) const;".iter
     def writeSigHeader = "FormatError write(openpal::WSlice& output) const;".iter
-    def printSig = "void print(IMessagePrinter& printer) const;".iter
+    def printSig = "virtual void print(IMessagePrinter& printer) const override;".iter
     def defaultConstructorSig = "%s();".format(msg.name).iter
 
     def minSizeBytes = "static const uint32_t min_size_bytes = %s;".format(msg.minSizeBytes).iter
@@ -31,7 +31,7 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
         "%s %s;".format(f.cpp.cppType, f.name);
       }.toIterator
 
-      "struct %s : private openpal::Uncopyable".format(msg.name).iter ++ bracketSemiColon {
+      "struct %s : public IMessage, private openpal::Uncopyable".format(msg.name).iter ++ bracketSemiColon {
           defaultConstructorSig ++
           space ++
           fullConstructorSig(false) ++
@@ -56,6 +56,7 @@ case class MessageGenerator(msg: Message) extends WriteCppFiles {
     def includes : Iterator[String] = {
       Includes.lines(
         List(
+          Includes.message,
           Includes.rslice,
           Includes.wslice,
           Includes.uncopyable,

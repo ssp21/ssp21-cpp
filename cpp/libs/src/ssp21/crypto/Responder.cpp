@@ -35,16 +35,6 @@ namespace ssp21
 
     }
 
-    void Responder::Context::transmit_to_lower(const openpal::RSlice& data)
-    {
-        this->lower->transmit(
-            Message(
-                Addresses(config.remote_address, config.local_address),
-                data
-            )
-        );
-    }
-
     void Responder::Context::reply_with_handshake_error(HandshakeError err)
     {
         ReplyHandshakeError msg(err);
@@ -53,7 +43,18 @@ namespace ssp21
 
         if (!result.is_error())
         {
-            this->transmit_to_lower(result.written);
+            this->transmit_to_lower(msg, result.written);
+        }
+    }
+
+    void Responder::Context::log_message(openpal::LogLevel msg_level, openpal::LogLevel field_level, Function func, const IMessage& msg, uint32_t length)
+    {
+        FORMAT_LOG_BLOCK(this->logger, msg_level, "%s (length = %u)", FunctionSpec::to_string(func), length);
+
+        if (this->logger.is_enabled(field_level))
+        {
+            LogMessagePrinter printer(this->logger, field_level);
+            msg.print(printer);
         }
     }
 
@@ -156,13 +157,7 @@ namespace ssp21
         }
         else
         {
-            FORMAT_LOG_BLOCK(ctx.logger, levels::rx_crypto_msg, "%s (length = %u)", FunctionSpec::to_string(MsgType::function), data.length());
-
-            if (ctx.logger.is_enabled(levels::rx_crypto_msg_fields))
-            {
-                LogMessagePrinter printer(ctx.logger, levels::rx_crypto_msg_fields);
-                msg.print(printer);
-            }
+            ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, MsgType::function, msg, data.length());
 
             this->handshake_state = &this->handshake_state->on_message(ctx, data, msg);
         }

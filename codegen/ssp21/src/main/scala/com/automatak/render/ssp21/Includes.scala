@@ -28,6 +28,7 @@ object Includes {
   val formatError = Include(quoted("ssp21/gen/FormatError.h"), Ordering.enum)
   val function = Include(quoted("ssp21/gen/Function.h"), Ordering.enum)
 
+  val message = Include(quoted("ssp21/crypto/IMessage.h"), Ordering.crypto)
   val readable = Include(quoted("ssp21/crypto/IReadable.h"), Ordering.crypto)
   val writable = Include(quoted("ssp21/crypto/IWritable.h"), Ordering.crypto)
   val seqTypes = Include(quoted("ssp21/crypto/SequenceTypes.h"), Ordering.crypto)

@@ -22,13 +22,14 @@
 #include "ssp21/gen/Function.h"
 #include "ssp21/gen/ParseError.h"
 #include "ssp21/gen/FormatError.h"
+#include "ssp21/crypto/IMessage.h"
 #include "ssp21/crypto/FormatResult.h"
 #include "ssp21/crypto/SequenceTypes.h"
 #include "ssp21/crypto/IMessagePrinter.h"
 
 namespace ssp21 {
 
-struct RequestHandshakeAuth : private openpal::Uncopyable
+struct RequestHandshakeAuth : public IMessage, private openpal::Uncopyable
 {
     RequestHandshakeAuth();
 
@@ -39,7 +40,7 @@ struct RequestHandshakeAuth : private openpal::Uncopyable
     ParseError read_msg(const openpal::RSlice& input);
     FormatResult write_msg(openpal::WSlice& output) const;
 
-    void print(IMessagePrinter& printer) const;
+    virtual void print(IMessagePrinter& printer) const override;
 
     static const uint32_t min_size_bytes = 2;
 

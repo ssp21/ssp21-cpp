@@ -58,7 +58,7 @@ namespace ssp21
             return *this;
         }
 
-        ctx.transmit_to_lower(wresult.written);
+        ctx.transmit_to_lower(reply, wresult.written);
 
         return HandshakeWaitForAuth::get();
     }
@@ -107,7 +107,7 @@ namespace ssp21
 
         // TODO - initialize the session!!!
 
-        ctx.transmit_to_lower(wresult.written);
+        ctx.transmit_to_lower(reply, wresult.written);
 
         return HandshakeIdle::get();
     }
