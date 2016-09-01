@@ -23,6 +23,7 @@
 #include "ssp21/gen/Function.h"
 #include "ssp21/gen/ParseError.h"
 #include "ssp21/gen/FormatError.h"
+#include "ssp21/msg/PayloadFlags.h"
 #include "ssp21/crypto/FormatResult.h"
 #include "ssp21/crypto/SequenceTypes.h"
 #include "ssp21/crypto/IMessagePrinter.h"
@@ -36,6 +37,7 @@ struct UnconfirmedSessionData : private openpal::Uncopyable
     UnconfirmedSessionData(
         uint32_t valid_until_ms,
         uint16_t nonce,
+        const PayloadFlags& payload_flags,
         const Seq16& payload
     );
 
@@ -44,12 +46,13 @@ struct UnconfirmedSessionData : private openpal::Uncopyable
 
     void print(IMessagePrinter& printer) const;
 
-    static const uint32_t min_size_bytes = 9;
+    static const uint32_t min_size_bytes = 10;
 
     static const Function function = Function::unconfirmed_session_data;
 
     uint32_t valid_until_ms;
     uint16_t nonce;
+    PayloadFlags payload_flags;
     Seq16 payload;
 
     private: 

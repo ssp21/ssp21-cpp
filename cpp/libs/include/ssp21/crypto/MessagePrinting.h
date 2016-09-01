@@ -59,6 +59,12 @@ namespace ssp21
         static void print(IMessagePrinter& printer, const char* name, SessionMode value);
         static void print(IMessagePrinter& printer, const char* name, HashMode value);
 
+		// any printable
+		static void print(IMessagePrinter& print, const char* name, const IPrintable& value)
+		{
+			value.print(name, print);
+		}
+
         // sequences
         static void print(IMessagePrinter& printer, const char* name, const Seq8& value);
         static void print(IMessagePrinter& printer, const char* name, const Seq16& value);

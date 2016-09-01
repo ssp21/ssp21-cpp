@@ -7,7 +7,8 @@ object Ordering {
   val system = 0
   val openpal = 1
   val enum = 2
-  val crypto = 3
+  val msg = 3
+  val crypto = 4
 }
 
 case class Include(file: String, order: Int) {
@@ -34,7 +35,11 @@ object Includes {
   val formatResult = Include(quoted("ssp21/crypto/FormatResult.h"), Ordering.crypto)
   val msgPrinter = Include(quoted("ssp21/crypto/IMessagePrinter.h"), Ordering.crypto)
   val msgPrinting = Include(quoted("ssp21/crypto/MessagePrinting.h"), Ordering.crypto)
+  val flagsPrinting = Include(quoted("ssp21/crypto/FlagsPrinting.h"), Ordering.crypto)
   val msgParser = Include(quoted("ssp21/crypto/MessageParser.h"), Ordering.crypto)
+
+
+  def message(className: String) = Include(quoted("ssp21/msg/%s.h".format(className)), Ordering.msg)
 
   def sort(lhs : Include, rhs : Include) : Boolean = {
     if(lhs.order == rhs.order) {

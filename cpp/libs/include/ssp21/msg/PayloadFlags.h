@@ -18,10 +18,11 @@
 
 #include "ssp21/crypto/IReadable.h"
 #include "ssp21/crypto/IWritable.h"
+#include "ssp21/crypto/IMessagePrinter.h"
 
 namespace ssp21 {
 
-struct PayloadFlags final : public IReadable, public IWritable
+struct PayloadFlags final : public IReadable, public IWritable, public IPrintable
 {
     PayloadFlags(){}
 
@@ -31,7 +32,8 @@ struct PayloadFlags final : public IReadable, public IWritable
     {}
 
     virtual ParseError read(openpal::RSlice& input) override;
-    virtual FormatError write(openpal::WSlice& output) override;
+    virtual FormatError write(openpal::WSlice& output) const override;
+    virtual void print(const char* name, IMessagePrinter& printer) const override;
 
     bool fir = true;
     bool fin = true;

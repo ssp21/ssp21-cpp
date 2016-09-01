@@ -17,7 +17,7 @@ namespace ssp21
     public:
 
         /// Advances the output. Returns an error if writing fails.
-        virtual FormatError write(openpal::WSlice& output) = 0;
+        virtual FormatError write(openpal::WSlice& output) const = 0;
     };
 
 }

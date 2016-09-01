@@ -11,6 +11,7 @@
 #include "ssp21/gen/FormatError.h"
 
 #include "ssp21/crypto/SequenceTypes.h"
+#include "ssp21/crypto/IWritable.h"
 
 #include "openpal/container/WSlice.h"
 #include "openpal/util/Uncopyable.h"
@@ -58,6 +59,10 @@ namespace ssp21
         static FormatError write(openpal::WSlice& dest, NonceMode value);
         static FormatError write(openpal::WSlice& dest, SessionMode value);
         static FormatError write(openpal::WSlice& dest, HashMode value);
+
+		// any writable
+		static FormatError write(openpal::WSlice& dest, const IWritable& value) { return value.write(dest); }
+
 
         // sequences
         static FormatError write(openpal::WSlice& dest, const Seq8& value);

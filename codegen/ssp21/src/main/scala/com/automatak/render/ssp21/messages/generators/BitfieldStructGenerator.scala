@@ -32,21 +32,26 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
     }
 
     def writeFunc : Iterator[String] = {
-      "virtual FormatError write(openpal::WSlice& output) override;".iter
+      "virtual FormatError write(openpal::WSlice& output) const override;".iter
     }
 
-    def struct = "struct %s final : public IReadable, public IWritable".format(field.structName).iter ++ bracketSemiColon {
+    def printFunc : Iterator[String] = {
+      "virtual void print(const char* name, IMessagePrinter& printer) const override;".iter
+    }
+
+    def struct = "struct %s final : public IReadable, public IWritable, public IPrintable".format(field.structName).iter ++ bracketSemiColon {
       defaultConstructor ++
       space ++
       fullConstructor ++
       space ++
       readFunc ++
       writeFunc ++
+      printFunc ++
       space ++
       members
     }
 
-    def includes = List(Includes.readable, Includes.writable)
+    def includes = List(Includes.readable, Includes.writable, Includes.msgPrinter)
     def includeLines : Iterator[String] = Includes.lines(includes)
 
     def content = struct
@@ -83,18 +88,28 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
         "if(%s) value |= %s;".format(b.name, mask)
       }.toIterator
 
-      "FormatError %s::write(openpal::WSlice& output)".format(field.structName).iter ++ bracket {
+      "FormatError %s::write(openpal::WSlice& output) const".format(field.structName).iter ++ bracket {
           "uint8_t value = 0;".iter ++
           space ++ fields ++ space ++
           "return openpal::UInt8::write_to(output, value) ? FormatError::ok : FormatError::insufficient_space;".iter
       }
     }
 
+    def printFunc : Iterator[String] = {
+      // FlagsPrinting::print(printer, name, "fir", fir, "fin", fin);
+
+      def fields : String = field.bits.map(b => "%s, %s".format(quoted(b.name), b.name)).mkString(", ")
+
+      "void %s::print(const char* name, IMessagePrinter& printer) const".format(field.structName).iter ++ bracket {
+        "FlagsPrinting::print(printer, name, %s);".format(fields).iter
+      }
+    }
+
     def selfInclude = include(quoted("ssp21/msg/%s".format(headerFileName)))
 
-    def otherIncludes = Includes.lines(List(Includes.bigEndian))
+    def otherIncludes = Includes.lines(List(Includes.bigEndian, Includes.flagsPrinting))
 
-    def content = readFunc ++ space ++ writeFunc
+    def content = readFunc ++ space ++ writeFunc ++ space ++ printFunc
 
 
     license ++ space ++ selfInclude ++ space ++ otherIncludes ++ space ++ namespace(cppNamespace) {

@@ -1,5 +1,6 @@
 package com.automatak.render.ssp21.messages
 
+import com.automatak.render.ssp21.Bitfields
 import com.automatak.render.ssp21.enums.ssp21.CryptoFunction
 
 
@@ -12,6 +13,7 @@ object UnconfirmedSessionData extends Message {
   override def fields: List[Field] = List(
       U32("valid_until_ms"),
       U16("nonce"),
+      Bitfields.payloadFlags,
       Seq16("payload")
   )
 

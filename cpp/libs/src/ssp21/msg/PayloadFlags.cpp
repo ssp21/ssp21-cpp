@@ -16,6 +16,7 @@
 #include "ssp21/msg/PayloadFlags.h"
 
 #include "openpal/serialization/BigEndian.h"
+#include "ssp21/crypto/FlagsPrinting.h"
 
 namespace ssp21 {
 
@@ -30,7 +31,7 @@ ParseError PayloadFlags::read(openpal::RSlice& input)
     return ParseError::ok;
 }
 
-FormatError PayloadFlags::write(openpal::WSlice& output)
+FormatError PayloadFlags::write(openpal::WSlice& output) const
 {
     uint8_t value = 0;
 
@@ -38,6 +39,11 @@ FormatError PayloadFlags::write(openpal::WSlice& output)
     if(fin) value |= 0x40;
 
     return openpal::UInt8::write_to(output, value) ? FormatError::ok : FormatError::insufficient_space;
+}
+
+void PayloadFlags::print(const char* name, IMessagePrinter& printer) const
+{
+    FlagsPrinting::print(printer, name, "fir", fir, "fin", fin);
 }
 
 }

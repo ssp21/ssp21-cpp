@@ -29,10 +29,12 @@ UnconfirmedSessionData::UnconfirmedSessionData() :
 UnconfirmedSessionData::UnconfirmedSessionData(
     uint32_t valid_until_ms,
     uint16_t nonce,
+    const PayloadFlags& payload_flags,
     const Seq16& payload
 ) :
     valid_until_ms(valid_until_ms),
     nonce(nonce),
+    payload_flags(payload_flags),
     payload(payload)
 {}
 
@@ -42,6 +44,7 @@ ParseError UnconfirmedSessionData::read_msg(const openpal::RSlice& input)
         input,
         valid_until_ms,
         nonce,
+        payload_flags,
         payload
     );
 }
@@ -52,6 +55,7 @@ FormatError UnconfirmedSessionData::write(openpal::WSlice& output) const
         output,
         valid_until_ms,
         nonce,
+        payload_flags,
         payload
     );
 }
@@ -70,6 +74,8 @@ void UnconfirmedSessionData::print(IMessagePrinter& printer) const
         valid_until_ms,
         "nonce",
         nonce,
+        "payload_flags",
+        payload_flags,
         "payload",
         payload
     );
