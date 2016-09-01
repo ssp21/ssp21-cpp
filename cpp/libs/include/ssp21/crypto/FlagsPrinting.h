@@ -18,8 +18,6 @@ namespace ssp21
 
     private:
 
-        //static const char* str(bool value) { return value ? "1" : "0"; };
-
         static const int max_line_size = 80;
 
     };
