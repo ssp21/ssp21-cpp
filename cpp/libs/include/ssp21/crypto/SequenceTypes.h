@@ -8,42 +8,49 @@
 
 #include "ssp21/crypto/Constants.h"
 #include "ssp21/crypto/IMessagePrinter.h"
+#include "ssp21/crypto/IReadable.h"
+#include "ssp21/crypto/IWritable.h"
 
 namespace ssp21
 {
-    class Seq8 final : public openpal::RSlice, public IPrintable
+    class Seq8 final : public openpal::RSlice, public IReadable, public IPrintable
     {
     public:
 
         Seq8() : openpal::RSlice()
         {}
 
+		virtual ParseError read(openpal::RSlice& input) override;
 		virtual void print(const char* name, IMessagePrinter& printer) const override;
+		
+
 
         explicit Seq8(const openpal::RSlice& other) : RSlice(other)
         {}
     };
 
-    class Seq16 final : public openpal::RSlice, public IPrintable
+    class Seq16 final : public openpal::RSlice, public IReadable, public IPrintable
     {
     public:
 
         Seq16() : openpal::RSlice()
         {}
 
+		virtual ParseError read(openpal::RSlice& input) override;
 		virtual void print(const char* name, IMessagePrinter& printer) const override;
 
         explicit Seq16(const openpal::RSlice& other) : RSlice(other)
         {}
     };
 
-    class SeqRSlice : public IPrintable
+    class SeqRSlice : public IReadable, public IPrintable
     {
 
     public:
 
         SeqRSlice();
 
+		virtual ParseError read(openpal::RSlice& input) override;
 		virtual void print(const char* name, IMessagePrinter& printer) const override;
 
         void clear();

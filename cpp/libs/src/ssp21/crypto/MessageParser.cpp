@@ -33,24 +33,7 @@ namespace ssp21
 
             return ParseError::ok;
         }
-    }
-
-    template <class CountType, class SeqType>
-    ParseError read_seq(openpal::RSlice& input, SeqType& value)
-    {
-        typename CountType::type_t count;
-        auto err = read_integer<CountType>(input, count);
-        if (any(err)) return err;
-
-        if (input.length() < count)
-        {
-            return ParseError::insufficient_bytes;
-        }
-
-        value = SeqType(input.take(count));
-        input.advance(count);
-        return ParseError::ok;
-    }
+    }   
 
     ParseError MessageParser::read(openpal::RSlice& input, uint8_t& value)
     {
@@ -101,40 +84,6 @@ namespace ssp21
     {
         return read_enum<HashModeSpec>(input, value);
     }
-
-    ParseError MessageParser::read(openpal::RSlice& input, Seq8& value)
-    {
-        return read_seq<UInt8, Seq8>(input, value);
-    }
-
-    ParseError MessageParser::read(openpal::RSlice& input, Seq16& value)
-    {
-        return read_seq<UInt16, Seq16>(input, value);
-    }
-
-    ParseError MessageParser::read(openpal::RSlice& input, Seq8Seq16& value)
-    {
-        value.clear();
-
-        uint8_t count;
-
-        auto cerr = read(input, count);
-        if (any(cerr)) return cerr;
-
-        while (count > 0)
-        {
-            Seq16 slice;
-            auto serr = read(input, slice);
-            if (any(serr)) return serr;
-
-            if (!value.push(slice))
-            {
-                return ParseError::impl_capacity_limit;
-            }
-            --count;
-        }
-
-        return ParseError::ok;
-    }
+	
 }
 
