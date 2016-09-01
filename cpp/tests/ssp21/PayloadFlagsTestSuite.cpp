@@ -60,6 +60,22 @@ TEST_CASE(SUITE("Correct deserialization"))
 	test_permutation(true, true, 0xC0);
 }
 
+TEST_CASE(SUITE("rejects empty output"))
+{
+	auto output = openpal::WSlice::empty_slice();
+	PayloadFlags flags;
+	auto err = flags.write(output);
+	REQUIRE(err == FormatError::insufficient_space);
+}
+
+TEST_CASE(SUITE("rejects empty input"))
+{	
+	auto input = openpal::RSlice::empty_slice();
+	PayloadFlags flags;
+	auto err = flags.read(input);
+	REQUIRE(err == ParseError::insufficient_bytes);
+}
+
 TEST_CASE(SUITE("error if reserved bit is set"))
 {
 		uint8_t byte = 0x01;
