@@ -17,86 +17,86 @@ using namespace openpal;
 
 TEST_CASE(SUITE("Correct defaults"))
 {
-	PayloadFlags flags;
-	REQUIRE(flags.fir);
-	REQUIRE(flags.fin);
+    PayloadFlags flags;
+    REQUIRE(flags.fir);
+    REQUIRE(flags.fin);
 }
 
 TEST_CASE(SUITE("Correct serialization"))
-{		
-	auto test_permutation = [](bool fir, bool fin, uint8_t expected)
-	{
-		PayloadFlags flags(fir, fin);
+{
+    auto test_permutation = [](bool fir, bool fin, uint8_t expected)
+    {
+        PayloadFlags flags(fir, fin);
 
-		uint8_t value = 0;
-		auto dest = openpal::WSlice(&value, 1);
-		auto err = flags.write(dest);
-		REQUIRE(!any(err));
-		REQUIRE(dest.is_empty());
-		REQUIRE(value == expected);
-	};
+        uint8_t value = 0;
+        auto dest = openpal::WSlice(&value, 1);
+        auto err = flags.write(dest);
+        REQUIRE(!any(err));
+        REQUIRE(dest.is_empty());
+        REQUIRE(value == expected);
+    };
 
-	test_permutation(false, false, 0x00);
-	test_permutation(true, false, 0x80);
-	test_permutation(false, true, 0x40);
-	test_permutation(true, true, 0xC0);
+    test_permutation(false, false, 0x00);
+    test_permutation(true, false, 0x80);
+    test_permutation(false, true, 0x40);
+    test_permutation(true, true, 0xC0);
 }
 
 TEST_CASE(SUITE("Correct deserialization"))
 {
-	auto test_permutation = [](bool fir, bool fin, uint8_t byte)
-	{
-		auto input = openpal::RSlice(&byte, 1);
-		PayloadFlags flags;		
-		REQUIRE(!any(flags.read(input)));
-		REQUIRE(input.is_empty());
-		REQUIRE(flags.fir == fir);
-		REQUIRE(flags.fin == fin);
-	};
+    auto test_permutation = [](bool fir, bool fin, uint8_t byte)
+    {
+        auto input = openpal::RSlice(&byte, 1);
+        PayloadFlags flags;
+        REQUIRE(!any(flags.read(input)));
+        REQUIRE(input.is_empty());
+        REQUIRE(flags.fir == fir);
+        REQUIRE(flags.fin == fin);
+    };
 
-	test_permutation(false, false, 0x00);
-	test_permutation(true, false, 0x80);
-	test_permutation(false, true, 0x40);
-	test_permutation(true, true, 0xC0);
+    test_permutation(false, false, 0x00);
+    test_permutation(true, false, 0x80);
+    test_permutation(false, true, 0x40);
+    test_permutation(true, true, 0xC0);
 }
 
 TEST_CASE(SUITE("rejects empty output"))
 {
-	auto output = openpal::WSlice::empty_slice();
-	PayloadFlags flags;
-	auto err = flags.write(output);
-	REQUIRE(err == FormatError::insufficient_space);
+    auto output = openpal::WSlice::empty_slice();
+    PayloadFlags flags;
+    auto err = flags.write(output);
+    REQUIRE(err == FormatError::insufficient_space);
 }
 
 TEST_CASE(SUITE("rejects empty input"))
-{	
-	auto input = openpal::RSlice::empty_slice();
-	PayloadFlags flags;
-	auto err = flags.read(input);
-	REQUIRE(err == ParseError::insufficient_bytes);
+{
+    auto input = openpal::RSlice::empty_slice();
+    PayloadFlags flags;
+    auto err = flags.read(input);
+    REQUIRE(err == ParseError::insufficient_bytes);
 }
 
 TEST_CASE(SUITE("error if reserved bit is set"))
 {
-		uint8_t byte = 0x01;
-	
-		auto input = openpal::RSlice(&byte, 1);
-		PayloadFlags flags;
-		auto err = flags.read(input);
-		REQUIRE(err == ParseError::reserved_bit);
+    uint8_t byte = 0x01;
+
+    auto input = openpal::RSlice(&byte, 1);
+    PayloadFlags flags;
+    auto err = flags.read(input);
+    REQUIRE(err == ParseError::reserved_bit);
 }
 
 TEST_CASE(SUITE("pretty printing"))
-{	
-	PayloadFlags flags(true, false);
+{
+    PayloadFlags flags(true, false);
 
-	MockLogHandler log("log");
-	LogMessagePrinter printer(log.root.logger, ssp21::levels::info, 16);
+    MockLogHandler log("log");
+    LogMessagePrinter printer(log.root.logger, ssp21::levels::info, 16);
 
-	flags.print("flags", printer);
-	
-	log.expect(
-		"flags { fir: 1 fin: 0 }"		
-	);
+    flags.print("flags", printer);
+
+    log.expect(
+        "flags { fir: 1 fin: 0 }"
+    );
 }
 

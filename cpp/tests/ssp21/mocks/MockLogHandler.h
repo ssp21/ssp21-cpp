@@ -43,7 +43,7 @@ namespace ssp21
             REQUIRE_FALSE(lines.empty());
             REQUIRE(expected == lines.front());
             lines.pop_front();
-			expect(args ...);
+            expect(args ...);
         }
 
         void expect()
