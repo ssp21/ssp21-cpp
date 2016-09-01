@@ -8,8 +8,6 @@
 #include "ssp21/msg/PayloadFlags.h"
 #include "ssp21/crypto/LogMessagePrinter.h"
 
-#include "openpal/container/StaticBuffer.h"
-
 #include "mocks/MockLogHandler.h"
 
 #define SUITE(name) "PayloadFlagsTestSuite - " name
@@ -26,20 +24,20 @@ TEST_CASE(SUITE("Correct defaults"))
 
 TEST_CASE(SUITE("Correct serialization"))
 {		
-	auto test_permutation = [](const PayloadFlags& flags, const std::string& expected)
+	auto test_permutation = [](const PayloadFlags& flags, uint8_t expected)
 	{
-		StaticBuffer<1> buffer;
-		auto dest = buffer.as_wslice();
+		uint8_t value = 0;
+		auto dest = openpal::WSlice(&value, 1);
 		auto err = flags.write(dest);
 		REQUIRE(!any(err));
 		REQUIRE(dest.is_empty());
-		REQUIRE(to_hex(buffer.as_rslice()) == expected);		
+		REQUIRE(value == expected);
 	};
 
-	test_permutation(PayloadFlags(false, false), "00");
-	test_permutation(PayloadFlags(true, false), "80");
-	test_permutation(PayloadFlags(false, true), "40");
-	test_permutation(PayloadFlags(true, true), "C0");
+	test_permutation(PayloadFlags(false, false), 0x00);
+	test_permutation(PayloadFlags(true, false), 0x80);
+	test_permutation(PayloadFlags(false, true), 0x40);
+	test_permutation(PayloadFlags(true, true), 0xC0);
 }
 
 TEST_CASE(SUITE("Correct deserialization"))
