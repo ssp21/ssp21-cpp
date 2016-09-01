@@ -1,7 +1,8 @@
 package com.automatak.render.ssp21.messages.generators
 
+import com.automatak.render.ssp21.messages.Bitfield
 import com.automatak.render.ssp21.{Include, Includes, Ordering}
-import com.automatak.render.{EnumModel, _}
+import com.automatak.render.{EnumModel, Indentation, _}
 
 
 sealed trait FieldGenerator {
@@ -9,6 +10,9 @@ sealed trait FieldGenerator {
   def cppType : String
   def defaultValue: Option[String]
   def asArgument(name: String) : String
+
+  def additionalDefine(implicit indent: Indentation) : Iterator[String] = Iterator.empty
+
   def initializeInFullConstructor : Boolean = true
 }
 
@@ -20,6 +24,14 @@ sealed trait PassByValue {
 sealed trait PassByConstRef {
   self: FieldGenerator =>
   def asArgument(name: String): String = "const %s& %s".format(cppType, name)
+}
+
+case class BitfieldGenerator(field: Bitfield) extends FieldGenerator with PassByConstRef {
+  override def includes = Set(Includes.cstdint)
+  override def cppType : String = field.structName
+  def defaultValue: Option[String] = None
+
+  override def additionalDefine(implicit indent: Indentation) = BitfieldStruct.definition(field)
 }
 
 object U16FieldGenerator extends FieldGenerator with PassByValue {
