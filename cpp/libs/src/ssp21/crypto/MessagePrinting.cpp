@@ -67,7 +67,7 @@ namespace ssp21
     void MessagePrinting::print(IMessagePrinter& printer, const char* name, HashMode value)
     {
         print_any_enum<max_line_size, HashModeSpec>(printer, name, value);
-    }   
+    }
 
 }
 

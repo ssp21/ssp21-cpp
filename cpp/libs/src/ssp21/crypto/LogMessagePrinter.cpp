@@ -17,10 +17,10 @@ namespace ssp21
 
     }
 
-	void LogMessagePrinter::print(const char* message)
-	{
-		logger_.log(level_, LOCATION, message);
-	}
+    void LogMessagePrinter::print(const char* message)
+    {
+        logger_.log(level_, LOCATION, message);
+    }
 
     void LogMessagePrinter::print(const char* name, uint32_t value)
     {
@@ -43,7 +43,7 @@ namespace ssp21
         logger_.log(level_, LOCATION, message);
 
         HexLogging::log(logger_, level_, data, ':', max_hex_bytes_per_line_, max_hex_bytes_per_line_);
-    }	
+    }
 
 }
 

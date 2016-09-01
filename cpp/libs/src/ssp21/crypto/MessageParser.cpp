@@ -33,7 +33,7 @@ namespace ssp21
 
             return ParseError::ok;
         }
-    }   
+    }
 
     ParseError MessageParser::read(openpal::RSlice& input, uint8_t& value)
     {
@@ -84,6 +84,6 @@ namespace ssp21
     {
         return read_enum<HashModeSpec>(input, value);
     }
-	
+
 }
 

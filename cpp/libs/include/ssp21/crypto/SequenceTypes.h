@@ -20,10 +20,10 @@ namespace ssp21
         Seq8() : openpal::RSlice()
         {}
 
-		virtual ParseError read(openpal::RSlice& input) override;
-		virtual FormatError write(openpal::WSlice& output) const override;
-		virtual void print(const char* name, IMessagePrinter& printer) const override;
-		
+        virtual ParseError read(openpal::RSlice& input) override;
+        virtual FormatError write(openpal::WSlice& output) const override;
+        virtual void print(const char* name, IMessagePrinter& printer) const override;
+
 
 
         explicit Seq8(const openpal::RSlice& other) : RSlice(other)
@@ -37,9 +37,9 @@ namespace ssp21
         Seq16() : openpal::RSlice()
         {}
 
-		virtual ParseError read(openpal::RSlice& input) override;
-		virtual FormatError write(openpal::WSlice& output) const override;
-		virtual void print(const char* name, IMessagePrinter& printer) const override;
+        virtual ParseError read(openpal::RSlice& input) override;
+        virtual FormatError write(openpal::WSlice& output) const override;
+        virtual void print(const char* name, IMessagePrinter& printer) const override;
 
         explicit Seq16(const openpal::RSlice& other) : RSlice(other)
         {}
@@ -52,9 +52,9 @@ namespace ssp21
 
         SeqRSlice();
 
-		virtual ParseError read(openpal::RSlice& input) override;
-		virtual FormatError write(openpal::WSlice& output) const override;
-		virtual void print(const char* name, IMessagePrinter& printer) const override;
+        virtual ParseError read(openpal::RSlice& input) override;
+        virtual FormatError write(openpal::WSlice& output) const override;
+        virtual void print(const char* name, IMessagePrinter& printer) const override;
 
         void clear();
 

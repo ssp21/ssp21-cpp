@@ -12,136 +12,136 @@ using namespace openpal;
 
 namespace ssp21
 {
-	template <class CountType, class SeqType>
-	ParseError read_seq(openpal::RSlice& input, SeqType& value)
-	{
-		typename CountType::type_t count;
-		auto err = MessageParser::read_fields(input, count);
-		if (any(err)) return err;
+    template <class CountType, class SeqType>
+    ParseError read_seq(openpal::RSlice& input, SeqType& value)
+    {
+        typename CountType::type_t count;
+        auto err = MessageParser::read_fields(input, count);
+        if (any(err)) return err;
 
-		if (input.length() < count)
-		{
-			return ParseError::insufficient_bytes;
-		}
+        if (input.length() < count)
+        {
+            return ParseError::insufficient_bytes;
+        }
 
-		value = SeqType(input.take(count));
-		input.advance(count);
-		return ParseError::ok;
-	}
+        value = SeqType(input.take(count));
+        input.advance(count);
+        return ParseError::ok;
+    }
 
-	template <class CountType, class SeqType>
-	FormatError write_seq(openpal::WSlice& dest, const SeqType& value)
-	{
-		if (value.length() > CountType::max_value)
-		{
-			return FormatError::bad_sequence_length;
-		}
+    template <class CountType, class SeqType>
+    FormatError write_seq(openpal::WSlice& dest, const SeqType& value)
+    {
+        if (value.length() > CountType::max_value)
+        {
+            return FormatError::bad_sequence_length;
+        }
 
-		const auto count = static_cast<typename CountType::type_t>(value.length());
+        const auto count = static_cast<typename CountType::type_t>(value.length());
 
-		auto err = MessageFormatter::write_fields(dest, count);
-		if (any(err)) return err;
+        auto err = MessageFormatter::write_fields(dest, count);
+        if (any(err)) return err;
 
-		if (dest.length() < value.length()) return FormatError::insufficient_space;
+        if (dest.length() < value.length()) return FormatError::insufficient_space;
 
-		value.copy_to(dest);
+        value.copy_to(dest);
 
-		return FormatError::ok;
-	}
+        return FormatError::ok;
+    }
 
-	ParseError Seq8::read(openpal::RSlice& input)
-	{
-		return read_seq<UInt8, Seq8>(input, *this);
-	}
+    ParseError Seq8::read(openpal::RSlice& input)
+    {
+        return read_seq<UInt8, Seq8>(input, *this);
+    }
 
-	FormatError Seq8::write(openpal::WSlice& output) const
-	{
-		return write_seq<UInt8, Seq8>(output, *this);
-	}
+    FormatError Seq8::write(openpal::WSlice& output) const
+    {
+        return write_seq<UInt8, Seq8>(output, *this);
+    }
 
-	void Seq8::print(const char* name, IMessagePrinter& printer) const
-	{
-		printer.print(name, *this);
-	}
+    void Seq8::print(const char* name, IMessagePrinter& printer) const
+    {
+        printer.print(name, *this);
+    }
 
-	ParseError Seq16::read(openpal::RSlice& input)
-	{
-		return read_seq<UInt16, Seq16>(input, *this);
-	}
+    ParseError Seq16::read(openpal::RSlice& input)
+    {
+        return read_seq<UInt16, Seq16>(input, *this);
+    }
 
-	FormatError Seq16::write(openpal::WSlice& output) const
-	{
-		return write_seq<UInt16, Seq16>(output, *this);
-	}
+    FormatError Seq16::write(openpal::WSlice& output) const
+    {
+        return write_seq<UInt16, Seq16>(output, *this);
+    }
 
-	void Seq16::print(const char* name, IMessagePrinter& printer) const
-	{
-		printer.print(name, *this);
-	}
+    void Seq16::print(const char* name, IMessagePrinter& printer) const
+    {
+        printer.print(name, *this);
+    }
 
     SeqRSlice::SeqRSlice() : count_(0)
     {}
 
-	ParseError SeqRSlice::read(openpal::RSlice& input)
-	{
-		this->clear();
+    ParseError SeqRSlice::read(openpal::RSlice& input)
+    {
+        this->clear();
 
-		uint8_t count;
+        uint8_t count;
 
-		auto cerr = MessageParser::read_fields(input, count);
-		if (any(cerr)) return cerr;
+        auto cerr = MessageParser::read_fields(input, count);
+        if (any(cerr)) return cerr;
 
-		while (count > 0)
-		{
-			Seq16 slice;
-			auto serr = slice.read(input);
-			if (any(serr)) return serr;
+        while (count > 0)
+        {
+            Seq16 slice;
+            auto serr = slice.read(input);
+            if (any(serr)) return serr;
 
-			if (!this->push(slice))
-			{
-				return ParseError::impl_capacity_limit;
-			}
-			--count;
-		}
+            if (!this->push(slice))
+            {
+                return ParseError::impl_capacity_limit;
+            }
+            --count;
+        }
 
-		return ParseError::ok;
-	}
+        return ParseError::ok;
+    }
 
-	FormatError SeqRSlice::write(openpal::WSlice& output) const
-	{
-		if (this->count() > UInt8::max_value)
-		{
-			return FormatError::bad_sequence_length;
-		}
+    FormatError SeqRSlice::write(openpal::WSlice& output) const
+    {
+        if (this->count() > UInt8::max_value)
+        {
+            return FormatError::bad_sequence_length;
+        }
 
-		const uint8_t count = static_cast<UInt8::type_t>(this->count());
+        const uint8_t count = static_cast<UInt8::type_t>(this->count());
 
-		auto err = MessageFormatter::write_fields(output, count);
-		if (any(err)) return err;
+        auto err = MessageFormatter::write_fields(output, count);
+        if (any(err)) return err;
 
-		for (UInt8::type_t i = 0; i < count_; ++i)
-		{			
-			Seq16 slice(slices_[i]);
-			auto serr = slice.write(output);
-			if (any(serr)) return serr;
-		}
+        for (UInt8::type_t i = 0; i < count_; ++i)
+        {
+            Seq16 slice(slices_[i]);
+            auto serr = slice.write(output);
+            if (any(serr)) return serr;
+        }
 
-		return FormatError::ok;
-	}
+        return FormatError::ok;
+    }
 
-	void SeqRSlice::print(const char* name, IMessagePrinter& printer) const
-	{		
-		char message[max_log_entry_size];
-		SAFE_STRING_FORMAT(message, max_log_entry_size, "%s (count = %u)", name, this->count());
-		printer.print(message);
-		
-		for (uint32_t i = 0; i < count_; ++i)
-		{						
-			SAFE_STRING_FORMAT(message, max_log_entry_size, "#%u", i + 1);			
-			printer.print(message, slices_[i]);
-		}
-		
-	}
+    void SeqRSlice::print(const char* name, IMessagePrinter& printer) const
+    {
+        char message[max_log_entry_size];
+        SAFE_STRING_FORMAT(message, max_log_entry_size, "%s (count = %u)", name, this->count());
+        printer.print(message);
+
+        for (uint32_t i = 0; i < count_; ++i)
+        {
+            SAFE_STRING_FORMAT(message, max_log_entry_size, "#%u", i + 1);
+            printer.print(message, slices_[i]);
+        }
+
+    }
 
     void SeqRSlice::clear()
     {

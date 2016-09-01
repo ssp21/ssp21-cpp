@@ -69,8 +69,11 @@ namespace ssp21
         static ParseError read(openpal::RSlice& input, SessionMode& value);
         static ParseError read(openpal::RSlice& input, HashMode& value);
 
-		// any readable
-		static ParseError read(openpal::RSlice& input, IReadable& value) { return value.read(input); }       
+        // any readable
+        static ParseError read(openpal::RSlice& input, IReadable& value)
+        {
+            return value.read(input);
+        }
     };
 }
 

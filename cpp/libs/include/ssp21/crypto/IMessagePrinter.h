@@ -16,23 +16,23 @@ namespace ssp21
 
     public:
 
-		virtual void print(const char* message) = 0;
+        virtual void print(const char* message) = 0;
         virtual void print(const char* name, uint32_t value) = 0;
         virtual void print(const char* name, const char* value) = 0;
-        virtual void print(const char* name, const openpal::RSlice& value) = 0;        
+        virtual void print(const char* name, const openpal::RSlice& value) = 0;
     };
 
-	/**
-	* Any type that can print contents to an IMessagePrinter
-	*/
-	class IPrintable
-	{
+    /**
+    * Any type that can print contents to an IMessagePrinter
+    */
+    class IPrintable
+    {
 
-	public:
+    public:
 
-		virtual void print(const char* name, IMessagePrinter& printer) const = 0;
+        virtual void print(const char* name, IMessagePrinter& printer) const = 0;
 
-	};
+    };
 
 }
 

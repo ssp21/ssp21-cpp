@@ -60,8 +60,11 @@ namespace ssp21
         static FormatError write(openpal::WSlice& dest, SessionMode value);
         static FormatError write(openpal::WSlice& dest, HashMode value);
 
-		// any writable
-		static FormatError write(openpal::WSlice& dest, const IWritable& value) { return value.write(dest); }
+        // any writable
+        static FormatError write(openpal::WSlice& dest, const IWritable& value)
+        {
+            return value.write(dest);
+        }
 
         template <class WriteFunc>
         static FormatError write_any_with_written(const WriteFunc& write, openpal::WSlice& dest, openpal::RSlice& written)

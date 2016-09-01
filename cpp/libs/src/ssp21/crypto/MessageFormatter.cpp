@@ -71,6 +71,6 @@ namespace ssp21
     {
         return write_enum<HashModeSpec>(dest, value);
     }
-   
+
 }
 

@@ -32,8 +32,8 @@ namespace ssp21
         static void print_fields(IMessagePrinter& printer) {}
 
     private:
-		
-        static const int max_line_size = 80;		
+
+        static const int max_line_size = 80;
 
         // integers
         static void print(IMessagePrinter& printer, const char* name, uint8_t value);
@@ -49,11 +49,11 @@ namespace ssp21
         static void print(IMessagePrinter& printer, const char* name, SessionMode value);
         static void print(IMessagePrinter& printer, const char* name, HashMode value);
 
-		// any printable
-		static void print(IMessagePrinter& printer, const char* name, const IPrintable& value)
-		{
-			value.print(name, printer);
-		}
+        // any printable
+        static void print(IMessagePrinter& printer, const char* name, const IPrintable& value)
+        {
+            value.print(name, printer);
+        }
 
     };
 }
