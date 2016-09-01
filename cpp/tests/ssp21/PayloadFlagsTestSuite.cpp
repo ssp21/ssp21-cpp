@@ -24,8 +24,10 @@ TEST_CASE(SUITE("Correct defaults"))
 
 TEST_CASE(SUITE("Correct serialization"))
 {		
-	auto test_permutation = [](const PayloadFlags& flags, uint8_t expected)
+	auto test_permutation = [](bool fir, bool fin, uint8_t expected)
 	{
+		PayloadFlags flags(fir, fin);
+
 		uint8_t value = 0;
 		auto dest = openpal::WSlice(&value, 1);
 		auto err = flags.write(dest);
@@ -34,10 +36,10 @@ TEST_CASE(SUITE("Correct serialization"))
 		REQUIRE(value == expected);
 	};
 
-	test_permutation(PayloadFlags(false, false), 0x00);
-	test_permutation(PayloadFlags(true, false), 0x80);
-	test_permutation(PayloadFlags(false, true), 0x40);
-	test_permutation(PayloadFlags(true, true), 0xC0);
+	test_permutation(false, false, 0x00);
+	test_permutation(true, false, 0x80);
+	test_permutation(false, true, 0x40);
+	test_permutation(true, true, 0xC0);
 }
 
 TEST_CASE(SUITE("Correct deserialization"))
