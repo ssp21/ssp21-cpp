@@ -13,23 +13,21 @@
 // License TBD
 //
 
-#ifndef SSP21_PAYLOADFLAGS_H
-#define SSP21_PAYLOADFLAGS_H
-
-#include "ssp21/crypto/IReadable.h"
+#include "ssp21/msg/PayloadFlags.h"
 
 namespace ssp21 {
 
-struct PayloadFlags final : public IReadable
+ParseError PayloadFlags::read(openpal::RSlice& input)
 {
-    PayloadFlags(){}
+    if(input.is_empty()) return ParseError::insufficient_bytes;
 
-    virtual ParseError read(openpal::RSlice& input) override;
+    const auto value = input[0];
+    input.advance(1);
 
-    bool fir = true;
-    bool fin = true;
-};
+    fir = (value & 0x80) != 0;
+    fin = (value & 0x40) != 0;
 
+    return ParseError::ok;
 }
 
-#endif
+}
