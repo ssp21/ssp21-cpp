@@ -15,14 +15,14 @@
 
 #include "ssp21/msg/PayloadFlags.h"
 
+#include "openpal/serialization/BigEndian.h"
+
 namespace ssp21 {
 
 ParseError PayloadFlags::read(openpal::RSlice& input)
 {
-    if(input.is_empty()) return ParseError::insufficient_bytes;
-
-    const auto value = input[0];
-    input.advance(1);
+    uint8_t value = 0;
+    if(!openpal::UInt8::read_from(input, value)) return ParseError::insufficient_bytes;
 
     fir = (value & 0x80) != 0;
     fin = (value & 0x40) != 0;
@@ -32,17 +32,12 @@ ParseError PayloadFlags::read(openpal::RSlice& input)
 
 FormatError PayloadFlags::write(openpal::WSlice& output)
 {
-    if(output.is_empty()) return FormatError::insufficient_space;
-
     uint8_t value = 0;
 
     if(fir) value |= 0x80;
     if(fin) value |= 0x40;
 
-    output[0] = value;
-    output.advance(1);
-
-    return FormatError::ok;
+    return openpal::UInt8::write_to(output, value) ? FormatError::ok : FormatError::insufficient_space;
 }
 
 }

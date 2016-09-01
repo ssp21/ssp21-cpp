@@ -21,6 +21,7 @@ object Includes {
   val rslice = Include(quoted("openpal/container/RSlice.h"), Ordering.openpal)
   val wslice = Include(quoted("openpal/container/WSlice.h"), Ordering.openpal)
   val uncopyable = Include(quoted("openpal/util/Uncopyable.h"), Ordering.openpal)
+  val bigEndian = Include(quoted("openpal/serialization/BigEndian.h"), Ordering.openpal)
 
   val parseError = Include(quoted("ssp21/gen/ParseError.h"), Ordering.enum)
   val formatError = Include(quoted("ssp21/gen/FormatError.h"), Ordering.enum)
