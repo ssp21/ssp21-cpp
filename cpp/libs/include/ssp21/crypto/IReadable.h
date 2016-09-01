@@ -17,8 +17,8 @@ namespace ssp21
 
     public:
 
-		/// consumes the input, returns an error if parsing fails
-        virtual ParseError read(openpal::RSlice& input) = 0;        
+        /// consumes the input, returns an error if parsing fails
+        virtual ParseError read(openpal::RSlice& input) = 0;
 
     };
 

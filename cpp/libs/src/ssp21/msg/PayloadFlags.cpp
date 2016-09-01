@@ -30,4 +30,19 @@ ParseError PayloadFlags::read(openpal::RSlice& input)
     return ParseError::ok;
 }
 
+FormatError PayloadFlags::write(openpal::WSlice& output)
+{
+    if(output.is_empty()) return FormatError::insufficient_space;
+
+    uint8_t value = 0;
+
+    if(fir) value |= 0x80;
+    if(fin) value |= 0x40;
+
+    output[0] = value;
+    output.advance(1);
+
+    return FormatError::ok;
+}
+
 }

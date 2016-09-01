@@ -21,15 +21,20 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
       "virtual ParseError read(openpal::RSlice& input) override;".iter
     }
 
-    def struct = "struct %s final : public IReadable".format(field.structName).iter ++ bracketSemiColon {
+    def writeFunc : Iterator[String] = {
+      "virtual FormatError write(openpal::WSlice& output) override;".iter
+    }
+
+    def struct = "struct %s final : public IReadable, public IWritable".format(field.structName).iter ++ bracketSemiColon {
       defaultConstructor ++
       space ++
       readFunc ++
+      writeFunc ++
       space ++
       members
     }
 
-    def includes = List(Includes.readable)
+    def includes = List(Includes.readable, Includes.writable)
     def includeLines : Iterator[String] = Includes.lines(includes)
 
     def content = struct
@@ -59,8 +64,26 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
       }
     }
 
+    def writeFunc : Iterator[String] = {
+
+      def fields : Iterator[String] = field.bits.zipWithIndex.map { case (b, i) =>
+        val mask = "0x%02X".format(1 << (7-i))
+        "if(%s) value |= %s;".format(b.name, mask)
+      }.toIterator
+
+      "FormatError %s::write(openpal::WSlice& output)".format(field.structName).iter ++ bracket {
+        "if(output.is_empty()) return FormatError::insufficient_space;".iter ++ space ++
+          "uint8_t value = 0;".iter ++
+          space ++ fields ++ space ++
+          "output[0] = value;".iter ++
+          "output.advance(1);".iter ++
+          space ++
+          "return FormatError::ok;".iter
+      }
+    }
+
     def selfInclude = include(quoted("ssp21/msg/%s".format(headerFileName)))
-    def content = readFunc
+    def content = readFunc ++ space ++ writeFunc
 
 
     license ++ space ++ selfInclude ++ space ++ namespace(cppNamespace) {

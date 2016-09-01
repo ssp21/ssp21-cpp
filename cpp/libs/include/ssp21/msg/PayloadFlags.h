@@ -17,14 +17,16 @@
 #define SSP21_PAYLOADFLAGS_H
 
 #include "ssp21/crypto/IReadable.h"
+#include "ssp21/crypto/IWritable.h"
 
 namespace ssp21 {
 
-struct PayloadFlags final : public IReadable
+struct PayloadFlags final : public IReadable, public IWritable
 {
     PayloadFlags(){}
 
     virtual ParseError read(openpal::RSlice& input) override;
+    virtual FormatError write(openpal::WSlice& output) override;
 
     bool fir = true;
     bool fin = true;
