@@ -13,14 +13,14 @@
 // License TBD
 //
 
-#include "ssp21/msg/PayloadFlags.h"
+#include "ssp21/msg/SessionFlags.h"
 
 #include "openpal/serialization/BigEndian.h"
 #include "ssp21/crypto/FlagsPrinting.h"
 
 namespace ssp21 {
 
-ParseError PayloadFlags::read(openpal::RSlice& input)
+ParseError SessionFlags::read(openpal::RSlice& input)
 {
     uint8_t value = 0;
     if(!openpal::UInt8::read_from(input, value)) return ParseError::insufficient_bytes;
@@ -33,7 +33,7 @@ ParseError PayloadFlags::read(openpal::RSlice& input)
     return ParseError::ok;
 }
 
-FormatError PayloadFlags::write(openpal::WSlice& output) const
+FormatError SessionFlags::write(openpal::WSlice& output) const
 {
     uint8_t value = 0;
 
@@ -43,7 +43,7 @@ FormatError PayloadFlags::write(openpal::WSlice& output) const
     return openpal::UInt8::write_to(output, value) ? FormatError::ok : FormatError::insufficient_space;
 }
 
-void PayloadFlags::print(const char* name, IMessagePrinter& printer) const
+void SessionFlags::print(const char* name, IMessagePrinter& printer) const
 {
     FlagsPrinting::print(printer, name, "fir", fir, "fin", fin);
 }

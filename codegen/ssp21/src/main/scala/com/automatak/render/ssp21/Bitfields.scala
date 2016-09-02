@@ -8,14 +8,14 @@ import com.automatak.render.ssp21.messages._
 
 object Bitfields {
 
-  val payloadFlags: Bitfield = Bitfield(
-    "payload_flags", "PayloadFlags",
+  val sessionFlags: Bitfield = Bitfield(
+    "flags", "SessionFlags",
     Bit("fir", true),
     Bit("fin", true)
   )
 
   def files: List[WriteCppFiles] = List(
-    payloadFlags
+    sessionFlags
   ).map(_.files)
 
 }

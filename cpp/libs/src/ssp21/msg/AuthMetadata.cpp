@@ -29,11 +29,11 @@ AuthMetadata::AuthMetadata() :
 AuthMetadata::AuthMetadata(
     uint16_t nonce,
     uint32_t valid_until_ms,
-    const PayloadFlags& payload_flags
+    const SessionFlags& flags
 ) :
     nonce(nonce),
     valid_until_ms(valid_until_ms),
-    payload_flags(payload_flags)
+    flags(flags)
 {}
 
 ParseError AuthMetadata::read(openpal::RSlice& input)
@@ -42,7 +42,7 @@ ParseError AuthMetadata::read(openpal::RSlice& input)
         input,
         nonce,
         valid_until_ms,
-        payload_flags
+        flags
     );
 }
 
@@ -52,7 +52,7 @@ FormatError AuthMetadata::write(openpal::WSlice& output) const
         output,
         nonce,
         valid_until_ms,
-        payload_flags
+        flags
     );
 }
 
@@ -64,8 +64,8 @@ void AuthMetadata::print(const char* name, IMessagePrinter& printer) const
         nonce,
         "valid_until_ms",
         valid_until_ms,
-        "payload_flags",
-        payload_flags
+        "flags",
+        flags
     );
 }
 

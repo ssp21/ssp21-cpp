@@ -5,19 +5,19 @@
 #include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
 
-#include "ssp21/msg/PayloadFlags.h"
+#include "ssp21/msg/SessionFlags.h"
 #include "ssp21/crypto/LogMessagePrinter.h"
 
 #include "mocks/MockLogHandler.h"
 
-#define SUITE(name) "PayloadFlagsTestSuite - " name
+#define SUITE(name) "SessionFlagsTestSuite - " name
 
 using namespace ssp21;
 using namespace openpal;
 
 TEST_CASE(SUITE("Correct defaults"))
 {
-    PayloadFlags flags;
+    SessionFlags flags;
     REQUIRE(flags.fir);
     REQUIRE(flags.fin);
 }
@@ -26,7 +26,7 @@ TEST_CASE(SUITE("Correct serialization"))
 {
     auto test_permutation = [](bool fir, bool fin, uint8_t expected)
     {
-        PayloadFlags flags(fir, fin);
+        SessionFlags flags(fir, fin);
 
         uint8_t value = 0;
         auto dest = openpal::WSlice(&value, 1);
@@ -47,7 +47,7 @@ TEST_CASE(SUITE("Correct deserialization"))
     auto test_permutation = [](bool fir, bool fin, uint8_t byte)
     {
         auto input = openpal::RSlice(&byte, 1);
-        PayloadFlags flags;
+        SessionFlags flags;
         REQUIRE(!any(flags.read(input)));
         REQUIRE(input.is_empty());
         REQUIRE(flags.fir == fir);
@@ -63,7 +63,7 @@ TEST_CASE(SUITE("Correct deserialization"))
 TEST_CASE(SUITE("rejects empty output"))
 {
     auto output = openpal::WSlice::empty_slice();
-    PayloadFlags flags;
+    SessionFlags flags;
     auto err = flags.write(output);
     REQUIRE(err == FormatError::insufficient_space);
 }
@@ -71,7 +71,7 @@ TEST_CASE(SUITE("rejects empty output"))
 TEST_CASE(SUITE("rejects empty input"))
 {
     auto input = openpal::RSlice::empty_slice();
-    PayloadFlags flags;
+    SessionFlags flags;
     auto err = flags.read(input);
     REQUIRE(err == ParseError::insufficient_bytes);
 }
@@ -81,14 +81,14 @@ TEST_CASE(SUITE("error if reserved bit is set"))
     uint8_t byte = 0x01;
 
     auto input = openpal::RSlice(&byte, 1);
-    PayloadFlags flags;
+    SessionFlags flags;
     auto err = flags.read(input);
     REQUIRE(err == ParseError::reserved_bit);
 }
 
 TEST_CASE(SUITE("pretty printing"))
 {
-    PayloadFlags flags(true, false);
+    SessionFlags flags(true, false);
 
     MockLogHandler log("log");
     LogMessagePrinter printer(log.root.logger, ssp21::levels::info, 16);

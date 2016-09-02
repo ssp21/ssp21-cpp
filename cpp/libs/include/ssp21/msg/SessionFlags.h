@@ -13,8 +13,8 @@
 // License TBD
 //
 
-#ifndef SSP21_PAYLOADFLAGS_H
-#define SSP21_PAYLOADFLAGS_H
+#ifndef SSP21_SESSIONFLAGS_H
+#define SSP21_SESSIONFLAGS_H
 
 #include "ssp21/crypto/IReadable.h"
 #include "ssp21/crypto/IWritable.h"
@@ -22,11 +22,11 @@
 
 namespace ssp21 {
 
-struct PayloadFlags final : public IReadable, public IWritable, public IPrintable
+struct SessionFlags final : public IReadable, public IWritable, public IPrintable
 {
-    PayloadFlags(){}
+    SessionFlags(){}
 
-    PayloadFlags(bool fir, bool fin) :
+    SessionFlags(bool fir, bool fin) :
         fir(fir),
         fin(fin)
     {}

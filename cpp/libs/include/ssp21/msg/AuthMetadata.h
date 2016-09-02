@@ -17,7 +17,7 @@
 #define SSP21_AUTHMETADATA_H
 
 #include <cstdint>
-#include "ssp21/msg/PayloadFlags.h"
+#include "ssp21/msg/SessionFlags.h"
 #include "ssp21/crypto/IReadable.h"
 #include "ssp21/crypto/IWritable.h"
 #include "ssp21/crypto/IMessagePrinter.h"
@@ -31,14 +31,14 @@ struct AuthMetadata : public IReadable, public IWritable, public IPrintable
     AuthMetadata(
         uint16_t nonce,
         uint32_t valid_until_ms,
-        const PayloadFlags& payload_flags
+        const SessionFlags& flags
     );
 
     static const uint32_t fixed_size_bytes = 7;
 
     uint16_t nonce;
     uint32_t valid_until_ms;
-    PayloadFlags payload_flags;
+    SessionFlags flags;
 
     virtual ParseError read(openpal::RSlice& input) override;
     virtual FormatError write(openpal::WSlice& output) const override;
