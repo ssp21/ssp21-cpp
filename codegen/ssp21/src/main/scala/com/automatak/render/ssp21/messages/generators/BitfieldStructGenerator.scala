@@ -2,8 +2,8 @@ package com.automatak.render.ssp21.messages.generators
 
 import com.automatak.render._
 import com.automatak.render.cpp._
-import com.automatak.render.ssp21.{Includes, WriteCppFiles}
 import com.automatak.render.ssp21.messages.{Bit, Bitfield}
+import com.automatak.render.ssp21.{Includes, WriteCppFiles}
 
 case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
 
