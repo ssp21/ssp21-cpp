@@ -18,9 +18,7 @@ object Generate {
 
     paths.foreach(p => Files.createDirectories(p))
 
-    def files = Structs.files ::: Bitfields.files ::: Enums.files ::: Messages.files
-
-    files.foreach { f =>
+    GeneratedFiles.list.foreach { f =>
       f.write(ssp21GenHeaderPath, ssp21GenImplPath)
     }
 
