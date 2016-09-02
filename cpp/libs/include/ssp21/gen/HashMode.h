@@ -10,7 +10,7 @@
 // 
 // This file is auto-generated. Do not edit manually
 // 
-// License TBD
+// Licensed under the terms of the BSDv3 license
 //
 
 #ifndef SSP21_HASHMODE_H
