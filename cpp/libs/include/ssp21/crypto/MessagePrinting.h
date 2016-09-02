@@ -52,7 +52,7 @@ namespace ssp21
         // any printable
         static void print(IMessagePrinter& printer, const char* name, const IMessageField& field)
         {
-			field.print(name, printer);
+            field.print(name, printer);
         }
 
     };
