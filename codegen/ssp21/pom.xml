@@ -12,11 +12,11 @@
     <packaging>jar</packaging>
 
     <dependencies>
-	<dependency>
-		<groupId>com.automatak.render</groupId>
-		<artifactId>ssp21-codegen-render</artifactId>
-		<version>1.0.0</version>
-	</dependency>
+        <dependency>
+            <groupId>com.automatak.render</groupId>
+            <artifactId>ssp21-codegen-render</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
 </project>

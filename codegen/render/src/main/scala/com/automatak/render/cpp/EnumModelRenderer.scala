@@ -1,15 +1,15 @@
 /**
- * License TBD
- */
+  * License TBD
+  */
 package com.automatak.render.cpp
 
 import com.automatak.render._
 
 object EnumModelRenderer extends Renderer[EnumModel] {
 
-  def render(enum: EnumModel)(implicit indent: Indentation) : Iterator[String] = {
+  def render(enum: EnumModel)(implicit indent: Indentation): Iterator[String] = {
 
-    def lastDefinition(ev: EnumValue): String  = {
+    def lastDefinition(ev: EnumValue): String = {
       "%s = %s".format(ev.name, enum.render(ev.value))
     }
 
@@ -19,13 +19,13 @@ object EnumModelRenderer extends Renderer[EnumModel] {
       "enum class %s : %s".format(enum.name, enum.cpp.typ).iter
     }
 
-    def lines(definition: String, comment: String) : Iterator[String] = {
+    def lines(definition: String, comment: String): Iterator[String] = {
       Iterator("/// %s".format(comment), definition)
     }
 
-    def definitionLines : Iterator[String] = {
+    def definitionLines: Iterator[String] = {
 
-      val head : Iterator[String] = enum.allValues.dropRight(1).map {
+      val head: Iterator[String] = enum.allValues.dropRight(1).map {
         ev => lines(leadingDefinition(ev), ev.comment)
       }.flatten.toIterator
 
@@ -35,14 +35,15 @@ object EnumModelRenderer extends Renderer[EnumModel] {
       head ++ tail
     }
 
-    def summary = if(enum.comments.isEmpty) Iterator.empty else {
+    def summary = if (enum.comments.isEmpty) Iterator.empty
+    else {
       "/**".iter ++ indent {
         enum.comments.toIterator
       } ++ "*/".iter
     }
 
     summary ++
-    header ++ bracketSemiColon {
+      header ++ bracketSemiColon {
       definitionLines
     }
 

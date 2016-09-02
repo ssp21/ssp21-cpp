@@ -1,6 +1,6 @@
 /**
- * License TBD
- */
+  * License TBD
+  */
 package com.automatak.render.cpp
 
 import com.automatak.render.Indentation
@@ -18,7 +18,7 @@ private case class IndentationImpl(indent: String) extends Indentation {
     count += 1
     val padding = Iterator.fill(count)(indent).mkString("") //calculate padding NOW instead of lazily
     def transform(s: String): String = {
-      if(s.isEmpty) s
+      if (s.isEmpty) s
       else padding + s
     }
     val iter = f.map(transform)

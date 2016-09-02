@@ -1,6 +1,6 @@
 /**
- * License TBD
- */
+  * License TBD
+  */
 package com.automatak.render.cpp
 
 import com.automatak.render.{Indentation, space}
@@ -15,12 +15,13 @@ object CppFunction {
 
   @tailrec
   def withSpacesRec(items: List[Iterator[String]], sum: Iterator[String]): Iterator[String] = items match {
-    case x :: tail => if(sum.isEmpty) withSpacesRec(tail, x) else withSpacesRec(tail, sum ++ space ++ x)
+    case x :: tail => if (sum.isEmpty) withSpacesRec(tail, x) else withSpacesRec(tail, sum ++ space ++ x)
     case Nil => sum
   }
 }
 
 trait CppFunction {
-  def signature(implicit indent: Indentation) : Iterator[String]
-  def implementation(implicit indent: Indentation) : Iterator[String]
+  def signature(implicit indent: Indentation): Iterator[String]
+
+  def implementation(implicit indent: Indentation): Iterator[String]
 }

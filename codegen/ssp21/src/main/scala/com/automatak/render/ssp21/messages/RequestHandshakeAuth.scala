@@ -4,7 +4,7 @@ import com.automatak.render.ssp21.enums.ssp21.CryptoFunction
 
 object RequestHandshakeAuth extends Message {
 
-  override def name : String = "RequestHandshakeAuth"
+  override def name: String = "RequestHandshakeAuth"
 
   override def function = CryptoFunction.requestHandshakeAuth
 

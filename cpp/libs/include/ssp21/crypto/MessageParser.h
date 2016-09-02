@@ -25,17 +25,17 @@ namespace ssp21
 
     public:
 
-        template <Function expected, typename T, typename... Args>
-        static ParseError read_message(const openpal::RSlice& input, T& value, Args& ... args)
+        template <typename Msg>
+        static ParseError read_message(const openpal::RSlice& input, Msg& msg)
         {
             openpal::RSlice copy(input);
 
             Function func;
             auto err = read(copy, func);
             if (any(err)) return err;
-            if (func != expected) return ParseError::unexpected_function;
+            if (func != Msg::function) return ParseError::unexpected_function;
 
-            err = read_fields(copy, value, args...);
+            err = msg.read(copy);
             if (any(err)) return err;
 
             // top level messages must always fully read the input

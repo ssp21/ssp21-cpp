@@ -30,9 +30,9 @@ ReplyHandshakeAuth::ReplyHandshakeAuth(
     mac(mac)
 {}
 
-ParseError ReplyHandshakeAuth::read_msg(const openpal::RSlice& input)
+ParseError ReplyHandshakeAuth::read(openpal::RSlice& input)
 {
-    return MessageParser::read_message<Function::request_handshake_auth>(
+    return MessageParser::read_fields(
         input,
         mac
     );
@@ -40,19 +40,13 @@ ParseError ReplyHandshakeAuth::read_msg(const openpal::RSlice& input)
 
 FormatError ReplyHandshakeAuth::write(openpal::WSlice& output) const
 {
-    return MessageFormatter::write_message<Function::request_handshake_auth>(
+    return MessageFormatter::write_fields(
         output,
         mac
     );
 }
 
-FormatResult ReplyHandshakeAuth::write_msg(openpal::WSlice& output) const
-{
-    auto write = [this](openpal::WSlice& output) { return this->write(output); };
-    return FormatResult::write_any(write, output);
-}
-
-void ReplyHandshakeAuth::print(IMessagePrinter& printer) const
+void ReplyHandshakeAuth::print(const char* name, IMessagePrinter& printer) const
 {
     MessagePrinting::print_fields(
         printer,
@@ -60,5 +54,20 @@ void ReplyHandshakeAuth::print(IMessagePrinter& printer) const
         mac
     );
 }
+
+ParseError ReplyHandshakeAuth::read_message(openpal::RSlice input)
+{
+    return MessageParser::read_message<ReplyHandshakeAuth>(input, *this);
+}
+
+FormatResult ReplyHandshakeAuth::write_message(openpal::WSlice output) const
+{
+    return MessageFormatter::write_message<ReplyHandshakeAuth>(output, *this);
+}
+void ReplyHandshakeAuth::print_message(IMessagePrinter& printer) const
+{
+    return this->print("", printer);
+}
+
 
 }

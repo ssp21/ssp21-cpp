@@ -10,6 +10,7 @@
 #include "ssp21/gen/HashMode.h"
 #include "ssp21/gen/FormatError.h"
 
+#include "ssp21/crypto/FormatResult.h"
 #include "ssp21/crypto/SequenceTypes.h"
 #include "ssp21/crypto/IWritable.h"
 
@@ -24,13 +25,19 @@ namespace ssp21
 
     public:
 
-        template <Function function, typename T, typename... Args>
-        static FormatError write_message(openpal::WSlice& dest, const T& value, Args& ... args)
+        template <typename Msg>
+        static FormatResult write_message(openpal::WSlice& dest, const Msg& msg)
         {
-            auto err = write(dest, function);
-            if (any(err)) return err;
+            const auto start = dest;
 
-            return write_fields(dest, value, args...);
+            auto ferr = write(dest, Msg::function);
+            if (any(ferr)) return FormatResult::Error(ferr);
+
+            auto merr = msg.write(dest);
+            if (any(merr)) return FormatResult::Error(merr);
+
+            const auto num_written = start.length() - dest.length();
+            return FormatResult::Succes(start.as_rslice().take(num_written));
         }
 
         template <typename T, typename... Args>

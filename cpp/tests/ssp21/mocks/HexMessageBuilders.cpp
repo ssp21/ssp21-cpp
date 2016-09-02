@@ -22,12 +22,11 @@ namespace ssp21
     namespace hex
     {
 
-        template <class T>
-        std::string write_message(const T& msg)
+        std::string write_message(const IMessage& msg)
         {
             openpal::StaticBuffer<1024> buffer;
             auto dest = buffer.as_wslice();
-            auto result = msg.write_msg(dest);
+            auto result = msg.write_message(dest);
 
             assert(!result.is_error());
 

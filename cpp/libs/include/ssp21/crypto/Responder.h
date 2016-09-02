@@ -79,11 +79,10 @@ namespace ssp21
                 this->upper = &upper;
             }
 
-            template <class T>
-            FormatResult write_msg(const T& msg)
+            FormatResult write_msg(const IMessage& msg)
             {
                 auto dest = tx_buffer.as_wslice();
-                return msg.write_msg(dest);
+                return msg.write_message(dest);
             }
 
             HandshakeError validate(const RequestHandshakeBegin& msg);

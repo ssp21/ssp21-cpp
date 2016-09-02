@@ -48,9 +48,9 @@ RequestHandshakeBegin::RequestHandshakeBegin(
     ephemeral_public_key(ephemeral_public_key)
 {}
 
-ParseError RequestHandshakeBegin::read_msg(const openpal::RSlice& input)
+ParseError RequestHandshakeBegin::read(openpal::RSlice& input)
 {
-    return MessageParser::read_message<Function::request_handshake_begin>(
+    return MessageParser::read_fields(
         input,
         version,
         nonce_mode,
@@ -65,7 +65,7 @@ ParseError RequestHandshakeBegin::read_msg(const openpal::RSlice& input)
 
 FormatError RequestHandshakeBegin::write(openpal::WSlice& output) const
 {
-    return MessageFormatter::write_message<Function::request_handshake_begin>(
+    return MessageFormatter::write_fields(
         output,
         version,
         nonce_mode,
@@ -78,13 +78,7 @@ FormatError RequestHandshakeBegin::write(openpal::WSlice& output) const
     );
 }
 
-FormatResult RequestHandshakeBegin::write_msg(openpal::WSlice& output) const
-{
-    auto write = [this](openpal::WSlice& output) { return this->write(output); };
-    return FormatResult::write_any(write, output);
-}
-
-void RequestHandshakeBegin::print(IMessagePrinter& printer) const
+void RequestHandshakeBegin::print(const char* name, IMessagePrinter& printer) const
 {
     MessagePrinting::print_fields(
         printer,
@@ -106,5 +100,20 @@ void RequestHandshakeBegin::print(IMessagePrinter& printer) const
         certificates
     );
 }
+
+ParseError RequestHandshakeBegin::read_message(openpal::RSlice input)
+{
+    return MessageParser::read_message<RequestHandshakeBegin>(input, *this);
+}
+
+FormatResult RequestHandshakeBegin::write_message(openpal::WSlice output) const
+{
+    return MessageFormatter::write_message<RequestHandshakeBegin>(output, *this);
+}
+void RequestHandshakeBegin::print_message(IMessagePrinter& printer) const
+{
+    return this->print("", printer);
+}
+
 
 }

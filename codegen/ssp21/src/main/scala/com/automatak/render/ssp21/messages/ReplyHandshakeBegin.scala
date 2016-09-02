@@ -4,13 +4,13 @@ import com.automatak.render.ssp21.enums.ssp21.CryptoFunction
 
 object ReplyHandshakeBegin extends Message {
 
-  override def name : String = "ReplyHandshakeBegin"
+  override def name: String = "ReplyHandshakeBegin"
 
   def function = CryptoFunction.replyHandshakeBegin
 
-  override def fields: List[Field] = List(     
-      CommonFields.ephemerialPublicKey,
-      CommonFields.certificates
+  override def fields: List[Field] = List(
+    CommonFields.ephemerialPublicKey,
+    CommonFields.certificates
   )
 
 }

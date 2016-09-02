@@ -8,14 +8,17 @@ import com.automatak.render.cpp.CppIndentation
 
 trait WriteCppFiles {
 
-  def mainClassName : String
-  def header(implicit i : Indentation) : Iterator[String]
-  def impl(implicit i : Indentation) : Iterator[String]
+  def mainClassName: String
 
-  def hasImpl : Boolean = true
+  def header(implicit i: Indentation): Iterator[String]
 
-  def headerFileName : String = mainClassName + ".h"
-  def implFileName : String = mainClassName + ".cpp"
+  def impl(implicit i: Indentation): Iterator[String]
+
+  def hasImpl: Boolean = true
+
+  def headerFileName: String = mainClassName + ".h"
+
+  def implFileName: String = mainClassName + ".cpp"
 
   def write(incDirectory: Path, implDirectory: Path): Unit = {
 
@@ -28,7 +31,7 @@ trait WriteCppFiles {
     println("Wrote: " + headerPath)
 
 
-    if(hasImpl && writeTo(implPath)(impl)) {
+    if (hasImpl && writeTo(implPath)(impl)) {
       println("Wrote: " + implPath)
     }
 

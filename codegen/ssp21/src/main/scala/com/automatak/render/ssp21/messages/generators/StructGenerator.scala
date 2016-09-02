@@ -3,29 +3,52 @@ package com.automatak.render.ssp21.messages.generators
 import com.automatak.render._
 import com.automatak.render.cpp._
 import com.automatak.render.ssp21.messages.Struct
-import com.automatak.render.ssp21.{Includes, WriteCppFiles}
+import com.automatak.render.ssp21.{Include, Includes, WriteCppFiles}
 
-case class StructGenerator(sf: Struct) extends WriteCppFiles {
+object StructGenerator {
+  def apply(sf: Struct) = new StructGenerator(sf)
+}
+
+class StructGenerator(sf: Struct) extends WriteCppFiles {
 
   private def cppNamespace = "ssp21"
+
   private def headerName = sf.name + ".h"
+
   private def implName = sf.name + ".cpp"
 
   final override def mainClassName: String = sf.name
 
-  /// These can be override in super classes
-  def extraHeaderSignatures : Iterator[String] = Iterator.empty
-  def extraHeaderConstants : Iterator[String] = Iterator.empty
-  def extraImplFunctions : Iterator[String] = Iterator.empty
-  def interfaces : String = "public IReadable, public IWritable, public IPrintable"
+  /// These can be overriden in super classes
+  def extraHeaderDeclarations: Iterator[String] = Iterator.empty
 
-  final override def header(implicit indent: Indentation) : Iterator[String] = {
+  def extraHeaderSignatures: Iterator[String] = Iterator.empty
+
+  def extraHeaderConstants: Iterator[String] = Iterator.empty
+
+  def extraImplFunctions(implicit indent: Indentation): Iterator[String] = Iterator.empty
+
+  def interfaces: String = "public IReadable, public IWritable, public IPrintable"
+
+  def headerIncludes: List[Include] = List(Includes.readable, Includes.writable, Includes.msgPrinter)
+
+  def publicReadWritePrint: Boolean = true
+
+  final override def header(implicit indent: Indentation): Iterator[String] = {
 
     def defaultConstructorSig = "%s();".format(sf.name).iter
 
-    def readSig = "virtual ParseError read(openpal::RSlice& input) override;".iter
-    def writeSig = "virtual FormatError write(openpal::WSlice& output) const override;".iter
-    def printSig = "virtual void print(const char* name, IMessagePrinter& printer) const override;".iter
+    def virtual = if (publicReadWritePrint) "virtual " else ""
+    def overrid = if (publicReadWritePrint) " override" else ""
+
+    def readSig = "%sParseError read(openpal::RSlice& input)%s;".format(virtual, overrid).iter
+    def writeSig = "%sFormatError write(openpal::WSlice& output) const%s;".format(virtual, overrid).iter
+    def printSig = "%svoid print(const char* name, IMessagePrinter& printer) const%s;".format(virtual, overrid).iter
+
+    def readWritePrint = {
+      val scope = if (publicReadWritePrint) Iterator.empty else "private:".iter ++ space
+      scope ++ readSig ++ writeSig ++ printSig
+    }
 
     def sizeBytes = sf.fixedSize match {
       case Some(size) => "static const uint32_t fixed_size_bytes = %s;".format(size).iter
@@ -34,13 +57,14 @@ case class StructGenerator(sf: Struct) extends WriteCppFiles {
 
     def constants = sizeBytes ++ extraHeaderConstants
 
-    def struct(implicit indent: Indentation) : Iterator[String] = {
+    def struct(implicit indent: Indentation): Iterator[String] = {
 
-      def fieldDefintions : Iterator[String] = sf.fields.map { f =>
+      def fieldDefintions: Iterator[String] = sf.fields.map { f =>
         "%s %s;".format(f.cpp.cppType, f.name);
       }.toIterator
 
       "struct %s : %s".format(sf.name, interfaces).iter ++ bracketSemiColon {
+        extraHeaderDeclarations ++
           defaultConstructorSig ++
           space ++
           fullConstructorSig(false) ++
@@ -50,20 +74,12 @@ case class StructGenerator(sf: Struct) extends WriteCppFiles {
           space ++
           fieldDefintions ++
           space ++
-          readSig ++ space ++
-          writeSig ++ space ++
-          printSig
+          readWritePrint
       }
     }
 
-    def includes : Iterator[String] = {
-      Includes.lines(
-        List(
-          Includes.readable,
-          Includes.writable,
-          Includes.msgPrinter
-        ) ::: sf.fields.flatMap(f => f.cpp.includes.toList)
-      )
+    def includes: Iterator[String] = {
+      Includes.lines(headerIncludes ::: sf.fields.flatMap(f => f.cpp.includes.toList))
     }
 
     def license = commented(LicenseHeader.lines)
@@ -72,15 +88,15 @@ case class StructGenerator(sf: Struct) extends WriteCppFiles {
     license ++ space ++ includeGuards(sf.name)(includes ++ space ++ namespace(cppNamespace)(content))
   }
 
-  final override def impl(implicit indent: Indentation) : Iterator[String] = {
+  final override def impl(implicit indent: Indentation): Iterator[String] = {
 
     def license = commented(LicenseHeader.lines)
 
     def args = commas(sf.fields.map(_.name))
 
     def printArgs = commas(sf.fields.map(f => List(quoted(f.name), f.name)).flatten)
-    
-    def readFunc(implicit indent: Indentation) : Iterator[String] = {
+
+    def readFunc(implicit indent: Indentation): Iterator[String] = {
 
       "ParseError %s::read(openpal::RSlice& input)".format(sf.name).iter ++ bracket {
         "return MessageParser::read_fields(".iter ++ indent {
@@ -89,7 +105,7 @@ case class StructGenerator(sf: Struct) extends WriteCppFiles {
       }
     }
 
-    def writeFunc(implicit indent: Indentation) : Iterator[String] = {
+    def writeFunc(implicit indent: Indentation): Iterator[String] = {
 
       "FormatError %s::write(openpal::WSlice& output) const".format(sf.name).iter ++ bracket {
         "return MessageFormatter::write_fields(".iter ++ indent {
@@ -104,13 +120,13 @@ case class StructGenerator(sf: Struct) extends WriteCppFiles {
       } ++ ");".iter
     }
 
-    def defaultConstructorImpl(implicit indent: Indentation) : Iterator[String] = {
+    def defaultConstructorImpl(implicit indent: Indentation): Iterator[String] = {
 
       val defaults = sf.fields.flatMap { f =>
         f.cpp.defaultValue.map(d => "%s(%s)".format(f.name, d))
       }
 
-      if(defaults.isEmpty) {
+      if (defaults.isEmpty) {
         "%s::%s()".format(sf.name, sf.name).iter ++ bracketsOnly
       }
       else {
@@ -121,10 +137,10 @@ case class StructGenerator(sf: Struct) extends WriteCppFiles {
       }
     }
 
-    def fullConstructorImpl(implicit indent: Indentation) : Iterator[String] = {
+    def fullConstructorImpl(implicit indent: Indentation): Iterator[String] = {
 
       def constructedFields = sf.fields.filter(_.cpp.initializeInFullConstructor)
-      def names : List[String] = constructedFields.map(f => "%s(%s)".format(f.name, f.name))
+      def names: List[String] = constructedFields.map(f => "%s(%s)".format(f.name, f.name))
 
       fullConstructorSig(true) ++ indent {
         commas(names)
@@ -132,7 +148,7 @@ case class StructGenerator(sf: Struct) extends WriteCppFiles {
     }
 
     def funcs = {
-        defaultConstructorImpl ++
+      defaultConstructorImpl ++
         space ++
         fullConstructorImpl ++
         space ++
@@ -154,18 +170,18 @@ case class StructGenerator(sf: Struct) extends WriteCppFiles {
 
   }
 
-  private def fullConstructorSig(impl: Boolean)(implicit indent: Indentation) : Iterator[String] = {
+  private def fullConstructorSig(impl: Boolean)(implicit indent: Indentation): Iterator[String] = {
 
     val fields = sf.fields.filter(_.cpp.initializeInFullConstructor)
 
-    val firstArgs : Iterator[String] = fields.dropRight(1).map(f => f.cpp.asArgument(f.name)+",").toIterator
+    val firstArgs: Iterator[String] = fields.dropRight(1).map(f => f.cpp.asArgument(f.name) + ",").toIterator
 
     val last = fields.last
-    val lastArgs : Iterator[String] = Iterator(last.cpp.asArgument(last.name))
+    val lastArgs: Iterator[String] = Iterator(last.cpp.asArgument(last.name))
 
-    def funcName = if(impl) "%s::%s(".format(sf.name, sf.name).iter else (sf.name + "(").iter
+    def funcName = if (impl) "%s::%s(".format(sf.name, sf.name).iter else (sf.name + "(").iter
 
-    def terminator = if(impl) ") :".iter else ");".iter
+    def terminator = if (impl) ") :".iter else ");".iter
 
     funcName ++ indent {
       firstArgs ++ lastArgs

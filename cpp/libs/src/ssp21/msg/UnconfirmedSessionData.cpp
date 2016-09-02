@@ -32,9 +32,9 @@ UnconfirmedSessionData::UnconfirmedSessionData(
     payload(payload)
 {}
 
-ParseError UnconfirmedSessionData::read_msg(const openpal::RSlice& input)
+ParseError UnconfirmedSessionData::read(openpal::RSlice& input)
 {
-    return MessageParser::read_message<Function::unconfirmed_session_data>(
+    return MessageParser::read_fields(
         input,
         ad,
         payload
@@ -43,20 +43,14 @@ ParseError UnconfirmedSessionData::read_msg(const openpal::RSlice& input)
 
 FormatError UnconfirmedSessionData::write(openpal::WSlice& output) const
 {
-    return MessageFormatter::write_message<Function::unconfirmed_session_data>(
+    return MessageFormatter::write_fields(
         output,
         ad,
         payload
     );
 }
 
-FormatResult UnconfirmedSessionData::write_msg(openpal::WSlice& output) const
-{
-    auto write = [this](openpal::WSlice& output) { return this->write(output); };
-    return FormatResult::write_any(write, output);
-}
-
-void UnconfirmedSessionData::print(IMessagePrinter& printer) const
+void UnconfirmedSessionData::print(const char* name, IMessagePrinter& printer) const
 {
     MessagePrinting::print_fields(
         printer,
@@ -66,5 +60,20 @@ void UnconfirmedSessionData::print(IMessagePrinter& printer) const
         payload
     );
 }
+
+ParseError UnconfirmedSessionData::read_message(openpal::RSlice input)
+{
+    return MessageParser::read_message<UnconfirmedSessionData>(input, *this);
+}
+
+FormatResult UnconfirmedSessionData::write_message(openpal::WSlice output) const
+{
+    return MessageFormatter::write_message<UnconfirmedSessionData>(output, *this);
+}
+void UnconfirmedSessionData::print_message(IMessagePrinter& printer) const
+{
+    return this->print("", printer);
+}
+
 
 }

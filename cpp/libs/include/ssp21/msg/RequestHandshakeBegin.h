@@ -17,26 +17,22 @@
 #define SSP21_REQUESTHANDSHAKEBEGIN_H
 
 #include <cstdint>
-#include "openpal/util/Uncopyable.h"
-#include "openpal/container/WSlice.h"
-#include "openpal/container/RSlice.h"
 #include "ssp21/gen/DHMode.h"
 #include "ssp21/gen/Function.h"
 #include "ssp21/gen/HashMode.h"
 #include "ssp21/gen/NonceMode.h"
-#include "ssp21/gen/ParseError.h"
-#include "ssp21/gen/FormatError.h"
 #include "ssp21/gen/SessionMode.h"
 #include "ssp21/gen/CertificateMode.h"
 #include "ssp21/crypto/IMessage.h"
-#include "ssp21/crypto/FormatResult.h"
 #include "ssp21/crypto/SequenceTypes.h"
-#include "ssp21/crypto/IMessagePrinter.h"
 
 namespace ssp21 {
 
 struct RequestHandshakeBegin : public IMessage, private openpal::Uncopyable
 {
+    friend class MessageParser;
+    friend class MessageFormatter;
+
     RequestHandshakeBegin();
 
     RequestHandshakeBegin(
@@ -49,13 +45,11 @@ struct RequestHandshakeBegin : public IMessage, private openpal::Uncopyable
         const Seq8& ephemeral_public_key
     );
 
-    ParseError read_msg(const openpal::RSlice& input);
-    FormatResult write_msg(openpal::WSlice& output) const;
-
-    virtual void print(IMessagePrinter& printer) const override;
+    virtual ParseError read_message(openpal::RSlice input) override;
+    virtual FormatResult write_message(openpal::WSlice output) const override;
+    virtual void print_message(IMessagePrinter& printer) const override;
 
     static const uint32_t min_size_bytes = 10;
-
     static const Function function = Function::request_handshake_begin;
 
     uint16_t version;
@@ -67,9 +61,11 @@ struct RequestHandshakeBegin : public IMessage, private openpal::Uncopyable
     Seq8 ephemeral_public_key;
     Seq8Seq16 certificates;
 
-    private: 
+    private:
 
+    ParseError read(openpal::RSlice& input);
     FormatError write(openpal::WSlice& output) const;
+    void print(const char* name, IMessagePrinter& printer) const;
 };
 
 }

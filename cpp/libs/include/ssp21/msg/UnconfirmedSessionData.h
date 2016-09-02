@@ -16,22 +16,18 @@
 #ifndef SSP21_UNCONFIRMEDSESSIONDATA_H
 #define SSP21_UNCONFIRMEDSESSIONDATA_H
 
-#include "openpal/util/Uncopyable.h"
-#include "openpal/container/WSlice.h"
-#include "openpal/container/RSlice.h"
 #include "ssp21/gen/Function.h"
-#include "ssp21/gen/ParseError.h"
-#include "ssp21/gen/FormatError.h"
 #include "ssp21/msg/SessionAuthData.h"
 #include "ssp21/crypto/IMessage.h"
-#include "ssp21/crypto/FormatResult.h"
 #include "ssp21/crypto/SequenceTypes.h"
-#include "ssp21/crypto/IMessagePrinter.h"
 
 namespace ssp21 {
 
 struct UnconfirmedSessionData : public IMessage, private openpal::Uncopyable
 {
+    friend class MessageParser;
+    friend class MessageFormatter;
+
     UnconfirmedSessionData();
 
     UnconfirmedSessionData(
@@ -39,21 +35,21 @@ struct UnconfirmedSessionData : public IMessage, private openpal::Uncopyable
         const Seq16& payload
     );
 
-    ParseError read_msg(const openpal::RSlice& input);
-    FormatResult write_msg(openpal::WSlice& output) const;
-
-    virtual void print(IMessagePrinter& printer) const override;
+    virtual ParseError read_message(openpal::RSlice input) override;
+    virtual FormatResult write_message(openpal::WSlice output) const override;
+    virtual void print_message(IMessagePrinter& printer) const override;
 
     static const uint32_t min_size_bytes = 10;
-
     static const Function function = Function::unconfirmed_session_data;
 
     SessionAuthData ad;
     Seq16 payload;
 
-    private: 
+    private:
 
+    ParseError read(openpal::RSlice& input);
     FormatError write(openpal::WSlice& output) const;
+    void print(const char* name, IMessagePrinter& printer) const;
 };
 
 }

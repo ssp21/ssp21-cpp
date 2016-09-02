@@ -30,9 +30,9 @@ ReplyHandshakeBegin::ReplyHandshakeBegin(
     ephemeral_public_key(ephemeral_public_key)
 {}
 
-ParseError ReplyHandshakeBegin::read_msg(const openpal::RSlice& input)
+ParseError ReplyHandshakeBegin::read(openpal::RSlice& input)
 {
-    return MessageParser::read_message<Function::reply_handshake_begin>(
+    return MessageParser::read_fields(
         input,
         ephemeral_public_key,
         certificates
@@ -41,20 +41,14 @@ ParseError ReplyHandshakeBegin::read_msg(const openpal::RSlice& input)
 
 FormatError ReplyHandshakeBegin::write(openpal::WSlice& output) const
 {
-    return MessageFormatter::write_message<Function::reply_handshake_begin>(
+    return MessageFormatter::write_fields(
         output,
         ephemeral_public_key,
         certificates
     );
 }
 
-FormatResult ReplyHandshakeBegin::write_msg(openpal::WSlice& output) const
-{
-    auto write = [this](openpal::WSlice& output) { return this->write(output); };
-    return FormatResult::write_any(write, output);
-}
-
-void ReplyHandshakeBegin::print(IMessagePrinter& printer) const
+void ReplyHandshakeBegin::print(const char* name, IMessagePrinter& printer) const
 {
     MessagePrinting::print_fields(
         printer,
@@ -64,5 +58,20 @@ void ReplyHandshakeBegin::print(IMessagePrinter& printer) const
         certificates
     );
 }
+
+ParseError ReplyHandshakeBegin::read_message(openpal::RSlice input)
+{
+    return MessageParser::read_message<ReplyHandshakeBegin>(input, *this);
+}
+
+FormatResult ReplyHandshakeBegin::write_message(openpal::WSlice output) const
+{
+    return MessageFormatter::write_message<ReplyHandshakeBegin>(output, *this);
+}
+void ReplyHandshakeBegin::print_message(IMessagePrinter& printer) const
+{
+    return this->print("", printer);
+}
+
 
 }

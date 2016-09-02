@@ -12,7 +12,7 @@ object Ordering {
 }
 
 case class Include(file: String, order: Int) {
-  def line : Iterator[String] = include(file)
+  def line: Iterator[String] = include(file)
 }
 
 object Includes {
@@ -42,8 +42,8 @@ object Includes {
 
   def message(className: String) = Include(quoted("ssp21/msg/%s.h".format(className)), Ordering.msg)
 
-  def sort(lhs : Include, rhs : Include) : Boolean = {
-    if(lhs.order == rhs.order) {
+  def sort(lhs: Include, rhs: Include): Boolean = {
+    if (lhs.order == rhs.order) {
       lhs.file.length < rhs.file.length
     }
     else {
@@ -51,7 +51,7 @@ object Includes {
     }
   }
 
-  def lines(lines : Seq[Include]) : Iterator[String] = {
+  def lines(lines: Seq[Include]): Iterator[String] = {
     lines.toSet.toList.sortWith(sort).map(_.line).flatten.toIterator
   }
 }

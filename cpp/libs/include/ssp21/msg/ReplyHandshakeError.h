@@ -16,41 +16,37 @@
 #ifndef SSP21_REPLYHANDSHAKEERROR_H
 #define SSP21_REPLYHANDSHAKEERROR_H
 
-#include "openpal/util/Uncopyable.h"
-#include "openpal/container/WSlice.h"
-#include "openpal/container/RSlice.h"
 #include "ssp21/gen/Function.h"
-#include "ssp21/gen/ParseError.h"
-#include "ssp21/gen/FormatError.h"
 #include "ssp21/gen/HandshakeError.h"
 #include "ssp21/crypto/IMessage.h"
-#include "ssp21/crypto/FormatResult.h"
-#include "ssp21/crypto/IMessagePrinter.h"
 
 namespace ssp21 {
 
 struct ReplyHandshakeError : public IMessage, private openpal::Uncopyable
 {
+    friend class MessageParser;
+    friend class MessageFormatter;
+
     ReplyHandshakeError();
 
     ReplyHandshakeError(
         HandshakeError handshake_error
     );
 
-    ParseError read_msg(const openpal::RSlice& input);
-    FormatResult write_msg(openpal::WSlice& output) const;
+    virtual ParseError read_message(openpal::RSlice input) override;
+    virtual FormatResult write_message(openpal::WSlice output) const override;
+    virtual void print_message(IMessagePrinter& printer) const override;
 
-    virtual void print(IMessagePrinter& printer) const override;
-
-    static const uint32_t min_size_bytes = 2;
-
+    static const uint32_t fixed_size_bytes = 2;
     static const Function function = Function::reply_handshake_error;
 
     HandshakeError handshake_error;
 
-    private: 
+    private:
 
+    ParseError read(openpal::RSlice& input);
     FormatError write(openpal::WSlice& output) const;
+    void print(const char* name, IMessagePrinter& printer) const;
 };
 
 }

@@ -1,11 +1,11 @@
 /**
- * License TBD
- */
+  * License TBD
+  */
 package com.automatak.render
 
 /**
- *
- */
+  *
+  */
 object LicenseHeader {
 
   def lines: Iterator[String] = list.iterator

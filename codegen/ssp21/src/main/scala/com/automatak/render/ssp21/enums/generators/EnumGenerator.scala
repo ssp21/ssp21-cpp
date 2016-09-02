@@ -1,6 +1,6 @@
 /**
- * License TBD
- */
+  * License TBD
+  */
 package com.automatak.render.ssp21.enums.generators
 
 
@@ -12,9 +12,9 @@ case class EnumGenerator(cfg: EnumConfig) extends WriteCppFiles {
 
   def cppNamespace = "ssp21"
 
-  override def hasImpl : Boolean = cfg.anyOptionalFunctions
+  override def hasImpl: Boolean = cfg.anyOptionalFunctions
 
-  private val renderers : List[HeaderImplModelRender[EnumModel]] = {
+  private val renderers: List[HeaderImplModelRender[EnumModel]] = {
 
     def conversions = if (cfg.conversions) List(EnumToType, EnumFromType) else Nil
     def stringify = if (cfg.stringConv) List(EnumToString) else Nil
@@ -22,9 +22,9 @@ case class EnumGenerator(cfg: EnumConfig) extends WriteCppFiles {
     conversions ::: stringify
   }
 
-  override def mainClassName : String = cfg.model.name
+  override def mainClassName: String = cfg.model.name
 
-  override def header(implicit i : Indentation) : Iterator[String] = {
+  override def header(implicit i: Indentation): Iterator[String] = {
 
     def license = commented(LicenseHeader.lines)
     def enum = EnumModelRenderer.render(cfg.model)
@@ -35,7 +35,7 @@ case class EnumGenerator(cfg: EnumConfig) extends WriteCppFiles {
         signatures
     }
 
-    def castFunc : Iterator[String] = {
+    def castFunc: Iterator[String] = {
       cfg.model.boolCastValue match {
         case Some(value) => {
           space ++
@@ -47,16 +47,16 @@ case class EnumGenerator(cfg: EnumConfig) extends WriteCppFiles {
       }
     }
 
-    def includes : List[Include] = List(Includes.uncopyable, Includes.cstdint)
+    def includes: List[Include] = List(Includes.uncopyable, Includes.cstdint)
 
-    license ++ space ++ includeGuards(cfg.model.name) (
+    license ++ space ++ includeGuards(cfg.model.name)(
       Includes.lines(includes) ++ space ++ namespace(cppNamespace)(
         enum ++ castFunc ++ space ++ spec
       )
     )
   }
 
-  override def impl(implicit i : Indentation) : Iterator[String] = {
+  override def impl(implicit i: Indentation): Iterator[String] = {
 
     def license = commented(LicenseHeader.lines)
     def funcs = renderers.map(r => r.impl.render(cfg.model)).flatten.toIterator

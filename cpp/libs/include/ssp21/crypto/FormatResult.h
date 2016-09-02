@@ -29,22 +29,6 @@ namespace ssp21
             return any(err);
         }
 
-        template <class WriteFunc>
-        static FormatResult write_any(const WriteFunc& write, openpal::WSlice& dest)
-        {
-            const auto start = dest;
-            auto err = write(dest);
-            if (any(err))
-            {
-                return FormatResult::Error(err);
-            }
-            else
-            {
-                const auto num_written = start.length() - dest.length();
-                return FormatResult::Succes(start.as_rslice().take(num_written));
-            }
-        }
-
     private:
 
         FormatResult() = delete;

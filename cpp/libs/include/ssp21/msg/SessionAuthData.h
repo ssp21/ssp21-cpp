@@ -41,9 +41,7 @@ struct SessionAuthData : public IReadable, public IWritable, public IPrintable
     PayloadFlags payload_flags;
 
     virtual ParseError read(openpal::RSlice& input) override;
-
     virtual FormatError write(openpal::WSlice& output) const override;
-
     virtual void print(const char* name, IMessagePrinter& printer) const override;
 };
 
