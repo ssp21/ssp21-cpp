@@ -22,17 +22,17 @@
 namespace ssp21 {
 
 AuthMetadata::AuthMetadata() : 
-    valid_until_ms(0),
-    nonce(0)
+    nonce(0),
+    valid_until_ms(0)
 {}
 
 AuthMetadata::AuthMetadata(
-    uint32_t valid_until_ms,
     uint16_t nonce,
+    uint32_t valid_until_ms,
     const PayloadFlags& payload_flags
 ) :
-    valid_until_ms(valid_until_ms),
     nonce(nonce),
+    valid_until_ms(valid_until_ms),
     payload_flags(payload_flags)
 {}
 
@@ -40,8 +40,8 @@ ParseError AuthMetadata::read(openpal::RSlice& input)
 {
     return MessageParser::read_fields(
         input,
-        valid_until_ms,
         nonce,
+        valid_until_ms,
         payload_flags
     );
 }
@@ -50,8 +50,8 @@ FormatError AuthMetadata::write(openpal::WSlice& output) const
 {
     return MessageFormatter::write_fields(
         output,
-        valid_until_ms,
         nonce,
+        valid_until_ms,
         payload_flags
     );
 }
@@ -60,10 +60,10 @@ void AuthMetadata::print(const char* name, IMessagePrinter& printer) const
 {
     MessagePrinting::print_fields(
         printer,
-        "valid_until_ms",
-        valid_until_ms,
         "nonce",
         nonce,
+        "valid_until_ms",
+        valid_until_ms,
         "payload_flags",
         payload_flags
     );

@@ -29,15 +29,15 @@ struct AuthMetadata : public IReadable, public IWritable, public IPrintable
     AuthMetadata();
 
     AuthMetadata(
-        uint32_t valid_until_ms,
         uint16_t nonce,
+        uint32_t valid_until_ms,
         const PayloadFlags& payload_flags
     );
 
     static const uint32_t fixed_size_bytes = 7;
 
-    uint32_t valid_until_ms;
     uint16_t nonce;
+    uint32_t valid_until_ms;
     PayloadFlags payload_flags;
 
     virtual ParseError read(openpal::RSlice& input) override;

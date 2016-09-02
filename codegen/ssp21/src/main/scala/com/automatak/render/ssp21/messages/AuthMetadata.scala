@@ -7,8 +7,8 @@ object AuthMetadata extends Struct {
   override def name: String = "AuthMetadata"
 
   override def fields: List[Field] = List(
-    U32("valid_until_ms"),
     U16("nonce"),
+    U32("valid_until_ms"),
     Bitfields.payloadFlags
   )
 
