@@ -13,8 +13,8 @@
 // License TBD
 //
 
-#ifndef SSP21_SESSIONAUTHDATA_H
-#define SSP21_SESSIONAUTHDATA_H
+#ifndef SSP21_AUTHMETADATA_H
+#define SSP21_AUTHMETADATA_H
 
 #include <cstdint>
 #include "ssp21/msg/PayloadFlags.h"
@@ -24,11 +24,11 @@
 
 namespace ssp21 {
 
-struct SessionAuthData : public IReadable, public IWritable, public IPrintable
+struct AuthMetadata : public IReadable, public IWritable, public IPrintable
 {
-    SessionAuthData();
+    AuthMetadata();
 
-    SessionAuthData(
+    AuthMetadata(
         uint32_t valid_until_ms,
         uint16_t nonce,
         const PayloadFlags& payload_flags

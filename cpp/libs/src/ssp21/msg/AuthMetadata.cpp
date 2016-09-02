@@ -13,7 +13,7 @@
 // License TBD
 //
 
-#include "ssp21/msg/SessionAuthData.h"
+#include "ssp21/msg/AuthMetadata.h"
 
 #include "ssp21/crypto/MessageParser.h"
 #include "ssp21/crypto/MessagePrinting.h"
@@ -21,12 +21,12 @@
 
 namespace ssp21 {
 
-SessionAuthData::SessionAuthData() : 
+AuthMetadata::AuthMetadata() : 
     valid_until_ms(0),
     nonce(0)
 {}
 
-SessionAuthData::SessionAuthData(
+AuthMetadata::AuthMetadata(
     uint32_t valid_until_ms,
     uint16_t nonce,
     const PayloadFlags& payload_flags
@@ -36,7 +36,7 @@ SessionAuthData::SessionAuthData(
     payload_flags(payload_flags)
 {}
 
-ParseError SessionAuthData::read(openpal::RSlice& input)
+ParseError AuthMetadata::read(openpal::RSlice& input)
 {
     return MessageParser::read_fields(
         input,
@@ -46,7 +46,7 @@ ParseError SessionAuthData::read(openpal::RSlice& input)
     );
 }
 
-FormatError SessionAuthData::write(openpal::WSlice& output) const
+FormatError AuthMetadata::write(openpal::WSlice& output) const
 {
     return MessageFormatter::write_fields(
         output,
@@ -56,7 +56,7 @@ FormatError SessionAuthData::write(openpal::WSlice& output) const
     );
 }
 
-void SessionAuthData::print(const char* name, IMessagePrinter& printer) const
+void AuthMetadata::print(const char* name, IMessagePrinter& printer) const
 {
     MessagePrinting::print_fields(
         printer,

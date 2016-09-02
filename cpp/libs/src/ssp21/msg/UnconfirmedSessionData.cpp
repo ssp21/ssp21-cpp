@@ -25,10 +25,10 @@ UnconfirmedSessionData::UnconfirmedSessionData()
 {}
 
 UnconfirmedSessionData::UnconfirmedSessionData(
-    const SessionAuthData& ad,
+    const AuthMetadata& metadata,
     const Seq16& payload
 ) :
-    ad(ad),
+    metadata(metadata),
     payload(payload)
 {}
 
@@ -36,7 +36,7 @@ ParseError UnconfirmedSessionData::read(openpal::RSlice& input)
 {
     return MessageParser::read_fields(
         input,
-        ad,
+        metadata,
         payload
     );
 }
@@ -45,7 +45,7 @@ FormatError UnconfirmedSessionData::write(openpal::WSlice& output) const
 {
     return MessageFormatter::write_fields(
         output,
-        ad,
+        metadata,
         payload
     );
 }
@@ -54,8 +54,8 @@ void UnconfirmedSessionData::print(const char* name, IMessagePrinter& printer) c
 {
     MessagePrinting::print_fields(
         printer,
-        "ad",
-        ad,
+        "metadata",
+        metadata,
         "payload",
         payload
     );

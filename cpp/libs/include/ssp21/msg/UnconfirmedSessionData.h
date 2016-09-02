@@ -17,7 +17,7 @@
 #define SSP21_UNCONFIRMEDSESSIONDATA_H
 
 #include "ssp21/gen/Function.h"
-#include "ssp21/msg/SessionAuthData.h"
+#include "ssp21/msg/AuthMetadata.h"
 #include "ssp21/crypto/IMessage.h"
 #include "ssp21/crypto/SequenceTypes.h"
 
@@ -31,7 +31,7 @@ struct UnconfirmedSessionData : public IMessage, private openpal::Uncopyable
     UnconfirmedSessionData();
 
     UnconfirmedSessionData(
-        const SessionAuthData& ad,
+        const AuthMetadata& metadata,
         const Seq16& payload
     );
 
@@ -42,7 +42,7 @@ struct UnconfirmedSessionData : public IMessage, private openpal::Uncopyable
     static const uint32_t min_size_bytes = 10;
     static const Function function = Function::unconfirmed_session_data;
 
-    SessionAuthData ad;
+    AuthMetadata metadata;
     Seq16 payload;
 
     private:

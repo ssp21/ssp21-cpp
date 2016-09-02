@@ -10,7 +10,7 @@ object UnconfirmedSessionData extends Message {
   def function = CryptoFunction.unconfirmedSessionData
 
   override def fields: List[Field] = List(
-    StructField("ad", SessionAuthData),
+    StructField("metadata", AuthMetadata),
     Seq16("payload")
   )
 

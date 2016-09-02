@@ -9,6 +9,6 @@ import com.automatak.render.ssp21.messages.generators.StructGenerator
 
 object Structs {
 
-  def files: List[WriteCppFiles] = List(SessionAuthData).map(x => StructGenerator(x))
+  def files: List[WriteCppFiles] = List(AuthMetadata).map(x => StructGenerator(x))
 
 }
