@@ -30,9 +30,9 @@ struct ReplyHandshakeError : public IMessage, private openpal::Uncopyable
         HandshakeError handshake_error
     );
 
-    virtual ParseError read_message(openpal::RSlice input) override;
-    virtual FormatResult write_message(openpal::WSlice output) const override;
-    virtual void print_message(IMessagePrinter& printer) const override;
+    virtual ParseError read(openpal::RSlice input) override;
+    virtual FormatResult write(openpal::WSlice output) const override;
+    virtual void print(IMessagePrinter& printer) const override;
 
     static const uint32_t fixed_size_bytes = 2;
     static const Function function = Function::reply_handshake_error;

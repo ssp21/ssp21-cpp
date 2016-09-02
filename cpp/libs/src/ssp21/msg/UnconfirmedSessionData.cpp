@@ -33,7 +33,7 @@ UnconfirmedSessionData::UnconfirmedSessionData(
 {}
 
 
-ParseError UnconfirmedSessionData::read_message(openpal::RSlice input)
+ParseError UnconfirmedSessionData::read(openpal::RSlice input)
 {
     auto read_fields = [this](openpal::RSlice& input) -> ParseError 
     {
@@ -47,7 +47,7 @@ ParseError UnconfirmedSessionData::read_message(openpal::RSlice input)
     return MessageParser::read_message(input, Function::unconfirmed_session_data, read_fields);
 }
 
-FormatResult UnconfirmedSessionData::write_message(openpal::WSlice output) const
+FormatResult UnconfirmedSessionData::write(openpal::WSlice output) const
 {
     auto write_fields = [this](openpal::WSlice& output) -> FormatError 
     {
@@ -60,7 +60,7 @@ FormatResult UnconfirmedSessionData::write_message(openpal::WSlice output) const
 
     return MessageFormatter::write_message(output, Function::unconfirmed_session_data, write_fields);
 }
-void UnconfirmedSessionData::print_message(IMessagePrinter& printer) const
+void UnconfirmedSessionData::print(IMessagePrinter& printer) const
 {
     MessagePrinting::print_fields(
         printer,

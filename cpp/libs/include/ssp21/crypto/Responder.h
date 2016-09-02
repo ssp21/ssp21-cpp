@@ -82,7 +82,7 @@ namespace ssp21
             FormatResult write_msg(const IMessage& msg)
             {
                 auto dest = tx_buffer.as_wslice();
-                return msg.write_message(dest);
+                return msg.write(dest);
             }
 
             HandshakeError validate(const RequestHandshakeBegin& msg);

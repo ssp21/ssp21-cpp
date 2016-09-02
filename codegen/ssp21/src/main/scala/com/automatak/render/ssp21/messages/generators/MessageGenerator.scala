@@ -18,15 +18,15 @@ final case class MessageGenerator(msg: Message) extends StructGenerator(msg) {
   )
 
   override def extraHeaderSignatures: Iterator[String] = Iterator(
-    "virtual ParseError read_message(openpal::RSlice input) override;",
-    "virtual FormatResult write_message(openpal::WSlice output) const override;",
-    "virtual void print_message(IMessagePrinter& printer) const override;"
+    "virtual ParseError read(openpal::RSlice input) override;",
+    "virtual FormatResult write(openpal::WSlice output) const override;",
+    "virtual void print(IMessagePrinter& printer) const override;"
   ) ++ space
 
   override def extraImplFunctions(implicit indent: Indentation): Iterator[String] = {
 
     def read = {
-      "ParseError %s::read_message(openpal::RSlice input)".format(msg.name).iter ++ bracket {
+      "ParseError %s::read(openpal::RSlice input)".format(msg.name).iter ++ bracket {
         "auto read_fields = [this](openpal::RSlice& input) -> ParseError ".iter ++ bracketSemiColon {
           readInternals
         } ++ space ++
@@ -35,7 +35,7 @@ final case class MessageGenerator(msg: Message) extends StructGenerator(msg) {
     }
 
     def write = {
-      "FormatResult %s::write_message(openpal::WSlice output) const".format(msg.name).iter ++ bracket {
+      "FormatResult %s::write(openpal::WSlice output) const".format(msg.name).iter ++ bracket {
         "auto write_fields = [this](openpal::WSlice& output) -> FormatError ".iter ++ bracketSemiColon {
           writeInternals
         } ++ space ++
@@ -44,7 +44,7 @@ final case class MessageGenerator(msg: Message) extends StructGenerator(msg) {
     }
 
     def print = {
-      "void %s::print_message(IMessagePrinter& printer) const".format(msg.name).iter ++ bracket {
+      "void %s::print(IMessagePrinter& printer) const".format(msg.name).iter ++ bracket {
         printInternals
       }
     }

@@ -17,11 +17,11 @@ namespace ssp21
 
     public:
 
-        virtual ParseError read_message(openpal::RSlice input) = 0;
+        virtual ParseError read(openpal::RSlice input) = 0;
 
-        virtual FormatResult write_message(openpal::WSlice output) const = 0;
+        virtual FormatResult write(openpal::WSlice output) const = 0;
 
-        virtual void print_message(IMessagePrinter& printer) const = 0;
+        virtual void print(IMessagePrinter& printer) const = 0;
 
     };
 

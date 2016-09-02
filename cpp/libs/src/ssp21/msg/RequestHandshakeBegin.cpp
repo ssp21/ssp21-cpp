@@ -49,7 +49,7 @@ RequestHandshakeBegin::RequestHandshakeBegin(
 {}
 
 
-ParseError RequestHandshakeBegin::read_message(openpal::RSlice input)
+ParseError RequestHandshakeBegin::read(openpal::RSlice input)
 {
     auto read_fields = [this](openpal::RSlice& input) -> ParseError 
     {
@@ -69,7 +69,7 @@ ParseError RequestHandshakeBegin::read_message(openpal::RSlice input)
     return MessageParser::read_message(input, Function::request_handshake_begin, read_fields);
 }
 
-FormatResult RequestHandshakeBegin::write_message(openpal::WSlice output) const
+FormatResult RequestHandshakeBegin::write(openpal::WSlice output) const
 {
     auto write_fields = [this](openpal::WSlice& output) -> FormatError 
     {
@@ -88,7 +88,7 @@ FormatResult RequestHandshakeBegin::write_message(openpal::WSlice output) const
 
     return MessageFormatter::write_message(output, Function::request_handshake_begin, write_fields);
 }
-void RequestHandshakeBegin::print_message(IMessagePrinter& printer) const
+void RequestHandshakeBegin::print(IMessagePrinter& printer) const
 {
     MessagePrinting::print_fields(
         printer,

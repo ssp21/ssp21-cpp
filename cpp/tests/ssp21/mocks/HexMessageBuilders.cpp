@@ -26,7 +26,7 @@ namespace ssp21
         {
             openpal::StaticBuffer<1024> buffer;
             auto dest = buffer.as_wslice();
-            auto result = msg.write_message(dest);
+            auto result = msg.write(dest);
 
             assert(!result.is_error());
 

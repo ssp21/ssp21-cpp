@@ -32,7 +32,7 @@ ReplyHandshakeError::ReplyHandshakeError(
 {}
 
 
-ParseError ReplyHandshakeError::read_message(openpal::RSlice input)
+ParseError ReplyHandshakeError::read(openpal::RSlice input)
 {
     auto read_fields = [this](openpal::RSlice& input) -> ParseError 
     {
@@ -45,7 +45,7 @@ ParseError ReplyHandshakeError::read_message(openpal::RSlice input)
     return MessageParser::read_message(input, Function::reply_handshake_error, read_fields);
 }
 
-FormatResult ReplyHandshakeError::write_message(openpal::WSlice output) const
+FormatResult ReplyHandshakeError::write(openpal::WSlice output) const
 {
     auto write_fields = [this](openpal::WSlice& output) -> FormatError 
     {
@@ -57,7 +57,7 @@ FormatResult ReplyHandshakeError::write_message(openpal::WSlice output) const
 
     return MessageFormatter::write_message(output, Function::reply_handshake_error, write_fields);
 }
-void ReplyHandshakeError::print_message(IMessagePrinter& printer) const
+void ReplyHandshakeError::print(IMessagePrinter& printer) const
 {
     MessagePrinting::print_fields(
         printer,

@@ -54,7 +54,7 @@ namespace ssp21
         if (this->logger.is_enabled(field_level))
         {
             LogMessagePrinter printer(this->logger, field_level);
-            msg.print_message(printer);
+            msg.print(printer);
         }
     }
 
@@ -149,7 +149,7 @@ namespace ssp21
     inline void Responder::handle_handshake_message(const openpal::RSlice& data)
     {
         MsgType msg;
-        auto err = msg.read_message(data);
+        auto err = msg.read(data);
         if (any(err))
         {
             FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "error reading %s: %s", FunctionSpec::to_string(MsgType::function), ParseErrorSpec::to_string(err));
@@ -166,7 +166,7 @@ namespace ssp21
     void Responder::handle_session_message(const openpal::RSlice& data)
     {
         UnconfirmedSessionData msg;
-        auto err = msg.read_message(data);
+        auto err = msg.read(data);
         if (any(err))
         {
             FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "error reading session message: %s", ParseErrorSpec::to_string(err));
@@ -178,7 +178,7 @@ namespace ssp21
             if (ctx.logger.is_enabled(levels::rx_crypto_msg_fields))
             {
                 LogMessagePrinter printer(ctx.logger, levels::rx_crypto_msg_fields);
-                msg.print_message(printer);
+                msg.print(printer);
             }
 
             // TODO

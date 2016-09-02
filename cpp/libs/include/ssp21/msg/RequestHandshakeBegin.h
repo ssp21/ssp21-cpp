@@ -42,9 +42,9 @@ struct RequestHandshakeBegin : public IMessage, private openpal::Uncopyable
         const Seq8& ephemeral_public_key
     );
 
-    virtual ParseError read_message(openpal::RSlice input) override;
-    virtual FormatResult write_message(openpal::WSlice output) const override;
-    virtual void print_message(IMessagePrinter& printer) const override;
+    virtual ParseError read(openpal::RSlice input) override;
+    virtual FormatResult write(openpal::WSlice output) const override;
+    virtual void print(IMessagePrinter& printer) const override;
 
     static const uint32_t min_size_bytes = 10;
     static const Function function = Function::request_handshake_begin;
