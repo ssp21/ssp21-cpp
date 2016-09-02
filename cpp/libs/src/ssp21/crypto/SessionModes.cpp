@@ -13,7 +13,7 @@ namespace ssp21
         mac_func_t mac_func,
         uint8_t trunc_length,
         const SymmetricKey& key,
-		const SessionAuthData& ad,
+        const SessionAuthData& ad,
         const openpal::RSlice& payload,
         openpal::WSlice& dest,
         std::error_code& ec)
@@ -33,9 +33,8 @@ namespace ssp21
             return RSlice::empty_slice();
         }
 
-		ad_buffer_t buffer;
-		auto ad_bytes = get_ad_bytes(ad, buffer);
-
+        ad_buffer_t buffer;
+        auto ad_bytes = get_ad_bytes(ad, buffer);
 
         // split the payload into user data and MAC
         const auto user_data = payload.take(user_data_length);
@@ -60,7 +59,7 @@ namespace ssp21
         mac_func_t mac_func,
         uint8_t trunc_length,
         const SymmetricKey& key,
-		const SessionAuthData& ad,
+        const SessionAuthData& ad,
         const openpal::RSlice& userdata,
         openpal::WSlice& dest,
         std::error_code& ec)
@@ -83,8 +82,8 @@ namespace ssp21
             return RSlice::empty_slice();
         }
 
-		ad_buffer_t buffer;
-		auto ad_bytes = get_ad_bytes(ad, buffer);
+        ad_buffer_t buffer;
+        auto ad_bytes = get_ad_bytes(ad, buffer);
 
         // Now calculate the mac
         HashOutput calc_mac_buffer;
@@ -98,14 +97,14 @@ namespace ssp21
         truncated.copy_to(dest);
 
         return ret;
-    }    
+    }
 
-	openpal::RSlice SessionModes::get_ad_bytes(const SessionAuthData& ad, ad_buffer_t& buffer)
-	{
-		auto dest = buffer.as_wslice();
-		ad.write(dest);
-		return buffer.as_rslice();
-	}
+    openpal::RSlice SessionModes::get_ad_bytes(const SessionAuthData& ad, ad_buffer_t& buffer)
+    {
+        auto dest = buffer.as_wslice();
+        ad.write(dest);
+        return buffer.as_rslice();
+    }
 }
 
 
