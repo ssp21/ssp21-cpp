@@ -60,9 +60,13 @@ sealed case class Seq8Seq16(name: String) extends Field {
   def minSizeBytes : Int = 1
 }
 
-trait Message {
+trait StructField extends Field {
   def name : String
   def fields : List[Field]
-  def function : EnumValue
+  def cpp = null
   def minSizeBytes = fields.foldLeft(0)(_ + _.minSizeBytes) + 1
+}
+
+trait Message extends StructField {
+  def function : EnumValue
 }
