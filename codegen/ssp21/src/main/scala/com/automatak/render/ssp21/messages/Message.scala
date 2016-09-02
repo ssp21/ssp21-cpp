@@ -16,28 +16,20 @@ sealed trait Field {
 
 case class Bit(name: String, default: Boolean)
 
-trait Bitfield extends Field {
-  def structName: String
-
-  def files: WriteCppFiles = BitfieldStructGenerator(this)
-
+trait Bitfield {
+  def name: String
   def bits: List[Bit]
 }
 
-object Bitfield {
+case class BitfieldField(name: String, bf: Bitfield) extends  Field {
 
-  private case class Bits(name: String, structName: String, bits: List[Bit]) extends Bitfield {
-    def cpp = BitfieldGenerator(this)
+  def cpp = BitfieldGenerator(bf)
 
-    def minSizeBytes: Int = 1
+  def minSizeBytes: Int = 1
 
-    def fixedSize: Option[Int] = Some(1)
-  }
-
-  def apply(name: String, structName: String, bit1: Bit, bit2: Bit): Bitfield = {
-    Bits(name, structName, List(bit1, bit2))
-  }
+  def fixedSize: Option[Int] = Some(1)
 }
+
 
 sealed case class U16(name: String) extends Field {
   def cpp = U16FieldGenerator

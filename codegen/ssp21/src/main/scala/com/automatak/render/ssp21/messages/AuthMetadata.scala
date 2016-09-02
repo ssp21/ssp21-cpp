@@ -1,6 +1,6 @@
 package com.automatak.render.ssp21.messages
 
-import com.automatak.render.ssp21.Bitfields
+import com.automatak.render.ssp21.Bitfields.SessionFlags
 
 object AuthMetadata extends Struct {
 
@@ -9,7 +9,7 @@ object AuthMetadata extends Struct {
   override def fields: List[Field] = List(
     U16("nonce"),
     U32("valid_until_ms"),
-    Bitfields.sessionFlags
+    BitfieldField("flags", SessionFlags)
   )
 
 }

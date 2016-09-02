@@ -7,7 +7,7 @@ import com.automatak.render.ssp21.{Includes, WriteCppFiles}
 
 case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
 
-  def mainClassName: String = field.structName
+  def mainClassName: String = field.name
 
   def license = commented(LicenseHeader.lines)
 
@@ -17,14 +17,14 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
 
     def members: Iterator[String] = field.bits.map(b => "bool %s = %b;".format(b.name, b.default)).toIterator
 
-    def defaultConstructor = "%s(){}".format(field.structName).iter
+    def defaultConstructor = "%s(){}".format(field.name).iter
 
     def fullConstructor = {
       def decl(b: Bit) = "bool %s".format(b.name)
 
       def init = commas(field.bits.map(b => "%s(%s)".format(b.name, b.name)))
 
-      "%s(%s) :".format(field.structName, commas(field.bits.map(decl)).mkString(" ")).iter ++ indent(init) ++ "{}".iter
+      "%s(%s) :".format(field.name, commas(field.bits.map(decl)).mkString(" ")).iter ++ indent(init) ++ "{}".iter
 
     }
 
@@ -40,7 +40,7 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
       "virtual void print(const char* name, IMessagePrinter& printer) const override;".iter
     }
 
-    def struct = "struct %s final : public IReadable, public IWritable, public IPrintable".format(field.structName).iter ++ bracketSemiColon {
+    def struct = "struct %s final : public IReadable, public IWritable, public IPrintable".format(field.name).iter ++ bracketSemiColon {
       defaultConstructor ++
         space ++
         fullConstructor ++
@@ -57,7 +57,7 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
 
     def content = struct
 
-    license ++ space ++ includeGuards(field.structName) {
+    license ++ space ++ includeGuards(field.name) {
       includeLines ++
         space ++
         namespace(cppNamespace)(content)
@@ -79,7 +79,7 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
         "0x%02X".format(~valid_mask.toByte)
       }
 
-      "ParseError %s::read(openpal::RSlice& input)".format(field.structName).iter ++ bracket {
+      "ParseError %s::read(openpal::RSlice& input)".format(field.name).iter ++ bracket {
         "uint8_t value = 0;".iter ++
           "if(!openpal::UInt8::read_from(input, value)) return ParseError::insufficient_bytes;".iter ++ space ++
           "if((value & %s) != 0) return ParseError::reserved_bit;".format(reserved_mask).iter ++ space ++
@@ -95,7 +95,7 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
         "if(%s) value |= %s;".format(b.name, mask)
       }.toIterator
 
-      "FormatError %s::write(openpal::WSlice& output) const".format(field.structName).iter ++ bracket {
+      "FormatError %s::write(openpal::WSlice& output) const".format(field.name).iter ++ bracket {
         "uint8_t value = 0;".iter ++
           space ++ fields ++ space ++
           "return openpal::UInt8::write_to(output, value) ? FormatError::ok : FormatError::insufficient_space;".iter
@@ -107,7 +107,7 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
 
       def fields: String = field.bits.map(b => "%s, %s".format(quoted(b.name), b.name)).mkString(", ")
 
-      "void %s::print(const char* name, IMessagePrinter& printer) const".format(field.structName).iter ++ bracket {
+      "void %s::print(const char* name, IMessagePrinter& printer) const".format(field.name).iter ++ bracket {
         "FlagsPrinting::print(printer, name, %s);".format(fields).iter
       }
     }

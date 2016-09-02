@@ -28,9 +28,9 @@ sealed trait PassByConstRef {
 }
 
 case class BitfieldGenerator(field: Bitfield) extends FieldGenerator with PassByConstRef {
-  override def includes = Set(Includes.message(field.structName))
+  override def includes = Set(Includes.message(field.name))
 
-  override def cppType: String = field.structName
+  override def cppType: String = field.name
 
   def defaultValue: Option[String] = None
 }
