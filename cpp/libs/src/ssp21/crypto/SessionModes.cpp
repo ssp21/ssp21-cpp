@@ -13,8 +13,7 @@ namespace ssp21
         mac_func_t mac_func,
         uint8_t trunc_length,
         const SymmetricKey& key,
-        const openpal::RSlice& ad,
-        uint16_t nonce,
+		const SessionAuthData& ad,
         const openpal::RSlice& payload,
         openpal::WSlice& dest,
         std::error_code& ec)
@@ -34,8 +33,8 @@ namespace ssp21
             return RSlice::empty_slice();
         }
 
-        nonce_and_ad_length_buffer_t buffer;
-        auto nonce_and_ad_length_bytes = get_nonce_and_ad_length_bytes(nonce, ad, buffer);
+		ad_buffer_t buffer;
+		auto ad_bytes = get_ad_bytes(ad, buffer);
 
 
         // split the payload into user data and MAC
@@ -44,7 +43,7 @@ namespace ssp21
 
         // Now calculate the expected MAC
         HashOutput calc_mac_buffer;
-        mac_func(key.as_slice(), { nonce_and_ad_length_bytes, ad, user_data }, calc_mac_buffer);
+        mac_func(key.as_slice(), { ad_bytes, user_data }, calc_mac_buffer);
         const auto truncated = calc_mac_buffer.as_slice().take(trunc_length);
 
         if (!Crypto::secure_equals(read_mac, truncated)) // authentication failure
@@ -61,8 +60,7 @@ namespace ssp21
         mac_func_t mac_func,
         uint8_t trunc_length,
         const SymmetricKey& key,
-        const openpal::RSlice& ad,
-        uint16_t nonce,
+		const SessionAuthData& ad,
         const openpal::RSlice& userdata,
         openpal::WSlice& dest,
         std::error_code& ec)
@@ -85,14 +83,13 @@ namespace ssp21
             return RSlice::empty_slice();
         }
 
-        nonce_and_ad_length_buffer_t buffer;
-        auto nonce_and_ad_length_bytes = get_nonce_and_ad_length_bytes(nonce, ad, buffer);
+		ad_buffer_t buffer;
+		auto ad_bytes = get_ad_bytes(ad, buffer);
 
         // Now calculate the mac
         HashOutput calc_mac_buffer;
-        mac_func(key.as_slice(), { nonce_and_ad_length_bytes, ad, userdata }, calc_mac_buffer);
+        mac_func(key.as_slice(), { ad_bytes, userdata }, calc_mac_buffer);
         const auto truncated = calc_mac_buffer.as_slice().take(trunc_length);
-
 
         const auto ret = dest.as_rslice().take(payload_length);
 
@@ -101,18 +98,14 @@ namespace ssp21
         truncated.copy_to(dest);
 
         return ret;
-    }
+    }    
 
-    openpal::RSlice SessionModes::get_nonce_and_ad_length_bytes(
-        uint16_t nonce,
-        const openpal::RSlice& ad,
-        nonce_and_ad_length_buffer_t& buffer
-    )
-    {
-        auto dest = buffer.as_wslice();
-        BigEndian::write<uint16_t, uint32_t>(dest, nonce, ad.length());
-        return buffer.as_rslice();
-    }
+	openpal::RSlice SessionModes::get_ad_bytes(const SessionAuthData& ad, ad_buffer_t& buffer)
+	{
+		auto dest = buffer.as_wslice();
+		ad.write(dest);
+		return buffer.as_rslice();
+	}
 }
 
 

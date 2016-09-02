@@ -4,6 +4,7 @@
 
 #include "openpal/util/Uncopyable.h"
 
+#include "ssp21/msg/SessionAuthData.h"
 #include "ssp21/gen/SessionMode.h"
 
 #include "ssp21/crypto/Crypto.h"
@@ -19,8 +20,7 @@ namespace ssp21
     * cleartext in the dest output buffer.
     *
     * @key the symmetric key used for authentication (and optionally decryption)
-    * @ad associated data that is also covered by the authentication tag
-    * @nonce A nonce that serves as additional input into authentication
+    * @ad associated data that is also covered by the authentication tag    
     * @payload the message payload that contains the data (possibly encrypted) and the authentication tag
     * @dest The output buffer into which the cleartext will be written if no error occurs.
     * @ec An error condition will be signaled if the output buffer is too small or if an authentication error occurs
@@ -29,8 +29,7 @@ namespace ssp21
     */
     typedef openpal::RSlice (*session_read_t)(
         const SymmetricKey& key,
-        const openpal::RSlice& ad,
-        uint16_t nonce,
+        const SessionAuthData& ad,        
         const openpal::RSlice& payload,
         openpal::WSlice& dest,
         std::error_code& ec
@@ -40,8 +39,7 @@ namespace ssp21
     * Writes an authenticated (and possibly encrypted) payload into the destination output buffer
     *
     * @key the symmetric key used for authentication (and possibly encryption)
-    * @ad associated data that is also covered by the authentication tag
-    * @nonce A nonce that serves as additional input into authentication/encryption
+    * @ad associated data that is also covered by the authentication tag    
     * @userdata the userdata that will be authentiacted (and possibly encrypted) and placed placed into the destination buffer
     * @dest The output buffer into which the authenticated (and possibly encrypted) payload will be placed
     * @ec An error condition will be signaled if the output buffer is too small for the payload
@@ -50,8 +48,7 @@ namespace ssp21
     */
     typedef openpal::RSlice (*session_write_t)(
         const SymmetricKey& key,
-        const openpal::RSlice& ad,
-        uint16_t nonce,
+		const SessionAuthData& ad,
         const openpal::RSlice& userdata,
         openpal::WSlice& dest,
         std::error_code& ec
@@ -74,8 +71,7 @@ namespace ssp21
 
         static openpal::RSlice read_hmac_sha256_trunc16(
             const SymmetricKey& key,
-            const openpal::RSlice& ad,
-            uint16_t nonce,
+			const SessionAuthData& ad,            
             const openpal::RSlice& payload,
             openpal::WSlice& dest,
             std::error_code& ec)
@@ -84,8 +80,7 @@ namespace ssp21
                        &Crypto::hmac_sha256,
                        consts::crypto::trunc16,
                        key,
-                       ad,
-                       nonce,
+                       ad,                       
                        payload,
                        dest,
                        ec
@@ -94,8 +89,7 @@ namespace ssp21
 
         static openpal::RSlice write_hmac_sha256_trunc16(
             const SymmetricKey& key,
-            const openpal::RSlice& ad,
-            uint16_t nonce,
+			const SessionAuthData& ad,            
             const openpal::RSlice& userdata,
             openpal::WSlice& dest,
             std::error_code& ec)
@@ -104,8 +98,7 @@ namespace ssp21
                        &Crypto::hmac_sha256,
                        consts::crypto::trunc16,
                        key,
-                       ad,
-                       nonce,
+                       ad,                       
                        userdata,
                        dest,
                        ec
@@ -114,12 +107,15 @@ namespace ssp21
 
     private:
 
+		typedef openpal::StaticBuffer<SessionAuthData::fixed_size_bytes> ad_buffer_t;
+
+		static openpal::RSlice get_ad_bytes(const SessionAuthData& ad, ad_buffer_t& buffer);
+
         static openpal::RSlice read_any_mac_with_truncation(
             mac_func_t mac_func,
             uint8_t trunc_length,
             const SymmetricKey& key,
-            const openpal::RSlice& ad,
-            uint16_t nonce,
+			const SessionAuthData& ad,            
             const openpal::RSlice& payload,
             openpal::WSlice& dest,
             std::error_code& ec
@@ -129,21 +125,11 @@ namespace ssp21
             mac_func_t mac_func,
             uint8_t trunc_length,
             const SymmetricKey& key,
-            const openpal::RSlice& ad,
-            uint16_t nonce,
+			const SessionAuthData& ad,
             const openpal::RSlice& userdata,
             openpal::WSlice& dest,
             std::error_code& ec
-        );
-
-        typedef openpal::StaticBuffer<6> nonce_and_ad_length_buffer_t;
-
-        // helper function
-        static openpal::RSlice get_nonce_and_ad_length_bytes(
-            uint16_t nonce,
-            const openpal::RSlice& ad,
-            nonce_and_ad_length_buffer_t& dest
-        );
+        );        
 
     };
 
