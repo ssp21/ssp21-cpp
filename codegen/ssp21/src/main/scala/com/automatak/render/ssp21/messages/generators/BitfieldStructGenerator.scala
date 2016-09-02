@@ -40,7 +40,7 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
       "virtual void print(const char* name, IMessagePrinter& printer) const override;".iter
     }
 
-    def struct = "struct %s final : public IReadable, public IWritable, public IPrintable".format(field.name).iter ++ bracketSemiColon {
+    def struct = "struct %s final : public IMessageField".format(field.name).iter ++ bracketSemiColon {
       defaultConstructor ++
         space ++
         fullConstructor ++
@@ -52,7 +52,7 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
         members
     }
 
-    def includes = List(Includes.readable, Includes.writable, Includes.msgPrinter)
+    def includes = List(Includes.messageField)
     def includeLines: Iterator[String] = Includes.lines(includes)
 
     def content = struct

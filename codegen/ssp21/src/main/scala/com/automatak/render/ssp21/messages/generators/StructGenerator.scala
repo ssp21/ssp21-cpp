@@ -28,9 +28,9 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
 
   def extraImplFunctions(implicit indent: Indentation): Iterator[String] = Iterator.empty
 
-  def interfaces: String = "public IReadable, public IWritable, public IPrintable"
+  def interfaces: String = "public IMessageField"
 
-  def headerIncludes: List[Include] = List(Includes.readable, Includes.writable, Includes.msgPrinter)
+  def headerIncludes: List[Include] = List(Includes.messageField)
 
   def outputReadWritePrint: Boolean = true
 

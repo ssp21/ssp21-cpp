@@ -50,9 +50,9 @@ namespace ssp21
         static void print(IMessagePrinter& printer, const char* name, HashMode value);
 
         // any printable
-        static void print(IMessagePrinter& printer, const char* name, const IPrintable& value)
+        static void print(IMessagePrinter& printer, const char* name, const IMessageField& field)
         {
-            value.print(name, printer);
+			field.print(name, printer);
         }
 
     };

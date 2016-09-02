@@ -7,13 +7,12 @@
 #include <openpal/container/RSlice.h>
 
 #include "ssp21/crypto/Constants.h"
-#include "ssp21/crypto/IMessagePrinter.h"
-#include "ssp21/crypto/IReadable.h"
-#include "ssp21/crypto/IWritable.h"
+#include "ssp21/crypto/IMessageField.h"
+
 
 namespace ssp21
 {
-    class Seq8 final : public openpal::RSlice, public IReadable, public IWritable, public IPrintable
+    class Seq8 final : public openpal::RSlice, public IMessageField
     {
     public:
 
@@ -30,7 +29,7 @@ namespace ssp21
         {}
     };
 
-    class Seq16 final : public openpal::RSlice, public IReadable, public IWritable, public IPrintable
+    class Seq16 final : public openpal::RSlice, public IMessageField
     {
     public:
 
@@ -45,7 +44,7 @@ namespace ssp21
         {}
     };
 
-    class SeqRSlice : public IReadable, public IWritable, public IPrintable
+    class SeqRSlice : public IMessageField
     {
 
     public:

@@ -18,13 +18,11 @@
 
 #include <cstdint>
 #include "ssp21/msg/SessionFlags.h"
-#include "ssp21/crypto/IReadable.h"
-#include "ssp21/crypto/IWritable.h"
-#include "ssp21/crypto/IMessagePrinter.h"
+#include "ssp21/crypto/IMessageField.h"
 
 namespace ssp21 {
 
-struct AuthMetadata : public IReadable, public IWritable, public IPrintable
+struct AuthMetadata : public IMessageField
 {
     AuthMetadata();
 

@@ -16,13 +16,11 @@
 #ifndef SSP21_SESSIONFLAGS_H
 #define SSP21_SESSIONFLAGS_H
 
-#include "ssp21/crypto/IReadable.h"
-#include "ssp21/crypto/IWritable.h"
-#include "ssp21/crypto/IMessagePrinter.h"
+#include "ssp21/crypto/IMessageField.h"
 
 namespace ssp21 {
 
-struct SessionFlags final : public IReadable, public IWritable, public IPrintable
+struct SessionFlags final : public IMessageField
 {
     SessionFlags(){}
 

@@ -10,9 +10,9 @@
 #include "ssp21/gen/HashMode.h"
 #include "ssp21/gen/FormatError.h"
 
-#include "ssp21/crypto/FormatResult.h"
 #include "ssp21/crypto/SequenceTypes.h"
-#include "ssp21/crypto/IWritable.h"
+#include "ssp21/crypto/IMessageField.h"
+#include "ssp21/crypto/FormatResult.h"
 
 #include "openpal/container/WSlice.h"
 #include "openpal/util/Uncopyable.h"
@@ -68,9 +68,9 @@ namespace ssp21
         static FormatError write(openpal::WSlice& dest, HashMode value);
 
         // any writable
-        static FormatError write(openpal::WSlice& dest, const IWritable& value)
+        static FormatError write(openpal::WSlice& dest, const IMessageField& field)
         {
-            return value.write(dest);
+            return field.write(dest);
         }
 
         template <class WriteFunc>

@@ -29,8 +29,9 @@ object Includes {
   val function = Include(quoted("ssp21/gen/Function.h"), Ordering.enum)
 
   val message = Include(quoted("ssp21/crypto/IMessage.h"), Ordering.crypto)
-  val readable = Include(quoted("ssp21/crypto/IReadable.h"), Ordering.crypto)
-  val writable = Include(quoted("ssp21/crypto/IWritable.h"), Ordering.crypto)
+  val messageField = Include(quoted("ssp21/crypto/IMessageField.h"), Ordering.crypto)
+
+
   val seqTypes = Include(quoted("ssp21/crypto/SequenceTypes.h"), Ordering.crypto)
   val msgFormatter = Include(quoted("ssp21/crypto/MessageFormatter.h"), Ordering.crypto)
   val formatResult = Include(quoted("ssp21/crypto/FormatResult.h"), Ordering.crypto)

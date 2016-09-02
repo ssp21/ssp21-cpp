@@ -12,7 +12,7 @@
 #include "ssp21/gen/HashMode.h"
 
 #include "ssp21/crypto/SequenceTypes.h"
-#include "ssp21/crypto/IReadable.h"
+#include "ssp21/crypto/IMessageField.h"
 
 #include "openpal/container/RSlice.h"
 #include "openpal/util/Uncopyable.h"
@@ -69,10 +69,10 @@ namespace ssp21
         static ParseError read(openpal::RSlice& input, SessionMode& value);
         static ParseError read(openpal::RSlice& input, HashMode& value);
 
-        // any readable
-        static ParseError read(openpal::RSlice& input, IReadable& value)
+        // any field
+        static ParseError read(openpal::RSlice& input, IMessageField& field)
         {
-            return value.read(input);
+            return field.read(input);
         }
     };
 }
