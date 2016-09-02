@@ -63,7 +63,7 @@ sealed case class Seq8Seq16(name: String) extends Field {
 trait StructField extends Field {
   def name : String
   def fields : List[Field]
-  def cpp = null
+  def cpp = StructFieldGenerator(this)
   def minSizeBytes = fields.foldLeft(0)(_ + _.minSizeBytes) + 1
 }
 

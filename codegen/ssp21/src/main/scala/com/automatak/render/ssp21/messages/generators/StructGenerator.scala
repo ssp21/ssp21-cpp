@@ -21,9 +21,9 @@ case class StructGenerator(sf: StructField) extends WriteCppFiles {
 
     def defaultConstructorSig = "%s();".format(sf.name).iter
 
-    def readSig = "virtual ParseError read(const openpal::RSlice& input) override;".iter
+    def readSig = "virtual ParseError read(openpal::RSlice& input) override;".iter
     def writeSig = "virtual FormatError write(openpal::WSlice& output) const override;".iter
-    def printSig = "virtual void print(IMessagePrinter& printer) const override;".iter
+    def printSig = "virtual void print(const char* name, IMessagePrinter& printer) const override;".iter
 
     def minSizeBytes = "static const uint32_t min_size_bytes = %s;".format(sf.minSizeBytes).iter
 
@@ -41,6 +41,7 @@ case class StructGenerator(sf: StructField) extends WriteCppFiles {
           extraHeaderSignatures ++
           minSizeBytes ++
           extraConstants ++
+          space ++
           fieldDefintions ++
           space ++
           readSig ++ space ++
@@ -81,7 +82,7 @@ case class StructGenerator(sf: StructField) extends WriteCppFiles {
     
     def readFunc(implicit indent: Indentation) : Iterator[String] = {
 
-      "ParseError %s::read(const openpal::RSlice& input)".format(sf.name).iter ++ bracket {
+      "ParseError %s::read(openpal::RSlice& input)".format(sf.name).iter ++ bracket {
         "return MessageParser::read_fields(".iter ++ indent {
           "input,".iter ++ args
         } ++ ");".iter
@@ -97,7 +98,7 @@ case class StructGenerator(sf: StructField) extends WriteCppFiles {
       }
     }
 
-    def printFunc = "void %s::print(IMessagePrinter& printer) const".format(sf.name).iter ++ bracket {
+    def printFunc = "void %s::print(const char* name, IMessagePrinter& printer) const".format(sf.name).iter ++ bracket {
       "MessagePrinting::print_fields(".iter ++ indent {
         "printer,".iter ++ printArgs
       } ++ ");".iter
@@ -142,15 +143,13 @@ case class StructGenerator(sf: StructField) extends WriteCppFiles {
         printFunc
     }
 
-    def selfInclude = include(quoted("ssp21/sf/%s".format(headerName)))
+    def selfInclude = Includes.message(sf.name).line
 
     def includes = {
-      selfInclude ++
-      space ++
       Includes.lines(List(Includes.msgParser, Includes.msgFormatter, Includes.msgPrinting))
     }
 
-    license ++ space ++ includes ++ space ++ namespace(cppNamespace)(funcs)
+    license ++ space ++ selfInclude ++ space ++ includes ++ space ++ namespace(cppNamespace)(funcs)
 
   }
 

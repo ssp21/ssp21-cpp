@@ -1,6 +1,6 @@
 package com.automatak.render.ssp21.messages.generators
 
-import com.automatak.render.ssp21.messages.Bitfield
+import com.automatak.render.ssp21.messages.{Bitfield, StructField}
 import com.automatak.render.ssp21.{Include, Includes, Ordering}
 import com.automatak.render.{EnumModel, Indentation, _}
 
@@ -26,6 +26,12 @@ sealed trait PassByConstRef {
 case class BitfieldGenerator(field: Bitfield) extends FieldGenerator with PassByConstRef {
   override def includes = Set(Includes.message(field.structName))
   override def cppType : String = field.structName
+  def defaultValue: Option[String] = None
+}
+
+case class StructFieldGenerator(sf: StructField) extends FieldGenerator with PassByConstRef {
+  override def includes = Set(Includes.message(sf.name))
+  override def cppType : String = sf.name
   def defaultValue: Option[String] = None
 }
 
