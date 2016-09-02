@@ -2,35 +2,37 @@ package com.automatak.render.ssp21.messages.generators
 
 import com.automatak.render._
 import com.automatak.render.cpp._
-import com.automatak.render.ssp21.messages.StructField
+import com.automatak.render.ssp21.messages.Struct
 import com.automatak.render.ssp21.{Includes, WriteCppFiles}
 
-case class StructGenerator(sf: StructField) extends WriteCppFiles {
+case class StructGenerator(sf: Struct) extends WriteCppFiles {
 
   private def cppNamespace = "ssp21"
   private def headerName = sf.name + ".h"
   private def implName = sf.name + ".cpp"
 
-  override def mainClassName: String = sf.name
+  final override def mainClassName: String = sf.name
 
+  /// These can be override in super classes
   def extraHeaderSignatures : Iterator[String] = Iterator.empty
+  def extraHeaderConstants : Iterator[String] = Iterator.empty
+  def extraImplFunctions : Iterator[String] = Iterator.empty
+  def interfaces : String = "public IReadable, public IWritable, public IPrintable"
 
-  def extraConstants : Iterator[String] = Iterator.empty
-
-  override def header(implicit indent: Indentation) : Iterator[String] = {
+  final override def header(implicit indent: Indentation) : Iterator[String] = {
 
     def defaultConstructorSig = "%s();".format(sf.name).iter
 
     def readSig = "virtual ParseError read(openpal::RSlice& input) override;".iter
     def writeSig = "virtual FormatError write(openpal::WSlice& output) const override;".iter
     def printSig = "virtual void print(const char* name, IMessagePrinter& printer) const override;".iter
-    
+
     def sizeBytes = sf.fixedSize match {
       case Some(size) => "static const uint32_t fixed_size_bytes = %s;".format(size).iter
       case None => "static const uint32_t min_size_bytes = %s;".format(sf.minSizeBytes).iter
     }
 
-    def constants = sizeBytes ++ extraConstants
+    def constants = sizeBytes ++ extraHeaderConstants
 
     def struct(implicit indent: Indentation) : Iterator[String] = {
 
@@ -38,7 +40,7 @@ case class StructGenerator(sf: StructField) extends WriteCppFiles {
         "%s %s;".format(f.cpp.cppType, f.name);
       }.toIterator
 
-      "struct %s : public IReadable, public IWritable, public IPrintable, private openpal::Uncopyable".format(sf.name).iter ++ bracketSemiColon {
+      "struct %s : %s".format(sf.name, interfaces).iter ++ bracketSemiColon {
           defaultConstructorSig ++
           space ++
           fullConstructorSig(false) ++
@@ -59,8 +61,7 @@ case class StructGenerator(sf: StructField) extends WriteCppFiles {
         List(
           Includes.readable,
           Includes.writable,
-          Includes.msgPrinter,
-          Includes.uncopyable
+          Includes.msgPrinter
         ) ::: sf.fields.flatMap(f => f.cpp.includes.toList)
       )
     }
@@ -71,7 +72,7 @@ case class StructGenerator(sf: StructField) extends WriteCppFiles {
     license ++ space ++ includeGuards(sf.name)(includes ++ space ++ namespace(cppNamespace)(content))
   }
 
-  override def impl(implicit indent: Indentation) : Iterator[String] = {
+  final override def impl(implicit indent: Indentation) : Iterator[String] = {
 
     def license = commented(LicenseHeader.lines)
 
@@ -139,7 +140,8 @@ case class StructGenerator(sf: StructField) extends WriteCppFiles {
         space ++
         writeFunc ++
         space ++
-        printFunc
+        printFunc ++
+        extraImplFunctions
     }
 
     def selfInclude = Includes.message(sf.name).line

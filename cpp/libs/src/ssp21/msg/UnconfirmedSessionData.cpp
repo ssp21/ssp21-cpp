@@ -21,20 +21,14 @@
 
 namespace ssp21 {
 
-UnconfirmedSessionData::UnconfirmedSessionData() : 
-    valid_until_ms(0),
-    nonce(0)
+UnconfirmedSessionData::UnconfirmedSessionData()
 {}
 
 UnconfirmedSessionData::UnconfirmedSessionData(
-    uint32_t valid_until_ms,
-    uint16_t nonce,
-    const PayloadFlags& payload_flags,
+    const SessionAuthData& ad,
     const Seq16& payload
 ) :
-    valid_until_ms(valid_until_ms),
-    nonce(nonce),
-    payload_flags(payload_flags),
+    ad(ad),
     payload(payload)
 {}
 
@@ -42,9 +36,7 @@ ParseError UnconfirmedSessionData::read_msg(const openpal::RSlice& input)
 {
     return MessageParser::read_message<Function::unconfirmed_session_data>(
         input,
-        valid_until_ms,
-        nonce,
-        payload_flags,
+        ad,
         payload
     );
 }
@@ -53,9 +45,7 @@ FormatError UnconfirmedSessionData::write(openpal::WSlice& output) const
 {
     return MessageFormatter::write_message<Function::unconfirmed_session_data>(
         output,
-        valid_until_ms,
-        nonce,
-        payload_flags,
+        ad,
         payload
     );
 }
@@ -70,12 +60,8 @@ void UnconfirmedSessionData::print(IMessagePrinter& printer) const
 {
     MessagePrinting::print_fields(
         printer,
-        "valid_until_ms",
-        valid_until_ms,
-        "nonce",
-        nonce,
-        "payload_flags",
-        payload_flags,
+        "ad",
+        ad,
         "payload",
         payload
     );

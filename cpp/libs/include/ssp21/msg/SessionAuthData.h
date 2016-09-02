@@ -17,7 +17,6 @@
 #define SSP21_SESSIONAUTHDATA_H
 
 #include <cstdint>
-#include "openpal/util/Uncopyable.h"
 #include "ssp21/msg/PayloadFlags.h"
 #include "ssp21/crypto/IReadable.h"
 #include "ssp21/crypto/IWritable.h"
@@ -25,7 +24,7 @@
 
 namespace ssp21 {
 
-struct SessionAuthData : public IReadable, public IWritable, public IPrintable, private openpal::Uncopyable
+struct SessionAuthData : public IReadable, public IWritable, public IPrintable
 {
     SessionAuthData();
 

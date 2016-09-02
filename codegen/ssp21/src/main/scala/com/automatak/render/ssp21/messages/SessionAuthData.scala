@@ -2,7 +2,7 @@ package com.automatak.render.ssp21.messages
 
 import com.automatak.render.ssp21.Bitfields
 
-object SessionAuthData extends StructField {
+object SessionAuthData extends Struct {
 
   override def name : String = "SessionAuthData"
 

@@ -16,14 +16,13 @@
 #ifndef SSP21_UNCONFIRMEDSESSIONDATA_H
 #define SSP21_UNCONFIRMEDSESSIONDATA_H
 
-#include <cstdint>
 #include "openpal/util/Uncopyable.h"
 #include "openpal/container/WSlice.h"
 #include "openpal/container/RSlice.h"
 #include "ssp21/gen/Function.h"
 #include "ssp21/gen/ParseError.h"
 #include "ssp21/gen/FormatError.h"
-#include "ssp21/msg/PayloadFlags.h"
+#include "ssp21/msg/SessionAuthData.h"
 #include "ssp21/crypto/IMessage.h"
 #include "ssp21/crypto/FormatResult.h"
 #include "ssp21/crypto/SequenceTypes.h"
@@ -36,9 +35,7 @@ struct UnconfirmedSessionData : public IMessage, private openpal::Uncopyable
     UnconfirmedSessionData();
 
     UnconfirmedSessionData(
-        uint32_t valid_until_ms,
-        uint16_t nonce,
-        const PayloadFlags& payload_flags,
+        const SessionAuthData& ad,
         const Seq16& payload
     );
 
@@ -51,9 +48,7 @@ struct UnconfirmedSessionData : public IMessage, private openpal::Uncopyable
 
     static const Function function = Function::unconfirmed_session_data;
 
-    uint32_t valid_until_ms;
-    uint16_t nonce;
-    PayloadFlags payload_flags;
+    SessionAuthData ad;
     Seq16 payload;
 
     private: 

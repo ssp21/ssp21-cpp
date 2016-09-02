@@ -68,12 +68,15 @@ sealed case class Seq8Seq16(name: String) extends Field {
   def fixedSize : Option[Int] = None
 }
 
-trait StructField extends Field {
+//def cpp =
+
+trait Struct {
+
   def name : String
   def fields : List[Field]
-  def cpp = StructFieldGenerator(this)
 
-  def minSizeBytes = fields.foldLeft(0)(_ + _.minSizeBytes)
+
+  def minSizeBytes : Int = fields.foldLeft(0)(_ + _.minSizeBytes)
 
   def fixedSize : Option[Int] = {
     if(!fields.forall(f => f.fixedSize.isDefined)) None
@@ -83,9 +86,14 @@ trait StructField extends Field {
   }
 }
 
-trait Message extends StructField {
-  def function : EnumValue
+case class StructField(name: String, struct: Struct) extends Field {
+  def cpp : FieldGenerator = StructFieldGenerator(this)
+  def minSizeBytes : Int = struct.minSizeBytes
+  def fixedSize : Option[Int] = struct.fixedSize
+}
 
+trait Message extends Struct {
+  def function : EnumValue
   override def minSizeBytes = super.minSizeBytes + 1
   override def fixedSize : Option[Int] = super.fixedSize.map(_ + 1)
 }

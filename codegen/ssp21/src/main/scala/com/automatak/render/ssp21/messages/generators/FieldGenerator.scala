@@ -30,8 +30,8 @@ case class BitfieldGenerator(field: Bitfield) extends FieldGenerator with PassBy
 }
 
 case class StructFieldGenerator(sf: StructField) extends FieldGenerator with PassByConstRef {
-  override def includes = Set(Includes.message(sf.name))
-  override def cppType : String = sf.name
+  override def includes = Set(Includes.message(sf.struct.name))
+  override def cppType : String = sf.struct.name
   def defaultValue: Option[String] = None
 }
 
