@@ -18,14 +18,9 @@
 
 #include <cstdint>
 #include "openpal/util/Uncopyable.h"
-#include "openpal/container/WSlice.h"
-#include "openpal/container/RSlice.h"
-#include "ssp21/gen/Function.h"
-#include "ssp21/gen/ParseError.h"
-#include "ssp21/gen/FormatError.h"
 #include "ssp21/msg/PayloadFlags.h"
-#include "ssp21/crypto/IMessage.h"
-#include "ssp21/crypto/FormatResult.h"
+#include "ssp21/crypto/IReadable.h"
+#include "ssp21/crypto/IWritable.h"
 #include "ssp21/crypto/IMessagePrinter.h"
 
 namespace ssp21 {
@@ -40,7 +35,7 @@ struct SessionAuthData : public IReadable, public IWritable, public IPrintable, 
         const PayloadFlags& payload_flags
     );
 
-    static const uint32_t min_size_bytes = 8;
+    static const uint32_t fixed_size_bytes = 7;
 
     uint32_t valid_until_ms;
     uint16_t nonce;

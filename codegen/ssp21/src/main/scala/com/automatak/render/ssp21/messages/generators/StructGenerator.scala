@@ -24,8 +24,13 @@ case class StructGenerator(sf: StructField) extends WriteCppFiles {
     def readSig = "virtual ParseError read(openpal::RSlice& input) override;".iter
     def writeSig = "virtual FormatError write(openpal::WSlice& output) const override;".iter
     def printSig = "virtual void print(const char* name, IMessagePrinter& printer) const override;".iter
+    
+    def sizeBytes = sf.fixedSize match {
+      case Some(size) => "static const uint32_t fixed_size_bytes = %s;".format(size).iter
+      case None => "static const uint32_t min_size_bytes = %s;".format(sf.minSizeBytes).iter
+    }
 
-    def minSizeBytes = "static const uint32_t min_size_bytes = %s;".format(sf.minSizeBytes).iter
+    def constants = sizeBytes ++ extraConstants
 
     def struct(implicit indent: Indentation) : Iterator[String] = {
 
@@ -39,8 +44,7 @@ case class StructGenerator(sf: StructField) extends WriteCppFiles {
           fullConstructorSig(false) ++
           space ++
           extraHeaderSignatures ++
-          minSizeBytes ++
-          extraConstants ++
+          constants ++
           space ++
           fieldDefintions ++
           space ++
@@ -53,15 +57,10 @@ case class StructGenerator(sf: StructField) extends WriteCppFiles {
     def includes : Iterator[String] = {
       Includes.lines(
         List(
-          Includes.message,
-          Includes.rslice,
-          Includes.wslice,
-          Includes.uncopyable,
-          Includes.parseError,
-          Includes.formatError,
-          Includes.formatResult,
+          Includes.readable,
+          Includes.writable,
           Includes.msgPrinter,
-          Includes.function
+          Includes.uncopyable
         ) ::: sf.fields.flatMap(f => f.cpp.includes.toList)
       )
     }

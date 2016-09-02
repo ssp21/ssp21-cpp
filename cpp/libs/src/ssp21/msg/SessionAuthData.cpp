@@ -57,7 +57,7 @@ FormatError SessionAuthData::write(openpal::WSlice& output) const
 }
 
 void SessionAuthData::print(const char* name, IMessagePrinter& printer) const
-{	
+{
     MessagePrinting::print_fields(
         printer,
         "valid_until_ms",
