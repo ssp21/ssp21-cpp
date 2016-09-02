@@ -9,7 +9,7 @@ import com.automatak.render.ssp21.enums.internal._
 import com.automatak.render.ssp21.enums.ssp21._
 
 
-object AllEnums {
+object Enums {
 
   def files: List[WriteCppFiles] = (ssp21Enums ::: internalEnums).map(e => EnumGenerator(e))
 

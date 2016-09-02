@@ -9,22 +9,21 @@ object Generate {
 
   val basePath = "../cpp/libs";
 
-  val ssp21GenHeaderPath = Paths.get(basePath, "/include/ssp21/gen")
-  val ssp21GenImplPath = Paths.get(basePath, "/src/ssp21/gen")
+  val ssp21GenHeaderPath = Paths.get(basePath, "/include/ssp21/crypto/gen")
+  val ssp21GenImplPath = Paths.get(basePath, "/src/ssp21/crypto/gen")
 
-  val ssp21MsgHeaderPath = Paths.get(basePath, "/include/ssp21/msg")
-  val ssp21MsgImplPath = Paths.get(basePath, "/src/ssp21/msg")
-
-  val paths = List(ssp21GenHeaderPath, ssp21GenImplPath, ssp21MsgHeaderPath, ssp21MsgImplPath)
+  val paths = List(ssp21GenHeaderPath, ssp21GenImplPath)
 
   def main(args: Array[String]): Unit = {
 
     paths.foreach(p => Files.createDirectories(p))
 
-    Structs.files.foreach(_.write(ssp21MsgHeaderPath, ssp21MsgImplPath))
-    Bitfields.files.foreach(_.write(ssp21MsgHeaderPath, ssp21MsgImplPath))
-    AllEnums.files.foreach(_.write(ssp21GenHeaderPath, ssp21GenImplPath))
-    AllMessages.files.foreach(_.write(ssp21MsgHeaderPath, ssp21MsgImplPath))
+    def files = Structs.files ::: Bitfields.files ::: Enums.files ::: Messages.files
+
+    files.foreach { f =>
+      f.write(ssp21GenHeaderPath, ssp21GenImplPath)
+    }
+
 
   }
 

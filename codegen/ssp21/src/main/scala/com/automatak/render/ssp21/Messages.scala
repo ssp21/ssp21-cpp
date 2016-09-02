@@ -7,7 +7,7 @@ import com.automatak.render.ssp21.messages._
 import com.automatak.render.ssp21.messages.generators.MessageGenerator
 
 
-object AllMessages {
+object Messages {
 
   def files: List[WriteCppFiles] = List(
     RequestHandshakeBegin,
