@@ -25,6 +25,7 @@ namespace ssp21
 
     public:
 
+        /// Enforces that the first byte is the expected function and expects all data to be consumed.
         template <typename ReadFields>
         static ParseError read_message(const openpal::RSlice& input, Function expected, const ReadFields& read_fields)
         {
