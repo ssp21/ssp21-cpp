@@ -25,5 +25,5 @@ object LicenseHeader {
     "",
     """Licensed under the terms of the BSDv3 license"""
   )
-  
+
 }
