@@ -48,37 +48,47 @@ RequestHandshakeBegin::RequestHandshakeBegin(
     ephemeral_public_key(ephemeral_public_key)
 {}
 
-ParseError RequestHandshakeBegin::read(openpal::RSlice& input)
+
+ParseError RequestHandshakeBegin::read_message(openpal::RSlice input)
 {
-    return MessageParser::read_fields(
-        input,
-        version,
-        nonce_mode,
-        dh_mode,
-        hash_mode,
-        session_mode,
-        certificate_mode,
-        ephemeral_public_key,
-        certificates
-    );
+    auto read_fields = [this](openpal::RSlice& input) -> ParseError 
+    {
+        return MessageParser::read_fields(
+            input,
+            version,
+            nonce_mode,
+            dh_mode,
+            hash_mode,
+            session_mode,
+            certificate_mode,
+            ephemeral_public_key,
+            certificates
+        );
+    };
+
+    return MessageParser::read_message(input, Function::request_handshake_begin, read_fields);
 }
 
-FormatError RequestHandshakeBegin::write(openpal::WSlice& output) const
+FormatResult RequestHandshakeBegin::write_message(openpal::WSlice output) const
 {
-    return MessageFormatter::write_fields(
-        output,
-        version,
-        nonce_mode,
-        dh_mode,
-        hash_mode,
-        session_mode,
-        certificate_mode,
-        ephemeral_public_key,
-        certificates
-    );
-}
+    auto write_fields = [this](openpal::WSlice& output) -> FormatError 
+    {
+        return MessageFormatter::write_fields(
+            output,
+            version,
+            nonce_mode,
+            dh_mode,
+            hash_mode,
+            session_mode,
+            certificate_mode,
+            ephemeral_public_key,
+            certificates
+        );
+    };
 
-void RequestHandshakeBegin::print(const char* name, IMessagePrinter& printer) const
+    return MessageFormatter::write_message(output, Function::request_handshake_begin, write_fields);
+}
+void RequestHandshakeBegin::print_message(IMessagePrinter& printer) const
 {
     MessagePrinting::print_fields(
         printer,
@@ -99,20 +109,6 @@ void RequestHandshakeBegin::print(const char* name, IMessagePrinter& printer) co
         "certificates",
         certificates
     );
-}
-
-ParseError RequestHandshakeBegin::read_message(openpal::RSlice input)
-{
-    return MessageParser::read_message<RequestHandshakeBegin>(input, *this);
-}
-
-FormatResult RequestHandshakeBegin::write_message(openpal::WSlice output) const
-{
-    return MessageFormatter::write_message<RequestHandshakeBegin>(output, *this);
-}
-void RequestHandshakeBegin::print_message(IMessagePrinter& printer) const
-{
-    return this->print("", printer);
 }
 
 

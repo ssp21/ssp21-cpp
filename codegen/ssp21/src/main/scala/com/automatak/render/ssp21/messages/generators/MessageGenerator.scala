@@ -11,12 +11,7 @@ final case class MessageGenerator(msg: Message) extends StructGenerator(msg) {
 
   override def headerIncludes: List[Include] = List(Includes.message, Includes.function)
 
-  override def publicReadWritePrint: Boolean = false
-
-  override def extraHeaderDeclarations: Iterator[String] = Iterator(
-    "friend class MessageParser;",
-    "friend class MessageFormatter;"
-  ) ++ space
+  override def outputReadWritePrint: Boolean = false
 
   override def extraHeaderConstants: Iterator[String] = Iterator(
     "static const Function function = Function::%s;".format(msg.function.name)
@@ -32,19 +27,25 @@ final case class MessageGenerator(msg: Message) extends StructGenerator(msg) {
 
     def read = {
       "ParseError %s::read_message(openpal::RSlice input)".format(msg.name).iter ++ bracket {
-        "return MessageParser::read_message<%s>(input, *this);".format(msg.name).iter
+        "auto read_fields = [this](openpal::RSlice& input) -> ParseError ".iter ++ bracketSemiColon {
+          readInternals
+        } ++ space ++
+        "return MessageParser::read_message(input, Function::%s, read_fields);".format(msg.function.name).iter
       }
     }
 
     def write = {
       "FormatResult %s::write_message(openpal::WSlice output) const".format(msg.name).iter ++ bracket {
-        "return MessageFormatter::write_message<%s>(output, *this);".format(msg.name).iter
+        "auto write_fields = [this](openpal::WSlice& output) -> FormatError ".iter ++ bracketSemiColon {
+          writeInternals
+        } ++ space ++
+          "return MessageFormatter::write_message(output, Function::%s, write_fields);".format(msg.function.name).iter
       }
     }
 
     def print = {
       "void %s::print_message(IMessagePrinter& printer) const".format(msg.name).iter ++ bracket {
-        "return this->print(\"\", printer);".iter
+        printInternals
       }
     }
 

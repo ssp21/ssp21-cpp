@@ -24,9 +24,6 @@ namespace ssp21 {
 
 struct ReplyHandshakeError : public IMessage, private openpal::Uncopyable
 {
-    friend class MessageParser;
-    friend class MessageFormatter;
-
     ReplyHandshakeError();
 
     ReplyHandshakeError(
@@ -42,11 +39,6 @@ struct ReplyHandshakeError : public IMessage, private openpal::Uncopyable
 
     HandshakeError handshake_error;
 
-    private:
-
-    ParseError read(openpal::RSlice& input);
-    FormatError write(openpal::WSlice& output) const;
-    void print(const char* name, IMessagePrinter& printer) const;
 };
 
 }

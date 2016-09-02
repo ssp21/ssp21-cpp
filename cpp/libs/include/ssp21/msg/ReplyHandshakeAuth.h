@@ -24,9 +24,6 @@ namespace ssp21 {
 
 struct ReplyHandshakeAuth : public IMessage, private openpal::Uncopyable
 {
-    friend class MessageParser;
-    friend class MessageFormatter;
-
     ReplyHandshakeAuth();
 
     ReplyHandshakeAuth(
@@ -42,11 +39,6 @@ struct ReplyHandshakeAuth : public IMessage, private openpal::Uncopyable
 
     Seq8 mac;
 
-    private:
-
-    ParseError read(openpal::RSlice& input);
-    FormatError write(openpal::WSlice& output) const;
-    void print(const char* name, IMessagePrinter& printer) const;
 };
 
 }

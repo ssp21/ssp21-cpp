@@ -30,9 +30,6 @@ namespace ssp21 {
 
 struct RequestHandshakeBegin : public IMessage, private openpal::Uncopyable
 {
-    friend class MessageParser;
-    friend class MessageFormatter;
-
     RequestHandshakeBegin();
 
     RequestHandshakeBegin(
@@ -61,11 +58,6 @@ struct RequestHandshakeBegin : public IMessage, private openpal::Uncopyable
     Seq8 ephemeral_public_key;
     Seq8Seq16 certificates;
 
-    private:
-
-    ParseError read(openpal::RSlice& input);
-    FormatError write(openpal::WSlice& output) const;
-    void print(const char* name, IMessagePrinter& printer) const;
 };
 
 }

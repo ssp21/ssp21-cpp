@@ -25,15 +25,15 @@ namespace ssp21
 
     public:
 
-        template <typename Msg>
-        static FormatResult write_message(openpal::WSlice& dest, const Msg& msg)
+        template <typename WriteFun>
+        static FormatResult write_message(openpal::WSlice& dest, Function function, const WriteFun& write_fields)
         {
             const auto start = dest;
 
-            auto ferr = write(dest, Msg::function);
+            auto ferr = write(dest, function);
             if (any(ferr)) return FormatResult::Error(ferr);
 
-            auto merr = msg.write(dest);
+            auto merr = write_fields(dest);
             if (any(merr)) return FormatResult::Error(merr);
 
             const auto num_written = start.length() - dest.length();

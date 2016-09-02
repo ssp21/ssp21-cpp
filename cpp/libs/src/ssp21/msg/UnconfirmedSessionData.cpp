@@ -32,25 +32,35 @@ UnconfirmedSessionData::UnconfirmedSessionData(
     payload(payload)
 {}
 
-ParseError UnconfirmedSessionData::read(openpal::RSlice& input)
+
+ParseError UnconfirmedSessionData::read_message(openpal::RSlice input)
 {
-    return MessageParser::read_fields(
-        input,
-        metadata,
-        payload
-    );
+    auto read_fields = [this](openpal::RSlice& input) -> ParseError 
+    {
+        return MessageParser::read_fields(
+            input,
+            metadata,
+            payload
+        );
+    };
+
+    return MessageParser::read_message(input, Function::unconfirmed_session_data, read_fields);
 }
 
-FormatError UnconfirmedSessionData::write(openpal::WSlice& output) const
+FormatResult UnconfirmedSessionData::write_message(openpal::WSlice output) const
 {
-    return MessageFormatter::write_fields(
-        output,
-        metadata,
-        payload
-    );
-}
+    auto write_fields = [this](openpal::WSlice& output) -> FormatError 
+    {
+        return MessageFormatter::write_fields(
+            output,
+            metadata,
+            payload
+        );
+    };
 
-void UnconfirmedSessionData::print(const char* name, IMessagePrinter& printer) const
+    return MessageFormatter::write_message(output, Function::unconfirmed_session_data, write_fields);
+}
+void UnconfirmedSessionData::print_message(IMessagePrinter& printer) const
 {
     MessagePrinting::print_fields(
         printer,
@@ -59,20 +69,6 @@ void UnconfirmedSessionData::print(const char* name, IMessagePrinter& printer) c
         "payload",
         payload
     );
-}
-
-ParseError UnconfirmedSessionData::read_message(openpal::RSlice input)
-{
-    return MessageParser::read_message<UnconfirmedSessionData>(input, *this);
-}
-
-FormatResult UnconfirmedSessionData::write_message(openpal::WSlice output) const
-{
-    return MessageFormatter::write_message<UnconfirmedSessionData>(output, *this);
-}
-void UnconfirmedSessionData::print_message(IMessagePrinter& printer) const
-{
-    return this->print("", printer);
 }
 
 

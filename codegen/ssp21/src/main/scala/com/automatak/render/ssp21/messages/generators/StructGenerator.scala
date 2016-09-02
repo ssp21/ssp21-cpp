@@ -32,22 +32,18 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
 
   def headerIncludes: List[Include] = List(Includes.readable, Includes.writable, Includes.msgPrinter)
 
-  def publicReadWritePrint: Boolean = true
+  def outputReadWritePrint: Boolean = true
 
   final override def header(implicit indent: Indentation): Iterator[String] = {
 
     def defaultConstructorSig = "%s();".format(sf.name).iter
 
-    def virtual = if (publicReadWritePrint) "virtual " else ""
-    def overrid = if (publicReadWritePrint) " override" else ""
-
-    def readSig = "%sParseError read(openpal::RSlice& input)%s;".format(virtual, overrid).iter
-    def writeSig = "%sFormatError write(openpal::WSlice& output) const%s;".format(virtual, overrid).iter
-    def printSig = "%svoid print(const char* name, IMessagePrinter& printer) const%s;".format(virtual, overrid).iter
+    def readSig = "virtual ParseError read(openpal::RSlice& input) override;".iter
+    def writeSig = "virtual FormatError write(openpal::WSlice& output) const override;".iter
+    def printSig = "virtual void print(const char* name, IMessagePrinter& printer) const override;".iter
 
     def readWritePrint = {
-      val scope = if (publicReadWritePrint) Iterator.empty else "private:".iter ++ space
-      scope ++ readSig ++ writeSig ++ printSig
+      if(outputReadWritePrint) readSig ++ writeSig ++ printSig else Iterator.empty
     }
 
     def sizeBytes = sf.fixedSize match {
@@ -88,36 +84,56 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
     license ++ space ++ includeGuards(sf.name)(includes ++ space ++ namespace(cppNamespace)(content))
   }
 
+  protected def writeInternals(implicit indent: Indentation): Iterator[String] = {
+
+    def args = commas(sf.fields.map(_.name))
+
+    "return MessageFormatter::write_fields(".iter ++ indent {
+      "output,".iter ++ args
+    } ++ ");".iter
+
+  }
+
+  protected def readInternals(implicit indent: Indentation): Iterator[String] = {
+
+    def args = commas(sf.fields.map(_.name))
+
+    "return MessageParser::read_fields(".iter ++ indent {
+      "input,".iter ++ args
+    } ++ ");".iter
+
+  }
+
+  protected def printInternals(implicit indent: Indentation) : Iterator[String] = {
+    def printArgs = commas(sf.fields.map(f => List(quoted(f.name), f.name)).flatten)
+
+    "MessagePrinting::print_fields(".iter ++ indent {
+      "printer,".iter ++ printArgs
+    } ++ ");".iter
+  }
+
   final override def impl(implicit indent: Indentation): Iterator[String] = {
 
     def license = commented(LicenseHeader.lines)
 
     def args = commas(sf.fields.map(_.name))
 
-    def printArgs = commas(sf.fields.map(f => List(quoted(f.name), f.name)).flatten)
+
 
     def readFunc(implicit indent: Indentation): Iterator[String] = {
-
       "ParseError %s::read(openpal::RSlice& input)".format(sf.name).iter ++ bracket {
-        "return MessageParser::read_fields(".iter ++ indent {
-          "input,".iter ++ args
-        } ++ ");".iter
+        readInternals
       }
     }
 
     def writeFunc(implicit indent: Indentation): Iterator[String] = {
-
       "FormatError %s::write(openpal::WSlice& output) const".format(sf.name).iter ++ bracket {
-        "return MessageFormatter::write_fields(".iter ++ indent {
-          "output,".iter ++ args
-        } ++ ");".iter
+        writeInternals
       }
     }
 
     def printFunc = "void %s::print(const char* name, IMessagePrinter& printer) const".format(sf.name).iter ++ bracket {
-      "MessagePrinting::print_fields(".iter ++ indent {
-        "printer,".iter ++ printArgs
-      } ++ ");".iter
+      printInternals
     }
 
     def defaultConstructorImpl(implicit indent: Indentation): Iterator[String] = {
@@ -147,16 +163,21 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
       } ++ bracketsOnly
     }
 
+    def readWritePrint : Iterator[String] = {
+      if(outputReadWritePrint) {
+        readFunc ++ space ++ writeFunc ++ space ++ printFunc
+      }
+      else {
+        Iterator.empty
+      }
+    }
+
     def funcs = {
-      defaultConstructorImpl ++
+        defaultConstructorImpl ++
         space ++
         fullConstructorImpl ++
         space ++
-        readFunc ++
-        space ++
-        writeFunc ++
-        space ++
-        printFunc ++
+        readWritePrint ++
         extraImplFunctions
     }
 

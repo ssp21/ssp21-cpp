@@ -31,43 +31,39 @@ ReplyHandshakeError::ReplyHandshakeError(
     handshake_error(handshake_error)
 {}
 
-ParseError ReplyHandshakeError::read(openpal::RSlice& input)
+
+ParseError ReplyHandshakeError::read_message(openpal::RSlice input)
 {
-    return MessageParser::read_fields(
-        input,
-        handshake_error
-    );
+    auto read_fields = [this](openpal::RSlice& input) -> ParseError 
+    {
+        return MessageParser::read_fields(
+            input,
+            handshake_error
+        );
+    };
+
+    return MessageParser::read_message(input, Function::reply_handshake_error, read_fields);
 }
 
-FormatError ReplyHandshakeError::write(openpal::WSlice& output) const
+FormatResult ReplyHandshakeError::write_message(openpal::WSlice output) const
 {
-    return MessageFormatter::write_fields(
-        output,
-        handshake_error
-    );
-}
+    auto write_fields = [this](openpal::WSlice& output) -> FormatError 
+    {
+        return MessageFormatter::write_fields(
+            output,
+            handshake_error
+        );
+    };
 
-void ReplyHandshakeError::print(const char* name, IMessagePrinter& printer) const
+    return MessageFormatter::write_message(output, Function::reply_handshake_error, write_fields);
+}
+void ReplyHandshakeError::print_message(IMessagePrinter& printer) const
 {
     MessagePrinting::print_fields(
         printer,
         "handshake_error",
         handshake_error
     );
-}
-
-ParseError ReplyHandshakeError::read_message(openpal::RSlice input)
-{
-    return MessageParser::read_message<ReplyHandshakeError>(input, *this);
-}
-
-FormatResult ReplyHandshakeError::write_message(openpal::WSlice output) const
-{
-    return MessageFormatter::write_message<ReplyHandshakeError>(output, *this);
-}
-void ReplyHandshakeError::print_message(IMessagePrinter& printer) const
-{
-    return this->print("", printer);
 }
 
 

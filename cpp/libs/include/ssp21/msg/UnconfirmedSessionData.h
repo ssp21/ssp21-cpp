@@ -25,9 +25,6 @@ namespace ssp21 {
 
 struct UnconfirmedSessionData : public IMessage, private openpal::Uncopyable
 {
-    friend class MessageParser;
-    friend class MessageFormatter;
-
     UnconfirmedSessionData();
 
     UnconfirmedSessionData(
@@ -45,11 +42,6 @@ struct UnconfirmedSessionData : public IMessage, private openpal::Uncopyable
     AuthMetadata metadata;
     Seq16 payload;
 
-    private:
-
-    ParseError read(openpal::RSlice& input);
-    FormatError write(openpal::WSlice& output) const;
-    void print(const char* name, IMessagePrinter& printer) const;
 };
 
 }

@@ -24,9 +24,6 @@ namespace ssp21 {
 
 struct ReplyHandshakeBegin : public IMessage, private openpal::Uncopyable
 {
-    friend class MessageParser;
-    friend class MessageFormatter;
-
     ReplyHandshakeBegin();
 
     ReplyHandshakeBegin(
@@ -43,11 +40,6 @@ struct ReplyHandshakeBegin : public IMessage, private openpal::Uncopyable
     Seq8 ephemeral_public_key;
     Seq8Seq16 certificates;
 
-    private:
-
-    ParseError read(openpal::RSlice& input);
-    FormatError write(openpal::WSlice& output) const;
-    void print(const char* name, IMessagePrinter& printer) const;
 };
 
 }
