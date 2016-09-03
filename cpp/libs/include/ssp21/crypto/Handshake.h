@@ -54,8 +54,6 @@ namespace ssp21
 
         void calc_auth_handshake_reply_mac(HashOutput& output) const;
 
-		Algorithms::Session get_session_algorithms() const { return algorithms_.session; }
-
     private:
 
         /// configures the handshake for initiator or responder mode
