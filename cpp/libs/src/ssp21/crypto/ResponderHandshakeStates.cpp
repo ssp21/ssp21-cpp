@@ -79,8 +79,6 @@ namespace ssp21
 
     Responder::IHandshakeState& HandshakeWaitForAuth::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeAuth& msg)
     {
-		const auto session_init_time = ctx.executor->get_time();
-
         if (!ctx.handshake.auth_handshake(msg.mac)) // auth success
         {
             SIMPLE_LOG_BLOCK(ctx.logger, levels::warn, "RequestHandshakeAuth: authentication failure");
@@ -104,7 +102,7 @@ namespace ssp21
 
         ctx.handshake.mix_ck(wresult.written);
 
-		ctx.handshake.initialize_session(ctx.session, session_init_time);
+		ctx.handshake.initialize_session(ctx.session, ctx.executor->get_time());
 
         ctx.transmit_to_lower(reply, wresult.written);
 
