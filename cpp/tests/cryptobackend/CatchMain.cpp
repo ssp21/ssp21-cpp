@@ -2,7 +2,7 @@
 #define CATCH_CONFIG_RUNNER
 #include "catch.hpp"
 
-#include "sodiumbackend/Initialize.h"
+#include "sodium/Initialize.h"
 
 int main(int argc, char*  argv[])
 {

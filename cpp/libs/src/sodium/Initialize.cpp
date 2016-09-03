@@ -1,5 +1,5 @@
 
-#include "sodiumbackend/Initialize.h"
+#include "sodium/Initialize.h"
 
 #include "ssp21/crypto/Crypto.h"
 
