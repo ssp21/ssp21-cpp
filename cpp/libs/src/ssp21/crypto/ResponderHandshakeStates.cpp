@@ -105,7 +105,9 @@ namespace ssp21
 
         ctx.handshake.mix_ck(wresult.written);
 
-        // TODO - initialize the session!!!
+		ctx.handshake.derive_session_keys(ctx.session.get_keys());
+
+		// TODO - finish initializing the session beyond just setting the new keys
 
         ctx.transmit_to_lower(reply, wresult.written);
 

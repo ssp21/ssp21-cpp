@@ -11,7 +11,9 @@
 
 #include "ssp21/link/LinkConstants.h"
 #include "ssp21/LayerInterfaces.h"
+
 #include "ssp21/crypto/Handshake.h"
+#include "ssp21/crypto/Session.h"
 
 #include "ssp21/LogLevels.h"
 
@@ -97,6 +99,7 @@ namespace ssp21
             openpal::IExecutor* const executor;
 
             Handshake handshake;
+			Session session;
             openpal::Timestamp session_init_time = openpal::Timestamp::min_value();
 
 
