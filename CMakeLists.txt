@@ -67,5 +67,5 @@ add_test(testssp21 testssp21)
 add_custom_target(
 	FORMAT 
 	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-	COMMAND astyle -R ./cpp/*.h ./cpp/*.cpp --options=./astyle.cfg --exclude=./cpp/libs/include/ssp21/gen --exclude=./cpp/libs/src/ssp21/gen --exclude=./cpp/libs/include/ssp21/msg --exclude=./cpp/libs/src/ssp21/msg
+	COMMAND astyle -R ./cpp/*.h ./cpp/*.cpp --options=./astyle.cfg --exclude=./cpp/libs/include/ssp21/crypto/gen --exclude=./cpp/libs/src/ssp21/crypto/gen
 )
