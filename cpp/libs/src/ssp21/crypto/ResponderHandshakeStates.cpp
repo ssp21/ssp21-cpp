@@ -15,9 +15,6 @@ namespace ssp21
 
     Responder::IHandshakeState& HandshakeIdle::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeBegin& msg)
     {
-        // this won't actually be used unless the session becomes initialized
-        ctx.session_init_time = ctx.executor->get_time();
-
         auto err = ctx.validate(msg);
 
         if (any(err))
@@ -82,6 +79,8 @@ namespace ssp21
 
     Responder::IHandshakeState& HandshakeWaitForAuth::on_message(Responder::Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeAuth& msg)
     {
+		const auto session_init_time = ctx.executor->get_time();
+
         if (!ctx.handshake.auth_handshake(msg.mac)) // auth success
         {
             SIMPLE_LOG_BLOCK(ctx.logger, levels::warn, "RequestHandshakeAuth: authentication failure");
@@ -107,7 +106,7 @@ namespace ssp21
 
 		ctx.handshake.derive_session_keys(ctx.session.get_keys());
 
-		// TODO - finish initializing the session beyond just setting the new keys
+		ctx.session.initialize(ctx.handshake.get_session_algorithms(), session_init_time);
 
         ctx.transmit_to_lower(reply, wresult.written);
 

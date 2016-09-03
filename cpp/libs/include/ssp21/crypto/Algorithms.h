@@ -43,6 +43,15 @@ namespace ssp21
             SessionMode session_mode;
         };
 
+		struct Session
+		{
+			Session();
+
+			verify_nonce_func_t verify_nonce;
+			session_read_t read;
+			session_write_t write;
+		};
+
         // default constructor initializes with default algorithms
         Algorithms();
 
@@ -58,9 +67,7 @@ namespace ssp21
         calc_handshake_mac_t calc_handshake_mac;
 
         // session stuff
-        verify_nonce_func_t verify_nonce;
-        session_read_t session_read;
-        session_write_t session_write;
+		Session session;
     };
 
 

@@ -100,8 +100,6 @@ namespace ssp21
 
             Handshake handshake;
 			Session session;
-            openpal::Timestamp session_init_time = openpal::Timestamp::min_value();
-
 
             ILowerLayer* const lower;
             IUpperLayer* upper = nullptr;
