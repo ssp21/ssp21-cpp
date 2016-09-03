@@ -17,11 +17,11 @@ namespace ssp21
         calc_handshake_mac(HandshakeAuthentication::default_calc_handshake_mac())
     {}
 
-	Algorithms::Session::Session() :
-		verify_nonce(NonceFunctions::default_verify()),
-		read(SessionModes::default_session_read()),
-		write(SessionModes::default_session_write())
-	{}
+    Algorithms::Session::Session() :
+        verify_nonce(NonceFunctions::default_verify()),
+        read(SessionModes::default_session_read()),
+        write(SessionModes::default_session_write())
+    {}
 
     HandshakeError Algorithms::configure(const Config& config)
     {

@@ -102,7 +102,7 @@ namespace ssp21
 
         ctx.handshake.mix_ck(wresult.written);
 
-		ctx.handshake.initialize_session(ctx.session, ctx.executor->get_time());
+        ctx.handshake.initialize_session(ctx.session, ctx.executor->get_time());
 
         ctx.transmit_to_lower(reply, wresult.written);
 
