@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+#include <openpal/util/Limits.h>
+
 namespace ssp21
 {
     namespace consts
@@ -10,6 +12,9 @@ namespace ssp21
         namespace crypto
         {
             const uint16_t protocol_version = 0x0000;
+
+            /// maximum duration is just the maximum of uint32_t
+            const uint32_t max_session_duration_ms = openpal::max_value<uint32_t>();
 
             // implementation constants
             const uint8_t max_certificate_chain = 3;

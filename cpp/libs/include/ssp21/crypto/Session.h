@@ -16,12 +16,12 @@ namespace ssp21
 
     public:
 
-        template <class KeyFun>
-        void initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const KeyFun& init_keys)
+        template <class InitKeysFun>
+        void initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const InitKeysFun& init_keys)
         {
             this->initialize(algorithms, session_start);
 
-            init_keys(keys_);
+            init_keys(this->keys_);
         }
 
     private:
