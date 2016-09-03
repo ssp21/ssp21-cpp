@@ -64,9 +64,9 @@ if (UNIX)
 	endif()
 
 	if(CMAKE_COMPILER_IS_GNUCXX)      
-		if(CMAKE_CXX_COMPILER_VERSION MATCHES 4.8.*)		
+		#if(CMAKE_CXX_COMPILER_VERSION MATCHES 4.8.*)		
 			add_definitions("-DNO_MAKE_UNIQUE_SUPPORT")			
-		endif()
+		#endif()
 	endif()
 
 endif()
