@@ -71,18 +71,20 @@ namespace ssp21
         );
     }
 
-    void Handshake::derive_session_keys(SessionKeys& keys) const
+    void Handshake::initialize_session(Session& session, const openpal::Timestamp& session_init_time) const
     {
-        if (this->id_ == EntityId::Initiator)
-        {
-            algorithms_.hkdf(chaining_key_.as_slice(), {}, keys.tx_key, keys.rx_key);
-        }
-        else
-        {
-            algorithms_.hkdf(chaining_key_.as_slice(), {}, keys.rx_key, keys.tx_key);
-        }
+		session.session_start_ = session_init_time;
+		session.algorithms_ = algorithms_.session;
 
-    }
+		// TODO: set up the nonces?
+
+		// which key is which depends on initiator vs responder
+		auto& tx_key = (this->id_ == EntityId::Initiator) ? session.keys_.tx_key : session.keys_.rx_key;
+		auto& rx_key = (this->id_ == EntityId::Initiator) ? session.keys_.rx_key : session.keys_.tx_key;
+
+		algorithms_.hkdf(chaining_key_.as_slice(), {}, tx_key, rx_key);
+	}
+       
 }
 
 

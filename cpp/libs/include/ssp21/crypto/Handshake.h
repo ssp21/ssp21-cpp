@@ -11,6 +11,7 @@
 #include "ssp21/crypto/Crypto.h"
 #include "ssp21/crypto/NonceFunctions.h"
 #include "ssp21/crypto/Algorithms.h"
+#include "ssp21/crypto/Session.h"
 
 namespace ssp21
 {
@@ -46,8 +47,8 @@ namespace ssp21
             std::error_code& ec
         );
 
-        /// derive the session keys
-        void derive_session_keys(SessionKeys& keys) const;
+        /// derive the session keys and initialize the session
+        void initialize_session(Session& session, const openpal::Timestamp& session_init_time) const;
 
         bool auth_handshake(const openpal::RSlice& mac) const;
 

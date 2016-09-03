@@ -104,9 +104,7 @@ namespace ssp21
 
         ctx.handshake.mix_ck(wresult.written);
 
-		ctx.handshake.derive_session_keys(ctx.session.get_keys());
-
-		ctx.session.initialize(ctx.handshake.get_session_algorithms(), session_init_time);
+		ctx.handshake.initialize_session(ctx.session, session_init_time);
 
         ctx.transmit_to_lower(reply, wresult.written);
 

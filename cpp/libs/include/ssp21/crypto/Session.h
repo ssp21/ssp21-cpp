@@ -13,18 +13,11 @@ namespace ssp21
 {
     class Session : private openpal::Uncopyable
     {
+		friend class Handshake;
 
     public:
 
-		SessionKeys& get_keys() { return keys_; }
-
-		void initialize(const Algorithms::Session& algorithms, openpal::Timestamp session_start)
-		{
-			// TODO - add nonces and reset these also
-
-			algorithms_ = algorithms;
-			session_start_ = session_start;
-		}
+	
 
 	private:
 
