@@ -16,7 +16,7 @@
 #ifndef SSP21_REPLYHANDSHAKEBEGIN_H
 #define SSP21_REPLYHANDSHAKEBEGIN_H
 
-#include "ssp21/gen/Function.h"
+#include "ssp21/crypto/gen/Function.h"
 #include "ssp21/crypto/IMessage.h"
 #include "ssp21/crypto/SequenceTypes.h"
 

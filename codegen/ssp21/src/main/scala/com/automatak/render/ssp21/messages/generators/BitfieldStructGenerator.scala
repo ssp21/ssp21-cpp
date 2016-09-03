@@ -112,7 +112,7 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
       }
     }
 
-    def selfInclude = include(quoted("ssp21/msg/%s".format(headerFileName)))
+    def selfInclude = Includes.message(field.name).line
 
     def otherIncludes = Includes.lines(List(Includes.bigEndian, Includes.flagsPrinting))
 

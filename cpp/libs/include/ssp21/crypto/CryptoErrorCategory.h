@@ -5,7 +5,7 @@
 #include <system_error>
 #include <string>
 
-#include "ssp21/gen/CryptoError.h"
+#include "ssp21/crypto/gen/CryptoError.h"
 
 #if (defined _MSC_VER && (_MSC_VER < 1900))
 #define NOEXCEPT

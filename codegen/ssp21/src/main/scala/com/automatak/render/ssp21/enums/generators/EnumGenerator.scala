@@ -60,8 +60,8 @@ case class EnumGenerator(cfg: EnumConfig) extends WriteCppFiles {
 
     def license = commented(LicenseHeader.lines)
     def funcs = renderers.map(r => r.impl.render(cfg.model)).flatten.toIterator
-    def inc = quoted("ssp21/gen/%s".format(headerFileName))
+    def includes = Includes.enum(cfg.model.name).line
 
-    license ++ space ++ include(inc) ++ space ++ namespace(cppNamespace)(funcs)
+    license ++ space ++ includes ++ space ++ namespace(cppNamespace)(funcs)
   }
 }

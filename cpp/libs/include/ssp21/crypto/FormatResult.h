@@ -4,7 +4,7 @@
 #include "openpal/container/RSlice.h"
 #include "openpal/container/WSlice.h"
 
-#include "ssp21/gen/FormatError.h"
+#include "ssp21/crypto/gen/FormatError.h"
 
 namespace ssp21
 {

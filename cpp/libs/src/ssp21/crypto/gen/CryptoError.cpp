@@ -13,7 +13,7 @@
 // Licensed under the terms of the BSDv3 license
 //
 
-#include "ssp21/gen/CryptoError.h"
+#include "ssp21/crypto/gen/CryptoError.h"
 
 namespace ssp21 {
 

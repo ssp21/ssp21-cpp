@@ -9,7 +9,7 @@
 #include "ssp21/crypto/Crypto.h"
 #include "ssp21/crypto/ResponderHandshakeStates.h"
 
-#include "ssp21/msg/ReplyHandshakeError.h"
+#include "ssp21/crypto/gen/ReplyHandshakeError.h"
 
 using namespace openpal;
 

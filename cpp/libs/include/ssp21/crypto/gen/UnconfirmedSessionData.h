@@ -16,8 +16,8 @@
 #ifndef SSP21_UNCONFIRMEDSESSIONDATA_H
 #define SSP21_UNCONFIRMEDSESSIONDATA_H
 
-#include "ssp21/gen/Function.h"
-#include "ssp21/msg/AuthMetadata.h"
+#include "ssp21/crypto/gen/Function.h"
+#include "ssp21/crypto/gen/AuthMetadata.h"
 #include "ssp21/crypto/IMessage.h"
 #include "ssp21/crypto/SequenceTypes.h"
 

@@ -1,8 +1,8 @@
 
 #include "ssp21/crypto/ResponderHandshakeStates.h"
 
-#include "ssp21/msg/ReplyHandshakeBegin.h"
-#include "ssp21/msg/ReplyHandshakeAuth.h"
+#include "ssp21/crypto/gen/ReplyHandshakeBegin.h"
+#include "ssp21/crypto/gen/ReplyHandshakeAuth.h"
 
 #include "openpal/logging/LogMacros.h"
 #include "ssp21/LogLevels.h"

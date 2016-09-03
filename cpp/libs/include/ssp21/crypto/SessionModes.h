@@ -4,8 +4,8 @@
 
 #include "openpal/util/Uncopyable.h"
 
-#include "ssp21/msg/AuthMetadata.h"
-#include "ssp21/gen/SessionMode.h"
+#include "ssp21/crypto/gen/AuthMetadata.h"
+#include "ssp21/crypto/gen/SessionMode.h"
 
 #include "ssp21/crypto/Crypto.h"
 #include "ssp21/crypto/CryptoTypedefs.h"

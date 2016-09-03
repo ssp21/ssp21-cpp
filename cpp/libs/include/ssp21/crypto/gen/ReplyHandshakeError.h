@@ -16,8 +16,8 @@
 #ifndef SSP21_REPLYHANDSHAKEERROR_H
 #define SSP21_REPLYHANDSHAKEERROR_H
 
-#include "ssp21/gen/Function.h"
-#include "ssp21/gen/HandshakeError.h"
+#include "ssp21/crypto/gen/Function.h"
+#include "ssp21/crypto/gen/HandshakeError.h"
 #include "ssp21/crypto/IMessage.h"
 
 namespace ssp21 {

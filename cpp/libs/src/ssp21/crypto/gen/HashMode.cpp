@@ -13,7 +13,7 @@
 // Licensed under the terms of the BSDv3 license
 //
 
-#include "ssp21/gen/HashMode.h"
+#include "ssp21/crypto/gen/HashMode.h"
 
 namespace ssp21 {
 

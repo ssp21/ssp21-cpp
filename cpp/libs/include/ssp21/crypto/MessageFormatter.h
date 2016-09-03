@@ -1,14 +1,14 @@
 #ifndef SSP21_MESSAGE_FORMATTER_H
 #define SSP21_MESSAGE_FORMATTER_H
 
-#include "ssp21/gen/Function.h"
-#include "ssp21/gen/CertificateMode.h"
-#include "ssp21/gen/DHMode.h"
-#include "ssp21/gen/HandshakeError.h"
-#include "ssp21/gen/NonceMode.h"
-#include "ssp21/gen/SessionMode.h"
-#include "ssp21/gen/HashMode.h"
-#include "ssp21/gen/FormatError.h"
+#include "ssp21/crypto/gen/Function.h"
+#include "ssp21/crypto/gen/CertificateMode.h"
+#include "ssp21/crypto/gen/DHMode.h"
+#include "ssp21/crypto/gen/HandshakeError.h"
+#include "ssp21/crypto/gen/NonceMode.h"
+#include "ssp21/crypto/gen/SessionMode.h"
+#include "ssp21/crypto/gen/HashMode.h"
+#include "ssp21/crypto/gen/FormatError.h"
 
 #include "ssp21/crypto/SequenceTypes.h"
 #include "ssp21/crypto/IMessageField.h"

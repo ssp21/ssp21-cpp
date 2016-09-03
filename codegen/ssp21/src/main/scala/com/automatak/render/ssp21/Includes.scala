@@ -19,40 +19,43 @@ object Includes {
 
   val cstdint = Include("<cstdint>", Ordering.system)
 
-  val rslice = Include(quoted("openpal/container/RSlice.h"), Ordering.openpal)
-  val wslice = Include(quoted("openpal/container/WSlice.h"), Ordering.openpal)
-  val uncopyable = Include(quoted("openpal/util/Uncopyable.h"), Ordering.openpal)
-  val bigEndian = Include(quoted("openpal/serialization/BigEndian.h"), Ordering.openpal)
+  val rslice = openpal("container/RSlice")
+  val wslice = openpal("container/WSlice")
+  val uncopyable = openpal("util/Uncopyable")
+  val bigEndian = openpal("serialization/BigEndian")
 
-  val parseError = Include(quoted("ssp21/gen/ParseError.h"), Ordering.enum)
-  val formatError = Include(quoted("ssp21/gen/FormatError.h"), Ordering.enum)
-  val function = Include(quoted("ssp21/gen/Function.h"), Ordering.enum)
+  val parseError = enum("ParseError")
+  val formatError = enum("FormatError")
+  val function = enum("Function")
 
-  val message = Include(quoted("ssp21/crypto/IMessage.h"), Ordering.crypto)
-  val messageField = Include(quoted("ssp21/crypto/IMessageField.h"), Ordering.crypto)
-
-
-  val seqTypes = Include(quoted("ssp21/crypto/SequenceTypes.h"), Ordering.crypto)
-  val msgFormatter = Include(quoted("ssp21/crypto/MessageFormatter.h"), Ordering.crypto)
-  val formatResult = Include(quoted("ssp21/crypto/FormatResult.h"), Ordering.crypto)
-  val msgPrinter = Include(quoted("ssp21/crypto/IMessagePrinter.h"), Ordering.crypto)
-  val msgPrinting = Include(quoted("ssp21/crypto/MessagePrinting.h"), Ordering.crypto)
-  val flagsPrinting = Include(quoted("ssp21/crypto/FlagsPrinting.h"), Ordering.crypto)
-  val msgParser = Include(quoted("ssp21/crypto/MessageParser.h"), Ordering.crypto)
+  val imessage = crypto("IMessage")
+  val messageField = crypto("IMessageField")
 
 
-  def message(className: String) = Include(quoted("ssp21/msg/%s.h".format(className)), Ordering.msg)
+  val seqTypes = crypto("SequenceTypes")
+  val msgFormatter = crypto("MessageFormatter")
+  val formatResult = crypto("FormatResult")
+  val msgPrinter = crypto("IMessagePrinter")
+  val msgPrinting = crypto("MessagePrinting")
+  val flagsPrinting = crypto("FlagsPrinting")
+  val msgParser = crypto("MessageParser")
 
-  def sort(lhs: Include, rhs: Include): Boolean = {
-    if (lhs.order == rhs.order) {
-      lhs.file.length < rhs.file.length
-    }
-    else {
-      lhs.order < rhs.order
-    }
-  }
+  def crypto(className: String) = Include(quoted("ssp21/crypto/%s.h".format(className)), Ordering.crypto)
+  def enum(className: String) = Include(quoted("ssp21/crypto/gen/%s.h".format(className)), Ordering.enum)
+  def message(className: String) = Include(quoted("ssp21/crypto/gen/%s.h".format(className)), Ordering.msg)
+  def openpal(classPath: String)= Include(quoted("openpal/%s.h".format(classPath)), Ordering.openpal)
 
   def lines(lines: Seq[Include]): Iterator[String] = {
+
+    def sort(lhs: Include, rhs: Include): Boolean = {
+      if (lhs.order == rhs.order) {
+        lhs.file.length < rhs.file.length
+      }
+      else {
+        lhs.order < rhs.order
+      }
+    }
+
     lines.toSet.toList.sortWith(sort).map(_.line).flatten.toIterator
   }
 }

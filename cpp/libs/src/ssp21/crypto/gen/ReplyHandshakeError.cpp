@@ -13,7 +13,7 @@
 // Licensed under the terms of the BSDv3 license
 //
 
-#include "ssp21/msg/ReplyHandshakeError.h"
+#include "ssp21/crypto/gen/ReplyHandshakeError.h"
 
 #include "ssp21/crypto/MessageParser.h"
 #include "ssp21/crypto/MessagePrinting.h"

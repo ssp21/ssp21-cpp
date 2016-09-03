@@ -13,7 +13,7 @@
 // Licensed under the terms of the BSDv3 license
 //
 
-#include "ssp21/msg/SessionFlags.h"
+#include "ssp21/crypto/gen/SessionFlags.h"
 
 #include "openpal/serialization/BigEndian.h"
 #include "ssp21/crypto/FlagsPrinting.h"

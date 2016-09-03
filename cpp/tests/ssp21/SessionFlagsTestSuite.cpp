@@ -5,7 +5,7 @@
 #include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
 
-#include "ssp21/msg/SessionFlags.h"
+#include "ssp21/crypto/gen/SessionFlags.h"
 #include "ssp21/crypto/LogMessagePrinter.h"
 
 #include "mocks/MockLogHandler.h"

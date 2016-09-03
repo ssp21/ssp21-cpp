@@ -4,9 +4,9 @@
 
 #include "CryptoTypedefs.h"
 
-#include "ssp21/gen/HandshakeError.h"
-#include "ssp21/gen/DHMode.h"
-#include "ssp21/gen/HashMode.h"
+#include "ssp21/crypto/gen/HandshakeError.h"
+#include "ssp21/crypto/gen/DHMode.h"
+#include "ssp21/crypto/gen/HashMode.h"
 
 #include "ssp21/crypto/Crypto.h"
 #include "ssp21/crypto/NonceFunctions.h"

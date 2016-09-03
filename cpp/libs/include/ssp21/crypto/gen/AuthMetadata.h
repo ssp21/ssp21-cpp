@@ -17,7 +17,7 @@
 #define SSP21_AUTHMETADATA_H
 
 #include <cstdint>
-#include "ssp21/msg/SessionFlags.h"
+#include "ssp21/crypto/gen/SessionFlags.h"
 #include "ssp21/crypto/IMessageField.h"
 
 namespace ssp21 {

@@ -9,7 +9,7 @@ final case class MessageGenerator(msg: Message) extends StructGenerator(msg) {
 
   override def interfaces: String = "public IMessage, private openpal::Uncopyable"
 
-  override def headerIncludes: List[Include] = List(Includes.message, Includes.function)
+  override def headerIncludes: List[Include] = List(Includes.imessage, Includes.function)
 
   override def outputReadWritePrint: Boolean = false
 

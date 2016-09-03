@@ -2,12 +2,12 @@
 #ifndef SSP21_RESPONDER_H
 #define SSP21_RESPONDER_H
 
-#include "ssp21/msg/RequestHandshakeBegin.h"
-#include "ssp21/msg/RequestHandshakeAuth.h"
-#include "ssp21/msg/UnconfirmedSessionData.h"
+#include "ssp21/crypto/gen/RequestHandshakeBegin.h"
+#include "ssp21/crypto/gen/RequestHandshakeAuth.h"
+#include "ssp21/crypto/gen/UnconfirmedSessionData.h"
 
-#include "ssp21/gen/Function.h"
-#include "ssp21/gen/HandshakeError.h"
+#include "ssp21/crypto/gen/Function.h"
+#include "ssp21/crypto/gen/HandshakeError.h"
 
 #include "ssp21/link/LinkConstants.h"
 #include "ssp21/LayerInterfaces.h"

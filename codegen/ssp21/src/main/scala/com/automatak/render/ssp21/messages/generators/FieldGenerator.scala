@@ -60,7 +60,7 @@ object U32FieldGenerator extends FieldGenerator with PassByValue {
 }
 
 case class EnumFieldGenerator(enum: EnumModel) extends FieldGenerator with PassByValue {
-  override def includes = Set(Include(quoted("ssp21/gen/%s.h").format(enum.name), Ordering.enum))
+  override def includes = Set(Includes.enum(enum.name))
 
   override def cppType: String = enum.name
 

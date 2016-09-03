@@ -5,7 +5,7 @@
 #include "openpal/util/Uncopyable.h"
 #include "openpal/util/Limits.h"
 
-#include "ssp21/gen/NonceMode.h"
+#include "ssp21/crypto/gen/NonceMode.h"
 
 #include <cstdint>
 

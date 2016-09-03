@@ -2,8 +2,8 @@
 #ifndef SSP21_IMESSAGEFIELD_H
 #define SSP21_IMESSAGEFIELD_H
 
-#include "ssp21/gen/ParseError.h"
-#include "ssp21/gen/FormatError.h"
+#include "ssp21/crypto/gen/ParseError.h"
+#include "ssp21/crypto/gen/FormatError.h"
 
 #include "ssp21/crypto/IMessagePrinter.h"
 

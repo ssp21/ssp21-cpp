@@ -2,7 +2,7 @@
 
 #include "catch.hpp"
 
-#include "ssp21/msg/RequestHandshakeBegin.h"
+#include "ssp21/crypto/gen/RequestHandshakeBegin.h"
 #include "ssp21/crypto/LogMessagePrinter.h"
 
 #include "testlib/Hex.h"

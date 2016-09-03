@@ -6,9 +6,9 @@
 #include "testlib/HexConversions.h"
 #include "testlib/Hex.h"
 
-#include "ssp21/msg/RequestHandshakeBegin.h"
-#include "ssp21/msg/ReplyHandshakeBegin.h"
-#include "ssp21/msg/ReplyHandshakeError.h"
+#include "ssp21/crypto/gen/RequestHandshakeBegin.h"
+#include "ssp21/crypto/gen/ReplyHandshakeBegin.h"
+#include "ssp21/crypto/gen/ReplyHandshakeError.h"
 
 #include "MakeUnique.h"
 

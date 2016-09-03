@@ -17,12 +17,12 @@
 #define SSP21_REQUESTHANDSHAKEBEGIN_H
 
 #include <cstdint>
-#include "ssp21/gen/DHMode.h"
-#include "ssp21/gen/Function.h"
-#include "ssp21/gen/HashMode.h"
-#include "ssp21/gen/NonceMode.h"
-#include "ssp21/gen/SessionMode.h"
-#include "ssp21/gen/CertificateMode.h"
+#include "ssp21/crypto/gen/DHMode.h"
+#include "ssp21/crypto/gen/HashMode.h"
+#include "ssp21/crypto/gen/Function.h"
+#include "ssp21/crypto/gen/NonceMode.h"
+#include "ssp21/crypto/gen/SessionMode.h"
+#include "ssp21/crypto/gen/CertificateMode.h"
 #include "ssp21/crypto/IMessage.h"
 #include "ssp21/crypto/SequenceTypes.h"
 

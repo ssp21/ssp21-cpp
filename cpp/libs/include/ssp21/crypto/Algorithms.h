@@ -8,11 +8,11 @@
 #include "ssp21/crypto/SessionModes.h"
 #include "ssp21/crypto/HandshakeAuthentication.h"
 
-#include "ssp21/gen/DHMode.h"
-#include "ssp21/gen/HashMode.h"
-#include "ssp21/gen/NonceMode.h"
-#include "ssp21/gen/HandshakeError.h"
-#include "ssp21/gen/SessionMode.h"
+#include "ssp21/crypto/gen/DHMode.h"
+#include "ssp21/crypto/gen/HashMode.h"
+#include "ssp21/crypto/gen/NonceMode.h"
+#include "ssp21/crypto/gen/HandshakeError.h"
+#include "ssp21/crypto/gen/SessionMode.h"
 
 namespace ssp21
 {

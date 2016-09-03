@@ -5,7 +5,7 @@
 #include "ssp21/crypto/IMessagePrinter.h"
 #include "ssp21/crypto/FormatResult.h"
 
-#include "ssp21/gen/ParseError.h"
+#include "ssp21/crypto/gen/ParseError.h"
 
 namespace ssp21
 {
