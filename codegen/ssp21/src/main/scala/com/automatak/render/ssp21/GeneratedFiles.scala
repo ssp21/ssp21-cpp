@@ -13,7 +13,7 @@ import com.automatak.render.ssp21.messages.generators.{BitfieldStructGenerator, 
 
 object GeneratedFiles {
 
-  def list : List [WriteCppFiles] = internalEnums ::: ssp21Enums ::: bitfiends ::: structs ::: messsages
+  def list : List [WriteCppFiles] = internalEnums ::: ssp21Enums ::: errorEnums ::: bitfiends ::: structs ::: messsages
 
   private def ssp21Enums = List(
     CryptoFunction(),
@@ -25,10 +25,11 @@ object GeneratedFiles {
     HandshakeError()
   ).map(x => EnumConfig(x, true, true)).map(e => EnumGenerator(e))
 
+  private def errorEnums = List(CryptoError()).map(x => EnumGenerator(EnumConfig(x, false, true, true)))
+
   private def internalEnums = List(
     ParseError(),
-    FormatError(),
-    CryptoError()
+    FormatError()
   ).map(x => EnumConfig(x, false, true)).map(e => EnumGenerator(e))
 
   private def bitfiends: List[WriteCppFiles] = List(

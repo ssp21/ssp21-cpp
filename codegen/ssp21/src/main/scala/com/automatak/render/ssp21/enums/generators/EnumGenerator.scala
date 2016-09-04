@@ -3,7 +3,6 @@
   */
 package com.automatak.render.ssp21.enums.generators
 
-
 import com.automatak.render._
 import com.automatak.render.cpp._
 import com.automatak.render.ssp21._
@@ -29,8 +28,13 @@ case class EnumGenerator(cfg: EnumConfig) extends WriteCppFiles {
     def license = commented(LicenseHeader.lines)
     def enum = EnumModelRenderer.render(cfg.model)
     def signatures = renderers.map(c => c.header.render(cfg.model)).flatten.toIterator
+    def nameLine : Iterator[String] = if (cfg.isErrorEnum)  {
+      space ++ "static const char* name;".iter
+    } else Iterator.empty
+
     def spec = "struct %s : private openpal::StaticOnly".format(cfg.model.specName).iter ++ bracketSemiColon {
       "typedef %s enum_type_t;".format(cfg.model.name).iter ++
+        nameLine ++
         space ++
         signatures
     }
@@ -60,8 +64,12 @@ case class EnumGenerator(cfg: EnumConfig) extends WriteCppFiles {
 
     def license = commented(LicenseHeader.lines)
     def funcs = renderers.map(r => r.impl.render(cfg.model)).flatten.toIterator
+    def constants : Iterator[String] = if(cfg.isErrorEnum) {
+      "const char* %s::name = %s;".format(cfg.model.specName, quoted(cfg.model.underscoredName)).iter ++ space
+    } else Iterator.empty
+
     def includes = Includes.enum(cfg.model.name).line
 
-    license ++ space ++ includes ++ space ++ namespace(cppNamespace)(funcs)
+    license ++ space ++ includes ++ space ++ namespace(cppNamespace)(constants ++ funcs)
   }
 }

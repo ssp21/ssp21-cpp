@@ -16,31 +16,34 @@
 namespace ssp21
 {
 
-    class CryptoErrorCategory final : public std::error_category
+	template <class EnumSpec>
+    class ErrorCategory final : public std::error_category
     {
     public:
 
         static const std::error_category& get()
         {
-            static CryptoErrorCategory instance;
+            static ErrorCategory instance;
             return instance;
         }
 
         virtual const char* name() const NOEXCEPT
         {
-            return "crypto error";
+            return EnumSpec::name;
         }
 
         virtual std::string message(int ev) const
         {
-            return CryptoErrorSpec::to_string(static_cast<CryptoError>(ev));
+            return EnumSpec::to_string(static_cast<CryptoError>(ev));
         }
 
     private:
 
-        CryptoErrorCategory() {}
-        CryptoErrorCategory(const CryptoErrorCategory&) = delete;
+        ErrorCategory() {}
+        ErrorCategory(const ErrorCategory&) = delete;
     };
+
+	typedef ErrorCategory<CryptoErrorSpec> CryptoErrorCategory;
 
 
     inline std::error_code make_error_code(CryptoError err)

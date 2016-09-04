@@ -17,6 +17,8 @@
 
 namespace ssp21 {
 
+const char* CryptoErrorSpec::name = "crypto_error";
+
 const char* CryptoErrorSpec::to_string(CryptoError arg)
 {
     switch(arg)
