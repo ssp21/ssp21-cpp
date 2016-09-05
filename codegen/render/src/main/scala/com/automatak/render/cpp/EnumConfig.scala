@@ -8,8 +8,7 @@ import com.automatak.render.EnumModel
 case class EnumConfig(
                        model: EnumModel,
                        conversions: Boolean,
-                       stringConv: Boolean,
-                       isErrorEnum: Boolean = false) {
+                       stringConv: Boolean) {
   def anyOptionalFunctions: Boolean = conversions || stringConv
 }
 

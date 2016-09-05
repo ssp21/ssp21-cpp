@@ -28,7 +28,7 @@ case class EnumGenerator(cfg: EnumConfig) extends WriteCppFiles {
     def license = commented(LicenseHeader.lines)
     def enum = EnumModelRenderer.render(cfg.model)
     def signatures = renderers.map(c => c.header.render(cfg.model)).flatten.toIterator
-    def nameLine : Iterator[String] = if (cfg.isErrorEnum)  {
+    def nameLine : Iterator[String] = if(cfg.model.errorCategory.isDefined) {
       space ++ "static const char* name;".iter
     } else Iterator.empty
 
@@ -64,9 +64,10 @@ case class EnumGenerator(cfg: EnumConfig) extends WriteCppFiles {
 
     def license = commented(LicenseHeader.lines)
     def funcs = renderers.map(r => r.impl.render(cfg.model)).flatten.toIterator
-    def constants : Iterator[String] = if(cfg.isErrorEnum) {
-      "const char* %s::name = %s;".format(cfg.model.specName, quoted(cfg.model.underscoredName)).iter ++ space
-    } else Iterator.empty
+    def constants : Iterator[String] = cfg.model.errorCategory match {
+      case Some(cat) => "const char* %s::name = %s;".format(cfg.model.specName, quoted(cat.stringName)).iter ++ space
+      case None => Iterator.empty
+    }
 
     def includes = Includes.enum(cfg.model.name).line
 

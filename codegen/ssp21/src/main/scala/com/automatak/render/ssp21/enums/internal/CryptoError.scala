@@ -9,7 +9,9 @@ object CryptoError {
 
   private val comments = List("The result of a message parse operation")
 
-  def apply(): EnumModel = EnumModel("CryptoError", "crypto_error", comments, EnumModel.UInt8, codes, None)
+  def category = Some(ErrorCategory("CryptoErrorCategory", "crypto error"))
+
+  def apply(): EnumModel = EnumModel("CryptoError", "crypto_error", comments, EnumModel.UInt8, codes, None, None, Hex, category)
 
   private val codes = List(
     EnumValue("bad_key_type", 0, "attempted operation with bad key type"),

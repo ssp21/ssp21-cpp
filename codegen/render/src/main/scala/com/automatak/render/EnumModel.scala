@@ -50,6 +50,8 @@ case object Base10 extends IntRender {
   def apply(i: Int): String = i.toString
 }
 
+case class ErrorCategory(className: String, stringName: String)
+
 case class EnumModel(
                       name: String,
                       underscoredName: String,
@@ -58,7 +60,8 @@ case class EnumModel(
                       nonDefaultValues: List[EnumValue],
                       defaultValue: Option[EnumValue],
                       boolCastValue: Option[EnumValue] = None,
-                      render: IntRender = Base10) {
+                      render: IntRender = Base10,
+                      errorCategory: Option[ErrorCategory] = None) {
 
   def specName = name + "Spec"
 

@@ -27,15 +27,15 @@ namespace ssp21 {
 enum class CryptoError : uint8_t
 {
     /// attempted operation with bad key type
-    bad_key_type = 0,
+    bad_key_type = 0x0,
     /// X25519 DH operation failed. Bad public key?
-    dh_x25519_fail = 1,
+    dh_x25519_fail = 0x1,
     /// a procedure cannot be executed b/c of an undefined algorithm
-    undefined_algorithm = 2,
+    undefined_algorithm = 0x2,
     /// A calculated MAC did not match the specified MAC
-    mac_auth_fail = 3,
+    mac_auth_fail = 0x3,
     /// A buffer had an insufficient or incorrect size
-    bad_buffer_size = 4
+    bad_buffer_size = 0x4
 };
 
 struct CryptoErrorSpec : private openpal::StaticOnly
