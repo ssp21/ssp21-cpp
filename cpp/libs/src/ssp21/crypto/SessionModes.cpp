@@ -1,7 +1,8 @@
 
 #include "ssp21/crypto/SessionModes.h"
 
-#include "ssp21/crypto/CryptoErrorCategory.h"
+#include "ssp21/crypto/gen/CryptoError.h"
+
 #include "openpal/serialization/BigEndian.h"
 
 using namespace openpal;

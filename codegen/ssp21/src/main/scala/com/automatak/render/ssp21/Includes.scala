@@ -8,7 +8,8 @@ object Ordering {
   val openpal = 1
   val enum = 2
   val msg = 3
-  val crypto = 4
+  val ssp21 = 4
+  val crypto = 5
 }
 
 case class Include(file: String, order: Int) {
@@ -27,6 +28,8 @@ object Includes {
   val parseError = enum("ParseError")
   val formatError = enum("FormatError")
   val function = enum("Function")
+
+  val errorCategory = Include(quoted("ssp21/ErrorCategory.h"), Ordering.ssp21)
 
   val imessage = crypto("IMessage")
   val messageField = crypto("IMessageField")

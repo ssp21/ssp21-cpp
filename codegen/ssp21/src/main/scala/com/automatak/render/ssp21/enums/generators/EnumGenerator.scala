@@ -51,12 +51,35 @@ case class EnumGenerator(cfg: EnumConfig) extends WriteCppFiles {
       }
     }
 
-    def includes: List[Include] = List(Includes.uncopyable, Includes.cstdint)
+    def errorCategory : Iterator[String] = cfg.model.errorCategory match {
+      case Some(cat) => {
+        space ++
+          "typedef ErrorCategory<%s> %s;".format(cfg.model.specName, cat.className).iter ++
+          space ++
+          "inline std::error_code make_error_code(%s err)".format(cfg.model.name).iter ++ bracket {
+          "return std::error_code(static_cast<int>(err), %s::get());".format(cat.className).iter
+        }
+      }
+      case None => Iterator.empty
+    }
+
+    def includes: List[Include] = {
+      val baseIncludes = List(Includes.uncopyable, Includes.cstdint)
+      if(cfg.model.errorCategory.isDefined) Includes.errorCategory :: baseIncludes else baseIncludes
+    }
+
+    def isErrorCodeEnum : Iterator[String] = cfg.model.errorCategory match {
+      case Some(cat) => space ++ namespace("std") {
+        "template <>".iter ++
+          "struct is_error_code_enum<ssp21::%s> : public true_type {};".format(cfg.model.name).iter
+      }
+      case None => Iterator.empty
+    }
 
     license ++ space ++ includeGuards(cfg.model.name)(
-      Includes.lines(includes) ++ space ++ namespace(cppNamespace)(
-        enum ++ castFunc ++ space ++ spec
-      )
+      Includes.lines(includes) ++ space ++ namespace(cppNamespace) {
+        enum ++ castFunc ++ space ++ spec ++ errorCategory
+      } ++ isErrorCodeEnum
     )
   }
 

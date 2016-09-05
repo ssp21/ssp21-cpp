@@ -14,7 +14,7 @@
 namespace ssp21
 {
 
-	template <class EnumSpec>
+    template <class EnumSpec>
     class ErrorCategory final : public std::error_category
     {
     public:

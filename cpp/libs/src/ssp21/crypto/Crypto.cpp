@@ -1,7 +1,7 @@
 
 #include "ssp21/crypto/Crypto.h"
 
-#include "ssp21/crypto/CryptoErrorCategory.h"
+#include "ssp21/crypto/gen/CryptoError.h"
 
 #include "ssp21/crypto/HKDF.h"
 
