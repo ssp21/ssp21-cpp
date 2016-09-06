@@ -115,9 +115,8 @@ namespace ssp21
 
     void Responder::on_tx_ready_impl()
     {
-        // if there's message to be read, read it
-        // since we can now transmit responses
-        if (ctx.lower->is_rx_ready())
+        // only read a message we don't have data ready
+        if (ctx.lower->is_rx_ready() && this->can_receive())
         {
             ctx.lower->receive(*this);
         }
@@ -127,7 +126,7 @@ namespace ssp21
     {
         // only read a message if the lower layer
         // can transmit a response
-        if (ctx.lower->is_tx_ready())
+        if (this->can_receive())
         {
             ctx.lower->receive(*this);
         }
@@ -170,19 +169,12 @@ namespace ssp21
         if (any(err))
         {
             FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "error reading session message: %s", ParseErrorSpec::to_string(err));
+			return;
         }
-        else
-        {
-            FORMAT_LOG_BLOCK(ctx.logger, levels::rx_crypto_msg, "%s (length = %u)", FunctionSpec::to_string(Function::unconfirmed_session_data), data.length());
+        
+		ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, Function::unconfirmed_session_data, msg, data.length());
 
-            if (ctx.logger.is_enabled(levels::rx_crypto_msg_fields))
-            {
-                LogMessagePrinter printer(ctx.logger, levels::rx_crypto_msg_fields);
-                msg.print(printer);
-            }
-
-            // TODO
-        }
+		// TODO - authenticate and process the message
     }
 
     void Responder::process(const Message& message)

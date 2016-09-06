@@ -56,12 +56,12 @@ namespace ssp21
 
         virtual bool receive(IMessageProcessor& processor) = 0;
 
-        bool is_tx_ready() const
+        inline bool is_tx_ready() const
         {
             return is_tx_ready_;
         }
 
-        bool is_rx_ready() const
+        inline bool is_rx_ready() const
         {
             return is_rx_ready_;
         }
@@ -78,7 +78,7 @@ namespace ssp21
 
     public:
 
-        void on_open()
+        inline void on_open()
         {
             if (!is_open_)
             {
@@ -87,7 +87,7 @@ namespace ssp21
             }
         }
 
-        void on_close()
+        inline void on_close()
         {
             if (is_open_)
             {
@@ -96,7 +96,7 @@ namespace ssp21
             }
         }
 
-        void on_tx_ready()
+        inline void on_tx_ready()
         {
             if (is_open_)
             {
@@ -104,7 +104,7 @@ namespace ssp21
             }
         }
 
-        void on_rx_ready()
+        inline void on_rx_ready()
         {
             if (is_open_)
             {
@@ -122,7 +122,7 @@ namespace ssp21
 
         virtual void on_rx_ready_impl() = 0;
 
-        bool is_open() const
+        inline bool is_open() const
         {
             return is_open_;
         }
