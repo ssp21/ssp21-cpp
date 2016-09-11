@@ -11,7 +11,6 @@
 #include "ssp21/crypto/gen/SessionMode.h"
 #include "ssp21/crypto/gen/HashMode.h"
 
-#include "ssp21/crypto/SequenceTypes.h"
 #include "ssp21/crypto/IMessageField.h"
 
 #include "openpal/container/RSlice.h"

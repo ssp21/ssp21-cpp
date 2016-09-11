@@ -3,6 +3,7 @@
 #include "catch.hpp"
 
 #include "ssp21/crypto/MessageParser.h"
+#include "ssp21/crypto/SequenceTypes.h"
 
 #include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
