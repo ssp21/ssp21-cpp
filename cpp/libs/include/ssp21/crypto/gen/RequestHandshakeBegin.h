@@ -24,6 +24,7 @@
 #include "ssp21/crypto/gen/SessionMode.h"
 #include "ssp21/crypto/gen/CertificateMode.h"
 #include "ssp21/crypto/IMessage.h"
+#include "ssp21/crypto/EnumField.h"
 #include "ssp21/crypto/SequenceTypes.h"
 
 namespace ssp21 {
@@ -34,11 +35,11 @@ struct RequestHandshakeBegin : public IMessage, private openpal::Uncopyable
 
     RequestHandshakeBegin(
         uint16_t version,
-        NonceMode nonce_mode,
-        DHMode dh_mode,
-        HashMode hash_mode,
-        SessionMode session_mode,
-        CertificateMode certificate_mode,
+        EnumField<NonceModeSpec> nonce_mode,
+        EnumField<DHModeSpec> dh_mode,
+        EnumField<HashModeSpec> hash_mode,
+        EnumField<SessionModeSpec> session_mode,
+        EnumField<CertificateModeSpec> certificate_mode,
         const Seq8& ephemeral_public_key
     );
 
@@ -50,11 +51,11 @@ struct RequestHandshakeBegin : public IMessage, private openpal::Uncopyable
     static const Function function = Function::request_handshake_begin;
 
     uint16_t version;
-    NonceMode nonce_mode;
-    DHMode dh_mode;
-    HashMode hash_mode;
-    SessionMode session_mode;
-    CertificateMode certificate_mode;
+    EnumField<NonceModeSpec> nonce_mode;
+    EnumField<DHModeSpec> dh_mode;
+    EnumField<HashModeSpec> hash_mode;
+    EnumField<SessionModeSpec> session_mode;
+    EnumField<CertificateModeSpec> certificate_mode;
     Seq8 ephemeral_public_key;
     Seq8Seq16 certificates;
 

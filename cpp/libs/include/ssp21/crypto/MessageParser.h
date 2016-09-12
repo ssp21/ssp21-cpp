@@ -2,16 +2,9 @@
 #define SSP21_MESSAGE_PARSER_H
 
 #include "ssp21/crypto/gen/ParseError.h"
-
-#include "ssp21/crypto/gen/Function.h"
-#include "ssp21/crypto/gen/CertificateMode.h"
-#include "ssp21/crypto/gen/DHMode.h"
-#include "ssp21/crypto/gen/HandshakeError.h"
-#include "ssp21/crypto/gen/NonceMode.h"
-#include "ssp21/crypto/gen/SessionMode.h"
-#include "ssp21/crypto/gen/HashMode.h"
-
 #include "ssp21/crypto/IMessageField.h"
+#include "ssp21/crypto/EnumField.h"
+#include "ssp21/crypto/gen/Function.h"
 
 #include "openpal/container/RSlice.h"
 #include "openpal/util/Uncopyable.h"
@@ -30,7 +23,7 @@ namespace ssp21
         {
             openpal::RSlice copy(input);
 
-            Function func;
+            EnumField<FunctionSpec> func;
             auto err = read(copy, func);
             if (any(err)) return err;
             if (func != expected) return ParseError::unexpected_function;
@@ -59,15 +52,6 @@ namespace ssp21
         static ParseError read(openpal::RSlice& input, uint8_t& value);
         static ParseError read(openpal::RSlice& input, uint16_t& value);
         static ParseError read(openpal::RSlice& input, uint32_t& value);
-
-        // enums
-        static ParseError read(openpal::RSlice& input, Function& value);
-        static ParseError read(openpal::RSlice& input, CertificateMode& value);
-        static ParseError read(openpal::RSlice& input, DHMode& value);
-        static ParseError read(openpal::RSlice& input, HandshakeError& value);
-        static ParseError read(openpal::RSlice& input, NonceMode& value);
-        static ParseError read(openpal::RSlice& input, SessionMode& value);
-        static ParseError read(openpal::RSlice& input, HashMode& value);
 
         // any field
         static ParseError read(openpal::RSlice& input, IMessageField& field)

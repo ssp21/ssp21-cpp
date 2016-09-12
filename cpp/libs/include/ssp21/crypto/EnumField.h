@@ -16,6 +16,9 @@ class EnumField final : public IMessageField
 
 public:
 
+	operator enum_t& () { return value;  }
+	operator enum_t () const { return value; }
+
 	EnumField()
 	{}
 
@@ -25,15 +28,23 @@ public:
 	virtual ParseError read(openpal::RSlice& input) override
 	{
 		uint8_t raw_value;
-		if (!BigEndian::read(input, raw_value)) return ParseError::insufficient_bytes;
+		if (!openpal::BigEndian::read(input, raw_value)) return ParseError::insufficient_bytes;
 
-		this->value = Spec::from_type(raw_value);
+		auto enum_value = Spec::from_type(raw_value);
+
+		if (enum_value == Spec::enum_type_t::undefined)
+		{
+			return ParseError::undefined_enum;
+		}
+
+		this->value = enum_value;
+
 		return ParseError::ok;
 	}
 	
 	virtual FormatError write(openpal::WSlice& output) const override
 	{
-		return BigEndian::write(output, Spec::to_type(value)) ? FormatError::ok : FormatError::insufficient_space;
+		return openpal::BigEndian::write(output, Spec::to_type(value)) ? FormatError::ok : FormatError::insufficient_space;
 	}
 
 	virtual void print(const char* name, IMessagePrinter& printer) const override

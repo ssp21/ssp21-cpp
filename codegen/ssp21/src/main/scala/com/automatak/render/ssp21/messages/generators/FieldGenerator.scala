@@ -60,9 +60,9 @@ object U32FieldGenerator extends FieldGenerator with PassByValue {
 }
 
 case class EnumFieldGenerator(enum: EnumModel) extends FieldGenerator with PassByValue {
-  override def includes = Set(Includes.enum(enum.name))
+  override def includes = Set(Includes.enum(enum.name), Includes.enumField)
 
-  override def cppType: String = enum.name
+  override def cppType: String = "EnumField<%s>".format(enum.specName)
 
   def defaultValue: Option[String] = Some("%s::undefined".format(enum.name))
 }

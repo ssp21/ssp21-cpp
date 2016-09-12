@@ -26,7 +26,7 @@ ReplyHandshakeError::ReplyHandshakeError() :
 {}
 
 ReplyHandshakeError::ReplyHandshakeError(
-    HandshakeError handshake_error
+    EnumField<HandshakeErrorSpec> handshake_error
 ) :
     handshake_error(handshake_error)
 {}
