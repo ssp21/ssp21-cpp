@@ -4,6 +4,7 @@
 
 #include "ssp21/crypto/MessageParser.h"
 #include "ssp21/crypto/SequenceTypes.h"
+#include "ssp21/crypto/EnumField.h"
 
 #include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
@@ -12,6 +13,18 @@
 
 using namespace ssp21;
 using namespace openpal;
+
+TEST_CASE(SUITE("reads enum values successfully"))
+{
+	EnumField<FunctionSpec> func;
+	Hex hex("00 01");
+
+	auto input = hex.as_rslice();
+
+	REQUIRE(ParseError::ok == func.read(input));
+	REQUIRE(input.length() == 1);
+	REQUIRE(func.value == Function::request_handshake_begin);
+}
 
 TEST_CASE(SUITE("reads integer fields successfully"))
 {
