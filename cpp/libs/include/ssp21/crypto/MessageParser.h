@@ -1,7 +1,6 @@
 #ifndef SSP21_MESSAGE_PARSER_H
 #define SSP21_MESSAGE_PARSER_H
 
-#include "ssp21/crypto/EnumField.h"
 #include "ssp21/crypto/gen/Function.h"
 #include "ssp21/crypto/gen/ParseError.h"
 
