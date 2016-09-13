@@ -41,8 +41,8 @@ TEST_CASE(SUITE("reads integer fields values successfully"))
 
 TEST_CASE(SUITE("reads integer fields successfully"))
 {
-    uint16_t a;
-    uint32_t b;
+    IntegerField<UInt16> a;
+    IntegerField<UInt32> b;
 
     Hex hex("00 01 00 00 00 03");
 
@@ -56,8 +56,8 @@ TEST_CASE(SUITE("reads integer fields successfully"))
 
 TEST_CASE(SUITE("returns error if too little data"))
 {
-    uint16_t a;
-    uint32_t b;
+    IntegerField<UInt16> a;
+    IntegerField<UInt32> b;
 
     Hex hex("00 01 00 00 00");
 
@@ -69,8 +69,8 @@ TEST_CASE(SUITE("returns error if too little data"))
 
 TEST_CASE(SUITE("ignores extra data after fields"))
 {
-    uint16_t a;
-    uint32_t b;
+	IntegerField<UInt16> a;
+	IntegerField<UInt32> b;
 
     Hex hex("00 01 00 00 00 03 FF");
 
@@ -86,7 +86,7 @@ TEST_CASE(SUITE("reads Seq8 correctly"))
     Hex hex("04 00 01 02 03 FF");
 
     auto input = hex.as_rslice();
-    auto err = MessageParser::read(input, seq);
+    auto err = MessageParser::read_fields(input, seq);
 
     REQUIRE_FALSE(any(err));
     REQUIRE(input.length() == 1);
@@ -97,7 +97,7 @@ TEST_CASE(SUITE("returns error if Seq8 empty"))
 {
     Seq8 seq;
     auto input = RSlice::empty_slice();
-    auto err = MessageParser::read(input, seq);
+    auto err = MessageParser::read_fields(input, seq);
     REQUIRE(err == ParseError::insufficient_bytes);
 }
 
@@ -106,7 +106,7 @@ TEST_CASE(SUITE("returns error if Seq8 incomplete"))
     Seq8 seq;
     Hex hex("04 00 01 02");
     auto input = hex.as_rslice();
-    auto err = MessageParser::read(input, seq);
+    auto err = MessageParser::read_fields(input, seq);
     REQUIRE(err == ParseError::insufficient_bytes);
 }
 
@@ -115,7 +115,7 @@ TEST_CASE(SUITE("reads Seq8Seq16 correctly"))
     Seq8Seq16 seqs;
     Hex hex("02 00 01 BB 00 02 CA FE DD");
     auto input = hex.as_rslice();
-    auto err = MessageParser::read(input, seqs);
+    auto err = MessageParser::read_fields(input, seqs);
     REQUIRE(!any(err));
     REQUIRE(to_hex(input) == "DD"); // remainder
     REQUIRE(seqs.count() == 2);
@@ -134,6 +134,6 @@ TEST_CASE(SUITE("returns err if Seq8Seq16 reaches limit"))
     Seq8Seq16 seqs;
     Hex hex("07 00 01 00 00 01 00 00 01 00 00 01 00 00 01 00");
     auto input = hex.as_rslice();
-    auto err = MessageParser::read(input, seqs);
+    auto err = MessageParser::read_fields(input, seqs);
     REQUIRE(err == ParseError::impl_capacity_limit);
 }

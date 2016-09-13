@@ -21,14 +21,12 @@
 
 namespace ssp21 {
 
-AuthMetadata::AuthMetadata() : 
-    nonce(0),
-    valid_until_ms(0)
+AuthMetadata::AuthMetadata()
 {}
 
 AuthMetadata::AuthMetadata(
-    uint16_t nonce,
-    uint32_t valid_until_ms,
+    IntegerField<openpal::UInt16> nonce,
+    IntegerField<openpal::UInt32> valid_until_ms,
     const SessionFlags& flags
 ) :
     nonce(nonce),

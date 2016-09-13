@@ -21,17 +21,11 @@
 
 namespace ssp21 {
 
-RequestHandshakeBegin::RequestHandshakeBegin() : 
-    version(0),
-    nonce_mode(NonceMode::undefined),
-    dh_mode(DHMode::undefined),
-    hash_mode(HashMode::undefined),
-    session_mode(SessionMode::undefined),
-    certificate_mode(CertificateMode::undefined)
+RequestHandshakeBegin::RequestHandshakeBegin()
 {}
 
 RequestHandshakeBegin::RequestHandshakeBegin(
-    uint16_t version,
+    IntegerField<openpal::UInt16> version,
     EnumField<NonceModeSpec> nonce_mode,
     EnumField<DHModeSpec> dh_mode,
     EnumField<HashModeSpec> hash_mode,

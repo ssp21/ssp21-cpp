@@ -21,8 +21,7 @@
 
 namespace ssp21 {
 
-ReplyHandshakeError::ReplyHandshakeError() : 
-    handshake_error(HandshakeError::undefined)
+ReplyHandshakeError::ReplyHandshakeError()
 {}
 
 ReplyHandshakeError::ReplyHandshakeError(

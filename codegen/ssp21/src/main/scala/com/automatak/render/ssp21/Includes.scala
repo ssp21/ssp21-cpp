@@ -33,6 +33,7 @@ object Includes {
 
   val imessage = crypto("IMessage")
   val enumField = crypto("EnumField")
+  val integerField = crypto("IntegerField")
 
   val seqTypes = crypto("SequenceTypes")
   val msgFormatter = crypto("MessageFormatter")

@@ -19,9 +19,11 @@
 #include <cstdint>
 #include "openpal/container/WSlice.h"
 #include "openpal/container/RSlice.h"
+#include "openpal/serialization/BigEndian.h"
 #include "ssp21/crypto/gen/ParseError.h"
 #include "ssp21/crypto/gen/FormatError.h"
 #include "ssp21/crypto/gen/SessionFlags.h"
+#include "ssp21/crypto/IntegerField.h"
 #include "ssp21/crypto/IMessagePrinter.h"
 
 namespace ssp21 {
@@ -31,15 +33,15 @@ struct AuthMetadata final
     AuthMetadata();
 
     AuthMetadata(
-        uint16_t nonce,
-        uint32_t valid_until_ms,
+        IntegerField<openpal::UInt16> nonce,
+        IntegerField<openpal::UInt32> valid_until_ms,
         const SessionFlags& flags
     );
 
     static const uint32_t fixed_size_bytes = 7;
 
-    uint16_t nonce;
-    uint32_t valid_until_ms;
+    IntegerField<openpal::UInt16> nonce;
+    IntegerField<openpal::UInt32> valid_until_ms;
     SessionFlags flags;
 
     ParseError read(openpal::RSlice& input);

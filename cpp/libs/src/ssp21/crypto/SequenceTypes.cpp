@@ -5,6 +5,7 @@
 
 #include "openpal/serialization/BigEndian.h"
 
+#include "ssp21/crypto/IntegerField.h"
 #include "ssp21/crypto/MessageParser.h"
 #include "ssp21/crypto/MessageFormatter.h"
 
@@ -15,8 +16,8 @@ namespace ssp21
     template <class CountType, class SeqType>
     ParseError read_seq(openpal::RSlice& input, SeqType& value)
     {
-        typename CountType::type_t count;
-        auto err = MessageParser::read_fields(input, count);
+		IntegerField<CountType> count;
+        auto err = count.read(input);
         if (any(err)) return err;
 
         if (input.length() < count)
@@ -86,9 +87,9 @@ namespace ssp21
     {
         this->clear();
 
-        uint8_t count;
-
-        auto cerr = MessageParser::read_fields(input, count);
+        IntegerField<UInt8> count;
+		
+		auto cerr = count.read(input);
         if (any(cerr)) return cerr;
 
         while (count > 0)

@@ -17,6 +17,7 @@
 #define SSP21_REQUESTHANDSHAKEBEGIN_H
 
 #include <cstdint>
+#include "openpal/serialization/BigEndian.h"
 #include "ssp21/crypto/gen/DHMode.h"
 #include "ssp21/crypto/gen/HashMode.h"
 #include "ssp21/crypto/gen/Function.h"
@@ -25,6 +26,7 @@
 #include "ssp21/crypto/gen/CertificateMode.h"
 #include "ssp21/crypto/IMessage.h"
 #include "ssp21/crypto/EnumField.h"
+#include "ssp21/crypto/IntegerField.h"
 #include "ssp21/crypto/SequenceTypes.h"
 
 namespace ssp21 {
@@ -34,7 +36,7 @@ struct RequestHandshakeBegin final : public IMessage, private openpal::Uncopyabl
     RequestHandshakeBegin();
 
     RequestHandshakeBegin(
-        uint16_t version,
+        IntegerField<openpal::UInt16> version,
         EnumField<NonceModeSpec> nonce_mode,
         EnumField<DHModeSpec> dh_mode,
         EnumField<HashModeSpec> hash_mode,
@@ -50,7 +52,7 @@ struct RequestHandshakeBegin final : public IMessage, private openpal::Uncopyabl
     static const uint32_t min_size_bytes = 10;
     static const Function function = Function::request_handshake_begin;
 
-    uint16_t version;
+    IntegerField<openpal::UInt16> version;
     EnumField<NonceModeSpec> nonce_mode;
     EnumField<DHModeSpec> dh_mode;
     EnumField<HashModeSpec> hash_mode;

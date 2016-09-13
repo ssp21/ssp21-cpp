@@ -44,19 +44,19 @@ case class StructFieldGenerator(sf: StructField) extends FieldGenerator with Pas
 }
 
 object U16FieldGenerator extends FieldGenerator with PassByValue {
-  override def includes = Set(Includes.cstdint)
+  override def includes = Set(Includes.cstdint, Includes.integerField, Includes.bigEndian)
 
-  override def cppType: String = "uint16_t"
+  override def cppType: String = "IntegerField<openpal::UInt16>"
 
-  def defaultValue: Option[String] = Some("0")
+  def defaultValue: Option[String] = None
 }
 
 object U32FieldGenerator extends FieldGenerator with PassByValue {
-  override def includes = Set(Includes.cstdint)
+  override def includes = Set(Includes.cstdint, Includes.integerField, Includes.bigEndian)
 
-  override def cppType: String = "uint32_t"
+  override def cppType: String = "IntegerField<openpal::UInt32>"
 
-  def defaultValue: Option[String] = Some("0")
+  def defaultValue: Option[String] = None
 }
 
 case class EnumFieldGenerator(enum: EnumModel) extends FieldGenerator with PassByValue {
@@ -64,7 +64,7 @@ case class EnumFieldGenerator(enum: EnumModel) extends FieldGenerator with PassB
 
   override def cppType: String = "EnumField<%s>".format(enum.specName)
 
-  def defaultValue: Option[String] = Some("%s::undefined".format(enum.name))
+  def defaultValue: Option[String] = None
 }
 
 object Seq8FieldGenerator extends FieldGenerator with PassByConstRef {

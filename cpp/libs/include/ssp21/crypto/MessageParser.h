@@ -37,7 +37,7 @@ namespace ssp21
         template <typename T, typename... Args>
         static ParseError read_fields(openpal::RSlice& input, T& value, Args& ... args)
         {
-            auto err = read(input, value);
+			auto err = value.read(input);
             if (any(err)) return err;
             return read_fields(input, args...);
         }
@@ -45,18 +45,6 @@ namespace ssp21
         static ParseError read_fields(openpal::RSlice&)
         {
             return ParseError::ok;
-        }
-
-        // integers
-        static ParseError read(openpal::RSlice& input, uint8_t& value);
-        static ParseError read(openpal::RSlice& input, uint16_t& value);
-        static ParseError read(openpal::RSlice& input, uint32_t& value);
-
-        // any type that has a read method
-		template <class T>
-        inline static ParseError read(openpal::RSlice& input, T& field)
-        {
-            return field.read(input);
         }
     };
 }
