@@ -1,16 +1,18 @@
 #ifndef SSP21_ENUMFIELD_H
 #define SSP21_ENUMFIELD_H
 
-#include <cstdint>
-
-#include "ssp21/crypto/IMessageField.h"
+#include "ssp21/crypto/gen/ParseError.h"
+#include "ssp21/crypto/gen/FormatError.h"
+#include "ssp21/crypto/IMessagePrinter.h"
+#include "openpal/container/RSlice.h"
+#include "openpal/container/WSlice.h"
 
 #include "openpal/serialization/BigEndian.h"
 
 namespace ssp21 {
 
 template <typename Spec>
-class EnumField final : public IMessageField
+class EnumField final
 {
 	typedef typename Spec::enum_type_t enum_t;
 
@@ -25,7 +27,7 @@ public:
 	EnumField(enum_t value) : value(value)
 	{}
 
-	virtual ParseError read(openpal::RSlice& input) override
+	ParseError read(openpal::RSlice& input)
 	{
 		uint8_t raw_value;
 		if (!openpal::BigEndian::read(input, raw_value)) return ParseError::insufficient_bytes;
@@ -42,12 +44,12 @@ public:
 		return ParseError::ok;
 	}
 	
-	virtual FormatError write(openpal::WSlice& output) const override
+	FormatError write(openpal::WSlice& output) const
 	{
 		return openpal::BigEndian::write(output, Spec::to_type(value)) ? FormatError::ok : FormatError::insufficient_space;
 	}
-
-	virtual void print(const char* name, IMessagePrinter& printer) const override
+	
+	void print(const char* name, IMessagePrinter& printer) const
 	{
 		printer.print(name, Spec::to_string(this->value));
 	}

@@ -2,26 +2,29 @@
 #ifndef SSP21_SEQUENCETYPES_H
 #define SSP21_SEQUENCETYPES_H
 
-#include <openpal/util/Uncopyable.h>
+#include "openpal/util/Uncopyable.h"
 
-#include <openpal/container/RSlice.h>
+#include "openpal/container/RSlice.h"
+#include "openpal/container/WSlice.h"
 
+#include "ssp21/crypto/gen/FormatError.h"
+#include "ssp21/crypto/gen/ParseError.h"
+#include "ssp21/crypto/IMessagePrinter.h"
 #include "ssp21/crypto/Constants.h"
-#include "ssp21/crypto/IMessageField.h"
 
 
 namespace ssp21
 {
-    class Seq8 final : public openpal::RSlice, public IMessageField
+    class Seq8 final : public openpal::RSlice
     {
     public:
 
         Seq8() : openpal::RSlice()
         {}
 
-        virtual ParseError read(openpal::RSlice& input) override;
-        virtual FormatError write(openpal::WSlice& output) const override;
-        virtual void print(const char* name, IMessagePrinter& printer) const override;
+        ParseError read(openpal::RSlice& input);
+        FormatError write(openpal::WSlice& output) const;
+        void print(const char* name, IMessagePrinter& printer) const;
 
 
 
@@ -29,31 +32,31 @@ namespace ssp21
         {}
     };
 
-    class Seq16 final : public openpal::RSlice, public IMessageField
+    class Seq16 final : public openpal::RSlice
     {
     public:
 
         Seq16() : openpal::RSlice()
         {}
 
-        virtual ParseError read(openpal::RSlice& input) override;
-        virtual FormatError write(openpal::WSlice& output) const override;
-        virtual void print(const char* name, IMessagePrinter& printer) const override;
+		ParseError read(openpal::RSlice& input);
+		FormatError write(openpal::WSlice& output) const;
+		void print(const char* name, IMessagePrinter& printer) const;
 
         explicit Seq16(const openpal::RSlice& other) : RSlice(other)
         {}
     };
 
-    class SeqRSlice : public IMessageField
+    class SeqRSlice
     {
 
     public:
 
         SeqRSlice();
 
-        virtual ParseError read(openpal::RSlice& input) override;
-        virtual FormatError write(openpal::WSlice& output) const override;
-        virtual void print(const char* name, IMessagePrinter& printer) const override;
+		ParseError read(openpal::RSlice& input);
+        FormatError write(openpal::WSlice& output) const;
+        void print(const char* name, IMessagePrinter& printer) const;
 
         void clear();
 
