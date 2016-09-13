@@ -1,7 +1,6 @@
 #ifndef SSP21_MESSAGE_PRINTING_H
 #define SSP21_MESSAGE_PRINTING_H
 
-#include "ssp21/crypto/SequenceTypes.h"
 #include "ssp21/crypto/IMessagePrinter.h"
 
 #include "openpal/util/Uncopyable.h"

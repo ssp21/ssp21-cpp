@@ -1,10 +1,9 @@
 #ifndef SSP21_MESSAGE_PARSER_H
 #define SSP21_MESSAGE_PARSER_H
 
-#include "ssp21/crypto/gen/ParseError.h"
-#include "ssp21/crypto/IMessageField.h"
 #include "ssp21/crypto/EnumField.h"
 #include "ssp21/crypto/gen/Function.h"
+#include "ssp21/crypto/gen/ParseError.h"
 
 #include "openpal/container/RSlice.h"
 #include "openpal/util/Uncopyable.h"
@@ -24,7 +23,7 @@ namespace ssp21
             openpal::RSlice copy(input);
 
             EnumField<FunctionSpec> func;
-            auto err = read(copy, func);
+            auto err = func.read(copy);
             if (any(err)) return err;
             if (func != expected) return ParseError::unexpected_function;
 

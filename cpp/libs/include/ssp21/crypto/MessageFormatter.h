@@ -3,8 +3,6 @@
 
 #include "ssp21/crypto/gen/Function.h"
 
-#include "ssp21/crypto/SequenceTypes.h"
-#include "ssp21/crypto/IMessageField.h"
 #include "ssp21/crypto/FormatResult.h"
 #include "ssp21/crypto/EnumField.h"
 
