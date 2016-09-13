@@ -23,7 +23,7 @@
 
 namespace ssp21 {
 
-struct UnconfirmedSessionData : public IMessage, private openpal::Uncopyable
+struct UnconfirmedSessionData final : public IMessage, private openpal::Uncopyable
 {
     UnconfirmedSessionData();
 

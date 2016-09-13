@@ -22,7 +22,7 @@
 
 namespace ssp21 {
 
-struct ReplyHandshakeAuth : public IMessage, private openpal::Uncopyable
+struct ReplyHandshakeAuth final : public IMessage, private openpal::Uncopyable
 {
     ReplyHandshakeAuth();
 

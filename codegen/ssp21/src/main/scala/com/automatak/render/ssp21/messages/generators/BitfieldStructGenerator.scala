@@ -29,18 +29,18 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
     }
 
     def readFunc: Iterator[String] = {
-      "virtual ParseError read(openpal::RSlice& input) override;".iter
+      "ParseError read(openpal::RSlice& input);".iter
     }
 
     def writeFunc: Iterator[String] = {
-      "virtual FormatError write(openpal::WSlice& output) const override;".iter
+      "FormatError write(openpal::WSlice& output) const;".iter
     }
 
     def printFunc: Iterator[String] = {
-      "virtual void print(const char* name, IMessagePrinter& printer) const override;".iter
+      "void print(const char* name, IMessagePrinter& printer) const;".iter
     }
 
-    def struct = "struct %s final : public IMessageField".format(field.name).iter ++ bracketSemiColon {
+    def struct = "struct %s final".format(field.name).iter ++ bracketSemiColon {
       defaultConstructor ++
         space ++
         fullConstructor ++
@@ -52,7 +52,7 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
         members
     }
 
-    def includes = List(Includes.messageField)
+    def includes = Includes.messageField
     def includeLines: Iterator[String] = Includes.lines(includes)
 
     def content = struct

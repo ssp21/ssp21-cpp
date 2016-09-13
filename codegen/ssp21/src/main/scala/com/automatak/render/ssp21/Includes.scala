@@ -32,7 +32,6 @@ object Includes {
   val errorCategory = Include(quoted("ssp21/ErrorCategory.h"), Ordering.ssp21)
 
   val imessage = crypto("IMessage")
-  val messageField = crypto("IMessageField")
   val enumField = crypto("EnumField")
 
   val seqTypes = crypto("SequenceTypes")
@@ -42,6 +41,8 @@ object Includes {
   val msgPrinting = crypto("MessagePrinting")
   val flagsPrinting = crypto("FlagsPrinting")
   val msgParser = crypto("MessageParser")
+
+  val messageField = List(parseError, formatError, msgPrinter, wslice, rslice)
 
   def crypto(className: String) = Include(quoted("ssp21/crypto/%s.h".format(className)), Ordering.crypto)
   def enum(className: String) = Include(quoted("ssp21/crypto/gen/%s.h".format(className)), Ordering.enum)

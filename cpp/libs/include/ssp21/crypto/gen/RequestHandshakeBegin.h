@@ -29,7 +29,7 @@
 
 namespace ssp21 {
 
-struct RequestHandshakeBegin : public IMessage, private openpal::Uncopyable
+struct RequestHandshakeBegin final : public IMessage, private openpal::Uncopyable
 {
     RequestHandshakeBegin();
 

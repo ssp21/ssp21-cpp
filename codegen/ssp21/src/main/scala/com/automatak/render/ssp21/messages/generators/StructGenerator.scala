@@ -28,9 +28,9 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
 
   def extraImplFunctions(implicit indent: Indentation): Iterator[String] = Iterator.empty
 
-  def interfaces: String = "public IMessageField"
+  def interfaces: String = ""
 
-  def headerIncludes: List[Include] = List(Includes.messageField)
+  def headerIncludes: List[Include] = Includes.messageField
 
   def outputReadWritePrint: Boolean = true
 
@@ -38,9 +38,9 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
 
     def defaultConstructorSig = "%s();".format(sf.name).iter
 
-    def readSig = "virtual ParseError read(openpal::RSlice& input) override;".iter
-    def writeSig = "virtual FormatError write(openpal::WSlice& output) const override;".iter
-    def printSig = "virtual void print(const char* name, IMessagePrinter& printer) const override;".iter
+    def readSig = "ParseError read(openpal::RSlice& input);".iter
+    def writeSig = "FormatError write(openpal::WSlice& output) const;".iter
+    def printSig = "void print(const char* name, IMessagePrinter& printer) const;".iter
 
     def readWritePrint = {
       if(outputReadWritePrint) readSig ++ writeSig ++ printSig else Iterator.empty
@@ -59,7 +59,7 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
         "%s %s;".format(f.cpp.cppType, f.name);
       }.toIterator
 
-      "struct %s : %s".format(sf.name, interfaces).iter ++ bracketSemiColon {
+      "struct %s final %s".format(sf.name, interfaces).iter ++ bracketSemiColon {
         extraHeaderDeclarations ++
           defaultConstructorSig ++
           space ++

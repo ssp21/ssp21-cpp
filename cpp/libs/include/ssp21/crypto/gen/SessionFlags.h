@@ -16,11 +16,15 @@
 #ifndef SSP21_SESSIONFLAGS_H
 #define SSP21_SESSIONFLAGS_H
 
-#include "ssp21/crypto/IMessageField.h"
+#include "openpal/container/WSlice.h"
+#include "openpal/container/RSlice.h"
+#include "ssp21/crypto/gen/ParseError.h"
+#include "ssp21/crypto/gen/FormatError.h"
+#include "ssp21/crypto/IMessagePrinter.h"
 
 namespace ssp21 {
 
-struct SessionFlags final : public IMessageField
+struct SessionFlags final
 {
     SessionFlags(){}
 
@@ -29,9 +33,9 @@ struct SessionFlags final : public IMessageField
         fin(fin)
     {}
 
-    virtual ParseError read(openpal::RSlice& input) override;
-    virtual FormatError write(openpal::WSlice& output) const override;
-    virtual void print(const char* name, IMessagePrinter& printer) const override;
+    ParseError read(openpal::RSlice& input);
+    FormatError write(openpal::WSlice& output) const;
+    void print(const char* name, IMessagePrinter& printer) const;
 
     bool fir = true;
     bool fin = true;
