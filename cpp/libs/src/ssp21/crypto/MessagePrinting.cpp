@@ -33,41 +33,5 @@ namespace ssp21
         printer.print(name, value);
     }
 
-    // enums
-    void MessagePrinting::print(IMessagePrinter& printer, const char* name, Function value)
-    {
-        print_any_enum<max_line_size, FunctionSpec>(printer, name, value);
-    }
-
-    void MessagePrinting::print(IMessagePrinter& printer, const char* name, CertificateMode value)
-    {
-        print_any_enum<max_line_size, CertificateModeSpec>(printer, name, value);
-    }
-
-    void MessagePrinting::print(IMessagePrinter& printer, const char* name, DHMode value)
-    {
-        print_any_enum<max_line_size, DHModeSpec>(printer, name, value);
-    }
-
-    void MessagePrinting::print(IMessagePrinter& printer, const char* name, HandshakeError value)
-    {
-        print_any_enum<max_line_size, HandshakeErrorSpec>(printer, name, value);
-    }
-
-    void MessagePrinting::print(IMessagePrinter& printer, const char* name, NonceMode value)
-    {
-        print_any_enum<max_line_size, NonceModeSpec>(printer, name, value);
-    }
-
-    void MessagePrinting::print(IMessagePrinter& printer, const char* name, SessionMode value)
-    {
-        print_any_enum<max_line_size, SessionModeSpec>(printer, name, value);
-    }
-
-    void MessagePrinting::print(IMessagePrinter& printer, const char* name, HashMode value)
-    {
-        print_any_enum<max_line_size, HashModeSpec>(printer, name, value);
-    }
-
 }
 

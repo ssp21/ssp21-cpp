@@ -1,14 +1,6 @@
 #ifndef SSP21_MESSAGE_PRINTING_H
 #define SSP21_MESSAGE_PRINTING_H
 
-#include "ssp21/crypto/gen/Function.h"
-#include "ssp21/crypto/gen/CertificateMode.h"
-#include "ssp21/crypto/gen/DHMode.h"
-#include "ssp21/crypto/gen/HandshakeError.h"
-#include "ssp21/crypto/gen/NonceMode.h"
-#include "ssp21/crypto/gen/SessionMode.h"
-#include "ssp21/crypto/gen/HashMode.h"
-
 #include "ssp21/crypto/SequenceTypes.h"
 #include "ssp21/crypto/IMessagePrinter.h"
 
@@ -40,17 +32,9 @@ namespace ssp21
         static void print(IMessagePrinter& printer, const char* name, uint16_t value);
         static void print(IMessagePrinter& printer, const char* name, uint32_t value);
 
-        // enums
-        static void print(IMessagePrinter& printer, const char* name, Function value);
-        static void print(IMessagePrinter& printer, const char* name, CertificateMode value);
-        static void print(IMessagePrinter& printer, const char* name, DHMode value);
-        static void print(IMessagePrinter& printer, const char* name, HandshakeError value);
-        static void print(IMessagePrinter& printer, const char* name, NonceMode value);
-        static void print(IMessagePrinter& printer, const char* name, SessionMode value);
-        static void print(IMessagePrinter& printer, const char* name, HashMode value);
-
-        // any field
-        static void print(IMessagePrinter& printer, const char* name, const IMessageField& field)
+        // anything with a print method
+		template <class T>
+        static void print(IMessagePrinter& printer, const char* name, const T& field)
         {
             field.print(name, printer);
         }
