@@ -22,7 +22,7 @@ namespace ssp21
         {
             const auto start = dest;
 
-            auto ferr = write(dest, function);
+			auto ferr = function.write(dest);
             if (any(ferr)) return FormatResult::Error(ferr);
 
             auto merr = write_fields(dest);
@@ -35,7 +35,7 @@ namespace ssp21
         template <typename T, typename... Args>
         static FormatError write_fields(openpal::WSlice& dest, const T& value, Args& ... args)
         {
-            auto err = write(dest, value);
+            auto err = value.write(dest);
             if (any(err)) return err;
             return write_fields(dest, args...);
         }
@@ -44,37 +44,6 @@ namespace ssp21
         {
             return FormatError::ok;
         }
-
-        // integers
-        static FormatError write(openpal::WSlice& dest, uint8_t value);
-        static FormatError write(openpal::WSlice& dest, uint16_t value);
-        static FormatError write(openpal::WSlice& dest, uint32_t value);
-
-        // anything with a write method
-		template <class T>
-        inline static FormatError write(openpal::WSlice& dest, const T& field)
-        {
-            return field.write(dest);
-        }
-
-        template <class WriteFunc>
-        static FormatError write_any_with_written(const WriteFunc& write, openpal::WSlice& dest, openpal::RSlice& written)
-        {
-            const auto start = dest;
-            auto err = write(dest);
-            if (any(err))
-            {
-                written = openpal::RSlice::empty_slice();
-                return err;
-            }
-            else
-            {
-                const auto num_written = start.length() - dest.length();
-                written = start.as_rslice().take(num_written);
-                return err;
-            }
-        }
-
 
     };
 }

@@ -38,9 +38,9 @@ namespace ssp21
             return FormatError::bad_sequence_length;
         }
 
-        const auto count = static_cast<typename CountType::type_t>(value.length());
+		IntegerField<CountType> count(static_cast<typename CountType::type_t>(value.length()));
 
-        auto err = MessageFormatter::write_fields(dest, count);
+		auto err = count.write(dest);
         if (any(err)) return err;
 
         if (dest.length() < value.length()) return FormatError::insufficient_space;
@@ -115,9 +115,10 @@ namespace ssp21
             return FormatError::bad_sequence_length;
         }
 
-        const uint8_t count = static_cast<UInt8::type_t>(this->count());
 
-        auto err = MessageFormatter::write_fields(output, count);
+        IntegerField<UInt8> count(static_cast<UInt8::type_t>(this->count()));
+
+		auto err = count.write(output);
         if (any(err)) return err;
 
         for (UInt8::type_t i = 0; i < count_; ++i)
