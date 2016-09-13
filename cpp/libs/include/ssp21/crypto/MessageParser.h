@@ -41,6 +41,8 @@ namespace ssp21
             return read_fields(input, args...);
         }
 
+	private:
+
         static ParseError read_fields(openpal::RSlice&)
         {
             return ParseError::ok;
