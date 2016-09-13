@@ -5,6 +5,7 @@
 #include "ssp21/crypto/MessageParser.h"
 #include "ssp21/crypto/SequenceTypes.h"
 #include "ssp21/crypto/EnumField.h"
+#include "ssp21/crypto/IntegerField.h"
 
 #include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
@@ -24,6 +25,18 @@ TEST_CASE(SUITE("reads enum values successfully"))
 	REQUIRE(ParseError::ok == func.read(input));
 	REQUIRE(input.length() == 1);
 	REQUIRE(func.value == Function::request_handshake_begin);
+}
+
+TEST_CASE(SUITE("reads integer fields values successfully"))
+{
+	IntegerField<UInt16> value;
+	Hex hex("01 02 03");
+
+	auto input = hex.as_rslice();
+
+	REQUIRE(ParseError::ok == value.read(input));
+	REQUIRE(input.length() == 1);
+	REQUIRE(value == 258);
 }
 
 TEST_CASE(SUITE("reads integer fields successfully"))
