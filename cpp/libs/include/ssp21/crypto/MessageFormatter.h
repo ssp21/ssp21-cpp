@@ -18,11 +18,12 @@ namespace ssp21
     public:
 
         template <typename WriteFun>
-        static FormatResult write_message(openpal::WSlice& dest, EnumField<FunctionSpec> function, const WriteFun& write_fields)
+        static FormatResult write_message(openpal::WSlice& dest, Function function, const WriteFun& write_fields)
         {
             const auto start = dest;
 
-			auto ferr = function.write(dest);
+			EnumField<FunctionSpec> func(function);
+			auto ferr = func.write(dest);
             if (any(ferr)) return FormatResult::Error(ferr);
 
             auto merr = write_fields(dest);
