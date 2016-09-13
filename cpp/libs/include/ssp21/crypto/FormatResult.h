@@ -11,15 +11,13 @@ namespace ssp21
 
     struct FormatResult
     {
-        static FormatResult Error(FormatError err)
-        {
-            return FormatResult(err, openpal::RSlice::empty_slice());
-        }
-
         static FormatResult Succes(const openpal::RSlice& written)
         {
             return FormatResult(FormatError::ok, written);
         }
+
+		FormatResult(FormatError err) : err(err)
+		{}
 
         FormatError err;
         openpal::RSlice written;
