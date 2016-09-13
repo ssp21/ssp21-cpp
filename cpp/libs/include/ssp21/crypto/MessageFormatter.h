@@ -2,17 +2,11 @@
 #define SSP21_MESSAGE_FORMATTER_H
 
 #include "ssp21/crypto/gen/Function.h"
-#include "ssp21/crypto/gen/CertificateMode.h"
-#include "ssp21/crypto/gen/DHMode.h"
-#include "ssp21/crypto/gen/HandshakeError.h"
-#include "ssp21/crypto/gen/NonceMode.h"
-#include "ssp21/crypto/gen/SessionMode.h"
-#include "ssp21/crypto/gen/HashMode.h"
-#include "ssp21/crypto/gen/FormatError.h"
 
 #include "ssp21/crypto/SequenceTypes.h"
 #include "ssp21/crypto/IMessageField.h"
 #include "ssp21/crypto/FormatResult.h"
+#include "ssp21/crypto/EnumField.h"
 
 #include "openpal/container/WSlice.h"
 #include "openpal/util/Uncopyable.h"
@@ -26,7 +20,7 @@ namespace ssp21
     public:
 
         template <typename WriteFun>
-        static FormatResult write_message(openpal::WSlice& dest, Function function, const WriteFun& write_fields)
+        static FormatResult write_message(openpal::WSlice& dest, EnumField<FunctionSpec> function, const WriteFun& write_fields)
         {
             const auto start = dest;
 
@@ -58,17 +52,9 @@ namespace ssp21
         static FormatError write(openpal::WSlice& dest, uint16_t value);
         static FormatError write(openpal::WSlice& dest, uint32_t value);
 
-        // enums
-        static FormatError write(openpal::WSlice& dest, Function value);
-        static FormatError write(openpal::WSlice& dest, CertificateMode value);
-        static FormatError write(openpal::WSlice& dest, DHMode value);
-        static FormatError write(openpal::WSlice& dest, HandshakeError value);
-        static FormatError write(openpal::WSlice& dest, NonceMode value);
-        static FormatError write(openpal::WSlice& dest, SessionMode value);
-        static FormatError write(openpal::WSlice& dest, HashMode value);
-
-        // any writable
-        static FormatError write(openpal::WSlice& dest, const IMessageField& field)
+        // anything with a write method
+		template <class T>
+        inline static FormatError write(openpal::WSlice& dest, const T& field)
         {
             return field.write(dest);
         }

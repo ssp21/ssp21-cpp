@@ -53,8 +53,9 @@ namespace ssp21
         static ParseError read(openpal::RSlice& input, uint16_t& value);
         static ParseError read(openpal::RSlice& input, uint32_t& value);
 
-        // any field
-        static ParseError read(openpal::RSlice& input, IMessageField& field)
+        // any type that has a read method
+		template <class T>
+        inline static ParseError read(openpal::RSlice& input, T& field)
         {
             return field.read(input);
         }
