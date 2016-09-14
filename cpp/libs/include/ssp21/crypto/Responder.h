@@ -132,7 +132,10 @@ namespace ssp21
 
     private:
 
-		bool can_receive() const { return ctx.lower->is_tx_ready() && !this->is_rx_ready(); }
+        bool can_receive() const
+        {
+            return ctx.lower->is_tx_ready() && !this->is_rx_ready();
+        }
 
         // ---- implement IUpperLayer -----
 

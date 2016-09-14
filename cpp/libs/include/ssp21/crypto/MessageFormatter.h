@@ -22,12 +22,12 @@ namespace ssp21
         {
             const auto start = dest;
 
-			EnumField<FunctionSpec> func(function);
-			auto ferr = func.write(dest);
-			if (any(ferr)) return ferr;
+            EnumField<FunctionSpec> func(function);
+            auto ferr = func.write(dest);
+            if (any(ferr)) return ferr;
 
             auto merr = write_fields(dest);
-			if (any(merr)) return merr;
+            if (any(merr)) return merr;
 
             const auto num_written = start.length() - dest.length();
             return FormatResult::Succes(start.as_rslice().take(num_written));
@@ -41,7 +41,7 @@ namespace ssp21
             return write_fields(dest, args...);
         }
 
-	private:
+    private:
 
         static FormatError write_fields(openpal::WSlice& output)
         {

@@ -17,26 +17,26 @@ using namespace openpal;
 
 TEST_CASE(SUITE("reads enum values successfully"))
 {
-	EnumField<FunctionSpec> func;
-	Hex hex("00 01");
+    EnumField<FunctionSpec> func;
+    Hex hex("00 01");
 
-	auto input = hex.as_rslice();
+    auto input = hex.as_rslice();
 
-	REQUIRE(ParseError::ok == func.read(input));
-	REQUIRE(input.length() == 1);
-	REQUIRE(func.value == Function::request_handshake_begin);
+    REQUIRE(ParseError::ok == func.read(input));
+    REQUIRE(input.length() == 1);
+    REQUIRE(func.value == Function::request_handshake_begin);
 }
 
 TEST_CASE(SUITE("reads integer fields values successfully"))
 {
-	IntegerField<UInt16> value;
-	Hex hex("01 02 03");
+    IntegerField<UInt16> value;
+    Hex hex("01 02 03");
 
-	auto input = hex.as_rslice();
+    auto input = hex.as_rslice();
 
-	REQUIRE(ParseError::ok == value.read(input));
-	REQUIRE(input.length() == 1);
-	REQUIRE(value == 258);
+    REQUIRE(ParseError::ok == value.read(input));
+    REQUIRE(input.length() == 1);
+    REQUIRE(value == 258);
 }
 
 TEST_CASE(SUITE("reads integer fields successfully"))
@@ -69,8 +69,8 @@ TEST_CASE(SUITE("returns error if too little data"))
 
 TEST_CASE(SUITE("ignores extra data after fields"))
 {
-	IntegerField<UInt16> a;
-	IntegerField<UInt32> b;
+    IntegerField<UInt16> a;
+    IntegerField<UInt32> b;
 
     Hex hex("00 01 00 00 00 03 FF");
 

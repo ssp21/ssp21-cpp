@@ -38,12 +38,12 @@ namespace ssp21
         template <typename T, typename... Args>
         static ParseError read_fields(openpal::RSlice& input, T& value, Args& ... args)
         {
-	    auto err = value.read(input);
+            auto err = value.read(input);
             if (any(err)) return err;
             return read_fields(input, args...);
         }
 
-	private:
+    private:
 
         static ParseError read_fields(openpal::RSlice&)
         {

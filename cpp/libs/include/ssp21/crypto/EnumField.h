@@ -9,56 +9,63 @@
 
 #include "openpal/serialization/BigEndian.h"
 
-namespace ssp21 {
-
-template <typename Spec>
-class EnumField final
+namespace ssp21
 {
-	typedef typename Spec::enum_type_t enum_t;
 
-public:
+    template <typename Spec>
+    class EnumField final
+    {
+        typedef typename Spec::enum_type_t enum_t;
 
-	operator enum_t& () { return value;  }
-	operator enum_t () const { return value; }
+    public:
 
-	EnumField()
-	{}
+        operator enum_t& ()
+        {
+            return value;
+        }
+        operator enum_t () const
+        {
+            return value;
+        }
 
-	EnumField(enum_t value) : value(value)
-	{}
+        EnumField()
+        {}
 
-	ParseError read(openpal::RSlice& input)
-	{
-		uint8_t raw_value;
-		if (!openpal::BigEndian::read(input, raw_value)) return ParseError::insufficient_bytes;
+        EnumField(enum_t value) : value(value)
+        {}
 
-		auto enum_value = Spec::from_type(raw_value);
+        ParseError read(openpal::RSlice& input)
+        {
+            uint8_t raw_value;
+            if (!openpal::BigEndian::read(input, raw_value)) return ParseError::insufficient_bytes;
 
-		if (enum_value == Spec::enum_type_t::undefined)
-		{
-			return ParseError::undefined_enum;
-		}
+            auto enum_value = Spec::from_type(raw_value);
 
-		this->value = enum_value;
+            if (enum_value == Spec::enum_type_t::undefined)
+            {
+                return ParseError::undefined_enum;
+            }
 
-		return ParseError::ok;
-	}
-	
-	FormatError write(openpal::WSlice& output) const
-	{
-		return openpal::BigEndian::write(output, Spec::to_type(value)) ? FormatError::ok : FormatError::insufficient_space;
-	}
-	
-	void print(const char* name, IMessagePrinter& printer) const
-	{
-		printer.print(name, Spec::to_string(this->value));
-	}
+            this->value = enum_value;
 
-	enum_t value = enum_t::undefined;
-	
-};
-	
-	
+            return ParseError::ok;
+        }
+
+        FormatError write(openpal::WSlice& output) const
+        {
+            return openpal::BigEndian::write(output, Spec::to_type(value)) ? FormatError::ok : FormatError::insufficient_space;
+        }
+
+        void print(const char* name, IMessagePrinter& printer) const
+        {
+            printer.print(name, Spec::to_string(this->value));
+        }
+
+        enum_t value = enum_t::undefined;
+
+    };
+
+
 }
 
 #endif

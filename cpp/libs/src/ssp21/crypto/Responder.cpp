@@ -169,12 +169,12 @@ namespace ssp21
         if (any(err))
         {
             FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "error reading session message: %s", ParseErrorSpec::to_string(err));
-			return;
+            return;
         }
-        
-		ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, Function::unconfirmed_session_data, msg, data.length());
 
-		// TODO - authenticate and process the message
+        ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, Function::unconfirmed_session_data, msg, data.length());
+
+        // TODO - authenticate and process the message
     }
 
     void Responder::process(const Message& message)

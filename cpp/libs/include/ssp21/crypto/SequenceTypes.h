@@ -39,9 +39,9 @@ namespace ssp21
         Seq16() : openpal::RSlice()
         {}
 
-		ParseError read(openpal::RSlice& input);
-		FormatError write(openpal::WSlice& output) const;
-		void print(const char* name, IMessagePrinter& printer) const;
+        ParseError read(openpal::RSlice& input);
+        FormatError write(openpal::WSlice& output) const;
+        void print(const char* name, IMessagePrinter& printer) const;
 
         explicit Seq16(const openpal::RSlice& other) : RSlice(other)
         {}
@@ -54,7 +54,7 @@ namespace ssp21
 
         SeqRSlice();
 
-		ParseError read(openpal::RSlice& input);
+        ParseError read(openpal::RSlice& input);
         FormatError write(openpal::WSlice& output) const;
         void print(const char* name, IMessagePrinter& printer) const;
 

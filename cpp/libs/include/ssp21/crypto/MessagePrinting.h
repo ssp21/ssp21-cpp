@@ -20,9 +20,9 @@ namespace ssp21
             return print_fields(printer, args...);
         }
 
-	private:
+    private:
 
-		static void print_fields(IMessagePrinter& printer) {}
+        static void print_fields(IMessagePrinter& printer) {}
     };
 }
 

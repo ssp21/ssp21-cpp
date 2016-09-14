@@ -16,7 +16,7 @@ namespace ssp21
     template <class CountType, class SeqType>
     ParseError read_seq(openpal::RSlice& input, SeqType& value)
     {
-		IntegerField<CountType> count;
+        IntegerField<CountType> count;
         auto err = count.read(input);
         if (any(err)) return err;
 
@@ -38,9 +38,9 @@ namespace ssp21
             return FormatError::bad_sequence_length;
         }
 
-		IntegerField<CountType> count(static_cast<typename CountType::type_t>(value.length()));
+        IntegerField<CountType> count(static_cast<typename CountType::type_t>(value.length()));
 
-		auto err = count.write(dest);
+        auto err = count.write(dest);
         if (any(err)) return err;
 
         if (dest.length() < value.length()) return FormatError::insufficient_space;
@@ -88,8 +88,8 @@ namespace ssp21
         this->clear();
 
         IntegerField<UInt8> count;
-		
-		auto cerr = count.read(input);
+
+        auto cerr = count.read(input);
         if (any(cerr)) return cerr;
 
         while (count > 0)
@@ -118,7 +118,7 @@ namespace ssp21
 
         IntegerField<UInt8> count(static_cast<UInt8::type_t>(this->count()));
 
-		auto err = count.write(output);
+        auto err = count.write(output);
         if (any(err)) return err;
 
         for (UInt8::type_t i = 0; i < count_; ++i)
