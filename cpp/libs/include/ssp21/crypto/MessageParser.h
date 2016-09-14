@@ -4,6 +4,8 @@
 #include "ssp21/crypto/gen/Function.h"
 #include "ssp21/crypto/gen/ParseError.h"
 
+#include "ssp21/crypto/EnumField.h"
+
 #include "openpal/container/RSlice.h"
 #include "openpal/util/Uncopyable.h"
 
@@ -36,7 +38,7 @@ namespace ssp21
         template <typename T, typename... Args>
         static ParseError read_fields(openpal::RSlice& input, T& value, Args& ... args)
         {
-			auto err = value.read(input);
+	    auto err = value.read(input);
             if (any(err)) return err;
             return read_fields(input, args...);
         }
