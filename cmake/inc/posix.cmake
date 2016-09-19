@@ -1,7 +1,9 @@
 if (UNIX)
+
 	set(PTHREAD pthread)   
 	find_package(Threads)
-		if(STATICLIBS)
+	
+	if(STATICLIBS)
 		set(LIB_TYPE STATIC)
 	else()
 		set(LIB_TYPE SHARED)
@@ -10,7 +12,7 @@ if (UNIX)
 	
 	include (CheckLibraryExists)
 	check_library_exists(pthread pthread_timedjoin_np "" HAVE_PHTREAD_TIMEDJOIN_NP)
-	set(CMAKE_C_FLAGS "-g -O2 -Wall -W -Wno-multichar -Wunused-variable -Wno-unused-parameter -Wunused-function -Wunused -Wno-system-headers -Wwrite-strings -fprofile-arcs -ftest-coverage -save-temps")
+	set(CMAKE_C_FLAGS "-Wall -W -Wno-multichar -Wunused-variable -Wno-unused-parameter -Wunused-function -Wunused -Wno-system-headers -Wwrite-strings")
 	if (${CYGWIN})
 		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
 	elseif(${MINGW})
@@ -18,6 +20,7 @@ if (UNIX)
 	else()
 		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
 	endif()
+
 	set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -Wno-deprecated")
  
 	set(CMAKE_CXX_FLAGS_DEBUG          "-O0 -g")
@@ -25,10 +28,8 @@ if (UNIX)
 	set(CMAKE_CXX_FLAGS_RELEASE        "-O4 -DNDEBUG")
 	set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
 
-	set(CMAKE_CXX_FLAGS                "${CMAKE_CXX_FLAGS} -Wall -Wno-parentheses --std=c++11")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-parentheses --std=c++11")
 
-	#find_library(ATOMIC_LIB atomic)
-	#list(APPEND EXTRA_LIBS ${ATOMIC_LIB})
 
 	# Compiler-specific C++11 activation.
 	if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
@@ -42,9 +43,7 @@ if (UNIX)
 	else ()
 		message(FATAL_ERROR "Your C++ compiler does not support C++11.")
 	endif ()
-	# different release and debug flags
-	set(CMAKE_CXX_FLAGS_RELEASE "-O3")
-	set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
+
 	if(COVERAGE)
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage -g -O0")
 		#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage -g -O0")
