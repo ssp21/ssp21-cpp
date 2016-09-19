@@ -52,68 +52,21 @@ namespace ssp21
             DecodeCursor(const openpal::RSlice& chars) : pos(chars)
             {}
 
-			Base64DecodeError get_next_chars(DecodeChars& chars)
-            {
-                auto err = get_next_char(chars.char1);
-                if (any(err)) return err;
-
-                err = get_next_char(chars.char2);
-                if (any(err)) return err;
-
-                err = get_next_char(chars.char3);
-                if (any(err)) return err;
-
-                err = get_next_char(chars.char4);
-                return err;
-            }
+			Base64DecodeError get_next_chars(DecodeChars& chars);
 
             bool is_empty() const
             {
                 return pos.is_empty();
             }
 
-			bool is_whitespace() const
-			{
-				openpal::RSlice copy(pos);
-				while (copy.is_not_empty()) {
-					if (!is_whitespace(copy[0])) return false;
-					copy.advance(1);
-				}
-				return true;
-			}
+
+			void trim_leading_whitespace();
 
         private:
 
-            inline static bool is_whitespace(uint8_t c)
-            {
-                switch (c)
-                {
-                case('\n'):
-                case('\r'):
-                case('\t'):
-                case(' '):
-                    return true;
-                default:
-                    return false;
-                }
-            }
+			static bool is_whitespace(uint8_t c);
 
-            Base64DecodeError get_next_char(uint8_t& value)
-            {
-                while (!pos.is_empty())
-                {
-                    const auto raw_value = pos[0];
-                    pos.advance(1);
-
-                    if (!is_whitespace(raw_value))
-                    {
-                        value = raw_value;
-                        return Base64DecodeError::ok;
-                    }
-                }
-
-                return Base64DecodeError::not_mult_four;
-            }
+			Base64DecodeError get_next_char(uint8_t& value);
 
             openpal::RSlice pos;
         };
@@ -202,12 +155,16 @@ namespace ssp21
 	{
 		DecodeCursor cursor(chars);
 
+		cursor.trim_leading_whitespace();
+
 		while (!cursor.is_empty())
 		{
 			DecodeChars chars;
 
 			auto err = cursor.get_next_chars(chars);
 			if (any(err)) return err;
+
+			cursor.trim_leading_whitespace();
 
 			if (chars.char4 == '=')
 			{
@@ -218,7 +175,7 @@ namespace ssp21
 					auto v2 = decode_table[chars.char2];
 					if (any_not_base64(v1, v2)) return Base64DecodeError::not_base64;
 					write(get_first_byte(v1, v2));
-					return cursor.is_whitespace() ? Base64DecodeError::ok : Base64DecodeError::bad_trailing_input;
+					return cursor.is_empty() ? Base64DecodeError::ok : Base64DecodeError::bad_trailing_input;
 				}
 				else
 				{
@@ -229,7 +186,7 @@ namespace ssp21
 					if (any_not_base64(v1, v2, v3)) return Base64DecodeError::not_base64;
 					write(get_first_byte(v1, v2));
 					write(get_second_byte(v2, v3));
-					return cursor.is_whitespace() ? Base64DecodeError::ok : Base64DecodeError::bad_trailing_input;
+					return cursor.is_empty() ? Base64DecodeError::ok : Base64DecodeError::bad_trailing_input;
 				}
 			}
 			else

@@ -104,7 +104,7 @@ TEST_CASE(SUITE("correctly decodes one byte"))
     test_decoding_success("TQ==", "M");
 }
 
-TEST_CASE(SUITE("correctly skips leading and trailing whitespace"))
+TEST_CASE(SUITE("skips leading and trailing whitespace after termination characters"))
 {
     test_decoding_success("\r\nT Q =\t=\n\r\t ", "M");
 }
@@ -117,6 +117,11 @@ TEST_CASE(SUITE("correctly decodes two bytes"))
 TEST_CASE(SUITE("correctly decodes three bytes"))
 {
     test_decoding_success("TWFu", "Man");
+}
+
+TEST_CASE(SUITE("skips trailing whitespace after non-terminating characters"))
+{
+	test_decoding_success("TWFu\n\r\t", "Man");
 }
 
 TEST_CASE(SUITE("correctly decodes six bytes"))
