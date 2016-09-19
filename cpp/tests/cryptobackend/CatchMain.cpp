@@ -16,11 +16,11 @@ int main(int argc, char*  argv[])
     {
         if (strcmp(argv[1], "--sodium") == 0)
         {
-	   if(!ssp21::sodium::initialize())
-	   {
-             std::cerr << "Unable to initialize sodium backend" << std::endl;
-             return 1;
-	   }
+            if(!ssp21::sodium::initialize())
+            {
+                std::cerr << "Unable to initialize sodium backend" << std::endl;
+                return 1;
+            }
         }
         else
         {
