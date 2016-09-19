@@ -21,6 +21,8 @@ namespace ssp21
         template <class CharWriteFun>
 		static void encode(const openpal::RSlice& bytes, const CharWriteFun& write);		
 
+		/// Consumes a slice of base64 characters and emits a sequence of bytes to an arbitrary lambda
+		/// Ignores whitespace characters.
         template <class ByteWriteFun>
 		static Base64DecodeError decode(const openpal::RSlice& chars, const ByteWriteFun& write);
 
