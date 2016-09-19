@@ -72,6 +72,16 @@ namespace ssp21
                 return pos.is_empty();
             }
 
+			bool is_whitespace() const
+			{
+				openpal::RSlice copy(pos);
+				while (copy.is_not_empty()) {
+					if (!is_whitespace(copy[0])) return false;
+					copy.advance(1);
+				}
+				return true;
+			}
+
         private:
 
             inline static bool is_whitespace(uint8_t c)
@@ -208,7 +218,7 @@ namespace ssp21
 					auto v2 = decode_table[chars.char2];
 					if (any_not_base64(v1, v2)) return Base64DecodeError::not_base64;
 					write(get_first_byte(v1, v2));
-					return cursor.is_empty() ? Base64DecodeError::ok : Base64DecodeError::bad_trailing_input;
+					return cursor.is_whitespace() ? Base64DecodeError::ok : Base64DecodeError::bad_trailing_input;
 				}
 				else
 				{
@@ -219,7 +229,7 @@ namespace ssp21
 					if (any_not_base64(v1, v2, v3)) return Base64DecodeError::not_base64;
 					write(get_first_byte(v1, v2));
 					write(get_second_byte(v2, v3));
-					return cursor.is_empty() ? Base64DecodeError::ok : Base64DecodeError::bad_trailing_input;
+					return cursor.is_whitespace() ? Base64DecodeError::ok : Base64DecodeError::bad_trailing_input;
 				}
 			}
 			else

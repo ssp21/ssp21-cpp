@@ -104,9 +104,9 @@ TEST_CASE(SUITE("correctly decodes one byte"))
     test_decoding_success("TQ==", "M");
 }
 
-TEST_CASE(SUITE("correctly skips any leading whitespace"))
+TEST_CASE(SUITE("correctly skips leading and trailing whitespace"))
 {
-    test_decoding_success("\r\nT Q =\t=", "M");
+    test_decoding_success("\r\nT Q =\t=\n\r\t ", "M");
 }
 
 TEST_CASE(SUITE("correctly decodes two bytes"))
