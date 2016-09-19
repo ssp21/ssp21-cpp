@@ -28,7 +28,7 @@ void test_encoding(const std::string& input, const std::string& expected_output)
     REQUIRE(output_string == expected_output);
 }
 
-void test_decoding_failure(const std::string& input, Base64::DecodeError expected_err)
+void test_decoding_failure(const std::string& input, Base64DecodeError expected_err)
 {
     std::vector<uint8_t> output;
     auto write = [&](char c)
@@ -53,7 +53,7 @@ void test_decoding_success(const std::string& input, const std::string& expected
 
     openpal::RSlice slice(reinterpret_cast<const uint8_t*>(input.c_str()), static_cast<uint32_t>(input.length()));
 
-    REQUIRE(Base64::decode(slice, write) == Base64::DecodeError::ok);
+    REQUIRE(Base64::decode(slice, write) == Base64DecodeError::ok);
 
     std::string output_string(output.begin(), output.end());
 
@@ -86,17 +86,17 @@ TEST_CASE(SUITE("correctly encodes module 2"))
 
 TEST_CASE(SUITE("rejects bad input size"))
 {
-    test_decoding_failure("TQ=", Base64::DecodeError::not_mult_four);
+    test_decoding_failure("TQ=", Base64DecodeError::not_mult_four);
 }
 
 TEST_CASE(SUITE("rejects trailing bytes"))
 {
-    test_decoding_failure("TQ==TWFu", Base64::DecodeError::bad_end_char);
+    test_decoding_failure("TQ==TWFu", Base64DecodeError::bad_trailing_input);
 }
 
 TEST_CASE(SUITE("rejects bad characters"))
 {
-    test_decoding_failure("TQ!=", Base64::DecodeError::not_base64);
+    test_decoding_failure("TQ!=", Base64DecodeError::not_base64);
 }
 
 TEST_CASE(SUITE("correctly decodes one byte"))

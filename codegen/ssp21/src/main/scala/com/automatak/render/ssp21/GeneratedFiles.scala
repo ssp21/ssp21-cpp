@@ -5,7 +5,7 @@ package com.automatak.render.ssp21
 
 import com.automatak.render.cpp.EnumConfig
 import com.automatak.render.ssp21.enums.generators.EnumGenerator
-import com.automatak.render.ssp21.enums.internal.{CryptoError, FormatError, ParseError}
+import com.automatak.render.ssp21.enums.internal.{Base64DecodeError, CryptoError, FormatError, ParseError}
 import com.automatak.render.ssp21.enums.ssp21._
 import com.automatak.render.ssp21.messages._
 import com.automatak.render.ssp21.messages.generators.{BitfieldStructGenerator, MessageGenerator, StructGenerator}
@@ -28,7 +28,8 @@ object GeneratedFiles {
   private def internalEnums = List(
     ParseError(),
     FormatError(),
-    CryptoError()
+    CryptoError(),
+    Base64DecodeError()
   ).map(x => EnumConfig(x, false, true)).map(e => EnumGenerator(e))
 
   private def bitfiends: List[WriteCppFiles] = List(

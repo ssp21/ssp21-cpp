@@ -1,6 +1,8 @@
 #ifndef SSP21_BASE64_H
 #define SSP21_BASE64_H
 
+#include "ssp21/crypto/gen/Base64DecodeError.h"
+
 #include "openpal/util/Uncopyable.h"
 #include "openpal/container/RSlice.h"
 
@@ -12,19 +14,7 @@ namespace ssp21
     class Base64 : private openpal::StaticOnly
     {
 
-    public:
-
-        enum class DecodeError : uint8_t
-        {
-            // decode sucess
-            ok,
-            // The non-whitespace input is not a multiple of four
-            not_mult_four,
-            // The input contains a non-base64 value
-            not_base64,
-            // The input contains non-whitespace characters after the terminating padding
-            bad_end_char,
-        };
+    public:       
 
         /// Takes an input byte slice and outputs one encoded character at a time to an arbitrary lambda
         /// accepting a char
@@ -32,7 +22,7 @@ namespace ssp21
 		static void encode(const openpal::RSlice& bytes, const CharWriteFun& write);		
 
         template <class ByteWriteFun>
-		static DecodeError decode(const openpal::RSlice& chars, const ByteWriteFun& write);
+		static Base64DecodeError decode(const openpal::RSlice& chars, const ByteWriteFun& write);
 
     private:
 
@@ -62,16 +52,16 @@ namespace ssp21
             DecodeCursor(const openpal::RSlice& chars) : pos(chars)
             {}
 
-            DecodeError get_next_chars(DecodeChars& chars)
+			Base64DecodeError get_next_chars(DecodeChars& chars)
             {
                 auto err = get_next_char(chars.char1);
-                if (err != DecodeError::ok) return err;
+                if (any(err)) return err;
 
                 err = get_next_char(chars.char2);
-                if (err != DecodeError::ok) return err;
+                if (any(err)) return err;
 
                 err = get_next_char(chars.char3);
-                if (err != DecodeError::ok) return err;
+                if (any(err)) return err;
 
                 err = get_next_char(chars.char4);
                 return err;
@@ -98,7 +88,7 @@ namespace ssp21
                 }
             }
 
-            DecodeError get_next_char(uint8_t& value)
+            Base64DecodeError get_next_char(uint8_t& value)
             {
                 while (!pos.is_empty())
                 {
@@ -108,11 +98,11 @@ namespace ssp21
                     if (!is_whitespace(raw_value))
                     {
                         value = raw_value;
-                        return DecodeError::ok;
+                        return Base64DecodeError::ok;
                     }
                 }
 
-                return DecodeError::not_mult_four;
+                return Base64DecodeError::not_mult_four;
             }
 
             openpal::RSlice pos;
@@ -198,7 +188,7 @@ namespace ssp21
 	}
 
 	template <class ByteWriteFun>
-	Base64::DecodeError Base64::decode(const openpal::RSlice& chars, const ByteWriteFun& write)
+	Base64DecodeError Base64::decode(const openpal::RSlice& chars, const ByteWriteFun& write)
 	{
 		DecodeCursor cursor(chars);
 
@@ -207,7 +197,7 @@ namespace ssp21
 			DecodeChars chars;
 
 			auto err = cursor.get_next_chars(chars);
-			if (err != DecodeError::ok) return err;
+			if (any(err)) return err;
 
 			if (chars.char4 == '=')
 			{
@@ -216,9 +206,9 @@ namespace ssp21
 					// two trailing "="
 					auto v1 = decode_table[chars.char1];
 					auto v2 = decode_table[chars.char2];
-					if (any_not_base64(v1, v2)) return DecodeError::not_base64;
+					if (any_not_base64(v1, v2)) return Base64DecodeError::not_base64;
 					write(get_first_byte(v1, v2));
-					return cursor.is_empty() ? DecodeError::ok : DecodeError::bad_end_char;
+					return cursor.is_empty() ? Base64DecodeError::ok : Base64DecodeError::bad_trailing_input;
 				}
 				else
 				{
@@ -226,10 +216,10 @@ namespace ssp21
 					auto v1 = decode_table[chars.char1];
 					auto v2 = decode_table[chars.char2];
 					auto v3 = decode_table[chars.char3];
-					if (any_not_base64(v1, v2, v3)) return DecodeError::not_base64;
+					if (any_not_base64(v1, v2, v3)) return Base64DecodeError::not_base64;
 					write(get_first_byte(v1, v2));
 					write(get_second_byte(v2, v3));
-					return cursor.is_empty() ? DecodeError::ok : DecodeError::bad_end_char;
+					return cursor.is_empty() ? Base64DecodeError::ok : Base64DecodeError::bad_trailing_input;
 				}
 			}
 			else
@@ -238,14 +228,14 @@ namespace ssp21
 				auto v2 = decode_table[chars.char2];
 				auto v3 = decode_table[chars.char3];
 				auto v4 = decode_table[chars.char4];
-				if (any_not_base64(v1, v2, v3, v4)) return DecodeError::not_base64;
+				if (any_not_base64(v1, v2, v3, v4)) return Base64DecodeError::not_base64;
 				write(get_first_byte(v1, v2));
 				write(get_second_byte(v2, v3));
 				write(get_third_byte(v3, v4));
 			}
 		}
 
-		return DecodeError::ok;
+		return Base64DecodeError::ok;
 	};
 
 }
