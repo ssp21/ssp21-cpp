@@ -3,31 +3,25 @@
   */
 package com.automatak.render.ssp21
 
-
+import java.nio.file.{Files, Paths}
 
 object Generate {
 
-  def getValue(c : Char): Int = c match {
-    case _ if(c >= 'A' && c <= 'Z') => (c.toByte  - 65).toByte  // base64 0 -> 25
-    case _ if(c >= 'a' && c <= 'z') => (c.toByte  - 71).toByte  // base64 26 -> 51
-    case _ if(c >= '0' && c <= '9') => (c.toByte  + 4).toByte   // base64 52 -> 61
-    case '+' => 62
-    case '/' => 63
-    case _ => 255
-  }
+  val basePath = "../cpp/libs";
 
+  val ssp21GenHeaderPath = Paths.get(basePath, "/include/ssp21/crypto/gen")
+  val ssp21GenImplPath = Paths.get(basePath, "/src/ssp21/crypto/gen")
+
+  val paths = List(ssp21GenHeaderPath, ssp21GenImplPath)
 
   def main(args: Array[String]): Unit = {
 
-    val values = (0 to 255).map(b => getValue(b.toChar)).grouped(16)
+    paths.foreach(p => Files.createDirectories(p))
 
-    def printGroup(group : Seq[Int]): Unit = {
-      println(group.map(i => "0x%02x".format(i)).mkString(", "))
+    GeneratedFiles.list.foreach { f =>
+      f.write(ssp21GenHeaderPath, ssp21GenImplPath)
     }
 
-    for {
-      group <- values
-    } printGroup(group)
 
   }
 

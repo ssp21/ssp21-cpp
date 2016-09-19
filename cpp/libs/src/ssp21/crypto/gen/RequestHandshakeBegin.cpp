@@ -66,9 +66,9 @@ ParseError RequestHandshakeBegin::read(openpal::RSlice input)
 FormatResult RequestHandshakeBegin::write(openpal::WSlice output) const
 {
     auto write_fields = [this](openpal::WSlice& output) -> FormatError 
-    {		
+    {
         return MessageFormatter::write_fields(
-            output,			
+            output,
             version,
             nonce_mode,
             dh_mode,
