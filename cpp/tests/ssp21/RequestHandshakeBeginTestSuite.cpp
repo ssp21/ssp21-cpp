@@ -103,7 +103,7 @@ TEST_CASE(SUITE("pretty prints message"))
 
 
     MockLogHandler log("log");
-    LogMessagePrinter printer(log.root.logger, ssp21::levels::info, 16);
+    LogMessagePrinter printer(log.logger, ssp21::levels::info, 16);
 
     msg.print(printer);
 

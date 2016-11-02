@@ -54,7 +54,7 @@ public:
         log("responder"),
         exe(),
         lower(),
-        responder(config, std::move(keys.local_kp), std::move(keys.remote_static_key), log.root.logger, exe, lower),
+        responder(config, std::move(keys.local_kp), std::move(keys.remote_static_key), log.logger, exe, lower),
         upper(responder)
     {
 

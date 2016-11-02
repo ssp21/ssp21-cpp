@@ -5,6 +5,7 @@
 #include "ssp21/crypto/IMessagePrinter.h"
 
 #include "openpal/logging/Logger.h"
+#include "openpal/util/Uncopyable.h"
 
 namespace ssp21
 {
