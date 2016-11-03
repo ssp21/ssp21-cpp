@@ -57,18 +57,18 @@ public:
         responder(config, std::move(keys.local_kp), std::move(keys.remote_static_key), log.logger, exe, lower),
         upper(responder)
     {
-		MockCryptoBackend::instance.counters.clear();
+        MockCryptoBackend::instance.counters.clear();
     }
 
-	void test_handshake_error(const std::string& request, HandshakeError expected_error)
-	{		
-		this->lower.enqueue_message(Addresses(1, 10), request);
-		REQUIRE(this->lower.num_rx_messages() == 1);
-		this->responder.on_rx_ready();
-		REQUIRE(this->lower.num_rx_messages() == 0);
-		REQUIRE(MockCryptoBackend::instance.counters.all_zero());
-		REQUIRE(this->lower.pop_tx_message() == hex::reply_handshake_error(expected_error));
-	}
+    void test_handshake_error(const std::string& request, HandshakeError expected_error)
+    {
+        this->lower.enqueue_message(Addresses(1, 10), request);
+        REQUIRE(this->lower.num_rx_messages() == 1);
+        this->responder.on_rx_ready();
+        REQUIRE(this->lower.num_rx_messages() == 0);
+        REQUIRE(MockCryptoBackend::instance.counters.all_zero());
+        REQUIRE(this->lower.pop_tx_message() == hex::reply_handshake_error(expected_error));
+    }
 
 private:
 
@@ -83,18 +83,12 @@ public:
     MockUpperLayer upper;
 };
 
-TEST_CASE(SUITE("responds to malformed REQUEST_HANDSHAKE_BEGIN with bad_message_format"))
-{
-    ResponderFixture fix;
-    fix.responder.on_open();	
 
-	fix.test_handshake_error(hex::func_to_hex(Function::request_handshake_begin), HandshakeError::bad_message_format);
-}
 
 TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_BEGIN with REPLY_HANDSHAKE_BEGIN"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();	
+    fix.responder.on_open();
 
     auto request = hex::request_handshake_begin(
                        0,
@@ -121,20 +115,28 @@ TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_BEGIN with REPLY_HANDSHAKE_BEGIN"
     REQUIRE(fix.lower.pop_tx_message() == reply);
 }
 
+TEST_CASE(SUITE("responds to malformed handshake begin with bad_message_format"))
+{
+    ResponderFixture fix;
+    fix.responder.on_open();
+
+    fix.test_handshake_error("00", HandshakeError::bad_message_format);
+}
+
 TEST_CASE(SUITE("responds to m2m certificate mode with unsupported_certificate_mode error"))
 {
-	ResponderFixture fix;
-	fix.responder.on_open();	
+    ResponderFixture fix;
+    fix.responder.on_open();
 
-	auto request = hex::request_handshake_begin(
-		0,
-		NonceMode::increment_last_rx,
-		DHMode::x25519,
-		HashMode::sha256,
-		SessionMode::hmac_sha256_16,
-		CertificateMode::m2m,
-		hex::repeat(0xFF, consts::crypto::x25519_key_length)
-	);
+    auto request = hex::request_handshake_begin(
+                       0,
+                       NonceMode::increment_last_rx,
+                       DHMode::x25519,
+                       HashMode::sha256,
+                       SessionMode::hmac_sha256_16,
+                       CertificateMode::m2m,
+                       hex::repeat(0xFF, consts::crypto::x25519_key_length)
+                   );
 
-	fix.test_handshake_error(request, HandshakeError::unsupported_certificate_mode);
+    fix.test_handshake_error(request, HandshakeError::unsupported_certificate_mode);
 }

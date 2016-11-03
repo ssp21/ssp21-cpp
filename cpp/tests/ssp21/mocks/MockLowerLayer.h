@@ -49,15 +49,15 @@ namespace ssp21
         void enqueue_message(const Addresses& addr, const std::string& hex)
         {
             openpal::Hex hexdata(hex);
-			this->rx_messages_.push_back(
-				std::make_unique<message_t>(addr, hexdata.as_rslice())
+            this->rx_messages_.push_back(
+                std::make_unique<message_t>(addr, hexdata.as_rslice())
             );
         }
 
-		size_t num_rx_messages() const
-		{
-			return this->rx_messages_.size();
-		}
+        size_t num_rx_messages() const
+        {
+            return this->rx_messages_.size();
+        }
 
         std::string pop_tx_message()
         {
