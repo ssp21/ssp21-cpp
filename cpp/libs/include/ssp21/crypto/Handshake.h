@@ -9,6 +9,7 @@
 #include "ssp21/crypto/gen/HashMode.h"
 
 #include "ssp21/crypto/Crypto.h"
+
 #include "ssp21/crypto/NonceFunctions.h"
 #include "ssp21/crypto/Algorithms.h"
 #include "ssp21/crypto/Session.h"
@@ -38,7 +39,7 @@ namespace ssp21
         /// mix the input input the chaining key: ck = hash(ck | input)
         void mix_ck(const openpal::RSlice& input);
 
-        /// derive the authentication key from the DH keys and the handshake_hash_
+        /// derive the authentication key from the DH keys and the handshake_hash
         void derive_authentication_key(
             const openpal::RSlice& message,
             const PrivateKey& priv_s_dh_key,

@@ -5,45 +5,25 @@
 
 #include "openpal/util/Uncopyable.h"
 
+#include <deque>
+#include <sstream>
+
 namespace ssp21
 {
+	enum class CryptoActions
+	{		
+		secure_equals,
+		hash_sha256,
+		hmac_sha256,
+		gen_keypair_x25519,
+		dh_x25519
+	};
+
     class MockCryptoBackend : public ICryptoBackend, private openpal::Uncopyable
     {
 
-    public:
-
-        struct Counters
-        {
-            uint32_t num_zero_memory = 0;
-            uint32_t num_secure_equals = 0;
-            uint32_t num_hash_sha256 = 0;
-            uint32_t num_hmac_sha256 = 0;
-            uint32_t num_gen_keypair_x25519 = 0;
-            uint32_t num_dh_x25519 = 0;
-
-            bool all_zero()
-            {
-                auto bitwise_or = num_zero_memory |
-                                  num_secure_equals |
-                                  num_hash_sha256 |
-                                  num_hmac_sha256 |
-                                  num_gen_keypair_x25519 |
-                                  num_dh_x25519;
-
-                return bitwise_or == 0;
-            }
-
-            void clear()
-            {
-                num_zero_memory = 0;
-                num_secure_equals = 0;
-                num_hash_sha256 = 0;
-                num_hmac_sha256 = 0;
-                num_gen_keypair_x25519 = 0;
-                num_dh_x25519 = 0;
-            }
-        };
-
+    public:	   
+		
         static MockCryptoBackend instance;
 
         virtual void zero_memory(openpal::WSlice data) override;
@@ -60,9 +40,47 @@ namespace ssp21
 
         uint8_t fill_byte = 0xFF;
 
-        Counters counters;
+		bool empty_actions() const { return actions.empty(); }
+
+		void clear_actions() { actions.clear(); }
+
+		template <typename... Args>
+		void expect(CryptoActions expected, const Args& ... args)
+		{
+			if (actions.empty()) {
+				std::ostringstream oss;
+				oss << "no more crypto actions while waiting for: " << static_cast<int>(expected);
+				throw std::logic_error(oss.str());
+			}
+
+			if (actions.front() != expected)
+			{
+				std::ostringstream oss;
+				oss << "expected " << static_cast<int>(expected) << " but next action was " << static_cast<int>(actions.front());
+				throw std::logic_error(oss.str());
+			}		
+
+			actions.pop_front();
+			expect(args ...);
+		}
+
+		void expect()
+		{
+			if (!actions.empty())
+			{
+				std::ostringstream oss;
+				oss << "unexpected additional actions: " << actions.size() << std::endl;
+				for (auto& action : actions)
+				{
+					oss << static_cast<int>(action) << std::endl;
+				}
+				throw std::logic_error(oss.str());
+			}			
+		}
 
     private:
+
+		std::deque<CryptoActions> actions;
 
         MockCryptoBackend() {}
     };

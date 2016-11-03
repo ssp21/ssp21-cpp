@@ -57,7 +57,7 @@ namespace ssp21
             responder(config, std::move(keys.local_kp), std::move(keys.remote_static_key), log.logger, exe, lower),
             upper(responder)
         {
-            MockCryptoBackend::instance.counters.clear();
+			MockCryptoBackend::instance.clear_actions();
         }
 
         void test_handshake_error(const std::string& request, HandshakeError expected_error)
@@ -66,7 +66,7 @@ namespace ssp21
             REQUIRE(this->lower.num_rx_messages() == 1);
             this->responder.on_rx_ready();
             REQUIRE(this->lower.num_rx_messages() == 0);
-            REQUIRE(MockCryptoBackend::instance.counters.all_zero());
+            REQUIRE(MockCryptoBackend::instance.empty_actions());
             REQUIRE(this->lower.pop_tx_message() == hex::reply_handshake_error(expected_error));
         }
 

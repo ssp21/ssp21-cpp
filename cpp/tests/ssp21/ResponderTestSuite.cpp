@@ -22,14 +22,20 @@ TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_BEGIN with REPLY_HANDSHAKE_BEGIN"
                          );
 
     fix.lower.enqueue_message(Addresses(1, 10), request);
-    fix.responder.on_rx_ready();
+    fix.responder.on_rx_ready();    
 
-    auto& counters = MockCryptoBackend::instance.counters;
-
-    REQUIRE(counters.num_hash_sha256 == 2);			// two hashes for the chaining key
-    REQUIRE(counters.num_gen_keypair_x25519 == 1);	// one ephemeral key pair generation
-    REQUIRE(counters.num_dh_x25519 == 3);			// 3 DH operations to get the authentication key
-    REQUIRE(counters.num_hmac_sha256 == 3);			// 3 hmacs during the HKDF
+	// expected order of crypto operations
+	MockCryptoBackend::instance.expect(			
+		CryptoActions::gen_keypair_x25519,
+		CryptoActions::hash_sha256,
+		CryptoActions::hash_sha256,		
+		CryptoActions::dh_x25519,
+		CryptoActions::dh_x25519,
+		CryptoActions::dh_x25519,
+		CryptoActions::hmac_sha256,
+		CryptoActions::hmac_sha256,
+		CryptoActions::hmac_sha256
+	);	
 
     const auto reply = hex::reply_handshake_begin(hex::repeat(0xFF, consts::crypto::x25519_key_length));
 
