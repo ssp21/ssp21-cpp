@@ -23,7 +23,7 @@ namespace ssp21
     {
     public:
 
-        Handshake(EntityId id) : id_(id)
+        Handshake(EntityId id) : id(id)
         {}
 
         HandshakeError set_algorithms(const Algorithms::Config& config);
@@ -57,19 +57,19 @@ namespace ssp21
     private:
 
         /// configures the handshake for initiator or responder mode
-        EntityId id_;
+        EntityId id;
 
         /// specific algorithms used to perform steps
-        Algorithms algorithms_;
+        Algorithms algorithms;
 
         /// running hash value and chaining key after the derive_authentication_key(...) step
-        SymmetricKey chaining_key_;
+        SymmetricKey chaining_key;
 
         /// authentication key derived during derive_authentication_key(...)
-        SymmetricKey authentication_key_;
+        SymmetricKey authentication_key;
 
         /// ephemeral keys
-        KeyPair local_ephemeral_keys_;
+        KeyPair local_ephemeral_keys;
     };
 
 

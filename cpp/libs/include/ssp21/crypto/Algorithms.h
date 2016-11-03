@@ -14,6 +14,8 @@
 #include "ssp21/crypto/gen/HandshakeError.h"
 #include "ssp21/crypto/gen/SessionMode.h"
 
+#include "ssp21/crypto/Crypto.h"
+
 namespace ssp21
 {
     /**
@@ -45,28 +47,35 @@ namespace ssp21
 
         struct Session
         {
-            Session();
+            Session() = default;
 
-            verify_nonce_func_t verify_nonce;
-            session_read_t read;
-            session_write_t write;
+            verify_nonce_func_t verify_nonce = NonceFunctions::default_verify();
+            session_read_t read = SessionModes::default_session_read();
+            session_write_t write = SessionModes::default_session_write();
+        };
+
+        struct Handshake
+        {
+            Handshake() = default;
+
+            dh_func_t dh = &Crypto::dh_x25519;
+            hkdf_func_t hkdf = &Crypto::hkdf_sha256;
+            hash_func_t hash = &Crypto::hash_sha256;
+            mac_func_t session_auth_mac = &Crypto::hmac_sha256;
+            gen_keypair_func_t gen_keypair = &Crypto::gen_keypair_x25519;
+            auth_handshake_t auth_handshake = HandshakeAuthentication::default_auth_handshake();
+            calc_handshake_mac_t calc_handshake_mac = HandshakeAuthentication::default_calc_handshake_mac();
         };
 
         // default constructor initializes with default algorithms
-        Algorithms();
+        Algorithms() = default;
 
         HandshakeError configure(const Config& config);
 
-        // handshake stuff
-        dh_func_t dh;
-        hkdf_func_t hkdf;
-        hash_func_t hash;
-        mac_func_t session_auth_mac;
-        gen_keypair_func_t gen_keypair;
-        auth_handshake_t auth_handshake;
-        calc_handshake_mac_t calc_handshake_mac;
+        // handshake algorithms
+        Handshake handshake;
 
-        // session stuff
+        // session algorithms
         Session session;
     };
 

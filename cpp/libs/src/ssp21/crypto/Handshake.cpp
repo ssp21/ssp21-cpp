@@ -7,39 +7,39 @@ namespace ssp21
 {
     HandshakeError Handshake::set_algorithms(const Algorithms::Config& config)
     {
-        return this->algorithms_.configure(config);
+        return this->algorithms.configure(config);
     }
 
     openpal::RSlice Handshake::initialize()
     {
-        algorithms_.gen_keypair(local_ephemeral_keys_);
+        this->algorithms.handshake.gen_keypair(this->local_ephemeral_keys);
 
-        return local_ephemeral_keys_.public_key.as_slice();
+        return this->local_ephemeral_keys.public_key.as_slice();
     }
 
     void Handshake::set_ck(const RSlice& input)
     {
-        algorithms_.hash({ input }, chaining_key_);
+        this->algorithms.handshake.hash({ input }, this->chaining_key);
     }
 
     void Handshake::mix_ck(const RSlice& input)
     {
         // ck = hash(ck || input)
 
-        algorithms_.hash(
-        { chaining_key_.as_slice(), input },
-        chaining_key_
+        this->algorithms.handshake.hash(
+        { this->chaining_key.as_slice(), input },
+        this->chaining_key
         );
     }
 
     bool Handshake::auth_handshake(const openpal::RSlice& mac) const
     {
-        return algorithms_.auth_handshake(authentication_key_, id_, mac);
+        return this->algorithms.handshake.auth_handshake(this->authentication_key, this->id, mac);
     }
 
     void Handshake::calc_auth_handshake_reply_mac(HashOutput& output) const
     {
-        return algorithms_.calc_handshake_mac(authentication_key_, id_, output);
+        return this->algorithms.handshake.calc_handshake_mac(this->authentication_key, this->id, output);
     }
 
     void Handshake::derive_authentication_key(
@@ -52,22 +52,22 @@ namespace ssp21
         this->mix_ck(message);
 
         DHOutput dh1;
-        algorithms_.dh(local_ephemeral_keys_.private_key, pub_e_dh_key, dh1, ec);
+        this->algorithms.handshake.dh(this->local_ephemeral_keys.private_key, pub_e_dh_key, dh1, ec);
         if (ec) return;
 
         DHOutput dh2;
-        algorithms_.dh(local_ephemeral_keys_.private_key, pub_s_dh_key, dh2, ec);
+        this->algorithms.handshake.dh(this->local_ephemeral_keys.private_key, pub_s_dh_key, dh2, ec);
         if (ec) return;
 
         DHOutput dh3;
-        algorithms_.dh(priv_s_dh_key, pub_e_dh_key, dh3, ec);
+        this->algorithms.handshake.dh(priv_s_dh_key, pub_e_dh_key, dh3, ec);
         if (ec) return;
 
-        algorithms_.hkdf(
-            chaining_key_.as_slice(),
-        { dh1.as_slice(), dh2.as_slice(), dh3.as_slice() },
-        chaining_key_,
-        authentication_key_
+        this->algorithms.handshake.hkdf(
+            this->chaining_key.as_slice(),
+            { dh1.as_slice(), dh2.as_slice(), dh3.as_slice() },
+            this->chaining_key,
+            this->authentication_key
         );
     }
 
@@ -77,13 +77,13 @@ namespace ssp21
         {
 
             // which key is which depends on initiator vs responder
-            auto& tx_key = (this->id_ == EntityId::Initiator) ? keys.tx_key : keys.rx_key;
-            auto& rx_key = (this->id_ == EntityId::Initiator) ? keys.rx_key : keys.tx_key;
+            auto& tx_key = (this->id == EntityId::Initiator) ? keys.tx_key : keys.rx_key;
+            auto& rx_key = (this->id == EntityId::Initiator) ? keys.rx_key : keys.tx_key;
 
-            this->algorithms_.hkdf(chaining_key_.as_slice(), {}, tx_key, rx_key);
+            this->algorithms.handshake.hkdf(this->chaining_key.as_slice(), {}, tx_key, rx_key);
         };
 
-        session.initialize(this->algorithms_.session, session_init_time, init_keys);
+        session.initialize(this->algorithms.session, session_init_time, init_keys);
     }
 
 }

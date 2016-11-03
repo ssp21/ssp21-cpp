@@ -2,27 +2,8 @@
 
 #include "ssp21/crypto/Algorithms.h"
 
-#include "ssp21/crypto/Crypto.h"
-
 namespace ssp21
 {
-
-    Algorithms::Algorithms() :
-        dh(&Crypto::dh_x25519),
-        hkdf(&Crypto::hkdf_sha256),
-        hash(&Crypto::hash_sha256),
-        session_auth_mac(&Crypto::hmac_sha256),
-        gen_keypair(&Crypto::gen_keypair_x25519),
-        auth_handshake(HandshakeAuthentication::default_auth_handshake()),
-        calc_handshake_mac(HandshakeAuthentication::default_calc_handshake_mac())
-    {}
-
-    Algorithms::Session::Session() :
-        verify_nonce(NonceFunctions::default_verify()),
-        read(SessionModes::default_session_read()),
-        write(SessionModes::default_session_write())
-    {}
-
     HandshakeError Algorithms::configure(const Config& config)
     {
         Algorithms algorithms;
@@ -30,8 +11,8 @@ namespace ssp21
         switch (config.dh_mode)
         {
         case(DHMode::x25519):
-            algorithms.dh = &Crypto::dh_x25519;
-            algorithms.gen_keypair = &Crypto::gen_keypair_x25519;
+            algorithms.handshake.dh = &Crypto::dh_x25519;
+            algorithms.handshake.gen_keypair = &Crypto::gen_keypair_x25519;
             break;
         default:
             return HandshakeError::unsupported_dh_mode;
@@ -40,11 +21,11 @@ namespace ssp21
         switch (config.hash_mode)
         {
         case(HashMode::sha256):
-            algorithms.hash = &Crypto::hash_sha256;
-            algorithms.session_auth_mac = &Crypto::hmac_sha256;
-            algorithms.hkdf = &Crypto::hkdf_sha256;
-            algorithms.auth_handshake = &HandshakeAuthentication::auth_handshake_hmac_sha256;
-            algorithms.calc_handshake_mac = &HandshakeAuthentication::calc_handshake_hmac_sha256;
+            algorithms.handshake.hash = &Crypto::hash_sha256;
+            algorithms.handshake.session_auth_mac = &Crypto::hmac_sha256;
+            algorithms.handshake.hkdf = &Crypto::hkdf_sha256;
+            algorithms.handshake.auth_handshake = &HandshakeAuthentication::auth_handshake_hmac_sha256;
+            algorithms.handshake.calc_handshake_mac = &HandshakeAuthentication::calc_handshake_hmac_sha256;
             break;
         default:
             return HandshakeError::unsupported_hash_mode;
