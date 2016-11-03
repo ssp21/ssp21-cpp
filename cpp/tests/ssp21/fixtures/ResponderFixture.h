@@ -3,8 +3,6 @@
 #ifndef RESPONDER_FIXTURE_H
 #define RESPONDER_FIXTURE_H
 
-#include "catch.hpp"
-
 #include "ssp21/crypto/BufferTypes.h"
 #include "ssp21/crypto/Responder.h"
 
@@ -58,17 +56,7 @@ namespace ssp21
             upper(responder)
         {
 			MockCryptoBackend::instance.clear_actions();
-        }
-
-        void test_handshake_error(const std::string& request, HandshakeError expected_error)
-        {
-            this->lower.enqueue_message(Addresses(1, 10), request);
-            REQUIRE(this->lower.num_rx_messages() == 1);
-            this->responder.on_rx_ready();
-            REQUIRE(this->lower.num_rx_messages() == 0);
-            REQUIRE(MockCryptoBackend::instance.empty_actions());
-            REQUIRE(this->lower.pop_tx_message() == hex::reply_handshake_error(expected_error));
-        }
+        }       
 
     private:
 
