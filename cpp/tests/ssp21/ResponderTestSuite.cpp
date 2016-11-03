@@ -11,7 +11,7 @@ TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_BEGIN with REPLY_HANDSHAKE_BEGIN"
     ResponderFixture fix;
     fix.responder.on_open();
 
-    auto request = hex::request_handshake_begin(
+    const auto request = hex::request_handshake_begin(
                        0,
                        NonceMode::increment_last_rx,
                        DHMode::x25519,
@@ -31,7 +31,7 @@ TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_BEGIN with REPLY_HANDSHAKE_BEGIN"
     REQUIRE(counters.num_dh_x25519 == 3);			// 3 DH operations to get the authentication key
     REQUIRE(counters.num_hmac_sha256 == 3);			// 3 hmacs during the HKDF
 
-    auto reply = hex::reply_handshake_begin(hex::repeat(0xFF, consts::crypto::x25519_key_length));
+    const auto reply = hex::reply_handshake_begin(hex::repeat(0xFF, consts::crypto::x25519_key_length));
 
     REQUIRE(fix.lower.pop_tx_message() == reply);
 }
@@ -49,7 +49,7 @@ TEST_CASE(SUITE("responds to m2m certificate mode with unsupported_certificate_m
     ResponderFixture fix;
     fix.responder.on_open();
 
-    auto request = hex::request_handshake_begin(
+    const auto request = hex::request_handshake_begin(
                        0,
                        NonceMode::increment_last_rx,
                        DHMode::x25519,
@@ -60,4 +60,22 @@ TEST_CASE(SUITE("responds to m2m certificate mode with unsupported_certificate_m
                    );
 
     fix.test_handshake_error(request, HandshakeError::unsupported_certificate_mode);
+}
+
+TEST_CASE(SUITE("responds to invalid key length with bad_message_format"))
+{
+	ResponderFixture fix;
+	fix.responder.on_open();
+
+	const auto request = hex::request_handshake_begin(
+		0,
+		NonceMode::increment_last_rx,
+		DHMode::x25519,
+		HashMode::sha256,
+		SessionMode::hmac_sha256_16,
+		CertificateMode::preshared_keys,
+		hex::repeat(0xFF, (consts::crypto::x25519_key_length - 1))
+	);
+
+	fix.test_handshake_error(request, HandshakeError::bad_message_format);
 }
