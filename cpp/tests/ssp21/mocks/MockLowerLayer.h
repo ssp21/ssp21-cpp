@@ -8,6 +8,8 @@
 #include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
 
+#include "MakeUnique.h"
+
 namespace ssp21
 {
     class MockLowerLayer : public ILowerLayer, private openpal::Uncopyable
@@ -22,7 +24,7 @@ namespace ssp21
         {
             assert(this->is_tx_ready_);
             this->tx_messages_.push_back(
-                std::unique_ptr<message_t>(new message_t(message.addresses, message.payload))
+                std::make_unique<message_t>(message.addresses, message.payload)
             );
             this->is_tx_ready_ = false;
             return true;
