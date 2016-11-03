@@ -8,6 +8,8 @@
 
 #include "ssp21/crypto/gen/RequestHandshakeBegin.h"
 #include "ssp21/crypto/gen/ReplyHandshakeBegin.h"
+#include "ssp21/crypto/gen/RequestHandshakeAuth.h"
+#include "ssp21/crypto/gen/ReplyHandshakeAuth.h"
 #include "ssp21/crypto/gen/ReplyHandshakeError.h"
 
 #include "MakeUnique.h"
@@ -71,6 +73,16 @@ namespace ssp21
 
             return write_message(msg);
         }
+
+		std::string request_handshake_auth(const std::string& mac)
+		{
+			Hex mac_bytes(mac);
+
+			RequestHandshakeAuth request(Seq8(mac_bytes.as_rslice()));
+
+		
+			return write_message(request);
+		}
 
         std::string reply_handshake_begin(
             const std::string& hex_ephem_pub_key,
