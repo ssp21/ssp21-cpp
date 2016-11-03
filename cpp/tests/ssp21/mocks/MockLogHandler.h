@@ -15,27 +15,27 @@ namespace ssp21
 {
     class MockLogHandler : public openpal::ILogHandler, openpal::Uncopyable
     {
-		struct Backend final : public openpal::ILogHandler
-		{
-			void log(openpal::ModuleId module, const char* id, openpal::LogLevel level, char const* location, char const* message) override
-			{
-				if (output_to_stdio)
-				{
-					std::cout << message << std::endl;
-				}
+        struct Backend final : public openpal::ILogHandler
+        {
+            void log(openpal::ModuleId module, const char* id, openpal::LogLevel level, char const* location, char const* message) override
+            {
+                if (output_to_stdio)
+                {
+                    std::cout << message << std::endl;
+                }
 
-				lines.push_back(message);
-			}
+                lines.push_back(message);
+            }
 
-			bool output_to_stdio = false;
-			std::deque<std::string> lines;
-		};
+            bool output_to_stdio = false;
+            std::deque<std::string> lines;
+        };
 
     public:
 
         MockLogHandler(const std::string& id, openpal::LogLevels levels = openpal::LogLevels::everything()) :
             backend(std::make_shared<Backend>()),
-			logger(backend, openpal::ModuleId(0), id, levels)
+            logger(backend, openpal::ModuleId(0), id, levels)
         {}
 
         void print_output()
@@ -45,7 +45,7 @@ namespace ssp21
 
         virtual void log(openpal::ModuleId module, const char* id, openpal::LogLevel level, char const* location, char const* message) override
         {
-			this->backend->log(module, id, level, location, message);
+            this->backend->log(module, id, level, location, message);
         }
 
         template <typename... Args>
@@ -53,24 +53,24 @@ namespace ssp21
         {
             REQUIRE_FALSE(backend->lines.empty());
             REQUIRE(expected == backend->lines.front());
-			backend->lines.pop_front();
+            backend->lines.pop_front();
             expect(args ...);
         }
 
         void expect()
         {
             REQUIRE(backend->lines.empty());
-        }		
+        }
 
     private :
 
-		std::shared_ptr<Backend> backend;
+        std::shared_ptr<Backend> backend;
 
         MockLogHandler() = delete;
 
-	public:
+    public:
 
-		openpal::Logger logger;
+        openpal::Logger logger;
 
     };
 

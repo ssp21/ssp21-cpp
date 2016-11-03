@@ -34,63 +34,66 @@ namespace ssp21
         0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
     };
 
-	Base64DecodeError Base64::DecodeCursor::get_next_chars(DecodeChars& chars)
-	{
-		auto err = get_next_char(chars.char1);
-		if (any(err)) return err;
+    Base64DecodeError Base64::DecodeCursor::get_next_chars(DecodeChars& chars)
+    {
+        auto err = get_next_char(chars.char1);
+        if (any(err)) return err;
 
-		err = get_next_char(chars.char2);
-		if (any(err)) return err;
+        err = get_next_char(chars.char2);
+        if (any(err)) return err;
 
-		err = get_next_char(chars.char3);
-		if (any(err)) return err;
+        err = get_next_char(chars.char3);
+        if (any(err)) return err;
 
-		err = get_next_char(chars.char4);
-		return err;
-	}
+        err = get_next_char(chars.char4);
+        return err;
+    }
 
-	void Base64::DecodeCursor::trim_leading_whitespace()
-	{
-		while (pos.is_not_empty()) {
-			if (is_whitespace(pos[0])) {
-				pos.advance(1);
-			}
-			else {
-				break;
-			}
-		}
-	}
+    void Base64::DecodeCursor::trim_leading_whitespace()
+    {
+        while (pos.is_not_empty())
+        {
+            if (is_whitespace(pos[0]))
+            {
+                pos.advance(1);
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
 
-	bool Base64::DecodeCursor::is_whitespace(uint8_t c)
-	{
-		switch (c)
-		{
-		case('\n'):
-		case('\r'):
-		case('\t'):
-		case(' '):
-			return true;
-		default:
-			return false;
-		}
-	}
+    bool Base64::DecodeCursor::is_whitespace(uint8_t c)
+    {
+        switch (c)
+        {
+        case('\n'):
+        case('\r'):
+        case('\t'):
+        case(' '):
+            return true;
+        default:
+            return false;
+        }
+    }
 
-	Base64DecodeError Base64::DecodeCursor::get_next_char(uint8_t& value)
-	{
-		while (!pos.is_empty())
-		{
-			const auto raw_value = pos[0];
-			pos.advance(1);
+    Base64DecodeError Base64::DecodeCursor::get_next_char(uint8_t& value)
+    {
+        while (!pos.is_empty())
+        {
+            const auto raw_value = pos[0];
+            pos.advance(1);
 
-			if (!is_whitespace(raw_value))
-			{
-				value = raw_value;
-				return Base64DecodeError::ok;
-			}
-		}
+            if (!is_whitespace(raw_value))
+            {
+                value = raw_value;
+                return Base64DecodeError::ok;
+            }
+        }
 
-		return Base64DecodeError::not_mult_four;
-	}
+        return Base64DecodeError::not_mult_four;
+    }
 
 }
 

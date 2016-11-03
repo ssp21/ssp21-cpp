@@ -121,7 +121,7 @@ TEST_CASE(SUITE("correctly decodes three bytes"))
 
 TEST_CASE(SUITE("skips trailing whitespace after non-terminating characters"))
 {
-	test_decoding_success("TWFu\n\r\t", "Man");
+    test_decoding_success("TWFu\n\r\t", "Man");
 }
 
 TEST_CASE(SUITE("correctly decodes six bytes"))
@@ -132,12 +132,12 @@ TEST_CASE(SUITE("correctly decodes six bytes"))
 TEST_CASE(SUITE("correctly decodes long input"))
 {
     auto input = "TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGl"
-				  "zIHNpbmd1bGFyIHBhc3Npb24gZnJvbSBvdGhlciBhbmltYWxzLCB3aGljaCBpcyBhIGx1c3Qgb2Yg"
-                  "dGhlIG1pbmQsIHRoYXQgYnkgYSBwZXJzZXZlcmFuY2Ugb2YgZGVsaWdodCBpbiB0aGUgY29udGlud"
-                  "WVkIGFuZCBpbmRlZmF0aWdhYmxlIGdlbmVyYXRpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRoZS"
-                  "BzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=";
+                 "zIHNpbmd1bGFyIHBhc3Npb24gZnJvbSBvdGhlciBhbmltYWxzLCB3aGljaCBpcyBhIGx1c3Qgb2Yg"
+                 "dGhlIG1pbmQsIHRoYXQgYnkgYSBwZXJzZXZlcmFuY2Ugb2YgZGVsaWdodCBpbiB0aGUgY29udGlud"
+                 "WVkIGFuZCBpbmRlZmF0aWdhYmxlIGdlbmVyYXRpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRoZS"
+                 "BzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=";
 
-	auto result = "Man is distinguished, not only by his reason, but by this singular passion from "
+    auto result = "Man is distinguished, not only by his reason, but by this singular passion from "
                   "other animals, which is a lust of the mind, that by a perseverance of delight in the "
                   "continued and indefatigable generation of knowledge, exceeds the short vehemence of "
                   "any carnal pleasure.";

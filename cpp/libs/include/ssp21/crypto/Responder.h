@@ -54,8 +54,8 @@ namespace ssp21
                 const Config& config,
                 std::unique_ptr<KeyPair> local_static_key_pair,
                 std::unique_ptr<PublicKey> remote_static_public_key,
-                openpal::Logger logger,
-                openpal::IExecutor& executor,
+                const openpal::Logger& logger,
+                const std::shared_ptr<openpal::IExecutor>& executor,
                 ILowerLayer& lower
             );
 
@@ -96,7 +96,7 @@ namespace ssp21
 
             openpal::Logger logger;
 
-            openpal::IExecutor* const executor;
+            const std::shared_ptr<openpal::IExecutor> executor;
 
             Handshake handshake;
             Session session;
@@ -120,8 +120,8 @@ namespace ssp21
         Responder(const Config& config,
                   std::unique_ptr<KeyPair> local_static_key_pair,
                   std::unique_ptr<PublicKey> remote_static_public_key,
-                  openpal::Logger logger,
-                  openpal::IExecutor& executor,
+                  const openpal::Logger& logger,
+                  const std::shared_ptr<openpal::IExecutor>& executor,
                   ILowerLayer& lower
                  );
 

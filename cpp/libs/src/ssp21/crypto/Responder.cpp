@@ -19,15 +19,15 @@ namespace ssp21
         const Config& config,
         std::unique_ptr<KeyPair> local_static_key_pair,
         std::unique_ptr<PublicKey> remote_static_public_key,
-        openpal::Logger logger,
-        openpal::IExecutor& executor,
+        const openpal::Logger& logger,
+        const std::shared_ptr<openpal::IExecutor>& executor,
         ILowerLayer& lower) :
 
         config(config),
         local_static_key_pair(std::move(local_static_key_pair)),
         remote_static_public_key(std::move(remote_static_public_key)),
         logger(logger),
-        executor(&executor),
+        executor(executor),
         handshake(EntityId::Responder),
         lower(&lower),
         tx_buffer(config.max_tx_message_size)
@@ -95,8 +95,8 @@ namespace ssp21
     Responder::Responder(const Config& config,
                          std::unique_ptr<KeyPair> local_static_key_pair,
                          std::unique_ptr<PublicKey> remote_static_public_key,
-                         openpal::Logger logger,
-                         openpal::IExecutor& executor,
+                         const openpal::Logger& logger,
+                         const std::shared_ptr<openpal::IExecutor>& executor,
                          ILowerLayer& lower
                         ) :
         ctx(config, std::move(local_static_key_pair), std::move(remote_static_public_key), logger, executor, lower),

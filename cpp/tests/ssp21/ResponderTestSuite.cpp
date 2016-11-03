@@ -52,7 +52,7 @@ public:
     ResponderFixture(BufferType key_type = BufferType::x25519_key, const Responder::Config& config = Responder::Config()) :
         keys(key_type),
         log("responder"),
-        exe(),
+        exe(MockExecutor::Create()),
         lower(),
         responder(config, std::move(keys.local_kp), std::move(keys.remote_static_key), log.logger, exe, lower),
         upper(responder)
@@ -67,7 +67,7 @@ private:
 public:
 
     MockLogHandler log;
-    MockExecutor exe;
+    std::shared_ptr<MockExecutor> exe;
     MockLowerLayer lower;
     Responder responder;
     MockUpperLayer upper;
