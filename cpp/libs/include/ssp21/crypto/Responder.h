@@ -107,8 +107,6 @@ namespace ssp21
         private:
 
             openpal::Buffer tx_buffer;
-
-
         };
 
         struct IHandshakeState
