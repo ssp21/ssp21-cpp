@@ -11,6 +11,7 @@ using namespace openpal;
 // helper methods
 void test_begin_handshake_success(ResponderFixture& fix);
 void test_auth_handshake_success(ResponderFixture& fix);
+void test_init_session_success(ResponderFixture& fix);
 void test_handshake_error(ResponderFixture& fix, const std::string& request, HandshakeError expected_error, std::initializer_list<CryptoAction> actions);
 
 // ---------- tests for handshake state idle -----------
@@ -81,8 +82,7 @@ TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_AUTH with REPLY_HANDSHAKE_AUTH"))
     ResponderFixture fix;
     fix.responder.on_open();
 
-    test_begin_handshake_success(fix);
-    test_auth_handshake_success(fix);
+	test_init_session_success(fix);
 }
 
 TEST_CASE(SUITE("responds to auth request w/ invalid HMAC"))
@@ -128,6 +128,18 @@ TEST_CASE(SUITE("begin handshake can be repeated prior to auth handshake"))
     test_begin_handshake_success(fix);
     test_begin_handshake_success(fix);
     test_auth_handshake_success(fix);
+}
+
+// ---------- tests for initialized session -----------
+
+TEST_CASE(SUITE("can authenticate session data"))
+{
+	ResponderFixture fix;
+	fix.responder.on_open();
+
+	test_init_session_success(fix);
+
+	
 }
 
 // ---------- helper method implementations -----------
@@ -188,6 +200,12 @@ void test_auth_handshake_success(ResponderFixture& fix)
     });
 
     fix.set_tx_ready();
+}
+
+void test_init_session_success(ResponderFixture& fix)
+{
+	test_begin_handshake_success(fix);
+	test_auth_handshake_success(fix);
 }
 
 void test_handshake_error(ResponderFixture& fix, const std::string& request, HandshakeError expected_error, std::initializer_list<CryptoAction> actions)

@@ -42,6 +42,8 @@ namespace ssp21
         );
 
         std::string reply_handshake_error(HandshakeError err);
+
+		std::string session_data(uint16_t nonce, uint32_t valid_until, bool fir, bool fin, const std::string& payload);
     }
 }
 

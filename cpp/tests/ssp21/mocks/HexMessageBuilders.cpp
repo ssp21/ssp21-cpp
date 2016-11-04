@@ -11,6 +11,7 @@
 #include "ssp21/crypto/gen/RequestHandshakeAuth.h"
 #include "ssp21/crypto/gen/ReplyHandshakeAuth.h"
 #include "ssp21/crypto/gen/ReplyHandshakeError.h"
+#include "ssp21/crypto/gen/UnconfirmedSessionData.h"
 
 #include "MakeUnique.h"
 
@@ -114,6 +115,23 @@ namespace ssp21
             ReplyHandshakeError msg(err);
             return write_message(msg);
         }
+
+		std::string session_data(uint16_t nonce, uint32_t valid_until, bool fir, bool fin, const std::string& payload)
+		{
+			Hex payload_hex(payload);
+
+			UnconfirmedSessionData msg(
+				AuthMetadata(
+					nonce,
+					valid_until,
+					SessionFlags(fir, fin)
+				),
+				Seq16(payload_hex.as_rslice())
+			);
+
+			return write_message(msg);
+		}
+
     }
 }
 
