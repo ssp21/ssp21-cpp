@@ -10,7 +10,7 @@
 #include <sstream>
 
 namespace ssp21
-{    
+{
     class MockCryptoBackend : public ICryptoBackend, private openpal::Uncopyable
     {
 
@@ -42,49 +42,45 @@ namespace ssp21
             actions.clear();
         }
 
-        template <typename... Args>
-        void expect(CryptoAction expected, const Args& ... args)
+        void expect(const std::initializer_list<CryptoAction>& expected)
         {
-			expect(0, expected, args ...);
-        }       
+            int count = 0;
+
+            for (auto& action : expected)
+            {
+                if (actions.empty())
+                {
+                    std::ostringstream oss;
+                    oss << "no more crypto actions while waiting for: " << CryptoActionSpec::to_string(action) << " after " << count << " actions";
+                    throw std::logic_error(oss.str());
+                }
+
+                if (actions.front() != action)
+                {
+                    std::ostringstream oss;
+                    oss << "expected " << CryptoActionSpec::to_string(action) << " but next action was " << CryptoActionSpec::to_string(actions.front());
+                    oss << " after " << count << " actions";
+                    throw std::logic_error(oss.str());
+                }
+
+                actions.pop_front();
+
+                ++count;
+            }
+
+            if (!actions.empty())
+            {
+                std::ostringstream oss;
+                oss << "unexpected additional actions: " << actions.size() << std::endl;
+                for (auto& action : actions)
+                {
+                    oss << CryptoActionSpec::to_string(action) << std::endl;
+                }
+                throw std::logic_error(oss.str());
+            }
+        }
 
     private:
-
-		template <typename... Args>
-		void expect(int count, CryptoAction expected, const Args& ... args)
-		{
-			if (actions.empty())
-			{
-				std::ostringstream oss;
-				oss << "no more crypto actions while waiting for: " << CryptoActionSpec::to_string(expected) << " after " << count << " actions";
-				throw std::logic_error(oss.str());
-			}
-
-			if (actions.front() != expected)
-			{
-				std::ostringstream oss;
-				oss << "expected " << CryptoActionSpec::to_string(expected) << " but next action was " << CryptoActionSpec::to_string(actions.front());
-				oss << " after " << count << " actions";
-				throw std::logic_error(oss.str());
-			}
-
-			actions.pop_front();
-			expect(count + 1, args ...);
-		}
-
-		void expect(int count)
-		{
-			if (!actions.empty())
-			{
-				std::ostringstream oss;
-				oss << "unexpected additional actions: " << actions.size() << std::endl;
-				for (auto& action : actions)
-				{
-					oss << CryptoActionSpec::to_string(action) << std::endl;
-				}
-				throw std::logic_error(oss.str());
-			}
-		}
 
         std::deque<CryptoAction> actions;
 

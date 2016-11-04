@@ -82,6 +82,7 @@ namespace ssp21
         if (!ctx.handshake.auth_handshake(msg.mac)) // auth success
         {
             SIMPLE_LOG_BLOCK(ctx.logger, levels::warn, "RequestHandshakeAuth: authentication failure");
+            ctx.reply_with_handshake_error(HandshakeError::authentication_error);
             return HandshakeIdle::get();
         }
 
