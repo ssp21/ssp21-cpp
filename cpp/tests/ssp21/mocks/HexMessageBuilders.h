@@ -32,7 +32,9 @@ namespace ssp21
             std::initializer_list<std::string> certificates = {}
         );
 
-		std::string request_handshake_auth(const std::string& mac);
+        std::string request_handshake_auth(const std::string& mac);
+
+        std::string reply_handshake_auth(const std::string& mac);
 
         std::string reply_handshake_begin(
             const std::string& hex_ephem_pub_key,

@@ -65,9 +65,9 @@ namespace ssp21
 
         this->algorithms.handshake.hkdf(
             this->chaining_key.as_slice(),
-            { dh1.as_slice(), dh2.as_slice(), dh3.as_slice() },
-            this->chaining_key,
-            this->authentication_key
+        { dh1.as_slice(), dh2.as_slice(), dh3.as_slice() },
+        this->chaining_key,
+        this->authentication_key
         );
     }
 

@@ -74,15 +74,19 @@ namespace ssp21
             return write_message(msg);
         }
 
-		std::string request_handshake_auth(const std::string& mac)
-		{
-			Hex mac_bytes(mac);
+        std::string request_handshake_auth(const std::string& mac)
+        {
+            Hex mac_bytes(mac);
+            RequestHandshakeAuth request(Seq8(mac_bytes.as_rslice()));
+            return write_message(request);
+        }
 
-			RequestHandshakeAuth request(Seq8(mac_bytes.as_rslice()));
-
-		
-			return write_message(request);
-		}
+        std::string reply_handshake_auth(const std::string& mac)
+        {
+            Hex mac_bytes(mac);
+            ReplyHandshakeAuth reply(Seq8(mac_bytes.as_rslice()));
+            return write_message(reply);
+        }
 
         std::string reply_handshake_begin(
             const std::string& hex_ephem_pub_key,

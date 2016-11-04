@@ -62,17 +62,7 @@ namespace ssp21
             void log_message(openpal::LogLevel msg_level, openpal::LogLevel field_level, Function func, const IMessage& msg, uint32_t length);
 
             template <class T>
-            void transmit_to_lower(const T& msg, const openpal::RSlice& data)
-            {
-                this->log_message(levels::tx_crypto_msg, levels::tx_crypto_msg_fields, T::function, msg, data.length());
-
-                this->lower->transmit(
-                    Message(
-                        Addresses(config.remote_address, config.local_address),
-                        data
-                    )
-                );
-            }
+            void transmit_to_lower(const T& msg, const openpal::RSlice& data);
 
             void reply_with_handshake_error(HandshakeError err);
 
@@ -166,6 +156,19 @@ namespace ssp21
         // state instance for the handshake
         IHandshakeState* handshake_state;
     };
+
+    template <class T>
+    void Responder::Context::transmit_to_lower(const T& msg, const openpal::RSlice& data)
+    {
+        this->log_message(levels::tx_crypto_msg, levels::tx_crypto_msg_fields, T::function, msg, data.length());
+
+        this->lower->transmit(
+            Message(
+                Addresses(config.remote_address, config.local_address),
+                data
+            )
+        );
+    }
 
 }
 

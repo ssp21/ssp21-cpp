@@ -20,6 +20,11 @@ namespace ssp21
 
     public:
 
+        void set_tx_ready()
+        {
+            this->is_tx_ready_ = true;
+        }
+
         virtual bool transmit(const Message& message) override
         {
             assert(this->is_tx_ready_);

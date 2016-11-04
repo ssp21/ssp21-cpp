@@ -55,8 +55,14 @@ namespace ssp21
             responder(config, std::move(keys.local_kp), std::move(keys.remote_static_key), log.logger, exe, lower),
             upper(responder)
         {
-			MockCryptoBackend::instance.clear_actions();
-        }       
+            MockCryptoBackend::instance.clear_actions();
+        }
+
+        void set_tx_ready()
+        {
+            lower.set_tx_ready();
+            responder.on_tx_ready();
+        }
 
     private:
 
