@@ -4,21 +4,13 @@
 #include "ssp21/crypto/ICryptoBackend.h"
 
 #include "openpal/util/Uncopyable.h"
+#include "../gen/CryptoAction.h"
 
 #include <deque>
 #include <sstream>
 
 namespace ssp21
-{
-    enum class CryptoActions
-    {
-        secure_equals,
-        hash_sha256,
-        hmac_sha256,
-        gen_keypair_x25519,
-        dh_x25519
-    };
-
+{    
     class MockCryptoBackend : public ICryptoBackend, private openpal::Uncopyable
     {
 
@@ -51,43 +43,50 @@ namespace ssp21
         }
 
         template <typename... Args>
-        void expect(CryptoActions expected, const Args& ... args)
+        void expect(CryptoAction expected, const Args& ... args)
         {
-            if (actions.empty())
-            {
-                std::ostringstream oss;
-                oss << "no more crypto actions while waiting for: " << static_cast<int>(expected);
-                throw std::logic_error(oss.str());
-            }
-
-            if (actions.front() != expected)
-            {
-                std::ostringstream oss;
-                oss << "expected " << static_cast<int>(expected) << " but next action was " << static_cast<int>(actions.front());
-                throw std::logic_error(oss.str());
-            }
-
-            actions.pop_front();
-            expect(args ...);
-        }
-
-        void expect()
-        {
-            if (!actions.empty())
-            {
-                std::ostringstream oss;
-                oss << "unexpected additional actions: " << actions.size() << std::endl;
-                for (auto& action : actions)
-                {
-                    oss << static_cast<int>(action) << std::endl;
-                }
-                throw std::logic_error(oss.str());
-            }
-        }
+			expect(0, expected, args ...);
+        }       
 
     private:
 
-        std::deque<CryptoActions> actions;
+		template <typename... Args>
+		void expect(int count, CryptoAction expected, const Args& ... args)
+		{
+			if (actions.empty())
+			{
+				std::ostringstream oss;
+				oss << "no more crypto actions while waiting for: " << CryptoActionSpec::to_string(expected) << " after " << count << " actions";
+				throw std::logic_error(oss.str());
+			}
+
+			if (actions.front() != expected)
+			{
+				std::ostringstream oss;
+				oss << "expected " << CryptoActionSpec::to_string(expected) << " but next action was " << CryptoActionSpec::to_string(actions.front());
+				oss << " after " << count << " actions";
+				throw std::logic_error(oss.str());
+			}
+
+			actions.pop_front();
+			expect(count + 1, args ...);
+		}
+
+		void expect(int count)
+		{
+			if (!actions.empty())
+			{
+				std::ostringstream oss;
+				oss << "unexpected additional actions: " << actions.size() << std::endl;
+				for (auto& action : actions)
+				{
+					oss << CryptoActionSpec::to_string(action) << std::endl;
+				}
+				throw std::logic_error(oss.str());
+			}
+		}
+
+        std::deque<CryptoAction> actions;
 
         MockCryptoBackend() {}
     };

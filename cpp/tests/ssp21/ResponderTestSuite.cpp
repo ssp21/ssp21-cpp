@@ -102,15 +102,15 @@ void test_begin_handshake(ResponderFixture& fix)
 
     // expected order of crypto operations
     MockCryptoBackend::instance.expect(
-        CryptoActions::gen_keypair_x25519,
-        CryptoActions::hash_sha256,
-        CryptoActions::hash_sha256,
-        CryptoActions::dh_x25519,
-        CryptoActions::dh_x25519,
-        CryptoActions::dh_x25519,
-        CryptoActions::hmac_sha256,
-        CryptoActions::hmac_sha256,
-        CryptoActions::hmac_sha256
+        CryptoAction::gen_keypair_x25519,
+        CryptoAction::hash_sha256,
+        CryptoAction::hash_sha256,
+        CryptoAction::dh_x25519,
+        CryptoAction::dh_x25519,
+        CryptoAction::dh_x25519,
+        CryptoAction::hmac_sha256,
+        CryptoAction::hmac_sha256,
+        CryptoAction::hmac_sha256
     );
 
     const auto reply = hex::reply_handshake_begin(hex::repeat(0xFF, consts::crypto::x25519_key_length));
@@ -125,8 +125,19 @@ void test_auth_handshake(ResponderFixture& fix)
     fix.responder.on_rx_ready();
     REQUIRE(fix.lower.pop_tx_message() == hex::request_handshake_auth(mac_hex));
 
-
-
+    // expected order of crypto operations
+    MockCryptoBackend::instance.expect(
+        
+		CryptoAction::hmac_sha256,		// calculate expected value
+		CryptoAction::secure_equals,	// compare MAC values
+        CryptoAction::hash_sha256,		// mix the received message
+		CryptoAction::hmac_sha256,		// calculate reply value
+		CryptoAction::hash_sha256,		// mix the reply
+		
+		CryptoAction::hmac_sha256,		// 3 HMACs for the final HKDF
+		CryptoAction::hmac_sha256,		//
+		CryptoAction::hmac_sha256		//
+    );
 
     fix.set_tx_ready();
 }

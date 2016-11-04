@@ -7,7 +7,7 @@ import com.automatak.render._
 import com.automatak.render.cpp._
 import com.automatak.render.ssp21._
 
-case class EnumGenerator(cfg: EnumConfig) extends WriteCppFiles {
+case class EnumGenerator(cfg: EnumConfig, headerPath: Option[String]) extends WriteCppFiles {
 
   def cppNamespace = "ssp21"
 
@@ -92,7 +92,10 @@ case class EnumGenerator(cfg: EnumConfig) extends WriteCppFiles {
       case None => Iterator.empty
     }
 
-    def includes = Includes.enum(cfg.model.name).line
+    def includes = headerPath match {
+      case Some(path) => Includes.enum(cfg.model.name, path).line
+      case None => Includes.enum(cfg.model.name).line
+    }
 
     license ++ space ++ includes ++ space ++ namespace(cppNamespace)(constants ++ funcs)
   }

@@ -18,6 +18,7 @@ case class Include(file: String, order: Int) {
 
 object Includes {
 
+
   val cstdint = Include("<cstdint>", Ordering.system)
 
   val rslice = openpal("container/RSlice")
@@ -46,7 +47,8 @@ object Includes {
   val messageField = List(parseError, formatError, msgPrinter, wslice, rslice)
 
   def crypto(className: String) = Include(quoted("ssp21/crypto/%s.h".format(className)), Ordering.crypto)
-  def enum(className: String) = Include(quoted("ssp21/crypto/gen/%s.h".format(className)), Ordering.enum)
+  def enum(className: String, path: String) : Include = Include(quoted("%s%s.h".format(path, className)), Ordering.enum)
+  def enum(className: String) : Include = enum(className, "ssp21/crypto/gen/")
   def message(className: String) = Include(quoted("ssp21/crypto/gen/%s.h".format(className)), Ordering.msg)
   def openpal(classPath: String)= Include(quoted("openpal/%s.h".format(classPath)), Ordering.openpal)
 

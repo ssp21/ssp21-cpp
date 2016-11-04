@@ -15,6 +15,8 @@ object GeneratedFiles {
 
   def list : List [WriteCppFiles] = internalEnums ::: ssp21Enums ::: bitfiends ::: structs ::: messsages
 
+  val basePath = "ssp21/crypto/gen/"
+
   private def ssp21Enums = List(
     CryptoFunction(),
     HashMode(),
@@ -23,14 +25,14 @@ object GeneratedFiles {
     SessionMode(),
     CertificateMode(),
     HandshakeError()
-  ).map(x => EnumConfig(x, true, true)).map(e => EnumGenerator(e))
+  ).map(x => EnumConfig(x, true, true)).map(e => EnumGenerator(e, Some(basePath)))
 
   private def internalEnums = List(
     ParseError(),
     FormatError(),
     CryptoError(),
     Base64DecodeError()
-  ).map(x => EnumConfig(x, false, true)).map(e => EnumGenerator(e))
+  ).map(x => EnumConfig(x, false, true)).map(e => EnumGenerator(e, Some(basePath)))
 
   private def bitfiends: List[WriteCppFiles] = List(
     SessionFlags
