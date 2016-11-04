@@ -9,8 +9,8 @@ using namespace ssp21;
 using namespace openpal;
 
 // helper methods
-void test_begin_handshake(ResponderFixture& fix);
-void test_auth_handshake(ResponderFixture& fix);
+void test_begin_handshake_success(ResponderFixture& fix);
+void test_auth_handshake_success(ResponderFixture& fix);
 void test_handshake_error(ResponderFixture& fix, const std::string& request, HandshakeError expected_error);
 
 // ---------- tests for handshake state idle -----------
@@ -19,7 +19,7 @@ TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_BEGIN with REPLY_HANDSHAKE_BEGIN"
 {
     ResponderFixture fix;
     fix.responder.on_open();
-    test_begin_handshake(fix);
+    test_begin_handshake_success(fix);
 }
 
 TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_AUTH with no_prior_handshake error"))
@@ -81,11 +81,45 @@ TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_AUTH with REPLY_HANDSHAKE_AUTH"))
     ResponderFixture fix;
     fix.responder.on_open();
 
-    test_begin_handshake(fix);
-    test_auth_handshake(fix);
+    test_begin_handshake_success(fix);
+    test_auth_handshake_success(fix);
 }
 
-void test_begin_handshake(ResponderFixture& fix)
+TEST_CASE(SUITE("responds to invalid HMAC"))
+{
+	ResponderFixture fix;
+	fix.responder.on_open();
+
+	test_begin_handshake_success(fix);
+	test_auth_handshake_success(fix);
+}
+
+TEST_CASE(SUITE("handshake process can be repeated"))
+{
+	ResponderFixture fix;
+	fix.responder.on_open();
+
+	for (int i = 0; i < 3; ++i) 
+	{
+		test_begin_handshake_success(fix);
+		test_auth_handshake_success(fix);
+	}	
+}
+
+TEST_CASE(SUITE("begin handshake can be repeated prior to auth handshake"))
+{
+	ResponderFixture fix;
+	fix.responder.on_open();
+	
+	test_begin_handshake_success(fix);
+	test_begin_handshake_success(fix);
+	test_begin_handshake_success(fix);
+	test_auth_handshake_success(fix);
+}
+
+// ---------- helper method implementations -----------
+
+void test_begin_handshake_success(ResponderFixture& fix)
 {
     const auto request = hex::request_handshake_begin(
                              0,
@@ -118,9 +152,10 @@ void test_begin_handshake(ResponderFixture& fix)
     fix.set_tx_ready();
 }
 
-void test_auth_handshake(ResponderFixture& fix)
+void test_auth_handshake_success(ResponderFixture& fix)
 {
     const auto mac_hex = hex::repeat(0xFF, consts::crypto::sha256_hash_output_length);
+
     fix.lower.enqueue_message(Addresses(1, 10), hex::request_handshake_auth(mac_hex));
     fix.responder.on_rx_ready();
     REQUIRE(fix.lower.pop_tx_message() == hex::request_handshake_auth(mac_hex));
