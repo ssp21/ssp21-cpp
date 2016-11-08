@@ -24,7 +24,7 @@ namespace ssp21
     };
 
     /**
-    *  A message between the link layer and the crypto layer
+    *  A combination of payload data and address information
     */
     struct Message : openpal::Uncopyable
     {
@@ -44,7 +44,7 @@ namespace ssp21
     class IMessageProcessor
     {
     public:
-        virtual void process(const Message& message) = 0;
+        virtual void process(const openpal::RSlice& data) = 0;
     };
 
     class ILowerLayer
@@ -52,7 +52,7 @@ namespace ssp21
 
     public:
 
-        virtual bool transmit(const Message& message) = 0;
+        virtual bool transmit(const openpal::RSlice& data) = 0;
 
         virtual bool receive(IMessageProcessor& processor) = 0;
 

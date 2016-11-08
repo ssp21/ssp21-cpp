@@ -15,7 +15,7 @@ namespace ssp21
     class MockLowerLayer : public ILowerLayer, private openpal::Uncopyable
     {
 
-        typedef std::pair<Addresses, openpal::Buffer> message_t;
+        typedef openpal::Buffer message_t;
 
 
     public:
@@ -25,12 +25,10 @@ namespace ssp21
             this->is_tx_ready_ = true;
         }
 
-        virtual bool transmit(const Message& message) override
+        virtual bool transmit(const openpal::RSlice& message) override
         {
             assert(this->is_tx_ready_);
-            this->tx_messages_.push_back(
-                std::make_unique<message_t>(message.addresses, message.payload)
-            );
+            this->tx_messages_.push_back(std::make_unique<message_t>(message));
             this->is_tx_ready_ = false;
             return true;
         }
@@ -44,21 +42,17 @@ namespace ssp21
 
             auto& front = rx_messages_.front();
 
-            processor.process(
-                Message(front->first, front->second.as_rslice())
-            );
+			processor.process(front->as_rslice());
 
             rx_messages_.pop_front();
 
             return true;
         }
 
-        void enqueue_message(const Addresses& addr, const std::string& hex)
+        void enqueue_message(const std::string& hex)
         {
             openpal::Hex hexdata(hex);
-            this->rx_messages_.push_back(
-                std::make_unique<message_t>(addr, hexdata.as_rslice())
-            );
+            this->rx_messages_.push_back(std::make_unique<message_t>(hexdata.as_rslice()));
         }
 
         size_t num_rx_messages() const
@@ -74,7 +68,7 @@ namespace ssp21
             }
             else
             {
-                auto hex = openpal::to_hex(tx_messages_.front()->second.as_rslice());
+                auto hex = openpal::to_hex(tx_messages_.front()->as_rslice());
                 tx_messages_.pop_front();
                 return hex;
             }

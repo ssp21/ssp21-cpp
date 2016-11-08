@@ -132,7 +132,7 @@ namespace ssp21
         }
     }
 
-    bool Responder::transmit(const Message& message)
+    bool Responder::transmit(const openpal::RSlice& data)
     {
         // TODO
         return false;
@@ -177,40 +177,28 @@ namespace ssp21
         // TODO - authenticate and process the message
     }
 
-    void Responder::process(const Message& message)
-    {
-        if (message.addresses.destination != ctx.config.local_address)
-        {
-            FORMAT_LOG_BLOCK(ctx.logger, levels::info, "unknown destination address: %u", message.addresses.destination);
-            return;
-        }
-
-        if (message.addresses.source != ctx.config.remote_address)
-        {
-            FORMAT_LOG_BLOCK(ctx.logger, levels::info, "unknown source address: %u", message.addresses.source);
-            return;
-        }
-
-        if (message.payload.is_empty())
+    void Responder::process(const openpal::RSlice& message)
+    {        
+        if (message.is_empty())
         {
             SIMPLE_LOG_BLOCK(ctx.logger, levels::warn, "Received zero length message");
             return;
         }
 
-        const auto function = message.payload[0];
+        const auto function = message[0];
 
         switch (FunctionSpec::from_type(function))
         {
         case(Function::request_handshake_begin) :
-            this->handle_handshake_message<RequestHandshakeBegin>(message.payload);
+            this->handle_handshake_message<RequestHandshakeBegin>(message);
             break;
 
         case(Function::request_handshake_auth) :
-            this->handle_handshake_message<RequestHandshakeAuth>(message.payload);
+            this->handle_handshake_message<RequestHandshakeAuth>(message);
             break;
 
         case(Function::unconfirmed_session_data) :
-            this->handle_session_message(message.payload);
+            this->handle_session_message(message);
             break;
 
         default:

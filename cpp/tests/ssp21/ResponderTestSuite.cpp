@@ -141,7 +141,7 @@ TEST_CASE(SUITE("can authenticate session data"))
 
 	const auto data_and_tag = hex::repeat(0xFF, 18);
 
-	fix.lower.enqueue_message(Addresses(1, 10), hex::session_data(0, 0xFFFFFFFF, true, true, data_and_tag));
+	fix.lower.enqueue_message(hex::session_data(0, 0xFFFFFFFF, true, true, data_and_tag));
 	fix.responder.on_rx_ready();
 	REQUIRE(fix.upper.pop_rx_message() == "FF FF");
 	
@@ -161,7 +161,7 @@ void test_begin_handshake_success(ResponderFixture& fix)
                              hex::repeat(0xFF, consts::crypto::x25519_key_length)
                          );
 
-    fix.lower.enqueue_message(Addresses(1, 10), request);
+    fix.lower.enqueue_message(request);
     fix.responder.on_rx_ready();
 
     // expected order of crypto operations
@@ -187,7 +187,7 @@ void test_auth_handshake_success(ResponderFixture& fix)
 {
     const auto mac_hex = hex::repeat(0xFF, consts::crypto::sha256_hash_output_length);
 
-    fix.lower.enqueue_message(Addresses(1, 10), hex::request_handshake_auth(mac_hex));
+    fix.lower.enqueue_message(hex::request_handshake_auth(mac_hex));
     fix.responder.on_rx_ready();
     REQUIRE(fix.lower.pop_tx_message() == hex::request_handshake_auth(mac_hex));
 
@@ -215,7 +215,7 @@ void test_init_session_success(ResponderFixture& fix)
 
 void test_handshake_error(ResponderFixture& fix, const std::string& request, HandshakeError expected_error, std::initializer_list<CryptoAction> actions)
 {
-    fix.lower.enqueue_message(Addresses(1, 10), request);
+    fix.lower.enqueue_message(request);
     REQUIRE(fix.lower.num_rx_messages() == 1);
     fix.responder.on_rx_ready();
     REQUIRE(fix.lower.num_rx_messages() == 0);

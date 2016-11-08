@@ -39,13 +39,7 @@ namespace ssp21
             /// The maximum message size that this layer should transmit to the link layer
             /// This constant determines the size of a buffer allocated when the responder
             /// is constructed
-            uint16_t max_tx_message_size = consts::link::max_config_payload_size;
-
-            /// expected remote address
-            uint16_t remote_address = consts::link::default_responder_remote_address;
-
-            /// local address
-            uint16_t local_address = consts::link::default_responder_local_address;
+            uint16_t max_tx_message_size = consts::link::max_config_payload_size;			
         };
 
         struct Context
@@ -134,12 +128,12 @@ namespace ssp21
 
         // ---- implement ILowerLayer -----
 
-        virtual bool transmit(const Message& message) override;
+        virtual bool transmit(const openpal::RSlice& data) override;
         virtual bool receive(IMessageProcessor& processor) override;
 
         // ---- implement IMessageProcessor -----
 
-        virtual void process(const Message& message) override;
+        virtual void process(const openpal::RSlice& data) override;
 
         // ---- private methods -----
 
@@ -161,13 +155,7 @@ namespace ssp21
     void Responder::Context::transmit_to_lower(const T& msg, const openpal::RSlice& data)
     {
         this->log_message(levels::tx_crypto_msg, levels::tx_crypto_msg_fields, T::function, msg, data.length());
-
-        this->lower->transmit(
-            Message(
-                Addresses(config.remote_address, config.local_address),
-                data
-            )
-        );
+		this->lower->transmit(data);
     }
 
 }

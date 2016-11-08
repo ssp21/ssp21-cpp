@@ -28,7 +28,7 @@ namespace ssp21
             }
             else
             {
-                auto hex = openpal::to_hex(rx_messages_.front()->second.as_rslice());
+                auto hex = openpal::to_hex(rx_messages_.front()->as_rslice());
                 rx_messages_.pop_front();
                 return hex;
             }
@@ -36,7 +36,7 @@ namespace ssp21
 
     private:
 
-        typedef std::pair<Addresses, openpal::Buffer> message_t;
+        typedef openpal::Buffer message_t;
 
         typedef std::deque<std::unique_ptr<message_t>> message_queue_t;
 
@@ -44,9 +44,9 @@ namespace ssp21
 
         ILowerLayer* const lower_;
 
-        virtual void process(const Message& message) override
+        virtual void process(const openpal::RSlice& message) override
         {
-            rx_messages_.push_back(std::make_unique<message_t>(message.addresses, message.payload));
+            rx_messages_.push_back(std::make_unique<message_t>(message));
         }
 
         virtual void on_open_impl() override {}
