@@ -110,7 +110,8 @@ namespace ssp21
 
     void Responder::on_close_impl()
     {
-        handshake_state = &HandshakeIdle::get();
+        this->handshake_state = &HandshakeIdle::get();
+		this->ctx.session.close();
     }
 
     void Responder::on_tx_ready_impl()
