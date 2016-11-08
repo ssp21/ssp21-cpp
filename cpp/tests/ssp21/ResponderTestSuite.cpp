@@ -139,6 +139,11 @@ TEST_CASE(SUITE("can authenticate session data"))
 
 	test_init_session_success(fix);
 
+	const auto data_and_tag = hex::repeat(0xFF, 18);
+
+	fix.lower.enqueue_message(Addresses(1, 10), hex::session_data(0, 0xFFFFFFFF, true, true, data_and_tag));
+	fix.responder.on_rx_ready();
+	REQUIRE(fix.upper.pop_rx_message() == "FF FF");
 	
 }
 
