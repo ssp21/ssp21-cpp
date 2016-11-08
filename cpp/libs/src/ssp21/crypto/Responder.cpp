@@ -174,6 +174,7 @@ namespace ssp21
 
         ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, Function::unconfirmed_session_data, msg, data.length());
 
+		
         // TODO - authenticate and process the message
     }
 
