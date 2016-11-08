@@ -3,24 +3,35 @@
 #define SSP21_SESSION_H
 
 #include "openpal/util/Uncopyable.h"
+#include "openpal/logging/Logger.h"
 #include "openpal/executor/Timestamp.h"
+#include "openpal/container/Buffer.h"
 
 #include "ssp21/crypto/BufferTypes.h"
 #include "ssp21/crypto/SessionModes.h"
 #include "ssp21/crypto/Algorithms.h"
+
+#include "ssp21/crypto/gen/UnconfirmedSessionData.h"
 
 namespace ssp21
 {
     class Session : private openpal::Uncopyable
     {
 
-    public:
-        
+    public:		
+
+		Session(const openpal::Logger& logger, uint16_t max_rx_payload_size);
+
 		void initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const SessionKeys& keys);
 
-		void close();
+		void reset();
+
+		bool validate(const UnconfirmedSessionData& message, const openpal::Timestamp& now);
 
     private:		
+
+		openpal::Logger logger;
+		openpal::Buffer rx_auth_buffer;
 
 		bool valid = false;
         uint16_t rx_nonce = 0;

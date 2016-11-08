@@ -11,7 +11,7 @@
 
 namespace ssp21
 {
-    typedef bool(*verify_nonce_func_t)(uint32_t last_nonce, uint32_t new_nonce);
+    typedef bool(*verify_nonce_func_t)(uint16_t last_nonce, uint16_t new_nonce);
 
     struct NonceFunctions : private openpal::StaticOnly
     {
@@ -20,9 +20,9 @@ namespace ssp21
             return &verify_strict_increment;
         }
 
-        inline static bool verify_strict_increment(uint32_t last_nonce, uint32_t new_nonce)
+        inline static bool verify_strict_increment(uint16_t last_nonce, uint16_t new_nonce)
         {
-            if (last_nonce == openpal::max_value<uint32_t>()) // don't allow rollover below
+            if (last_nonce == openpal::max_value<uint16_t>()) // don't allow rollover
             {
                 return false;
             }
@@ -30,7 +30,7 @@ namespace ssp21
             return new_nonce == (last_nonce + 1);
         }
 
-        inline static bool verify_greater_than_last(uint32_t last_nonce, uint32_t new_nonce)
+        inline static bool verify_greater_than_last(uint16_t last_nonce, uint16_t new_nonce)
         {
             return new_nonce > last_nonce;
         }

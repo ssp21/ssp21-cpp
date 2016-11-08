@@ -29,6 +29,7 @@ namespace ssp21
         logger(logger),
         executor(executor),
         handshake(EntityId::Responder),
+		session(logger, config.max_rx_payload_size),
         lower(&lower),
         tx_buffer(config.max_tx_message_size)
     {
@@ -111,7 +112,7 @@ namespace ssp21
     void Responder::on_close_impl()
     {
         this->handshake_state = &HandshakeIdle::get();
-		this->ctx.session.close();
+		this->ctx.session.reset();
     }
 
     void Responder::on_tx_ready_impl()
