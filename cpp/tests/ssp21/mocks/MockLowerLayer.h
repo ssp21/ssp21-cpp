@@ -22,29 +22,29 @@ namespace ssp21
 
         void set_tx_ready()
         {
-            this->is_tx_ready_ = true;
+            this->is_tx_ready = true;
         }
 
         virtual bool transmit(const openpal::RSlice& message) override
         {
-            assert(this->is_tx_ready_);
-            this->tx_messages_.push_back(std::make_unique<message_t>(message));
-            this->is_tx_ready_ = false;
+            assert(this->is_tx_ready);
+            this->tx_messages.push_back(std::make_unique<message_t>(message));
+            this->is_tx_ready = false;
             return true;
         }
 
         virtual bool receive(IMessageProcessor& processor) override
         {
-            if (rx_messages_.empty())
+            if (this->rx_messages.empty())
             {
                 return false;
             }
 
-            auto& front = rx_messages_.front();
+            auto& front = this->rx_messages.front();
 
 			processor.process(front->as_rslice());
 
-            rx_messages_.pop_front();
+			this->rx_messages.pop_front();
 
             return true;
         }
@@ -52,24 +52,24 @@ namespace ssp21
         void enqueue_message(const std::string& hex)
         {
             openpal::Hex hexdata(hex);
-            this->rx_messages_.push_back(std::make_unique<message_t>(hexdata.as_rslice()));
+            this->rx_messages.push_back(std::make_unique<message_t>(hexdata.as_rslice()));
         }
 
         size_t num_rx_messages() const
         {
-            return this->rx_messages_.size();
+            return this->rx_messages.size();
         }
 
         std::string pop_tx_message()
         {
-            if (this->tx_messages_.empty())
+            if (this->tx_messages.empty())
             {
                 return "";
             }
             else
             {
-                auto hex = openpal::to_hex(tx_messages_.front()->as_rslice());
-                tx_messages_.pop_front();
+                auto hex = openpal::to_hex(this->tx_messages.front()->as_rslice());
+                this->tx_messages.pop_front();
                 return hex;
             }
         }
@@ -78,9 +78,9 @@ namespace ssp21
 
         typedef std::deque<std::unique_ptr<message_t>> message_queue_t;
 
-        message_queue_t tx_messages_;
+        message_queue_t tx_messages;
 
-        message_queue_t rx_messages_;
+        message_queue_t rx_messages;
     };
 
 }

@@ -17,19 +17,19 @@ namespace ssp21
 
     public:
 
-        MockUpperLayer(ILowerLayer& lower) : lower_(&lower)
+        MockUpperLayer(ILowerLayer& lower) : lower(&lower)
         {}
 
         std::string pop_rx_message()
         {
-            if (this->rx_messages_.empty())
+            if (this->rx_messages.empty())
             {
                 return "";
             }
             else
             {
-                auto hex = openpal::to_hex(rx_messages_.front()->as_rslice());
-                rx_messages_.pop_front();
+                auto hex = openpal::to_hex(this->rx_messages.front()->as_rslice());
+				this->rx_messages.pop_front();
                 return hex;
             }
         }
@@ -40,27 +40,24 @@ namespace ssp21
 
         typedef std::deque<std::unique_ptr<message_t>> message_queue_t;
 
-        message_queue_t rx_messages_;
+        message_queue_t rx_messages;
 
-        ILowerLayer* const lower_;
+        ILowerLayer* const lower;
 
         virtual void process(const openpal::RSlice& message) override
         {
-            rx_messages_.push_back(std::make_unique<message_t>(message));
+            this->rx_messages.push_back(std::make_unique<message_t>(message));
         }
 
         virtual void on_open_impl() override {}
 
         virtual void on_close_impl() override {}
 
-        virtual void on_tx_ready_impl() override
-        {
-
-        }
+        virtual void on_tx_ready_impl() override {}
 
         virtual void on_rx_ready_impl() override
         {
-            lower_->receive(*this);
+            this->lower->receive(*this);
         }
 
     };

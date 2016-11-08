@@ -56,20 +56,20 @@ namespace ssp21
 
         virtual bool receive(IMessageProcessor& processor) = 0;
 
-        inline bool is_tx_ready() const
+        inline bool get_is_tx_ready() const
         {
-            return is_tx_ready_;
+            return this->is_tx_ready;
         }
 
-        inline bool is_rx_ready() const
+        inline bool get_is_rx_ready() const
         {
-            return is_rx_ready_;
+            return this->is_rx_ready;
         }
 
     protected:
 
-        bool is_tx_ready_ = true;
-        bool is_rx_ready_ = false;
+        bool is_tx_ready = true;
+        bool is_rx_ready = false;
 
     };
 
@@ -80,25 +80,25 @@ namespace ssp21
 
         inline void on_open()
         {
-            if (!is_open_)
+            if (!this->is_open)
             {
-                is_open_ = true;
+				this->is_open = true;
                 this->on_open_impl();
             }
         }
 
         inline void on_close()
         {
-            if (is_open_)
+            if (this->is_open)
             {
-                is_open_ = false;
+				this->is_open = false;
                 this->on_close_impl();
             }
         }
 
         inline void on_tx_ready()
         {
-            if (is_open_)
+            if (this->is_open)
             {
                 this->on_tx_ready_impl();
             }
@@ -106,7 +106,7 @@ namespace ssp21
 
         inline void on_rx_ready()
         {
-            if (is_open_)
+            if (this->is_open)
             {
                 this->on_rx_ready_impl();
             }
@@ -122,14 +122,14 @@ namespace ssp21
 
         virtual void on_rx_ready_impl() = 0;
 
-        inline bool is_open() const
+        inline bool get_is_open() const
         {
-            return is_open_;
+            return is_open;
         }
 
     private:
 
-        bool is_open_ = false;
+        bool is_open = false;
 
     };
 

@@ -116,7 +116,7 @@ namespace ssp21
     void Responder::on_tx_ready_impl()
     {
         // only read a message we don't have data ready
-        if (ctx.lower->is_rx_ready() && this->can_receive())
+        if (ctx.lower->get_is_rx_ready() && this->can_receive())
         {
             ctx.lower->receive(*this);
         }

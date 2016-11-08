@@ -116,7 +116,7 @@ namespace ssp21
 
         bool can_receive() const
         {
-            return ctx.lower->is_tx_ready() && !this->is_rx_ready();
+            return ctx.lower->get_is_tx_ready() && !this->get_is_rx_ready();
         }
 
         // ---- implement IUpperLayer -----
