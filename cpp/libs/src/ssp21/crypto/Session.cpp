@@ -4,13 +4,14 @@
 #include "openpal/logging/LogMacros.h"
 
 #include "ssp21/LogLevels.h"
+#include "ssp21/crypto/gen/CryptoError.h"
+
+using namespace openpal;
 
 namespace ssp21
 {
 
-Session::Session(const openpal::Logger& logger, uint16_t max_rx_payload_size) : 
-	logger(logger),
-	rx_auth_buffer(max_rx_payload_size)
+Session::Session(uint16_t max_rx_payload_size) : rx_auth_buffer(max_rx_payload_size)
 {}
    
 void Session::initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const SessionKeys& keys)
@@ -27,42 +28,40 @@ void Session::reset()
 	this->valid = false;
 }
 
-bool Session::validate(const UnconfirmedSessionData& message, const openpal::Timestamp& now)
+RSlice Session::validate_user_data(const UnconfirmedSessionData& message, const openpal::Timestamp& now, std::error_code& ec)
 {
 	if (!this->valid) 
-	{
-		SIMPLE_LOG_BLOCK(this->logger, levels::warn, "ignoring message: no valid session");
-		return false;
+	{		
+		ec = CryptoError::no_valid_session;
+		return RSlice::empty_slice();
 	}
-
-	std::error_code ec;
-	auto result = this->algorithms.read(this->keys.rx_key, message.metadata, message.payload, this->rx_auth_buffer.as_wslice(), ec);
+	
+	const auto payload = this->algorithms.read(this->keys.rx_key, message.metadata, message.payload, this->rx_auth_buffer.as_wslice(), ec);
 
 	if (ec)
-	{
-		FORMAT_LOG_BLOCK(this->logger, levels::warn, "authentication failed: %s", ec.message().c_str());
-		return false;
+	{		
+		return RSlice::empty_slice();
 	}
 
 	const auto current_session_time = now.milliseconds - this->session_start.milliseconds;
 
 	// the message is authentic, check the TTL
-	if (message.metadata.valid_until_ms > current_session_time)
-	{
-		SIMPLE_LOG_BLOCK(this->logger, levels::warn, "ignoring message: TTL no longer valid");
-		return false;
+	if (message.metadata.valid_until_ms < current_session_time)
+	{		
+		ec = CryptoError::expired_ttl;
+		return RSlice::empty_slice();
 	}
 
 	// check the nonce
 	if (!this->algorithms.verify_nonce(this->rx_nonce, message.metadata.nonce.value))
 	{
-		SIMPLE_LOG_BLOCK(this->logger, levels::warn, "ignoring message: bad nonce");
-		return false;
+		ec = CryptoError::invalid_nonce;
+		return RSlice::empty_slice();
 	}
 
 	this->rx_nonce = message.metadata.nonce.value;
 
-	return true;
+	return payload;
 }
 
 }

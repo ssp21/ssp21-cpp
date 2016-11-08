@@ -36,7 +36,13 @@ enum class CryptoError : uint8_t
     /// A calculated MAC did not match the specified MAC
     mac_auth_fail = 0x3,
     /// A buffer had an insufficient or incorrect size
-    bad_buffer_size = 0x4
+    bad_buffer_size = 0x4,
+    /// No validate session for authenticating user data
+    no_valid_session = 0x5,
+    /// The TTL on a message is expired
+    expired_ttl = 0x6,
+    /// The nonce on a message is not valid
+    invalid_nonce = 0x7
 };
 
 struct CryptoErrorSpec : private openpal::StaticOnly

@@ -33,6 +33,12 @@ const char* CryptoErrorSpec::to_string(CryptoError arg)
             return "mac_auth_fail";
         case(CryptoError::bad_buffer_size):
             return "bad_buffer_size";
+        case(CryptoError::no_valid_session):
+            return "no_valid_session";
+        case(CryptoError::expired_ttl):
+            return "expired_ttl";
+        case(CryptoError::invalid_nonce):
+            return "invalid_nonce";
         default:
             return "undefined";
     }

@@ -20,17 +20,16 @@ namespace ssp21
 
     public:		
 
-		Session(const openpal::Logger& logger, uint16_t max_rx_payload_size);
+		Session(uint16_t max_rx_payload_size);
 
 		void initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const SessionKeys& keys);
 
 		void reset();
 
-		bool validate(const UnconfirmedSessionData& message, const openpal::Timestamp& now);
+		openpal::RSlice validate_user_data(const UnconfirmedSessionData& message, const openpal::Timestamp& now, std::error_code& ec);
 
     private:		
-
-		openpal::Logger logger;
+		
 		openpal::Buffer rx_auth_buffer;
 
 		bool valid = false;

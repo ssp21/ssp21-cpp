@@ -29,7 +29,7 @@ namespace ssp21
         logger(logger),
         executor(executor),
         handshake(EntityId::Responder),
-		session(logger, config.max_rx_payload_size),
+		session(config.max_rx_payload_size),
         lower(&lower),
         tx_buffer(config.max_tx_message_size)
     {
@@ -166,6 +166,8 @@ namespace ssp21
 
     void Responder::handle_session_message(const openpal::RSlice& data)
     {
+		const auto rx_time = ctx.executor->get_time();
+
         UnconfirmedSessionData msg;
         auto err = msg.read(data);
         if (any(err))
@@ -175,9 +177,21 @@ namespace ssp21
         }
 
         ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, Function::unconfirmed_session_data, msg, data.length());
-
 		
-        // TODO - authenticate and process the message
+		
+		std::error_code ec;
+		const auto payload = this->ctx.session.validate_user_data(msg, rx_time, ec);
+
+		if(ec)
+		{
+			FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "validation error: %s", ec.message().c_str());
+			return;
+		}
+		else
+		{
+			// TODO: process the payload
+
+		}
     }
 
     void Responder::process(const openpal::RSlice& message)
