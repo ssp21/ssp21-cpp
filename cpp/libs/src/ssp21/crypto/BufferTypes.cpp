@@ -5,30 +5,31 @@
 
 namespace ssp21
 {
-
-    BufferBase::BufferBase() : length_(0), buffer_type_(BufferType::empty)
-    {}
-
     openpal::RSlice BufferBase::as_slice() const
     {
-        return buffer_.as_rslice().take(length_);
+        return this->buffer.as_rslice().take(this->length);
     }
 
     BufferType BufferBase::get_type() const
     {
-        return buffer_type_;
+        return this->buffer_type;
     }
 
     openpal::WSlice BufferBase::get_write_slice()
     {
-        return buffer_.as_wslice();
+        return this->buffer.as_wslice();
     }
 
     void BufferBase::set_type(BufferType buffer_type)
     {
-        buffer_type_ = buffer_type;
-        length_ = get_buffer_length(buffer_type);
+		this->buffer_type = buffer_type;
+		this->length = get_buffer_length(buffer_type);
     }
+
+	void BufferBase::copy(const BufferBase& other)
+	{
+		memcpy(this->buffer.as_wslice(), other.buffer.as_rslice(), consts::crypto::max_primitive_buffer_length);
+	}
 
     uint32_t BufferBase::get_buffer_length(BufferType key_type)
     {
@@ -47,7 +48,7 @@ namespace ssp21
 
     SecureBuffer::~SecureBuffer()
     {
-        Crypto::zero_memory(buffer_.as_wslice());
+        Crypto::zero_memory(this->buffer.as_wslice());
     }
 
 }

@@ -15,26 +15,16 @@ namespace ssp21
     {
 
     public:
+        
+		void initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const SessionKeys& keys);
 
-        template <class InitKeysFun>
-        void initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const InitKeysFun& init_keys)
-        {
-            this->initialize(algorithms, session_start);
+		void close();
 
-            init_keys(this->keys);
-        }
+    private:		
 
-    private:
-
-        void initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start)
-        {
-            this->rx_nonce = this->tx_nonce = 0;
-            this->algorithms = algorithms;
-            this->session_start = session_start;
-        }
-
+		bool valid = false;
         uint16_t rx_nonce = 0;
-        uint16_t tx_nonce = 0;
+        uint16_t tx_nonce = 0;		
 
         SessionKeys keys;
         Algorithms::Session algorithms;

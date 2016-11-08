@@ -30,21 +30,23 @@ namespace ssp21
 
         openpal::WSlice get_write_slice();
 
-        void set_type(BufferType key_type);
+        void set_type(BufferType key_type);		
+
+		void copy(const BufferBase& other);
 
     protected:
 
-        BufferBase();
+		BufferBase() = default;
 
     private:
 
         static uint32_t get_buffer_length(BufferType);
 
-        uint32_t length_;
-        BufferType buffer_type_;
+		uint32_t length = 0;
+		BufferType buffer_type = BufferType::empty;
 
     protected:
-        openpal::StaticBuffer<consts::crypto::max_primitive_buffer_length> buffer_;
+        openpal::StaticBuffer<consts::crypto::max_primitive_buffer_length> buffer;
     };
 
     /**
@@ -82,6 +84,12 @@ namespace ssp21
     {
         SymmetricKey rx_key;
         SymmetricKey tx_key;
+
+		inline void copy(const SessionKeys& other)
+		{
+			this->rx_key.copy(other.rx_key);
+			this->rx_key.copy(other.tx_key);
+		}
     };
 
 
