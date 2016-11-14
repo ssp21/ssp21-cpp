@@ -75,6 +75,20 @@ TEST_CASE(SUITE("responds to invalid key length with bad_message_format"))
     test_handshake_error(fix, request, HandshakeError::bad_message_format, {});
 }
 
+TEST_CASE(SUITE("ignores user data without a session"))
+{
+    ResponderFixture fix;
+    fix.responder.on_open();
+
+    const auto request = hex::session_data(1, 0xFFFFFFFF, true, true, hex::repeat(0xFF, 20));
+    fix.lower.enqueue_message(request);
+    fix.responder.on_rx_ready();
+
+    const auto stats = fix.responder.get_statistics();
+    REQUIRE(stats.session.num_user_data_without_session == 1);
+    REQUIRE(fix.upper.is_empty());
+}
+
 // ---------- tests for handshake state wait for auth -----------
 
 TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_AUTH with REPLY_HANDSHAKE_AUTH"))
@@ -82,7 +96,7 @@ TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_AUTH with REPLY_HANDSHAKE_AUTH"))
     ResponderFixture fix;
     fix.responder.on_open();
 
-	test_init_session_success(fix);
+    test_init_session_success(fix);
 }
 
 TEST_CASE(SUITE("responds to auth request w/ invalid HMAC"))
@@ -127,31 +141,101 @@ TEST_CASE(SUITE("begin handshake can be repeated prior to auth handshake"))
     test_begin_handshake_success(fix);
     test_begin_handshake_success(fix);
     test_begin_handshake_success(fix);
-    test_auth_handshake_success(fix);	
+    test_auth_handshake_success(fix);
 }
 
 // ---------- tests for initialized session -----------
 
+TEST_CASE(SUITE("auth fails if insufficient data for tag"))
+{
+    ResponderFixture fix;
+    fix.responder.on_open();
+
+    test_init_session_success(fix);
+
+    const auto data_and_tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16 - 1);
+    fix.lower.enqueue_message(hex::session_data(1, 0xFFFFFFFF, true, true, data_and_tag));
+    fix.responder.on_rx_ready();
+
+    const auto stats = fix.responder.get_statistics();
+
+    REQUIRE(stats.session.num_auth_fail == 1);
+    REQUIRE(fix.upper.is_empty());
+}
+
+TEST_CASE(SUITE("auth fails if TTL expired"))
+{
+    ResponderFixture fix;
+    fix.responder.on_open();
+
+    test_init_session_success(fix);
+
+    fix.exe->advance_time(TimeDuration::milliseconds(3));
+
+    const auto data_and_tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16 + 1);
+    fix.lower.enqueue_message(hex::session_data(1, 2, true, true, data_and_tag)); // session TTL of 2
+    fix.responder.on_rx_ready();
+
+    const auto stats = fix.responder.get_statistics();
+
+    REQUIRE(stats.session.num_ttl_expiration == 1);
+    REQUIRE(fix.upper.is_empty());
+}
+
+TEST_CASE(SUITE("auth fails on nonce of zero"))
+{
+    ResponderFixture fix;
+    fix.responder.on_open();
+
+    test_init_session_success(fix);
+
+    const auto data_and_tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16 + 1);
+    fix.lower.enqueue_message(hex::session_data(0, 0, true, true, data_and_tag)); // nonce of zero
+    fix.responder.on_rx_ready();
+
+    const auto stats = fix.responder.get_statistics();
+
+    REQUIRE(stats.session.num_nonce_fail == 1);
+    REQUIRE(fix.upper.is_empty());
+}
+
+TEST_CASE(SUITE("fails on empty user data"))
+{
+    ResponderFixture fix;
+    fix.responder.on_open();
+
+    test_init_session_success(fix);
+
+    const auto data_and_tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
+
+    fix.lower.enqueue_message(hex::session_data(1, 0xFFFFFFFF, true, true, data_and_tag));
+    fix.responder.on_rx_ready();
+
+    const auto stats = fix.responder.get_statistics();
+
+    REQUIRE(stats.session.num_auth_fail == 1);
+    REQUIRE(fix.upper.is_empty());
+}
+
 TEST_CASE(SUITE("can authenticate session data"))
 {
-	ResponderFixture fix;
-	fix.responder.on_open();
+    ResponderFixture fix;
+    fix.responder.on_open();
 
-	test_init_session_success(fix);
+    test_init_session_success(fix);
 
+    const auto data = "CA FE";
+    const auto data_and_tag = data + hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
 
-	const auto data = "CA FE";
-	const auto data_and_tag = data + hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
+    fix.lower.enqueue_message(hex::session_data(1, 0xFFFFFFFF, true, true, data_and_tag));
+    fix.responder.on_rx_ready();
 
-	fix.lower.enqueue_message(hex::session_data(1, 0xFFFFFFFF, true, true, data_and_tag));
-	fix.responder.on_rx_ready();
+    const auto stats = fix.responder.get_statistics();
 
-	const auto stats = fix.responder.get_statistics();
-
-	REQUIRE(stats.session.num_success == 1);
-	REQUIRE(fix.upper.pop_rx_message() == data);
-	
+    REQUIRE(stats.session.num_success == 1);
+    REQUIRE(fix.upper.pop_rx_message() == data);
 }
+
 
 // ---------- helper method implementations -----------
 
@@ -215,8 +299,8 @@ void test_auth_handshake_success(ResponderFixture& fix)
 
 void test_init_session_success(ResponderFixture& fix)
 {
-	test_begin_handshake_success(fix);
-	test_auth_handshake_success(fix);
+    test_begin_handshake_success(fix);
+    test_auth_handshake_success(fix);
 }
 
 void test_handshake_error(ResponderFixture& fix, const std::string& request, HandshakeError expected_error, std::initializer_list<CryptoAction> actions)

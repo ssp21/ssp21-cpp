@@ -42,9 +42,9 @@ namespace ssp21
 
             auto& front = this->rx_messages.front();
 
-			processor.process(front->as_rslice());
+            processor.process(front->as_rslice());
 
-			this->rx_messages.pop_front();
+            this->rx_messages.pop_front();
 
             return true;
         }

@@ -116,21 +116,21 @@ namespace ssp21
             return write_message(msg);
         }
 
-		std::string session_data(uint16_t nonce, uint32_t valid_until, bool fir, bool fin, const std::string& payload)
-		{
-			Hex payload_hex(payload);
+        std::string session_data(uint16_t nonce, uint32_t valid_until, bool fir, bool fin, const std::string& payload)
+        {
+            Hex payload_hex(payload);
 
-			UnconfirmedSessionData msg(
-				AuthMetadata(
-					nonce,
-					valid_until,
-					SessionFlags(fir, fin)
-				),
-				Seq16(payload_hex.as_rslice())
-			);
+            UnconfirmedSessionData msg(
+                AuthMetadata(
+                    nonce,
+                    valid_until,
+                    SessionFlags(fir, fin)
+                ),
+                Seq16(payload_hex.as_rslice())
+            );
 
-			return write_message(msg);
-		}
+            return write_message(msg);
+        }
 
     }
 }

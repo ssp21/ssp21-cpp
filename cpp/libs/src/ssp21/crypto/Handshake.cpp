@@ -73,18 +73,18 @@ namespace ssp21
 
     void Handshake::initialize_session(Session& session, const openpal::Timestamp& session_init_time) const
     {
-		SessionKeys keys;
+        SessionKeys keys;
 
-		// keys are swapped for initiator vs responder        
-		if (this->id == EntityId::Initiator)
-		{
-			this->algorithms.handshake.hkdf(this->chaining_key.as_slice(), {}, keys.tx_key, keys.rx_key);
-		}
-		else
-		{
-			this->algorithms.handshake.hkdf(this->chaining_key.as_slice(), {}, keys.rx_key, keys.tx_key);
-		}
-                
+        // keys are swapped for initiator vs responder
+        if (this->id == EntityId::Initiator)
+        {
+            this->algorithms.handshake.hkdf(this->chaining_key.as_slice(), {}, keys.tx_key, keys.rx_key);
+        }
+        else
+        {
+            this->algorithms.handshake.hkdf(this->chaining_key.as_slice(), {}, keys.rx_key, keys.tx_key);
+        }
+
         session.initialize(this->algorithms.session, session_init_time, keys);
     }
 

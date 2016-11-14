@@ -6,37 +6,40 @@
 
 namespace ssp21
 {
-	struct Statistic
-	{
-		uint64_t value = 0;
+    struct Statistic
+    {
+        uint64_t value = 0;
 
-		inline void increment()
-		{
-			++value;
-		}
-		
-		operator const uint64_t& () const { return value; }
-	};
+        inline void increment()
+        {
+            ++value;
+        }
 
-	struct SessionStatistics
-	{
-		Statistic num_init;
-		Statistic num_reset;		
-		Statistic num_user_data_without_session;
-		Statistic num_auth_fail;
-		Statistic num_ttl_expiration;
-		Statistic num_nonce_fail;
-		Statistic num_success;
-	};
+        operator const uint64_t& () const
+        {
+            return value;
+        }
+    };
 
-	struct ResponderStatistics
-	{
-		ResponderStatistics(const SessionStatistics& session) : 
-			session(session) 
-		{}
+    struct SessionStatistics
+    {
+        Statistic num_init;
+        Statistic num_reset;
+        Statistic num_user_data_without_session;
+        Statistic num_auth_fail;
+        Statistic num_ttl_expiration;
+        Statistic num_nonce_fail;
+        Statistic num_success;
+    };
 
-		SessionStatistics session;
-	};
+    struct ResponderStatistics
+    {
+        ResponderStatistics(const SessionStatistics& session) :
+            session(session)
+        {}
+
+        SessionStatistics session;
+    };
 }
 
 #endif

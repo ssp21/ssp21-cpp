@@ -82,7 +82,7 @@ namespace ssp21
         {
             if (!this->is_open)
             {
-				this->is_open = true;
+                this->is_open = true;
                 this->on_open_impl();
             }
         }
@@ -91,7 +91,7 @@ namespace ssp21
         {
             if (this->is_open)
             {
-				this->is_open = false;
+                this->is_open = false;
                 this->on_close_impl();
             }
         }

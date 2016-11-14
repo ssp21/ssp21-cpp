@@ -39,10 +39,10 @@ namespace ssp21
             /// The maximum message size that this layer should transmit to the link layer
             /// This constant determines the size of a buffer allocated when the responder
             /// is constructed
-			uint16_t max_tx_message_size = consts::link::max_config_payload_size;
+            uint16_t max_tx_message_size = consts::link::max_config_payload_size;
 
-			/// The authenticated payload size this layer might need to process
-			uint16_t max_rx_payload_size = consts::link::max_config_payload_size;
+            /// The authenticated payload size this layer might need to process
+            uint16_t max_rx_payload_size = consts::link::max_config_payload_size;
         };
 
         struct Context
@@ -115,12 +115,12 @@ namespace ssp21
             this->ctx.set_upper_layer(upper);
         }
 
-		ResponderStatistics get_statistics() const
-		{
-			return ResponderStatistics(
-				this->ctx.session.get_statistics()
-			);
-		}
+        ResponderStatistics get_statistics() const
+        {
+            return ResponderStatistics(
+                       this->ctx.session.get_statistics()
+                   );
+        }
 
     private:
 
@@ -165,7 +165,7 @@ namespace ssp21
     void Responder::Context::transmit_to_lower(const T& msg, const openpal::RSlice& data)
     {
         this->log_message(levels::tx_crypto_msg, levels::tx_crypto_msg_fields, T::function, msg, data.length());
-		this->lower->transmit(data);
+        this->lower->transmit(data);
     }
 
 }

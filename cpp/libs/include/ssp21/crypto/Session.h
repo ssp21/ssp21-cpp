@@ -20,27 +20,30 @@ namespace ssp21
     class Session : private openpal::Uncopyable
     {
 
-    public:				
+    public:
 
-		Session(uint16_t max_rx_payload_size);
+        Session(uint16_t max_rx_payload_size);
 
-		void initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const SessionKeys& keys);
+        void initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const SessionKeys& keys);
 
-		void reset();
+        void reset();
 
-		SessionStatistics get_statistics() const { return statistics; }
+        SessionStatistics get_statistics() const
+        {
+            return statistics;
+        }
 
-		openpal::RSlice validate_user_data(const UnconfirmedSessionData& message, const openpal::Timestamp& now, std::error_code& ec);
+        openpal::RSlice validate_user_data(const UnconfirmedSessionData& message, const openpal::Timestamp& now, std::error_code& ec);
 
-    private:		
+    private:
 
-		SessionStatistics statistics;
-		
-		openpal::Buffer rx_auth_buffer;
+        SessionStatistics statistics;
 
-		bool valid = false;
+        openpal::Buffer rx_auth_buffer;
+
+        bool valid = false;
         uint16_t rx_nonce = 0;
-        uint16_t tx_nonce = 0;		
+        uint16_t tx_nonce = 0;
 
         SessionKeys keys;
         Algorithms::Session algorithms;

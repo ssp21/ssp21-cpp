@@ -22,14 +22,14 @@ namespace ssp21
 
     void BufferBase::set_type(BufferType buffer_type)
     {
-		this->buffer_type = buffer_type;
-		this->length = get_buffer_length(buffer_type);
+        this->buffer_type = buffer_type;
+        this->length = get_buffer_length(buffer_type);
     }
 
-	void BufferBase::copy(const BufferBase& other)
-	{
-		memcpy(this->buffer.as_wslice(), other.buffer.as_rslice(), consts::crypto::max_primitive_buffer_length);
-	}
+    void BufferBase::copy(const BufferBase& other)
+    {
+        memcpy(this->buffer.as_wslice(), other.buffer.as_rslice(), consts::crypto::max_primitive_buffer_length);
+    }
 
     uint32_t BufferBase::get_buffer_length(BufferType key_type)
     {

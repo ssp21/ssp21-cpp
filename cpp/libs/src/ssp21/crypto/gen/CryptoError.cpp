@@ -39,6 +39,8 @@ const char* CryptoErrorSpec::to_string(CryptoError arg)
             return "expired_ttl";
         case(CryptoError::invalid_nonce):
             return "invalid_nonce";
+        case(CryptoError::empty_user_data):
+            return "empty_user_data";
         default:
             return "undefined";
     }

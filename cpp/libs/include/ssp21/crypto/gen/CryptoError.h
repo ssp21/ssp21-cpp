@@ -42,7 +42,9 @@ enum class CryptoError : uint8_t
     /// The TTL on a message is expired
     expired_ttl = 0x6,
     /// The nonce on a message is not valid
-    invalid_nonce = 0x7
+    invalid_nonce = 0x7,
+    /// Received a session message with no user data
+    empty_user_data = 0x8
 };
 
 struct CryptoErrorSpec : private openpal::StaticOnly

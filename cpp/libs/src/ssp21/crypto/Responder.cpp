@@ -29,7 +29,7 @@ namespace ssp21
         logger(logger),
         executor(executor),
         handshake(EntityId::Responder),
-		session(config.max_rx_payload_size),
+        session(config.max_rx_payload_size),
         lower(&lower),
         tx_buffer(config.max_tx_message_size)
     {
@@ -112,7 +112,7 @@ namespace ssp21
     void Responder::on_close_impl()
     {
         this->handshake_state = &HandshakeIdle::get();
-		this->ctx.session.reset();
+        this->ctx.session.reset();
     }
 
     void Responder::on_tx_ready_impl()
@@ -166,7 +166,7 @@ namespace ssp21
 
     bool Responder::handle_session_message(const openpal::RSlice& data)
     {
-		const auto rx_time = ctx.executor->get_time();
+        const auto rx_time = ctx.executor->get_time();
 
         UnconfirmedSessionData msg;
         auto err = msg.read(data);
@@ -177,25 +177,25 @@ namespace ssp21
         }
 
         ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, Function::unconfirmed_session_data, msg, data.length());
-				
-		std::error_code ec;
-		const auto payload = this->ctx.session.validate_user_data(msg, rx_time, ec);
 
-		if(ec)
-		{
-			FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "validation error: %s", ec.message().c_str());
-			return false;
-		}
-		
-		// TODO: process the message
+        std::error_code ec;
+        const auto payload = this->ctx.session.validate_user_data(msg, rx_time, ec);
+
+        if(ec)
+        {
+            FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "validation error: %s", ec.message().c_str());
+            return false;
+        }
+
+        // TODO: process the message
 
 
 
-		return true;
+        return true;
     }
 
     void Responder::process(const openpal::RSlice& message)
-    {        
+    {
         if (message.is_empty())
         {
             SIMPLE_LOG_BLOCK(ctx.logger, levels::warn, "Received zero length message");

@@ -29,9 +29,14 @@ namespace ssp21
             else
             {
                 auto hex = openpal::to_hex(this->rx_messages.front()->as_rslice());
-				this->rx_messages.pop_front();
+                this->rx_messages.pop_front();
                 return hex;
             }
+        }
+
+        bool is_empty() const
+        {
+            return this->rx_messages.empty();
         }
 
     private:
