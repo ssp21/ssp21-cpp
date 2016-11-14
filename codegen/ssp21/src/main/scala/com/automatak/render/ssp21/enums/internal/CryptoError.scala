@@ -7,7 +7,7 @@ import com.automatak.render._
 
 object CryptoError {
 
-  private val comments = List("The result of a message parse operation")
+  private val comments = List("Various errors in the cryptographic layer")
 
   def category = Some(ErrorCategory("CryptoErrorCategory", "crypto error"))
 

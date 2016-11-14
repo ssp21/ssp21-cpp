@@ -23,7 +23,7 @@
 namespace ssp21 {
 
 /**
-    The result of a message parse operation
+    Various errors in the cryptographic layer
 */
 enum class CryptoError : uint8_t
 {

@@ -14,6 +14,7 @@
 
 #include "ssp21/crypto/Handshake.h"
 #include "ssp21/crypto/Session.h"
+#include "ssp21/crypto/Reassembler.h"
 
 #include "ssp21/LogLevels.h"
 
@@ -43,6 +44,9 @@ namespace ssp21
 
             /// The authenticated payload size this layer might need to process
             uint16_t max_rx_payload_size = consts::link::max_config_payload_size;
+
+            /// The maximum size of a reassembled message
+            uint16_t max_reassembly_size = consts::link::max_config_payload_size;
         };
 
         struct Context
@@ -87,6 +91,7 @@ namespace ssp21
 
             Handshake handshake;
             Session session;
+            Reassembler reassembler;
 
             ILowerLayer* const lower;
             IUpperLayer* upper = nullptr;

@@ -30,6 +30,7 @@ namespace ssp21
         executor(executor),
         handshake(EntityId::Responder),
         session(config.max_rx_payload_size),
+        reassembler(config.max_reassembly_size),
         lower(&lower),
         tx_buffer(config.max_tx_message_size)
     {
@@ -113,6 +114,7 @@ namespace ssp21
     {
         this->handshake_state = &HandshakeIdle::get();
         this->ctx.session.reset();
+        this->ctx.reassembler.reset();
     }
 
     void Responder::on_tx_ready_impl()
@@ -187,11 +189,22 @@ namespace ssp21
             return false;
         }
 
-        // TODO: process the message
+        // process the message using the reassembler
+        const auto result = this->ctx.reassembler.process(msg.metadata.flags.fir, msg.metadata.flags.fin, msg.metadata.nonce, payload);
 
+        switch (result)
+        {
+        case(ReassemblyResult::partial):
+            return true; // do nothing
 
+        case(ReassemblyResult::complete):
+            // TODO: notify next layer
+            return true;
 
-        return true;
+        default: // error
+            FORMAT_LOG_BLOCK(this->ctx.logger, levels::warn, "reassembly error: %s", ReassemblyResultSpec::to_string(result));
+            return false;
+        }
     }
 
     void Responder::process(const openpal::RSlice& message)
