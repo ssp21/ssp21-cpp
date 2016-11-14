@@ -27,6 +27,10 @@ const char* ReassemblyResultSpec::to_string(ReassemblyResult arg)
             return "partial";
         case(ReassemblyResult::bad_nonce):
             return "bad_nonce";
+        case(ReassemblyResult::no_prior_fir):
+            return "no_prior_fir";
+        case(ReassemblyResult::overflow):
+            return "overflow";
         default:
             return "undefined";
     }

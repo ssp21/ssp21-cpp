@@ -198,7 +198,8 @@ namespace ssp21
             return true; // do nothing
 
         case(ReassemblyResult::complete):
-            // TODO: notify next layer
+            this->is_rx_ready = true;
+            this->ctx.upper->on_rx_ready();
             return true;
 
         default: // error

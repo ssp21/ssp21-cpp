@@ -56,6 +56,7 @@ namespace ssp21
             upper(responder)
         {
             MockCryptoBackend::instance.clear_actions();
+            responder.set_upper_layer(upper);
         }
 
         void set_tx_ready()

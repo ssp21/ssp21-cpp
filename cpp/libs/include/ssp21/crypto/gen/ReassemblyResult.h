@@ -31,7 +31,11 @@ enum class ReassemblyResult : uint8_t
     /// partial reassembly. more data needed
     partial = 0x1,
     /// reassembly failed due to an out-of-order nonce
-    bad_nonce = 0x2
+    bad_nonce = 0x2,
+    /// reassembly failed because a non-fir packet was received before receiving a fir packet
+    no_prior_fir = 0x3,
+    /// reassembly failed the new packet would overflow the reassembly buffer
+    overflow = 0x4
 };
 
 struct ReassemblyResultSpec : private openpal::StaticOnly
