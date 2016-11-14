@@ -127,7 +127,7 @@ TEST_CASE(SUITE("begin handshake can be repeated prior to auth handshake"))
     test_begin_handshake_success(fix);
     test_begin_handshake_success(fix);
     test_begin_handshake_success(fix);
-    test_auth_handshake_success(fix);
+    test_auth_handshake_success(fix);	
 }
 
 // ---------- tests for initialized session -----------
@@ -139,11 +139,17 @@ TEST_CASE(SUITE("can authenticate session data"))
 
 	test_init_session_success(fix);
 
-	const auto data_and_tag = hex::repeat(0xFF, 18);
+
+	const auto data = "CA FE";
+	const auto data_and_tag = data + hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
 
 	fix.lower.enqueue_message(hex::session_data(1, 0xFFFFFFFF, true, true, data_and_tag));
 	fix.responder.on_rx_ready();
-	REQUIRE(fix.upper.pop_rx_message() == "FF FF");
+
+	const auto stats = fix.responder.get_statistics();
+
+	REQUIRE(stats.session.num_success == 1);
+	REQUIRE(fix.upper.pop_rx_message() == data);
 	
 }
 

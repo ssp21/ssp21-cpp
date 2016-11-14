@@ -44,9 +44,9 @@ namespace ssp21
         // Now calculate the expected MAC
         HashOutput calc_mac_buffer;
         mac_func(key.as_slice(), { ad_bytes, user_data }, calc_mac_buffer);
-        const auto truncated = calc_mac_buffer.as_slice().take(trunc_length);
+        const auto truncated_mac = calc_mac_buffer.as_slice().take(trunc_length);
 
-        if (!Crypto::secure_equals(read_mac, truncated)) // authentication failure
+        if (!Crypto::secure_equals(read_mac, truncated_mac)) // authentication failure
         {
             ec = CryptoError::mac_auth_fail;
             return openpal::RSlice::empty_slice();

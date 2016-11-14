@@ -115,6 +115,13 @@ namespace ssp21
             this->ctx.set_upper_layer(upper);
         }
 
+		ResponderStatistics get_statistics() const
+		{
+			return ResponderStatistics(
+				this->ctx.session.get_statistics()
+			);
+		}
+
     private:
 
         bool can_receive() const
@@ -143,7 +150,7 @@ namespace ssp21
         template <class MsgType>
         inline void handle_handshake_message(const openpal::RSlice& data);
 
-        void handle_session_message(const openpal::RSlice& data);
+        bool handle_session_message(const openpal::RSlice& data);
 
         // ---- private members -----
 

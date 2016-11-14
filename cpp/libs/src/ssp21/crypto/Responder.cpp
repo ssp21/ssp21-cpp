@@ -164,7 +164,7 @@ namespace ssp21
         }
     }
 
-    void Responder::handle_session_message(const openpal::RSlice& data)
+    bool Responder::handle_session_message(const openpal::RSlice& data)
     {
 		const auto rx_time = ctx.executor->get_time();
 
@@ -173,25 +173,25 @@ namespace ssp21
         if (any(err))
         {
             FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "error reading session message: %s", ParseErrorSpec::to_string(err));
-            return;
+            return false;
         }
 
         ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, Function::unconfirmed_session_data, msg, data.length());
-		
-		
+				
 		std::error_code ec;
 		const auto payload = this->ctx.session.validate_user_data(msg, rx_time, ec);
 
 		if(ec)
 		{
 			FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "validation error: %s", ec.message().c_str());
-			return;
+			return false;
 		}
-		else
-		{
-			// TODO: process the payload
+		
+		// TODO: process the message
 
-		}
+
+
+		return true;
     }
 
     void Responder::process(const openpal::RSlice& message)

@@ -10,15 +10,17 @@
 #include "ssp21/crypto/BufferTypes.h"
 #include "ssp21/crypto/SessionModes.h"
 #include "ssp21/crypto/Algorithms.h"
+#include "ssp21/crypto/Statistics.h"
 
 #include "ssp21/crypto/gen/UnconfirmedSessionData.h"
+
 
 namespace ssp21
 {
     class Session : private openpal::Uncopyable
     {
 
-    public:		
+    public:				
 
 		Session(uint16_t max_rx_payload_size);
 
@@ -26,9 +28,13 @@ namespace ssp21
 
 		void reset();
 
+		SessionStatistics get_statistics() const { return statistics; }
+
 		openpal::RSlice validate_user_data(const UnconfirmedSessionData& message, const openpal::Timestamp& now, std::error_code& ec);
 
     private:		
+
+		SessionStatistics statistics;
 		
 		openpal::Buffer rx_auth_buffer;
 

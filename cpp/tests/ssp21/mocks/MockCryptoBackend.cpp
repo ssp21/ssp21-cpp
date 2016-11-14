@@ -1,6 +1,8 @@
 
 #include "MockCryptoBackend.h"
 
+#include "testlib/HexConversions.h"
+
 #include <cstring>
 
 namespace ssp21
@@ -15,8 +17,12 @@ namespace ssp21
 
     bool MockCryptoBackend::secure_equals(const openpal::RSlice& lhs, const openpal::RSlice& rhs)
     {
-        actions.push_back(CryptoAction::secure_equals);
-        return lhs.equals(rhs);
+		actions.push_back(CryptoAction::secure_equals);
+
+		const auto lhs_string = openpal::to_hex(lhs);
+		const auto rhs_string = openpal::to_hex(rhs);
+        
+		return lhs_string == rhs_string;
     }
 
     void MockCryptoBackend::hash_sha256(std::initializer_list<openpal::RSlice> data, SecureBuffer& output)
