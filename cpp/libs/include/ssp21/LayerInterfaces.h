@@ -68,6 +68,12 @@ namespace ssp21
 
     protected:
 
+        void reset_lower_layer()
+        {
+            this->is_tx_ready = true;
+            this->is_rx_ready = false;
+        }
+
         bool is_tx_ready = true;
         bool is_rx_ready = false;
 

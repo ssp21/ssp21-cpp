@@ -115,6 +115,8 @@ namespace ssp21
         this->handshake_state = &HandshakeIdle::get();
         this->ctx.session.reset();
         this->ctx.reassembler.reset();
+        this->ctx.upper->on_close();
+        this->reset_lower_layer();
     }
 
     void Responder::on_tx_ready_impl()
@@ -144,7 +146,13 @@ namespace ssp21
 
     bool Responder::receive(IMessageProcessor& processor)
     {
-        // TODO
+        if (this->is_rx_ready)
+        {
+            this->is_rx_ready = false;
+            processor.process(this->ctx.reassembler.get_data());
+            return true;
+        }
+
         return false;
     }
 

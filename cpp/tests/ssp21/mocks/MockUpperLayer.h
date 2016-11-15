@@ -8,7 +8,6 @@
 #include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
 
-#include "MakeUnique.h"
 
 namespace ssp21
 {
@@ -24,14 +23,12 @@ namespace ssp21
         {
             if (this->rx_messages.empty())
             {
-                return "";
+                throw std::logic_error("No rx messages");
             }
-            else
-            {
-                auto hex = openpal::to_hex(this->rx_messages.front()->as_rslice());
-                this->rx_messages.pop_front();
-                return hex;
-            }
+
+            auto hex = this->rx_messages.front();
+            this->rx_messages.pop_front();
+            return hex;
         }
 
         bool is_empty() const
@@ -43,7 +40,7 @@ namespace ssp21
 
         typedef openpal::Buffer message_t;
 
-        typedef std::deque<std::unique_ptr<message_t>> message_queue_t;
+        typedef std::deque<std::string> message_queue_t;
 
         message_queue_t rx_messages;
 
@@ -51,7 +48,7 @@ namespace ssp21
 
         virtual void process(const openpal::RSlice& message) override
         {
-            this->rx_messages.push_back(std::make_unique<message_t>(message));
+            this->rx_messages.push_back(openpal::to_hex(message));
         }
 
         virtual void on_open_impl() override {}

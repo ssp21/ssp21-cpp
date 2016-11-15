@@ -107,6 +107,8 @@ namespace ssp21
 
         ctx.transmit_to_lower(reply, wresult.written);
 
+        ctx.upper->on_open();
+
         return HandshakeIdle::get();
     }
 
