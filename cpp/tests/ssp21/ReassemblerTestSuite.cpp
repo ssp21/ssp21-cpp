@@ -47,6 +47,28 @@ TEST_CASE("accepts three segment message")
     test_complete_reassembly(reassembler, false, true, 3, "03 04", "01 02 03 04");
 }
 
+TEST_CASE("detects overflow in multi segment message")
+{
+	Reassembler reassembler(4);
+	test_incomplete_reassembly(reassembler, true, false, 1, "01", ReassemblyResult::partial);
+	test_incomplete_reassembly(reassembler, false, false, 2, "02", ReassemblyResult::partial);
+	test_incomplete_reassembly(reassembler, false, true, 3, "03 04 05", ReassemblyResult::overflow);
+}
+
+TEST_CASE("detects discontiguous nonce")
+{
+	Reassembler reassembler(2);
+	test_incomplete_reassembly(reassembler, true, false, 1, "01", ReassemblyResult::partial);
+	test_incomplete_reassembly(reassembler, false, false, 3, "02", ReassemblyResult::bad_nonce);
+}
+
+TEST_CASE("discards data when new fir arrives")
+{
+	Reassembler reassembler(2);
+	test_incomplete_reassembly(reassembler, true, false, 1, "01", ReassemblyResult::partial);
+	test_complete_reassembly(reassembler, true, true, 3, "03 04", "03 04");
+}
+
 // ---------- helper method impls -----------
 
 void test_complete_reassembly(Reassembler& reassembler, bool fir, bool fin, uint32_t nonce, const std::string& segment, const std::string& output)
