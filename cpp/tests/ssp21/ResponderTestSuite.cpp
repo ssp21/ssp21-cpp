@@ -80,7 +80,7 @@ TEST_CASE(SUITE("ignores user data without a session"))
     ResponderFixture fix;
     fix.responder.on_open();
 
-    const auto request = hex::session_data(1, 0xFFFFFFFF, true, true, hex::repeat(0xFF, 20));
+    const auto request = hex::session_data(1, 0, true, true, hex::repeat(0xFF, 20));
     fix.lower.enqueue_message(request);
     fix.responder.on_rx_ready();
 
@@ -96,7 +96,9 @@ TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_AUTH with REPLY_HANDSHAKE_AUTH"))
     ResponderFixture fix;
     fix.responder.on_open();
 
+	REQUIRE_FALSE(fix.upper.get_is_open());
     test_init_session_success(fix);
+	REQUIRE(fix.upper.get_is_open());
 }
 
 TEST_CASE(SUITE("responds to auth request w/ invalid HMAC"))
@@ -224,10 +226,10 @@ TEST_CASE(SUITE("can authenticate session data"))
 
     test_init_session_success(fix);
 
-    const auto data = "CA FE";
+    const auto data = "01";
     const auto data_and_tag = data + hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
 
-    fix.lower.enqueue_message(hex::session_data(1, 0xFFFFFFFF, true, true, data_and_tag));
+    fix.lower.enqueue_message(hex::session_data(1, 0, true, true, data_and_tag));
     fix.responder.on_rx_ready();
 
     const auto stats = fix.responder.get_statistics();

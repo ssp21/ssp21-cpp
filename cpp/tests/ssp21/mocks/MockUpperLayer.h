@@ -36,7 +36,14 @@ namespace ssp21
             return this->rx_messages.empty();
         }
 
+		bool get_is_open() const
+		{
+			return this->is_open;
+		}
+
     private:
+
+		bool is_open = false;
 
         typedef openpal::Buffer message_t;
 
@@ -51,9 +58,15 @@ namespace ssp21
             this->rx_messages.push_back(openpal::to_hex(message));
         }
 
-        virtual void on_open_impl() override {}
+        virtual void on_open_impl() override 
+		{
+			this->is_open = true;
+		}
 
-        virtual void on_close_impl() override {}
+        virtual void on_close_impl() override 
+		{
+			this->is_open = false;
+		}
 
         virtual void on_tx_ready_impl() override {}
 
