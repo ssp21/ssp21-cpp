@@ -96,9 +96,9 @@ TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_AUTH with REPLY_HANDSHAKE_AUTH"))
     ResponderFixture fix;
     fix.responder.on_open();
 
-	REQUIRE_FALSE(fix.upper.get_is_open());
+    REQUIRE_FALSE(fix.upper.get_is_open());
     test_init_session_success(fix);
-	REQUIRE(fix.upper.get_is_open());
+    REQUIRE(fix.upper.get_is_open());
 }
 
 TEST_CASE(SUITE("responds to auth request w/ invalid HMAC"))
@@ -240,24 +240,24 @@ TEST_CASE(SUITE("can authenticate session data"))
 
 TEST_CASE(SUITE("can authenticate multiple messages"))
 {
-	ResponderFixture fix;
-	fix.responder.on_open();
+    ResponderFixture fix;
+    fix.responder.on_open();
 
-	test_init_session_success(fix);
+    test_init_session_success(fix);
 
-	for (uint8_t i = 0; i < 3; ++i)
-	{
-		const auto data = to_hex(&i, 1);
-		const auto data_and_tag = data + hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
+    for (uint8_t i = 0; i < 3; ++i)
+    {
+        const auto data = to_hex(&i, 1);
+        const auto data_and_tag = data + hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
 
-		fix.lower.enqueue_message(hex::session_data(i + 1, 0, true, true, data_and_tag));
-		fix.responder.on_rx_ready();
+        fix.lower.enqueue_message(hex::session_data(i + 1, 0, true, true, data_and_tag));
+        fix.responder.on_rx_ready();
 
-		const auto stats = fix.responder.get_statistics();
+        const auto stats = fix.responder.get_statistics();
 
-		REQUIRE(stats.session.num_success == (i + 1));
-		REQUIRE(fix.upper.pop_rx_message() == data);
-	}	
+        REQUIRE(stats.session.num_success == (i + 1));
+        REQUIRE(fix.upper.pop_rx_message() == data);
+    }
 }
 
 // ---------- helper method implementations -----------

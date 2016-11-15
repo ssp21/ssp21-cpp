@@ -16,11 +16,22 @@ namespace ssp21
 
     ReassemblyResult Reassembler::process(bool fir, bool fin, uint32_t nonce, const openpal::RSlice& data)
     {
+        if (nonce == 0)
+        {
+            this->reset();
+            return ReassemblyResult::bad_nonce;
+        }
+
+        const auto previous_nonce = this->last_nonce;
         this->last_nonce = nonce;
+
 
         if (fir)
         {
+            if (data.length() > this->buffer.length()) return ReassemblyResult::overflow;
+
             this->reassembled_data = data.copy_to(this->buffer.as_wslice());
+
             return fin ? ReassemblyResult::complete : ReassemblyResult::partial;
         }
         else
@@ -31,7 +42,7 @@ namespace ssp21
                 return ReassemblyResult::no_prior_fir;
             }
 
-            if ((nonce == 0) || ((nonce - 1) != this->last_nonce))
+            if (((nonce - 1) != previous_nonce)) // nonce guaranteed to be > 0
             {
                 this->reset();
                 return ReassemblyResult::bad_nonce;
