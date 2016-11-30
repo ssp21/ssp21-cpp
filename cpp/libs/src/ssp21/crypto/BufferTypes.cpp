@@ -3,6 +3,8 @@
 
 #include "ssp21/crypto/Crypto.h"
 
+#include <cstring>
+
 namespace ssp21
 {
     openpal::RSlice BufferBase::as_slice() const

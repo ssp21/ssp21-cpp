@@ -30,7 +30,8 @@ namespace ssp21
         {
             if (data.length() > this->buffer.length()) return ReassemblyResult::overflow;
 
-            this->reassembled_data = data.copy_to(this->buffer.as_wslice());
+            auto dest = this->buffer.as_wslice();
+            this->reassembled_data = data.copy_to(dest);
 
             return fin ? ReassemblyResult::complete : ReassemblyResult::partial;
         }

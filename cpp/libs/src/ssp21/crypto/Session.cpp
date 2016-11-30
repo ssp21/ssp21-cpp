@@ -39,7 +39,8 @@ namespace ssp21
             return RSlice::empty_slice();
         }
 
-        const auto payload = this->algorithms.read(this->keys.rx_key, message.metadata, message.payload, this->rx_auth_buffer.as_wslice(), ec);
+	auto dest = this->rx_auth_buffer.as_wslice();
+        const auto payload = this->algorithms.read(this->keys.rx_key, message.metadata, message.payload, dest, ec);
 
         if (ec)
         {
