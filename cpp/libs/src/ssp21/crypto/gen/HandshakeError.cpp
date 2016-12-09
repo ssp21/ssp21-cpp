@@ -47,9 +47,9 @@ HandshakeError HandshakeErrorSpec::from_type(uint8_t arg)
             return HandshakeError::authentication_error;
         case(0xA):
             return HandshakeError::no_prior_handshake_begin;
-        case(0xB):
+        case(0xFF):
             return HandshakeError::internal;
-        case(0xFE):
+        case(0xFD):
             return HandshakeError::none;
         default:
             return HandshakeError::undefined;

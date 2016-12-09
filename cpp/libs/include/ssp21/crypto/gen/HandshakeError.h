@@ -48,12 +48,12 @@ enum class HandshakeError : uint8_t
     authentication_error = 0x9,
     /// The master requested handshake auth, but no prior handshake begin was received
     no_prior_handshake_begin = 0xA,
-    /// internal error
-    internal = 0xB,
     /// This value gets used internally in ssp21-cpp only
-    none = 0xFE,
+    none = 0xFD,
     /// value not defined
-    undefined = 0xFF
+    undefined = 0xFE,
+    /// internal error
+    internal = 0xFF
 };
 
 inline bool any(HandshakeError value)

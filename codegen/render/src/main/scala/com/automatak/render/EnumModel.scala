@@ -65,9 +65,12 @@ case class EnumModel(
 
   def specName = name + "Spec"
 
-  def allValues: List[EnumValue] = defaultValue match {
-    case Some(d) => nonDefaultValues ::: List(d)
-    case None => nonDefaultValues
+  def allValues: List[EnumValue] = {
+    val list = defaultValue match {
+      case Some(d) => nonDefaultValues ::: List(d)
+      case None => nonDefaultValues
+    }
+    list.sortBy(ev => ev.value)
   }
 
   def default: EnumValue = defaultValue match {
