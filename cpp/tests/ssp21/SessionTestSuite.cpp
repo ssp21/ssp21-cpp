@@ -3,7 +3,9 @@
 
 #include "ssp21/crypto/Session.h"
 #include "ssp21/crypto/gen/CryptoError.h"
+
 #include "testlib/Hex.h"
+#include "testlib/HexConversions.h"
 
 #define SUITE(name) "SessionTestSuite - " name
 
@@ -29,16 +31,28 @@ TEST_CASE(SUITE("won't intialize with invalid keys"))
     REQUIRE_FALSE(session.initialize(Algorithms::Session(), Timestamp(0), SessionKeys()));
 }
 
-TEST_CASE(SUITE("validates data after initialization"))
+TEST_CASE(SUITE("returns size errors from the sesion read function"))
+{
+	Session session(10);
+	init(session);
+
+	std::error_code ec;
+	const auto user_data = validate(session, 1, 0, 0, "", ec);
+	REQUIRE(ec == CryptoError::bad_buffer_size);
+	REQUIRE(user_data.is_empty());
+}
+
+TEST_CASE(SUITE("authenticates data"))
 {
     Session session(10);
     init(session);
 
     std::error_code ec;
-    const auto user_data = validate(session, 1, 0, 0, "", ec);
-    REQUIRE(ec == CryptoError::bad_buffer_size);
-    REQUIRE(user_data.is_empty());
+    const auto user_data = validate(session, 1, 0, 0, "CAFE" + repeat_hex(0xFF, consts::crypto::trunc16), ec);
+	REQUIRE_FALSE(ec);
+	REQUIRE("CA FE" == to_hex(user_data));
 }
+
 
 
 
