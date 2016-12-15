@@ -70,13 +70,16 @@ TEST_CASE(SUITE("rejects initial nonce of zero"))
 }
 
 TEST_CASE(SUITE("rejects rollover nonce when initialized with maximum nonce"))
-{
-	
+{	
 	test_validation_failure(65535, 0, 0, 0, test_payload, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::invalid_nonce);
-
 }
 
 //// ---- ttl tests ----
+
+TEST_CASE(SUITE("rejects expired ttl"))
+{
+	test_validation_failure(0, 1, 0, 1, test_payload, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::expired_ttl);	
+}
 
 /// ------- helpers methods impls -------------
 
