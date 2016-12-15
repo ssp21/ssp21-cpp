@@ -14,14 +14,18 @@ namespace ssp21
     Session::Session(uint16_t max_rx_payload_size) : rx_auth_buffer(max_rx_payload_size)
     {}
 
-    void Session::initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const SessionKeys& keys)
+    bool Session::initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const SessionKeys& keys, uint16_t nonce_start)
     {
+        if (!keys.valid()) return false;
+
         this->statistics.num_init.increment();
         this->valid = true;
-        this->rx_nonce = this->tx_nonce = 0;
+        this->rx_nonce = this->tx_nonce = nonce_start;
         this->algorithms = algorithms;
         this->session_start = session_start;
         this->keys.copy(keys);
+
+        return true;
     }
 
     void Session::reset()

@@ -17,14 +17,14 @@
 
 namespace ssp21
 {
-    class Session : private openpal::Uncopyable
+    class Session final : private openpal::Uncopyable
     {
 
     public:
 
         Session(uint16_t max_rx_payload_size);
 
-        void initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const SessionKeys& keys);
+        bool initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const SessionKeys& keys, uint16_t nonce_start = 0);
 
         void reset();
 

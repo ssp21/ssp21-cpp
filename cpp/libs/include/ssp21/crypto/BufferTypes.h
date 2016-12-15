@@ -90,6 +90,11 @@ namespace ssp21
             this->rx_key.copy(other.rx_key);
             this->rx_key.copy(other.tx_key);
         }
+
+        bool valid() const
+        {
+            return (rx_key.get_type() == BufferType::symmetric_key) && (tx_key.get_type() == BufferType::symmetric_key);
+        }
     };
 
 
