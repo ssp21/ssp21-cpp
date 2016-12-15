@@ -80,12 +80,35 @@ namespace ssp21
             }
         }
 
+		void expect_empty()
+		{
+			this->expect({});
+		}
+
     private:
 
         std::deque<CryptoAction> actions;
 
         MockCryptoBackend() {}
     };
+
+	struct CryptoTest
+	{
+		CryptoTest()
+		{
+			MockCryptoBackend::instance.clear_actions();
+		}
+
+		MockCryptoBackend* operator->()
+		{
+			return &MockCryptoBackend::instance;
+		}
+
+		~CryptoTest()
+		{
+			MockCryptoBackend::instance.clear_actions();
+		}
+	};
 
 }
 
