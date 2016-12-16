@@ -80,10 +80,10 @@ namespace ssp21
             }
         }
 
-		void expect_empty()
-		{
-			this->expect({});
-		}
+        void expect_empty()
+        {
+            this->expect({});
+        }
 
     private:
 
@@ -92,23 +92,23 @@ namespace ssp21
         MockCryptoBackend() {}
     };
 
-	struct CryptoTest
-	{
-		CryptoTest()
-		{
-			MockCryptoBackend::instance.clear_actions();
-		}
+    struct CryptoTest
+    {
+        CryptoTest()
+        {
+            MockCryptoBackend::instance.clear_actions();
+        }
 
-		MockCryptoBackend* operator->()
-		{
-			return &MockCryptoBackend::instance;
-		}
+        MockCryptoBackend* operator->()
+        {
+            return &MockCryptoBackend::instance;
+        }
 
-		~CryptoTest()
-		{
-			MockCryptoBackend::instance.clear_actions();
-		}
-	};
+        ~CryptoTest()
+        {
+            MockCryptoBackend::instance.clear_actions();
+        }
+    };
 
 }
 
