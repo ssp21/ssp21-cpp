@@ -21,8 +21,10 @@ object CryptoError {
     EnumValue("bad_buffer_size", 4, "A buffer had an insufficient or incorrect size"),
     EnumValue("no_valid_session", 5, "No validate session for authenticating user data"),
     EnumValue("expired_ttl", 6, "The TTL on a message is expired"),
-    EnumValue("invalid_nonce", 7, "The nonce on a message is not valid"),
-    EnumValue("empty_user_data", 8, "Received a session message with no user data")
+    EnumValue("invalid_rx_nonce", 7, "The nonce on a received message is invalid"),
+    EnumValue("invalid_tx_nonce", 8, "The tx nonce reached the maximum valid before the session was reinitialized"),
+    EnumValue("ttl_overflow", 9, "The TTL could not be set because the value would overflow the representation"),
+    EnumValue("empty_user_data", 10, "Received a session message with no user data")
   )
 
 }

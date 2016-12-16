@@ -41,10 +41,14 @@ enum class CryptoError : uint8_t
     no_valid_session = 0x5,
     /// The TTL on a message is expired
     expired_ttl = 0x6,
-    /// The nonce on a message is not valid
-    invalid_nonce = 0x7,
+    /// The nonce on a received message is invalid
+    invalid_rx_nonce = 0x7,
+    /// The tx nonce reached the maximum valid before the session was reinitialized
+    invalid_tx_nonce = 0x8,
+    /// The TTL could not be set because the value would overflow the representation
+    ttl_overflow = 0x9,
     /// Received a session message with no user data
-    empty_user_data = 0x8
+    empty_user_data = 0xA
 };
 
 struct CryptoErrorSpec : private openpal::StaticOnly

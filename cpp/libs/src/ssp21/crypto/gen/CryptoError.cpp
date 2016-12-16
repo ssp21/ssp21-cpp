@@ -37,8 +37,12 @@ const char* CryptoErrorSpec::to_string(CryptoError arg)
             return "no_valid_session";
         case(CryptoError::expired_ttl):
             return "expired_ttl";
-        case(CryptoError::invalid_nonce):
-            return "invalid_nonce";
+        case(CryptoError::invalid_rx_nonce):
+            return "invalid_rx_nonce";
+        case(CryptoError::invalid_tx_nonce):
+            return "invalid_tx_nonce";
+        case(CryptoError::ttl_overflow):
+            return "ttl_overflow";
         case(CryptoError::empty_user_data):
             return "empty_user_data";
         default:

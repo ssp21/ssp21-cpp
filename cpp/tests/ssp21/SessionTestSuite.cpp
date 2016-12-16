@@ -28,7 +28,7 @@ TEST_CASE(SUITE("won't validate user data when not initialized"))
 {
     CryptoTest crypto;
 
-    Session session(10);
+    Session session;
     std::error_code ec;
     const auto user_data = validate(session, 1, 0, 0, "", ec);
     REQUIRE(ec == CryptoError::no_valid_session);
@@ -44,7 +44,7 @@ TEST_CASE(SUITE("authenticates data"))
 
 TEST_CASE(SUITE("won't intialize with invalid keys"))
 {
-    Session session(10);
+    Session session;
     REQUIRE_FALSE(session.initialize(Algorithms::Session(), Timestamp(0), SessionKeys()));
 }
 
@@ -57,12 +57,12 @@ TEST_CASE(SUITE("returns size errors from the session read function"))
 
 TEST_CASE(SUITE("rejects initial nonce of zero"))
 {
-    test_validation_failure(0, Timestamp(0), 0, 0, 0, test_payload, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::invalid_nonce);
+    test_validation_failure(0, Timestamp(0), 0, 0, 0, test_payload, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::invalid_rx_nonce);
 }
 
 TEST_CASE(SUITE("rejects rollover nonce when initialized with maximum nonce"))
 {
-    test_validation_failure(65535, Timestamp(0), 0, 0, 0, test_payload, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::invalid_nonce);
+    test_validation_failure(65535, Timestamp(0), 0, 0, 0, test_payload, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::invalid_rx_nonce);
 }
 
 //// ---- ttl tests ----
@@ -114,7 +114,7 @@ std::string test_validation_success(uint16_t nonce_init, Timestamp session_init_
 {
     CryptoTest crypto;
 
-    Session session(10);
+    Session session;
 
     init(session, nonce_init, session_init_time);
 
@@ -131,7 +131,7 @@ void test_validation_failure(uint16_t nonce_init, Timestamp session_init_time, u
 {
     CryptoTest crypto;
 
-    Session session(10);
+    Session session;
 
     init(session, nonce_init, session_init_time);
 

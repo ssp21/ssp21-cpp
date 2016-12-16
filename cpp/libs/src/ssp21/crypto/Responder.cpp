@@ -29,7 +29,7 @@ namespace ssp21
         logger(logger),
         executor(executor),
         handshake(EntityId::Responder),
-        session(config.max_rx_payload_size),
+        session(config.session),
         reassembler(config.max_reassembly_size),
         lower(&lower),
         tx_buffer(config.max_tx_message_size)

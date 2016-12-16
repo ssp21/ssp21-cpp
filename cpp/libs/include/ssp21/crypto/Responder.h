@@ -37,13 +37,13 @@ namespace ssp21
 
         struct Config
         {
+            // configuration for the session
+            Session::Config session;
+
             /// The maximum message size that this layer should transmit to the link layer
             /// This constant determines the size of a buffer allocated when the responder
             /// is constructed
             uint16_t max_tx_message_size = consts::link::max_config_payload_size;
-
-            /// The authenticated payload size this layer might need to process
-            uint16_t max_rx_payload_size = consts::link::max_config_payload_size;
 
             /// The maximum size of a reassembled message
             uint16_t max_reassembly_size = consts::link::max_config_payload_size;

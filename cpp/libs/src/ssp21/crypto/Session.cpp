@@ -6,12 +6,17 @@
 #include "ssp21/LogLevels.h"
 #include "ssp21/crypto/gen/CryptoError.h"
 
+#include <limits>
+
 using namespace openpal;
 
 namespace ssp21
 {
 
-    Session::Session(uint16_t max_rx_payload_size) : rx_auth_buffer(max_rx_payload_size)
+    Session::Session(const Config& config) :
+        config(config),
+        rx_auth_buffer(config.max_rx_user_data_size),
+        tx_payload_buffer(config.max_tx_payload_size)
     {}
 
     bool Session::initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const SessionKeys& keys, uint16_t nonce_start)
@@ -73,7 +78,7 @@ namespace ssp21
         if (!this->algorithms.verify_nonce(this->rx_nonce, message.metadata.nonce.value))
         {
             this->statistics.num_nonce_fail.increment();
-            ec = CryptoError::invalid_nonce;
+            ec = CryptoError::invalid_rx_nonce;
             return RSlice::empty_slice();
         }
 
@@ -81,6 +86,44 @@ namespace ssp21
         this->statistics.num_success.increment();
 
         return payload;
+    }
+
+    bool Session::format_tx_message(UnconfirmedSessionData& msg, const Timestamp& now, openpal::RSlice& input, std::error_code& ec)
+    {
+        if (!this->valid)
+        {
+            ec = CryptoError::no_valid_session;
+            return false;
+        }
+
+        if (this->rx_nonce == std::numeric_limits<uint16_t>::max())
+        {
+            ec = CryptoError::invalid_tx_nonce;
+            return false;
+        }
+
+        const auto session_time_long = now.milliseconds - this->session_start.milliseconds;
+        if (session_time_long > std::numeric_limits<uint32_t>::max())
+        {
+            ec = CryptoError::ttl_overflow;
+            return false;
+        }
+
+        const auto session_time = static_cast<uint32_t>(session_time_long);
+        const auto remainder = std::numeric_limits<uint32_t>::max() - session_time;
+        if (remainder < config.ttl_pad_ms)
+        {
+            ec = CryptoError::ttl_overflow;
+            return false;
+        }
+
+        msg.metadata.nonce = ++this->rx_nonce;
+        msg.metadata.valid_until_ms = session_time + config.ttl_pad_ms;
+
+        // TODO: finish the method
+
+
+        return false;
     }
 
 }
