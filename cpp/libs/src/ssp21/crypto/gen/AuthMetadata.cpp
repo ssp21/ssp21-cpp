@@ -25,8 +25,8 @@ AuthMetadata::AuthMetadata()
 {}
 
 AuthMetadata::AuthMetadata(
-    IntegerField<openpal::UInt16> nonce,
-    IntegerField<openpal::UInt32> valid_until_ms,
+    uint16_t nonce,
+    uint32_t valid_until_ms,
     const SessionFlags& flags
 ) :
     nonce(nonce),

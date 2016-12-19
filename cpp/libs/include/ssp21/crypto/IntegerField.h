@@ -21,6 +21,7 @@ namespace ssp21
         {
             return value;
         }
+
         operator integer_t () const
         {
             return value;
@@ -29,7 +30,13 @@ namespace ssp21
         IntegerField()
         {}
 
-        IntegerField(integer_t value) : value(value)
+		IntegerField& operator=(integer_t value)
+		{
+			this->value = value;
+			return *this;
+		}
+
+        explicit IntegerField(integer_t value) : value(value)
         {}
 
         ParseError read(openpal::RSlice& input)
@@ -40,7 +47,7 @@ namespace ssp21
         FormatError write(openpal::WSlice& output) const
         {
             return IntegerType::write_to(output, this->value) ? FormatError::ok : FormatError::insufficient_space;
-        }
+        }		
 
         void print(const char* name, IMessagePrinter& printer) const
         {

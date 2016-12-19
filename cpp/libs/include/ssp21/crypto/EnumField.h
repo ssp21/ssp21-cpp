@@ -31,7 +31,7 @@ namespace ssp21
         EnumField()
         {}
 
-        EnumField(enum_t value) : value(value)
+        explicit EnumField(enum_t value) : value(value)
         {}
 
         ParseError read(openpal::RSlice& input)
