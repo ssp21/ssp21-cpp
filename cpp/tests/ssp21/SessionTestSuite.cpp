@@ -147,6 +147,20 @@ TEST_CASE(SUITE("can't format a maximum if the session time has overflowed"))
 	REQUIRE(input.length() == 2);
 }
 
+TEST_CASE(SUITE("can't format if destination buffer is too small"))
+{
+	Session s;
+	init(s);
+	StaticBuffer<4> buffer;
+	Hex hex("CAFE");
+
+	std::error_code ec;
+	auto input = hex.as_rslice();	
+	const auto output = s.format_message(buffer.as_wslice(), true, Timestamp(0), input, ec);
+	REQUIRE(ec == FormatError::insufficient_space);
+	REQUIRE(output.is_empty());
+}
+
 /// ------- helpers methods impls -------------
 
 void init(Session& session, uint16_t nonce_start, Timestamp session_init_time)

@@ -143,7 +143,7 @@ namespace ssp21
         );
 
 
-        const auto payload = this->algorithms.write(this->keys.tx_key, metadata, userdata, dest, ec);
+        const auto payload = this->algorithms.write(this->keys.tx_key, metadata, userdata, this->tx_payload_buffer.as_wslice(), ec);
         if (ec)
         {
             return RSlice::empty_slice();
