@@ -19,17 +19,17 @@ namespace ssp21
         tx_payload_buffer(max_userdata_size(config.max_link_payload_size))
     {}
 
-	uint32_t Session::max_crypto_payload_size(uint32_t max_link_payload_size)
-	{
-		return (max_link_payload_size > UnconfirmedSessionData::min_size_bytes) ? max_link_payload_size - UnconfirmedSessionData::min_size_bytes : 0;
-	}
+    uint32_t Session::max_crypto_payload_size(uint32_t max_link_payload_size)
+    {
+        return (max_link_payload_size > UnconfirmedSessionData::min_size_bytes) ? max_link_payload_size - UnconfirmedSessionData::min_size_bytes : 0;
+    }
 
-	uint32_t Session::max_userdata_size(uint32_t max_link_payload_size)
-	{
-		const auto base_size = UnconfirmedSessionData::min_size_bytes + consts::crypto::max_session_auth_tag_length;
+    uint32_t Session::max_userdata_size(uint32_t max_link_payload_size)
+    {
+        const auto base_size = UnconfirmedSessionData::min_size_bytes + consts::crypto::max_session_auth_tag_length;
 
-		return (max_link_payload_size > base_size) ? max_link_payload_size - base_size : 0;
-	}
+        return (max_link_payload_size > base_size) ? max_link_payload_size - base_size : 0;
+    }
 
     bool Session::initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const SessionKeys& keys, uint16_t nonce_start)
     {
@@ -100,25 +100,25 @@ namespace ssp21
         return payload;
     }
 
-	RSlice Session::format_message(openpal::WSlice dest, bool fir, const openpal::Timestamp& now, openpal::RSlice& input, std::error_code& ec)
+    RSlice Session::format_message(openpal::WSlice dest, bool fir, const openpal::Timestamp& now, openpal::RSlice& input, std::error_code& ec)
     {
         if (!this->valid)
         {
             ec = CryptoError::no_valid_session;
-			return RSlice::empty_slice();
+            return RSlice::empty_slice();
         }
 
         if (this->tx_nonce == std::numeric_limits<uint16_t>::max())
         {
             ec = CryptoError::invalid_tx_nonce;
-			return RSlice::empty_slice();
+            return RSlice::empty_slice();
         }
 
         const auto session_time_long = now.milliseconds - this->session_start.milliseconds;
         if (session_time_long > std::numeric_limits<uint32_t>::max())
         {
             ec = CryptoError::ttl_overflow;
-			return RSlice::empty_slice();
+            return RSlice::empty_slice();
         }
 
         const auto session_time = static_cast<uint32_t>(session_time_long);
@@ -126,47 +126,47 @@ namespace ssp21
         if (remainder < config.ttl_pad_ms)
         {
             ec = CryptoError::ttl_overflow;
-			return RSlice::empty_slice();
+            return RSlice::empty_slice();
         }
 
         // how big can the user data be?
-		const auto max_userdata_length = this->tx_payload_buffer.length() - consts::crypto::max_session_auth_tag_length;
-		const auto fin = input.length() <= max_userdata_length;
-		const auto userdata_length = fin ? input.length() : max_userdata_length;
-		const auto userdata = input.take(userdata_length);
+        const auto max_userdata_length = this->tx_payload_buffer.length() - consts::crypto::max_session_auth_tag_length;
+        const auto fin = input.length() <= max_userdata_length;
+        const auto userdata_length = fin ? input.length() : max_userdata_length;
+        const auto userdata = input.take(userdata_length);
 
-		// the metadata we're encoding
-		AuthMetadata metadata(
-			this->tx_nonce + 1,
-			session_time + config.ttl_pad_ms,
-			SessionFlags(fir, fin)
-		);
-	
-		
-		const auto payload = this->algorithms.write(this->keys.tx_key, metadata, userdata, dest, ec);
-		if (ec)
-		{
-			return RSlice::empty_slice();
-		}
+        // the metadata we're encoding
+        AuthMetadata metadata(
+            this->tx_nonce + 1,
+            session_time + config.ttl_pad_ms,
+            SessionFlags(fir, fin)
+        );
 
-		UnconfirmedSessionData msg(
-			metadata,
-			Seq16(payload)
-		);
 
-		const auto res = msg.write(dest);
+        const auto payload = this->algorithms.write(this->keys.tx_key, metadata, userdata, dest, ec);
+        if (ec)
+        {
+            return RSlice::empty_slice();
+        }
 
-		if (res.is_error())
-		{
-			ec = FormatError::insufficient_space;
-			return RSlice::empty_slice();
-		}		
+        UnconfirmedSessionData msg(
+            metadata,
+            Seq16(payload)
+        );
 
-		// everything succeeded, so increment the nonce and advance the input buffer
-        this->rx_nonce++;		
-		input.advance(userdata_length);
+        const auto res = msg.write(dest);
 
-		return res.written;
+        if (res.is_error())
+        {
+            ec = FormatError::insufficient_space;
+            return RSlice::empty_slice();
+        }
+
+        // everything succeeded, so increment the nonce and advance the input buffer
+        this->rx_nonce++;
+        input.advance(userdata_length);
+
+        return res.written;
     }
 
 }

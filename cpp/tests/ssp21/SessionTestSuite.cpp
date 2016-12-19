@@ -88,16 +88,16 @@ TEST_CASE(SUITE("rejects minimum ttl + 1"))
 
 TEST_CASE(SUITE("can't format a message with no session"))
 {
-	Session s;
-	StaticBuffer<consts::link::max_config_payload_size> buffer;
-	Hex hex("CAFE");
+    Session s;
+    StaticBuffer<consts::link::max_config_payload_size> buffer;
+    Hex hex("CAFE");
 
-	std::error_code ec;
-	auto input = hex.as_rslice();
-	const auto output = s.format_message(buffer.as_wslice(), true, Timestamp(0), input, ec);
-	REQUIRE(ec == CryptoError::no_valid_session);
-	REQUIRE(output.is_empty());
-	REQUIRE(input.length() == 2);
+    std::error_code ec;
+    auto input = hex.as_rslice();
+    const auto output = s.format_message(buffer.as_wslice(), true, Timestamp(0), input, ec);
+    REQUIRE(ec == CryptoError::no_valid_session);
+    REQUIRE(output.is_empty());
+    REQUIRE(input.length() == 2);
 }
 
 /// ------- helpers methods impls -------------

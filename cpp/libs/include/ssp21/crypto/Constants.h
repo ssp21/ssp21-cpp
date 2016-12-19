@@ -24,15 +24,15 @@ namespace ssp21
 
             // HMAC truncation lengths
             const uint8_t trunc16 = 16;
-			// the maximum length of 
-			const uint8_t max_session_auth_tag_length = trunc16;
+            // the maximum length of
+            const uint8_t max_session_auth_tag_length = trunc16;
 
             // maximum length_ required buffer_ length_ across algorithm types
             const uint8_t max_primitive_buffer_length = x25519_key_length;
 
-            
+
             const uint32_t default_ttl_pad_ms = 10000;
-						
+
         }
     }
 }
