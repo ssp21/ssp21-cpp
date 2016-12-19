@@ -165,17 +165,30 @@ TEST_CASE(SUITE("can't format if destination buffer is too small"))
 
 TEST_CASE(SUITE("successfully formats and increments nonce"))
 {
-    Session s;
-    init(s);
-    StaticBuffer<consts::link::max_config_payload_size> buffer;
-    Hex hex("CAFE");
+	Session s;
+	init(s);
+	StaticBuffer<consts::link::max_config_payload_size> buffer;
+	Hex hex("CAFE");
 
-    std::error_code ec;
-    auto input = hex.as_rslice();
-    const auto output = s.format_message(buffer.as_wslice(), true, Timestamp(0), input, ec);
-    const auto expected = hex::session_data(1, 10000, true, true, "CA FE" + hex::repeat(0xFF, consts::crypto::trunc16));
-    REQUIRE_FALSE(ec);
-    REQUIRE(to_hex(output) == expected);
+	std::error_code ec;
+	
+	{
+		auto input = hex.as_rslice();
+		const auto output = s.format_message(buffer.as_wslice(), true, Timestamp(0), input, ec);
+		const auto expected = hex::session_data(1, 10000, true, true, "CA FE" + hex::repeat(0xFF, consts::crypto::trunc16));
+		REQUIRE_FALSE(ec);
+		REQUIRE(to_hex(output) == expected);
+		REQUIRE(input.is_empty());
+	}
+
+	{
+		auto input = hex.as_rslice();
+		const auto output = s.format_message(buffer.as_wslice(), true, Timestamp(0), input, ec);
+		const auto expected = hex::session_data(2, 10000, true, true, "CA FE" + hex::repeat(0xFF, consts::crypto::trunc16));
+		REQUIRE_FALSE(ec);
+		REQUIRE(to_hex(output) == expected);
+		REQUIRE(input.is_empty());
+	}
 }
 
 /// ------- helpers methods impls -------------

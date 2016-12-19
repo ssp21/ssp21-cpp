@@ -163,7 +163,7 @@ namespace ssp21
         }
 
         // everything succeeded, so increment the nonce and advance the input buffer
-        this->rx_nonce++;
+        this->tx_nonce++;
         input.advance(userdata_length);
 
         return res.written;
