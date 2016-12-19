@@ -53,7 +53,7 @@ TEST_CASE(SUITE("returns size errors from the session read function"))
     test_validation_failure(0, Timestamp(0), 1, 0, 0, "", {}, CryptoError::bad_buffer_size);
 }
 
-//// ---- nonce tests ----
+//// ---- validation nonce tests ----
 
 TEST_CASE(SUITE("rejects initial nonce of zero"))
 {
@@ -65,7 +65,7 @@ TEST_CASE(SUITE("rejects rollover nonce when initialized with maximum nonce"))
     test_validation_failure(65535, Timestamp(0), 0, 0, 0, test_payload, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::invalid_rx_nonce);
 }
 
-//// ---- ttl tests ----
+//// ---- validation ttl tests ----
 
 TEST_CASE(SUITE("accepts minimum ttl"))
 {
@@ -81,6 +81,21 @@ TEST_CASE(SUITE("rejects minimum ttl + 1"))
     const auto ttl = 3;
 
     test_validation_failure(0, init_time, 1, ttl, init_time.milliseconds + ttl + 1, test_payload, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::expired_ttl);
+}
+
+
+//// ---- formatting tests ----
+
+TEST_CASE(SUITE("can't format a message with no session"))
+{
+	Session s;
+	StaticBuffer<consts::link::max_config_payload_size> buffer;
+	Hex hex("CAFE");
+
+	std::error_code ec;
+	const auto output = s.format_message(buffer.as_wslice(), true, Timestamp(0), hex.as_rslice(), ec);
+	REQUIRE(ec == CryptoError::no_valid_session);
+	REQUIRE(output.is_empty());
 }
 
 /// ------- helpers methods impls -------------

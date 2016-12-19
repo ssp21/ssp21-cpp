@@ -16,7 +16,7 @@ namespace ssp21
         const SymmetricKey& key,
         const AuthMetadata& metadata,
         const openpal::RSlice& payload,
-        openpal::WSlice& dest,
+        openpal::WSlice dest,
         std::error_code& ec)
     {
         // payload must at least have the truncated HMAC
@@ -62,7 +62,7 @@ namespace ssp21
         const SymmetricKey& key,
         const AuthMetadata& metadata,
         const openpal::RSlice& userdata,
-        openpal::WSlice& dest,
+        openpal::WSlice dest,
         std::error_code& ec)
     {
         // maximum userdata length

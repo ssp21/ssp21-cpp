@@ -31,7 +31,7 @@ namespace ssp21
         const SymmetricKey& key,
         const AuthMetadata& metadata,
         const openpal::RSlice& payload,
-        openpal::WSlice& dest,
+        openpal::WSlice dest,
         std::error_code& ec
     );
 
@@ -50,7 +50,7 @@ namespace ssp21
         const SymmetricKey& key,
         const AuthMetadata& metadata,
         const openpal::RSlice& userdata,
-        openpal::WSlice& dest,
+        openpal::WSlice dest,
         std::error_code& ec
     );
 
@@ -73,7 +73,7 @@ namespace ssp21
             const SymmetricKey& key,
             const AuthMetadata& metadata,
             const openpal::RSlice& payload,
-            openpal::WSlice& dest,
+            openpal::WSlice dest,
             std::error_code& ec)
         {
             return read_any_mac_with_truncation(
@@ -91,7 +91,7 @@ namespace ssp21
             const SymmetricKey& key,
             const AuthMetadata& metadata,
             const openpal::RSlice& userdata,
-            openpal::WSlice& dest,
+            openpal::WSlice dest,
             std::error_code& ec)
         {
             return write_any_mac_with_truncation(
@@ -117,7 +117,7 @@ namespace ssp21
             const SymmetricKey& key,
             const AuthMetadata& metadata,
             const openpal::RSlice& payload,
-            openpal::WSlice& dest,
+            openpal::WSlice dest,
             std::error_code& ec
         );
 
@@ -127,7 +127,7 @@ namespace ssp21
             const SymmetricKey& key,
             const AuthMetadata& metadata,
             const openpal::RSlice& userdata,
-            openpal::WSlice& dest,
+            openpal::WSlice dest,
             std::error_code& ec
         );
 
