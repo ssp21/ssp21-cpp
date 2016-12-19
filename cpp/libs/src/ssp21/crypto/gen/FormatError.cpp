@@ -17,6 +17,8 @@
 
 namespace ssp21 {
 
+const char* FormatErrorSpec::name = "message format error";
+
 const char* FormatErrorSpec::to_string(FormatError arg)
 {
     switch(arg)

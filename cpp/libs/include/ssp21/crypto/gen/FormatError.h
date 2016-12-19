@@ -18,6 +18,7 @@
 
 #include <cstdint>
 #include "openpal/util/Uncopyable.h"
+#include "ssp21/ErrorCategory.h"
 
 namespace ssp21 {
 
@@ -43,8 +44,24 @@ struct FormatErrorSpec : private openpal::StaticOnly
 {
     typedef FormatError enum_type_t;
 
+    static const char* name;
+
     static const char* to_string(FormatError arg);
 };
+
+typedef ErrorCategory<FormatErrorSpec> FormatErrorCategory;
+
+inline std::error_code make_error_code(FormatError err)
+{
+    return std::error_code(static_cast<int>(err), FormatErrorCategory::get());
+}
+
+}
+
+namespace std {
+
+template <>
+struct is_error_code_enum<ssp21::FormatError> : public true_type {};
 
 }
 

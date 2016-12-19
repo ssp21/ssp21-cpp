@@ -28,8 +28,7 @@ namespace ssp21
         {
             Config() {}
 
-            uint16_t max_rx_user_data_size = consts::crypto::default_session_max_rx_userdata_size;
-            uint16_t max_tx_payload_size = consts::crypto::default_session_max_tx_payload_size;
+            uint16_t max_link_payload_size = consts::link::max_config_payload_size;            
             uint32_t ttl_pad_ms = consts::crypto::default_ttl_pad_ms;
         };
 
@@ -44,11 +43,21 @@ namespace ssp21
             return statistics;
         }
 
-        openpal::RSlice validate_user_data(const UnconfirmedSessionData& message, const openpal::Timestamp& now, std::error_code& ec);
+        openpal::RSlice validate_message(const UnconfirmedSessionData& message, const openpal::Timestamp& now, std::error_code& ec);
 
-        bool format_tx_message(UnconfirmedSessionData& msg, bool fir, const openpal::Timestamp& now, openpal::RSlice& input, std::error_code& ec);
+        openpal::RSlice format_message(openpal::WSlice dest, bool fir, const openpal::Timestamp& now, openpal::RSlice& input, std::error_code& ec);
 
     private:
+
+		/**
+		* Given a maximum link layer payload, how big could the crypto payload be?
+		*/
+		static uint32_t max_crypto_payload_size(uint32_t max_link_payload_size);
+
+		/**
+		* Given a maximum link layer payload, what's the maximum amount of userdata we might receive?
+		*/
+		static uint32_t max_userdata_size(uint32_t max_link_payload_size);
 
         SessionStatistics statistics;
         Config config;

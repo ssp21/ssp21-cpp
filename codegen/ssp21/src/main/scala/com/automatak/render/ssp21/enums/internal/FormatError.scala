@@ -9,7 +9,9 @@ object FormatError {
 
   private val comments = List("The result of a message format operation")
 
-  def apply(): EnumModel = EnumModel("FormatError", "format_error", comments, EnumModel.UInt8, codes, None, Some(falseValue), Hex)
+  def category = Some(ErrorCategory("FormatErrorCategory", "message format error"))
+
+  def apply(): EnumModel = EnumModel("FormatError", "format_error", comments, EnumModel.UInt8, codes, None, Some(falseValue), Hex, category)
 
   private val falseValue = EnumValue("ok", 0, "message was formatted successfully")
 

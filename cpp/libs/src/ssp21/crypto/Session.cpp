@@ -15,9 +15,21 @@ namespace ssp21
 
     Session::Session(const Config& config) :
         config(config),
-        rx_auth_buffer(config.max_rx_user_data_size),
-        tx_payload_buffer(config.max_tx_payload_size)
+        rx_auth_buffer(max_crypto_payload_size(config.max_link_payload_size)),
+        tx_payload_buffer(max_userdata_size(config.max_link_payload_size))
     {}
+
+	uint32_t Session::max_crypto_payload_size(uint32_t max_link_payload_size)
+	{
+		return (max_link_payload_size > UnconfirmedSessionData::min_size_bytes) ? max_link_payload_size - UnconfirmedSessionData::min_size_bytes : 0;
+	}
+
+	uint32_t Session::max_userdata_size(uint32_t max_link_payload_size)
+	{
+		const auto base_size = UnconfirmedSessionData::min_size_bytes + consts::crypto::max_session_auth_tag_length;
+
+		return (max_link_payload_size > base_size) ? max_link_payload_size - base_size : 0;
+	}
 
     bool Session::initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const SessionKeys& keys, uint16_t nonce_start)
     {
@@ -39,7 +51,7 @@ namespace ssp21
         this->valid = false;
     }
 
-    RSlice Session::validate_user_data(const UnconfirmedSessionData& message, const openpal::Timestamp& now, std::error_code& ec)
+    RSlice Session::validate_message(const UnconfirmedSessionData& message, const openpal::Timestamp& now, std::error_code& ec)
     {
         if (!this->valid)
         {
@@ -88,25 +100,25 @@ namespace ssp21
         return payload;
     }
 
-    bool Session::format_tx_message(UnconfirmedSessionData& msg, bool fir, const Timestamp& now, openpal::RSlice& input, std::error_code& ec)
+	RSlice Session::format_message(openpal::WSlice dest, bool fir, const openpal::Timestamp& now, openpal::RSlice& input, std::error_code& ec)
     {
         if (!this->valid)
         {
             ec = CryptoError::no_valid_session;
-            return false;
+			return RSlice::empty_slice();
         }
 
-        if (this->rx_nonce == std::numeric_limits<uint16_t>::max())
+        if (this->tx_nonce == std::numeric_limits<uint16_t>::max())
         {
             ec = CryptoError::invalid_tx_nonce;
-            return false;
+			return RSlice::empty_slice();
         }
 
         const auto session_time_long = now.milliseconds - this->session_start.milliseconds;
         if (session_time_long > std::numeric_limits<uint32_t>::max())
         {
             ec = CryptoError::ttl_overflow;
-            return false;
+			return RSlice::empty_slice();
         }
 
         const auto session_time = static_cast<uint32_t>(session_time_long);
@@ -114,28 +126,45 @@ namespace ssp21
         if (remainder < config.ttl_pad_ms)
         {
             ec = CryptoError::ttl_overflow;
-            return false;
+			return RSlice::empty_slice();
         }
 
-        // determine how much we can fit in the packet
+        // how big can the user data be?
+		const auto max_userdata_length = this->tx_payload_buffer.length() - consts::crypto::max_session_auth_tag_length;
+		const auto fin = input.length() <= max_userdata_length;
+		const auto userdata_length = fin ? input.length() : max_userdata_length;
+		const auto userdata = input.take(userdata_length);
 
+		// the metadata we're encoding
+		AuthMetadata metadata(
+			this->tx_nonce + 1,
+			session_time + config.ttl_pad_ms,
+			SessionFlags(fir, fin)
+		);
+	
+		const auto payload = this->algorithms.write(this->keys.tx_key, metadata, userdata, this->tx_payload_buffer.as_wslice(), ec);
+		if (ec)
+		{
+			return RSlice::empty_slice();
+		}
 
+		UnconfirmedSessionData msg(
+			metadata,
+			Seq16(payload)
+		);
 
-        msg.metadata.flags.fir = fir;
-        msg.metadata.nonce = this->rx_nonce + 1;
-        msg.metadata.valid_until_ms = session_time + config.ttl_pad_ms;
+		const auto res = msg.write(dest);
 
-        // this->algorithms.write(this->keys.tx_key, )
+		if (res.is_error())
+		{
+			ec = FormatError::insufficient_space;
+			return RSlice::empty_slice();
+		}		
 
+		// everything succeeded, so increment the nonce an return
+        this->rx_nonce++;		
 
-        this->rx_nonce++;
-
-
-
-        // TODO: finish the method
-
-
-        return false;
+		return res.written;
     }
 
 }

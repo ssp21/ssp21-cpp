@@ -189,7 +189,7 @@ namespace ssp21
         ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, Function::unconfirmed_session_data, msg, data.length());
 
         std::error_code ec;
-        const auto payload = this->ctx.session.validate_user_data(msg, rx_time, ec);
+        const auto payload = this->ctx.session.validate_message(msg, rx_time, ec);
 
         if(ec)
         {
