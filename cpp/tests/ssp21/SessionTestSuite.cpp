@@ -93,9 +93,11 @@ TEST_CASE(SUITE("can't format a message with no session"))
 	Hex hex("CAFE");
 
 	std::error_code ec;
-	const auto output = s.format_message(buffer.as_wslice(), true, Timestamp(0), hex.as_rslice(), ec);
+	auto input = hex.as_rslice();
+	const auto output = s.format_message(buffer.as_wslice(), true, Timestamp(0), input, ec);
 	REQUIRE(ec == CryptoError::no_valid_session);
 	REQUIRE(output.is_empty());
+	REQUIRE(input.length() == 2);
 }
 
 /// ------- helpers methods impls -------------

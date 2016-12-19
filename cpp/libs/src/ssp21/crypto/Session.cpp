@@ -141,7 +141,8 @@ namespace ssp21
 			session_time + config.ttl_pad_ms,
 			SessionFlags(fir, fin)
 		);
-			
+	
+		
 		const auto payload = this->algorithms.write(this->keys.tx_key, metadata, userdata, dest, ec);
 		if (ec)
 		{
@@ -161,8 +162,9 @@ namespace ssp21
 			return RSlice::empty_slice();
 		}		
 
-		// everything succeeded, so increment the nonce an return
+		// everything succeeded, so increment the nonce and advance the input buffer
         this->rx_nonce++;		
+		input.advance(userdata_length);
 
 		return res.written;
     }
