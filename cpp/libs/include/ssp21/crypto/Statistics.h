@@ -34,7 +34,7 @@ namespace ssp21
 
     struct ResponderStatistics
     {
-        ResponderStatistics(const SessionStatistics& session) :
+        explicit ResponderStatistics(const SessionStatistics& session) :
             session(session)
         {}
 

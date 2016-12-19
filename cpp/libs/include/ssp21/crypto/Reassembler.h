@@ -17,7 +17,7 @@ namespace ssp21
 
     public:
 
-        Reassembler(uint16_t max_reassembled_size);
+        explicit Reassembler(uint16_t max_reassembled_size);
 
         ReassemblyResult process(bool fir, bool fin, uint32_t nonce, const openpal::RSlice& data);
 
