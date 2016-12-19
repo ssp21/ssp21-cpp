@@ -200,9 +200,14 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
     val last = fields.last
     val lastArgs: Iterator[String] = Iterator(last.cpp.asArgument(last.name))
 
-    def funcName = if (impl) "%s::%s(".format(sf.name, sf.name).iter else (sf.name + "(").iter
+    def funcName = if (impl) {
+      "%s::%s(".format(sf.name, sf.name).iter
+    } else {
+      if(fields.size == 1) ("explicit " + sf.name + "(").iter else (sf.name + "(").iter
+    }
 
     def terminator = if (impl) ") :".iter else ");".iter
+
 
     funcName ++ indent {
       firstArgs ++ lastArgs

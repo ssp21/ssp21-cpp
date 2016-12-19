@@ -27,7 +27,7 @@ struct ReplyHandshakeError final : public IMessage, private openpal::Uncopyable
 {
     ReplyHandshakeError();
 
-    ReplyHandshakeError(
+    explicit ReplyHandshakeError(
         EnumField<HandshakeErrorSpec> handshake_error
     );
 
