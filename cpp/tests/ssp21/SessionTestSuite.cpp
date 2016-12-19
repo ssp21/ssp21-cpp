@@ -124,7 +124,7 @@ TEST_CASE(SUITE("can't format a message if the session time has exceed 2^32 - 1"
 
 	std::error_code ec;
 	auto input = hex.as_rslice();
-	const auto time = static_cast<int64_t>(std::numeric_limits<int32_t>::max()) + 1;
+	const auto time = static_cast<int64_t>(std::numeric_limits<uint32_t>::max()) + 1;
 	const auto output = s.format_message(buffer.as_wslice(), true, Timestamp(time), input, ec);
 	REQUIRE(ec == CryptoError::ttl_overflow);
 	REQUIRE(output.is_empty());
