@@ -86,7 +86,7 @@ TEST_CASE(SUITE("rejects minimum ttl + 1"))
 
 //// ---- formatting tests ----
 
-TEST_CASE(SUITE("can't format a message with no session"))
+TEST_CASE(SUITE("can't format a message without a valid session"))
 {
     Session s;
     StaticBuffer<consts::link::max_config_payload_size> buffer;
@@ -98,6 +98,53 @@ TEST_CASE(SUITE("can't format a message with no session"))
     REQUIRE(ec == CryptoError::no_valid_session);
     REQUIRE(output.is_empty());
     REQUIRE(input.length() == 2);
+}
+
+TEST_CASE(SUITE("can't format a with maximum nonce value"))
+{
+	Session s;
+	init(s, std::numeric_limits<uint16_t>::max());		
+	StaticBuffer<consts::link::max_config_payload_size> buffer;
+	Hex hex("CAFE");
+
+	std::error_code ec;
+	auto input = hex.as_rslice();
+	const auto output = s.format_message(buffer.as_wslice(), true, Timestamp(0), input, ec);
+	REQUIRE(ec == CryptoError::invalid_tx_nonce);
+	REQUIRE(output.is_empty());
+	REQUIRE(input.length() == 2);
+}
+
+TEST_CASE(SUITE("can't format a message if the session time has exceed 2^32 - 1"))
+{
+	Session s;
+	init(s);
+	StaticBuffer<consts::link::max_config_payload_size> buffer;
+	Hex hex("CAFE");
+
+	std::error_code ec;
+	auto input = hex.as_rslice();
+	const auto time = static_cast<int64_t>(std::numeric_limits<int32_t>::max()) + 1;
+	const auto output = s.format_message(buffer.as_wslice(), true, Timestamp(time), input, ec);
+	REQUIRE(ec == CryptoError::ttl_overflow);
+	REQUIRE(output.is_empty());
+	REQUIRE(input.length() == 2);
+}
+
+TEST_CASE(SUITE("can't format a maximum if the session time has overflowed"))
+{
+	Session s;
+	init(s);
+	StaticBuffer<consts::link::max_config_payload_size> buffer;
+	Hex hex("CAFE");
+
+	std::error_code ec;
+	auto input = hex.as_rslice();
+	const auto time = std::numeric_limits<uint32_t>::max() - consts::crypto::default_ttl_pad_ms + 1;
+	const auto output = s.format_message(buffer.as_wslice(), true, Timestamp(time), input, ec);
+	REQUIRE(ec == CryptoError::ttl_overflow);
+	REQUIRE(output.is_empty());
+	REQUIRE(input.length() == 2);
 }
 
 /// ------- helpers methods impls -------------
