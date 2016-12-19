@@ -46,7 +46,7 @@ namespace ssp21
 
         openpal::RSlice validate_user_data(const UnconfirmedSessionData& message, const openpal::Timestamp& now, std::error_code& ec);
 
-        bool format_tx_message(UnconfirmedSessionData& msg, const openpal::Timestamp& now, openpal::RSlice& input, std::error_code& ec);
+        bool format_tx_message(UnconfirmedSessionData& msg, bool fir, const openpal::Timestamp& now, openpal::RSlice& input, std::error_code& ec);
 
     private:
 

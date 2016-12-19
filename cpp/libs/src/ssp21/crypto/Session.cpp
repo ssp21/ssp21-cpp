@@ -88,7 +88,7 @@ namespace ssp21
         return payload;
     }
 
-    bool Session::format_tx_message(UnconfirmedSessionData& msg, const Timestamp& now, openpal::RSlice& input, std::error_code& ec)
+    bool Session::format_tx_message(UnconfirmedSessionData& msg, bool fir, const Timestamp& now, openpal::RSlice& input, std::error_code& ec)
     {
         if (!this->valid)
         {
@@ -117,8 +117,20 @@ namespace ssp21
             return false;
         }
 
-        msg.metadata.nonce = ++this->rx_nonce;
+        // determine how much we can fit in the packet
+
+
+
+        msg.metadata.flags.fir = fir;
+        msg.metadata.nonce = this->rx_nonce + 1;
         msg.metadata.valid_until_ms = session_time + config.ttl_pad_ms;
+
+        // this->algorithms.write(this->keys.tx_key, )
+
+
+        this->rx_nonce++;
+
+
 
         // TODO: finish the method
 
