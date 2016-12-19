@@ -27,8 +27,8 @@ struct ReplyHandshakeError final : public IMessage, private openpal::Uncopyable
 {
     ReplyHandshakeError();
 
-    ReplyHandshakeError(
-        EnumField<HandshakeErrorSpec> handshake_error
+    explicit ReplyHandshakeError(
+        HandshakeError handshake_error
     );
 
     virtual ParseError read(openpal::RSlice input) override;

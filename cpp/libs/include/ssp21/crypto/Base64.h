@@ -51,7 +51,7 @@ namespace ssp21
         {
         public:
 
-            DecodeCursor(const openpal::RSlice& chars) : pos(chars)
+            explicit DecodeCursor(const openpal::RSlice& chars) : pos(chars)
             {}
 
             Base64DecodeError get_next_chars(DecodeChars& chars);

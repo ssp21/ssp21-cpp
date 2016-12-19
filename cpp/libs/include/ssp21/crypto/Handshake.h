@@ -24,7 +24,7 @@ namespace ssp21
     {
     public:
 
-        Handshake(EntityId id) : id(id)
+        explicit Handshake(EntityId id) : id(id)
         {}
 
         HandshakeError set_algorithms(const Algorithms::Config& config);

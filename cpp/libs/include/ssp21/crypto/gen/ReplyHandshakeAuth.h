@@ -26,7 +26,7 @@ struct ReplyHandshakeAuth final : public IMessage, private openpal::Uncopyable
 {
     ReplyHandshakeAuth();
 
-    ReplyHandshakeAuth(
+    explicit ReplyHandshakeAuth(
         const Seq8& mac
     );
 

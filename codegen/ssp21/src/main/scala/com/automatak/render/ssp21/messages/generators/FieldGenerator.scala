@@ -10,6 +10,8 @@ sealed trait FieldGenerator {
 
   def cppType: String
 
+  def paramType : String = cppType
+
   def defaultValue: Option[String]
 
   def asArgument(name: String): String
@@ -19,12 +21,12 @@ sealed trait FieldGenerator {
 
 sealed trait PassByValue {
   self: FieldGenerator =>
-  def asArgument(name: String): String = "%s %s".format(cppType, name)
+  def asArgument(name: String): String = "%s %s".format(paramType, name)
 }
 
 sealed trait PassByConstRef {
   self: FieldGenerator =>
-  def asArgument(name: String): String = "const %s& %s".format(cppType, name)
+  def asArgument(name: String): String = "const %s& %s".format(paramType, name)
 }
 
 case class BitfieldGenerator(field: Bitfield) extends FieldGenerator with PassByConstRef {
@@ -48,6 +50,8 @@ object U16FieldGenerator extends FieldGenerator with PassByValue {
 
   override def cppType: String = "IntegerField<openpal::UInt16>"
 
+  override def paramType: String = "uint16_t"
+
   def defaultValue: Option[String] = None
 }
 
@@ -55,6 +59,8 @@ object U32FieldGenerator extends FieldGenerator with PassByValue {
   override def includes = Set(Includes.cstdint, Includes.integerField, Includes.bigEndian)
 
   override def cppType: String = "IntegerField<openpal::UInt32>"
+
+  override def paramType: String = "uint32_t"
 
   def defaultValue: Option[String] = None
 }
@@ -64,6 +70,8 @@ case class EnumFieldGenerator(enum: EnumModel) extends FieldGenerator with PassB
   override def includes = Set(Includes.enum(enum.name), Includes.enumField)
 
   override def cppType: String = "EnumField<%s>".format(enum.specName)
+
+  override def paramType: String = enum.name
 
   def defaultValue: Option[String] = None
 }

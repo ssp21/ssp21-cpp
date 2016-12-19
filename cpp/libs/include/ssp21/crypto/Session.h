@@ -33,7 +33,7 @@ namespace ssp21
             uint32_t ttl_pad_ms = consts::crypto::default_ttl_pad_ms;
         };
 
-        Session(const Config& config = Config());
+        explicit Session(const Config& config = Config());
 
         bool initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const SessionKeys& keys, uint16_t nonce_start = 0);
 

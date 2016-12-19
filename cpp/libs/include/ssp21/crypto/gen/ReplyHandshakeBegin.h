@@ -26,7 +26,7 @@ struct ReplyHandshakeBegin final : public IMessage, private openpal::Uncopyable
 {
     ReplyHandshakeBegin();
 
-    ReplyHandshakeBegin(
+    explicit ReplyHandshakeBegin(
         const Seq8& ephemeral_public_key
     );
 

@@ -16,7 +16,7 @@ namespace ssp21
             return FormatResult(FormatError::ok, written);
         }
 
-        FormatResult(FormatError err) : err(err)
+        explicit FormatResult(FormatError err) : err(err)
         {}
 
         FormatError err;

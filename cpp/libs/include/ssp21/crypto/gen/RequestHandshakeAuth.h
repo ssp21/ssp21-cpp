@@ -26,7 +26,7 @@ struct RequestHandshakeAuth final : public IMessage, private openpal::Uncopyable
 {
     RequestHandshakeAuth();
 
-    RequestHandshakeAuth(
+    explicit RequestHandshakeAuth(
         const Seq8& mac
     );
 

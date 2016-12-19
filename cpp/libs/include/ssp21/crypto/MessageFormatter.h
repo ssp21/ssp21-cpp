@@ -24,10 +24,10 @@ namespace ssp21
 
             EnumField<FunctionSpec> func(function);
             auto ferr = func.write(dest);
-            if (any(ferr)) return ferr;
+            if (any(ferr)) return FormatResult(ferr);
 
             auto merr = write_fields(dest);
-            if (any(merr)) return merr;
+            if (any(merr)) return FormatResult(merr);
 
             const auto num_written = start.length() - dest.length();
             return FormatResult::Succes(start.as_rslice().take(num_written));
