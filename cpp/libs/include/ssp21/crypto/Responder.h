@@ -136,7 +136,7 @@ namespace ssp21
 
         // ---- implement IUpperLayer -----
 
-        virtual void on_open_impl() override;
+		virtual void on_open_impl() override {}
         virtual void on_close_impl() override;
         virtual void on_tx_ready_impl() override;
         virtual void on_rx_ready_impl() override;

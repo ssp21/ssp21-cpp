@@ -103,12 +103,7 @@ namespace ssp21
                         ) :
         ctx(config, std::move(local_static_key_pair), std::move(remote_static_public_key), logger, executor, lower),
         handshake_state(&HandshakeIdle::get())
-    {}
-
-    void Responder::on_open_impl()
-    {
-
-    }
+    {}   
 
     void Responder::on_close_impl()
     {
@@ -130,8 +125,7 @@ namespace ssp21
 
     void Responder::on_rx_ready_impl()
     {
-        // only read a message if the lower layer
-        // can transmit a response
+        // only read a message if the lower layer can transmit a response        
         if (this->can_receive())
         {
             ctx.lower->receive(*this);
