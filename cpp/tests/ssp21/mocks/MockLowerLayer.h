@@ -27,7 +27,11 @@ namespace ssp21
 
         virtual bool transmit(const openpal::RSlice& message) override
         {
-            assert(this->is_tx_ready);
+            if (!this->is_tx_ready)
+            {
+                throw std::logic_error("transmit called when tx_ready == false");
+            }
+
             this->tx_messages.push_back(std::make_unique<message_t>(message));
             this->is_tx_ready = false;
             return true;
@@ -45,6 +49,10 @@ namespace ssp21
             processor.process(front->as_rslice());
 
             this->rx_messages.pop_front();
+            if (this->rx_messages.empty())
+            {
+                this->is_rx_ready = false;
+            }
 
             return true;
         }
@@ -53,6 +61,7 @@ namespace ssp21
         {
             openpal::Hex hexdata(hex);
             this->rx_messages.push_back(std::make_unique<message_t>(hexdata.as_rslice()));
+            this->is_rx_ready = true;
         }
 
         size_t num_rx_messages() const
@@ -64,14 +73,12 @@ namespace ssp21
         {
             if (this->tx_messages.empty())
             {
-                return "";
+                throw std::logic_error("No messages to pop()");
             }
-            else
-            {
-                auto hex = openpal::to_hex(this->tx_messages.front()->as_rslice());
-                this->tx_messages.pop_front();
-                return hex;
-            }
+
+            auto hex = openpal::to_hex(this->tx_messages.front()->as_rslice());
+            this->tx_messages.pop_front();
+            return hex;
         }
 
     private:

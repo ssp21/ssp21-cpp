@@ -25,6 +25,11 @@ namespace ssp21
         */
         virtual bool supports(Function function) const = 0;
 
+        /**
+        * Called when a parse error occurs for a particular message type
+        */
+        virtual void on_parse_error(Function function, ParseError error) {}
+
         // --- optionally overriden message callbacks ---
 
         virtual bool on_message(const RequestHandshakeBegin& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now)

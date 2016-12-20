@@ -118,7 +118,7 @@ namespace ssp21
     void Responder::on_tx_ready_impl()
     {
         // only read a message we don't have data ready
-        if (ctx.lower->get_is_rx_ready() && this->can_receive())
+        if (this->can_receive())
         {
             ctx.lower->receive(*this);
         }
@@ -171,6 +171,19 @@ namespace ssp21
             return true;
         default:
             return false;
+        }
+    }
+
+    void Responder::on_parse_error(Function function, ParseError error)
+    {
+        switch (function)
+        {
+        case(Function::request_handshake_begin):
+        case(Function::request_handshake_auth):
+            this->ctx.reply_with_handshake_error(HandshakeError::bad_message_format);
+            break;
+        default:
+            break;
         }
     }
 

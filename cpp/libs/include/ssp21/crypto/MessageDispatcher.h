@@ -21,7 +21,7 @@ namespace ssp21
 
     private:
 
-        static void log_parse_error(openpal::Logger& logger, Function function, ParseError);
+        static void handle_parse_error(openpal::Logger& logger, Function function, ParseError error, IMessageHandler& handler);
 
         template <class MsgType>
         static inline bool handle_message(openpal::Logger& logger, const openpal::RSlice& message, const openpal::Timestamp& now, IMessageHandler& handler)
@@ -30,7 +30,7 @@ namespace ssp21
             auto err = msg.read(message);
             if (any(err))
             {
-                log_parse_error(logger, MsgType::function, err);
+                handle_parse_error(logger, MsgType::function, err, handler);
                 return false;
             }
             else

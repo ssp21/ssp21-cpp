@@ -123,16 +123,19 @@ namespace ssp21
 
         ResponderStatistics get_statistics() const
         {
-            return ResponderStatistics(
-                       this->ctx.session.get_statistics()
-                   );
+            return ResponderStatistics(this->ctx.session.get_statistics());
         }
 
     private:
 
         bool can_receive() const
         {
-            return ctx.lower->get_is_tx_ready() && !this->get_is_rx_ready();
+            /**
+            	1) the lower layer should have data
+            	2) the lower layer should be ready to transmit
+            	3) this layer shouldn't have any un-read data
+            */
+            return ctx.lower->get_is_rx_ready() && ctx.lower->get_is_tx_ready() && !this->get_is_rx_ready();
         }
 
         // ---- implement IUpperLayer -----
@@ -154,6 +157,8 @@ namespace ssp21
         // ---- implement IMessageHandler -----
 
         virtual bool supports(Function function) const override;
+
+        virtual void on_parse_error(Function function, ParseError error) override;
 
         virtual bool on_message(const RequestHandshakeBegin& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now) override;
 

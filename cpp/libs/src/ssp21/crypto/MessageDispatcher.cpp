@@ -42,9 +42,10 @@ namespace ssp21
         }
     }
 
-    void MessageDispatcher::log_parse_error(openpal::Logger& logger, Function function, ParseError error)
+    void MessageDispatcher::handle_parse_error(openpal::Logger& logger, Function function, ParseError error, IMessageHandler& handler)
     {
         FORMAT_LOG_BLOCK(logger, levels::warn, "Error parsing function %s: %s", FunctionSpec::to_string(function), ParseErrorSpec::to_string(error));
+        handler.on_parse_error(function, error);
     }
 }
 
