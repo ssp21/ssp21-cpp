@@ -118,6 +118,11 @@ namespace ssp21
             }
         }
 
+        inline bool get_is_open() const
+        {
+            return is_open;
+        }
+
     protected:
 
         virtual void on_open_impl() = 0;
@@ -127,11 +132,6 @@ namespace ssp21
         virtual void on_tx_ready_impl() = 0;
 
         virtual void on_rx_ready_impl() = 0;
-
-        inline bool get_is_open() const
-        {
-            return is_open;
-        }
 
     private:
 

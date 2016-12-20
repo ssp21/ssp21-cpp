@@ -135,7 +135,18 @@ namespace ssp21
 
     bool Responder::transmit(const openpal::RSlice& data)
     {
-        // TODO
+        if (!this->get_is_open())
+        {
+            return false;
+        }
+
+        if (!this->ctx.upper->get_is_open())
+        {
+            return false;
+        }
+
+        // TODO: are we already transmitting on behalf on the upper layer?
+
         return false;
     }
 
