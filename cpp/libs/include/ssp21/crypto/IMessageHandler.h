@@ -9,6 +9,8 @@
 #include "ssp21/crypto/gen/ReplyHandshakeError.h"
 #include "ssp21/crypto/gen/UnconfirmedSessionData.h"
 
+#include "openpal/executor/Timestamp.h"
+
 namespace ssp21
 {
 
@@ -17,29 +19,44 @@ namespace ssp21
     */
     struct IMessageHandler
     {
-		// --- message callbacks ---
 
-		virtual void on_message(const RequestHandshakeBegin& msg) = 0;
-		
-		virtual void on_message(const RequestHandshakeAuth& msg) = 0;
-		
-		virtual void on_message(const ReplyHandshakeBegin& msg) = 0;
-		
-		virtual void on_message(const ReplyHandshakeAuth& msg) = 0;
-		
-		virtual void on_message(const ReplyHandshakeError& msg) = 0;
+        /**
+        * determines if a function should be parsed
+        */
+        virtual bool supports(Function function) const = 0;
 
-		virtual void on_message(const UnconfirmedSessionData& msg) = 0;
+        // --- optionally overriden message callbacks ---
 
+        virtual bool on_message(const RequestHandshakeBegin& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now)
+        {
+            return false;
+        }
 
-		// --- error callbacks ---
+        virtual bool on_message(const RequestHandshakeAuth& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now)
+        {
+            return false;
+        }
 
-		virtual void on_empty_message() = 0;
+        virtual bool on_message(const ReplyHandshakeBegin& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now)
+        {
+            return false;
+        }
 
-		virtual void on_unknown_function(uint8_t function) = 0;
+        virtual bool on_message(const ReplyHandshakeAuth& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now)
+        {
+            return false;
+        }
 
-		virtual void on_error(Function function, ParseError error) = 0;
-		
+        virtual bool on_message(const ReplyHandshakeError& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now)
+        {
+            return false;
+        }
+
+        virtual bool on_message(const UnconfirmedSessionData& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now)
+        {
+            return false;
+        }
+
     };
 
 

@@ -15,6 +15,7 @@
 #include "ssp21/crypto/Handshake.h"
 #include "ssp21/crypto/Session.h"
 #include "ssp21/crypto/Reassembler.h"
+#include "ssp21/crypto/IMessageHandler.h"
 
 #include "ssp21/LogLevels.h"
 
@@ -30,7 +31,7 @@ namespace ssp21
     /**
     	WIP - this class will implement the stateful part of the responder.
     */
-    class Responder final : public IUpperLayer, public ILowerLayer, private IMessageProcessor
+    class Responder final : public IUpperLayer, public ILowerLayer, private IMessageProcessor, private IMessageHandler
     {
 
     public:
@@ -136,7 +137,7 @@ namespace ssp21
 
         // ---- implement IUpperLayer -----
 
-		virtual void on_open_impl() override {}
+        virtual void on_open_impl() override {}
         virtual void on_close_impl() override;
         virtual void on_tx_ready_impl() override;
         virtual void on_rx_ready_impl() override;
@@ -150,12 +151,15 @@ namespace ssp21
 
         virtual void process(const openpal::RSlice& data) override;
 
-        // ---- private methods -----
+        // ---- implement IMessageHandler -----
 
-        template <class MsgType>
-        inline void handle_handshake_message(const openpal::RSlice& data);
+        virtual bool supports(Function function) const override;
 
-        bool handle_session_message(const openpal::RSlice& data);
+        virtual bool on_message(const RequestHandshakeBegin& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now) override;
+
+        virtual bool on_message(const RequestHandshakeAuth& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now) override;
+
+        virtual bool on_message(const UnconfirmedSessionData& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now) override;
 
         // ---- private members -----
 

@@ -10,6 +10,7 @@
 #include "ssp21/crypto/ResponderHandshakeStates.h"
 
 #include "ssp21/crypto/gen/ReplyHandshakeError.h"
+#include "ssp21/crypto/MessageDispatcher.h"
 
 using namespace openpal;
 
@@ -103,7 +104,7 @@ namespace ssp21
                         ) :
         ctx(config, std::move(local_static_key_pair), std::move(remote_static_public_key), logger, executor, lower),
         handshake_state(&HandshakeIdle::get())
-    {}   
+    {}
 
     void Responder::on_close_impl()
     {
@@ -125,7 +126,7 @@ namespace ssp21
 
     void Responder::on_rx_ready_impl()
     {
-        // only read a message if the lower layer can transmit a response        
+        // only read a message if the lower layer can transmit a response
         if (this->can_receive())
         {
             ctx.lower->receive(*this);
@@ -150,42 +151,51 @@ namespace ssp21
         return false;
     }
 
-    template <class MsgType>
-    inline void Responder::handle_handshake_message(const openpal::RSlice& data)
+    void Responder::process(const openpal::RSlice& message)
     {
-        MsgType msg;
-        auto err = msg.read(data);
-        if (any(err))
-        {
-            FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "error reading %s: %s", FunctionSpec::to_string(MsgType::function), ParseErrorSpec::to_string(err));
-            ctx.reply_with_handshake_error(HandshakeError::bad_message_format);
-        }
-        else
-        {
-            ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, MsgType::function, msg, data.length());
+        MessageDispatcher::Dispatch(
+            this->ctx.logger,
+            message,
+            this->ctx.executor->get_time(),
+            *this
+        );
+    }
 
-            this->handshake_state = &this->handshake_state->on_message(ctx, data, msg);
+    bool Responder::supports(Function function) const
+    {
+        switch (function)
+        {
+        case(Function::request_handshake_begin):
+        case(Function::request_handshake_auth):
+        case(Function::unconfirmed_session_data):
+            return true;
+        default:
+            return false;
         }
     }
 
-    bool Responder::handle_session_message(const openpal::RSlice& data)
+    bool Responder::on_message(const RequestHandshakeBegin& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now)
     {
-        const auto rx_time = ctx.executor->get_time();
+        ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, msg.function, msg, raw_data.length());
+        this->handshake_state = &this->handshake_state->on_message(ctx, raw_data, msg);
+        return true;
+    }
 
-        UnconfirmedSessionData msg;
-        auto err = msg.read(data);
-        if (any(err))
-        {
-            FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "error reading session message: %s", ParseErrorSpec::to_string(err));
-            return false;
-        }
+    bool Responder::on_message(const RequestHandshakeAuth& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now)
+    {
+        ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, msg.function, msg, raw_data.length());
+        this->handshake_state = &this->handshake_state->on_message(ctx, raw_data, msg);
+        return true;
+    }
 
-        ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, Function::unconfirmed_session_data, msg, data.length());
+    bool Responder::on_message(const UnconfirmedSessionData& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now)
+    {
+        ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, Function::unconfirmed_session_data, msg, raw_data.length());
 
         std::error_code ec;
-        const auto payload = this->ctx.session.validate_message(msg, rx_time, ec);
+        const auto payload = this->ctx.session.validate_message(msg, now, ec);
 
-        if(ec)
+        if (ec)
         {
             FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "validation error: %s", ec.message().c_str());
             return false;
@@ -207,36 +217,6 @@ namespace ssp21
         default: // error
             FORMAT_LOG_BLOCK(this->ctx.logger, levels::warn, "reassembly error: %s", ReassemblyResultSpec::to_string(result));
             return false;
-        }
-    }
-
-    void Responder::process(const openpal::RSlice& message)
-    {
-        if (message.is_empty())
-        {
-            SIMPLE_LOG_BLOCK(ctx.logger, levels::warn, "Received zero length message");
-            return;
-        }
-
-        const auto function = message[0];
-
-        switch (FunctionSpec::from_type(function))
-        {
-        case(Function::request_handshake_begin) :
-            this->handle_handshake_message<RequestHandshakeBegin>(message);
-            break;
-
-        case(Function::request_handshake_auth) :
-            this->handle_handshake_message<RequestHandshakeAuth>(message);
-            break;
-
-        case(Function::unconfirmed_session_data) :
-            this->handle_session_message(message);
-            break;
-
-        default:
-            FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "Received unknown function id: %u", function);
-            break;
         }
     }
 
