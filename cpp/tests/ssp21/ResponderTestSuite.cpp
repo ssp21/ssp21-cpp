@@ -16,6 +16,11 @@ void test_handshake_error(ResponderFixture& fix, const std::string& request, Han
 
 // ---------- tests for handshake state idle -----------
 
+TEST_CASE(SUITE("failing test for jenkins"))
+{
+    REQUIRE(false);
+}
+
 TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_BEGIN with REPLY_HANDSHAKE_BEGIN"))
 {
     ResponderFixture fix;
