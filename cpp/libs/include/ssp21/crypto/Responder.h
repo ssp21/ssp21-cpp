@@ -131,6 +131,7 @@ namespace ssp21
     private:
 
 		void check_receive();
+		void check_transmit();
 
         // ---- implement IUpperLayer -----
 

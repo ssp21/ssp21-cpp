@@ -142,6 +142,11 @@ namespace ssp21
 		}
 	}
 
+	void Responder::check_transmit()
+	{
+		// TODO - check if we can transmit some data
+	}
+
     bool Responder::transmit(const openpal::RSlice& data)
     {
         if (!this->get_is_open())
@@ -156,14 +161,13 @@ namespace ssp21
 
         // already transmitting on behalf on the upper layer
 		if (!ctx.tx.begin(data))
-		{
-			this->is_tx_ready = false;
+		{			
 			return false;
 		}
 
-		
+		this->check_transmit();
 
-        return false;
+		return true;
     }
 
     bool Responder::receive(IMessageProcessor& processor)
