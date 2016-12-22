@@ -109,29 +109,38 @@ namespace ssp21
     void Responder::on_close_impl()
     {
         this->handshake_state = &HandshakeIdle::get();
-        this->ctx.session.reset();
+        
+		this->ctx.session.reset();
         this->ctx.reassembler.reset();
         this->ctx.upper->on_close();
+		this->ctx.tx.reset();
+
         this->reset_lower_layer();
     }
 
     void Responder::on_tx_ready_impl()
     {
-        // only read a message we don't have data ready
-        if (this->can_receive())
-        {
-            ctx.lower->receive(*this);
-        }
+		this->check_receive();        
     }
 
     void Responder::on_rx_ready_impl()
     {
-        // only read a message if the lower layer can transmit a response
-        if (this->can_receive())
-        {
-            ctx.lower->receive(*this);
-        }
+		this->check_receive();
     }
+
+	void Responder::check_receive()
+	{
+		/*
+            1) the lower layer should have data
+		    2) the lower layer should be ready to transmit
+		    3) this layer shouldn't have any un-read data
+		*/
+		const auto can_receive = ctx.lower->get_is_rx_ready() && ctx.lower->get_is_tx_ready() && !this->get_is_rx_ready();
+		if (can_receive)
+		{
+			ctx.lower->receive(*this);
+		}
+	}
 
     bool Responder::transmit(const openpal::RSlice& data)
     {
@@ -145,7 +154,14 @@ namespace ssp21
             return false;
         }
 
-        // TODO: are we already transmitting on behalf on the upper layer?
+        // already transmitting on behalf on the upper layer
+		if (!ctx.tx.begin(data))
+		{
+			this->is_tx_ready = false;
+			return false;
+		}
+
+		
 
         return false;
     }

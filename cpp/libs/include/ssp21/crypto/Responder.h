@@ -15,6 +15,7 @@
 #include "ssp21/crypto/Handshake.h"
 #include "ssp21/crypto/Session.h"
 #include "ssp21/crypto/Reassembler.h"
+#include "ssp21/crypto/TxState.h"
 #include "ssp21/crypto/IMessageHandler.h"
 
 #include "ssp21/LogLevels.h"
@@ -93,6 +94,7 @@ namespace ssp21
             Handshake handshake;
             Session session;
             Reassembler reassembler;
+			TxState tx;
 
             ILowerLayer* const lower;
             IUpperLayer* upper = nullptr;
@@ -128,15 +130,7 @@ namespace ssp21
 
     private:
 
-        bool can_receive() const
-        {
-            /**
-            	1) the lower layer should have data
-            	2) the lower layer should be ready to transmit
-            	3) this layer shouldn't have any un-read data
-            */
-            return ctx.lower->get_is_rx_ready() && ctx.lower->get_is_tx_ready() && !this->get_is_rx_ready();
-        }
+		void check_receive();
 
         // ---- implement IUpperLayer -----
 
