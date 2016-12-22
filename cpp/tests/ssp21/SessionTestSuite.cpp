@@ -19,7 +19,7 @@ using namespace ssp21;
 using namespace openpal;
 
 void init(Session& session, uint16_t nonce_init = 0, Timestamp session_init_time = Timestamp(0));
-RSlice validate(Session& session, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& payload, std::error_code& ec);
+std::string validate(Session& session, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& payload, std::error_code& ec);
 void test_validation_failure(uint16_t nonce_init, Timestamp session_init_time, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& payload, std::initializer_list<CryptoAction> actions, CryptoError error);
 std::string test_validation_success(uint16_t nonce_init, Timestamp session_init_time, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& payload);
 
@@ -34,7 +34,7 @@ TEST_CASE(SUITE("won't validate user data when not initialized"))
     std::error_code ec;
     const auto user_data = validate(session, 1, 0, 0, "", ec);
     REQUIRE(ec == CryptoError::no_valid_session);
-    REQUIRE(user_data.is_empty());
+    REQUIRE(user_data.empty());
 
     crypto->expect_empty();
 }
@@ -199,7 +199,7 @@ void init(Session& session, uint16_t nonce_start, Timestamp session_init_time)
     REQUIRE(session.initialize(Algorithms::Session(), session_init_time, keys, nonce_start));
 }
 
-RSlice validate(Session& session, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& payload, std::error_code& ec)
+std::string validate(Session& session, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& payload, std::error_code& ec)
 {
     Hex hex(payload);
 
@@ -212,7 +212,7 @@ RSlice validate(Session& session, uint16_t nonce, uint32_t ttl, int64_t now, con
         Seq16(hex.as_rslice())
     );
 
-    return session.validate_message(msg, Timestamp(now), ec);
+	return to_hex(session.validate_message(msg, Timestamp(now), ec));
 }
 
 std::string test_validation_success(uint16_t nonce_init, Timestamp session_init_time, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& payload)
@@ -229,7 +229,7 @@ std::string test_validation_success(uint16_t nonce_init, Timestamp session_init_
 
     crypto->expect({ CryptoAction::hmac_sha256, CryptoAction::secure_equals });
 
-    return to_hex(user_data);
+    return user_data;
 }
 
 void test_validation_failure(uint16_t nonce_init, Timestamp session_init_time, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& payload, std::initializer_list<CryptoAction> actions, CryptoError error)
@@ -243,7 +243,7 @@ void test_validation_failure(uint16_t nonce_init, Timestamp session_init_time, u
     std::error_code ec;
     const auto user_data = validate(session, nonce, ttl, now, payload, ec);
     REQUIRE(ec == error);
-    REQUIRE(user_data.is_empty());
+    REQUIRE(user_data.empty());
 
     crypto->expect(actions);
 

@@ -16,7 +16,7 @@ namespace ssp21
         const SymmetricKey& key,
         const AuthMetadata& metadata,
         const openpal::RSlice& payload,
-        openpal::WSlice dest,
+        openpal::WSlice, // ignored for MAC read methods since message itself contains the output slice
         std::error_code& ec)
     {
         // payload must at least have the truncated HMAC
@@ -26,13 +26,7 @@ namespace ssp21
             return RSlice::empty_slice();
         }
 
-        const auto user_data_length = payload.length() - trunc_length;
-
-        if (dest.length() < user_data_length) // insufficient space to write cleartext
-        {
-            ec = CryptoError::bad_buffer_size;
-            return RSlice::empty_slice();
-        }
+        const auto user_data_length = payload.length() - trunc_length;		
 
         metadata_buffer_t buffer;
         auto ad_bytes = get_metadata_bytes(metadata, buffer);
@@ -52,8 +46,8 @@ namespace ssp21
             return openpal::RSlice::empty_slice();
         }
 
-        // we're authenticated, transfer the user data and return the slice
-        return user_data.copy_to(dest);
+		// we're authenticated, so return the user_data slice
+		return user_data;
     }
 
     openpal::RSlice SessionModes::write_any_mac_with_truncation(
