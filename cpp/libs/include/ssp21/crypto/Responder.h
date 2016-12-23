@@ -94,7 +94,7 @@ namespace ssp21
             Handshake handshake;
             Session session;
             Reassembler reassembler;
-			TxState tx;
+            TxState tx;
 
             ILowerLayer* const lower;
             IUpperLayer* upper = nullptr;
@@ -130,8 +130,8 @@ namespace ssp21
 
     private:
 
-		void check_receive();
-		void check_transmit();
+        void check_receive();
+        void check_transmit();
 
         // ---- implement IUpperLayer -----
 

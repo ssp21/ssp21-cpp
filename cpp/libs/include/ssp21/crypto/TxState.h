@@ -13,65 +13,65 @@ namespace ssp21
     /**
     	Tracks the state of a multi-segment transmission for the crypto layer
     */
-	class TxState final : openpal::Uncopyable
-	{
+    class TxState final : openpal::Uncopyable
+    {
 
-	public:		
+    public:
 
-		TxState() {}
+        TxState() {}
 
-		void reset()
-		{
-			this->fir = false;
-			this->active = false;
-			this->remainder.make_empty();
-		}
+        void reset()
+        {
+            this->fir = false;
+            this->active = false;
+            this->remainder.make_empty();
+        }
 
-		bool begin(const openpal::RSlice& data)
-		{
-			if (active) return false;
+        bool begin(const openpal::RSlice& data)
+        {
+            if (active) return false;
 
-			this->fir = true;
-			this->active = true;
-			this->remainder = data;
+            this->fir = true;
+            this->active = true;
+            this->remainder = data;
 
-			return true;
-		}
+            return true;
+        }
 
-		bool transmit_some(const openpal::RSlice& remainder)
-		{
-			if (!active) return false;
+        bool transmit_some(const openpal::RSlice& remainder)
+        {
+            if (!active) return false;
 
-			this->fir = false;
-			this->remainder = remainder;
+            this->fir = false;
+            this->remainder = remainder;
 
-			return true;
-		}		
+            return true;
+        }
 
-		// ---- accessors -----
+        // ---- accessors -----
 
-		bool is_active() const
-		{
-			return active;
-		}
+        bool is_active() const
+        {
+            return active;
+        }
 
-		openpal::RSlice get_remainder() const
-		{
-			return remainder;
-		}
+        openpal::RSlice get_remainder() const
+        {
+            return remainder;
+        }
 
-		bool get_fir() const
-		{
-			return fir;
-		}
+        bool get_fir() const
+        {
+            return fir;
+        }
 
-	private:
+    private:
 
-		bool fir = false;
-		bool active = false;
-		openpal::RSlice remainder;
-		
-	};
+        bool fir = false;
+        bool active = false;
+        openpal::RSlice remainder;
+
+    };
 
 }
 

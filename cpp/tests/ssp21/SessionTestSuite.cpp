@@ -212,7 +212,7 @@ std::string validate(Session& session, uint16_t nonce, uint32_t ttl, int64_t now
         Seq16(hex.as_rslice())
     );
 
-	return to_hex(session.validate_message(msg, Timestamp(now), ec));
+    return to_hex(session.validate_message(msg, Timestamp(now), ec));
 }
 
 std::string test_validation_success(uint16_t nonce_init, Timestamp session_init_time, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& payload)

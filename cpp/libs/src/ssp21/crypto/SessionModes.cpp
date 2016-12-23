@@ -26,7 +26,7 @@ namespace ssp21
             return RSlice::empty_slice();
         }
 
-        const auto user_data_length = payload.length() - trunc_length;		
+        const auto user_data_length = payload.length() - trunc_length;
 
         metadata_buffer_t buffer;
         auto ad_bytes = get_metadata_bytes(metadata, buffer);
@@ -46,8 +46,8 @@ namespace ssp21
             return openpal::RSlice::empty_slice();
         }
 
-		// we're authenticated, so return the user_data slice
-		return user_data;
+        // we're authenticated, so return the user_data slice
+        return user_data;
     }
 
     openpal::RSlice SessionModes::write_any_mac_with_truncation(

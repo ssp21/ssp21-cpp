@@ -109,43 +109,43 @@ namespace ssp21
     void Responder::on_close_impl()
     {
         this->handshake_state = &HandshakeIdle::get();
-        
-		this->ctx.session.reset();
+
+        this->ctx.session.reset();
         this->ctx.reassembler.reset();
         this->ctx.upper->on_close();
-		this->ctx.tx.reset();
+        this->ctx.tx.reset();
 
         this->reset_lower_layer();
     }
 
     void Responder::on_tx_ready_impl()
     {
-		this->check_receive();        
+        this->check_receive();
     }
 
     void Responder::on_rx_ready_impl()
     {
-		this->check_receive();
+        this->check_receive();
     }
 
-	void Responder::check_receive()
-	{
-		/*
+    void Responder::check_receive()
+    {
+        /*
             1) the lower layer should have data
-		    2) the lower layer should be ready to transmit
-		    3) this layer shouldn't have any un-read data
-		*/
-		const auto can_receive = ctx.lower->get_is_rx_ready() && ctx.lower->get_is_tx_ready() && !this->get_is_rx_ready();
-		if (can_receive)
-		{
-			ctx.lower->receive(*this);
-		}
-	}
+            2) the lower layer should be ready to transmit
+            3) this layer shouldn't have any un-read data
+        */
+        const auto can_receive = ctx.lower->get_is_rx_ready() && ctx.lower->get_is_tx_ready() && !this->get_is_rx_ready();
+        if (can_receive)
+        {
+            ctx.lower->receive(*this);
+        }
+    }
 
-	void Responder::check_transmit()
-	{
-		// TODO - check if we can transmit some data
-	}
+    void Responder::check_transmit()
+    {
+        // TODO - check if we can transmit some data
+    }
 
     bool Responder::transmit(const openpal::RSlice& data)
     {
@@ -160,14 +160,14 @@ namespace ssp21
         }
 
         // already transmitting on behalf on the upper layer
-		if (!ctx.tx.begin(data))
-		{			
-			return false;
-		}
+        if (!ctx.tx.begin(data))
+        {
+            return false;
+        }
 
-		this->check_transmit();
+        this->check_transmit();
 
-		return true;
+        return true;
     }
 
     bool Responder::receive(IMessageProcessor& processor)
