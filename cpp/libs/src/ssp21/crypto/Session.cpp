@@ -61,7 +61,7 @@ namespace ssp21
         }
 
         auto dest = this->rx_auth_buffer.as_wslice();
-        const auto payload = this->algorithms.read(this->keys.rx_key, message.metadata, message.payload, dest, ec);
+        const auto payload = this->algorithms.mode->read(this->keys.rx_key, message.metadata, message.payload, dest, ec);
 
         if (ec)
         {
@@ -143,7 +143,7 @@ namespace ssp21
         );
 
 
-        const auto payload = this->algorithms.write(this->keys.tx_key, metadata, userdata, this->tx_payload_buffer.as_wslice(), ec);
+        const auto payload = this->algorithms.mode->write(this->keys.tx_key, metadata, userdata, this->tx_payload_buffer.as_wslice(), ec);
         if (ec)
         {
             return RSlice::empty_slice();

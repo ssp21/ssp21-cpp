@@ -46,8 +46,7 @@ namespace ssp21
         switch (config.session_mode)
         {
         case(SessionMode::hmac_sha256_16):
-            algorithms.session.read = &SessionModes::read_hmac_sha256_trunc16;
-            algorithms.session.write = &SessionModes::write_hmac_sha256_trunc16;
+			algorithms.session.mode = &SessionModes::get_hmac_sha_256_trunc16();
             break;
         default:
             return HandshakeError::unsupported_session_mode;

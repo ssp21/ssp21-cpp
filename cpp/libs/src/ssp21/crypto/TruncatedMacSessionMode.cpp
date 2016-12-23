@@ -16,7 +16,7 @@ openpal::RSlice TruncatedMacSessionMode::read(
     const openpal::RSlice& payload,
     openpal::WSlice dest,
     std::error_code& ec
-)
+) const
 {
 	// payload must at least have the truncated HMAC
 	if (payload.length() < trunc_length)
@@ -55,7 +55,7 @@ openpal::RSlice TruncatedMacSessionMode::write(
     const openpal::RSlice& userdata,
     openpal::WSlice dest,
     std::error_code& ec
-)
+) const
 {
 	// maximum userdata length
 	const uint16_t max_userdata_length = UInt16::max_value - trunc_length;
@@ -92,7 +92,7 @@ openpal::RSlice TruncatedMacSessionMode::write(
 	return ret;
 }
 
-uint16_t TruncatedMacSessionMode::max_writable_user_data_length(uint16_t max_payload_size)
+uint16_t TruncatedMacSessionMode::max_writable_user_data_length(uint16_t max_payload_size) const
 {
     return (max_payload_size < trunc_length) ? 0 : max_payload_size - trunc_length;
 }

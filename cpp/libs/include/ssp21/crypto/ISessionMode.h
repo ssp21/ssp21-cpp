@@ -38,7 +38,7 @@ namespace ssp21
             const openpal::RSlice& payload,
             openpal::WSlice dest,
             std::error_code& ec
-        ) = 0;
+        ) const = 0;
 
         /**
         * Writes an authenticated (and possibly encrypted) payload into the destination output buffer
@@ -57,7 +57,7 @@ namespace ssp21
             const openpal::RSlice& userdata,
             openpal::WSlice dest,
             std::error_code& ec
-        ) = 0;
+        ) const = 0;
 
         /**
         * Calculates the maximum possible user data length factoring the overhead from any authentication tags and padding
@@ -66,7 +66,7 @@ namespace ssp21
         *
         * @return maximum possible user data length
         */
-        virtual uint16_t max_writable_user_data_length(uint16_t max_payload_size) = 0;
+        virtual uint16_t max_writable_user_data_length(uint16_t max_payload_size) const = 0;
 
 	protected:
 

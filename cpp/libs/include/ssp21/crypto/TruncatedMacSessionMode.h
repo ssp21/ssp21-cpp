@@ -26,7 +26,7 @@ namespace ssp21
             const openpal::RSlice& payload,
             openpal::WSlice dest,
             std::error_code& ec
-        ) override;
+        ) const override;
 
         virtual openpal::RSlice write(
             const SymmetricKey& key,
@@ -34,9 +34,9 @@ namespace ssp21
             const openpal::RSlice& userdata,
             openpal::WSlice dest,
             std::error_code& ec
-        ) override;
+        ) const override;
 
-        virtual uint16_t max_writable_user_data_length(uint16_t max_payload_size) override;
+        virtual uint16_t max_writable_user_data_length(uint16_t max_payload_size) const override;
 
     private:
 
