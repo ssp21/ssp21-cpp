@@ -50,7 +50,7 @@ namespace ssp21
             Session() = default;
 
             verify_nonce_func_t verify_nonce = NonceFunctions::default_verify();
-			ISessionMode* mode = &SessionModes::default_mode();
+            ISessionMode* mode = &SessionModes::default_mode();
         };
 
         struct Handshake

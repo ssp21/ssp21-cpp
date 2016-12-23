@@ -28,7 +28,7 @@ namespace ssp21
         {
             Config() {}
 
-            uint16_t max_link_payload_size = consts::link::max_config_payload_size;
+            uint16_t max_link_payload_length = consts::link::max_config_payload_size;
             uint32_t ttl_pad_ms = consts::crypto::default_ttl_pad_ms;
         };
 
@@ -52,15 +52,13 @@ namespace ssp21
         /**
         * Given a maximum link layer payload, how big could the crypto payload be?
         */
-        static uint32_t max_crypto_payload_size(uint32_t max_link_payload_size);
-
-        /**
-        * Given a maximum link layer payload, what's the maximum amount of userdata we might receive?
-        */
-        static uint32_t max_userdata_size(uint32_t max_link_payload_size);
+        static uint32_t calc_max_crypto_payload_length(uint32_t max_link_payload_size);
 
         SessionStatistics statistics;
         Config config;
+
+        // calculated during construction
+        const uint16_t max_crypto_payload_length;        
 
         openpal::Buffer rx_auth_buffer;
         openpal::Buffer tx_payload_buffer;

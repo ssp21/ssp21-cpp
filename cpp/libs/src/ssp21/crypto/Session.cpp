@@ -15,20 +15,14 @@ namespace ssp21
 
     Session::Session(const Config& config) :
         config(config),
-        rx_auth_buffer(max_crypto_payload_size(config.max_link_payload_size)),
-        tx_payload_buffer(max_userdata_size(config.max_link_payload_size))
+        max_crypto_payload_length(calc_max_crypto_payload_length(config.max_link_payload_length)),
+        rx_auth_buffer(max_crypto_payload_length),
+        tx_payload_buffer(max_crypto_payload_length)
     {}
 
-    uint32_t Session::max_crypto_payload_size(uint32_t max_link_payload_size)
+    uint32_t Session::calc_max_crypto_payload_length(uint32_t max_link_payload_size)
     {
         return (max_link_payload_size > UnconfirmedSessionData::min_size_bytes) ? max_link_payload_size - UnconfirmedSessionData::min_size_bytes : 0;
-    }
-
-    uint32_t Session::max_userdata_size(uint32_t max_link_payload_size)
-    {
-        const auto base_size = UnconfirmedSessionData::min_size_bytes + consts::crypto::max_session_auth_tag_length;
-
-        return (max_link_payload_size > base_size) ? max_link_payload_size - base_size : 0;
     }
 
     bool Session::initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const SessionKeys& keys, uint16_t nonce_start)
@@ -40,7 +34,7 @@ namespace ssp21
         this->rx_nonce = this->tx_nonce = nonce_start;
         this->algorithms = algorithms;
         this->session_start = session_start;
-        this->keys.copy(keys);
+        this->keys.copy(keys);        
 
         return true;
     }
@@ -130,10 +124,10 @@ namespace ssp21
         }
 
         // how big can the user data be?
-        const auto max_userdata_length = this->tx_payload_buffer.length() - consts::crypto::max_session_auth_tag_length;
-        const auto fin = input.length() <= max_userdata_length;
-        const auto userdata_length = fin ? input.length() : max_userdata_length;
-        const auto userdata = input.take(userdata_length);
+		const uint16_t max_user_data_length = this->algorithms.mode->max_writable_user_data_length(this->max_crypto_payload_length);
+        const auto fin = input.length() <= max_user_data_length;
+        const auto user_data_length = fin ? input.length() : max_user_data_length;
+        const auto user_data = input.take(user_data_length);
 
         // the metadata we're encoding
         AuthMetadata metadata(
@@ -143,7 +137,7 @@ namespace ssp21
         );
 
 
-        const auto payload = this->algorithms.mode->write(this->keys.tx_key, metadata, userdata, this->tx_payload_buffer.as_wslice(), ec);
+        const auto payload = this->algorithms.mode->write(this->keys.tx_key, metadata, user_data, this->tx_payload_buffer.as_wslice(), ec);
         if (ec)
         {
             return RSlice::empty_slice();
@@ -164,7 +158,7 @@ namespace ssp21
 
         // everything succeeded, so increment the nonce and advance the input buffer
         this->tx_nonce++;
-        input.advance(userdata_length);
+        input.advance(user_data_length);
 
         return res.written;
     }

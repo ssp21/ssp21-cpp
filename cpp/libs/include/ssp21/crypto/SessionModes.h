@@ -6,24 +6,24 @@
 
 namespace ssp21
 {
-	class SessionModes : private openpal::StaticOnly
-    {   
+    class SessionModes : private openpal::StaticOnly
+    {
 
-	public:
+    public:
 
-		static ISessionMode& get_hmac_sha_256_trunc16()
-		{
-			return hmac_sha_256_trunc16;
-		}
+        static ISessionMode& get_hmac_sha_256_trunc16()
+        {
+            return hmac_sha_256_trunc16;
+        }
 
-		static ISessionMode& default_mode()
-		{
-			return hmac_sha_256_trunc16;
-		}
+        static ISessionMode& default_mode()
+        {
+            return hmac_sha_256_trunc16;
+        }
 
-	private:
+    private:
 
-		static TruncatedMacSessionMode hmac_sha_256_trunc16;        
+        static TruncatedMacSessionMode hmac_sha_256_trunc16;
     };
 
 }

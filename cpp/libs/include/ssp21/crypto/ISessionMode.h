@@ -12,14 +12,14 @@
 
 namespace ssp21
 {
-	typedef openpal::StaticBuffer<AuthMetadata::fixed_size_bytes> metadata_buffer_t;
+    typedef openpal::StaticBuffer<AuthMetadata::fixed_size_bytes> metadata_buffer_t;
 
     class ISessionMode
     {
 
-	public:		
+    public:
 
-        virtual ~ISessionMode() {}				
+        virtual ~ISessionMode() {}
 
         /**
         * Authenticates (and possibly decrypts) a session message payload and returns a slice pointing to the cleartext output.
@@ -68,16 +68,16 @@ namespace ssp21
         */
         virtual uint16_t max_writable_user_data_length(uint16_t max_payload_size) const = 0;
 
-	protected:
+    protected:
 
-		typedef openpal::StaticBuffer<AuthMetadata::fixed_size_bytes> metadata_buffer_t;
+        typedef openpal::StaticBuffer<AuthMetadata::fixed_size_bytes> metadata_buffer_t;
 
-		inline static openpal::RSlice get_metadata_bytes(const AuthMetadata& metadata, metadata_buffer_t& buffer)			
-		{
-			auto dest = buffer.as_wslice();
-			metadata.write(dest);
-			return buffer.as_rslice();
-		}
+        inline static openpal::RSlice get_metadata_bytes(const AuthMetadata& metadata, metadata_buffer_t& buffer)
+        {
+            auto dest = buffer.as_wslice();
+            metadata.write(dest);
+            return buffer.as_rslice();
+        }
 
     };
 
