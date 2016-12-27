@@ -12,7 +12,7 @@ object RequestHandshakeBegin extends Message {
     U16("version"),
     Enum(NonceMode()),
     Enum(DHMode()),
-    Enum(HashMode()),
+    Enum(HandshakeHash()),
     Enum(SessionMode()),
     Enum(CertificateMode()),
     CommonFields.ephemerialPublicKey,

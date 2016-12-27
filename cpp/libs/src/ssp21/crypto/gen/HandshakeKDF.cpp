@@ -13,30 +13,30 @@
 // Licensed under the terms of the BSDv3 license
 //
 
-#include "ssp21/crypto/gen/HashMode.h"
+#include "ssp21/crypto/gen/HandshakeKDF.h"
 
 namespace ssp21 {
 
-uint8_t HashModeSpec::to_type(HashMode arg)
+uint8_t HandshakeKDFSpec::to_type(HandshakeKDF arg)
 {
     return static_cast<uint8_t>(arg);
 }
-HashMode HashModeSpec::from_type(uint8_t arg)
+HandshakeKDF HandshakeKDFSpec::from_type(uint8_t arg)
 {
     switch(arg)
     {
         case(0x0):
-            return HashMode::sha256;
+            return HandshakeKDF::HKDF_SHA256;
         default:
-            return HashMode::undefined;
+            return HandshakeKDF::undefined;
     }
 }
-const char* HashModeSpec::to_string(HashMode arg)
+const char* HandshakeKDFSpec::to_string(HandshakeKDF arg)
 {
     switch(arg)
     {
-        case(HashMode::sha256):
-            return "sha256";
+        case(HandshakeKDF::HKDF_SHA256):
+            return "HKDF_SHA256";
         default:
             return "undefined";
     }

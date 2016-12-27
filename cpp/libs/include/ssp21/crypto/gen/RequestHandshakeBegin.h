@@ -19,10 +19,10 @@
 #include <cstdint>
 #include "openpal/serialization/BigEndian.h"
 #include "ssp21/crypto/gen/DHMode.h"
-#include "ssp21/crypto/gen/HashMode.h"
 #include "ssp21/crypto/gen/Function.h"
 #include "ssp21/crypto/gen/NonceMode.h"
 #include "ssp21/crypto/gen/SessionMode.h"
+#include "ssp21/crypto/gen/HandshakeHash.h"
 #include "ssp21/crypto/gen/CertificateMode.h"
 #include "ssp21/crypto/IMessage.h"
 #include "ssp21/crypto/EnumField.h"
@@ -39,7 +39,7 @@ struct RequestHandshakeBegin final : public IMessage, private openpal::Uncopyabl
         uint16_t version,
         NonceMode nonce_mode,
         DHMode dh_mode,
-        HashMode hash_mode,
+        HandshakeHash handshake_hash,
         SessionMode session_mode,
         CertificateMode certificate_mode,
         const Seq8& ephemeral_public_key
@@ -55,7 +55,7 @@ struct RequestHandshakeBegin final : public IMessage, private openpal::Uncopyabl
     IntegerField<openpal::UInt16> version;
     EnumField<NonceModeSpec> nonce_mode;
     EnumField<DHModeSpec> dh_mode;
-    EnumField<HashModeSpec> hash_mode;
+    EnumField<HandshakeHashSpec> handshake_hash;
     EnumField<SessionModeSpec> session_mode;
     EnumField<CertificateModeSpec> certificate_mode;
     Seq8 ephemeral_public_key;

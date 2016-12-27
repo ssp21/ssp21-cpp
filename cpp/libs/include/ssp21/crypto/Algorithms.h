@@ -9,7 +9,7 @@
 #include "ssp21/crypto/HandshakeAuthentication.h"
 
 #include "ssp21/crypto/gen/DHMode.h"
-#include "ssp21/crypto/gen/HashMode.h"
+#include "ssp21/crypto/gen/HandshakeHash.h"
 #include "ssp21/crypto/gen/NonceMode.h"
 #include "ssp21/crypto/gen/HandshakeError.h"
 #include "ssp21/crypto/gen/SessionMode.h"
@@ -30,17 +30,17 @@ namespace ssp21
         {
             Config(
                 DHMode dh_mode,
-                HashMode hash_mode,
+                HandshakeHash handshake_hash,
                 NonceMode nonce_mode,
                 SessionMode session_mode) :
                 dh_mode(dh_mode),
-                hash_mode(hash_mode),
+                handshake_hash(handshake_hash),
                 nonce_mode(nonce_mode),
                 session_mode(session_mode)
             {}
 
             DHMode dh_mode;
-            HashMode hash_mode;
+			HandshakeHash handshake_hash;
             NonceMode nonce_mode;
             SessionMode session_mode;
         };

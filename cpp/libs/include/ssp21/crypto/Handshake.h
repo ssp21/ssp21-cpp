@@ -6,7 +6,7 @@
 
 #include "ssp21/crypto/gen/HandshakeError.h"
 #include "ssp21/crypto/gen/DHMode.h"
-#include "ssp21/crypto/gen/HashMode.h"
+#include "ssp21/crypto/gen/HandshakeHash.h"
 
 #include "ssp21/crypto/Crypto.h"
 

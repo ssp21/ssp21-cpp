@@ -6,7 +6,7 @@
 
 #include "ssp21/crypto/gen/NonceMode.h"
 #include "ssp21/crypto/gen/DHMode.h"
-#include "ssp21/crypto/gen/HashMode.h"
+#include "ssp21/crypto/gen/HandshakeHash.h"
 #include "ssp21/crypto/gen/SessionMode.h"
 #include "ssp21/crypto/gen/CertificateMode.h"
 #include "ssp21/crypto/gen/HandshakeError.h"
@@ -25,7 +25,7 @@ namespace ssp21
             uint16_t version,
             NonceMode nonce_mode,
             DHMode dh_mode,
-            HashMode hash_mode,
+			HandshakeHash handshake_hash,
             SessionMode session_mode,
             CertificateMode certificate_mode,
             const std::string& hex_ephem_pub_key,

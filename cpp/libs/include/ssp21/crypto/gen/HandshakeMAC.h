@@ -13,8 +13,8 @@
 // Licensed under the terms of the BSDv3 license
 //
 
-#ifndef SSP21_HASHMODE_H
-#define SSP21_HASHMODE_H
+#ifndef SSP21_HANDSHAKEMAC_H
+#define SSP21_HANDSHAKEMAC_H
 
 #include <cstdint>
 #include "openpal/util/Uncopyable.h"
@@ -22,23 +22,23 @@
 namespace ssp21 {
 
 /**
-    Specifies which hash algorithm is used for the handshake hash and handshake authentication
+    Specifies the Message Authentication Code (MAC) algorithm used to authenticate the handshake
 */
-enum class HashMode : uint8_t
+enum class HandshakeMAC : uint8_t
 {
-    /// Use SHA256 and HMAC-SHA256
-    sha256 = 0x0,
+    /// Use HMAC-SHA256
+    HMAC_SHA256 = 0x0,
     /// value not defined
     undefined = 0xFF
 };
 
-struct HashModeSpec : private openpal::StaticOnly
+struct HandshakeMACSpec : private openpal::StaticOnly
 {
-    typedef HashMode enum_type_t;
+    typedef HandshakeMAC enum_type_t;
 
-    static uint8_t to_type(HashMode arg);
-    static HashMode from_type(uint8_t arg);
-    static const char* to_string(HashMode arg);
+    static uint8_t to_type(HandshakeMAC arg);
+    static HandshakeMAC from_type(uint8_t arg);
+    static const char* to_string(HandshakeMAC arg);
 };
 
 }

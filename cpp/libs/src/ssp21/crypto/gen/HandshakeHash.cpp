@@ -13,34 +13,33 @@
 // Licensed under the terms of the BSDv3 license
 //
 
-#ifndef SSP21_DHMODE_H
-#define SSP21_DHMODE_H
-
-#include <cstdint>
-#include "openpal/util/Uncopyable.h"
+#include "ssp21/crypto/gen/HandshakeHash.h"
 
 namespace ssp21 {
 
-/**
-    Specifies which Diffie Hellman function is used during the handshake
-*/
-enum class DHMode : uint8_t
+uint8_t HandshakeHashSpec::to_type(HandshakeHash arg)
 {
-    /// Use the x25519 algorithm
-    x25519 = 0x0,
-    /// value not defined
-    undefined = 0xFF
-};
-
-struct DHModeSpec : private openpal::StaticOnly
+    return static_cast<uint8_t>(arg);
+}
+HandshakeHash HandshakeHashSpec::from_type(uint8_t arg)
 {
-    typedef DHMode enum_type_t;
-
-    static uint8_t to_type(DHMode arg);
-    static DHMode from_type(uint8_t arg);
-    static const char* to_string(DHMode arg);
-};
-
+    switch(arg)
+    {
+        case(0x0):
+            return HandshakeHash::sha256;
+        default:
+            return HandshakeHash::undefined;
+    }
+}
+const char* HandshakeHashSpec::to_string(HandshakeHash arg)
+{
+    switch(arg)
+    {
+        case(HandshakeHash::sha256):
+            return "sha256";
+        default:
+            return "undefined";
+    }
 }
 
-#endif
+}

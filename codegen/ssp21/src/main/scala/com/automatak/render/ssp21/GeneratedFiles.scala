@@ -19,12 +19,14 @@ object GeneratedFiles {
 
   private def ssp21Enums = List(
     CryptoFunction(),
-    HashMode(),
+    HandshakeHash(),
     NonceMode(),
     DHMode(),
     SessionMode(),
     CertificateMode(),
-    HandshakeError()
+    HandshakeError(),
+    HandshakeKDF(),
+    HandshakeMAC()
   ).map(x => EnumConfig(x, true, true)).map(e => EnumGenerator(e, Some(basePath)))
 
   private def internalEnums = List(

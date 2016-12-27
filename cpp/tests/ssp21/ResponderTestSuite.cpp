@@ -48,7 +48,7 @@ TEST_CASE(SUITE("responds to m2m certificate mode with unsupported_certificate_m
                              0,
                              NonceMode::increment_last_rx,
                              DHMode::x25519,
-                             HashMode::sha256,
+                             HandshakeHash::sha256,
                              SessionMode::hmac_sha256_16,
                              CertificateMode::m2m,
                              hex::repeat(0xFF, consts::crypto::x25519_key_length)
@@ -66,7 +66,7 @@ TEST_CASE(SUITE("responds to invalid key length with bad_message_format"))
                              0,
                              NonceMode::increment_last_rx,
                              DHMode::x25519,
-                             HashMode::sha256,
+                             HandshakeHash::sha256,
                              SessionMode::hmac_sha256_16,
                              CertificateMode::preshared_keys,
                              hex::repeat(0xFF, (consts::crypto::x25519_key_length - 1))
@@ -268,7 +268,7 @@ void test_begin_handshake_success(ResponderFixture& fix)
                              0,
                              NonceMode::increment_last_rx,
                              DHMode::x25519,
-                             HashMode::sha256,
+                             HandshakeHash::sha256,
                              SessionMode::hmac_sha256_16,
                              CertificateMode::preshared_keys,
                              hex::repeat(0xFF, consts::crypto::x25519_key_length)

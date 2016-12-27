@@ -69,7 +69,7 @@ TEST_CASE(SUITE("successfully parses message"))
     REQUIRE(msg.version == 0xD1D2);
     REQUIRE(msg.nonce_mode == NonceMode::increment_last_rx);
     REQUIRE(msg.dh_mode == DHMode::x25519);
-    REQUIRE(msg.hash_mode == HashMode::sha256);
+    REQUIRE(msg.handshake_hash == HandshakeHash::sha256);
     REQUIRE(msg.session_mode == SessionMode::hmac_sha256_16);
     REQUIRE(msg.certificate_mode == CertificateMode::preshared_keys);
 
@@ -92,7 +92,7 @@ TEST_CASE(SUITE("pretty prints message"))
         7,
         NonceMode::greater_than_last_rx,
         DHMode::x25519,
-        HashMode::sha256,
+        HandshakeHash::sha256,
         SessionMode::hmac_sha256_16,
         CertificateMode::preshared_keys,
         Seq8(publicKey)
@@ -111,7 +111,7 @@ TEST_CASE(SUITE("pretty prints message"))
         "version: 7",
         "nonce_mode: greater_than_last_rx",
         "dh_mode: x25519",
-        "hash_mode: sha256",
+        "handshake_hash: sha256",
         "session_mode: hmac_sha256_16",
         "certificate_mode: preshared_keys",
         "ephemeral_public_key (length = 2)",

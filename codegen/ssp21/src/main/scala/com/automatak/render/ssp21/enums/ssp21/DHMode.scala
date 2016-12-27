@@ -7,7 +7,7 @@ import com.automatak.render._
 
 object DHMode {
 
-  private val comments = List("Specifies which Diffie Hellman function is used")
+  private val comments = List("Specifies which Diffie Hellman function is used during the handshake")
 
   def apply(): EnumModel = EnumModel("DHMode", "dh_mode", comments, EnumModel.UInt8, codes, Some(EnumValue.undefined(255)), None, Hex)
 

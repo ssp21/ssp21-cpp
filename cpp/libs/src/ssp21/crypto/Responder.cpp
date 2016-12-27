@@ -88,7 +88,7 @@ namespace ssp21
         return handshake.set_algorithms(
                    Algorithms::Config(
                        msg.dh_mode,
-                       msg.hash_mode,
+                       msg.handshake_hash,
                        msg.nonce_mode,
                        msg.session_mode
                    )
