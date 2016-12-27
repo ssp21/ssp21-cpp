@@ -9,7 +9,7 @@ object ReassemblyResult {
 
   private val comments = List("The result of a message reassembly operation")
 
-  def apply(): EnumModel = EnumModel("ReassemblyResult", "reassembly_result", comments, EnumModel.UInt8, codes, None, None, Hex, None)
+  def apply(): EnumModel = EnumModel("ReassemblyResult", "reassembly_result", comments, EnumType.UInt8, codes, None, None, Hex, None)
 
   private val codes = List(
     EnumValue("complete", 0, "reassembly complete"),

@@ -13,7 +13,7 @@ object CryptoAction {
     "CryptoAction",
     "crypto_actions",
     comments,
-    EnumModel.UInt8,
+    EnumType.UInt8,
     codes,
     None,
     None,

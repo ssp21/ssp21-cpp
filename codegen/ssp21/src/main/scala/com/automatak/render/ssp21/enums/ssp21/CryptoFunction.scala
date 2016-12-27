@@ -13,7 +13,7 @@ object CryptoFunction {
     "Function",
     "function",
     comments,
-    EnumModel.UInt8,
+    EnumType.UInt8,
     codes,
     Some(EnumValue.undefined(255)),
     None,

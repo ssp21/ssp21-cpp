@@ -9,7 +9,7 @@ object HandshakeError {
 
   private val comments = List("Denotes an error condition that occurred during the handshake process")
 
-  def apply(): EnumModel = EnumModel("HandshakeError", "handshake_error", comments, EnumModel.UInt8, codes, Some(EnumValue.undefined(254)), Some(noneValue), Hex)
+  def apply(): EnumModel = EnumModel("HandshakeError", "handshake_error", comments, EnumType.UInt8, codes, Some(EnumValue.undefined(254)), Some(noneValue), Hex)
 
   private val noneValue = EnumValue("none", 253, "This value gets used internally in ssp21-cpp only")
 

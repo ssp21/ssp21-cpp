@@ -9,7 +9,7 @@ object DHMode {
 
   private val comments = List("Specifies which Diffie Hellman function is used during the handshake")
 
-  def apply(): EnumModel = EnumModel("DHMode", "dh_mode", comments, EnumModel.UInt8, codes, Some(EnumValue.undefined(255)), None, Hex)
+  def apply(): EnumModel = EnumModel("DHMode", "dh_mode", comments, EnumType.UInt8, codes, Some(EnumValue.undefined(255)), None, Hex)
 
   private val codes = List(
     EnumValue("x25519", 0, "Use the x25519 algorithm")

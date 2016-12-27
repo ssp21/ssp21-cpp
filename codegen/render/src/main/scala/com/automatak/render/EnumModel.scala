@@ -10,34 +10,6 @@ object EnumValue {
 
 case class EnumValue(name: String, value: Int, comment: String)
 
-object EnumModel {
-
-  sealed trait CppType {
-    def sizeInBytes: Int
-
-    def typ: String
-  }
-
-  case object UInt8 extends CppType {
-    def sizeInBytes = 1
-
-    def typ = "uint8_t"
-  }
-
-  case object UInt16 extends CppType {
-    def sizeInBytes = 2
-
-    def typ = "uint16_t"
-  }
-
-  case object UInt32 extends CppType {
-    def sizeInBytes = 4
-
-    def typ = "uint32_t"
-  }
-
-}
-
 sealed trait IntRender {
   def apply(i: Int): String
 }
@@ -56,7 +28,7 @@ case class EnumModel(
                       name: String,
                       underscoredName: String,
                       comments: List[String],
-                      cpp: EnumModel.CppType,
+                      cpp: EnumType.Type,
                       nonDefaultValues: List[EnumValue],
                       defaultValue: Option[EnumValue],
                       boolCastValue: Option[EnumValue] = None,

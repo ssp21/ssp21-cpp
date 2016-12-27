@@ -11,7 +11,7 @@ object CryptoError {
 
   def category = Some(ErrorCategory("CryptoErrorCategory", "crypto error"))
 
-  def apply(): EnumModel = EnumModel("CryptoError", "crypto_error", comments, EnumModel.UInt8, codes, None, None, Hex, category)
+  def apply(): EnumModel = EnumModel("CryptoError", "crypto_error", comments, EnumType.UInt8, codes, None, None, Hex, category)
 
   private val codes = List(
     EnumValue("bad_key_type", 0, "attempted operation with bad key type"),

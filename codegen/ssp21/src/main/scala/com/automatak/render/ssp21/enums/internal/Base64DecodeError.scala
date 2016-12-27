@@ -9,7 +9,7 @@ object Base64DecodeError {
 
   private val comments = List("The result of a base64 decode operation")
 
-  def apply(): EnumModel = EnumModel("Base64DecodeError", "base64_decode_error", comments, EnumModel.UInt8, codes, None, Some(falseValue), Hex)
+  def apply(): EnumModel = EnumModel("Base64DecodeError", "base64_decode_error", comments, EnumType.UInt8, codes, None, Some(falseValue), Hex)
 
   private val falseValue = EnumValue("ok", 0, "decode success")
 

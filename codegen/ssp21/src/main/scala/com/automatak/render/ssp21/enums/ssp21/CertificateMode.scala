@@ -13,7 +13,7 @@ object CertificateMode {
     "CertificateMode",
     "certificate_mode",
     comments,
-    EnumModel.UInt8,
+    EnumType.UInt8,
     codes,
     Some(EnumValue.undefined(255)),
     None,

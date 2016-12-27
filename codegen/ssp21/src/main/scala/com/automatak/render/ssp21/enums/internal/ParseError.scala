@@ -9,7 +9,7 @@ object ParseError {
 
   private val comments = List("The result of a message parse operation")
 
-  def apply(): EnumModel = EnumModel("ParseError", "parse_error", comments, EnumModel.UInt8, codes, None, Some(falseValue), Hex)
+  def apply(): EnumModel = EnumModel("ParseError", "parse_error", comments, EnumType.UInt8, codes, None, Some(falseValue), Hex)
 
   private val falseValue = EnumValue("ok", 0, "message was parsed successfully")
 
