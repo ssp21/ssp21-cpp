@@ -50,7 +50,9 @@ namespace ssp21
             uint16_t version,
             NonceMode nonce_mode,
             DHMode dh_mode,
-			HandshakeHash handshake_hash,
+            HandshakeHash handshake_hash,
+            HandshakeKDF handshake_kdf,
+            HandshakeMAC handshake_mac,
             SessionMode session_mode,
             CertificateMode certificate_mode,
             const std::string& hex_ephem_pub_key,
@@ -60,7 +62,15 @@ namespace ssp21
             Hex pub_key(hex_ephem_pub_key);
 
             RequestHandshakeBegin msg(
-                version, nonce_mode, dh_mode, handshake_hash, session_mode, certificate_mode, Seq8(pub_key.as_rslice())
+                version,
+                nonce_mode,
+                dh_mode,
+                handshake_hash,
+                handshake_kdf,
+                handshake_mac,
+                session_mode,
+                certificate_mode,
+                Seq8(pub_key.as_rslice())
             );
 
             std::vector<std::unique_ptr<Hex>> certificate_slices;

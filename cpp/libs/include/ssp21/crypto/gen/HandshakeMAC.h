@@ -27,7 +27,7 @@ namespace ssp21 {
 enum class HandshakeMAC : uint8_t
 {
     /// Use HMAC-SHA256
-    HMAC_SHA256 = 0x0,
+    hmac_sha256 = 0x0,
     /// value not defined
     undefined = 0xFF
 };

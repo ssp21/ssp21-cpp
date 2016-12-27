@@ -61,7 +61,7 @@ TEST_CASE(SUITE("successfully parses message"))
 {
     RequestHandshakeBegin msg;
 
-    Hex hex("00 D1 D2 00 00 00 00 00 03 AA AA AA 01 00 02 BB BB");
+    Hex hex("00 D1 D2 00 00 00 00 00 00 00 03 AA AA AA 01 00 02 BB BB");
 
     auto input = hex.as_rslice();
     auto err = msg.read(input);
@@ -70,6 +70,8 @@ TEST_CASE(SUITE("successfully parses message"))
     REQUIRE(msg.nonce_mode == NonceMode::increment_last_rx);
     REQUIRE(msg.dh_mode == DHMode::x25519);
     REQUIRE(msg.handshake_hash == HandshakeHash::sha256);
+    REQUIRE(msg.handshake_kdf == HandshakeKDF::hkdf_sha256);
+    REQUIRE(msg.handshake_mac == HandshakeMAC::hmac_sha256);
     REQUIRE(msg.session_mode == SessionMode::hmac_sha256_16);
     REQUIRE(msg.certificate_mode == CertificateMode::preshared_keys);
 
@@ -93,6 +95,8 @@ TEST_CASE(SUITE("pretty prints message"))
         NonceMode::greater_than_last_rx,
         DHMode::x25519,
         HandshakeHash::sha256,
+        HandshakeKDF::hkdf_sha256,
+        HandshakeMAC::hmac_sha256,
         SessionMode::hmac_sha256_16,
         CertificateMode::preshared_keys,
         Seq8(publicKey)
@@ -112,6 +116,8 @@ TEST_CASE(SUITE("pretty prints message"))
         "nonce_mode: greater_than_last_rx",
         "dh_mode: x25519",
         "handshake_hash: sha256",
+        "handshake_kdf: hkdf_sha256",
+        "handshake_mac: hmac_sha256",
         "session_mode: hmac_sha256_16",
         "certificate_mode: preshared_keys",
         "ephemeral_public_key (length = 2)",
@@ -142,7 +148,7 @@ TEST_CASE(SUITE("rejects trailing data"))
 {
     RequestHandshakeBegin msg;
 
-    Hex hex("00 D1 D2 00 00 00 00 00 03 AA AA AA 01 00 02 BB BB FF FF FF");
+    Hex hex("00 D1 D2 00 00 00 00 00 00 00 03 AA AA AA 01 00 02 BB BB FF FF FF");
 
     auto input = hex.as_rslice();
     auto err = msg.read(input);
@@ -157,7 +163,7 @@ TEST_CASE(SUITE("formats default value"))
     auto res = msg.write(dest);
 
     REQUIRE(!res.is_error());
-    REQUIRE(to_hex(res.written) == "00 00 00 FF FF FF FF FF 00 00");
+    REQUIRE(to_hex(res.written) == "00 00 00 FF FF FF FF FF FF FF 00 00");
 }
 
 TEST_CASE(SUITE("returns error if insufficient buffer space"))

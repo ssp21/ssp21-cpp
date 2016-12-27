@@ -24,11 +24,11 @@ namespace ssp21
     class HandshakeAuthentication : private openpal::StaticOnly
     {
 
-    public:        
+    public:
 
-		static bool auth_handshake_with_mac(mac_func_t mac_func, const SymmetricKey& key, EntityId id, const openpal::RSlice& mac_value);
+        static bool auth_handshake_with_mac(mac_func_t mac_func, const SymmetricKey& key, EntityId id, const openpal::RSlice& mac_value);
 
-		static void calc_handshake_mac_with_macfunc(mac_func_t mac_func, const SymmetricKey& key, EntityId id, HashOutput& output);
+        static void calc_handshake_mac_with_macfunc(mac_func_t mac_func, const SymmetricKey& key, EntityId id, HashOutput& output);
 
     private:
 
@@ -42,7 +42,7 @@ namespace ssp21
             return (id == EntityId::Responder) ? 0x01 : 0x02;
         }
 
-       
+
     };
 }
 

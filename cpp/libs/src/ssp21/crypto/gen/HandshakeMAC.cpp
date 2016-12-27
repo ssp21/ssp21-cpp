@@ -26,7 +26,7 @@ HandshakeMAC HandshakeMACSpec::from_type(uint8_t arg)
     switch(arg)
     {
         case(0x0):
-            return HandshakeMAC::HMAC_SHA256;
+            return HandshakeMAC::hmac_sha256;
         default:
             return HandshakeMAC::undefined;
     }
@@ -35,8 +35,8 @@ const char* HandshakeMACSpec::to_string(HandshakeMAC arg)
 {
     switch(arg)
     {
-        case(HandshakeMAC::HMAC_SHA256):
-            return "HMAC_SHA256";
+        case(HandshakeMAC::hmac_sha256):
+            return "hmac_sha256";
         default:
             return "undefined";
     }

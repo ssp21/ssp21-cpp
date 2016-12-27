@@ -40,7 +40,7 @@ namespace ssp21
             {}
 
             DHMode dh_mode;
-			HandshakeHash handshake_hash;
+            HandshakeHash handshake_hash;
             NonceMode nonce_mode;
             SessionMode session_mode;
         };

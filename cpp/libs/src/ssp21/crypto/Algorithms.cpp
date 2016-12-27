@@ -20,10 +20,10 @@ namespace ssp21
 
         switch (config.handshake_hash)
         {
-		case(HandshakeHash::sha256):
+        case(HandshakeHash::sha256):
             algorithms.handshake.hash = &Crypto::hash_sha256;
             algorithms.handshake.session_auth_mac = &Crypto::hmac_sha256;
-            algorithms.handshake.kdf = &Crypto::hkdf_sha256;            
+            algorithms.handshake.kdf = &Crypto::hkdf_sha256;
             break;
         default:
             return HandshakeError::unsupported_hash_mode;

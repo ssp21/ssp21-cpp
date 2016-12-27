@@ -13,6 +13,8 @@ object RequestHandshakeBegin extends Message {
     Enum(NonceMode()),
     Enum(DHMode()),
     Enum(HandshakeHash()),
+    Enum(HandshakeKDF()),
+    Enum(HandshakeMAC()),
     Enum(SessionMode()),
     Enum(CertificateMode()),
     CommonFields.ephemerialPublicKey,

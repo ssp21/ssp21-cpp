@@ -26,7 +26,7 @@ HandshakeKDF HandshakeKDFSpec::from_type(uint8_t arg)
     switch(arg)
     {
         case(0x0):
-            return HandshakeKDF::HKDF_SHA256;
+            return HandshakeKDF::hkdf_sha256;
         default:
             return HandshakeKDF::undefined;
     }
@@ -35,8 +35,8 @@ const char* HandshakeKDFSpec::to_string(HandshakeKDF arg)
 {
     switch(arg)
     {
-        case(HandshakeKDF::HKDF_SHA256):
-            return "HKDF_SHA256";
+        case(HandshakeKDF::hkdf_sha256):
+            return "hkdf_sha256";
         default:
             return "undefined";
     }

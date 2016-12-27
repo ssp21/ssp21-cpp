@@ -12,7 +12,7 @@ object HandshakeKDF {
   def apply(): EnumModel = EnumModel("HandshakeKDF", "handshake_kdf", comments, EnumType.UInt8, codes, Some(EnumValue.undefined(255)), None, Hex)
 
   private val codes = List(
-    EnumValue("HKDF_SHA256", 0, "Use HKDF with HMAC-SHA256")
+    EnumValue("hkdf_sha256", 0, "Use HKDF with HMAC-SHA256")
   )
 
 }

@@ -27,7 +27,7 @@ namespace ssp21 {
 enum class HandshakeKDF : uint8_t
 {
     /// Use HKDF with HMAC-SHA256
-    HKDF_SHA256 = 0x0,
+    hkdf_sha256 = 0x0,
     /// value not defined
     undefined = 0xFF
 };

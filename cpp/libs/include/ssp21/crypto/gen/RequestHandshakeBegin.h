@@ -22,6 +22,8 @@
 #include "ssp21/crypto/gen/Function.h"
 #include "ssp21/crypto/gen/NonceMode.h"
 #include "ssp21/crypto/gen/SessionMode.h"
+#include "ssp21/crypto/gen/HandshakeKDF.h"
+#include "ssp21/crypto/gen/HandshakeMAC.h"
 #include "ssp21/crypto/gen/HandshakeHash.h"
 #include "ssp21/crypto/gen/CertificateMode.h"
 #include "ssp21/crypto/IMessage.h"
@@ -40,6 +42,8 @@ struct RequestHandshakeBegin final : public IMessage, private openpal::Uncopyabl
         NonceMode nonce_mode,
         DHMode dh_mode,
         HandshakeHash handshake_hash,
+        HandshakeKDF handshake_kdf,
+        HandshakeMAC handshake_mac,
         SessionMode session_mode,
         CertificateMode certificate_mode,
         const Seq8& ephemeral_public_key
@@ -49,13 +53,15 @@ struct RequestHandshakeBegin final : public IMessage, private openpal::Uncopyabl
     virtual FormatResult write(openpal::WSlice output) const override;
     virtual void print(IMessagePrinter& printer) const override;
 
-    static const uint32_t min_size_bytes = 10;
+    static const uint32_t min_size_bytes = 12;
     static const Function function = Function::request_handshake_begin;
 
     IntegerField<openpal::UInt16> version;
     EnumField<NonceModeSpec> nonce_mode;
     EnumField<DHModeSpec> dh_mode;
     EnumField<HandshakeHashSpec> handshake_hash;
+    EnumField<HandshakeKDFSpec> handshake_kdf;
+    EnumField<HandshakeMACSpec> handshake_mac;
     EnumField<SessionModeSpec> session_mode;
     EnumField<CertificateModeSpec> certificate_mode;
     Seq8 ephemeral_public_key;
