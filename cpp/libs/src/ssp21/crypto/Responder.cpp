@@ -89,6 +89,8 @@ namespace ssp21
                    Algorithms::Config(
                        msg.dh_mode,
                        msg.handshake_hash,
+                       msg.handshake_kdf,
+                       msg.handshake_mac,
                        msg.nonce_mode,
                        msg.session_mode
                    )

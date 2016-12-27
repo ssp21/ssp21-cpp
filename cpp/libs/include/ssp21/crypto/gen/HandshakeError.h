@@ -32,22 +32,26 @@ enum class HandshakeError : uint8_t
     unsupported_version = 0x1,
     /// The requested DH mode is not supported
     unsupported_dh_mode = 0x2,
-    /// The requested hash mode is not supported
-    unsupported_hash_mode = 0x3,
+    /// The requested handshake hash is not supported
+    unsupported_handshake_hash = 0x3,
+    /// The requested handshake KDF is not supported
+    unsupported_handshake_kdf = 0x4,
+    /// The requested handshake MAC is not supported
+    unsupported_handshake_mac = 0x5,
     /// The requested session mode is not supported
-    unsupported_session_mode = 0x4,
+    unsupported_session_mode = 0x6,
     /// The requested nonce verification mode is not supported
-    unsupported_nonce_mode = 0x5,
+    unsupported_nonce_mode = 0x7,
     /// The requested certificate mode is not supported
-    unsupported_certificate_mode = 0x6,
+    unsupported_certificate_mode = 0x8,
     /// One of the received certificates was improperly encoded
-    bad_certificate_format = 0x7,
+    bad_certificate_format = 0x9,
     /// One of the received certificates utilizes an unsupported feature
-    unsupported_certificate_feature = 0x8,
+    unsupported_certificate_feature = 0xA,
     /// The outstation was unable to authenticate the master
-    authentication_error = 0x9,
+    authentication_error = 0xB,
     /// The master requested handshake auth, but no prior handshake begin was received
-    no_prior_handshake_begin = 0xA,
+    no_prior_handshake_begin = 0xC,
     /// This value gets used internally in ssp21-cpp only
     none = 0xFD,
     /// value not defined

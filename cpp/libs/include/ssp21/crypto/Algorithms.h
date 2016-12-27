@@ -10,6 +10,8 @@
 
 #include "ssp21/crypto/gen/DHMode.h"
 #include "ssp21/crypto/gen/HandshakeHash.h"
+#include "ssp21/crypto/gen/HandshakeKDF.h"
+#include "ssp21/crypto/gen/HandshakeMAC.h"
 #include "ssp21/crypto/gen/NonceMode.h"
 #include "ssp21/crypto/gen/HandshakeError.h"
 #include "ssp21/crypto/gen/SessionMode.h"
@@ -31,16 +33,22 @@ namespace ssp21
             Config(
                 DHMode dh_mode,
                 HandshakeHash handshake_hash,
+                HandshakeKDF handshake_kdf,
+                HandshakeMAC handshake_mac,
                 NonceMode nonce_mode,
                 SessionMode session_mode) :
                 dh_mode(dh_mode),
                 handshake_hash(handshake_hash),
+                handshake_kdf(handshake_kdf),
+                handshake_mac(handshake_mac),
                 nonce_mode(nonce_mode),
                 session_mode(session_mode)
             {}
 
             DHMode dh_mode;
             HandshakeHash handshake_hash;
+            HandshakeKDF handshake_kdf;
+            HandshakeMAC handshake_mac;
             NonceMode nonce_mode;
             SessionMode session_mode;
         };

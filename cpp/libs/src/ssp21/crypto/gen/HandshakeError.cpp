@@ -32,20 +32,24 @@ HandshakeError HandshakeErrorSpec::from_type(uint8_t arg)
         case(0x2):
             return HandshakeError::unsupported_dh_mode;
         case(0x3):
-            return HandshakeError::unsupported_hash_mode;
+            return HandshakeError::unsupported_handshake_hash;
         case(0x4):
-            return HandshakeError::unsupported_session_mode;
+            return HandshakeError::unsupported_handshake_kdf;
         case(0x5):
-            return HandshakeError::unsupported_nonce_mode;
+            return HandshakeError::unsupported_handshake_mac;
         case(0x6):
-            return HandshakeError::unsupported_certificate_mode;
+            return HandshakeError::unsupported_session_mode;
         case(0x7):
-            return HandshakeError::bad_certificate_format;
+            return HandshakeError::unsupported_nonce_mode;
         case(0x8):
-            return HandshakeError::unsupported_certificate_feature;
+            return HandshakeError::unsupported_certificate_mode;
         case(0x9):
-            return HandshakeError::authentication_error;
+            return HandshakeError::bad_certificate_format;
         case(0xA):
+            return HandshakeError::unsupported_certificate_feature;
+        case(0xB):
+            return HandshakeError::authentication_error;
+        case(0xC):
             return HandshakeError::no_prior_handshake_begin;
         case(0xFF):
             return HandshakeError::internal;
@@ -65,8 +69,12 @@ const char* HandshakeErrorSpec::to_string(HandshakeError arg)
             return "unsupported_version";
         case(HandshakeError::unsupported_dh_mode):
             return "unsupported_dh_mode";
-        case(HandshakeError::unsupported_hash_mode):
-            return "unsupported_hash_mode";
+        case(HandshakeError::unsupported_handshake_hash):
+            return "unsupported_handshake_hash";
+        case(HandshakeError::unsupported_handshake_kdf):
+            return "unsupported_handshake_kdf";
+        case(HandshakeError::unsupported_handshake_mac):
+            return "unsupported_handshake_mac";
         case(HandshakeError::unsupported_session_mode):
             return "unsupported_session_mode";
         case(HandshakeError::unsupported_nonce_mode):

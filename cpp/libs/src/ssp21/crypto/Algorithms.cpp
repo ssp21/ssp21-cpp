@@ -22,11 +22,27 @@ namespace ssp21
         {
         case(HandshakeHash::sha256):
             algorithms.handshake.hash = &Crypto::hash_sha256;
-            algorithms.handshake.session_auth_mac = &Crypto::hmac_sha256;
+            break;
+        default:
+            return HandshakeError::unsupported_handshake_hash;
+        }
+
+        switch (config.handshake_kdf)
+        {
+        case(HandshakeKDF::hkdf_sha256):
             algorithms.handshake.kdf = &Crypto::hkdf_sha256;
             break;
         default:
-            return HandshakeError::unsupported_hash_mode;
+            return HandshakeError::unsupported_handshake_kdf;
+        }
+
+        switch (config.handshake_mac)
+        {
+        case(HandshakeMAC::hmac_sha256):
+            algorithms.handshake.session_auth_mac = &Crypto::hmac_sha256;
+            break;
+        default:
+            return HandshakeError::unsupported_handshake_mac;
         }
 
         switch (config.nonce_mode)
