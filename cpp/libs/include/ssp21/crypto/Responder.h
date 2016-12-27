@@ -99,8 +99,6 @@ namespace ssp21
             ILowerLayer* const lower;
             IUpperLayer* upper = nullptr;
 
-        private:
-
             openpal::Buffer tx_buffer;
         };
 

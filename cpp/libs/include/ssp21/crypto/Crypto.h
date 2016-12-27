@@ -43,8 +43,8 @@ namespace ssp21
             DHOutput& output,
             std::error_code& ec
         );
-        
-		// HKDF using HMAC-SHA256
+
+        // HKDF using HMAC-SHA256
         static void hkdf_sha256(
             const openpal::RSlice& chaining_key,
             std::initializer_list<openpal::RSlice> input_key_material,

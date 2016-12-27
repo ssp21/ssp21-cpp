@@ -31,10 +31,11 @@ namespace ssp21
 
         this->statistics.num_init.increment();
         this->valid = true;
-        this->rx_nonce = this->tx_nonce = nonce_start;
+        this->rx_nonce.set(nonce_start);
+        this->tx_nonce.set(nonce_start);
         this->algorithms = algorithms;
         this->session_start = session_start;
-        this->keys.copy(keys);        
+        this->keys.copy(keys);
 
         return true;
     }
@@ -81,86 +82,72 @@ namespace ssp21
         }
 
         // check the nonce
-        if (!this->algorithms.verify_nonce(this->rx_nonce, message.metadata.nonce.value))
+        if (!this->algorithms.verify_nonce(this->rx_nonce.get(), message.metadata.nonce.value))
         {
             this->statistics.num_nonce_fail.increment();
             ec = CryptoError::invalid_rx_nonce;
             return RSlice::empty_slice();
         }
 
-        this->rx_nonce = message.metadata.nonce.value;
+        this->rx_nonce.set(message.metadata.nonce.value);
         this->statistics.num_success.increment();
 
         return payload;
     }
 
-    RSlice Session::format_message(openpal::WSlice dest, bool fir, const openpal::Timestamp& now, openpal::RSlice& input, std::error_code& ec)
+    std::error_code Session::format_message(UnconfirmedSessionData& msg, bool fir, const openpal::Timestamp& now, openpal::RSlice& input)
     {
         if (!this->valid)
         {
-            ec = CryptoError::no_valid_session;
-            return RSlice::empty_slice();
+            return CryptoError::no_valid_session;
         }
 
-        if (this->tx_nonce == std::numeric_limits<uint16_t>::max())
+        if (this->tx_nonce.is_max_value())
         {
-            ec = CryptoError::invalid_tx_nonce;
-            return RSlice::empty_slice();
+            return CryptoError::invalid_tx_nonce;
         }
 
         const auto session_time_long = now.milliseconds - this->session_start.milliseconds;
         if (session_time_long > std::numeric_limits<uint32_t>::max())
         {
-            ec = CryptoError::ttl_overflow;
-            return RSlice::empty_slice();
+            return CryptoError::ttl_overflow;
         }
 
         const auto session_time = static_cast<uint32_t>(session_time_long);
         const auto remainder = std::numeric_limits<uint32_t>::max() - session_time;
         if (remainder < config.ttl_pad_ms)
         {
-            ec = CryptoError::ttl_overflow;
-            return RSlice::empty_slice();
+            return CryptoError::ttl_overflow;
         }
 
         // how big can the user data be?
-		const uint16_t max_user_data_length = this->algorithms.mode->max_writable_user_data_length(this->max_crypto_payload_length);
+        const uint16_t max_user_data_length = this->algorithms.mode->max_writable_user_data_length(this->max_crypto_payload_length);
         const auto fin = input.length() <= max_user_data_length;
         const auto user_data_length = fin ? input.length() : max_user_data_length;
         const auto user_data = input.take(user_data_length);
 
         // the metadata we're encoding
         AuthMetadata metadata(
-            this->tx_nonce + 1,
+            this->tx_nonce.get() + 1,
             session_time + config.ttl_pad_ms,
             SessionFlags(fir, fin)
         );
 
-
+        std::error_code ec;
         const auto payload = this->algorithms.mode->write(this->keys.tx_key, metadata, user_data, this->tx_payload_buffer.as_wslice(), ec);
         if (ec)
         {
-            return RSlice::empty_slice();
+            return ec;
         }
 
-        UnconfirmedSessionData msg(
-            metadata,
-            Seq16(payload)
-        );
-
-        const auto res = msg.write(dest);
-
-        if (res.is_error())
-        {
-            ec = FormatError::insufficient_space;
-            return RSlice::empty_slice();
-        }
+        msg.metadata = metadata;
+        msg.payload = Seq16(payload);
 
         // everything succeeded, so increment the nonce and advance the input buffer
-        this->tx_nonce++;
+        this->tx_nonce.increment();
         input.advance(user_data_length);
 
-        return res.written;
+        return ec;
     }
 
 }

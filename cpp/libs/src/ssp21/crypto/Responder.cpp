@@ -144,7 +144,35 @@ namespace ssp21
 
     void Responder::check_transmit()
     {
-        // TODO - check if we can transmit some data
+        /**
+        * 1) The session must be able to transmit
+        * 2) Lower-layer must be ready to transmit
+        * 3) transmission state must have some data to send
+        */
+        if (ctx.session.can_transmit() && ctx.lower->get_is_tx_ready() && ctx.tx.is_ready_tx())
+        {
+            auto remainder = this->ctx.tx.get_remainder();
+            const auto fir = this->ctx.tx.get_fir();
+            const auto now = this->ctx.executor->get_time();
+
+            UnconfirmedSessionData msg;
+            const auto err = ctx.session.format_message(msg, fir, now, remainder);
+            if (err)
+            {
+                FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "Error formatting session message: %s", err.message().c_str());
+                return;
+            }
+
+            const auto result = this->ctx.write_msg(msg);
+
+            if (result.is_error())
+            {
+                FORMAT_LOG_BLOCK(ctx.logger, levels::error, "Error writing session message: %s", FormatErrorSpec::to_string(result.err));
+                return;
+            }
+
+            this->ctx.transmit_to_lower(msg, result.written);
+        }
     }
 
     bool Responder::transmit(const openpal::RSlice& data)

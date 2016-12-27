@@ -23,16 +23,16 @@ namespace ssp21
         void reset()
         {
             this->fir = false;
-            this->active = false;
+            this->transmitting = false;
             this->remainder.make_empty();
         }
 
         bool begin(const openpal::RSlice& data)
         {
-            if (active) return false;
+            if (transmitting) return false;
 
             this->fir = true;
-            this->active = true;
+            this->transmitting = false;
             this->remainder = data;
 
             return true;
@@ -40,9 +40,10 @@ namespace ssp21
 
         bool transmit_some(const openpal::RSlice& remainder)
         {
-            if (!active) return false;
+            if (!transmitting) return false;
 
             this->fir = false;
+            this->transmitting = true;
             this->remainder = remainder;
 
             return true;
@@ -52,7 +53,17 @@ namespace ssp21
 
         bool is_active() const
         {
-            return active;
+            return transmitting || remainder.is_not_empty();
+        }
+
+        bool is_ready_tx() const
+        {
+            return !transmitting && remainder.is_not_empty();
+        }
+
+        bool is_transmitting() const
+        {
+            return transmitting;
         }
 
         openpal::RSlice get_remainder() const
@@ -68,7 +79,7 @@ namespace ssp21
     private:
 
         bool fir = false;
-        bool active = false;
+        bool transmitting = false;
         openpal::RSlice remainder;
 
     };

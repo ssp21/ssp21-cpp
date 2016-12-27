@@ -7,15 +7,14 @@
 #include "openpal/executor/Timestamp.h"
 #include "openpal/container/Buffer.h"
 
-#include "ssp21/crypto/BufferTypes.h"
-#include "ssp21/crypto/SessionModes.h"
+#include "ssp21/crypto/Nonce.h"
+#include "ssp21/crypto/Constants.h"
 #include "ssp21/crypto/Algorithms.h"
 #include "ssp21/crypto/Statistics.h"
+#include "ssp21/crypto/BufferTypes.h"
+#include "ssp21/crypto/SessionModes.h"
 
 #include "ssp21/crypto/gen/UnconfirmedSessionData.h"
-
-#include "ssp21/crypto/Constants.h"
-
 
 namespace ssp21
 {
@@ -45,7 +44,12 @@ namespace ssp21
 
         openpal::RSlice validate_message(const UnconfirmedSessionData& message, const openpal::Timestamp& now, std::error_code& ec);
 
-        openpal::RSlice format_message(openpal::WSlice dest, bool fir, const openpal::Timestamp& now, openpal::RSlice& input, std::error_code& ec);
+        std::error_code format_message(UnconfirmedSessionData& msg, bool fir, const openpal::Timestamp& now, openpal::RSlice& cleartext);
+
+        bool can_transmit() const
+        {
+            return this->valid && !tx_nonce.is_max_value();
+        }
 
     private:
 
@@ -58,14 +62,14 @@ namespace ssp21
         Config config;
 
         // calculated during construction
-        const uint16_t max_crypto_payload_length;        
+        const uint16_t max_crypto_payload_length;
 
         openpal::Buffer rx_auth_buffer;
         openpal::Buffer tx_payload_buffer;
 
         bool valid = false;
-        uint16_t rx_nonce = 0;
-        uint16_t tx_nonce = 0;
+        Nonce rx_nonce;
+        Nonce tx_nonce;
 
         SessionKeys keys;
         Algorithms::Session algorithms;
