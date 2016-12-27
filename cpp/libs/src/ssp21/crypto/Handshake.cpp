@@ -34,12 +34,22 @@ namespace ssp21
 
     bool Handshake::auth_handshake(const openpal::RSlice& mac) const
     {
-        return this->algorithms.handshake.auth_handshake(this->authentication_key, this->id, mac);
+		return HandshakeAuthentication::auth_handshake_with_mac(
+			this->algorithms.handshake.session_auth_mac,
+			this->authentication_key,
+			this->id,
+			mac
+		);
     }
 
     void Handshake::calc_auth_handshake_reply_mac(HashOutput& output) const
     {
-        return this->algorithms.handshake.calc_handshake_mac(this->authentication_key, this->id, output);
+		HandshakeAuthentication::calc_handshake_mac_with_macfunc(
+			this->algorithms.handshake.session_auth_mac,
+			this->authentication_key,
+			this->id,
+			output
+		);        
     }
 
     void Handshake::derive_authentication_key(

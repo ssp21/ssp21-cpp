@@ -62,8 +62,6 @@ namespace ssp21
             hash_func_t hash = &Crypto::hash_sha256;
             mac_func_t session_auth_mac = &Crypto::hmac_sha256;
             gen_keypair_func_t gen_keypair = &Crypto::gen_keypair_x25519;
-            auth_handshake_t auth_handshake = HandshakeAuthentication::default_auth_handshake();
-            calc_handshake_mac_t calc_handshake_mac = HandshakeAuthentication::default_calc_handshake_mac();
         };
 
         // default constructor initializes with default algorithms

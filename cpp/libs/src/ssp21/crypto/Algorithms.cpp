@@ -23,9 +23,7 @@ namespace ssp21
         case(HashMode::sha256):
             algorithms.handshake.hash = &Crypto::hash_sha256;
             algorithms.handshake.session_auth_mac = &Crypto::hmac_sha256;
-            algorithms.handshake.kdf = &Crypto::hkdf_sha256;
-            algorithms.handshake.auth_handshake = &HandshakeAuthentication::auth_handshake_hmac_sha256;
-            algorithms.handshake.calc_handshake_mac = &HandshakeAuthentication::calc_handshake_hmac_sha256;
+            algorithms.handshake.kdf = &Crypto::hkdf_sha256;            
             break;
         default:
             return HandshakeError::unsupported_hash_mode;
