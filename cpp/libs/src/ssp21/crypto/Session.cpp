@@ -30,7 +30,10 @@ namespace ssp21
         if (!keys.valid()) return false;
 
         this->statistics.num_init.increment();
-        this->valid = true;
+
+        this->rx_valid = true;
+        this->tx_valid = true;
+
         this->rx_nonce.set(nonce_start);
         this->tx_nonce.set(nonce_start);
         this->algorithms = algorithms;
@@ -43,12 +46,13 @@ namespace ssp21
     void Session::reset()
     {
         this->statistics.num_reset.increment();
-        this->valid = false;
+        this->rx_valid = false;
+        this->tx_valid = false;
     }
 
     RSlice Session::validate_message(const UnconfirmedSessionData& message, const openpal::Timestamp& now, std::error_code& ec)
     {
-        if (!this->valid)
+        if (!this->rx_valid)
         {
             this->statistics.num_user_data_without_session.increment();
             ec = CryptoError::no_valid_session;
@@ -95,9 +99,20 @@ namespace ssp21
         return payload;
     }
 
-    std::error_code Session::format_message(UnconfirmedSessionData& msg, bool fir, const openpal::Timestamp& now, openpal::RSlice& input)
+    std::error_code Session::format_message(UnconfirmedSessionData& msg, bool fir, const openpal::Timestamp& now, openpal::RSlice& cleartext)
     {
-        if (!this->valid)
+        const auto ret = this->format_message_impl(msg, fir, now, cleartext);
+        if (ret)
+        {
+            // any error invalidates the tx direction of the session
+            this->tx_valid = false;
+        }
+        return ret;
+    }
+
+    std::error_code Session::format_message_impl(UnconfirmedSessionData& msg, bool fir, const openpal::Timestamp& now, openpal::RSlice& input)
+    {
+        if (!this->tx_valid)
         {
             return CryptoError::no_valid_session;
         }

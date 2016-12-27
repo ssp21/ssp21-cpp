@@ -48,10 +48,12 @@ namespace ssp21
 
         bool can_transmit() const
         {
-            return this->valid && !tx_nonce.is_max_value();
+            return this->tx_valid && !tx_nonce.is_max_value();
         }
 
     private:
+
+        std::error_code format_message_impl(UnconfirmedSessionData& msg, bool fir, const openpal::Timestamp& now, openpal::RSlice& cleartext);
 
         /**
         * Given a maximum link layer payload, how big could the crypto payload be?
@@ -67,7 +69,9 @@ namespace ssp21
         openpal::Buffer rx_auth_buffer;
         openpal::Buffer tx_payload_buffer;
 
-        bool valid = false;
+        bool rx_valid = false;
+        bool tx_valid = false;
+
         Nonce rx_nonce;
         Nonce tx_nonce;
 

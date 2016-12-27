@@ -113,14 +113,17 @@ namespace ssp21
         this->ctx.session.reset();
         this->ctx.reassembler.reset();
         this->ctx.upper->on_close();
-        this->ctx.tx.reset();
+        this->ctx.tx_state.reset();
 
         this->reset_lower_layer();
     }
 
     void Responder::on_tx_ready_impl()
     {
+        ctx.tx_state.on_tx_complete();
+
         this->check_receive();
+        this->check_transmit();
     }
 
     void Responder::on_rx_ready_impl()
@@ -149,10 +152,10 @@ namespace ssp21
         * 2) Lower-layer must be ready to transmit
         * 3) transmission state must have some data to send
         */
-        if (ctx.session.can_transmit() && ctx.lower->get_is_tx_ready() && ctx.tx.is_ready_tx())
+        if (ctx.session.can_transmit() && ctx.lower->get_is_tx_ready() && ctx.tx_state.is_ready_tx())
         {
-            auto remainder = this->ctx.tx.get_remainder();
-            const auto fir = this->ctx.tx.get_fir();
+            auto remainder = this->ctx.tx_state.get_remainder();
+            const auto fir = this->ctx.tx_state.get_fir();
             const auto now = this->ctx.executor->get_time();
 
             UnconfirmedSessionData msg;
@@ -171,6 +174,8 @@ namespace ssp21
                 return;
             }
 
+            ctx.tx_state.begin_transmit(remainder);
+
             this->ctx.transmit_to_lower(msg, result.written);
         }
     }
@@ -188,7 +193,7 @@ namespace ssp21
         }
 
         // already transmitting on behalf on the upper layer
-        if (!ctx.tx.begin(data))
+        if (!ctx.tx_state.initialize(data))
         {
             return false;
         }

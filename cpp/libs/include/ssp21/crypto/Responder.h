@@ -94,7 +94,7 @@ namespace ssp21
             Handshake handshake;
             Session session;
             Reassembler reassembler;
-            TxState tx;
+            TxState tx_state;
 
             ILowerLayer* const lower;
             IUpperLayer* upper = nullptr;

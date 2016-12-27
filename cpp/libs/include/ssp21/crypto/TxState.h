@@ -27,7 +27,7 @@ namespace ssp21
             this->remainder.make_empty();
         }
 
-        bool begin(const openpal::RSlice& data)
+        bool initialize(const openpal::RSlice& data)
         {
             if (transmitting) return false;
 
@@ -38,7 +38,12 @@ namespace ssp21
             return true;
         }
 
-        bool transmit_some(const openpal::RSlice& remainder)
+        void on_tx_complete()
+        {
+            this->transmitting = false;
+        }
+
+        bool begin_transmit(const openpal::RSlice& remainder)
         {
             if (!transmitting) return false;
 
