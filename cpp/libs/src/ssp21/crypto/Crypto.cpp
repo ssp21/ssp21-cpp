@@ -65,7 +65,7 @@ namespace ssp21
         SymmetricKey& output1,
         SymmetricKey& output2)
     {
-        hkdf(&hmac_sha256, chaining_key, input_key_material, output1, output2);
+        hkdf<hmac_sha256>(chaining_key, input_key_material, output1, output2);
     }
 
     void Crypto::inititalize(ICryptoBackend& backend)
