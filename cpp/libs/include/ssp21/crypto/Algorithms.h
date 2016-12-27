@@ -58,7 +58,7 @@ namespace ssp21
             Handshake() = default;
 
             dh_func_t dh = &Crypto::dh_x25519;
-            hkdf_func_t hkdf = &Crypto::hkdf_sha256;
+            kdf_func_t kdf = &Crypto::hkdf_sha256;
             hash_func_t hash = &Crypto::hash_sha256;
             mac_func_t session_auth_mac = &Crypto::hmac_sha256;
             gen_keypair_func_t gen_keypair = &Crypto::gen_keypair_x25519;

@@ -26,7 +26,7 @@ namespace ssp21
         std::error_code& ec
     );
 
-    typedef void (*hkdf_func_t)(
+    typedef void (*kdf_func_t)(
         const openpal::RSlice& chaining_key,
         std::initializer_list<openpal::RSlice> input_key_material,
         SymmetricKey& key1,
