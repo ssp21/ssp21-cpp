@@ -26,22 +26,12 @@ RequestHandshakeBegin::RequestHandshakeBegin()
 
 RequestHandshakeBegin::RequestHandshakeBegin(
     uint16_t version,
-    NonceMode nonce_mode,
-    DHMode dh_mode,
-    HandshakeHash handshake_hash,
-    HandshakeKDF handshake_kdf,
-    HandshakeMAC handshake_mac,
-    SessionMode session_mode,
+    const CryptoSpec& spec,
     CertificateMode certificate_mode,
     const Seq8& ephemeral_public_key
 ) :
     version(version),
-    nonce_mode(nonce_mode),
-    dh_mode(dh_mode),
-    handshake_hash(handshake_hash),
-    handshake_kdf(handshake_kdf),
-    handshake_mac(handshake_mac),
-    session_mode(session_mode),
+    spec(spec),
     certificate_mode(certificate_mode),
     ephemeral_public_key(ephemeral_public_key)
 {}
@@ -54,12 +44,7 @@ ParseError RequestHandshakeBegin::read(openpal::RSlice input)
         return MessageParser::read_fields(
             input,
             version,
-            nonce_mode,
-            dh_mode,
-            handshake_hash,
-            handshake_kdf,
-            handshake_mac,
-            session_mode,
+            spec,
             certificate_mode,
             ephemeral_public_key,
             certificates
@@ -76,12 +61,7 @@ FormatResult RequestHandshakeBegin::write(openpal::WSlice output) const
         return MessageFormatter::write_fields(
             output,
             version,
-            nonce_mode,
-            dh_mode,
-            handshake_hash,
-            handshake_kdf,
-            handshake_mac,
-            session_mode,
+            spec,
             certificate_mode,
             ephemeral_public_key,
             certificates
@@ -96,18 +76,8 @@ void RequestHandshakeBegin::print(IMessagePrinter& printer) const
         printer,
         "version",
         version,
-        "nonce_mode",
-        nonce_mode,
-        "dh_mode",
-        dh_mode,
-        "handshake_hash",
-        handshake_hash,
-        "handshake_kdf",
-        handshake_kdf,
-        "handshake_mac",
-        handshake_mac,
-        "session_mode",
-        session_mode,
+        "spec",
+        spec,
         "certificate_mode",
         certificate_mode,
         "ephemeral_public_key",

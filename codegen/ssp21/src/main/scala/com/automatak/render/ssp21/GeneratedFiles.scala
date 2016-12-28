@@ -41,7 +41,7 @@ object GeneratedFiles {
     SessionFlags
   ).map(x => BitfieldStructGenerator(x))
 
-  private def structs: List[WriteCppFiles] = List(AuthMetadata).map(x => StructGenerator(x))
+  private def structs: List[WriteCppFiles] = List(AuthMetadata, CryptoSpec).map(x => StructGenerator(x))
 
   private def messsages: List[WriteCppFiles] = List(
     RequestHandshakeBegin,

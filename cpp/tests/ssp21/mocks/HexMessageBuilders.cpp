@@ -63,12 +63,14 @@ namespace ssp21
 
             RequestHandshakeBegin msg(
                 version,
-                nonce_mode,
-                dh_mode,
-                handshake_hash,
-                handshake_kdf,
-                handshake_mac,
-                session_mode,
+                CryptoSpec(
+                    nonce_mode,
+                    dh_mode,
+                    handshake_hash,
+                    handshake_kdf,
+                    handshake_mac,
+                    session_mode
+                ),
                 certificate_mode,
                 Seq8(pub_key.as_rslice())
             );

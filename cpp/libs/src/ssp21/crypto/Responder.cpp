@@ -85,16 +85,7 @@ namespace ssp21
         }
 
         // last thing we should do is configure the requested algorithms
-        return handshake.set_algorithms(
-                   Algorithms::Config(
-                       msg.dh_mode,
-                       msg.handshake_hash,
-                       msg.handshake_kdf,
-                       msg.handshake_mac,
-                       msg.nonce_mode,
-                       msg.session_mode
-                   )
-               );
+        return handshake.set_algorithms(msg.spec);
     }
 
     Responder::Responder(const Config& config,

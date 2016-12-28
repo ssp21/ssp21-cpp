@@ -27,7 +27,7 @@ namespace ssp21
         explicit Handshake(EntityId id) : id(id)
         {}
 
-        HandshakeError set_algorithms(const Algorithms::Config& config);
+        HandshakeError set_algorithms(const CryptoSpec& spec);
 
         /// generates new ephemeral keys, resets all state, and returns a slice pointing
         /// to the ephemeral public DH key

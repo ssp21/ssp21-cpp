@@ -67,12 +67,12 @@ TEST_CASE(SUITE("successfully parses message"))
     auto err = msg.read(input);
     REQUIRE(!any(err));
     REQUIRE(msg.version == 0xD1D2);
-    REQUIRE(msg.nonce_mode == NonceMode::increment_last_rx);
-    REQUIRE(msg.dh_mode == DHMode::x25519);
-    REQUIRE(msg.handshake_hash == HandshakeHash::sha256);
-    REQUIRE(msg.handshake_kdf == HandshakeKDF::hkdf_sha256);
-    REQUIRE(msg.handshake_mac == HandshakeMAC::hmac_sha256);
-    REQUIRE(msg.session_mode == SessionMode::hmac_sha256_16);
+    REQUIRE(msg.spec.nonce_mode == NonceMode::increment_last_rx);
+    REQUIRE(msg.spec.dh_mode == DHMode::x25519);
+    REQUIRE(msg.spec.handshake_hash == HandshakeHash::sha256);
+    REQUIRE(msg.spec.handshake_kdf == HandshakeKDF::hkdf_sha256);
+    REQUIRE(msg.spec.handshake_mac == HandshakeMAC::hmac_sha256);
+    REQUIRE(msg.spec.session_mode == SessionMode::hmac_sha256_16);
     REQUIRE(msg.certificate_mode == CertificateMode::preshared_keys);
 
     REQUIRE(to_hex(msg.ephemeral_public_key) == "AA AA AA");
@@ -92,12 +92,14 @@ TEST_CASE(SUITE("pretty prints message"))
 
     RequestHandshakeBegin msg(
         7,
-        NonceMode::greater_than_last_rx,
-        DHMode::x25519,
-        HandshakeHash::sha256,
-        HandshakeKDF::hkdf_sha256,
-        HandshakeMAC::hmac_sha256,
-        SessionMode::hmac_sha256_16,
+        CryptoSpec(
+            NonceMode::greater_than_last_rx,
+            DHMode::x25519,
+            HandshakeHash::sha256,
+            HandshakeKDF::hkdf_sha256,
+            HandshakeMAC::hmac_sha256,
+            SessionMode::hmac_sha256_16
+        ),
         CertificateMode::preshared_keys,
         Seq8(publicKey)
     );
