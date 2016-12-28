@@ -4,7 +4,6 @@
 #include "openpal/container/StaticBuffer.h"
 
 #include "testlib/HexConversions.h"
-#include "testlib/Hex.h"
 
 #include "ssp21/crypto/gen/RequestHandshakeBegin.h"
 #include "ssp21/crypto/gen/ReplyHandshakeBegin.h"
@@ -12,6 +11,8 @@
 #include "ssp21/crypto/gen/ReplyHandshakeAuth.h"
 #include "ssp21/crypto/gen/ReplyHandshakeError.h"
 #include "ssp21/crypto/gen/SessionData.h"
+
+#include "HexSequences.h"
 
 #include "MakeUnique.h"
 
@@ -59,7 +60,7 @@ namespace ssp21
             std::initializer_list<std::string> certificates
         )
         {
-            Hex pub_key(hex_ephem_pub_key);
+            HexSeq8 pub_key(hex_ephem_pub_key);
 
             RequestHandshakeBegin msg(
                 version,
@@ -72,15 +73,15 @@ namespace ssp21
                     session_mode
                 ),
                 certificate_mode,
-                Seq8(pub_key.as_rslice())
+                pub_key
             );
 
-            std::vector<std::unique_ptr<Hex>> certificate_slices;
+            std::vector<std::unique_ptr<HexSeq16>> certificate_slices;
 
             for (auto& cert : certificates)
             {
-                auto hex = std::make_unique<Hex>(cert);
-                msg.certificates.push(hex->as_rslice());
+                auto hex = std::make_unique<HexSeq16>(cert);
+                msg.certificates.push(hex->to_seq());
                 certificate_slices.push_back(std::move(hex));
             }
 
@@ -89,15 +90,15 @@ namespace ssp21
 
         std::string request_handshake_auth(const std::string& mac)
         {
-            Hex mac_bytes(mac);
-            RequestHandshakeAuth request(Seq8(mac_bytes.as_rslice()));
+            HexSeq8 mac_bytes(mac);
+            RequestHandshakeAuth request(mac_bytes);
             return write_message(request);
         }
 
         std::string reply_handshake_auth(const std::string& mac)
         {
-            Hex mac_bytes(mac);
-            ReplyHandshakeAuth reply(Seq8(mac_bytes.as_rslice()));
+            HexSeq8 mac_bytes(mac);
+            ReplyHandshakeAuth reply(mac_bytes);
             return write_message(reply);
         }
 
@@ -106,16 +107,16 @@ namespace ssp21
             std::initializer_list<std::string> certificates
         )
         {
-            Hex pub_key(hex_ephem_pub_key);
+            HexSeq8 pub_key(hex_ephem_pub_key);
 
-            ReplyHandshakeBegin msg(Seq8(pub_key.as_rslice()));
+            ReplyHandshakeBegin msg(pub_key);
 
-            std::vector<std::unique_ptr<Hex>> certificate_slices;
+            std::vector<std::unique_ptr<HexSeq16>> certificate_slices;
 
             for (auto& cert : certificates)
             {
-                auto hex = std::make_unique<Hex>(cert);
-                msg.certificates.push(hex->as_rslice());
+                auto hex = std::make_unique<HexSeq16>(cert);
+                msg.certificates.push(*hex);
                 certificate_slices.push_back(std::move(hex));
             }
 
@@ -130,8 +131,8 @@ namespace ssp21
 
         std::string session_data(uint16_t nonce, uint32_t valid_until, bool fir, bool fin, const std::string& user_data, const std::string& auth_tag)
         {
-            Hex user_data_hex(user_data);
-            Hex auth_tag_hex(auth_tag);
+            HexSeq16 user_data_hex(user_data);
+            HexSeq8 auth_tag_hex(auth_tag);
 
             SessionData msg(
                 AuthMetadata(
@@ -139,8 +140,8 @@ namespace ssp21
                     valid_until,
                     SessionFlags(fir, fin)
                 ),
-                Seq16(user_data_hex.as_rslice()),
-                Seq8(auth_tag_hex.as_rslice())
+                user_data_hex,
+                auth_tag_hex
             );
 
             return write_message(msg);

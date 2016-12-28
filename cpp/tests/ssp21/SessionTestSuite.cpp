@@ -4,12 +4,12 @@
 #include "ssp21/crypto/Session.h"
 #include "ssp21/crypto/gen/CryptoError.h"
 
-#include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
 
 #include "mocks/MockCryptoBackend.h"
 
 #include "mocks/HexMessageBuilders.h"
+#include "mocks/HexSequences.h"
 
 #include <array>
 
@@ -190,8 +190,8 @@ void init(Session& session, uint16_t nonce_start, Timestamp session_init_time)
 
 std::string validate(Session& session, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex, std::error_code& ec)
 {
-    Hex user_data(user_data_hex);
-    Hex auth_tag(auth_tag_hex);
+    HexSeq16 user_data(user_data_hex);
+    HexSeq8 auth_tag(auth_tag_hex);
 
     SessionData msg(
         AuthMetadata(
@@ -199,8 +199,8 @@ std::string validate(Session& session, uint16_t nonce, uint32_t ttl, int64_t now
             ttl,
             SessionFlags(true, true)
         ),
-        Seq16(user_data.as_rslice()),
-        Seq8(auth_tag.as_rslice())
+        user_data,
+        auth_tag
     );
 
     return to_hex(session.validate_message(msg, Timestamp(now), ec));

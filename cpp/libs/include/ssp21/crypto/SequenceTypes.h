@@ -9,50 +9,67 @@
 
 #include "ssp21/crypto/gen/FormatError.h"
 #include "ssp21/crypto/gen/ParseError.h"
-#include "ssp21/crypto/IMessagePrinter.h"
 #include "ssp21/crypto/Constants.h"
 
 
 namespace ssp21
 {
-    class Seq8 final : public openpal::RSlice
+    class IMessagePrinter;
+
+    class Seq8 final : public openpal::RSeq<uint8_t, uint8_t, Seq8>
     {
     public:
 
-        Seq8() : openpal::RSlice()
+        Seq8() {}
+
+        static Seq8 from(const openpal::RSlice& data, uint8_t length);
+
+        Seq8(uint8_t const* buffer, uint8_t length) : RSeq(buffer, length)
         {}
+
+        operator openpal::RSlice() const
+        {
+            return openpal::RSlice(buffer_, length_);
+        }
+
+        ParseError read(openpal::RSlice& input);
+        FormatError write(openpal::WSlice& output) const;
+        void print(const char* name, IMessagePrinter& printer) const;
+    };
+
+    class Seq16 final : public openpal::RSeq<uint8_t, uint16_t, Seq16>
+    {
+    public:
+
+        Seq16() {}
+
+        static Seq16 from(const openpal::RSlice& data, uint16_t length);
+
+        Seq16(uint8_t const* buffer, uint16_t length) : RSeq(buffer, length)
+        {}
+
+        openpal::RSlice as_rslice() const
+        {
+            return openpal::RSlice(buffer_, length_);
+        }
+
+        operator openpal::RSlice() const
+        {
+            return openpal::RSlice(buffer_, length_);
+        }
 
         ParseError read(openpal::RSlice& input);
         FormatError write(openpal::WSlice& output) const;
         void print(const char* name, IMessagePrinter& printer) const;
 
-
-
-        explicit Seq8(const openpal::RSlice& other) : RSlice(other)
-        {}
     };
 
-    class Seq16 final : public openpal::RSlice
-    {
-    public:
-
-        Seq16() : openpal::RSlice()
-        {}
-
-        ParseError read(openpal::RSlice& input);
-        FormatError write(openpal::WSlice& output) const;
-        void print(const char* name, IMessagePrinter& printer) const;
-
-        explicit Seq16(const openpal::RSlice& other) : RSlice(other)
-        {}
-    };
-
-    class SeqRSlice
+    class Seq8Seq16
     {
 
     public:
 
-        SeqRSlice();
+        Seq8Seq16();
 
         ParseError read(openpal::RSlice& input);
         FormatError write(openpal::WSlice& output) const;
@@ -60,20 +77,18 @@ namespace ssp21
 
         void clear();
 
-        bool push(const openpal::RSlice& slice);
+        bool push(const Seq16& slice);
 
-        bool read(uint32_t i, openpal::RSlice& slice) const;
+        bool read(uint32_t i, Seq16& slice) const;
 
-        uint32_t count() const;
+        uint8_t count() const;
 
     private:
 
-        uint32_t count_;
-        openpal::RSlice slices_[consts::crypto::max_seq_of_seq];
+        uint8_t count_;
+        Seq16 slices_[consts::crypto::max_seq_of_seq];
     };
 
-    // specialized types with type dependent constraints
-    class Seq8Seq16 final : public SeqRSlice { };
 }
 
 #endif

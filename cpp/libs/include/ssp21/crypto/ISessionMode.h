@@ -2,7 +2,7 @@
 #ifndef SSP21_ISESSIONMODE_H
 #define SSP21_ISESSIONMODE_H
 
-#include "openpal/container/RSlice.h"
+#include "ssp21/crypto/SequenceTypes.h"
 #include "openpal/container/WSlice.h"
 
 #include "ssp21/crypto/BufferTypes.h"
@@ -31,7 +31,7 @@ namespace ssp21
         *
         * @return A slice pointing to the cleartext. This slice will be empty if an error occured.
         */
-        virtual openpal::RSlice read(
+        virtual Seq16 read(
             const SymmetricKey& key,
             const SessionData& msg,
             openpal::WSlice dest,
@@ -50,10 +50,10 @@ namespace ssp21
         *
         * @return A slice pointing to the possibly encrypted user data. This slice will be empty if an error occured.
         */
-        virtual openpal::RSlice write(
+        virtual Seq16 write(
             const SymmetricKey& key,
             const AuthMetadata& metadata,
-            const openpal::RSlice& user_data,
+            const Seq16& user_data,
             AuthenticationTag& auth_tag,
             openpal::WSlice dest,
             std::error_code& ec

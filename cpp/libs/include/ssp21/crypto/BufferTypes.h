@@ -4,6 +4,8 @@
 
 #include "Constants.h"
 
+#include "ssp21/crypto/SequenceTypes.h"
+
 #include <openpal/util/Uncopyable.h>
 #include <openpal/container/StaticBuffer.h>
 
@@ -25,7 +27,7 @@ namespace ssp21
 
         virtual ~BufferBase() {}
 
-        openpal::RSlice as_slice() const;
+        Seq8 as_slice() const;
 
         BufferType get_type() const;
 
@@ -41,9 +43,9 @@ namespace ssp21
 
     private:
 
-        static uint32_t get_buffer_length(BufferType);
+        static uint8_t get_buffer_length(BufferType);
 
-        uint32_t length = 0;
+        uint8_t length = 0;
         BufferType buffer_type = BufferType::empty;
 
     protected:

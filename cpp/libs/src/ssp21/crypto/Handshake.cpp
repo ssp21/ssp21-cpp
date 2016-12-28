@@ -10,7 +10,7 @@ namespace ssp21
         return this->algorithms.configure(spec);
     }
 
-    openpal::RSlice Handshake::initialize()
+    Seq8 Handshake::initialize()
     {
         this->algorithms.handshake.gen_keypair(this->local_ephemeral_keys);
 

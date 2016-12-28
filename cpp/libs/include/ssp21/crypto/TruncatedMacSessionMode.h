@@ -16,22 +16,22 @@ namespace ssp21
 
         TruncatedMacSessionMode(
             mac_func_t const mac_func,
-            const uint16_t auth_tag_length,
+            const uint8_t auth_tag_length,
             BufferType buffer_type
         ) : mac_func(mac_func), auth_tag_length(auth_tag_length), buffer_type(buffer_type)
         {}
 
-        virtual openpal::RSlice read(
+        virtual Seq16 read(
             const SymmetricKey& key,
             const SessionData& msg,
             openpal::WSlice dest,
             std::error_code& ec
         ) const override;
 
-        virtual openpal::RSlice write(
+        virtual Seq16 write(
             const SymmetricKey& key,
             const AuthMetadata& metadata,
-            const openpal::RSlice& userdata,
+            const Seq16& user_data,
             AuthenticationTag& auth_tag,
             openpal::WSlice dest,
             std::error_code& ec
@@ -42,7 +42,7 @@ namespace ssp21
     private:
 
         mac_func_t const mac_func;
-        const uint16_t auth_tag_length;
+        const uint8_t auth_tag_length;
         BufferType buffer_type;
 
     };

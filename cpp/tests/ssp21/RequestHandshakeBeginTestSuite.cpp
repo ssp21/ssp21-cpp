@@ -5,12 +5,12 @@
 #include "ssp21/crypto/gen/RequestHandshakeBegin.h"
 #include "ssp21/crypto/LogMessagePrinter.h"
 
-#include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
 
 #include "openpal/container/StaticBuffer.h"
 
 #include "mocks/MockLogHandler.h"
+#include "mocks/HexSequences.h"
 
 #define SUITE(name) "RequestHandshakeBeginTestSuite - " name
 
@@ -86,9 +86,9 @@ TEST_CASE(SUITE("successfully parses message"))
 TEST_CASE(SUITE("pretty prints message"))
 {
 
-    Hex publicKey("CA FE");
-    Hex cert1("AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA");
-    Hex cert2("CC DD");
+    HexSeq8 publicKey("CA FE");
+    HexSeq16 cert1("AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA");
+    HexSeq16 cert2("CC DD");
 
     RequestHandshakeBegin msg(
         7,
@@ -101,11 +101,11 @@ TEST_CASE(SUITE("pretty prints message"))
             SessionMode::hmac_sha256_16
         ),
         CertificateMode::preshared_keys,
-        Seq8(publicKey)
+        publicKey
     );
 
-    REQUIRE(msg.certificates.push(cert1));
-    REQUIRE(msg.certificates.push(cert2));
+    REQUIRE(msg.certificates.push(cert1.to_seq()));
+    REQUIRE(msg.certificates.push(cert2.to_seq()));
 
 
     MockLogHandler log("log");

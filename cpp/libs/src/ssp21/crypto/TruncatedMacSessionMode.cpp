@@ -10,7 +10,7 @@ namespace ssp21
 {
 
 
-    openpal::RSlice TruncatedMacSessionMode::read(
+    Seq16 TruncatedMacSessionMode::read(
         const SymmetricKey& key,
         const SessionData& msg,
         openpal::WSlice, // ignored in MAC mode
@@ -31,17 +31,17 @@ namespace ssp21
         if (!Crypto::secure_equals(msg.auth_tag, truncated_mac)) // authentication failure
         {
             ec = CryptoError::mac_auth_fail;
-            return openpal::RSlice::empty_slice();
+            return Seq16::empty_slice();
         }
 
         // we're authenticated, so return the user_data slice
         return msg.user_data;
     }
 
-    openpal::RSlice TruncatedMacSessionMode::write(
+    Seq16 TruncatedMacSessionMode::write(
         const SymmetricKey& key,
         const AuthMetadata& metadata,
-        const openpal::RSlice& user_data,
+        const Seq16& user_data,
         AuthenticationTag& auth_tag,
         openpal::WSlice,
         std::error_code& ec
@@ -54,7 +54,7 @@ namespace ssp21
         if (user_data.length() > max_userdata_length)
         {
             ec = CryptoError::bad_buffer_size;
-            return RSlice::empty_slice();
+            return Seq16::empty_slice();
         }
 
         metadata_buffer_t buffer;

@@ -31,7 +31,7 @@ namespace ssp21
 
         /// generates new ephemeral keys, resets all state, and returns a slice pointing
         /// to the ephemeral public DH key
-        openpal::RSlice initialize();
+        Seq8 initialize();
 
         /// calculate a new ck: ck = hash(input)
         void set_ck(const openpal::RSlice& input);

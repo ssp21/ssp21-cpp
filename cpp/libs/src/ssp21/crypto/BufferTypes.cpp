@@ -7,9 +7,9 @@
 
 namespace ssp21
 {
-    openpal::RSlice BufferBase::as_slice() const
+    Seq8 BufferBase::as_slice() const
     {
-        return this->buffer.as_rslice().take(this->length);
+        return Seq8::from(this->buffer.as_rslice(), this->length);
     }
 
     BufferType BufferBase::get_type() const
@@ -33,7 +33,7 @@ namespace ssp21
         memcpy(this->buffer.as_wslice(), other.buffer.as_rslice(), consts::crypto::max_primitive_buffer_length);
     }
 
-    uint32_t BufferBase::get_buffer_length(BufferType key_type)
+    uint8_t BufferBase::get_buffer_length(BufferType key_type)
     {
         switch (key_type)
         {

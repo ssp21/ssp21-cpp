@@ -28,6 +28,8 @@ namespace ssp21
 
     private:
 
+
+
         openpal::Logger logger_;
         openpal::LogLevel level_;
         const uint32_t max_hex_bytes_per_line_;

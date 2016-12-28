@@ -138,8 +138,8 @@ namespace ssp21
         // how big can the user data be?
         const uint16_t max_user_data_length = this->algorithms.mode->max_writable_user_data_length(this->max_crypto_payload_length);
         const auto fin = input.length() <= max_user_data_length;
-        const auto user_data_length = fin ? input.length() : max_user_data_length;
-        const auto user_data = input.take(user_data_length);
+        const uint16_t user_data_length = fin ? static_cast<uint16_t>(input.length()) : max_user_data_length;
+        const auto user_data = Seq16::from(input, user_data_length);
 
         // the metadata we're encoding
         AuthMetadata metadata(
@@ -156,8 +156,8 @@ namespace ssp21
         }
 
         msg.metadata = metadata;
-        msg.user_data = Seq16(written_user_data);
-        msg.auth_tag = Seq8(this->auth_tag_buffer.as_slice());
+        msg.user_data = written_user_data;
+        msg.auth_tag = this->auth_tag_buffer.as_slice();
 
         // everything succeeded, so increment the nonce and advance the input buffer
         this->tx_nonce.increment();

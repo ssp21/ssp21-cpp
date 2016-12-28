@@ -25,7 +25,7 @@ namespace ssp21
             return ParseError::insufficient_bytes;
         }
 
-        value = SeqType(input.take(count));
+        value = SeqType::from(input, count);
         input.advance(count);
         return ParseError::ok;
     }
@@ -50,6 +50,13 @@ namespace ssp21
         return FormatError::ok;
     }
 
+    Seq8 Seq8::from(const openpal::RSlice& data, uint8_t length)
+    {
+        const auto min = (data.length() < length) ? static_cast<uint8_t>(data.length()) : length;
+
+        return Seq8(data, min);
+    }
+
     ParseError Seq8::read(openpal::RSlice& input)
     {
         return read_seq<UInt8, Seq8>(input, *this);
@@ -63,6 +70,13 @@ namespace ssp21
     void Seq8::print(const char* name, IMessagePrinter& printer) const
     {
         printer.print(name, *this);
+    }
+
+    Seq16 Seq16::from(const openpal::RSlice& data, uint16_t length)
+    {
+        const auto min = (data.length() < length) ? static_cast<uint16_t>(data.length()) : length;
+
+        return Seq16(data, min);
     }
 
     ParseError Seq16::read(openpal::RSlice& input)
@@ -80,10 +94,10 @@ namespace ssp21
         printer.print(name, *this);
     }
 
-    SeqRSlice::SeqRSlice() : count_(0)
+    Seq8Seq16::Seq8Seq16() : count_(0)
     {}
 
-    ParseError SeqRSlice::read(openpal::RSlice& input)
+    ParseError Seq8Seq16::read(openpal::RSlice& input)
     {
         this->clear();
 
@@ -108,7 +122,7 @@ namespace ssp21
         return ParseError::ok;
     }
 
-    FormatError SeqRSlice::write(openpal::WSlice& output) const
+    FormatError Seq8Seq16::write(openpal::WSlice& output) const
     {
         if (this->count() > UInt8::max_value)
         {
@@ -131,7 +145,7 @@ namespace ssp21
         return FormatError::ok;
     }
 
-    void SeqRSlice::print(const char* name, IMessagePrinter& printer) const
+    void Seq8Seq16::print(const char* name, IMessagePrinter& printer) const
     {
         char message[max_log_entry_size];
         SAFE_STRING_FORMAT(message, max_log_entry_size, "%s (count = %u)", name, this->count());
@@ -145,12 +159,12 @@ namespace ssp21
 
     }
 
-    void SeqRSlice::clear()
+    void Seq8Seq16::clear()
     {
         count_ = 0;
     }
 
-    bool SeqRSlice::push(const openpal::RSlice& slice)
+    bool Seq8Seq16::push(const Seq16& slice)
     {
         if (count_ == consts::crypto::max_seq_of_seq)
         {
@@ -161,7 +175,7 @@ namespace ssp21
         return true;
     }
 
-    bool SeqRSlice::read(uint32_t i, openpal::RSlice& slice) const
+    bool Seq8Seq16::read(uint32_t i, Seq16& slice) const
     {
         if (i >= count_)
         {
@@ -172,7 +186,7 @@ namespace ssp21
         return true;
     }
 
-    uint32_t SeqRSlice::count() const
+    uint8_t Seq8Seq16::count() const
     {
         return count_;
     }
