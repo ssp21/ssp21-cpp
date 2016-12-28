@@ -26,10 +26,12 @@ SessionData::SessionData()
 
 SessionData::SessionData(
     const AuthMetadata& metadata,
-    const Seq16& payload
+    const Seq16& user_data,
+    const Seq8& auth_tag
 ) :
     metadata(metadata),
-    payload(payload)
+    user_data(user_data),
+    auth_tag(auth_tag)
 {}
 
 
@@ -40,7 +42,8 @@ ParseError SessionData::read(openpal::RSlice input)
         return MessageParser::read_fields(
             input,
             metadata,
-            payload
+            user_data,
+            auth_tag
         );
     };
 
@@ -54,7 +57,8 @@ FormatResult SessionData::write(openpal::WSlice output) const
         return MessageFormatter::write_fields(
             output,
             metadata,
-            payload
+            user_data,
+            auth_tag
         );
     };
 
@@ -66,8 +70,10 @@ void SessionData::print(IMessagePrinter& printer) const
         printer,
         "metadata",
         metadata,
-        "payload",
-        payload
+        "user_data",
+        user_data,
+        "auth_tag",
+        auth_tag
     );
 }
 

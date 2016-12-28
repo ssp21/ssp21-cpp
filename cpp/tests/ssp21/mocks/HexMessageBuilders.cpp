@@ -126,9 +126,10 @@ namespace ssp21
             return write_message(msg);
         }
 
-        std::string session_data(uint16_t nonce, uint32_t valid_until, bool fir, bool fin, const std::string& payload)
+        std::string session_data(uint16_t nonce, uint32_t valid_until, bool fir, bool fin, const std::string& user_data, const std::string& auth_tag)
         {
-            Hex payload_hex(payload);
+            Hex user_data_hex(user_data);
+            Hex auth_tag_hex(auth_tag);
 
             SessionData msg(
                 AuthMetadata(
@@ -136,7 +137,8 @@ namespace ssp21
                     valid_until,
                     SessionFlags(fir, fin)
                 ),
-                Seq16(payload_hex.as_rslice())
+                Seq16(user_data_hex.as_rslice()),
+                Seq8(auth_tag_hex.as_rslice())
             );
 
             return write_message(msg);

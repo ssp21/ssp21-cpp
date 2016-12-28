@@ -29,18 +29,20 @@ struct SessionData final : public IMessage, private openpal::Uncopyable
 
     SessionData(
         const AuthMetadata& metadata,
-        const Seq16& payload
+        const Seq16& user_data,
+        const Seq8& auth_tag
     );
 
     virtual ParseError read(openpal::RSlice input) override;
     virtual FormatResult write(openpal::WSlice output) const override;
     virtual void print(IMessagePrinter& printer) const override;
 
-    static const uint32_t min_size_bytes = 10;
+    static const uint32_t min_size_bytes = 11;
     static const Function function = Function::session_data;
 
     AuthMetadata metadata;
-    Seq16 payload;
+    Seq16 user_data;
+    Seq8 auth_tag;
 
 };
 

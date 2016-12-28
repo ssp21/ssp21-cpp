@@ -19,12 +19,12 @@ using namespace ssp21;
 using namespace openpal;
 
 void init(Session& session, uint16_t nonce_init = 0, Timestamp session_init_time = Timestamp(0));
-std::string validate(Session& session, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& payload, std::error_code& ec);
-void test_validation_failure(uint16_t nonce_init, Timestamp session_init_time, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& payload, std::initializer_list<CryptoAction> actions, CryptoError error);
-std::string test_validation_success(uint16_t nonce_init, Timestamp session_init_time, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& payload);
+std::string validate(Session& session, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex, std::error_code& ec);
+void test_validation_failure(uint16_t nonce_init, Timestamp session_init_time, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex, std::initializer_list<CryptoAction> actions, CryptoError error);
+std::string test_validation_success(uint16_t nonce_init, Timestamp session_init_time, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex);
 
-const auto test_userdata = "CA FE";
-const auto test_payload = test_userdata + repeat_hex(0xFF, consts::crypto::trunc16);
+const auto test_user_data = "CA FE";
+const auto test_auth_tag = repeat_hex(0xFF, consts::crypto::trunc16);
 
 TEST_CASE(SUITE("won't validate user data when not initialized"))
 {
@@ -32,7 +32,7 @@ TEST_CASE(SUITE("won't validate user data when not initialized"))
 
     Session session;
     std::error_code ec;
-    const auto user_data = validate(session, 1, 0, 0, "", ec);
+    const auto user_data = validate(session, 1, 0, 0, "", "", ec);
     REQUIRE(ec == CryptoError::no_valid_session);
     REQUIRE(user_data.empty());
 
@@ -41,7 +41,7 @@ TEST_CASE(SUITE("won't validate user data when not initialized"))
 
 TEST_CASE(SUITE("authenticates data"))
 {
-    REQUIRE(test_userdata == test_validation_success(0, Timestamp(0), 1, 0, 0, test_payload));
+    REQUIRE(test_user_data == test_validation_success(0, Timestamp(0), 1, 0, 0, test_user_data, test_auth_tag));
 }
 
 TEST_CASE(SUITE("won't intialize with invalid keys"))
@@ -50,21 +50,26 @@ TEST_CASE(SUITE("won't intialize with invalid keys"))
     REQUIRE_FALSE(session.initialize(Algorithms::Session(), Timestamp(0), SessionKeys()));
 }
 
-TEST_CASE(SUITE("returns size errors from the session read function"))
+TEST_CASE(SUITE("empty max results in mac_auth_fail"))
 {
-    test_validation_failure(0, Timestamp(0), 1, 0, 0, "", {}, CryptoError::bad_buffer_size);
+    test_validation_failure(0, Timestamp(0), 1, 0, 0, "", "", { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::mac_auth_fail);
+}
+
+TEST_CASE(SUITE("rejects empty user data"))
+{
+    test_validation_failure(0, Timestamp(0), 1, 0, 0, "", test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::empty_user_data);
 }
 
 //// ---- validation nonce tests ----
 
 TEST_CASE(SUITE("rejects initial nonce of zero"))
 {
-    test_validation_failure(0, Timestamp(0), 0, 0, 0, test_payload, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::invalid_rx_nonce);
+    test_validation_failure(0, Timestamp(0), 0, 0, 0, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::invalid_rx_nonce);
 }
 
 TEST_CASE(SUITE("rejects rollover nonce when initialized with maximum nonce"))
 {
-    test_validation_failure(65535, Timestamp(0), 0, 0, 0, test_payload, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::invalid_rx_nonce);
+    test_validation_failure(65535, Timestamp(0), 0, 0, 0, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::invalid_rx_nonce);
 }
 
 //// ---- validation ttl tests ----
@@ -74,7 +79,7 @@ TEST_CASE(SUITE("accepts minimum ttl"))
     const auto init_time = Timestamp(4);
     const auto ttl = 3;
 
-    REQUIRE(test_userdata == test_validation_success(0, init_time, 1, ttl, init_time.milliseconds + ttl, test_payload));
+    REQUIRE(test_user_data == test_validation_success(0, init_time, 1, ttl, init_time.milliseconds + ttl, test_user_data, test_auth_tag));
 }
 
 TEST_CASE(SUITE("rejects minimum ttl + 1"))
@@ -82,7 +87,7 @@ TEST_CASE(SUITE("rejects minimum ttl + 1"))
     const auto init_time = Timestamp(4);
     const auto ttl = 3;
 
-    test_validation_failure(0, init_time, 1, ttl, init_time.milliseconds + ttl + 1, test_payload, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::expired_ttl);
+    test_validation_failure(0, init_time, 1, ttl, init_time.milliseconds + ttl + 1, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::expired_ttl);
 }
 
 
@@ -183,9 +188,10 @@ void init(Session& session, uint16_t nonce_start, Timestamp session_init_time)
     REQUIRE(session.initialize(Algorithms::Session(), session_init_time, keys, nonce_start));
 }
 
-std::string validate(Session& session, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& payload, std::error_code& ec)
+std::string validate(Session& session, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex, std::error_code& ec)
 {
-    Hex hex(payload);
+    Hex user_data(user_data_hex);
+    Hex auth_tag(auth_tag_hex);
 
     SessionData msg(
         AuthMetadata(
@@ -193,13 +199,14 @@ std::string validate(Session& session, uint16_t nonce, uint32_t ttl, int64_t now
             ttl,
             SessionFlags(true, true)
         ),
-        Seq16(hex.as_rslice())
+        Seq16(user_data.as_rslice()),
+        Seq8(auth_tag.as_rslice())
     );
 
     return to_hex(session.validate_message(msg, Timestamp(now), ec));
 }
 
-std::string test_validation_success(uint16_t nonce_init, Timestamp session_init_time, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& payload)
+std::string test_validation_success(uint16_t nonce_init, Timestamp session_init_time, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex)
 {
     CryptoTest crypto;
 
@@ -208,7 +215,7 @@ std::string test_validation_success(uint16_t nonce_init, Timestamp session_init_
     init(session, nonce_init, session_init_time);
 
     std::error_code ec;
-    const auto user_data = validate(session, nonce, ttl, now, payload, ec);
+    const auto user_data = validate(session, nonce, ttl, now, user_data_hex, auth_tag_hex, ec);
     REQUIRE_FALSE(ec);
 
     crypto->expect({ CryptoAction::hmac_sha256, CryptoAction::secure_equals });
@@ -216,7 +223,7 @@ std::string test_validation_success(uint16_t nonce_init, Timestamp session_init_
     return user_data;
 }
 
-void test_validation_failure(uint16_t nonce_init, Timestamp session_init_time, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& payload, std::initializer_list<CryptoAction> actions, CryptoError error)
+void test_validation_failure(uint16_t nonce_init, Timestamp session_init_time, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex, std::initializer_list<CryptoAction> actions, CryptoError error)
 {
     CryptoTest crypto;
 
@@ -225,7 +232,7 @@ void test_validation_failure(uint16_t nonce_init, Timestamp session_init_time, u
     init(session, nonce_init, session_init_time);
 
     std::error_code ec;
-    const auto user_data = validate(session, nonce, ttl, now, payload, ec);
+    const auto user_data = validate(session, nonce, ttl, now, user_data_hex, auth_tag_hex, ec);
     REQUIRE(ec == error);
     REQUIRE(user_data.empty());
 

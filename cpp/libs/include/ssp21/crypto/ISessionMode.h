@@ -6,7 +6,7 @@
 #include "openpal/container/WSlice.h"
 
 #include "ssp21/crypto/BufferTypes.h"
-#include "ssp21/crypto/gen/AuthMetadata.h"
+#include "ssp21/crypto/gen/SessionData.h"
 
 #include <system_error>
 
@@ -25,8 +25,7 @@ namespace ssp21
         * Authenticates (and possibly decrypts) a session message payload and returns a slice pointing to the cleartext output.
         *
         * @key the symmetric key used for authentication (and optionally decryption)
-        * @metadata associated data that is also covered by the authentication tag
-        * @payload the message payload that contains the data (possibly encrypted) and the authentication tag
+        * @msg the parsed session data message
         * @dest The output buffer into which the cleartext may be written (encryption modes only) if no error occurs.
         * @ec An error condition will be signaled if the output buffer is too small or if an authentication error occurs
         *
@@ -34,8 +33,7 @@ namespace ssp21
         */
         virtual openpal::RSlice read(
             const SymmetricKey& key,
-            const AuthMetadata& metadata,
-            const openpal::RSlice& payload,
+            const SessionData& msg,
             openpal::WSlice dest,
             std::error_code& ec
         ) const = 0;
@@ -46,15 +44,17 @@ namespace ssp21
         * @key the symmetric key used for authentication (and possibly encryption)
         * @metadata associated data that is also covered by the authentication tag
         * @userdata the cleartext userdata that will be authentiacted (and possibly encrypted) and placed placed into the destination buffer
-        * @dest The output buffer into which the authenticated (and possibly encrypted) payload will be written
+        * @auth_tag buffer into which the authentication tag will be written. No modification if an error occured.
+        * @dest The output buffer into which the encrypted payload will be written if this mode is an encryption mode
         * @ec An error condition will be signaled if the output buffer is too small for the payload
         *
-        * @return A slice pointing to the written message payload. This slice will be empty if an error occured.
+        * @return A slice pointing to the possibly encrypted user data. This slice will be empty if an error occured.
         */
         virtual openpal::RSlice write(
             const SymmetricKey& key,
             const AuthMetadata& metadata,
             const openpal::RSlice& userdata,
+            AuthenticationTag& auth_tag,
             openpal::WSlice dest,
             std::error_code& ec
         ) const = 0;

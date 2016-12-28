@@ -12,64 +12,43 @@ namespace ssp21
 
     openpal::RSlice TruncatedMacSessionMode::read(
         const SymmetricKey& key,
-        const AuthMetadata& metadata,
-        const openpal::RSlice& payload,
-        openpal::WSlice dest,
+        const SessionData& msg,
+        openpal::WSlice, // ignored in MAC mode
         std::error_code& ec
     ) const
     {
-        // payload must at least have the truncated HMAC
-        if (payload.length() < trunc_length)
-        {
-            ec = CryptoError::bad_buffer_size;
-            return RSlice::empty_slice();
-        }
-
-        const auto user_data_length = payload.length() - trunc_length;
-
         metadata_buffer_t buffer;
-        auto ad_bytes = get_metadata_bytes(metadata, buffer);
-
-        // split the payload into user data and MAC
-        const auto user_data = payload.take(user_data_length);
-        const auto read_mac = payload.skip(user_data_length);
+        auto ad_bytes = get_metadata_bytes(msg.metadata, buffer);
 
         // Now calculate the expected MAC
         HashOutput calc_mac_buffer;
-        mac_func(key.as_slice(), { ad_bytes, user_data }, calc_mac_buffer);
-        const auto truncated_mac = calc_mac_buffer.as_slice().take(trunc_length);
+        mac_func(key.as_slice(), { ad_bytes, msg.user_data }, calc_mac_buffer);
+        const auto truncated_mac = calc_mac_buffer.as_slice().take(this->auth_tag_length);
 
-        if (!Crypto::secure_equals(read_mac, truncated_mac)) // authentication failure
+        if (!Crypto::secure_equals(msg.auth_tag, truncated_mac)) // authentication failure
         {
             ec = CryptoError::mac_auth_fail;
             return openpal::RSlice::empty_slice();
         }
 
         // we're authenticated, so return the user_data slice
-        return user_data;
+        return msg.user_data;
     }
 
     openpal::RSlice TruncatedMacSessionMode::write(
         const SymmetricKey& key,
         const AuthMetadata& metadata,
-        const openpal::RSlice& userdata,
-        openpal::WSlice dest,
+        const openpal::RSlice& user_data,
+        AuthenticationTag& auth_tag,
+        openpal::WSlice,
         std::error_code& ec
     ) const
     {
         // maximum userdata length
-        const uint16_t max_userdata_length = UInt16::max_value - trunc_length;
+        const uint16_t max_userdata_length = UInt16::max_value - this->auth_tag_length;
 
         // payload must at least have the truncated HMAC
-        if (userdata.length() > max_userdata_length)
-        {
-            ec = CryptoError::bad_buffer_size;
-            return RSlice::empty_slice();
-        }
-
-        const uint16_t payload_length = userdata.length() + trunc_length;
-
-        if (dest.length() < payload_length)
+        if (user_data.length() > max_userdata_length)
         {
             ec = CryptoError::bad_buffer_size;
             return RSlice::empty_slice();
@@ -79,22 +58,15 @@ namespace ssp21
         auto ad_bytes = get_metadata_bytes(metadata, buffer);
 
         // Now calculate the mac
-        HashOutput calc_mac_buffer;
-        mac_func(key.as_slice(), { ad_bytes, userdata }, calc_mac_buffer);
-        const auto truncated = calc_mac_buffer.as_slice().take(trunc_length);
+        mac_func(key.as_slice(), { ad_bytes, user_data }, auth_tag);
+        auth_tag.set_type(this->buffer_type);
 
-        const auto ret = dest.as_rslice().take(payload_length);
-
-        // write the output buffer, advancing dest
-        userdata.copy_to(dest);
-        truncated.copy_to(dest);
-
-        return ret;
+        return user_data;
     }
 
     uint16_t TruncatedMacSessionMode::max_writable_user_data_length(uint16_t max_payload_size) const
     {
-        return (max_payload_size < trunc_length) ? 0 : max_payload_size - trunc_length;
+        return (max_payload_size < auth_tag_length) ? 0 : max_payload_size - auth_tag_length;
     }
 
 

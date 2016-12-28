@@ -84,7 +84,7 @@ TEST_CASE(SUITE("ignores user data without a session"))
     ResponderFixture fix;
     fix.responder.on_open();
 
-    const auto request = hex::session_data(1, 0, true, true, hex::repeat(0xFF, 20));
+    const auto request = hex::session_data(1, 0, true, true, "CA FE", hex::repeat(0xFF, 16));
     fix.lower.enqueue_message(request);
     fix.responder.on_rx_ready();
 
@@ -159,8 +159,8 @@ TEST_CASE(SUITE("auth fails if insufficient data for tag"))
 
     test_init_session_success(fix);
 
-    const auto data_and_tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16 - 1);
-    fix.lower.enqueue_message(hex::session_data(1, 0xFFFFFFFF, true, true, data_and_tag));
+    const auto short_tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16 - 1);
+    fix.lower.enqueue_message(hex::session_data(1, 0xFFFFFFFF, true, true, "AA", short_tag));
     fix.responder.on_rx_ready();
 
     const auto stats = fix.responder.get_statistics();
@@ -178,8 +178,8 @@ TEST_CASE(SUITE("auth fails if TTL expired"))
 
     fix.exe->advance_time(TimeDuration::milliseconds(3));
 
-    const auto data_and_tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16 + 1);
-    fix.lower.enqueue_message(hex::session_data(1, 2, true, true, data_and_tag)); // session TTL of 2
+    const auto tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
+    fix.lower.enqueue_message(hex::session_data(1, 2, true, true, "AA", tag)); // session TTL of 2
     fix.responder.on_rx_ready();
 
     const auto stats = fix.responder.get_statistics();
@@ -195,8 +195,8 @@ TEST_CASE(SUITE("auth fails on nonce of zero"))
 
     test_init_session_success(fix);
 
-    const auto data_and_tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16 + 1);
-    fix.lower.enqueue_message(hex::session_data(0, 0, true, true, data_and_tag)); // nonce of zero
+    const auto tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
+    fix.lower.enqueue_message(hex::session_data(0, 0, true, true, "AA", tag)); // nonce of zero
     fix.responder.on_rx_ready();
 
     const auto stats = fix.responder.get_statistics();
@@ -212,9 +212,9 @@ TEST_CASE(SUITE("fails on empty user data"))
 
     test_init_session_success(fix);
 
-    const auto data_and_tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
+    const auto tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
 
-    fix.lower.enqueue_message(hex::session_data(1, 0xFFFFFFFF, true, true, data_and_tag));
+    fix.lower.enqueue_message(hex::session_data(1, 0xFFFFFFFF, true, true, "", tag));
     fix.responder.on_rx_ready();
 
     const auto stats = fix.responder.get_statistics();
@@ -231,9 +231,9 @@ TEST_CASE(SUITE("can authenticate session data"))
     test_init_session_success(fix);
 
     const auto data = "01";
-    const auto data_and_tag = data + hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
+    const auto tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
 
-    fix.lower.enqueue_message(hex::session_data(1, 0, true, true, data_and_tag));
+    fix.lower.enqueue_message(hex::session_data(1, 0, true, true, data, tag));
     fix.responder.on_rx_ready();
 
     const auto stats = fix.responder.get_statistics();
@@ -252,9 +252,9 @@ TEST_CASE(SUITE("can authenticate multiple messages"))
     for (uint8_t i = 0; i < 3; ++i)
     {
         const auto data = to_hex(&i, 1);
-        const auto data_and_tag = data + hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
+        const auto tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
 
-        fix.lower.enqueue_message(hex::session_data(i + 1, 0, true, true, data_and_tag));
+        fix.lower.enqueue_message(hex::session_data(i + 1, 0, true, true, data, tag));
         fix.responder.on_rx_ready();
 
         const auto stats = fix.responder.get_statistics();

@@ -15,6 +15,7 @@ namespace ssp21
         empty,
         x25519_key,
         sha256,
+        mac_trunc16,
         symmetric_key
     };
 
@@ -70,7 +71,9 @@ namespace ssp21
 
     class DHOutput final : public SecureBuffer {};
 
-    class HashOutput final : public SecureBuffer {};
+    class HashOutput : public SecureBuffer {};
+
+    class AuthenticationTag : public HashOutput {};
 
     class SymmetricKey final : public SecureBuffer {};
 

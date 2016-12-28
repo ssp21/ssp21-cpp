@@ -17,7 +17,7 @@ namespace ssp21
         config(config),
         max_crypto_payload_length(calc_max_crypto_payload_length(config.max_link_payload_length)),
         rx_auth_buffer(max_crypto_payload_length),
-        tx_payload_buffer(max_crypto_payload_length)
+        tx_encrypt_user_data_buffer(max_crypto_payload_length)
     {}
 
     uint32_t Session::calc_max_crypto_payload_length(uint32_t max_link_payload_size)
@@ -60,7 +60,7 @@ namespace ssp21
         }
 
         auto dest = this->rx_auth_buffer.as_wslice();
-        const auto payload = this->algorithms.mode->read(this->keys.rx_key, message.metadata, message.payload, dest, ec);
+        const auto payload = this->algorithms.mode->read(this->keys.rx_key, message, dest, ec);
 
         if (ec)
         {
@@ -149,14 +149,15 @@ namespace ssp21
         );
 
         std::error_code ec;
-        const auto payload = this->algorithms.mode->write(this->keys.tx_key, metadata, user_data, this->tx_payload_buffer.as_wslice(), ec);
+        const auto written_user_data = this->algorithms.mode->write(this->keys.tx_key, metadata, user_data, this->auth_tag_buffer, this->tx_encrypt_user_data_buffer.as_wslice(), ec);
         if (ec)
         {
             return ec;
         }
 
         msg.metadata = metadata;
-        msg.payload = Seq16(payload);
+        msg.user_data = Seq16(written_user_data);
+        msg.auth_tag = Seq8(this->auth_tag_buffer.as_slice());
 
         // everything succeeded, so increment the nonce and advance the input buffer
         this->tx_nonce.increment();

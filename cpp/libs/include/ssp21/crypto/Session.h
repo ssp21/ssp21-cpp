@@ -67,7 +67,9 @@ namespace ssp21
         const uint16_t max_crypto_payload_length;
 
         openpal::Buffer rx_auth_buffer;
-        openpal::Buffer tx_payload_buffer;
+        openpal::Buffer tx_encrypt_user_data_buffer;
+
+        AuthenticationTag auth_tag_buffer;
 
         bool rx_valid = false;
         bool tx_valid = false;
