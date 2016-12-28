@@ -17,12 +17,15 @@ namespace ssp21
         std::error_code& ec
     ) const
     {
-        metadata_buffer_t buffer;
-        auto ad_bytes = get_metadata_bytes(msg.metadata, buffer);
+        metadata_buffer_t metadata_buffer;
+        const auto ad_bytes = get_metadata_bytes(msg.metadata, metadata_buffer);
+
+        user_data_length_buffer_t length_buffer;
+        const auto user_data_length_bytes = get_user_data_length_bytes(static_cast<uint16_t>(msg.user_data.length()), length_buffer);
 
         // Now calculate the expected MAC
         HashOutput calc_mac_buffer;
-        mac_func(key.as_slice(), { ad_bytes, msg.user_data }, calc_mac_buffer);
+        mac_func(key.as_slice(), { ad_bytes, user_data_length_bytes, msg.user_data }, calc_mac_buffer);
         const auto truncated_mac = calc_mac_buffer.as_slice().take(this->auth_tag_length);
 
         if (!Crypto::secure_equals(msg.auth_tag, truncated_mac)) // authentication failure
@@ -57,8 +60,11 @@ namespace ssp21
         metadata_buffer_t buffer;
         auto ad_bytes = get_metadata_bytes(metadata, buffer);
 
+        user_data_length_buffer_t length_buffer;
+        const auto user_data_length_bytes = get_user_data_length_bytes(static_cast<uint16_t>(user_data.length()), length_buffer);
+
         // Now calculate the mac
-        mac_func(key.as_slice(), { ad_bytes, user_data }, auth_tag);
+        mac_func(key.as_slice(), { ad_bytes, user_data_length_bytes, user_data }, auth_tag);
         auth_tag.set_type(this->buffer_type);
 
         return user_data;

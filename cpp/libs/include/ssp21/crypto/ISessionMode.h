@@ -53,7 +53,7 @@ namespace ssp21
         virtual openpal::RSlice write(
             const SymmetricKey& key,
             const AuthMetadata& metadata,
-            const openpal::RSlice& userdata,
+            const openpal::RSlice& user_data,
             AuthenticationTag& auth_tag,
             openpal::WSlice dest,
             std::error_code& ec
@@ -71,11 +71,19 @@ namespace ssp21
     protected:
 
         typedef openpal::StaticBuffer<AuthMetadata::fixed_size_bytes> metadata_buffer_t;
+        typedef openpal::StaticBuffer<openpal::UInt16::size> user_data_length_buffer_t;
 
         inline static openpal::RSlice get_metadata_bytes(const AuthMetadata& metadata, metadata_buffer_t& buffer)
         {
             auto dest = buffer.as_wslice();
             metadata.write(dest);
+            return buffer.as_rslice();
+        }
+
+        inline static openpal::RSlice get_user_data_length_bytes(uint16_t user_data_length, user_data_length_buffer_t& buffer)
+        {
+            auto dest = buffer.as_wslice();
+            openpal::UInt16::write_to(dest, user_data_length);
             return buffer.as_rslice();
         }
 
