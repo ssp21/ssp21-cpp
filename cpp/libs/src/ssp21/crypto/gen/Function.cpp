@@ -36,7 +36,7 @@ Function FunctionSpec::from_type(uint8_t arg)
         case(0x4):
             return Function::reply_handshake_error;
         case(0x5):
-            return Function::unconfirmed_session_data;
+            return Function::session_data;
         default:
             return Function::undefined;
     }
@@ -55,8 +55,8 @@ const char* FunctionSpec::to_string(Function arg)
             return "reply_handshake_auth";
         case(Function::reply_handshake_error):
             return "reply_handshake_error";
-        case(Function::unconfirmed_session_data):
-            return "unconfirmed_session_data";
+        case(Function::session_data):
+            return "session_data";
         default:
             return "undefined";
     }

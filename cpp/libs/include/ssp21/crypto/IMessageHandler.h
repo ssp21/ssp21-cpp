@@ -7,7 +7,7 @@
 #include "ssp21/crypto/gen/ReplyHandshakeBegin.h"
 #include "ssp21/crypto/gen/ReplyHandshakeAuth.h"
 #include "ssp21/crypto/gen/ReplyHandshakeError.h"
-#include "ssp21/crypto/gen/UnconfirmedSessionData.h"
+#include "ssp21/crypto/gen/SessionData.h"
 
 #include "openpal/executor/Timestamp.h"
 
@@ -57,7 +57,7 @@ namespace ssp21
             return false;
         }
 
-        virtual bool on_message(const UnconfirmedSessionData& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now)
+        virtual bool on_message(const SessionData& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now)
         {
             return false;
         }

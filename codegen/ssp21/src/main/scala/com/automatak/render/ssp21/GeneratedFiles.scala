@@ -49,7 +49,7 @@ object GeneratedFiles {
     RequestHandshakeAuth,
     ReplyHandshakeAuth,
     ReplyHandshakeError,
-    UnconfirmedSessionData
+    SessionData
   ).map(m => MessageGenerator(m))
 
 }

@@ -13,8 +13,8 @@
 // Licensed under the terms of the BSDv3 license
 //
 
-#ifndef SSP21_UNCONFIRMEDSESSIONDATA_H
-#define SSP21_UNCONFIRMEDSESSIONDATA_H
+#ifndef SSP21_SESSIONDATA_H
+#define SSP21_SESSIONDATA_H
 
 #include "ssp21/crypto/gen/Function.h"
 #include "ssp21/crypto/gen/AuthMetadata.h"
@@ -23,11 +23,11 @@
 
 namespace ssp21 {
 
-struct UnconfirmedSessionData final : public IMessage, private openpal::Uncopyable
+struct SessionData final : public IMessage, private openpal::Uncopyable
 {
-    UnconfirmedSessionData();
+    SessionData();
 
-    UnconfirmedSessionData(
+    SessionData(
         const AuthMetadata& metadata,
         const Seq16& payload
     );
@@ -37,7 +37,7 @@ struct UnconfirmedSessionData final : public IMessage, private openpal::Uncopyab
     virtual void print(IMessagePrinter& printer) const override;
 
     static const uint32_t min_size_bytes = 10;
-    static const Function function = Function::unconfirmed_session_data;
+    static const Function function = Function::session_data;
 
     AuthMetadata metadata;
     Seq16 payload;

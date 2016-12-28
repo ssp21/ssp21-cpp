@@ -11,7 +11,7 @@
 #include "ssp21/crypto/gen/RequestHandshakeAuth.h"
 #include "ssp21/crypto/gen/ReplyHandshakeAuth.h"
 #include "ssp21/crypto/gen/ReplyHandshakeError.h"
-#include "ssp21/crypto/gen/UnconfirmedSessionData.h"
+#include "ssp21/crypto/gen/SessionData.h"
 
 #include "MakeUnique.h"
 
@@ -130,7 +130,7 @@ namespace ssp21
         {
             Hex payload_hex(payload);
 
-            UnconfirmedSessionData msg(
+            SessionData msg(
                 AuthMetadata(
                     nonce,
                     valid_until,

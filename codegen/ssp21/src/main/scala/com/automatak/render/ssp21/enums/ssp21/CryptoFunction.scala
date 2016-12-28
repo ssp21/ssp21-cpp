@@ -25,7 +25,7 @@ object CryptoFunction {
   val requestHandshakeAuth = EnumValue("request_handshake_auth", 2, "Master authenticates to the outstation")
   val replyHandshakeAuth = EnumValue("reply_handshake_auth", 3, "Outstation authenticates to the master")
   val replyHandshakeError = EnumValue("reply_handshake_error", 4, "Outstation returns an error code to the master")
-  val unconfirmedSessionData = EnumValue("unconfirmed_session_data", 5, "Either party transmits an unconfirmed session message")
+  val sessionData = EnumValue("session_data", 5, "Both parties transmit session data messages")
 
   private val codes = List(
     requestHandshakeBegin,
@@ -33,7 +33,7 @@ object CryptoFunction {
     requestHandshakeAuth,
     replyHandshakeAuth,
     replyHandshakeError,
-    unconfirmedSessionData
+    sessionData
   )
 
 }

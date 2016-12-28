@@ -36,8 +36,8 @@ enum class Function : uint8_t
     reply_handshake_auth = 0x3,
     /// Outstation returns an error code to the master
     reply_handshake_error = 0x4,
-    /// Either party transmits an unconfirmed session message
-    unconfirmed_session_data = 0x5,
+    /// Both parties transmit session data messages
+    session_data = 0x5,
     /// value not defined
     undefined = 0xFF
 };

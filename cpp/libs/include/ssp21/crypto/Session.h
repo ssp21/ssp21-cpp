@@ -14,7 +14,7 @@
 #include "ssp21/crypto/BufferTypes.h"
 #include "ssp21/crypto/SessionModes.h"
 
-#include "ssp21/crypto/gen/UnconfirmedSessionData.h"
+#include "ssp21/crypto/gen/SessionData.h"
 
 namespace ssp21
 {
@@ -42,9 +42,9 @@ namespace ssp21
             return statistics;
         }
 
-        openpal::RSlice validate_message(const UnconfirmedSessionData& message, const openpal::Timestamp& now, std::error_code& ec);
+        openpal::RSlice validate_message(const SessionData& message, const openpal::Timestamp& now, std::error_code& ec);
 
-        std::error_code format_message(UnconfirmedSessionData& msg, bool fir, const openpal::Timestamp& now, openpal::RSlice& cleartext);
+        std::error_code format_message(SessionData& msg, bool fir, const openpal::Timestamp& now, openpal::RSlice& cleartext);
 
         bool can_transmit() const
         {
@@ -53,7 +53,7 @@ namespace ssp21
 
     private:
 
-        std::error_code format_message_impl(UnconfirmedSessionData& msg, bool fir, const openpal::Timestamp& now, openpal::RSlice& cleartext);
+        std::error_code format_message_impl(SessionData& msg, bool fir, const openpal::Timestamp& now, openpal::RSlice& cleartext);
 
         /**
         * Given a maximum link layer payload, how big could the crypto payload be?

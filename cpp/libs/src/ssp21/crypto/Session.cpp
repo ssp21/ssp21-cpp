@@ -22,7 +22,7 @@ namespace ssp21
 
     uint32_t Session::calc_max_crypto_payload_length(uint32_t max_link_payload_size)
     {
-        return (max_link_payload_size > UnconfirmedSessionData::min_size_bytes) ? max_link_payload_size - UnconfirmedSessionData::min_size_bytes : 0;
+        return (max_link_payload_size > SessionData::min_size_bytes) ? max_link_payload_size - SessionData::min_size_bytes : 0;
     }
 
     bool Session::initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const SessionKeys& keys, uint16_t nonce_start)
@@ -50,7 +50,7 @@ namespace ssp21
         this->tx_valid = false;
     }
 
-    RSlice Session::validate_message(const UnconfirmedSessionData& message, const openpal::Timestamp& now, std::error_code& ec)
+    RSlice Session::validate_message(const SessionData& message, const openpal::Timestamp& now, std::error_code& ec)
     {
         if (!this->rx_valid)
         {
@@ -99,7 +99,7 @@ namespace ssp21
         return payload;
     }
 
-    std::error_code Session::format_message(UnconfirmedSessionData& msg, bool fir, const openpal::Timestamp& now, openpal::RSlice& cleartext)
+    std::error_code Session::format_message(SessionData& msg, bool fir, const openpal::Timestamp& now, openpal::RSlice& cleartext)
     {
         const auto ret = this->format_message_impl(msg, fir, now, cleartext);
         if (ret)
@@ -110,7 +110,7 @@ namespace ssp21
         return ret;
     }
 
-    std::error_code Session::format_message_impl(UnconfirmedSessionData& msg, bool fir, const openpal::Timestamp& now, openpal::RSlice& input)
+    std::error_code Session::format_message_impl(SessionData& msg, bool fir, const openpal::Timestamp& now, openpal::RSlice& input)
     {
         if (!this->tx_valid)
         {

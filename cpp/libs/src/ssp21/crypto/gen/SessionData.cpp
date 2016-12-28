@@ -13,7 +13,7 @@
 // Licensed under the terms of the BSDv3 license
 //
 
-#include "ssp21/crypto/gen/UnconfirmedSessionData.h"
+#include "ssp21/crypto/gen/SessionData.h"
 
 #include "ssp21/crypto/MessageParser.h"
 #include "ssp21/crypto/MessagePrinting.h"
@@ -21,10 +21,10 @@
 
 namespace ssp21 {
 
-UnconfirmedSessionData::UnconfirmedSessionData()
+SessionData::SessionData()
 {}
 
-UnconfirmedSessionData::UnconfirmedSessionData(
+SessionData::SessionData(
     const AuthMetadata& metadata,
     const Seq16& payload
 ) :
@@ -33,7 +33,7 @@ UnconfirmedSessionData::UnconfirmedSessionData(
 {}
 
 
-ParseError UnconfirmedSessionData::read(openpal::RSlice input)
+ParseError SessionData::read(openpal::RSlice input)
 {
     auto read_fields = [this](openpal::RSlice& input) -> ParseError 
     {
@@ -44,10 +44,10 @@ ParseError UnconfirmedSessionData::read(openpal::RSlice input)
         );
     };
 
-    return MessageParser::read_message(input, Function::unconfirmed_session_data, read_fields);
+    return MessageParser::read_message(input, Function::session_data, read_fields);
 }
 
-FormatResult UnconfirmedSessionData::write(openpal::WSlice output) const
+FormatResult SessionData::write(openpal::WSlice output) const
 {
     auto write_fields = [this](openpal::WSlice& output) -> FormatError 
     {
@@ -58,9 +58,9 @@ FormatResult UnconfirmedSessionData::write(openpal::WSlice output) const
         );
     };
 
-    return MessageFormatter::write_message(output, Function::unconfirmed_session_data, write_fields);
+    return MessageFormatter::write_message(output, Function::session_data, write_fields);
 }
-void UnconfirmedSessionData::print(IMessagePrinter& printer) const
+void SessionData::print(IMessagePrinter& printer) const
 {
     MessagePrinting::print_fields(
         printer,

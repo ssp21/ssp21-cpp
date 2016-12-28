@@ -160,7 +160,7 @@ namespace ssp21
             const auto fir = this->ctx.tx_state.get_fir();
             const auto now = this->ctx.executor->get_time();
 
-            UnconfirmedSessionData msg;
+            SessionData msg;
             const auto err = ctx.session.format_message(msg, fir, now, remainder);
             if (err)
             {
@@ -233,7 +233,7 @@ namespace ssp21
         {
         case(Function::request_handshake_begin):
         case(Function::request_handshake_auth):
-        case(Function::unconfirmed_session_data):
+        case(Function::session_data):
             return true;
         default:
             return false;
@@ -267,9 +267,9 @@ namespace ssp21
         return true;
     }
 
-    bool Responder::on_message(const UnconfirmedSessionData& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now)
+    bool Responder::on_message(const SessionData& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now)
     {
-        ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, Function::unconfirmed_session_data, msg, raw_data.length());
+        ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, Function::session_data, msg, raw_data.length());
 
         std::error_code ec;
         const auto payload = this->ctx.session.validate_message(msg, now, ec);

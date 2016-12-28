@@ -4,7 +4,7 @@
 
 #include "ssp21/crypto/gen/RequestHandshakeBegin.h"
 #include "ssp21/crypto/gen/RequestHandshakeAuth.h"
-#include "ssp21/crypto/gen/UnconfirmedSessionData.h"
+#include "ssp21/crypto/gen/SessionData.h"
 
 #include "ssp21/crypto/gen/Function.h"
 #include "ssp21/crypto/gen/HandshakeError.h"
@@ -157,7 +157,7 @@ namespace ssp21
 
         virtual bool on_message(const RequestHandshakeAuth& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now) override;
 
-        virtual bool on_message(const UnconfirmedSessionData& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now) override;
+        virtual bool on_message(const SessionData& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now) override;
 
         // ---- private members -----
 

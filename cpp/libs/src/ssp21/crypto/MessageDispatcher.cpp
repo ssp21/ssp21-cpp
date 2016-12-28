@@ -35,8 +35,8 @@ namespace ssp21
             return handle_message<ReplyHandshakeAuth>(logger, message, now, handler);
         case(Function::reply_handshake_error):
             return handle_message<ReplyHandshakeError>(logger, message, now, handler);
-        case(Function::unconfirmed_session_data):
-            return handle_message<UnconfirmedSessionData>(logger, message, now, handler);
+        case(Function::session_data):
+            return handle_message<SessionData>(logger, message, now, handler);
         default:
             return false;
         }
