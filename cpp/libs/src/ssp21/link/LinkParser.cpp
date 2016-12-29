@@ -176,7 +176,7 @@ namespace ssp21
         const auto num_to_copy = min<uint32_t>(remaining, input.length());
         auto dest = ctx.buffer.as_wslice().skip(state.num_buffered);
 
-        dest.copy_from(input.take(num_to_copy));
+        dest.move_from(input.take(num_to_copy));
         input.advance(num_to_copy);
 
         return num_to_copy + state.num_buffered;
