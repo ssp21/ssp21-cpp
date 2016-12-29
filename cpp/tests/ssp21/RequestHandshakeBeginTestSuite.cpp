@@ -170,7 +170,7 @@ TEST_CASE(SUITE("formats default value"))
 
 TEST_CASE(SUITE("returns error if insufficient buffer space"))
 {
-    openpal::StaticBuffer <uint32_t, RequestHandshakeBegin::min_size_bytes - 1 > buffer;
+    openpal::StaticBuffer < uint32_t, RequestHandshakeBegin::min_size_bytes - 1 > buffer;
     RequestHandshakeBegin msg;
     auto dest = buffer.as_wslice();
     REQUIRE(msg.write(dest).err == FormatError::insufficient_space);

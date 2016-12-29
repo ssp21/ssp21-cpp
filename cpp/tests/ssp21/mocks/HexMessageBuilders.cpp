@@ -76,11 +76,11 @@ namespace ssp21
                 pub_key
             );
 
-            std::vector<std::unique_ptr<HexSeq16>> certificate_slices;
+            std::vector<std::unique_ptr<ssp21::HexSeq16>> certificate_slices;
 
             for (auto& cert : certificates)
             {
-                auto hex = std::make_unique<HexSeq16>(cert);
+                auto hex = std::make_unique<ssp21::HexSeq16>(cert);
                 msg.certificates.push(hex->to_seq());
                 certificate_slices.push_back(std::move(hex));
             }

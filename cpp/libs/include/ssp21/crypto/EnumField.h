@@ -19,10 +19,6 @@ namespace ssp21
 
     public:
 
-        operator enum_t& ()
-        {
-            return value;
-        }
         operator enum_t () const
         {
             return value;

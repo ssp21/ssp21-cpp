@@ -51,7 +51,7 @@ namespace ssp21
         UInt32::write_to(dest, crc_h);
 
         // copy the payload
-		dest.copy_from(message.payload);
+        dest.copy_from(message.payload);
 
         // append the body crc
         UInt32::write_to(dest, CastagnoliCRC32::calc(message.payload));

@@ -35,7 +35,7 @@ namespace ssp21
         }
 
         // we're authenticated, so return the user_data slice
-		return msg.user_data;
+        return msg.user_data;
     }
 
     Seq16 TruncatedMacSessionMode::write(

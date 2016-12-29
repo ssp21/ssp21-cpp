@@ -20,14 +20,14 @@ namespace ssp21
             }
         }
 
-		inline operator R() const
-        {			
-			return to_seq();
+        inline operator R() const
+        {
+            return to_seq();
         }
 
         inline R to_seq() const
         {
-			return this->buffer_.as_rslice().take(static_cast<N>(this->buffer_.length()));
+            return this->buffer_.as_rslice().take(static_cast<N>(this->buffer_.length()));
         }
     };
 

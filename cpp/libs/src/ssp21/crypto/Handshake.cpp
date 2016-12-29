@@ -75,11 +75,11 @@ namespace ssp21
 
         this->algorithms.handshake.kdf(
             this->chaining_key.as_slice().widen(),
-            { 
-				dh1.as_slice().widen(), dh2.as_slice().widen(), dh3.as_slice().widen()
-			},
-            this->chaining_key,
-            this->authentication_key
+        {
+            dh1.as_slice().widen(), dh2.as_slice().widen(), dh3.as_slice().widen()
+        },
+        this->chaining_key,
+        this->authentication_key
         );
     }
 

@@ -28,7 +28,7 @@ TEST_CASE(SUITE("correctly formats output"))
 
 TEST_CASE(SUITE("returns empty buffer if less space than minimum frame size"))
 {
-    StaticBuffer <uint32_t, consts::link::min_frame_size - 1 > buffer;
+    StaticBuffer < uint32_t, consts::link::min_frame_size - 1 > buffer;
 
     auto result = LinkFormatter::write(buffer.as_wslice(), Message(Addresses(1, 2), RSlice::empty_slice()));
 
@@ -37,7 +37,7 @@ TEST_CASE(SUITE("returns empty buffer if less space than minimum frame size"))
 
 TEST_CASE(SUITE("returns empty buffer if insufficient space for payload"))
 {
-    StaticBuffer <uint32_t, consts::link::min_frame_size + 5 > buffer;
+    StaticBuffer < uint32_t, consts::link::min_frame_size + 5 > buffer;
 
     Hex payload("DD DD DD DD DD DD");
 

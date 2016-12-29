@@ -12,7 +12,7 @@
 
 namespace ssp21
 {
-  
+
     class ISessionMode
     {
 
@@ -76,14 +76,14 @@ namespace ssp21
         {
             auto dest = buffer.as_wslice();
             metadata.write(dest);
-			return buffer.as_seq();
+            return buffer.as_seq();
         }
 
         inline static openpal::RSlice get_user_data_length_bytes(uint16_t user_data_length, user_data_length_buffer_t& buffer)
         {
             auto dest = buffer.as_wslice();
             openpal::UInt16::write_to(dest, user_data_length);
-			return buffer.as_seq();
+            return buffer.as_seq();
         }
 
     };

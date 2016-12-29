@@ -97,7 +97,7 @@ TEST_CASE(SUITE("reads Seq8 correctly"))
 
 TEST_CASE(SUITE("returns error if Seq8 empty"))
 {
-	SeqField<openpal::UInt8> field;
+    SeqField<openpal::UInt8> field;
     auto input = RSlice::empty_slice();
     auto err = MessageParser::read_fields(input, field);
     REQUIRE(err == ParseError::insufficient_bytes);
@@ -105,7 +105,7 @@ TEST_CASE(SUITE("returns error if Seq8 empty"))
 
 TEST_CASE(SUITE("returns error if Seq8 incomplete"))
 {
-	SeqField<openpal::UInt8> field;
+    SeqField<openpal::UInt8> field;
     Hex hex("04 00 01 02");
     auto input = hex.as_rslice();
     auto err = MessageParser::read_fields(input, field);
@@ -114,7 +114,7 @@ TEST_CASE(SUITE("returns error if Seq8 incomplete"))
 
 TEST_CASE(SUITE("reads Seq8Seq16 correctly"))
 {
-	SeqSeqField<UInt8, UInt16, 6> seqs;
+    SeqSeqField<UInt8, UInt16, 6> seqs;
     Hex hex("02 00 01 BB 00 02 CA FE DD");
     auto input = hex.as_rslice();
     auto err = MessageParser::read_fields(input, seqs);
@@ -133,7 +133,7 @@ TEST_CASE(SUITE("reads Seq8Seq16 correctly"))
 
 TEST_CASE(SUITE("returns err if capacity limit exceeded"))
 {
-	SeqSeqField<UInt8, UInt16, 1> seqs;
+    SeqSeqField<UInt8, UInt16, 1> seqs;
     Hex hex("02 00 01 AA 00 01 BB");
     auto input = hex.as_rslice();
     auto err = MessageParser::read_fields(input, seqs);
