@@ -96,7 +96,7 @@ namespace ssp21
         this->rx_nonce.set(message.metadata.nonce.value);
         this->statistics.num_success.increment();
 
-        return payload;
+        return payload.widen<uint32_t>();
     }
 
     std::error_code Session::format_message(SessionData& msg, bool fir, const openpal::Timestamp& now, openpal::RSlice& cleartext)
@@ -139,7 +139,7 @@ namespace ssp21
         const uint16_t max_user_data_length = this->algorithms.mode->max_writable_user_data_length(this->max_crypto_payload_length);
         const auto fin = input.length() <= max_user_data_length;
         const uint16_t user_data_length = fin ? static_cast<uint16_t>(input.length()) : max_user_data_length;
-        const auto user_data = Seq16::from(input, user_data_length);
+        const auto user_data = input.take<uint16_t>(user_data_length);
 
         // the metadata we're encoding
         AuthMetadata metadata(
@@ -156,8 +156,8 @@ namespace ssp21
         }
 
         msg.metadata = metadata;
-        msg.user_data = written_user_data;
-        msg.auth_tag = this->auth_tag_buffer.as_slice();
+        msg.user_data.value = written_user_data;
+        msg.auth_tag.value = this->auth_tag_buffer.as_slice();
 
         // everything succeeded, so increment the nonce and advance the input buffer
         this->tx_nonce.increment();

@@ -49,7 +49,8 @@ namespace ssp21
         BufferType buffer_type = BufferType::empty;
 
     protected:
-        openpal::StaticBuffer<consts::crypto::max_primitive_buffer_length> buffer;
+
+        openpal::StaticBuffer<uint8_t, consts::crypto::max_primitive_buffer_length> buffer;
     };
 
     /**

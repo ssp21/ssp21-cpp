@@ -36,7 +36,7 @@ object Includes {
   val enumField = crypto("EnumField")
   val integerField = crypto("IntegerField")
 
-  val seqTypes = crypto("SequenceTypes")
+  val seqTypes = crypto("SequenceFieldTypes")
   val msgFormatter = crypto("MessageFormatter")
   val formatResult = crypto("FormatResult")
   val msgPrinter = crypto("IMessagePrinter")

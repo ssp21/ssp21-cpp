@@ -18,7 +18,7 @@
 
 #include "ssp21/crypto/gen/Function.h"
 #include "ssp21/crypto/IMessage.h"
-#include "ssp21/crypto/SequenceTypes.h"
+#include "ssp21/crypto/SequenceFieldTypes.h"
 
 namespace ssp21 {
 
@@ -37,7 +37,7 @@ struct RequestHandshakeAuth final : public IMessage, private openpal::Uncopyable
     static const uint32_t min_size_bytes = 2;
     static const Function function = Function::request_handshake_auth;
 
-    Seq8 mac;
+    Seq8Field mac;
 
 };
 

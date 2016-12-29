@@ -18,7 +18,7 @@
 
 #include "ssp21/crypto/gen/Function.h"
 #include "ssp21/crypto/IMessage.h"
-#include "ssp21/crypto/SequenceTypes.h"
+#include "ssp21/crypto/SequenceFieldTypes.h"
 
 namespace ssp21 {
 
@@ -37,8 +37,8 @@ struct ReplyHandshakeBegin final : public IMessage, private openpal::Uncopyable
     static const uint32_t min_size_bytes = 3;
     static const Function function = Function::reply_handshake_begin;
 
-    Seq8 ephemeral_public_key;
-    Seq8Seq16 certificates;
+    Seq8Field ephemeral_public_key;
+    Seq8Seq16Field certificates;
 
 };
 

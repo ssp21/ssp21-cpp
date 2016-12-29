@@ -9,7 +9,7 @@ namespace ssp21
 {
     Seq8 BufferBase::as_slice() const
     {
-        return Seq8::from(this->buffer.as_rslice(), this->length);
+		return this->buffer.as_seq();
     }
 
     BufferType BufferBase::get_type() const
@@ -30,7 +30,7 @@ namespace ssp21
 
     void BufferBase::copy(const BufferBase& other)
     {
-        memcpy(this->buffer.as_wslice(), other.buffer.as_rslice(), consts::crypto::max_primitive_buffer_length);
+        memcpy(this->buffer.as_wslice(), other.buffer.as_seq(), consts::crypto::max_primitive_buffer_length);
     }
 
     uint8_t BufferBase::get_buffer_length(BufferType key_type)

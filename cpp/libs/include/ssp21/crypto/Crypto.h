@@ -22,7 +22,7 @@ namespace ssp21
 
         static void zero_memory(openpal::WSlice data);
 
-        static bool secure_equals(const openpal::RSlice& lhs, const openpal::RSlice& rhs);
+        static bool secure_equals(const Seq8& lhs, const Seq8& rhs);
 
         static void hash_sha256(
             std::initializer_list<openpal::RSlice> data,

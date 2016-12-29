@@ -1,5 +1,5 @@
 
-#include "ssp21/crypto/SequenceTypes.h"
+#include "ssp21/crypto/SequenceFieldTypes.h"
 
 #include "openpal/logging/LogMacros.h"
 
@@ -25,7 +25,7 @@ namespace ssp21
             return ParseError::insufficient_bytes;
         }
 
-        value = SeqType::from(input, count);
+		value = input.take(count);
         input.advance(count);
         return ParseError::ok;
     }
@@ -45,59 +45,45 @@ namespace ssp21
 
         if (dest.length() < value.length()) return FormatError::insufficient_space;
 
-        value.copy_to(dest);
+		dest.copy_from(value.widen<uint32_t>());
 
         return FormatError::ok;
     }
 
-    Seq8 Seq8::from(const openpal::RSlice& data, uint8_t length)
+    ParseError Seq8Field::read(openpal::RSlice& input)
     {
-        const auto min = (data.length() < length) ? static_cast<uint8_t>(data.length()) : length;
-
-        return Seq8(data, min);
+        return read_seq<UInt8, Seq8>(input, this->value);
     }
 
-    ParseError Seq8::read(openpal::RSlice& input)
+    FormatError Seq8Field::write(openpal::WSlice& output) const
     {
-        return read_seq<UInt8, Seq8>(input, *this);
+        return write_seq<UInt8, Seq8>(output, this->value);
     }
 
-    FormatError Seq8::write(openpal::WSlice& output) const
+    void Seq8Field::print(const char* name, IMessagePrinter& printer) const
     {
-        return write_seq<UInt8, Seq8>(output, *this);
+        printer.print(name, this->value.widen<uint32_t>());
     }
 
-    void Seq8::print(const char* name, IMessagePrinter& printer) const
+    ParseError Seq16Field::read(openpal::RSlice& input)
     {
-        printer.print(name, *this);
+        return read_seq<UInt16, Seq16>(input, this->value);
     }
 
-    Seq16 Seq16::from(const openpal::RSlice& data, uint16_t length)
+    FormatError Seq16Field::write(openpal::WSlice& output) const
     {
-        const auto min = (data.length() < length) ? static_cast<uint16_t>(data.length()) : length;
-
-        return Seq16(data, min);
+        return write_seq<UInt16, Seq16>(output, this->value);
     }
 
-    ParseError Seq16::read(openpal::RSlice& input)
+    void Seq16Field::print(const char* name, IMessagePrinter& printer) const
     {
-        return read_seq<UInt16, Seq16>(input, *this);
+        printer.print(name, this->value.widen<uint32_t>());
     }
 
-    FormatError Seq16::write(openpal::WSlice& output) const
-    {
-        return write_seq<UInt16, Seq16>(output, *this);
-    }
-
-    void Seq16::print(const char* name, IMessagePrinter& printer) const
-    {
-        printer.print(name, *this);
-    }
-
-    Seq8Seq16::Seq8Seq16() : count_(0)
+    Seq8Seq16Field::Seq8Seq16Field() : count_(0)
     {}
 
-    ParseError Seq8Seq16::read(openpal::RSlice& input)
+    ParseError Seq8Seq16Field::read(openpal::RSlice& input)
     {
         this->clear();
 
@@ -108,11 +94,11 @@ namespace ssp21
 
         while (count > 0)
         {
-            Seq16 slice;
+            Seq16Field slice;
             auto serr = slice.read(input);
             if (any(serr)) return serr;
 
-            if (!this->push(slice))
+            if (!this->push(slice.value))
             {
                 return ParseError::impl_capacity_limit;
             }
@@ -122,7 +108,7 @@ namespace ssp21
         return ParseError::ok;
     }
 
-    FormatError Seq8Seq16::write(openpal::WSlice& output) const
+    FormatError Seq8Seq16Field::write(openpal::WSlice& output) const
     {
         if (this->count() > UInt8::max_value)
         {
@@ -137,7 +123,7 @@ namespace ssp21
 
         for (UInt8::type_t i = 0; i < count_; ++i)
         {
-            Seq16 slice(slices_[i]);
+            Seq16Field slice(slices_[i]);
             auto serr = slice.write(output);
             if (any(serr)) return serr;
         }
@@ -145,7 +131,7 @@ namespace ssp21
         return FormatError::ok;
     }
 
-    void Seq8Seq16::print(const char* name, IMessagePrinter& printer) const
+    void Seq8Seq16Field::print(const char* name, IMessagePrinter& printer) const
     {
         char message[max_log_entry_size];
         SAFE_STRING_FORMAT(message, max_log_entry_size, "%s (count = %u)", name, this->count());
@@ -154,17 +140,17 @@ namespace ssp21
         for (uint32_t i = 0; i < count_; ++i)
         {
             SAFE_STRING_FORMAT(message, max_log_entry_size, "#%u", i + 1);
-            printer.print(message, slices_[i]);
+            printer.print(message, slices_[i].widen<uint32_t>());
         }
 
     }
 
-    void Seq8Seq16::clear()
+    void Seq8Seq16Field::clear()
     {
         count_ = 0;
     }
 
-    bool Seq8Seq16::push(const Seq16& slice)
+    bool Seq8Seq16Field::push(const Seq16& slice)
     {
         if (count_ == consts::crypto::max_seq_of_seq)
         {
@@ -175,7 +161,7 @@ namespace ssp21
         return true;
     }
 
-    bool Seq8Seq16::read(uint32_t i, Seq16& slice) const
+    bool Seq8Seq16Field::read(uint32_t i, Seq16& slice) const
     {
         if (i >= count_)
         {
@@ -186,7 +172,7 @@ namespace ssp21
         return true;
     }
 
-    uint8_t Seq8Seq16::count() const
+    uint8_t Seq8Seq16Field::count() const
     {
         return count_;
     }

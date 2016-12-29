@@ -27,12 +27,12 @@ namespace ssp21
         // ck = hash(ck || input)
 
         this->algorithms.handshake.hash(
-        { this->chaining_key.as_slice(), input },
+        { this->chaining_key.as_slice().widen<uint32_t>(), input },
         this->chaining_key
         );
     }
 
-    bool Handshake::auth_handshake(const openpal::RSlice& mac) const
+    bool Handshake::auth_handshake(const Seq8& mac) const
     {
         return HandshakeAuthentication::auth_handshake_with_mac(
                    this->algorithms.handshake.session_auth_mac,
@@ -74,10 +74,12 @@ namespace ssp21
         if (ec) return;
 
         this->algorithms.handshake.kdf(
-            this->chaining_key.as_slice(),
-        { dh1.as_slice(), dh2.as_slice(), dh3.as_slice() },
-        this->chaining_key,
-        this->authentication_key
+            this->chaining_key.as_slice().widen<uint32_t>(),
+            { 
+				dh1.as_slice().widen<uint32_t>(), dh2.as_slice().widen<uint32_t>(), dh3.as_slice().widen<uint32_t>()
+			},
+            this->chaining_key,
+            this->authentication_key
         );
     }
 
@@ -88,11 +90,11 @@ namespace ssp21
         // keys are swapped for initiator vs responder
         if (this->id == EntityId::Initiator)
         {
-            this->algorithms.handshake.kdf(this->chaining_key.as_slice(), {}, keys.tx_key, keys.rx_key);
+            this->algorithms.handshake.kdf(this->chaining_key.as_slice().widen<uint32_t>(), {}, keys.tx_key, keys.rx_key);
         }
         else
         {
-            this->algorithms.handshake.kdf(this->chaining_key.as_slice(), {}, keys.rx_key, keys.tx_key);
+            this->algorithms.handshake.kdf(this->chaining_key.as_slice().widen<uint32_t>(), {}, keys.rx_key, keys.tx_key);
         }
 
         session.initialize(this->algorithms.session, session_init_time, keys);

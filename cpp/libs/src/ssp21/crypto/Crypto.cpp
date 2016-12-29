@@ -17,7 +17,7 @@ namespace ssp21
         backend_->zero_memory(data);
     }
 
-    bool Crypto::secure_equals(const openpal::RSlice& lhs, const openpal::RSlice& rhs)
+    bool Crypto::secure_equals(const Seq8& lhs, const Seq8& rhs)
     {
         assert(backend_);
         return backend_->secure_equals(lhs, rhs);

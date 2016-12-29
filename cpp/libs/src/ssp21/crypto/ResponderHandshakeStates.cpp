@@ -43,8 +43,8 @@ namespace ssp21
         ctx.handshake.derive_authentication_key(
             wresult.written,
             ctx.local_static_key_pair->private_key,
-            msg.ephemeral_public_key,
-            ctx.remote_static_public_key->as_slice(),
+            msg.ephemeral_public_key.value.widen<uint32_t>(),
+            ctx.remote_static_public_key->as_slice().widen<uint32_t>(),
             ec
         );
 

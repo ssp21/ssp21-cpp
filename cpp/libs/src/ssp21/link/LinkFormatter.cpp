@@ -46,17 +46,17 @@ namespace ssp21
             payload_length
         );
 
-        const auto crc_h = CastagnoliCRC32::calc(start.take(consts::link::header_fields_size));
+        const auto crc_h = CastagnoliCRC32::calc(start.take<uint32_t>(consts::link::header_fields_size));
 
         UInt32::write_to(dest, crc_h);
 
         // copy the payload
-        message.payload.copy_to(dest);
+		dest.copy_from(message.payload);
 
         // append the body crc
         UInt32::write_to(dest, CastagnoliCRC32::calc(message.payload));
 
-        return start.take(consts::link::min_frame_size + payload_length);
+        return start.take<uint32_t>(consts::link::min_frame_size + payload_length);
     }
 }
 

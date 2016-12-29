@@ -79,7 +79,9 @@ case class EnumFieldGenerator(enum: EnumModel) extends FieldGenerator with PassB
 object Seq8FieldGenerator extends FieldGenerator with PassByConstRef {
   override def includes = Set(Includes.seqTypes)
 
-  override def cppType: String = "Seq8"
+  override def paramType : String = "Seq8"
+
+  override def cppType: String = "Seq8Field"
 
   def defaultValue: Option[String] = None
 }
@@ -87,7 +89,9 @@ object Seq8FieldGenerator extends FieldGenerator with PassByConstRef {
 object Seq16FieldGenerator extends FieldGenerator with PassByConstRef {
   override def includes = Set(Includes.seqTypes)
 
-  override def cppType: String = "Seq16"
+  override def paramType : String = "Seq16"
+
+  override def cppType: String = "Seq16Field"
 
   def defaultValue: Option[String] = None
 }
@@ -95,7 +99,7 @@ object Seq16FieldGenerator extends FieldGenerator with PassByConstRef {
 object Seq8Seq16FieldGenerator extends FieldGenerator with PassByConstRef {
   override def includes = Set(Includes.seqTypes)
 
-  override def cppType: String = "Seq8Seq16"
+  override def cppType: String = "Seq8Seq16Field"
 
   def defaultValue: Option[String] = None
 

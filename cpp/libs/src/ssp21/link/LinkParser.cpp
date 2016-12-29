@@ -119,13 +119,13 @@ namespace ssp21
         );
 
         // now read and validate the header
-        auto expected_crc = CastagnoliCRC32::calc(ctx.buffer.as_rslice().take(consts::link::header_fields_size));
+        auto expected_crc = CastagnoliCRC32::calc(ctx.buffer.as_rslice().take<uint32_t>(consts::link::header_fields_size));
 
         if (expected_crc != actual_crc)
         {
             ctx.reporter->on_bad_header_crc(expected_crc, actual_crc);
 
-            auto header = ctx.buffer.as_rslice().take(consts::link::header_total_size).skip(2);
+            auto header = ctx.buffer.as_rslice().take<uint32_t>(consts::link::header_total_size).skip(2);
 
             // reprocess all header bytes except for the synchronization bytes.
             //
@@ -154,7 +154,7 @@ namespace ssp21
             return State::wait_body(new_num_buffered);
         }
 
-        ctx.message.payload = ctx.buffer.as_rslice().skip(consts::link::header_total_size).take(ctx.payload_length);
+        ctx.message.payload = ctx.buffer.as_rslice().skip(consts::link::header_total_size).take<uint32_t>(ctx.payload_length);
         const auto expected_crc = CastagnoliCRC32::calc(ctx.message.payload);
         auto crcb_start = ctx.buffer.as_rslice().skip(consts::link::header_total_size + ctx.payload_length);
 
@@ -176,7 +176,7 @@ namespace ssp21
         const auto num_to_copy = min<uint32_t>(remaining, input.length());
         auto dest = ctx.buffer.as_wslice().skip(state.num_buffered);
 
-        input.take(num_to_copy).move_to(dest);
+		dest.copy_from(input.take(num_to_copy));
         input.advance(num_to_copy);
 
         return num_to_copy + state.num_buffered;

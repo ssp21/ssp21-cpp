@@ -51,7 +51,7 @@ namespace ssp21
         /// derive the session keys and initialize the session
         void initialize_session(Session& session, const openpal::Timestamp& session_init_time) const;
 
-        bool auth_handshake(const openpal::RSlice& mac) const;
+        bool auth_handshake(const Seq8& mac) const;
 
         void calc_auth_handshake_reply_mac(HashOutput& output) const;
 

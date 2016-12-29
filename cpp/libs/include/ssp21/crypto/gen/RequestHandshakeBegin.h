@@ -24,7 +24,7 @@
 #include "ssp21/crypto/IMessage.h"
 #include "ssp21/crypto/EnumField.h"
 #include "ssp21/crypto/IntegerField.h"
-#include "ssp21/crypto/SequenceTypes.h"
+#include "ssp21/crypto/SequenceFieldTypes.h"
 
 namespace ssp21 {
 
@@ -49,8 +49,8 @@ struct RequestHandshakeBegin final : public IMessage, private openpal::Uncopyabl
     IntegerField<openpal::UInt16> version;
     CryptoSpec spec;
     EnumField<CertificateModeSpec> certificate_mode;
-    Seq8 ephemeral_public_key;
-    Seq8Seq16 certificates;
+    Seq8Field ephemeral_public_key;
+    Seq8Seq16Field certificates;
 
 };
 
