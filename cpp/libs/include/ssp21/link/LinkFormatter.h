@@ -7,7 +7,7 @@
 #include "openpal/container/RSlice.h"
 #include "openpal/container/WSlice.h"
 
-#include "ssp21/LayerInterfaces.h"
+#include "ssp21/link/Addresses.h"
 
 #include "ssp21/crypto/SequenceTypes.h"
 

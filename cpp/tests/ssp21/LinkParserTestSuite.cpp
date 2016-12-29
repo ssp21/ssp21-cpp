@@ -72,11 +72,11 @@ TEST_CASE(SUITE("reads a full message properly"))
     REQUIRE(reporter.no_errors());
     REQUIRE(input.is_empty());
 
-    Message msg;
+    LinkParser::Result msg;
 
     REQUIRE(parser.read(msg));
-    REQUIRE(msg.addresses.destination == 1);
-    REQUIRE(msg.addresses.source == 2);
+    REQUIRE(msg.destination == 1);
+    REQUIRE(msg.source == 2);
     REQUIRE(to_hex(msg.payload) == "DD DD DD DD DD DD");
 
 }

@@ -112,8 +112,8 @@ namespace ssp21
 
         BigEndian::read(
             header_start,
-            ctx.message.addresses.destination,
-            ctx.message.addresses.source,
+            ctx.result.destination,
+            ctx.result.source,
             ctx.payload_length,
             actual_crc
         );
@@ -154,8 +154,8 @@ namespace ssp21
             return State::wait_body(new_num_buffered);
         }
 
-        ctx.message.payload = ctx.buffer.as_rslice().skip(consts::link::header_total_size).take<uint32_t>(ctx.payload_length);
-        const auto expected_crc = CastagnoliCRC32::calc(ctx.message.payload);
+        ctx.result.payload = ctx.buffer.as_rslice().skip(consts::link::header_total_size).take<uint32_t>(ctx.payload_length);
+        const auto expected_crc = CastagnoliCRC32::calc(ctx.result.payload);
         auto crcb_start = ctx.buffer.as_rslice().skip(consts::link::header_total_size + ctx.payload_length);
 
         uint32_t actual_crc = 0;

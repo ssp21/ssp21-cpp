@@ -5,7 +5,7 @@
 #include "openpal/util/Uncopyable.h"
 #include "openpal/container/Buffer.h"
 
-#include "ssp21/LayerInterfaces.h"
+#include "ssp21/link/Addresses.h"
 
 namespace ssp21
 {
@@ -20,6 +20,11 @@ namespace ssp21
             virtual void on_bad_header_crc(uint32_t expected, uint32_t actual) = 0;
             virtual void on_bad_body_crc(uint32_t expected, uint32_t actual) = 0;
             virtual void on_bad_body_length(uint32_t max_allowed, uint32_t actual) = 0;
+        };
+
+        struct Result : public Addresses
+        {
+            openpal::RSlice payload;
         };
 
 
@@ -39,17 +44,16 @@ namespace ssp21
 
             this->state_ = State::wait_sync1();
 
-            fun(this->context_.message);
+            fun(this->context_.result);
 
             return true;
         }
 
-        bool read(Message& message)
+        bool read(Result& result)
         {
-            auto fun = [&message](const Message & m) -> void
+            auto fun = [&result](const Result & m) -> void
             {
-                message.addresses = m.addresses;
-                message.payload = m.payload;
+                result = m;
             };
 
             return read(fun);
@@ -118,7 +122,7 @@ namespace ssp21
             IReporter* reporter;
             openpal::Buffer buffer;
 
-            Message message;
+            Result result;
             uint16_t payload_length = 0;
         };
 

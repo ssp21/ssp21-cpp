@@ -68,14 +68,14 @@ TEST_CASE(SUITE("HMAC-sha256"))
 */
 TEST_CASE(SUITE("HKDF-sha256"))
 {
-    Hex ikm("0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b");    
+    Hex ikm("0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b");
 
-	uint8_t salt[8] = { 0xDE, 0xAD, 0xBE, 0xEF };
+    uint8_t salt[8] = { 0xDE, 0xAD, 0xBE, 0xEF };
 
     SymmetricKey key1;
     SymmetricKey key2;
 
-    Crypto::hkdf_sha256(Seq8(salt,8), { ikm }, key1, key2);
+    Crypto::hkdf_sha256(Seq8(salt, 8), { ikm }, key1, key2);
 
     REQUIRE(key1.get_type() == BufferType::symmetric_key);
     REQUIRE(key2.get_type() == BufferType::symmetric_key);

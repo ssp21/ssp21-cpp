@@ -7,40 +7,6 @@
 
 namespace ssp21
 {
-    /**
-    * Addressing information from a source to a destination
-    */
-    struct Addresses
-    {
-        Addresses(uint16_t destination, uint16_t source) :
-            destination(destination), source(source)
-        {}
-
-        Addresses() : destination(0), source(0)
-        {}
-
-        uint16_t destination;
-        uint16_t source;
-    };
-
-    /**
-    *  A combination of payload data and address information
-    */
-    struct Message : openpal::Uncopyable
-    {
-        Message(const Addresses& addresses, const openpal::RSlice& payload) :
-            addresses(addresses),
-            payload(payload)
-        {
-
-        }
-
-        Message() {}
-
-        Addresses addresses;
-        openpal::RSlice payload;
-    };
-
     class IMessageProcessor
     {
     public:
