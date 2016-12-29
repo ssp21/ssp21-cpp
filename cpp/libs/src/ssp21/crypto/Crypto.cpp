@@ -24,7 +24,7 @@ namespace ssp21
     }
 
     void Crypto::hash_sha256(
-        std::initializer_list<openpal::RSlice> data,
+        std::initializer_list<Seq32> data,
         SecureBuffer& output)
     {
         assert(backend_);
@@ -33,7 +33,7 @@ namespace ssp21
 
     void Crypto::hmac_sha256(
         const Seq8& key,
-        std::initializer_list<openpal::RSlice> data,
+        std::initializer_list<Seq32> data,
         SecureBuffer& output)
     {
         assert(backend_);
@@ -46,7 +46,7 @@ namespace ssp21
         backend_->gen_keypair_x25519(pair);
     }
 
-    void Crypto::dh_x25519(const PrivateKey& priv_key, const openpal::RSlice& pub_key, DHOutput& output, std::error_code& ec)
+    void Crypto::dh_x25519(const PrivateKey& priv_key, const Seq8& pub_key, DHOutput& output, std::error_code& ec)
     {
         assert(backend_);
 
@@ -61,7 +61,7 @@ namespace ssp21
 
     void Crypto::hkdf_sha256(
         const Seq8& chaining_key,
-        std::initializer_list<openpal::RSlice> input_key_material,
+        std::initializer_list<Seq32> input_key_material,
         SymmetricKey& output1,
         SymmetricKey& output2)
     {

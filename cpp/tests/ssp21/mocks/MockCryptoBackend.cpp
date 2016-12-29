@@ -25,14 +25,14 @@ namespace ssp21
         return lhs_string == rhs_string;
     }
 
-    void MockCryptoBackend::hash_sha256(std::initializer_list<openpal::RSlice> data, SecureBuffer& output)
+    void MockCryptoBackend::hash_sha256(std::initializer_list<Seq32> data, SecureBuffer& output)
     {
         actions.push_back(CryptoAction::hash_sha256);
         output.get_write_slice().take(consts::crypto::sha256_hash_output_length).set_all_to(fill_byte);
         output.set_type(BufferType::sha256);
     }
 
-    void MockCryptoBackend::hmac_sha256(const Seq8& key, std::initializer_list<openpal::RSlice> data, SecureBuffer& output)
+    void MockCryptoBackend::hmac_sha256(const Seq8& key, std::initializer_list<Seq32> data, SecureBuffer& output)
     {
         actions.push_back(CryptoAction::hmac_sha256);
         output.get_write_slice().take(consts::crypto::sha256_hash_output_length).set_all_to(fill_byte);
@@ -50,7 +50,7 @@ namespace ssp21
         pair.public_key.set_type(BufferType::x25519_key);
     }
 
-    void MockCryptoBackend::dh_x25519(const PrivateKey& priv_key, const openpal::RSlice& pub_key, DHOutput& output, std::error_code& ec)
+    void MockCryptoBackend::dh_x25519(const PrivateKey& priv_key, const Seq8& pub_key, DHOutput& output, std::error_code& ec)
     {
         actions.push_back(CryptoAction::dh_x25519);
 

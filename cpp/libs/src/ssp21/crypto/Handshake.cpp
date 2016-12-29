@@ -62,15 +62,15 @@ namespace ssp21
         this->mix_ck(message);
 
         DHOutput dh1;
-        this->algorithms.handshake.dh(this->local_ephemeral_keys.private_key, pub_e_dh_key.widen(), dh1, ec);
+        this->algorithms.handshake.dh(this->local_ephemeral_keys.private_key, pub_e_dh_key, dh1, ec);
         if (ec) return;
 
         DHOutput dh2;
-        this->algorithms.handshake.dh(this->local_ephemeral_keys.private_key, pub_s_dh_key.widen(), dh2, ec);
+        this->algorithms.handshake.dh(this->local_ephemeral_keys.private_key, pub_s_dh_key, dh2, ec);
         if (ec) return;
 
         DHOutput dh3;
-        this->algorithms.handshake.dh(priv_s_dh_key, pub_e_dh_key.widen(), dh3, ec);
+        this->algorithms.handshake.dh(priv_s_dh_key, pub_e_dh_key, dh3, ec);
         if (ec) return;
 
         this->algorithms.handshake.kdf(

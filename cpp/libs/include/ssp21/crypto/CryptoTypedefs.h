@@ -21,7 +21,7 @@ namespace ssp21
 
     typedef void (*dh_func_t)(
         const PrivateKey& priv_key,
-        const openpal::RSlice& pub_key,
+        const Seq8& pub_key,
         DHOutput& output,
         std::error_code& ec
     );

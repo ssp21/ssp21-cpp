@@ -22,13 +22,13 @@ namespace ssp21
 
         virtual bool secure_equals(const Seq8& lhs, const Seq8& rhs)  override;
 
-        virtual void hash_sha256(std::initializer_list<openpal::RSlice> data, SecureBuffer& output) override;
+        virtual void hash_sha256(std::initializer_list<Seq32> data, SecureBuffer& output) override;
 
-        virtual void hmac_sha256(const Seq8& key, std::initializer_list<openpal::RSlice> data, SecureBuffer& output) override;
+        virtual void hmac_sha256(const Seq8& key, std::initializer_list<Seq32> data, SecureBuffer& output) override;
 
         virtual void gen_keypair_x25519(KeyPair& pair) override;
 
-        virtual void dh_x25519(const PrivateKey& priv_key, const openpal::RSlice& pub_key, DHOutput& output, std::error_code& ec) override;
+        virtual void dh_x25519(const PrivateKey& priv_key, const Seq8& pub_key, DHOutput& output, std::error_code& ec) override;
 
         uint8_t fill_byte = 0xFF;
 

@@ -25,13 +25,13 @@ namespace ssp21
         static bool secure_equals(const Seq8& lhs, const Seq8& rhs);
 
         static void hash_sha256(
-            std::initializer_list<openpal::RSlice> data,
+            std::initializer_list<Seq32> data,
             SecureBuffer& output
         );
 
         static void hmac_sha256(
             const Seq8& key,
-            std::initializer_list<openpal::RSlice> data,
+            std::initializer_list<Seq32> data,
             SecureBuffer& output
         );
 
@@ -39,7 +39,7 @@ namespace ssp21
 
         static void dh_x25519(
             const PrivateKey& priv_key,
-            const openpal::RSlice& pub_key,
+            const Seq8& pub_key,
             DHOutput& output,
             std::error_code& ec
         );
@@ -47,7 +47,7 @@ namespace ssp21
         // HKDF using HMAC-SHA256
         static void hkdf_sha256(
             const Seq8& chaining_key,
-            std::initializer_list<openpal::RSlice> input_key_material,
+            std::initializer_list<Seq32> input_key_material,
             SymmetricKey& key1,
             SymmetricKey& key2
         );
