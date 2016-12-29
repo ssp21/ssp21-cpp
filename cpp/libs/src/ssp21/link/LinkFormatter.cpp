@@ -13,7 +13,7 @@ using namespace openpal;
 
 namespace ssp21
 {
-    RSlice LinkFormatter::write(WSlice dest, const Message& message)
+    RSlice LinkFormatter::write(WSlice dest, const Addresses& addr, const Seq32& payload)
     {
         const auto start = dest.as_rslice();
 
@@ -29,20 +29,20 @@ namespace ssp21
                                                 dest.length() - consts::link::min_frame_size
                                             );
 
-        if (message.payload.length() > max_payload_length)
+        if (payload.length() > max_payload_length)
         {
             return RSlice::empty_slice();
         }
 
         // safe cast since we've already validated the payload length relative to the maximum allowed
-        const auto payload_length = static_cast<uint16_t>(message.payload.length());
+        const auto payload_length = static_cast<uint16_t>(payload.length());
 
         BigEndian::write(
             dest,
             consts::link::sync1,
             consts::link::sync2,
-            message.addresses.destination,
-            message.addresses.source,
+            addr.destination,
+            addr.source,
             payload_length
         );
 
@@ -51,10 +51,10 @@ namespace ssp21
         UInt32::write_to(dest, crc_h);
 
         // copy the payload
-        dest.copy_from(message.payload);
+        dest.copy_from(payload);
 
         // append the body crc
-        UInt32::write_to(dest, CastagnoliCRC32::calc(message.payload));
+        UInt32::write_to(dest, CastagnoliCRC32::calc(payload));
 
         return start.take<uint32_t>(consts::link::min_frame_size + payload_length);
     }

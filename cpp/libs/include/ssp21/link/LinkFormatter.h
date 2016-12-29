@@ -9,6 +9,8 @@
 
 #include "ssp21/LayerInterfaces.h"
 
+#include "ssp21/crypto/SequenceTypes.h"
+
 namespace ssp21
 {
     class LinkFormatter : private openpal::StaticOnly
@@ -16,7 +18,7 @@ namespace ssp21
     public:
 
         // returns an empty slice if there wasn't sufficient space to write the frame
-        static openpal::RSlice write(openpal::WSlice dest, const Message& message);
+        static openpal::RSlice write(openpal::WSlice dest, const Addresses& addr, const Seq32& payload);
     };
 }
 
