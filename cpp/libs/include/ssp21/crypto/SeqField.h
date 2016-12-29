@@ -1,6 +1,6 @@
 
-#ifndef SSP21_SEQUENCEFIELD_H
-#define SSP21_SEQUENCEFIELD_H
+#ifndef SSP21_SEQFIELD_H
+#define SSP21_SEQFIELD_H
 
 #include "openpal/container/RSlice.h"
 #include "openpal/container/WSlice.h"

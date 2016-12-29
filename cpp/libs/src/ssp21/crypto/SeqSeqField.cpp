@@ -1,5 +1,5 @@
 
-#include "ssp21/crypto/SequenceFieldTypes.h"
+#include "ssp21/crypto/SeqSeqField.h"
 
 #include "openpal/logging/LogMacros.h"
 

@@ -97,7 +97,7 @@ object Seq16FieldGenerator extends FieldGenerator with PassByConstRef {
 }
 
 object Seq8Seq16FieldGenerator extends FieldGenerator with PassByConstRef {
-  override def includes = Set(Includes.seqTypes)
+  override def includes = Set(Includes.seqSeqField)
 
   override def cppType: String = "Seq8Seq16Field"
 

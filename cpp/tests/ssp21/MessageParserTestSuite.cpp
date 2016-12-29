@@ -7,7 +7,7 @@
 #include "ssp21/crypto/MessageParser.h"
 
 #include "ssp21/crypto/SeqField.h"
-#include "ssp21/crypto/SequenceFieldTypes.h"
+#include "ssp21/crypto/SeqSeqField.h"
 
 #include "testlib/Hex.h"
 #include "testlib/HexConversions.h"

@@ -24,8 +24,8 @@
 #include "ssp21/crypto/SeqField.h"
 #include "ssp21/crypto/IMessage.h"
 #include "ssp21/crypto/EnumField.h"
+#include "ssp21/crypto/SeqSeqField.h"
 #include "ssp21/crypto/IntegerField.h"
-#include "ssp21/crypto/SequenceFieldTypes.h"
 
 namespace ssp21 {
 
