@@ -19,8 +19,8 @@ namespace ssp21
     {
         actions.push_back(CryptoAction::secure_equals);
 
-        const auto lhs_string = openpal::to_hex(lhs.widen<uint32_t>());
-        const auto rhs_string = openpal::to_hex(rhs.widen<uint32_t>());
+        const auto lhs_string = openpal::to_hex(lhs.widen());
+        const auto rhs_string = openpal::to_hex(rhs.widen());
 
         return lhs_string == rhs_string;
     }

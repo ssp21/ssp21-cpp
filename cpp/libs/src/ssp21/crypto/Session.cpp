@@ -96,7 +96,7 @@ namespace ssp21
         this->rx_nonce.set(message.metadata.nonce.value);
         this->statistics.num_success.increment();
 
-        return payload.widen<uint32_t>();
+        return payload.widen();
     }
 
     std::error_code Session::format_message(SessionData& msg, bool fir, const openpal::Timestamp& now, openpal::RSlice& cleartext)

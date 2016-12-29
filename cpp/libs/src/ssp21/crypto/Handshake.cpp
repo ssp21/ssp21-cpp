@@ -27,7 +27,7 @@ namespace ssp21
         // ck = hash(ck || input)
 
         this->algorithms.handshake.hash(
-        { this->chaining_key.as_slice().widen<uint32_t>(), input },
+        { this->chaining_key.as_slice().widen(), input },
         this->chaining_key
         );
     }
@@ -62,21 +62,21 @@ namespace ssp21
         this->mix_ck(message);
 
         DHOutput dh1;
-        this->algorithms.handshake.dh(this->local_ephemeral_keys.private_key, pub_e_dh_key.widen<uint32_t>(), dh1, ec);
+        this->algorithms.handshake.dh(this->local_ephemeral_keys.private_key, pub_e_dh_key.widen(), dh1, ec);
         if (ec) return;
 
         DHOutput dh2;
-        this->algorithms.handshake.dh(this->local_ephemeral_keys.private_key, pub_s_dh_key.widen<uint32_t>(), dh2, ec);
+        this->algorithms.handshake.dh(this->local_ephemeral_keys.private_key, pub_s_dh_key.widen(), dh2, ec);
         if (ec) return;
 
         DHOutput dh3;
-        this->algorithms.handshake.dh(priv_s_dh_key, pub_e_dh_key.widen<uint32_t>(), dh3, ec);
+        this->algorithms.handshake.dh(priv_s_dh_key, pub_e_dh_key.widen(), dh3, ec);
         if (ec) return;
 
         this->algorithms.handshake.kdf(
-            this->chaining_key.as_slice().widen<uint32_t>(),
+            this->chaining_key.as_slice().widen(),
             { 
-				dh1.as_slice().widen<uint32_t>(), dh2.as_slice().widen<uint32_t>(), dh3.as_slice().widen<uint32_t>()
+				dh1.as_slice().widen(), dh2.as_slice().widen(), dh3.as_slice().widen()
 			},
             this->chaining_key,
             this->authentication_key
@@ -90,11 +90,11 @@ namespace ssp21
         // keys are swapped for initiator vs responder
         if (this->id == EntityId::Initiator)
         {
-            this->algorithms.handshake.kdf(this->chaining_key.as_slice().widen<uint32_t>(), {}, keys.tx_key, keys.rx_key);
+            this->algorithms.handshake.kdf(this->chaining_key.as_slice().widen(), {}, keys.tx_key, keys.rx_key);
         }
         else
         {
-            this->algorithms.handshake.kdf(this->chaining_key.as_slice().widen<uint32_t>(), {}, keys.rx_key, keys.tx_key);
+            this->algorithms.handshake.kdf(this->chaining_key.as_slice().widen(), {}, keys.rx_key, keys.tx_key);
         }
 
         session.initialize(this->algorithms.session, session_init_time, keys);

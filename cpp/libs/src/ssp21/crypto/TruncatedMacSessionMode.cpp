@@ -25,7 +25,7 @@ namespace ssp21
 
         // Now calculate the expected MAC
         HashOutput calc_mac_buffer;
-        mac_func(key.as_slice().widen<uint32_t>(), { ad_bytes, user_data_length_bytes, msg.user_data.seq.widen<uint32_t>() }, calc_mac_buffer);
+        mac_func(key.as_slice().widen(), { ad_bytes, user_data_length_bytes, msg.user_data.seq.widen() }, calc_mac_buffer);
         const auto truncated_mac = calc_mac_buffer.as_slice().take(this->auth_tag_length);
 
         if (!Crypto::secure_equals(msg.auth_tag, truncated_mac)) // authentication failure
@@ -64,7 +64,7 @@ namespace ssp21
         const auto user_data_length_bytes = get_user_data_length_bytes(static_cast<uint16_t>(user_data.length()), length_buffer);
 
         // Now calculate the mac
-        mac_func(key.as_slice().widen<uint32_t>(), { ad_bytes, user_data_length_bytes, user_data.widen<uint32_t>() }, auth_tag);
+        mac_func(key.as_slice().widen(), { ad_bytes, user_data_length_bytes, user_data.widen() }, auth_tag);
         auth_tag.set_type(this->buffer_type);
 
         return user_data;
