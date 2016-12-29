@@ -72,12 +72,12 @@ TEST_CASE(SUITE("reads a full message properly"))
     REQUIRE(reporter.no_errors());
     REQUIRE(input.is_empty());
 
-    LinkParser::Result msg;
+    LinkParser::Result result;
 
-    REQUIRE(parser.read(msg));
-    REQUIRE(msg.destination == 1);
-    REQUIRE(msg.source == 2);
-    REQUIRE(to_hex(msg.payload) == "DD DD DD DD DD DD");
+    REQUIRE(parser.read(result));
+    REQUIRE(result.destination == 1);
+    REQUIRE(result.source == 2);
+    REQUIRE(to_hex(result.payload) == "DD DD DD DD DD DD");
 
 }
 
