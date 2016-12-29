@@ -74,7 +74,7 @@ namespace ssp21
         if (ec) return;
 
         this->algorithms.handshake.kdf(
-            this->chaining_key.as_slice().widen(),
+            this->chaining_key.as_slice(),
         {
             dh1.as_slice().widen(), dh2.as_slice().widen(), dh3.as_slice().widen()
         },
@@ -90,11 +90,11 @@ namespace ssp21
         // keys are swapped for initiator vs responder
         if (this->id == EntityId::Initiator)
         {
-            this->algorithms.handshake.kdf(this->chaining_key.as_slice().widen(), {}, keys.tx_key, keys.rx_key);
+            this->algorithms.handshake.kdf(this->chaining_key.as_slice(), {}, keys.tx_key, keys.rx_key);
         }
         else
         {
-            this->algorithms.handshake.kdf(this->chaining_key.as_slice().widen(), {}, keys.rx_key, keys.tx_key);
+            this->algorithms.handshake.kdf(this->chaining_key.as_slice(), {}, keys.rx_key, keys.tx_key);
         }
 
         session.initialize(this->algorithms.session, session_init_time, keys);

@@ -32,7 +32,7 @@ namespace ssp21
         output.set_type(BufferType::sha256);
     }
 
-    void MockCryptoBackend::hmac_sha256(const openpal::RSlice& key, std::initializer_list<openpal::RSlice> data, SecureBuffer& output)
+    void MockCryptoBackend::hmac_sha256(const Seq8& key, std::initializer_list<openpal::RSlice> data, SecureBuffer& output)
     {
         actions.push_back(CryptoAction::hmac_sha256);
         output.get_write_slice().take(consts::crypto::sha256_hash_output_length).set_all_to(fill_byte);

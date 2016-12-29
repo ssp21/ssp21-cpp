@@ -48,8 +48,7 @@ namespace ssp21
             output.set_type(BufferType::sha256);
         }
 
-        void SodiumBackend::hmac_sha256(const openpal::RSlice& key, std::initializer_list<openpal::RSlice> data,
-                                        SecureBuffer& output)
+        void SodiumBackend::hmac_sha256(const Seq8& key, std::initializer_list<openpal::RSlice> data, SecureBuffer& output)
         {
             crypto_auth_hmacsha256_state state;
             crypto_auth_hmacsha256_init(&state, key, key.length());

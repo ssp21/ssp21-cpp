@@ -32,7 +32,7 @@ namespace ssp21
     }
 
     void Crypto::hmac_sha256(
-        const openpal::RSlice& key,
+        const Seq8& key,
         std::initializer_list<openpal::RSlice> data,
         SecureBuffer& output)
     {
@@ -60,7 +60,7 @@ namespace ssp21
     }
 
     void Crypto::hkdf_sha256(
-        const openpal::RSlice& chaining_key,
+        const Seq8& chaining_key,
         std::initializer_list<openpal::RSlice> input_key_material,
         SymmetricKey& output1,
         SymmetricKey& output2)

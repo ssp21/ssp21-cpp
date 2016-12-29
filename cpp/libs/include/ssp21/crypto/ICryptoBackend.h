@@ -20,7 +20,7 @@ namespace ssp21
 
         virtual void hash_sha256(std::initializer_list<openpal::RSlice> data, SecureBuffer& output) = 0;
 
-        virtual void hmac_sha256(const openpal::RSlice& key, std::initializer_list<openpal::RSlice> data, SecureBuffer& output) = 0;
+        virtual void hmac_sha256(const Seq8& key, std::initializer_list<openpal::RSlice> data, SecureBuffer& output) = 0;
 
         virtual void gen_keypair_x25519(KeyPair& pair) = 0;
 

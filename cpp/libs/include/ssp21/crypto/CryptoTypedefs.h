@@ -14,7 +14,7 @@ namespace ssp21
     );
 
     typedef void (*mac_func_t)(
-        const openpal::RSlice& key,
+        const Seq8& key,
         std::initializer_list<openpal::RSlice> data,
         SecureBuffer& output
     );
@@ -27,7 +27,7 @@ namespace ssp21
     );
 
     typedef void (*kdf_func_t)(
-        const openpal::RSlice& chaining_key,
+        const Seq8& chaining_key,
         std::initializer_list<openpal::RSlice> input_key_material,
         SymmetricKey& key1,
         SymmetricKey& key2
