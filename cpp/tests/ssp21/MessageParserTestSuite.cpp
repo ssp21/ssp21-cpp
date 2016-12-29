@@ -5,6 +5,8 @@
 #include "ssp21/crypto/EnumField.h"
 #include "ssp21/crypto/IntegerField.h"
 #include "ssp21/crypto/MessageParser.h"
+
+#include "ssp21/crypto/SeqField.h"
 #include "ssp21/crypto/SequenceFieldTypes.h"
 
 #include "testlib/Hex.h"

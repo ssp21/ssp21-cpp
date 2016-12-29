@@ -9,79 +9,12 @@
 #include "ssp21/crypto/MessageParser.h"
 #include "ssp21/crypto/MessageFormatter.h"
 
+#include "ssp21/crypto/SeqField.h"
+
 using namespace openpal;
 
 namespace ssp21
 {
-	/*
-    template <class CountType, class SeqType>
-    ParseError read_seq(openpal::RSlice& input, SeqType& value)
-    {
-        IntegerField<CountType> count;
-        auto err = count.read(input);
-        if (any(err)) return err;
-
-        if (input.length() < count)
-        {
-            return ParseError::insufficient_bytes;
-        }
-
-		value = input.take(count);
-        input.advance(count);
-        return ParseError::ok;
-    }
-
-    template <class CountType, class SeqType>
-    FormatError write_seq(openpal::WSlice& dest, const SeqType& value)
-    {
-        if (value.length() > CountType::max_value)
-        {
-            return FormatError::bad_sequence_length;
-        }
-
-        IntegerField<CountType> count(static_cast<typename CountType::type_t>(value.length()));
-
-        auto err = count.write(dest);
-        if (any(err)) return err;
-
-        if (dest.length() < value.length()) return FormatError::insufficient_space;
-
-		dest.copy_from(value.widen<uint32_t>());
-
-        return FormatError::ok;
-    }
-
-    ParseError Seq8Field::read(openpal::RSlice& input)
-    {
-        return read_seq<UInt8, Seq8>(input, this->value);
-    }
-
-    FormatError Seq8Field::write(openpal::WSlice& output) const
-    {
-        return write_seq<UInt8, Seq8>(output, this->value);
-    }
-
-    void Seq8Field::print(const char* name, IMessagePrinter& printer) const
-    {
-        printer.print(name, this->value.widen<uint32_t>());
-    }
-
-    ParseError Seq16Field::read(openpal::RSlice& input)
-    {
-        return read_seq<UInt16, Seq16>(input, this->value);
-    }
-
-    FormatError Seq16Field::write(openpal::WSlice& output) const
-    {
-        return write_seq<UInt16, Seq16>(output, this->value);
-    }
-
-    void Seq16Field::print(const char* name, IMessagePrinter& printer) const
-    {
-        printer.print(name, this->value.widen<uint32_t>());
-    }
-	*/
-
     Seq8Seq16Field::Seq8Seq16Field() : count_(0)
     {}
 

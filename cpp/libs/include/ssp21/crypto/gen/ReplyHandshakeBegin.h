@@ -18,6 +18,7 @@
 
 #include "openpal/serialization/BigEndian.h"
 #include "ssp21/crypto/gen/Function.h"
+#include "ssp21/crypto/SeqField.h"
 #include "ssp21/crypto/IMessage.h"
 #include "ssp21/crypto/SequenceFieldTypes.h"
 

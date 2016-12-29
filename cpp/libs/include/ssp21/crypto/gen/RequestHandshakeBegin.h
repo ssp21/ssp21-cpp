@@ -21,6 +21,7 @@
 #include "ssp21/crypto/gen/Function.h"
 #include "ssp21/crypto/gen/CertificateMode.h"
 #include "ssp21/crypto/gen/CryptoSpec.h"
+#include "ssp21/crypto/SeqField.h"
 #include "ssp21/crypto/IMessage.h"
 #include "ssp21/crypto/EnumField.h"
 #include "ssp21/crypto/IntegerField.h"

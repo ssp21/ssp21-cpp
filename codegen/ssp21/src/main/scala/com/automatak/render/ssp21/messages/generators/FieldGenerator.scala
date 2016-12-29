@@ -77,7 +77,7 @@ case class EnumFieldGenerator(enum: EnumModel) extends FieldGenerator with PassB
 }
 
 object Seq8FieldGenerator extends FieldGenerator with PassByConstRef {
-  override def includes = Set(Includes.seqTypes, Includes.bigEndian)
+  override def includes = Set(Includes.seqField, Includes.bigEndian)
 
   override def paramType : String = "Seq8"
 
@@ -87,7 +87,7 @@ object Seq8FieldGenerator extends FieldGenerator with PassByConstRef {
 }
 
 object Seq16FieldGenerator extends FieldGenerator with PassByConstRef {
-  override def includes = Set(Includes.seqTypes)
+  override def includes = Set(Includes.seqField, Includes.bigEndian)
 
   override def paramType : String = "Seq16"
 
