@@ -19,7 +19,7 @@ namespace ssp21
     {
     public:
 
-		typedef openpal::RSeq<uint8_t, typename T::type_t> seq_t;
+		typedef openpal::RSeq<typename T::type_t> seq_t;
 
 		SeqField() {}
 

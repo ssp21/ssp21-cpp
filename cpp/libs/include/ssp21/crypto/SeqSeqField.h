@@ -16,7 +16,7 @@ namespace ssp21
     public:
 
 		typedef typename OuterType::type_t count_t;
-		typedef openpal::RSeq<uint8_t, typename InnerType::type_t> seq_t;				
+		typedef openpal::RSeq<typename InnerType::type_t> seq_t;				
 
 		ParseError read(openpal::RSlice& input)
 		{
