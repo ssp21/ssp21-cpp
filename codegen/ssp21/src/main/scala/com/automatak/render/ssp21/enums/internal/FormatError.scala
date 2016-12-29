@@ -17,8 +17,7 @@ object FormatError {
 
   private val codes = List(
     falseValue,
-    EnumValue("insufficient_space", 1, "not enough output buffer space"),
-    EnumValue("bad_sequence_length", 2, "a message sequence length overflowed its serialized representation")
+    EnumValue("insufficient_space", 1, "not enough output buffer space")
   )
 
 }

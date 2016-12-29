@@ -111,13 +111,7 @@ namespace ssp21
     }
 
     FormatError Seq8Seq16Field::write(openpal::WSlice& output) const
-    {
-        if (this->count() > UInt8::max_value)
-        {
-            return FormatError::bad_sequence_length;
-        }
-
-
+    {       
         IntegerField<UInt8> count(static_cast<UInt8::type_t>(this->count()));
 
         auto err = count.write(output);

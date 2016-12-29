@@ -27,8 +27,6 @@ const char* FormatErrorSpec::to_string(FormatError arg)
             return "ok";
         case(FormatError::insufficient_space):
             return "insufficient_space";
-        case(FormatError::bad_sequence_length):
-            return "bad_sequence_length";
         default:
             return "undefined";
     }

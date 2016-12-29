@@ -30,9 +30,7 @@ enum class FormatError : uint8_t
     /// message was formatted successfully
     ok = 0x0,
     /// not enough output buffer space
-    insufficient_space = 0x1,
-    /// a message sequence length overflowed its serialized representation
-    bad_sequence_length = 0x2
+    insufficient_space = 0x1
 };
 
 inline bool any(FormatError value)
