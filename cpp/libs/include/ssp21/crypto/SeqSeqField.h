@@ -2,43 +2,114 @@
 #ifndef SSP21_SEQSEQFIELD_H
 #define SSP21_SEQSEQFIELD_H
 
-#include "openpal/container/RSlice.h"
-#include "openpal/container/WSlice.h"
-
-#include "ssp21/crypto/gen/FormatError.h"
-#include "ssp21/crypto/gen/ParseError.h"
-#include "ssp21/crypto/Constants.h"
-
-#include "ssp21/crypto/SequenceTypes.h"
-#include "ssp21/crypto/IMessagePrinter.h"
-#include "ssp21/crypto/IntegerField.h"
+#include "ssp21/crypto/SeqField.h"
+#include "openpal/logging/Logger.h"
+#include "openpal/logging/LogMacros.h"
 
 namespace ssp21
 {
 
-    class Seq8Seq16Field
+	template <class OuterType, class InnerType, uint8_t MAX_COUNT>
+    class SeqSeqField
     {
 
     public:
 
-        Seq8Seq16Field();
+		typedef typename OuterType::type_t count_t;
+		typedef openpal::RSeq<uint8_t, typename InnerType::type_t> seq_t;				
 
-        ParseError read(openpal::RSlice& input);
-        FormatError write(openpal::WSlice& output) const;
-        void print(const char* name, IMessagePrinter& printer) const;
+		ParseError read(openpal::RSlice& input)
+		{
+			this->clear();
 
-        void clear();
+			IntegerField<OuterType> count;
 
-        bool push(const Seq16& slice);
+			auto cerr = count.read(input);
+			if (any(cerr)) return cerr;
 
-        bool read(uint32_t i, Seq16& slice) const;
+			while (count > 0)
+			{
+				SeqField<InnerType> slice;
+				auto serr = slice.read(input);
+				if (any(serr)) return serr;
 
-        uint8_t count() const;
+				if (!this->push(slice))
+				{
+					return ParseError::impl_capacity_limit;
+				}
+				--count;
+			}
+
+			return ParseError::ok;
+		}
+        
+		FormatError write(openpal::WSlice& output) const
+		{
+			IntegerField<OuterType> count_field(this->count_);
+
+			auto err = count_field.write(output);
+			if (any(err)) return err;
+
+			for (count_t i = 0; i < this->count_; ++i)
+			{
+				SeqField<InnerType> item(this->items_[i]);
+				auto serr = item.write(output);
+				if (any(serr)) return serr;
+			}
+
+			return FormatError::ok;
+		}
+        
+		void print(const char* name, IMessagePrinter& printer) const
+		{
+			char message[openpal::max_log_entry_size];
+			SAFE_STRING_FORMAT(message, openpal::max_log_entry_size, "%s (count = %u)", name, this->count());
+			printer.print(message);
+
+			for (count_t i = 0; i < this->count_; ++i)
+			{
+				SAFE_STRING_FORMAT(message, openpal::max_log_entry_size, "#%u", i + 1);
+				printer.print(message, this->items_[i].widen<uint32_t>());
+			}
+		}
+
+		void clear()
+		{
+			this->count_ = 0;
+		}
+
+		bool push(const seq_t& item)
+		{
+			if (this->count_ == MAX_COUNT)
+			{
+				return false;
+			}
+
+			this->items_[this->count_++] = item;
+
+			return true;
+		}
+
+		bool read(count_t i, seq_t& item) const
+		{
+			if (i >= this->count_)
+			{
+				return false;
+			}
+
+			item = this->items_[i];
+			return true;
+		}
+
+		count_t count() const
+		{
+			return this->count_;
+		}
 
     private:
 
-        uint8_t count_;
-        Seq16 slices_[consts::crypto::max_seq_of_seq];
+		count_t count_ = 0;
+		seq_t items_[MAX_COUNT];
     };
 
 }

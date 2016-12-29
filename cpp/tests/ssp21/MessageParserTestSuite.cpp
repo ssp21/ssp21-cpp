@@ -114,7 +114,7 @@ TEST_CASE(SUITE("returns error if Seq8 incomplete"))
 
 TEST_CASE(SUITE("reads Seq8Seq16 correctly"))
 {
-	Seq8Seq16Field seqs;
+	SeqSeqField<UInt8, UInt16, 6> seqs;
     Hex hex("02 00 01 BB 00 02 CA FE DD");
     auto input = hex.as_rslice();
     auto err = MessageParser::read_fields(input, seqs);
@@ -131,10 +131,10 @@ TEST_CASE(SUITE("reads Seq8Seq16 correctly"))
     REQUIRE_FALSE(seqs.read(2, slice));
 }
 
-TEST_CASE(SUITE("returns err if Seq8Seq16 reaches limit"))
+TEST_CASE(SUITE("returns err if capacity limit exceeded"))
 {
-    Seq8Seq16Field seqs;
-    Hex hex("07 00 01 00 00 01 00 00 01 00 00 01 00 00 01 00");
+	SeqSeqField<UInt8, UInt16, 1> seqs;
+    Hex hex("02 00 01 AA 00 01 BB");
     auto input = hex.as_rslice();
     auto err = MessageParser::read_fields(input, seqs);
     REQUIRE(err == ParseError::impl_capacity_limit);

@@ -16,10 +16,9 @@
 #ifndef SSP21_REPLYHANDSHAKEBEGIN_H
 #define SSP21_REPLYHANDSHAKEBEGIN_H
 
-#include "openpal/serialization/BigEndian.h"
 #include "ssp21/crypto/gen/Function.h"
-#include "ssp21/crypto/SeqField.h"
 #include "ssp21/crypto/IMessage.h"
+#include "ssp21/crypto/SeqField.h"
 #include "ssp21/crypto/SeqSeqField.h"
 
 namespace ssp21 {
@@ -40,7 +39,7 @@ struct ReplyHandshakeBegin final : public IMessage, private openpal::Uncopyable
     static const Function function = Function::reply_handshake_begin;
 
     SeqField<openpal::UInt8> ephemeral_public_key;
-    Seq8Seq16Field certificates;
+    SeqSeqField<openpal::UInt8, openpal::UInt16, 6> certificates;
 
 };
 

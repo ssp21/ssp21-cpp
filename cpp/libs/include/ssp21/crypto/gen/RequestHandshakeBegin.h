@@ -51,7 +51,7 @@ struct RequestHandshakeBegin final : public IMessage, private openpal::Uncopyabl
     CryptoSpec spec;
     EnumField<CertificateModeSpec> certificate_mode;
     SeqField<openpal::UInt8> ephemeral_public_key;
-    Seq8Seq16Field certificates;
+    SeqSeqField<openpal::UInt8, openpal::UInt16, 6> certificates;
 
 };
 

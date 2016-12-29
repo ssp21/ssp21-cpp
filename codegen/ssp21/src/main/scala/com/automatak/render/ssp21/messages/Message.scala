@@ -73,8 +73,9 @@ sealed case class Seq16(name: String) extends Field {
   def fixedSize: Option[Int] = None
 }
 
-sealed case class Seq8Seq16(name: String) extends Field {
-  def cpp = Seq8Seq16FieldGenerator
+sealed case class Seq8Seq16(name: String, capacity : Int) extends Field {
+
+  def cpp = Seq8Seq16FieldGenerator(capacity)
 
   def minSizeBytes: Int = 1
 

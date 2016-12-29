@@ -2,8 +2,8 @@
 #ifndef SSP21_SEQFIELD_H
 #define SSP21_SEQFIELD_H
 
-#include "openpal/container/RSlice.h"
 #include "openpal/container/WSlice.h"
+#include "openpal/serialization/BigEndian.h"
 
 #include "ssp21/crypto/gen/FormatError.h"
 #include "ssp21/crypto/gen/ParseError.h"

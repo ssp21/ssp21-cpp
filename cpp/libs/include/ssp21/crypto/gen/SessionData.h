@@ -16,11 +16,10 @@
 #ifndef SSP21_SESSIONDATA_H
 #define SSP21_SESSIONDATA_H
 
-#include "openpal/serialization/BigEndian.h"
 #include "ssp21/crypto/gen/Function.h"
 #include "ssp21/crypto/gen/AuthMetadata.h"
-#include "ssp21/crypto/SeqField.h"
 #include "ssp21/crypto/IMessage.h"
+#include "ssp21/crypto/SeqField.h"
 
 namespace ssp21 {
 
