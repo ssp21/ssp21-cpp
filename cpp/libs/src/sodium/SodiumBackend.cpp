@@ -26,7 +26,7 @@ namespace ssp21
             sodium_memzero(data, data.length());
         }
 
-        bool SodiumBackend::secure_equals(const openpal::RSlice& lhs, const openpal::RSlice& rhs)
+        bool SodiumBackend::secure_equals(const Seq8& lhs, const Seq8& rhs)
         {
             if (lhs.length() != rhs.length()) return false;
 

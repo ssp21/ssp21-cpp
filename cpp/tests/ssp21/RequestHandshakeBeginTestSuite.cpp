@@ -75,12 +75,12 @@ TEST_CASE(SUITE("successfully parses message"))
     REQUIRE(msg.spec.session_mode == SessionMode::hmac_sha256_16);
     REQUIRE(msg.certificate_mode == CertificateMode::preshared_keys);
 
-    REQUIRE(to_hex(msg.ephemeral_public_key) == "AA AA AA");
+    REQUIRE(to_hex(msg.ephemeral_public_key.seq.widen<uint32_t>()) == "AA AA AA");
 
     REQUIRE(msg.certificates.count() == 1);
     Seq16 cert;
     REQUIRE(msg.certificates.read(0, cert));
-    REQUIRE(to_hex(cert) == "BB BB");
+    REQUIRE(to_hex(cert.widen<uint32_t>()) == "BB BB");
 }
 
 TEST_CASE(SUITE("pretty prints message"))
@@ -159,7 +159,7 @@ TEST_CASE(SUITE("rejects trailing data"))
 
 TEST_CASE(SUITE("formats default value"))
 {
-    openpal::StaticBuffer<RequestHandshakeBegin::min_size_bytes> buffer;
+    openpal::StaticBuffer<uint32_t, RequestHandshakeBegin::min_size_bytes> buffer;
     RequestHandshakeBegin msg;
     auto dest = buffer.as_wslice();
     auto res = msg.write(dest);
@@ -170,7 +170,7 @@ TEST_CASE(SUITE("formats default value"))
 
 TEST_CASE(SUITE("returns error if insufficient buffer space"))
 {
-    openpal::StaticBuffer < RequestHandshakeBegin::min_size_bytes - 1 > buffer;
+    openpal::StaticBuffer <uint32_t, RequestHandshakeBegin::min_size_bytes - 1 > buffer;
     RequestHandshakeBegin msg;
     auto dest = buffer.as_wslice();
     REQUIRE(msg.write(dest).err == FormatError::insufficient_space);

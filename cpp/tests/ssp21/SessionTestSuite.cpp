@@ -96,7 +96,7 @@ TEST_CASE(SUITE("rejects minimum ttl + 1"))
 TEST_CASE(SUITE("can't format a message without a valid session"))
 {
     Session s;
-    StaticBuffer<consts::link::max_config_payload_size> buffer;
+    StaticBuffer<uint32_t, consts::link::max_config_payload_size> buffer;
     Hex hex("CAFE");
 
     auto input = hex.as_rslice();
@@ -110,7 +110,7 @@ TEST_CASE(SUITE("can't format a with maximum nonce value"))
 {
     Session s;
     init(s, std::numeric_limits<uint16_t>::max());
-    StaticBuffer<consts::link::max_config_payload_size> buffer;
+    StaticBuffer<uint32_t, consts::link::max_config_payload_size> buffer;
     Hex hex("CAFE");
 
 
@@ -125,7 +125,7 @@ TEST_CASE(SUITE("can't format a message if the session time has exceed 2^32 - 1"
 {
     Session s;
     init(s);
-    StaticBuffer<consts::link::max_config_payload_size> buffer;
+    StaticBuffer<uint32_t, consts::link::max_config_payload_size> buffer;
     Hex hex("CAFE");
 
     auto input = hex.as_rslice();
@@ -140,7 +140,7 @@ TEST_CASE(SUITE("can't format a maximum if the session time has overflowed"))
 {
     Session s;
     init(s);
-    StaticBuffer<consts::link::max_config_payload_size> buffer;
+    StaticBuffer<uint32_t, consts::link::max_config_payload_size> buffer;
     Hex hex("CAFE");
 
     auto input = hex.as_rslice();
@@ -158,7 +158,7 @@ TEST_CASE(SUITE("successfully formats and increments nonce"))
 
     Session s;
     init(s);
-    StaticBuffer<consts::link::max_config_payload_size> buffer;
+    StaticBuffer<uint32_t, consts::link::max_config_payload_size> buffer;
     Hex hex("CAFE");
 
     std::error_code ec;

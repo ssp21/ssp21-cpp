@@ -16,6 +16,7 @@
 #ifndef SSP21_SESSIONDATA_H
 #define SSP21_SESSIONDATA_H
 
+#include "openpal/serialization/BigEndian.h"
 #include "ssp21/crypto/gen/Function.h"
 #include "ssp21/crypto/gen/AuthMetadata.h"
 #include "ssp21/crypto/IMessage.h"
@@ -41,8 +42,8 @@ struct SessionData final : public IMessage, private openpal::Uncopyable
     static const Function function = Function::session_data;
 
     AuthMetadata metadata;
-    Seq16Field user_data;
-    Seq8Field auth_tag;
+    SeqField<openpal::UInt16> user_data;
+    SeqField<openpal::UInt8> auth_tag;
 
 };
 

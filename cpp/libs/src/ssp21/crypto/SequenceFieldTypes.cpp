@@ -13,6 +13,7 @@ using namespace openpal;
 
 namespace ssp21
 {
+	/*
     template <class CountType, class SeqType>
     ParseError read_seq(openpal::RSlice& input, SeqType& value)
     {
@@ -79,6 +80,7 @@ namespace ssp21
     {
         printer.print(name, this->value.widen<uint32_t>());
     }
+	*/
 
     Seq8Seq16Field::Seq8Seq16Field() : count_(0)
     {}
@@ -94,11 +96,11 @@ namespace ssp21
 
         while (count > 0)
         {
-            Seq16Field slice;
+            SeqField<openpal::UInt16> slice;
             auto serr = slice.read(input);
             if (any(serr)) return serr;
 
-            if (!this->push(slice.value))
+            if (!this->push(slice))
             {
                 return ParseError::impl_capacity_limit;
             }
@@ -123,7 +125,7 @@ namespace ssp21
 
         for (UInt8::type_t i = 0; i < count_; ++i)
         {
-            Seq16Field slice(slices_[i]);
+            SeqField<openpal::UInt16> slice(slices_[i]);
             auto serr = slice.write(output);
             if (any(serr)) return serr;
         }

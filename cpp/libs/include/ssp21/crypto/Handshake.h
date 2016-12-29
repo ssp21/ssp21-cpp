@@ -13,6 +13,7 @@
 #include "ssp21/crypto/NonceFunctions.h"
 #include "ssp21/crypto/Algorithms.h"
 #include "ssp21/crypto/Session.h"
+#include "ssp21/crypto/SequenceTypes.h"
 
 namespace ssp21
 {
@@ -43,8 +44,8 @@ namespace ssp21
         void derive_authentication_key(
             const openpal::RSlice& message,
             const PrivateKey& priv_s_dh_key,
-            const openpal::RSlice& pub_e_dh_key,
-            const openpal::RSlice& pub_s_dh_key,
+            const Seq8& pub_e_dh_key,
+            const Seq8& pub_s_dh_key,
             std::error_code& ec
         );
 

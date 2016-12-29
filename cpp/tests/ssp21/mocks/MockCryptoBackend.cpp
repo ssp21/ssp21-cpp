@@ -15,12 +15,12 @@ namespace ssp21
         memset(data, 0, data.length());
     }
 
-    bool MockCryptoBackend::secure_equals(const openpal::RSlice& lhs, const openpal::RSlice& rhs)
+    bool MockCryptoBackend::secure_equals(const Seq8& lhs, const Seq8& rhs)
     {
         actions.push_back(CryptoAction::secure_equals);
 
-        const auto lhs_string = openpal::to_hex(lhs);
-        const auto rhs_string = openpal::to_hex(rhs);
+        const auto lhs_string = openpal::to_hex(lhs.widen<uint32_t>());
+        const auto rhs_string = openpal::to_hex(rhs.widen<uint32_t>());
 
         return lhs_string == rhs_string;
     }

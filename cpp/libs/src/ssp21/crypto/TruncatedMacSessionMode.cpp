@@ -21,21 +21,21 @@ namespace ssp21
         const auto ad_bytes = get_metadata_bytes(msg.metadata, metadata_buffer);
 
         user_data_length_buffer_t length_buffer;
-        const auto user_data_length_bytes = get_user_data_length_bytes(msg.user_data.value.length(), length_buffer);
+        const auto user_data_length_bytes = get_user_data_length_bytes(msg.user_data.length(), length_buffer);
 
         // Now calculate the expected MAC
         HashOutput calc_mac_buffer;
-        mac_func(key.as_slice().widen<uint32_t>(), { ad_bytes, user_data_length_bytes, msg.user_data.value.widen<uint32_t>() }, calc_mac_buffer);
+        mac_func(key.as_slice().widen<uint32_t>(), { ad_bytes, user_data_length_bytes, msg.user_data.seq.widen<uint32_t>() }, calc_mac_buffer);
         const auto truncated_mac = calc_mac_buffer.as_slice().take(this->auth_tag_length);
 
-        if (!Crypto::secure_equals(msg.auth_tag.value, truncated_mac)) // authentication failure
+        if (!Crypto::secure_equals(msg.auth_tag, truncated_mac)) // authentication failure
         {
             ec = CryptoError::mac_auth_fail;
             return Seq16::empty_slice();
         }
 
         // we're authenticated, so return the user_data slice
-		return msg.user_data.value;
+		return msg.user_data;
     }
 
     Seq16 TruncatedMacSessionMode::write(

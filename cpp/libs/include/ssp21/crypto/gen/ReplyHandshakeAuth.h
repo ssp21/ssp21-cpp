@@ -16,6 +16,7 @@
 #ifndef SSP21_REPLYHANDSHAKEAUTH_H
 #define SSP21_REPLYHANDSHAKEAUTH_H
 
+#include "openpal/serialization/BigEndian.h"
 #include "ssp21/crypto/gen/Function.h"
 #include "ssp21/crypto/IMessage.h"
 #include "ssp21/crypto/SequenceFieldTypes.h"
@@ -37,7 +38,7 @@ struct ReplyHandshakeAuth final : public IMessage, private openpal::Uncopyable
     static const uint32_t min_size_bytes = 2;
     static const Function function = Function::request_handshake_auth;
 
-    Seq8Field mac;
+    SeqField<openpal::UInt8> mac;
 
 };
 

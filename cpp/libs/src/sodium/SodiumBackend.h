@@ -16,7 +16,7 @@ namespace ssp21
 
             virtual void zero_memory(openpal::WSlice data) override;
 
-            virtual bool secure_equals(const openpal::RSlice& lhs, const openpal::RSlice& rhs) override;
+            virtual bool secure_equals(const Seq8& lhs, const Seq8& rhs) override;
 
             virtual void hash_sha256(std::initializer_list<openpal::RSlice> data, SecureBuffer& output) override;
 

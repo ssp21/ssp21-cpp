@@ -2,10 +2,10 @@
 
 #include "catch.hpp"
 
-#include "ssp21/crypto/MessageParser.h"
-#include "ssp21/crypto/SequenceTypes.h"
 #include "ssp21/crypto/EnumField.h"
 #include "ssp21/crypto/IntegerField.h"
+#include "ssp21/crypto/MessageParser.h"
+#include "ssp21/crypto/SequenceFieldTypes.h"
 
 #include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
@@ -82,37 +82,37 @@ TEST_CASE(SUITE("ignores extra data after fields"))
 
 TEST_CASE(SUITE("reads Seq8 correctly"))
 {
-    Seq8 seq;
+    SeqField<openpal::UInt8> field;
     Hex hex("04 00 01 02 03 FF");
 
     auto input = hex.as_rslice();
-    auto err = MessageParser::read_fields(input, seq);
+    auto err = MessageParser::read_fields(input, field);
 
     REQUIRE_FALSE(any(err));
     REQUIRE(input.length() == 1);
-    REQUIRE(to_hex(seq) == "00 01 02 03");
+    REQUIRE(to_hex(field.seq.widen<uint32_t>()) == "00 01 02 03");
 }
 
 TEST_CASE(SUITE("returns error if Seq8 empty"))
 {
-    Seq8 seq;
+	SeqField<openpal::UInt8> field;
     auto input = RSlice::empty_slice();
-    auto err = MessageParser::read_fields(input, seq);
+    auto err = MessageParser::read_fields(input, field);
     REQUIRE(err == ParseError::insufficient_bytes);
 }
 
 TEST_CASE(SUITE("returns error if Seq8 incomplete"))
 {
-    Seq8 seq;
+	SeqField<openpal::UInt8> field;
     Hex hex("04 00 01 02");
     auto input = hex.as_rslice();
-    auto err = MessageParser::read_fields(input, seq);
+    auto err = MessageParser::read_fields(input, field);
     REQUIRE(err == ParseError::insufficient_bytes);
 }
 
 TEST_CASE(SUITE("reads Seq8Seq16 correctly"))
 {
-    Seq8Seq16 seqs;
+	Seq8Seq16Field seqs;
     Hex hex("02 00 01 BB 00 02 CA FE DD");
     auto input = hex.as_rslice();
     auto err = MessageParser::read_fields(input, seqs);
@@ -123,15 +123,15 @@ TEST_CASE(SUITE("reads Seq8Seq16 correctly"))
 
     Seq16 slice;
     REQUIRE(seqs.read(0, slice));
-    REQUIRE(to_hex(slice) == "BB");
+    REQUIRE(to_hex(slice.widen<uint32_t>()) == "BB");
     REQUIRE(seqs.read(1, slice));
-    REQUIRE(to_hex(slice) == "CA FE");
+    REQUIRE(to_hex(slice.widen<uint32_t>()) == "CA FE");
     REQUIRE_FALSE(seqs.read(2, slice));
 }
 
 TEST_CASE(SUITE("returns err if Seq8Seq16 reaches limit"))
 {
-    Seq8Seq16 seqs;
+    Seq8Seq16Field seqs;
     Hex hex("07 00 01 00 00 01 00 00 01 00 00 01 00 00 01 00");
     auto input = hex.as_rslice();
     auto err = MessageParser::read_fields(input, seqs);
