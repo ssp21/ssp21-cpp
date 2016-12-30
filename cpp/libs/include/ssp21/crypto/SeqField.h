@@ -24,9 +24,9 @@ namespace ssp21
         SeqField() {}
 
         SeqField& operator=(const seq_t& other)
-        {            
-			seq_t::operator=(other);
-			return *this;
+        {
+            seq_t::operator=(other);
+            return *this;
         }
 
         explicit SeqField(const seq_t& value) : seq_t(value)
@@ -66,7 +66,7 @@ namespace ssp21
         {
             printer.print(name, *this);
         }
-		
+
     };
 
 }
