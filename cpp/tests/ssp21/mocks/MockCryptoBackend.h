@@ -18,7 +18,7 @@ namespace ssp21
 
         static MockCryptoBackend instance;
 
-        virtual void zero_memory(wseq32_t data) override;
+        virtual void zero_memory(const wseq32_t& data) override;
 
         virtual bool secure_equals(const seq8_t& lhs, const seq8_t& rhs)  override;
 

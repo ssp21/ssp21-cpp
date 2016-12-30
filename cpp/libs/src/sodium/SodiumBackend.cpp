@@ -21,7 +21,7 @@ namespace ssp21
 
         SodiumBackend SodiumBackend::backend_;
 
-        void SodiumBackend::zero_memory(wseq32_t data)
+        void SodiumBackend::zero_memory(const wseq32_t& data)
         {
             sodium_memzero(data, data.length());
         }

@@ -20,7 +20,7 @@ namespace ssp21
 
         // --- These are the static proxy functions that SSP21 calls at runtime ---
 
-        static void zero_memory(wseq32_t data);
+        static void zero_memory(const wseq32_t& data);
 
         static bool secure_equals(const seq8_t& lhs, const seq8_t& rhs);
 
