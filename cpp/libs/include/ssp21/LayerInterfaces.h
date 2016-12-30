@@ -4,14 +4,11 @@
 
 #include "openpal/util/Uncopyable.h"
 
+#include "openpal/container/SequenceTypes.h"
+
 namespace ssp21
 {
-    class IMessageProcessor
-    {
-    public:
-        virtual void process(const seq32_t& data) = 0;
-    };
-
+   
     class ILowerLayer
     {
 
@@ -19,7 +16,8 @@ namespace ssp21
 
         virtual bool transmit(const seq32_t& data) = 0;
 
-        virtual bool receive(IMessageProcessor& processor) = 0;
+		// tell this layer to push any data it might have
+        virtual void receive() = 0;
 
         inline bool get_is_tx_ready() const
         {
@@ -75,12 +73,9 @@ namespace ssp21
             }
         }
 
-        inline void on_rx_ready()
+        inline bool on_rx_ready(const seq32_t& data)
         {
-            if (this->is_open)
-            {
-                this->on_rx_ready_impl();
-            }
+			return (this->is_open) ? this->on_rx_ready_impl(data) : false;
         }
 
         inline bool get_is_open() const
@@ -96,7 +91,7 @@ namespace ssp21
 
         virtual void on_tx_ready_impl() = 0;
 
-        virtual void on_rx_ready_impl() = 0;
+        virtual bool on_rx_ready_impl(const seq32_t& data) = 0;
 
     private:
 

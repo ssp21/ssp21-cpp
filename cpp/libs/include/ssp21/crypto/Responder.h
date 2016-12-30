@@ -32,7 +32,7 @@ namespace ssp21
     /**
     	WIP - this class will implement the stateful part of the responder.
     */
-    class Responder final : public IUpperLayer, public ILowerLayer, private IMessageProcessor, private IMessageHandler
+    class Responder final : public IUpperLayer, public ILowerLayer, private IMessageHandler
     {
 
     public:
@@ -130,22 +130,27 @@ namespace ssp21
 
         void check_receive();
         void check_transmit();
+		
+		inline bool can_receive() const
+		{
+			return ctx.lower->get_is_tx_ready() && !this->get_is_rx_ready();
+		}
+		
+
+		void process(const seq32_t& data);
 
         // ---- implement IUpperLayer -----
 
         virtual void on_open_impl() override {}
         virtual void on_close_impl() override;
         virtual void on_tx_ready_impl() override;
-        virtual void on_rx_ready_impl() override;
+        virtual bool on_rx_ready_impl(const seq32_t& data) override;
 
         // ---- implement ILowerLayer -----
 
         virtual bool transmit(const seq32_t& data) override;
-        virtual bool receive(IMessageProcessor& processor) override;
-
-        // ---- implement IMessageProcessor -----
-
-        virtual void process(const seq32_t& data) override;
+        virtual void receive() override;
+        
 
         // ---- implement IMessageHandler -----
 

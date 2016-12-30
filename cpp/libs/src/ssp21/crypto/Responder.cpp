@@ -119,22 +119,24 @@ namespace ssp21
         this->check_transmit();
     }
 
-    void Responder::on_rx_ready_impl()
+    bool Responder::on_rx_ready_impl(const seq32_t& data)
     {
-        this->check_receive();
+		if (this->can_receive())
+		{
+			this->process(data);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
     }
 
     void Responder::check_receive()
-    {
-        /*
-            1) the lower layer should have data
-            2) the lower layer should be ready to transmit
-            3) this layer shouldn't have any un-read data
-        */
-        const auto can_receive = ctx.lower->get_is_rx_ready() && ctx.lower->get_is_tx_ready() && !this->get_is_rx_ready();
-        if (can_receive)
+    {        
+        if (this->can_receive())
         {
-            ctx.lower->receive(*this);
+            ctx.lower->receive();
         }
     }
 
@@ -196,16 +198,12 @@ namespace ssp21
         return true;
     }
 
-    bool Responder::receive(IMessageProcessor& processor)
+    void Responder::receive()
     {
-        if (this->is_rx_ready)
-        {
-            this->is_rx_ready = false;
-            processor.process(this->ctx.reassembler.get_data());
-            return true;
-        }
-
-        return false;
+        if (this->is_rx_ready && this->ctx.upper->on_rx_ready(this->ctx.reassembler.get_data()))
+        {            
+			this->is_rx_ready = false;
+        }        
     }
 
     void Responder::process(const seq32_t& message)
@@ -280,8 +278,7 @@ namespace ssp21
             return true; // do nothing
 
         case(ReassemblyResult::complete):
-            this->is_rx_ready = true;
-            this->ctx.upper->on_rx_ready();
+            this->is_rx_ready = !this->ctx.upper->on_rx_ready(ctx.reassembler.get_data());            
             return true;
 
         default: // error
