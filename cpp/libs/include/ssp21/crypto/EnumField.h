@@ -30,7 +30,7 @@ namespace ssp21
         explicit EnumField(enum_t value) : value(value)
         {}
 
-        ParseError read(openpal::RSlice& input)
+        ParseError read(seq32_t& input)
         {
             uint8_t raw_value;
             if (!openpal::BigEndian::read(input, raw_value)) return ParseError::insufficient_bytes;

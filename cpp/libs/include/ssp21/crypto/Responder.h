@@ -65,7 +65,7 @@ namespace ssp21
             void log_message(openpal::LogLevel msg_level, openpal::LogLevel field_level, Function func, const IMessage& msg, uint32_t length);
 
             template <class T>
-            void transmit_to_lower(const T& msg, const openpal::RSlice& data);
+            void transmit_to_lower(const T& msg, const seq32_t& data);
 
             void reply_with_handshake_error(HandshakeError err);
 
@@ -104,8 +104,8 @@ namespace ssp21
 
         struct IHandshakeState
         {
-            virtual IHandshakeState& on_message(Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeBegin& msg) = 0;
-            virtual IHandshakeState& on_message(Context& ctx, const openpal::RSlice& msg_bytes, const RequestHandshakeAuth& msg) = 0;
+            virtual IHandshakeState& on_message(Context& ctx, const seq32_t& msg_bytes, const RequestHandshakeBegin& msg) = 0;
+            virtual IHandshakeState& on_message(Context& ctx, const seq32_t& msg_bytes, const RequestHandshakeAuth& msg) = 0;
         };
 
         Responder(const Config& config,
@@ -140,12 +140,12 @@ namespace ssp21
 
         // ---- implement ILowerLayer -----
 
-        virtual bool transmit(const openpal::RSlice& data) override;
+        virtual bool transmit(const seq32_t& data) override;
         virtual bool receive(IMessageProcessor& processor) override;
 
         // ---- implement IMessageProcessor -----
 
-        virtual void process(const openpal::RSlice& data) override;
+        virtual void process(const seq32_t& data) override;
 
         // ---- implement IMessageHandler -----
 
@@ -153,11 +153,11 @@ namespace ssp21
 
         virtual void on_parse_error(Function function, ParseError error) override;
 
-        virtual bool on_message(const RequestHandshakeBegin& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now) override;
+        virtual bool on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
 
-        virtual bool on_message(const RequestHandshakeAuth& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now) override;
+        virtual bool on_message(const RequestHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
 
-        virtual bool on_message(const SessionData& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now) override;
+        virtual bool on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
 
         // ---- private members -----
 
@@ -169,7 +169,7 @@ namespace ssp21
     };
 
     template <class T>
-    void Responder::Context::transmit_to_lower(const T& msg, const openpal::RSlice& data)
+    void Responder::Context::transmit_to_lower(const T& msg, const seq32_t& data)
     {
         this->log_message(levels::tx_crypto_msg, levels::tx_crypto_msg_fields, T::function, msg, data.length());
         this->lower->transmit(data);

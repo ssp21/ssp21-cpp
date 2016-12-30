@@ -173,7 +173,7 @@ namespace ssp21
         }
     }
 
-    bool Responder::transmit(const openpal::RSlice& data)
+    bool Responder::transmit(const seq32_t& data)
     {
         if (!this->get_is_open())
         {
@@ -208,7 +208,7 @@ namespace ssp21
         return false;
     }
 
-    void Responder::process(const openpal::RSlice& message)
+    void Responder::process(const seq32_t& message)
     {
         MessageDispatcher::Dispatch(
             this->ctx.logger,
@@ -244,21 +244,21 @@ namespace ssp21
         }
     }
 
-    bool Responder::on_message(const RequestHandshakeBegin& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now)
+    bool Responder::on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
         ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, msg.function, msg, raw_data.length());
         this->handshake_state = &this->handshake_state->on_message(ctx, raw_data, msg);
         return true;
     }
 
-    bool Responder::on_message(const RequestHandshakeAuth& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now)
+    bool Responder::on_message(const RequestHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
         ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, msg.function, msg, raw_data.length());
         this->handshake_state = &this->handshake_state->on_message(ctx, raw_data, msg);
         return true;
     }
 
-    bool Responder::on_message(const SessionData& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now)
+    bool Responder::on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
         ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, Function::session_data, msg, raw_data.length());
 

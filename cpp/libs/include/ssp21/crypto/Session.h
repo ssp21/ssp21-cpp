@@ -42,9 +42,9 @@ namespace ssp21
             return statistics;
         }
 
-        openpal::RSlice validate_message(const SessionData& message, const openpal::Timestamp& now, std::error_code& ec);
+        seq32_t validate_message(const SessionData& message, const openpal::Timestamp& now, std::error_code& ec);
 
-        std::error_code format_message(SessionData& msg, bool fir, const openpal::Timestamp& now, openpal::RSlice& cleartext);
+        std::error_code format_message(SessionData& msg, bool fir, const openpal::Timestamp& now, seq32_t& cleartext);
 
         bool can_transmit() const
         {
@@ -53,7 +53,7 @@ namespace ssp21
 
     private:
 
-        std::error_code format_message_impl(SessionData& msg, bool fir, const openpal::Timestamp& now, openpal::RSlice& cleartext);
+        std::error_code format_message_impl(SessionData& msg, bool fir, const openpal::Timestamp& now, seq32_t& cleartext);
 
         /**
         * Given a maximum link layer payload, how big could the crypto payload be?

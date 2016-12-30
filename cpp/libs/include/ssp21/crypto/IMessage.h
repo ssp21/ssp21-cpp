@@ -17,7 +17,7 @@ namespace ssp21
 
     public:
 
-        virtual ParseError read(openpal::RSlice input) = 0;
+        virtual ParseError read(seq32_t input) = 0;
 
         virtual FormatResult write(openpal::WSlice output) const = 0;
 

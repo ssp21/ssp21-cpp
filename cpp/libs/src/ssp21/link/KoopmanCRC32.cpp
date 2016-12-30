@@ -3,7 +3,7 @@
 
 namespace ssp21
 {
-    uint32_t KoopmanCRC32::calc(const openpal::RSlice& data)
+    uint32_t KoopmanCRC32::calc(const seq32_t& data)
     {
         uint32_t remainder = 0;
 

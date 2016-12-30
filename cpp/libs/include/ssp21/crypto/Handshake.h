@@ -36,14 +36,14 @@ namespace ssp21
         seq8_t initialize();
 
         /// calculate a new ck: ck = hash(input)
-        void set_ck(const openpal::RSlice& input);
+        void set_ck(const seq32_t& input);
 
         /// mix the input input the chaining key: ck = hash(ck | input)
-        void mix_ck(const openpal::RSlice& input);
+        void mix_ck(const seq32_t& input);
 
         /// derive the authentication key from the DH keys and the handshake_hash
         void derive_authentication_key(
-            const openpal::RSlice& message,
+            const seq32_t& message,
             const PrivateKey& priv_s_dh_key,
             const seq8_t& pub_e_dh_key,
             const seq8_t& pub_s_dh_key,

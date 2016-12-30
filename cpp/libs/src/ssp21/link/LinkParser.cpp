@@ -35,7 +35,7 @@ namespace ssp21
         return state_.value == State::Value::wait_read;
     }
 
-    LinkParser::State LinkParser::parse_many(const State& state, Context& ctx, openpal::RSlice& input)
+    LinkParser::State LinkParser::parse_many(const State& state, Context& ctx, seq32_t& input)
     {
         auto current_state = state;
 
@@ -64,7 +64,7 @@ namespace ssp21
         }
     }
 
-    LinkParser::State LinkParser::parse_sync1(const State& state, Context& ctx, openpal::RSlice& input)
+    LinkParser::State LinkParser::parse_sync1(const State& state, Context& ctx, seq32_t& input)
     {
         // scan the input one byte at a time looking
         // for the first synchronization character
@@ -82,7 +82,7 @@ namespace ssp21
         return State::wait_sync1();
     }
 
-    LinkParser::State LinkParser::parse_sync2(const State& state, Context& ctx, openpal::RSlice& input)
+    LinkParser::State LinkParser::parse_sync2(const State& state, Context& ctx, seq32_t& input)
     {
         const auto value = input[0];
         input.advance(1);
@@ -97,7 +97,7 @@ namespace ssp21
         }
     }
 
-    LinkParser::State LinkParser::parse_header(const State& state, Context& ctx, openpal::RSlice& input)
+    LinkParser::State LinkParser::parse_header(const State& state, Context& ctx, seq32_t& input)
     {
         const auto new_num_buffered = transfer_data(state, ctx, input, consts::link::header_total_size);
 
@@ -143,7 +143,7 @@ namespace ssp21
         return State::wait_body(new_num_buffered);
     }
 
-    LinkParser::State LinkParser::parse_body(const State& state, Context& ctx, openpal::RSlice& input)
+    LinkParser::State LinkParser::parse_body(const State& state, Context& ctx, seq32_t& input)
     {
         const uint32_t total_frame_size = consts::link::header_total_size + ctx.payload_length + consts::link::crc_size;
 
@@ -170,7 +170,7 @@ namespace ssp21
         return State::wait_read(new_num_buffered);
     }
 
-    uint32_t LinkParser::transfer_data(const State& state, Context& ctx, openpal::RSlice& input, uint32_t max_bytes_to_buffer)
+    uint32_t LinkParser::transfer_data(const State& state, Context& ctx, seq32_t& input, uint32_t max_bytes_to_buffer)
     {
         const auto remaining = max_bytes_to_buffer - state.num_buffered;
         const auto num_to_copy = min<uint32_t>(remaining, input.length());

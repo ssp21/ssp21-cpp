@@ -10,7 +10,7 @@ namespace ssp21
     class IMessageProcessor
     {
     public:
-        virtual void process(const openpal::RSlice& data) = 0;
+        virtual void process(const seq32_t& data) = 0;
     };
 
     class ILowerLayer
@@ -18,7 +18,7 @@ namespace ssp21
 
     public:
 
-        virtual bool transmit(const openpal::RSlice& data) = 0;
+        virtual bool transmit(const seq32_t& data) = 0;
 
         virtual bool receive(IMessageProcessor& processor) = 0;
 

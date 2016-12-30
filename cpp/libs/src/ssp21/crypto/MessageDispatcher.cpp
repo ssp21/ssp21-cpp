@@ -6,7 +6,7 @@
 
 namespace ssp21
 {
-    bool MessageDispatcher::Dispatch(openpal::Logger& logger, const openpal::RSlice& message, const openpal::Timestamp& now, IMessageHandler& handler)
+    bool MessageDispatcher::Dispatch(openpal::Logger& logger, const seq32_t& message, const openpal::Timestamp& now, IMessageHandler& handler)
     {
         if (message.is_empty())
         {

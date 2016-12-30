@@ -5,6 +5,8 @@
 #include "openpal/util/Uncopyable.h"
 #include "openpal/container/Buffer.h"
 
+#include "ssp21/SequenceTypes.h"
+
 #include "ssp21/link/Addresses.h"
 
 namespace ssp21
@@ -24,7 +26,7 @@ namespace ssp21
 
         struct Result : public Addresses
         {
-            openpal::RSlice payload;
+            seq32_t payload;
         };
 
 
@@ -32,7 +34,7 @@ namespace ssp21
 
         LinkParser(uint16_t max_payload_length, IReporter& reporter);
 
-        bool parse(openpal::RSlice& input);
+        bool parse(seq32_t& input);
 
         template <class Fun>
         bool read(const Fun& fun)
@@ -126,16 +128,16 @@ namespace ssp21
             uint16_t payload_length = 0;
         };
 
-        static State parse_one(const State& state, Context& ctx, openpal::RSlice& input);
-        static State parse_many(const State& state, Context& ctx, openpal::RSlice& input);
+        static State parse_one(const State& state, Context& ctx, seq32_t& input);
+        static State parse_many(const State& state, Context& ctx, seq32_t& input);
 
-        static State parse_sync1(const State& state, Context& ctx, openpal::RSlice& input);
-        static State parse_sync2(const State& state, Context& ctx, openpal::RSlice& input);
-        static State parse_header(const State& state, Context& ctx, openpal::RSlice& input);
-        static State parse_body(const State& state, Context& ctx, openpal::RSlice& input);
+        static State parse_sync1(const State& state, Context& ctx, seq32_t& input);
+        static State parse_sync2(const State& state, Context& ctx, seq32_t& input);
+        static State parse_header(const State& state, Context& ctx, seq32_t& input);
+        static State parse_body(const State& state, Context& ctx, seq32_t& input);
 
         // helpers
-        static uint32_t transfer_data(const State& state, Context& ctx, openpal::RSlice& input, uint32_t max);
+        static uint32_t transfer_data(const State& state, Context& ctx, seq32_t& input, uint32_t max);
 
         LinkParser() = delete;
 

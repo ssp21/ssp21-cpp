@@ -19,9 +19,9 @@ namespace ssp21
 
         /// Enforces that the first byte is the expected function and expects all data to be consumed.
         template <typename ReadFields>
-        static ParseError read_message(const openpal::RSlice& input, Function expected, const ReadFields& read_fields)
+        static ParseError read_message(const seq32_t& input, Function expected, const ReadFields& read_fields)
         {
-            openpal::RSlice copy(input);
+            seq32_t copy(input);
 
             EnumField<FunctionSpec> func;
             auto err = func.read(copy);
@@ -36,7 +36,7 @@ namespace ssp21
         }
 
         template <typename T, typename... Args>
-        static ParseError read_fields(openpal::RSlice& input, T& value, Args& ... args)
+        static ParseError read_fields(seq32_t& input, T& value, Args& ... args)
         {
             auto err = value.read(input);
             if (any(err)) return err;
@@ -45,7 +45,7 @@ namespace ssp21
 
     private:
 
-        static ParseError read_fields(openpal::RSlice&)
+        static ParseError read_fields(seq32_t&)
         {
             return ParseError::ok;
         }

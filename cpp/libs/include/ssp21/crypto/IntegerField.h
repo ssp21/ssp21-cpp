@@ -39,7 +39,7 @@ namespace ssp21
         explicit IntegerField(integer_t value) : value(value)
         {}
 
-        ParseError read(openpal::RSlice& input)
+        ParseError read(seq32_t& input)
         {
             return IntegerType::read_from(input, this->value) ? ParseError::ok : ParseError::insufficient_bytes;
         }

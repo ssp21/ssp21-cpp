@@ -4,7 +4,8 @@
 #include "ssp21/crypto/gen/Base64DecodeError.h"
 
 #include "openpal/util/Uncopyable.h"
-#include "openpal/container/RSlice.h"
+
+#include "ssp21/SequenceTypes.h"
 
 #include <cstdint>
 #include <functional>
@@ -19,12 +20,12 @@ namespace ssp21
         /// Takes an input byte slice and outputs one encoded character at a time to an arbitrary lambda
         /// accepting a char
         template <class CharWriteFun>
-        static void encode(const openpal::RSlice& bytes, const CharWriteFun& write);
+        static void encode(const seq32_t& bytes, const CharWriteFun& write);
 
         /// Consumes a slice of base64 characters and emits a sequence of bytes to an arbitrary lambda
         /// Ignores whitespace characters.
         template <class ByteWriteFun>
-        static Base64DecodeError decode(const openpal::RSlice& chars, const ByteWriteFun& write);
+        static Base64DecodeError decode(const seq32_t& chars, const ByteWriteFun& write);
 
     private:
 
@@ -51,7 +52,7 @@ namespace ssp21
         {
         public:
 
-            explicit DecodeCursor(const openpal::RSlice& chars) : pos(chars)
+            explicit DecodeCursor(const seq32_t& chars) : pos(chars)
             {}
 
             Base64DecodeError get_next_chars(DecodeChars& chars);
@@ -70,7 +71,7 @@ namespace ssp21
 
             Base64DecodeError get_next_char(uint8_t& value);
 
-            openpal::RSlice pos;
+            seq32_t pos;
         };
 
         inline static char get_first_char(uint8_t first)
@@ -118,7 +119,7 @@ namespace ssp21
     };
 
     template <class CharWriteFun>
-    void Base64::encode(const openpal::RSlice& bytes, const CharWriteFun& write)
+    void Base64::encode(const seq32_t& bytes, const CharWriteFun& write)
     {
         uint32_t pos = 0;
 
@@ -153,7 +154,7 @@ namespace ssp21
     }
 
     template <class ByteWriteFun>
-    Base64DecodeError Base64::decode(const openpal::RSlice& chars, const ByteWriteFun& write)
+    Base64DecodeError Base64::decode(const seq32_t& chars, const ByteWriteFun& write)
     {
         DecodeCursor cursor(chars);
 

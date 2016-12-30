@@ -32,32 +32,32 @@ namespace ssp21
 
         // --- optionally overriden message callbacks ---
 
-        virtual bool on_message(const RequestHandshakeBegin& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now)
+        virtual bool on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
         {
             return false;
         }
 
-        virtual bool on_message(const RequestHandshakeAuth& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now)
+        virtual bool on_message(const RequestHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
         {
             return false;
         }
 
-        virtual bool on_message(const ReplyHandshakeBegin& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now)
+        virtual bool on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
         {
             return false;
         }
 
-        virtual bool on_message(const ReplyHandshakeAuth& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now)
+        virtual bool on_message(const ReplyHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
         {
             return false;
         }
 
-        virtual bool on_message(const ReplyHandshakeError& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now)
+        virtual bool on_message(const ReplyHandshakeError& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
         {
             return false;
         }
 
-        virtual bool on_message(const SessionData& msg, const openpal::RSlice& raw_data, const openpal::Timestamp& now)
+        virtual bool on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
         {
             return false;
         }

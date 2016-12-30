@@ -7,6 +7,7 @@
 #include "openpal/container/Buffer.h"
 
 #include "ssp21/crypto/gen/ReassemblyResult.h"
+#include "ssp21/SequenceTypes.h"
 
 #include <system_error>
 
@@ -19,7 +20,7 @@ namespace ssp21
 
         explicit Reassembler(uint16_t max_reassembled_size);
 
-        ReassemblyResult process(bool fir, bool fin, uint32_t nonce, const openpal::RSlice& data);
+        ReassemblyResult process(bool fir, bool fin, uint32_t nonce, const seq32_t& data);
 
         void reset()
         {
@@ -32,7 +33,7 @@ namespace ssp21
             return reassembled_data.is_not_empty();
         }
 
-        openpal::RSlice get_data() const
+        seq32_t get_data() const
         {
             return reassembled_data;
         }
@@ -41,7 +42,7 @@ namespace ssp21
 
         uint32_t last_nonce = 0;
 
-        openpal::RSlice reassembled_data;
+        seq32_t reassembled_data;
 
         openpal::Buffer buffer;
 

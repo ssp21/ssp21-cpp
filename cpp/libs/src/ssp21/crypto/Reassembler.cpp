@@ -14,7 +14,7 @@ namespace ssp21
     {}
 
 
-    ReassemblyResult Reassembler::process(bool fir, bool fin, uint32_t nonce, const openpal::RSlice& data)
+    ReassemblyResult Reassembler::process(bool fir, bool fin, uint32_t nonce, const seq32_t& data)
     {
         if (nonce == 0)
         {

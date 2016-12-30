@@ -99,7 +99,7 @@ namespace ssp21
         return payload;
     }
 
-    std::error_code Session::format_message(SessionData& msg, bool fir, const openpal::Timestamp& now, openpal::RSlice& cleartext)
+    std::error_code Session::format_message(SessionData& msg, bool fir, const openpal::Timestamp& now, seq32_t& cleartext)
     {
         const auto ret = this->format_message_impl(msg, fir, now, cleartext);
         if (ret)
@@ -110,7 +110,7 @@ namespace ssp21
         return ret;
     }
 
-    std::error_code Session::format_message_impl(SessionData& msg, bool fir, const openpal::Timestamp& now, openpal::RSlice& input)
+    std::error_code Session::format_message_impl(SessionData& msg, bool fir, const openpal::Timestamp& now, seq32_t& input)
     {
         if (!this->tx_valid)
         {

@@ -34,7 +34,7 @@ namespace ssp21
         explicit SeqField(const seq_t& value) : seq_t(value)
         {}
 
-        ParseError read(openpal::RSlice& input)
+        ParseError read(seq32_t& input)
         {
             IntegerField<T> count;
             auto err = count.read(input);

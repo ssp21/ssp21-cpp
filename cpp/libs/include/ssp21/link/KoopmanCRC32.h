@@ -1,10 +1,9 @@
 #ifndef SSP21_KOOPMAN_CRC32_H
 #define SSP21_KOOPMAN_CRC32_H
 
-#include <cstdint>
+#include "ssp21/SequenceTypes.h"
 
-#include <openpal/container/RSlice.h>
-#include <openpal/util/Uncopyable.h>
+#include "openpal/util/Uncopyable.h"
 
 namespace ssp21
 {
@@ -22,7 +21,7 @@ namespace ssp21
     */
     struct KoopmanCRC32 : private openpal::StaticOnly
     {
-        static uint32_t calc(const openpal::RSlice& data);
+        static uint32_t calc(const seq32_t& data);
 
     private:
 

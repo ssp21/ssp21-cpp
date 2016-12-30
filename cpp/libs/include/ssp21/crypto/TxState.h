@@ -27,7 +27,7 @@ namespace ssp21
             this->remainder.make_empty();
         }
 
-        bool initialize(const openpal::RSlice& data)
+        bool initialize(const seq32_t& data)
         {
             if (transmitting) return false;
 
@@ -43,7 +43,7 @@ namespace ssp21
             this->transmitting = false;
         }
 
-        bool begin_transmit(const openpal::RSlice& remainder)
+        bool begin_transmit(const seq32_t& remainder)
         {
             if (!transmitting) return false;
 
@@ -71,7 +71,7 @@ namespace ssp21
             return transmitting;
         }
 
-        openpal::RSlice get_remainder() const
+        seq32_t get_remainder() const
         {
             return remainder;
         }
@@ -85,7 +85,7 @@ namespace ssp21
 
         bool fir = false;
         bool transmitting = false;
-        openpal::RSlice remainder;
+        seq32_t remainder;
 
     };
 

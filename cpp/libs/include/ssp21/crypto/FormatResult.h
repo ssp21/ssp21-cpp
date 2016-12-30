@@ -11,7 +11,7 @@ namespace ssp21
 
     struct FormatResult
     {
-        static FormatResult Succes(const openpal::RSlice& written)
+        static FormatResult Succes(const seq32_t& written)
         {
             return FormatResult(FormatError::ok, written);
         }
@@ -20,7 +20,7 @@ namespace ssp21
         {}
 
         FormatError err;
-        openpal::RSlice written;
+        seq32_t written;
 
         bool is_error() const
         {
@@ -31,7 +31,7 @@ namespace ssp21
 
         FormatResult() = delete;
 
-        FormatResult(FormatError err, const openpal::RSlice& written) :
+        FormatResult(FormatError err, const seq32_t& written) :
             err(err),
             written(written)
         {}
