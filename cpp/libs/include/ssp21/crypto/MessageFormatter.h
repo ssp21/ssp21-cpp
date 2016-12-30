@@ -23,13 +23,13 @@ namespace ssp21
 
             EnumField<FunctionSpec> func(function);
             auto ferr = func.write(dest);
-            if (any(ferr)) return FormatResult(ferr);
+            if (any(ferr)) return FormatResult::error(ferr);
 
             auto merr = write_fields(dest);
-            if (any(merr)) return FormatResult(merr);
+            if (any(merr)) return FormatResult::error(merr);
 
             const auto num_written = start.length() - dest.length();
-            return FormatResult::Success(start.readonly().take(num_written));
+            return FormatResult::success(start.readonly().take(num_written));
         }
 
         template <typename T, typename... Args>

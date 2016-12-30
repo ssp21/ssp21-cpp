@@ -27,7 +27,7 @@ public:
 	virtual FormatResult write(wseq32_t& output) const override
 	{
 		const auto src = payload.as_rslice();
-		return src.length() < output.length() ? FormatResult::Success(output.copy_from(src)) : FormatResult(FormatError::insufficient_space);		
+		return src.length() < output.length() ? FormatResult::success(output.copy_from(src)) : FormatResult::error(FormatError::insufficient_space);		
 	}
 
 private:

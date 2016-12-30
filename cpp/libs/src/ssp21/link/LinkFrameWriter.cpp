@@ -60,7 +60,7 @@ namespace ssp21
 
 		if (!openpal::BigEndian::write(dest, CastagnoliCRC32::calc(result.written)))
 		{
-			return FormatResult(FormatError::insufficient_space);
+			return FormatResult::error(FormatError::insufficient_space);
 		}
 
 		return result;

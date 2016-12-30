@@ -9,13 +9,15 @@ namespace ssp21
 
     struct FormatResult
     {
-        static FormatResult Success(const seq32_t& written)
+        static FormatResult success(const seq32_t& written)
         {
             return FormatResult(FormatError::ok, written);
         }
 
-        explicit FormatResult(FormatError err) : err(err)
-        {}
+        static FormatResult error(FormatError err)
+        {
+			return FormatResult(err);
+		}
 
         FormatError err;
         seq32_t written;
@@ -33,6 +35,9 @@ namespace ssp21
             err(err),
             written(written)
         {}
+
+		FormatResult(FormatError err) : err(err)			
+		{}
     };
 }
 
