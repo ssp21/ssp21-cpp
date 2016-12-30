@@ -40,9 +40,9 @@ namespace ssp21
 
     private:
 
-        mac_func_t const mac_func;
+        const mac_func_t mac_func;
         const uint8_t auth_tag_length;
-        BufferType buffer_type;
+        const BufferType buffer_type;
 
     };
 
