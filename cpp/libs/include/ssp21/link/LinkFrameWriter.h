@@ -19,7 +19,7 @@ namespace ssp21
 
 		LinkFrameWriter(Addresses addr, uint16_t max_payload_size);
 
-		virtual WriteResult write(IWritable& payload) override;		
+		virtual WriteResult write(const IWritable& payload) override;		
 
 		virtual uint16_t get_max_payload_size() const override
 		{
@@ -28,7 +28,7 @@ namespace ssp21
 
 	private:		
 
-		FormatResult write_body_and_crc(IWritable& payload);
+		FormatResult write_body_and_crc(const IWritable& payload);
 
 		static constexpr uint32_t get_buffer_size(uint16_t max_payload_size)
 		{

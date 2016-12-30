@@ -14,14 +14,44 @@
 #include "../mocks/MockCryptoBackend.h"
 #include "../mocks/HexMessageBuilders.h"
 
+#include "ssp21/link/LinkConstants.h"
+
 #include <memory>
 
 namespace ssp21
-{
+{	
 
     class ResponderFixture
     {
     private:
+
+		struct MockFrameWriter : public IFrameWriter
+		{
+		public:
+
+			MockFrameWriter(uint16_t max_payload_size) : max_payload_size(max_payload_size), buffer(max_payload_size) {}
+
+			virtual WriteResult write(const IWritable& payload)  override
+			{
+				auto dest = buffer.as_wslice();
+				const auto res = payload.write(dest);
+				if (res.is_error()) return WriteResult::error(res.err);
+				else
+				{
+					return WriteResult::success(res, res.written);
+				}
+			}
+
+			virtual uint16_t get_max_payload_size() const override
+			{
+				return max_payload_size;
+			}
+
+		private:
+
+			uint16_t max_payload_size;
+			openpal::Buffer buffer;
+		};
 
         struct Keys
         {
@@ -47,12 +77,12 @@ namespace ssp21
 
     public:
 
-        ResponderFixture(BufferType key_type = BufferType::x25519_key, const Responder::Config& config = Responder::Config()) :
+        ResponderFixture(BufferType key_type = BufferType::x25519_key, std::unique_ptr<IFrameWriter> frame_writer = default_frame_writer(), const Responder::Config& config = Responder::Config()) :
             keys(key_type),
             log("responder"),
             exe(openpal::MockExecutor::Create()),
             lower(),
-            responder(config, std::move(keys.local_kp), std::move(keys.remote_static_key), log.logger, exe, lower),
+            responder(config, std::move(frame_writer), std::move(keys.local_kp), std::move(keys.remote_static_key), log.logger, exe, lower),
             upper(responder)
         {
             MockCryptoBackend::instance.clear_actions();
@@ -65,6 +95,11 @@ namespace ssp21
             lower.set_tx_ready();
             responder.on_tx_ready();
         }
+
+		static std::unique_ptr<IFrameWriter> default_frame_writer()
+		{
+			return std::make_unique<MockFrameWriter>(consts::link::max_config_payload_size);
+		}
 
     private:
 

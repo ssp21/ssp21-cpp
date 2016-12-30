@@ -41,7 +41,7 @@ namespace ssp21
     {
 		virtual ~IFrameWriter() {}
 
-        virtual WriteResult write(IWritable& payload) = 0;		
+        virtual WriteResult write(const IWritable& payload) = 0;		
 
 		virtual uint16_t get_max_payload_size() const = 0;
 

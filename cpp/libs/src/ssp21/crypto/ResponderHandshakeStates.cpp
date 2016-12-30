@@ -30,18 +30,18 @@ namespace ssp21
         // now format our response - in the future, this we'll add certificates after this call
         ReplyHandshakeBegin reply(public_ephem_dh_key);
 
-        auto wresult = ctx.write_msg(reply);
+		const auto res = ctx.transmit_to_lower(reply);        
 
-        if (wresult.is_error())
+        if (res.is_error())
         {
-            FORMAT_LOG_BLOCK(ctx.logger, levels::error, "error formatting reply: %s", FormatErrorSpec::to_string(wresult.err));
+            FORMAT_LOG_BLOCK(ctx.logger, levels::error, "error formatting reply: %s", FormatErrorSpec::to_string(res.err));
             return *this;
         }
 
         std::error_code ec;
 
         ctx.handshake.derive_authentication_key(
-            wresult.written,
+            res.written,
             ctx.local_static_key_pair->private_key,
             msg.ephemeral_public_key,
             ctx.remote_static_public_key->as_seq(),
@@ -53,9 +53,7 @@ namespace ssp21
             FORMAT_LOG_BLOCK(ctx.logger, levels::error, "error deriving auth key: %s", ec.message().c_str());
             ctx.reply_with_handshake_error(HandshakeError::internal);
             return *this;
-        }
-
-        ctx.transmit_to_lower(reply, wresult.written);
+        }        
 
         return HandshakeWaitForAuth::get();
     }
@@ -93,19 +91,17 @@ namespace ssp21
 
         ReplyHandshakeAuth reply(seq8_t(reply_mac.as_seq()));
 
-        const auto wresult = ctx.write_msg(reply);
+		const auto res = ctx.transmit_to_lower(reply);
 
-        if (wresult.is_error())
+        if (res.is_error())
         {
-            FORMAT_LOG_BLOCK(ctx.logger, levels::error, "Unable to format reply: %s", FormatErrorSpec::to_string(wresult.err));
+            FORMAT_LOG_BLOCK(ctx.logger, levels::error, "Unable to format reply: %s", FormatErrorSpec::to_string(res.err));
             return HandshakeIdle::get();
         }
 
-        ctx.handshake.mix_ck(wresult.written);
+        ctx.handshake.mix_ck(res.written);
 
-        ctx.handshake.initialize_session(ctx.session, ctx.executor->get_time());
-
-        ctx.transmit_to_lower(reply, wresult.written);
+        ctx.handshake.initialize_session(ctx.session, ctx.executor->get_time());        
 
         ctx.upper->on_open();
 

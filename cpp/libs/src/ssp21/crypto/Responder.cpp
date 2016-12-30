@@ -18,6 +18,7 @@ namespace ssp21
 {
     Responder::Context::Context(
         const Config& config,
+		std::unique_ptr<IFrameWriter> frame_writer,
         std::unique_ptr<KeyPair> local_static_key_pair,
         std::unique_ptr<PublicKey> remote_static_public_key,
         const openpal::Logger& logger,
@@ -25,6 +26,7 @@ namespace ssp21
         ILowerLayer& lower) :
 
         config(config),
+		frame_writer(std::move(frame_writer)),
         local_static_key_pair(std::move(local_static_key_pair)),
         remote_static_public_key(std::move(remote_static_public_key)),
         logger(logger),
@@ -32,8 +34,7 @@ namespace ssp21
         handshake(EntityId::Responder),
         session(config.session),
         reassembler(config.max_reassembly_size),
-        lower(&lower),
-        tx_buffer(config.max_tx_message_size)
+        lower(&lower)        
     {
 
     }
@@ -41,19 +42,12 @@ namespace ssp21
     void Responder::Context::reply_with_handshake_error(HandshakeError err)
     {
         ReplyHandshakeError msg(err);
-
-        auto result = this->write_msg(msg);
-
-        if (!result.is_error())
-        {
-            this->transmit_to_lower(msg, result.written);
-        }
-
+		this->transmit_to_lower(msg);
     }
 
-    void Responder::Context::log_message(openpal::LogLevel msg_level, openpal::LogLevel field_level, Function func, const IMessage& msg, uint32_t length)
+    void Responder::Context::log_message(openpal::LogLevel msg_level, openpal::LogLevel field_level, Function func, const IMessage& msg)
     {
-        FORMAT_LOG_BLOCK(this->logger, msg_level, "%s (length = %u)", FunctionSpec::to_string(func), length);
+        FORMAT_LOG_BLOCK(this->logger, msg_level, "%s", FunctionSpec::to_string(func));
 
         if (this->logger.is_enabled(field_level))
         {
@@ -90,13 +84,20 @@ namespace ssp21
     }
 
     Responder::Responder(const Config& config,
+		                 std::unique_ptr<IFrameWriter> frame_writer,
                          std::unique_ptr<KeyPair> local_static_key_pair,
                          std::unique_ptr<PublicKey> remote_static_public_key,
                          const openpal::Logger& logger,
                          const std::shared_ptr<openpal::IExecutor>& executor,
                          ILowerLayer& lower
                         ) :
-        ctx(config, std::move(local_static_key_pair), std::move(remote_static_public_key), logger, executor, lower),
+        ctx(config, 
+			std::move(frame_writer),
+			std::move(local_static_key_pair),
+			std::move(remote_static_public_key),
+			logger,
+			executor, 
+			lower),
         handshake_state(&HandshakeIdle::get())
     {}
 
@@ -162,7 +163,7 @@ namespace ssp21
                 return;
             }
 
-            const auto result = this->ctx.write_msg(msg);
+            const auto result = this->ctx.transmit_to_lower(msg);
 
             if (result.is_error())
             {
@@ -170,9 +171,7 @@ namespace ssp21
                 return;
             }
 
-            ctx.tx_state.begin_transmit(remainder);
-
-            this->ctx.transmit_to_lower(msg, result.written);
+            ctx.tx_state.begin_transmit(remainder);            
         }
     }
 
@@ -245,21 +244,21 @@ namespace ssp21
 
     bool Responder::on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
-        ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, msg.function, msg, raw_data.length());
+        ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, msg.function, msg);
         this->handshake_state = &this->handshake_state->on_message(ctx, raw_data, msg);
         return true;
     }
 
     bool Responder::on_message(const RequestHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
-        ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, msg.function, msg, raw_data.length());
+        ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, msg.function, msg);
         this->handshake_state = &this->handshake_state->on_message(ctx, raw_data, msg);
         return true;
     }
 
     bool Responder::on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
-        ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, Function::session_data, msg, raw_data.length());
+        ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, Function::session_data, msg);
 
         std::error_code ec;
         const auto payload = this->ctx.session.validate_message(msg, now, ec);

@@ -13,7 +13,7 @@ namespace ssp21
 		frame_buffer(get_buffer_size(max_payload_size))
 	{}
 
-	WriteResult LinkFrameWriter::write(IWritable& payload)
+	WriteResult LinkFrameWriter::write(const IWritable& payload)
 	{
 		const auto res = this->write_body_and_crc(payload);
 		if (res.is_error()) return WriteResult::error(res.err);
@@ -50,7 +50,7 @@ namespace ssp21
 		return WriteResult::success(res, this->frame_buffer.as_rslice().take<uint32_t>(res.written.length() + consts::link::min_frame_size));
 	}
 
-	FormatResult LinkFrameWriter::write_body_and_crc(IWritable& payload)
+	FormatResult LinkFrameWriter::write_body_and_crc(const IWritable& payload)
 	{
 		auto dest = frame_buffer.as_wslice();
 		dest.advance(consts::link::header_total_size);

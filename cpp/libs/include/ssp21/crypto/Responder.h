@@ -18,6 +18,7 @@
 #include "ssp21/crypto/TxState.h"
 #include "ssp21/crypto/IMessageHandler.h"
 
+#include "ssp21/IFrameWriter.h"
 #include "ssp21/LogLevels.h"
 
 #include "openpal/logging/Logger.h"
@@ -40,12 +41,7 @@ namespace ssp21
         struct Config
         {
             // configuration for the session
-            Session::Config session;
-
-            /// The maximum message size that this layer should transmit to the link layer
-            /// This constant determines the size of a buffer allocated when the responder
-            /// is constructed
-            uint16_t max_tx_message_size = consts::link::max_config_payload_size;
+            Session::Config session;            
 
             /// The maximum size of a reassembled message
             uint16_t max_reassembly_size = consts::link::max_config_payload_size;
@@ -55,34 +51,30 @@ namespace ssp21
         {
             Context(
                 const Config& config,
+				std::unique_ptr<IFrameWriter> frame_writer,
                 std::unique_ptr<KeyPair> local_static_key_pair,
-                std::unique_ptr<PublicKey> remote_static_public_key,
+                std::unique_ptr<PublicKey> remote_static_public_key,				
                 const openpal::Logger& logger,
                 const std::shared_ptr<openpal::IExecutor>& executor,
                 ILowerLayer& lower
             );
 
-            void log_message(openpal::LogLevel msg_level, openpal::LogLevel field_level, Function func, const IMessage& msg, uint32_t length);
+            void log_message(openpal::LogLevel msg_level, openpal::LogLevel field_level, Function func, const IMessage& msg);
 
             template <class T>
-            void transmit_to_lower(const T& msg, const seq32_t& data);
+			FormatResult transmit_to_lower(const T& msg);
 
             void reply_with_handshake_error(HandshakeError err);
 
             void set_upper_layer(IUpperLayer& upper)
             {
                 this->upper = &upper;
-            }
-
-            FormatResult write_msg(const IMessage& msg)
-            {
-                auto dest = tx_buffer.as_wslice();
-                return msg.write(dest);
-            }
+            }            
 
             HandshakeError validate(const RequestHandshakeBegin& msg);
 
             Config config;
+			const std::unique_ptr<IFrameWriter> frame_writer;
 
             std::unique_ptr<KeyPair> local_static_key_pair;
             std::unique_ptr<PublicKey> remote_static_public_key;
@@ -97,9 +89,7 @@ namespace ssp21
             TxState tx_state;
 
             ILowerLayer* const lower;
-            IUpperLayer* upper = nullptr;
-
-            openpal::Buffer tx_buffer;
+            IUpperLayer* upper = nullptr;            
         };
 
         struct IHandshakeState
@@ -109,6 +99,7 @@ namespace ssp21
         };
 
         Responder(const Config& config,
+			      std::unique_ptr<IFrameWriter> frame_writer,
                   std::unique_ptr<KeyPair> local_static_key_pair,
                   std::unique_ptr<PublicKey> remote_static_public_key,
                   const openpal::Logger& logger,
@@ -172,10 +163,16 @@ namespace ssp21
     };
 
     template <class T>
-    void Responder::Context::transmit_to_lower(const T& msg, const seq32_t& data)
+	FormatResult Responder::Context::transmit_to_lower(const T& msg)
     {
-        this->log_message(levels::tx_crypto_msg, levels::tx_crypto_msg_fields, T::function, msg, data.length());
-        this->lower->transmit(data);
+        this->log_message(levels::tx_crypto_msg, levels::tx_crypto_msg_fields, T::function, msg);
+
+		const auto res = this->frame_writer->write(msg);
+		if (res.is_error()) return res;
+
+        this->lower->transmit(res.frame);
+
+		return res;
     }
 
 }
