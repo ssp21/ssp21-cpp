@@ -9,7 +9,7 @@
 
 #include "ssp21/link/Addresses.h"
 
-#include "ssp21/crypto/SequenceTypes.h"
+#include "ssp21/SequenceTypes.h"
 
 namespace ssp21
 {

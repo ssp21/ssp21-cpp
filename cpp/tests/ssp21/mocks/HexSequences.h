@@ -3,7 +3,7 @@
 
 #include "testlib/Hex.h"
 
-#include "ssp21/crypto/SequenceTypes.h"
+#include "ssp21/SequenceTypes.h"
 
 #include <limits>
 

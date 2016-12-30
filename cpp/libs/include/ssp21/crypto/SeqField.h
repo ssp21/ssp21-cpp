@@ -5,12 +5,14 @@
 #include "openpal/container/WSlice.h"
 #include "openpal/serialization/BigEndian.h"
 
+#include "ssp21/SequenceTypes.h"
+
 #include "ssp21/crypto/gen/FormatError.h"
 #include "ssp21/crypto/gen/ParseError.h"
 
 #include "ssp21/crypto/IMessagePrinter.h"
 #include "ssp21/crypto/IntegerField.h"
-#include "ssp21/crypto/SequenceTypes.h"
+
 
 namespace ssp21
 {

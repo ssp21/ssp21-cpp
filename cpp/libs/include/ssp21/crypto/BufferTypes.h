@@ -4,7 +4,7 @@
 
 #include "Constants.h"
 
-#include "ssp21/crypto/SequenceTypes.h"
+#include "ssp21/SequenceTypes.h"
 
 #include <openpal/util/Uncopyable.h>
 #include <openpal/container/StaticBuffer.h>

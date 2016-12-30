@@ -4,16 +4,17 @@
 
 #include "CryptoTypedefs.h"
 
+#include "ssp21/SequenceTypes.h"
+
 #include "ssp21/crypto/gen/HandshakeError.h"
 #include "ssp21/crypto/gen/DHMode.h"
 #include "ssp21/crypto/gen/HandshakeHash.h"
 
 #include "ssp21/crypto/Crypto.h"
-
 #include "ssp21/crypto/NonceFunctions.h"
 #include "ssp21/crypto/Algorithms.h"
 #include "ssp21/crypto/Session.h"
-#include "ssp21/crypto/SequenceTypes.h"
+
 
 namespace ssp21
 {
