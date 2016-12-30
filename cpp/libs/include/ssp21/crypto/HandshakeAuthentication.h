@@ -15,7 +15,7 @@ namespace ssp21
         Responder
     };
 
-    typedef bool (*auth_handshake_t)(const SymmetricKey& key, EntityId id, const openpal::RSlice& mac);
+    typedef bool (*auth_handshake_t)(const SymmetricKey& key, EntityId id, const seq32_t& mac);
 
     typedef void (*calc_handshake_mac_t)(const SymmetricKey& key, EntityId id, HashOutput& output);
 

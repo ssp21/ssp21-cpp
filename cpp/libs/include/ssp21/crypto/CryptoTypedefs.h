@@ -9,13 +9,13 @@ namespace ssp21
     typedef void (*gen_keypair_func_t)(KeyPair& pair);
 
     typedef void (*hash_func_t)(
-        std::initializer_list<openpal::RSlice> data,
+        std::initializer_list<seq32_t> data,
         SecureBuffer& output
     );
 
     typedef void (*mac_func_t)(
         const seq8_t& key,
-        std::initializer_list<openpal::RSlice> data,
+        std::initializer_list<seq32_t> data,
         SecureBuffer& output
     );
 
@@ -28,7 +28,7 @@ namespace ssp21
 
     typedef void (*kdf_func_t)(
         const seq8_t& chaining_key,
-        std::initializer_list<openpal::RSlice> input_key_material,
+        std::initializer_list<seq32_t> input_key_material,
         SymmetricKey& key1,
         SymmetricKey& key2
     );
