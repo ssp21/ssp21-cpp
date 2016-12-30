@@ -288,7 +288,6 @@ TEST_CASE(SUITE("can transmit a message if session is initialized"))
 	const auto expected = hex::session_data(1, consts::crypto::default_ttl_pad_ms, true, true, "CA FE", hex::repeat(0xFF, 16));
 
 	REQUIRE(fix.lower.pop_tx_message() == expected);
-
 }
 
 

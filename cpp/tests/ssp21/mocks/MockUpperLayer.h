@@ -41,6 +41,8 @@ namespace ssp21
             return this->is_open;
         }
 
+		uint32_t num_tx_ready = 0;
+
     private:
 
         bool is_open = false;        
@@ -61,7 +63,10 @@ namespace ssp21
             this->is_open = false;
         }
 
-        virtual void on_tx_ready_impl() override {}
+        virtual void on_tx_ready_impl() override 
+		{
+			++num_tx_ready;
+		}
 
         virtual bool on_rx_ready_impl(const seq32_t& data) override
         {

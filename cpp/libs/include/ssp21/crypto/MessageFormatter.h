@@ -29,7 +29,7 @@ namespace ssp21
             if (any(merr)) return FormatResult(merr);
 
             const auto num_written = start.length() - dest.length();
-            return FormatResult::Succes(start.readonly().take(num_written));
+            return FormatResult::Success(start.readonly().take(num_written));
         }
 
         template <typename T, typename... Args>

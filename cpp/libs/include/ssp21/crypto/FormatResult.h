@@ -1,6 +1,7 @@
 #ifndef SSP21_FORMAT_RESULT_H
 #define SSP21_FORMAT_RESULT_H
 
+#include "ssp21/SequenceTypes.h"
 #include "ssp21/crypto/gen/FormatError.h"
 
 namespace ssp21
@@ -8,7 +9,7 @@ namespace ssp21
 
     struct FormatResult
     {
-        static FormatResult Succes(const seq32_t& written)
+        static FormatResult Success(const seq32_t& written)
         {
             return FormatResult(FormatError::ok, written);
         }
