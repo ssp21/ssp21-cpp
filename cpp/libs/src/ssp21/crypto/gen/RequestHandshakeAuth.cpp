@@ -31,9 +31,9 @@ RequestHandshakeAuth::RequestHandshakeAuth(
 {}
 
 
-ParseError RequestHandshakeAuth::read(openpal::RSlice input)
+ParseError RequestHandshakeAuth::read(seq32_t input)
 {
-    auto read_fields = [this](openpal::RSlice& input) -> ParseError 
+    auto read_fields = [this](seq32_t& input) -> ParseError 
     {
         return MessageParser::read_fields(
             input,
@@ -44,9 +44,9 @@ ParseError RequestHandshakeAuth::read(openpal::RSlice input)
     return MessageParser::read_message(input, Function::request_handshake_auth, read_fields);
 }
 
-FormatResult RequestHandshakeAuth::write(openpal::WSlice output) const
+FormatResult RequestHandshakeAuth::write(wseq32_t output) const
 {
-    auto write_fields = [this](openpal::WSlice& output) -> FormatError 
+    auto write_fields = [this](wseq32_t& output) -> FormatError 
     {
         return MessageFormatter::write_fields(
             output,

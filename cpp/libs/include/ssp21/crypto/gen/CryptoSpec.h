@@ -16,8 +16,6 @@
 #ifndef SSP21_CRYPTOSPEC_H
 #define SSP21_CRYPTOSPEC_H
 
-#include "openpal/container/WSlice.h"
-#include "openpal/container/RSlice.h"
 #include "ssp21/crypto/gen/DHMode.h"
 #include "ssp21/crypto/gen/NonceMode.h"
 #include "ssp21/crypto/gen/ParseError.h"
@@ -26,6 +24,7 @@
 #include "ssp21/crypto/gen/HandshakeKDF.h"
 #include "ssp21/crypto/gen/HandshakeMAC.h"
 #include "ssp21/crypto/gen/HandshakeHash.h"
+#include "ssp21/SequenceTypes.h"
 #include "ssp21/crypto/EnumField.h"
 #include "ssp21/crypto/IMessagePrinter.h"
 
@@ -53,8 +52,8 @@ struct CryptoSpec final
     EnumField<HandshakeMACSpec> handshake_mac;
     EnumField<SessionModeSpec> session_mode;
 
-    ParseError read(openpal::RSlice& input);
-    FormatError write(openpal::WSlice& output) const;
+    ParseError read(seq32_t& input);
+    FormatError write(wseq32_t& output) const;
     void print(const char* name, IMessagePrinter& printer) const;
 };
 

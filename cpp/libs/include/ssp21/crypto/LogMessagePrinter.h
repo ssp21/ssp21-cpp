@@ -24,7 +24,7 @@ namespace ssp21
         virtual void print(const char* message) override;
         virtual void print(const char* name, uint32_t value) override;
         virtual void print(const char* name, const char* value) override;
-        virtual void print(const char* name, const openpal::RSlice& data) override;
+        virtual void print(const char* name, const seq32_t& data) override;
 
     private:
 

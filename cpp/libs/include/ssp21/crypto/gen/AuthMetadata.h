@@ -17,12 +17,11 @@
 #define SSP21_AUTHMETADATA_H
 
 #include <cstdint>
-#include "openpal/container/WSlice.h"
-#include "openpal/container/RSlice.h"
 #include "openpal/serialization/BigEndian.h"
 #include "ssp21/crypto/gen/ParseError.h"
 #include "ssp21/crypto/gen/FormatError.h"
 #include "ssp21/crypto/gen/SessionFlags.h"
+#include "ssp21/SequenceTypes.h"
 #include "ssp21/crypto/IntegerField.h"
 #include "ssp21/crypto/IMessagePrinter.h"
 
@@ -44,8 +43,8 @@ struct AuthMetadata final
     IntegerField<openpal::UInt32> valid_until_ms;
     SessionFlags flags;
 
-    ParseError read(openpal::RSlice& input);
-    FormatError write(openpal::WSlice& output) const;
+    ParseError read(seq32_t& input);
+    FormatError write(wseq32_t& output) const;
     void print(const char* name, IMessagePrinter& printer) const;
 };
 

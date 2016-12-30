@@ -2,7 +2,7 @@
 #ifndef SSP21_IMESSAGEPRINTER_H
 #define SSP21_IMESSAGEPRINTER_H
 
-#include "openpal/container/RSlice.h"
+#include "ssp21/SequenceTypes.h"
 
 namespace ssp21
 {
@@ -19,7 +19,7 @@ namespace ssp21
         virtual void print(const char* message) = 0;
         virtual void print(const char* name, uint32_t value) = 0;
         virtual void print(const char* name, const char* value) = 0;
-        virtual void print(const char* name, const openpal::RSlice& data) = 0;
+        virtual void print(const char* name, const seq32_t& data) = 0;
     };
 
 }

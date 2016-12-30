@@ -37,9 +37,9 @@ RequestHandshakeBegin::RequestHandshakeBegin(
 {}
 
 
-ParseError RequestHandshakeBegin::read(openpal::RSlice input)
+ParseError RequestHandshakeBegin::read(seq32_t input)
 {
-    auto read_fields = [this](openpal::RSlice& input) -> ParseError 
+    auto read_fields = [this](seq32_t& input) -> ParseError 
     {
         return MessageParser::read_fields(
             input,
@@ -54,9 +54,9 @@ ParseError RequestHandshakeBegin::read(openpal::RSlice input)
     return MessageParser::read_message(input, Function::request_handshake_begin, read_fields);
 }
 
-FormatResult RequestHandshakeBegin::write(openpal::WSlice output) const
+FormatResult RequestHandshakeBegin::write(wseq32_t output) const
 {
-    auto write_fields = [this](openpal::WSlice& output) -> FormatError 
+    auto write_fields = [this](wseq32_t& output) -> FormatError 
     {
         return MessageFormatter::write_fields(
             output,

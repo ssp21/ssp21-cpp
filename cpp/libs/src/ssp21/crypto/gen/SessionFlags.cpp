@@ -20,7 +20,7 @@
 
 namespace ssp21 {
 
-ParseError SessionFlags::read(openpal::RSlice& input)
+ParseError SessionFlags::read(seq32_t& input)
 {
     uint8_t value = 0;
     if(!openpal::UInt8::read_from(input, value)) return ParseError::insufficient_bytes;
@@ -33,7 +33,7 @@ ParseError SessionFlags::read(openpal::RSlice& input)
     return ParseError::ok;
 }
 
-FormatError SessionFlags::write(openpal::WSlice& output) const
+FormatError SessionFlags::write(wseq32_t& output) const
 {
     uint8_t value = 0;
 

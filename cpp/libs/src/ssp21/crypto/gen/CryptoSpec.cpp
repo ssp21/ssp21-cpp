@@ -40,7 +40,7 @@ CryptoSpec::CryptoSpec(
     session_mode(session_mode)
 {}
 
-ParseError CryptoSpec::read(openpal::RSlice& input)
+ParseError CryptoSpec::read(seq32_t& input)
 {
     return MessageParser::read_fields(
         input,
@@ -53,7 +53,7 @@ ParseError CryptoSpec::read(openpal::RSlice& input)
     );
 }
 
-FormatError CryptoSpec::write(openpal::WSlice& output) const
+FormatError CryptoSpec::write(wseq32_t& output) const
 {
     return MessageFormatter::write_fields(
         output,

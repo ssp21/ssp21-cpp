@@ -29,11 +29,11 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
     }
 
     def readFunc: Iterator[String] = {
-      "ParseError read(openpal::RSlice& input);".iter
+      "ParseError read(seq32_t& input);".iter
     }
 
     def writeFunc: Iterator[String] = {
-      "FormatError write(openpal::WSlice& output) const;".iter
+      "FormatError write(wseq32_t& output) const;".iter
     }
 
     def printFunc: Iterator[String] = {
@@ -79,7 +79,7 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
         "0x%02X".format(~valid_mask.toByte)
       }
 
-      "ParseError %s::read(openpal::RSlice& input)".format(field.name).iter ++ bracket {
+      "ParseError %s::read(seq32_t& input)".format(field.name).iter ++ bracket {
         "uint8_t value = 0;".iter ++
           "if(!openpal::UInt8::read_from(input, value)) return ParseError::insufficient_bytes;".iter ++ space ++
           "if((value & %s) != 0) return ParseError::reserved_bit;".format(reserved_mask).iter ++ space ++
@@ -95,7 +95,7 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
         "if(%s) value |= %s;".format(b.name, mask)
       }.toIterator
 
-      "FormatError %s::write(openpal::WSlice& output) const".format(field.name).iter ++ bracket {
+      "FormatError %s::write(wseq32_t& output) const".format(field.name).iter ++ bracket {
         "uint8_t value = 0;".iter ++
           space ++ fields ++ space ++
           "return openpal::UInt8::write_to(output, value) ? FormatError::ok : FormatError::insufficient_space;".iter

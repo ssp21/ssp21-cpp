@@ -16,10 +16,9 @@
 #ifndef SSP21_SESSIONFLAGS_H
 #define SSP21_SESSIONFLAGS_H
 
-#include "openpal/container/WSlice.h"
-#include "openpal/container/RSlice.h"
 #include "ssp21/crypto/gen/ParseError.h"
 #include "ssp21/crypto/gen/FormatError.h"
+#include "ssp21/SequenceTypes.h"
 #include "ssp21/crypto/IMessagePrinter.h"
 
 namespace ssp21 {
@@ -33,8 +32,8 @@ struct SessionFlags final
         fin(fin)
     {}
 
-    ParseError read(openpal::RSlice& input);
-    FormatError write(openpal::WSlice& output) const;
+    ParseError read(seq32_t& input);
+    FormatError write(wseq32_t& output) const;
     void print(const char* name, IMessagePrinter& printer) const;
 
     bool fir = true;

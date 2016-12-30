@@ -34,7 +34,7 @@ AuthMetadata::AuthMetadata(
     flags(flags)
 {}
 
-ParseError AuthMetadata::read(openpal::RSlice& input)
+ParseError AuthMetadata::read(seq32_t& input)
 {
     return MessageParser::read_fields(
         input,
@@ -44,7 +44,7 @@ ParseError AuthMetadata::read(openpal::RSlice& input)
     );
 }
 
-FormatError AuthMetadata::write(openpal::WSlice& output) const
+FormatError AuthMetadata::write(wseq32_t& output) const
 {
     return MessageFormatter::write_fields(
         output,

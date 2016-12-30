@@ -18,16 +18,16 @@ final case class MessageGenerator(msg: Message) extends StructGenerator(msg) {
   )
 
   override def extraHeaderSignatures: Iterator[String] = Iterator(
-    "virtual ParseError read(openpal::RSlice input) override;",
-    "virtual FormatResult write(openpal::WSlice output) const override;",
+    "virtual ParseError read(seq32_t input) override;",
+    "virtual FormatResult write(wseq32_t output) const override;",
     "virtual void print(IMessagePrinter& printer) const override;"
   ) ++ space
 
   override def extraImplFunctions(implicit indent: Indentation): Iterator[String] = {
 
     def read = {
-      "ParseError %s::read(openpal::RSlice input)".format(msg.name).iter ++ bracket {
-        "auto read_fields = [this](openpal::RSlice& input) -> ParseError ".iter ++ bracketSemiColon {
+      "ParseError %s::read(seq32_t input)".format(msg.name).iter ++ bracket {
+        "auto read_fields = [this](seq32_t& input) -> ParseError ".iter ++ bracketSemiColon {
           readInternals
         } ++ space ++
         "return MessageParser::read_message(input, Function::%s, read_fields);".format(msg.function.name).iter
@@ -35,8 +35,8 @@ final case class MessageGenerator(msg: Message) extends StructGenerator(msg) {
     }
 
     def write = {
-      "FormatResult %s::write(openpal::WSlice output) const".format(msg.name).iter ++ bracket {
-        "auto write_fields = [this](openpal::WSlice& output) -> FormatError ".iter ++ bracketSemiColon {
+      "FormatResult %s::write(wseq32_t output) const".format(msg.name).iter ++ bracket {
+        "auto write_fields = [this](wseq32_t& output) -> FormatError ".iter ++ bracketSemiColon {
           writeInternals
         } ++ space ++
           "return MessageFormatter::write_message(output, Function::%s, write_fields);".format(msg.function.name).iter

@@ -38,8 +38,8 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
 
     def defaultConstructorSig = "%s();".format(sf.name).iter
 
-    def readSig = "ParseError read(openpal::RSlice& input);".iter
-    def writeSig = "FormatError write(openpal::WSlice& output) const;".iter
+    def readSig = "ParseError read(seq32_t& input);".iter
+    def writeSig = "FormatError write(wseq32_t& output) const;".iter
     def printSig = "void print(const char* name, IMessagePrinter& printer) const;".iter
 
     def readWritePrint = {
@@ -121,13 +121,13 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
 
 
     def readFunc(implicit indent: Indentation): Iterator[String] = {
-      "ParseError %s::read(openpal::RSlice& input)".format(sf.name).iter ++ bracket {
+      "ParseError %s::read(seq32_t& input)".format(sf.name).iter ++ bracket {
         readInternals
       }
     }
 
     def writeFunc(implicit indent: Indentation): Iterator[String] = {
-      "FormatError %s::write(openpal::WSlice& output) const".format(sf.name).iter ++ bracket {
+      "FormatError %s::write(wseq32_t& output) const".format(sf.name).iter ++ bracket {
         writeInternals
       }
     }

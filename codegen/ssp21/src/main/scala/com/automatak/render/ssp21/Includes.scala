@@ -18,11 +18,8 @@ case class Include(file: String, order: Int) {
 
 object Includes {
 
-
   val cstdint = Include("<cstdint>", Ordering.system)
 
-  val rslice = openpal("container/RSlice")
-  val wslice = openpal("container/WSlice")
   val uncopyable = openpal("util/Uncopyable")
   val bigEndian = openpal("serialization/BigEndian")
 
@@ -30,7 +27,8 @@ object Includes {
   val formatError = enum("FormatError")
   val function = enum("Function")
 
-  val errorCategory = Include(quoted("ssp21/ErrorCategory.h"), Ordering.ssp21)
+  val errorCategory = ssp21("ErrorCategory")
+  val seqTypes = ssp21("SequenceTypes")
 
   val imessage = crypto("IMessage")
   val enumField = crypto("EnumField")
@@ -45,8 +43,9 @@ object Includes {
   val flagsPrinting = crypto("FlagsPrinting")
   val msgParser = crypto("MessageParser")
 
-  val messageField = List(parseError, formatError, msgPrinter, wslice, rslice)
+  val messageField = List(parseError, formatError, msgPrinter, seqTypes)
 
+  def ssp21(className: String) = Include(quoted("ssp21/%s.h".format(className)), Ordering.ssp21)
   def crypto(className: String) = Include(quoted("ssp21/crypto/%s.h".format(className)), Ordering.crypto)
   def enum(className: String, path: String) : Include = Include(quoted("%s%s.h".format(path, className)), Ordering.enum)
   def enum(className: String) : Include = enum(className, "ssp21/crypto/gen/")
