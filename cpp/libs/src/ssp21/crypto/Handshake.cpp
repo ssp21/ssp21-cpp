@@ -27,7 +27,7 @@ namespace ssp21
         // ck = hash(ck || input)
 
         this->algorithms.handshake.hash(
-        { this->chaining_key.as_slice().widen(), input },
+        { this->chaining_key.as_slice(), input },
         this->chaining_key
         );
     }
@@ -76,7 +76,7 @@ namespace ssp21
         this->algorithms.handshake.kdf(
             this->chaining_key.as_slice(),
         {
-            dh1.as_slice().widen(), dh2.as_slice().widen(), dh3.as_slice().widen()
+            dh1.as_slice(), dh2.as_slice(), dh3.as_slice()
         },
         this->chaining_key,
         this->authentication_key

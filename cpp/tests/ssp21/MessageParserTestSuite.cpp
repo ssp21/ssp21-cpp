@@ -92,7 +92,7 @@ TEST_CASE(SUITE("reads Seq8 correctly"))
 
     REQUIRE_FALSE(any(err));
     REQUIRE(input.length() == 1);
-    REQUIRE(to_hex(field.seq.widen()) == "00 01 02 03");
+    REQUIRE(to_hex(field.seq) == "00 01 02 03");
 }
 
 TEST_CASE(SUITE("returns error if Seq8 empty"))
@@ -125,9 +125,9 @@ TEST_CASE(SUITE("reads Seq8Seq16 correctly"))
 
     Seq16 slice;
     REQUIRE(seqs.read(0, slice));
-    REQUIRE(to_hex(slice.widen()) == "BB");
+    REQUIRE(to_hex(slice) == "BB");
     REQUIRE(seqs.read(1, slice));
-    REQUIRE(to_hex(slice.widen()) == "CA FE");
+    REQUIRE(to_hex(slice) == "CA FE");
     REQUIRE_FALSE(seqs.read(2, slice));
 }
 

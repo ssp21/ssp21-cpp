@@ -57,14 +57,14 @@ namespace ssp21
 
             if (dest.length() < seq.length()) return FormatError::insufficient_space;
 
-            dest.copy_from(seq.widen());
+            dest.copy_from(seq);
 
             return FormatError::ok;
         }
 
         void print(const char* name, IMessagePrinter& printer) const
         {
-            printer.print(name, seq.widen());
+            printer.print(name, seq);
         }
 
         inline operator seq_t& ()

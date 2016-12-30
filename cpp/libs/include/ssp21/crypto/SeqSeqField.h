@@ -69,7 +69,7 @@ namespace ssp21
             for (count_t i = 0; i < this->count_; ++i)
             {
                 SAFE_STRING_FORMAT(message, openpal::max_log_entry_size, "#%u", i + 1);
-                printer.print(message, this->items_[i].widen());
+                printer.print(message, this->items_[i]);
             }
         }
 

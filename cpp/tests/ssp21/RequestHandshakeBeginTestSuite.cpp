@@ -75,12 +75,12 @@ TEST_CASE(SUITE("successfully parses message"))
     REQUIRE(msg.spec.session_mode == SessionMode::hmac_sha256_16);
     REQUIRE(msg.certificate_mode == CertificateMode::preshared_keys);
 
-    REQUIRE(to_hex(msg.ephemeral_public_key.seq.widen()) == "AA AA AA");
+    REQUIRE(to_hex(msg.ephemeral_public_key.seq) == "AA AA AA");
 
     REQUIRE(msg.certificates.count() == 1);
     Seq16 cert;
     REQUIRE(msg.certificates.read(0, cert));
-    REQUIRE(to_hex(cert.widen()) == "BB BB");
+    REQUIRE(to_hex(cert) == "BB BB");
 }
 
 TEST_CASE(SUITE("pretty prints message"))
