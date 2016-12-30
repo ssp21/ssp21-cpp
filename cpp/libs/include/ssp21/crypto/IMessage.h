@@ -19,7 +19,7 @@ namespace ssp21
 
         virtual ParseError read(seq32_t input) = 0;
 
-        virtual FormatResult write(openpal::WSlice output) const = 0;
+        virtual FormatResult write(wseq32_t output) const = 0;
 
         virtual void print(IMessagePrinter& printer) const = 0;
 

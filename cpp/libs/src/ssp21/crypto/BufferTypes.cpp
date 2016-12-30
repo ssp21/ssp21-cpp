@@ -17,7 +17,7 @@ namespace ssp21
         return this->buffer_type;
     }
 
-    openpal::WSlice BufferBase::get_write_slice()
+    wseq32_t BufferBase::get_write_slice()
     {
         return this->buffer.as_wslice();
     }

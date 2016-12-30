@@ -18,7 +18,7 @@ namespace ssp21
     public:
 
         template <typename WriteFun>
-        static FormatResult write_message(openpal::WSlice& dest, Function function, const WriteFun& write_fields)
+        static FormatResult write_message(wseq32_t& dest, Function function, const WriteFun& write_fields)
         {
             const auto start = dest;
 
@@ -34,7 +34,7 @@ namespace ssp21
         }
 
         template <typename T, typename... Args>
-        static FormatError write_fields(openpal::WSlice& dest, const T& value, Args& ... args)
+        static FormatError write_fields(wseq32_t& dest, const T& value, Args& ... args)
         {
             auto err = value.write(dest);
             if (any(err)) return err;
@@ -43,7 +43,7 @@ namespace ssp21
 
     private:
 
-        static FormatError write_fields(openpal::WSlice& output)
+        static FormatError write_fields(wseq32_t& output)
         {
             return FormatError::ok;
         }

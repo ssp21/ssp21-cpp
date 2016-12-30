@@ -47,7 +47,7 @@ namespace ssp21
             return ParseError::ok;
         }
 
-        FormatError write(openpal::WSlice& output) const
+        FormatError write(wseq32_t& output) const
         {
             return openpal::BigEndian::write(output, Spec::to_type(value)) ? FormatError::ok : FormatError::insufficient_space;
         }

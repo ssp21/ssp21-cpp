@@ -13,7 +13,7 @@ namespace ssp21
     seq16_t TruncatedMacSessionMode::read(
         const SymmetricKey& key,
         const SessionData& msg,
-        openpal::WSlice, // ignored in MAC mode
+        wseq32_t, // ignored in MAC mode
         std::error_code& ec
     ) const
     {
@@ -43,7 +43,7 @@ namespace ssp21
         const AuthMetadata& metadata,
         const seq16_t& user_data,
         AuthenticationTag& auth_tag,
-        openpal::WSlice,
+        wseq32_t,
         std::error_code& ec
     ) const
     {

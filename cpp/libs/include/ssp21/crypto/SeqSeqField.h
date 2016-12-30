@@ -43,7 +43,7 @@ namespace ssp21
             return ParseError::ok;
         }
 
-        FormatError write(openpal::WSlice& output) const
+        FormatError write(wseq32_t& output) const
         {
             IntegerField<OuterType> count_field(this->count_);
 

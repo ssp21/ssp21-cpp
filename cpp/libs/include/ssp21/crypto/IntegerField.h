@@ -44,7 +44,7 @@ namespace ssp21
             return IntegerType::read_from(input, this->value) ? ParseError::ok : ParseError::insufficient_bytes;
         }
 
-        FormatError write(openpal::WSlice& output) const
+        FormatError write(wseq32_t& output) const
         {
             return IntegerType::write_to(output, this->value) ? FormatError::ok : FormatError::insufficient_space;
         }

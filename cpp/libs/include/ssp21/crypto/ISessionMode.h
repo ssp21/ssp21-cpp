@@ -34,7 +34,7 @@ namespace ssp21
         virtual seq16_t read(
             const SymmetricKey& key,
             const SessionData& msg,
-            openpal::WSlice dest,
+            wseq32_t dest,
             std::error_code& ec
         ) const = 0;
 
@@ -55,7 +55,7 @@ namespace ssp21
             const AuthMetadata& metadata,
             const seq16_t& user_data,
             AuthenticationTag& auth_tag,
-            openpal::WSlice dest,
+            wseq32_t dest,
             std::error_code& ec
         ) const = 0;
 

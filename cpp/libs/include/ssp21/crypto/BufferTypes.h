@@ -31,7 +31,7 @@ namespace ssp21
 
         BufferType get_type() const;
 
-        openpal::WSlice get_write_slice();
+        wseq32_t get_write_slice();
 
         void set_type(BufferType key_type);
 

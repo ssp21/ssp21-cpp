@@ -11,7 +11,7 @@ namespace ssp21
 {
     ICryptoBackend* Crypto::backend_(nullptr);
 
-    void Crypto::zero_memory(openpal::WSlice data)
+    void Crypto::zero_memory(wseq32_t data)
     {
         assert(backend_);
         backend_->zero_memory(data);
