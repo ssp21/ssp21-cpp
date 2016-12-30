@@ -13,7 +13,7 @@ using namespace openpal;
 
 namespace ssp21
 {
-    RSlice LinkFormatter::write(WSlice dest, const Addresses& addr, const Seq32& payload)
+    RSlice LinkFormatter::write(WSlice dest, const Addresses& addr, const seq32_t& payload)
     {
         const auto start = dest.as_rslice();
 

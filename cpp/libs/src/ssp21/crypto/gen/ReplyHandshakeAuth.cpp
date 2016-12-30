@@ -25,7 +25,7 @@ ReplyHandshakeAuth::ReplyHandshakeAuth()
 {}
 
 ReplyHandshakeAuth::ReplyHandshakeAuth(
-    const Seq8& mac
+    const seq8_t& mac
 ) :
     mac(mac)
 {}

@@ -49,7 +49,7 @@ TEST_CASE(SUITE("HMAC-sha256"))
     std::string key("somesecret");
 
     auto text_slice = RSlice(reinterpret_cast<const uint8_t*>(text.c_str()), text.size());
-    auto key_slice = Seq8(reinterpret_cast<const uint8_t*>(key.c_str()), static_cast<uint8_t>(key.size()));
+    auto key_slice = seq8_t(reinterpret_cast<const uint8_t*>(key.c_str()), static_cast<uint8_t>(key.size()));
 
     HashOutput output;
     Crypto::hmac_sha256(key_slice, { text_slice }, output);
@@ -75,7 +75,7 @@ TEST_CASE(SUITE("HKDF-sha256"))
     SymmetricKey key1;
     SymmetricKey key2;
 
-    Crypto::hkdf_sha256(Seq8(salt, 8), { ikm }, key1, key2);
+    Crypto::hkdf_sha256(seq8_t(salt, 8), { ikm }, key1, key2);
 
     REQUIRE(key1.get_type() == BufferType::symmetric_key);
     REQUIRE(key2.get_type() == BufferType::symmetric_key);

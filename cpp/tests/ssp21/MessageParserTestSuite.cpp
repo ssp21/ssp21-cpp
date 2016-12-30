@@ -123,7 +123,7 @@ TEST_CASE(SUITE("reads Seq8Seq16 correctly"))
     REQUIRE(seqs.count() == 2);
 
 
-    Seq16 slice;
+    seq16_t slice;
     REQUIRE(seqs.read(0, slice));
     REQUIRE(to_hex(slice) == "BB");
     REQUIRE(seqs.read(1, slice));

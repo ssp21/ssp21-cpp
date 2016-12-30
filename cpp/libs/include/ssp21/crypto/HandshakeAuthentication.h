@@ -26,7 +26,7 @@ namespace ssp21
 
     public:
 
-        static bool auth_handshake_with_mac(mac_func_t mac_func, const SymmetricKey& key, EntityId id, const Seq8& mac_value);
+        static bool auth_handshake_with_mac(mac_func_t mac_func, const SymmetricKey& key, EntityId id, const seq8_t& mac_value);
 
         static void calc_handshake_mac_with_macfunc(mac_func_t mac_func, const SymmetricKey& key, EntityId id, HashOutput& output);
 

@@ -27,7 +27,7 @@ namespace ssp21
 
         virtual ~BufferBase() {}
 
-        Seq8 as_slice() const;
+        seq8_t as_slice() const;
 
         BufferType get_type() const;
 

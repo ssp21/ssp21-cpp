@@ -14,20 +14,20 @@ namespace ssp21
     );
 
     typedef void (*mac_func_t)(
-        const Seq8& key,
+        const seq8_t& key,
         std::initializer_list<openpal::RSlice> data,
         SecureBuffer& output
     );
 
     typedef void (*dh_func_t)(
         const PrivateKey& priv_key,
-        const Seq8& pub_key,
+        const seq8_t& pub_key,
         DHOutput& output,
         std::error_code& ec
     );
 
     typedef void (*kdf_func_t)(
-        const Seq8& chaining_key,
+        const seq8_t& chaining_key,
         std::initializer_list<openpal::RSlice> input_key_material,
         SymmetricKey& key1,
         SymmetricKey& key2

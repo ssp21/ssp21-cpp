@@ -17,14 +17,14 @@ namespace ssp21
         backend_->zero_memory(data);
     }
 
-    bool Crypto::secure_equals(const Seq8& lhs, const Seq8& rhs)
+    bool Crypto::secure_equals(const seq8_t& lhs, const seq8_t& rhs)
     {
         assert(backend_);
         return backend_->secure_equals(lhs, rhs);
     }
 
     void Crypto::hash_sha256(
-        std::initializer_list<Seq32> data,
+        std::initializer_list<seq32_t> data,
         SecureBuffer& output)
     {
         assert(backend_);
@@ -32,8 +32,8 @@ namespace ssp21
     }
 
     void Crypto::hmac_sha256(
-        const Seq8& key,
-        std::initializer_list<Seq32> data,
+        const seq8_t& key,
+        std::initializer_list<seq32_t> data,
         SecureBuffer& output)
     {
         assert(backend_);
@@ -46,7 +46,7 @@ namespace ssp21
         backend_->gen_keypair_x25519(pair);
     }
 
-    void Crypto::dh_x25519(const PrivateKey& priv_key, const Seq8& pub_key, DHOutput& output, std::error_code& ec)
+    void Crypto::dh_x25519(const PrivateKey& priv_key, const seq8_t& pub_key, DHOutput& output, std::error_code& ec)
     {
         assert(backend_);
 
@@ -60,8 +60,8 @@ namespace ssp21
     }
 
     void Crypto::hkdf_sha256(
-        const Seq8& chaining_key,
-        std::initializer_list<Seq32> input_key_material,
+        const seq8_t& chaining_key,
+        std::initializer_list<seq32_t> input_key_material,
         SymmetricKey& output1,
         SymmetricKey& output2)
     {

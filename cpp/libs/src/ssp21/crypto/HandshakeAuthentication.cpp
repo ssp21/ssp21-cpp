@@ -5,7 +5,7 @@
 namespace ssp21
 {
 
-    bool HandshakeAuthentication::auth_handshake_with_mac(mac_func_t mac_func, const SymmetricKey& key, EntityId id, const Seq8& mac_value)
+    bool HandshakeAuthentication::auth_handshake_with_mac(mac_func_t mac_func, const SymmetricKey& key, EntityId id, const seq8_t& mac_value)
     {
         auto byte = get_auth_byte(id);
         const openpal::RSlice pattern(&byte, 1);

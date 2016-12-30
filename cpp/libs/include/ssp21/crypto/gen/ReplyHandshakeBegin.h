@@ -28,7 +28,7 @@ struct ReplyHandshakeBegin final : public IMessage, private openpal::Uncopyable
     ReplyHandshakeBegin();
 
     explicit ReplyHandshakeBegin(
-        const Seq8& ephemeral_public_key
+        const seq8_t& ephemeral_public_key
     );
 
     virtual ParseError read(openpal::RSlice input) override;

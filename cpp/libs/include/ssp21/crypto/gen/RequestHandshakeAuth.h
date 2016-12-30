@@ -27,7 +27,7 @@ struct RequestHandshakeAuth final : public IMessage, private openpal::Uncopyable
     RequestHandshakeAuth();
 
     explicit RequestHandshakeAuth(
-        const Seq8& mac
+        const seq8_t& mac
     );
 
     virtual ParseError read(openpal::RSlice input) override;

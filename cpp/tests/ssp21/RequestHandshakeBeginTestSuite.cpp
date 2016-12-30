@@ -78,7 +78,7 @@ TEST_CASE(SUITE("successfully parses message"))
     REQUIRE(to_hex(msg.ephemeral_public_key) == "AA AA AA");
 
     REQUIRE(msg.certificates.count() == 1);
-    Seq16 cert;
+    seq16_t cert;
     REQUIRE(msg.certificates.read(0, cert));
     REQUIRE(to_hex(cert) == "BB BB");
 }

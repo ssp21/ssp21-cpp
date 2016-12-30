@@ -21,17 +21,17 @@ namespace ssp21
         ) : mac_func(mac_func), auth_tag_length(auth_tag_length), buffer_type(buffer_type)
         {}
 
-        virtual Seq16 read(
+        virtual seq16_t read(
             const SymmetricKey& key,
             const SessionData& msg,
             openpal::WSlice dest,
             std::error_code& ec
         ) const override;
 
-        virtual Seq16 write(
+        virtual seq16_t write(
             const SymmetricKey& key,
             const AuthMetadata& metadata,
-            const Seq16& user_data,
+            const seq16_t& user_data,
             AuthenticationTag& auth_tag,
             openpal::WSlice dest,
             std::error_code& ec

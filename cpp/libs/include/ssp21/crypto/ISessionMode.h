@@ -30,7 +30,7 @@ namespace ssp21
         *
         * @return A slice pointing to the cleartext. This slice will be empty if an error occured.
         */
-        virtual Seq16 read(
+        virtual seq16_t read(
             const SymmetricKey& key,
             const SessionData& msg,
             openpal::WSlice dest,
@@ -49,10 +49,10 @@ namespace ssp21
         *
         * @return A slice pointing to the possibly encrypted user data. This slice will be empty if an error occured.
         */
-        virtual Seq16 write(
+        virtual seq16_t write(
             const SymmetricKey& key,
             const AuthMetadata& metadata,
-            const Seq16& user_data,
+            const seq16_t& user_data,
             AuthenticationTag& auth_tag,
             openpal::WSlice dest,
             std::error_code& ec

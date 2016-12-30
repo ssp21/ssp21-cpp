@@ -15,7 +15,7 @@ namespace ssp21
     */
     template <mac_func_t mac_func>
     void hkdf(
-        const Seq8& chaining_key,
+        const seq8_t& chaining_key,
         std::initializer_list<openpal::RSlice> input_key_material,
         SymmetricKey& output1,
         SymmetricKey& output2)

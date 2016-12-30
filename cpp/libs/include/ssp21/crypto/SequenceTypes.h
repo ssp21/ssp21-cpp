@@ -8,9 +8,9 @@
 
 namespace ssp21
 {
-    typedef openpal::RSeq<uint8_t> Seq8;
-    typedef openpal::RSeq<uint16_t> Seq16;
-    typedef openpal::RSeq<uint32_t> Seq32;
+    typedef openpal::RSeq<uint8_t> seq8_t;
+    typedef openpal::RSeq<uint16_t> seq16_t;
+    typedef openpal::RSeq<uint32_t> seq32_t;
 }
 
 #endif

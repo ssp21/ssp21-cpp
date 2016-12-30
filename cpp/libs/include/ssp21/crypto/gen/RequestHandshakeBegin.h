@@ -37,7 +37,7 @@ struct RequestHandshakeBegin final : public IMessage, private openpal::Uncopyabl
         uint16_t version,
         const CryptoSpec& spec,
         CertificateMode certificate_mode,
-        const Seq8& ephemeral_public_key
+        const seq8_t& ephemeral_public_key
     );
 
     virtual ParseError read(openpal::RSlice input) override;

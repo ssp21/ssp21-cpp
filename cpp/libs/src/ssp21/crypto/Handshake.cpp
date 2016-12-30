@@ -10,7 +10,7 @@ namespace ssp21
         return this->algorithms.configure(spec);
     }
 
-    Seq8 Handshake::initialize()
+    seq8_t Handshake::initialize()
     {
         this->algorithms.handshake.gen_keypair(this->local_ephemeral_keys);
 
@@ -32,7 +32,7 @@ namespace ssp21
         );
     }
 
-    bool Handshake::auth_handshake(const Seq8& mac) const
+    bool Handshake::auth_handshake(const seq8_t& mac) const
     {
         return HandshakeAuthentication::auth_handshake_with_mac(
                    this->algorithms.handshake.session_auth_mac,
@@ -55,8 +55,8 @@ namespace ssp21
     void Handshake::derive_authentication_key(
         const RSlice& message,
         const PrivateKey& priv_s_dh_key,
-        const Seq8& pub_e_dh_key,
-        const Seq8& pub_s_dh_key,
+        const seq8_t& pub_e_dh_key,
+        const seq8_t& pub_s_dh_key,
         std::error_code& ec)
     {
         this->mix_ck(message);

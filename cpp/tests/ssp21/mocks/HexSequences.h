@@ -31,8 +31,8 @@ namespace ssp21
         }
     };
 
-    typedef HexSeq<uint8_t, Seq8> HexSeq8;
-    typedef HexSeq<uint16_t, Seq16> HexSeq16;
+    typedef HexSeq<uint8_t, seq8_t> HexSeq8;
+    typedef HexSeq<uint16_t, seq16_t> HexSeq16;
 }
 
 #endif

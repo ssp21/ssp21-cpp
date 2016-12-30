@@ -7,7 +7,7 @@
 
 namespace ssp21
 {
-    Seq8 BufferBase::as_slice() const
+    seq8_t BufferBase::as_slice() const
     {
         return this->buffer.as_seq();
     }
