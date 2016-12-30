@@ -29,7 +29,7 @@ TEST_CASE(SUITE("Correct serialization"))
         SessionFlags flags(fir, fin);
 
         uint8_t value = 0;
-        auto dest = openpal::WSlice(&value, 1);
+        auto dest = wseq32_t(&value, 1);
         auto err = flags.write(dest);
         REQUIRE(!any(err));
         REQUIRE(dest.is_empty());
@@ -46,7 +46,7 @@ TEST_CASE(SUITE("Correct deserialization"))
 {
     auto test_permutation = [](bool fir, bool fin, uint8_t byte)
     {
-        auto input = openpal::RSlice(&byte, 1);
+        auto input = seq32_t(&byte, 1);
         SessionFlags flags;
         REQUIRE(!any(flags.read(input)));
         REQUIRE(input.is_empty());
@@ -62,7 +62,7 @@ TEST_CASE(SUITE("Correct deserialization"))
 
 TEST_CASE(SUITE("rejects empty output"))
 {
-    auto output = openpal::WSlice::empty_slice();
+    auto output = wseq32_t::empty_slice();
     SessionFlags flags;
     auto err = flags.write(output);
     REQUIRE(err == FormatError::insufficient_space);
@@ -70,7 +70,7 @@ TEST_CASE(SUITE("rejects empty output"))
 
 TEST_CASE(SUITE("rejects empty input"))
 {
-    auto input = openpal::RSlice::empty_slice();
+    auto input = seq32_t::empty_slice();
     SessionFlags flags;
     auto err = flags.read(input);
     REQUIRE(err == ParseError::insufficient_bytes);
@@ -80,7 +80,7 @@ TEST_CASE(SUITE("error if reserved bit is set"))
 {
     uint8_t byte = 0x01;
 
-    auto input = openpal::RSlice(&byte, 1);
+    auto input = seq32_t(&byte, 1);
     SessionFlags flags;
     auto err = flags.read(input);
     REQUIRE(err == ParseError::reserved_bit);

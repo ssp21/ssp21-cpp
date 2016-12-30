@@ -18,7 +18,7 @@ void test_encoding(const std::string& input, const std::string& expected_output)
         output.push_back(c);
     };
 
-    openpal::RSlice slice(reinterpret_cast<const uint8_t*>(input.c_str()), static_cast<uint32_t>(input.length()));
+    seq32_t slice(reinterpret_cast<const uint8_t*>(input.c_str()), static_cast<uint32_t>(input.length()));
 
     Base64::encode(slice, write);
 
@@ -36,7 +36,7 @@ void test_decoding_failure(const std::string& input, Base64DecodeError expected_
         output.push_back(c);
     };
 
-    openpal::RSlice slice(reinterpret_cast<const uint8_t*>(input.c_str()), static_cast<uint32_t>(input.length()));
+    seq32_t slice(reinterpret_cast<const uint8_t*>(input.c_str()), static_cast<uint32_t>(input.length()));
 
     auto err = Base64::decode(slice, write);
 
@@ -51,7 +51,7 @@ void test_decoding_success(const std::string& input, const std::string& expected
         output.push_back(c);
     };
 
-    openpal::RSlice slice(reinterpret_cast<const uint8_t*>(input.c_str()), static_cast<uint32_t>(input.length()));
+    seq32_t slice(reinterpret_cast<const uint8_t*>(input.c_str()), static_cast<uint32_t>(input.length()));
 
     REQUIRE(Base64::decode(slice, write) == Base64DecodeError::ok);
 

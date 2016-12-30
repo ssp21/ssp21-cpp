@@ -10,7 +10,7 @@ namespace ssp21
 
     MockCryptoBackend MockCryptoBackend::instance;
 
-    void MockCryptoBackend::zero_memory(openpal::WSlice data)
+    void MockCryptoBackend::zero_memory(wseq32_t data)
     {
         memset(data, 0, data.length());
     }

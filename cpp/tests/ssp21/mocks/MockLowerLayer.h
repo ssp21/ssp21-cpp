@@ -25,7 +25,7 @@ namespace ssp21
             this->is_tx_ready = true;
         }
 
-        virtual bool transmit(const openpal::RSlice& message) override
+        virtual bool transmit(const seq32_t& message) override
         {
             if (!this->is_tx_ready)
             {

@@ -53,7 +53,7 @@ namespace ssp21
 
         ILowerLayer* const lower;
 
-        virtual void process(const openpal::RSlice& message) override
+        virtual void process(const seq32_t& message) override
         {
             this->rx_messages.push_back(openpal::to_hex(message));
         }
