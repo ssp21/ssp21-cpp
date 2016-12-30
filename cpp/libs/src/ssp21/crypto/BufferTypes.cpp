@@ -9,7 +9,7 @@ namespace ssp21
 {
     seq8_t BufferBase::as_seq() const
     {
-        return this->buffer.as_seq();
+        return this->buffer.as_seq(get_buffer_length(this->buffer_type));
     }
 
     BufferType BufferBase::get_type() const
