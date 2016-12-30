@@ -11,7 +11,7 @@
 
 namespace ssp21
 {
-    class MockUpperLayer : public IUpperLayer, private IMessageProcessor, private openpal::Uncopyable
+    class MockUpperLayer : public IUpperLayer, private openpal::Uncopyable
     {
 
     public:
@@ -43,20 +43,13 @@ namespace ssp21
 
     private:
 
-        bool is_open = false;
-
-        typedef openpal::Buffer message_t;
+        bool is_open = false;        
 
         typedef std::deque<std::string> message_queue_t;
 
         message_queue_t rx_messages;
 
-        ILowerLayer* const lower;
-
-        virtual void process(const seq32_t& message) override
-        {
-            this->rx_messages.push_back(openpal::to_hex(message));
-        }
+        ILowerLayer* const lower;       
 
         virtual void on_open_impl() override
         {
@@ -70,9 +63,10 @@ namespace ssp21
 
         virtual void on_tx_ready_impl() override {}
 
-        virtual void on_rx_ready_impl() override
+        virtual bool on_rx_ready_impl(const seq32_t& data) override
         {
-            this->lower->receive(*this);
+			this->rx_messages.push_back(to_hex(data));
+			return true;
         }
 
     };
