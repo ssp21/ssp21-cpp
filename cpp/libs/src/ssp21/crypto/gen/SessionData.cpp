@@ -50,7 +50,7 @@ ParseError SessionData::read(seq32_t input)
     return MessageParser::read_message(input, Function::session_data, read_fields);
 }
 
-FormatResult SessionData::write(wseq32_t output) const
+FormatResult SessionData::write(wseq32_t& output) const
 {
     auto write_fields = [this](wseq32_t& output) -> FormatError 
     {

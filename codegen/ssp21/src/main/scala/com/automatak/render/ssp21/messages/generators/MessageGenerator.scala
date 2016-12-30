@@ -19,7 +19,7 @@ final case class MessageGenerator(msg: Message) extends StructGenerator(msg) {
 
   override def extraHeaderSignatures: Iterator[String] = Iterator(
     "virtual ParseError read(seq32_t input) override;",
-    "virtual FormatResult write(wseq32_t output) const override;",
+    "virtual FormatResult write(wseq32_t& output) const override;",
     "virtual void print(IMessagePrinter& printer) const override;"
   ) ++ space
 
@@ -35,7 +35,7 @@ final case class MessageGenerator(msg: Message) extends StructGenerator(msg) {
     }
 
     def write = {
-      "FormatResult %s::write(wseq32_t output) const".format(msg.name).iter ++ bracket {
+      "FormatResult %s::write(wseq32_t& output) const".format(msg.name).iter ++ bracket {
         "auto write_fields = [this](wseq32_t& output) -> FormatError ".iter ++ bracketSemiColon {
           writeInternals
         } ++ space ++

@@ -32,7 +32,7 @@ struct ReplyHandshakeError final : public IMessage, private openpal::Uncopyable
     );
 
     virtual ParseError read(seq32_t input) override;
-    virtual FormatResult write(wseq32_t output) const override;
+    virtual FormatResult write(wseq32_t& output) const override;
     virtual void print(IMessagePrinter& printer) const override;
 
     static const uint32_t fixed_size_bytes = 2;

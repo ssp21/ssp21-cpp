@@ -44,7 +44,7 @@ ParseError RequestHandshakeAuth::read(seq32_t input)
     return MessageParser::read_message(input, Function::request_handshake_auth, read_fields);
 }
 
-FormatResult RequestHandshakeAuth::write(wseq32_t output) const
+FormatResult RequestHandshakeAuth::write(wseq32_t& output) const
 {
     auto write_fields = [this](wseq32_t& output) -> FormatError 
     {

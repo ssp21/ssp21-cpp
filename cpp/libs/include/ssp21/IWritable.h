@@ -12,7 +12,7 @@ namespace ssp21
     struct IWritable
     {            
 
-        virtual FormatResult write(wseq32_t output) const = 0;      
+        virtual FormatResult write(wseq32_t& output) const = 0;      
 
     };
 

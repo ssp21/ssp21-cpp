@@ -41,7 +41,7 @@ struct RequestHandshakeBegin final : public IMessage, private openpal::Uncopyabl
     );
 
     virtual ParseError read(seq32_t input) override;
-    virtual FormatResult write(wseq32_t output) const override;
+    virtual FormatResult write(wseq32_t& output) const override;
     virtual void print(IMessagePrinter& printer) const override;
 
     static const uint32_t min_size_bytes = 12;

@@ -44,7 +44,7 @@ ParseError ReplyHandshakeError::read(seq32_t input)
     return MessageParser::read_message(input, Function::reply_handshake_error, read_fields);
 }
 
-FormatResult ReplyHandshakeError::write(wseq32_t output) const
+FormatResult ReplyHandshakeError::write(wseq32_t& output) const
 {
     auto write_fields = [this](wseq32_t& output) -> FormatError 
     {
