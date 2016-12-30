@@ -125,6 +125,11 @@ namespace ssp21
         {
             return ResponderStatistics(this->ctx.session.get_statistics());
         }
+		
+		// ---- implement ILowerLayer -----
+
+		virtual bool transmit(const seq32_t& data) override;
+		virtual void receive() override;
 
     private:
 
@@ -136,21 +141,14 @@ namespace ssp21
 			return ctx.lower->get_is_tx_ready() && !this->is_rx_ready;
 		}
 		
+		void process(const seq32_t& data);               
 
-		void process(const seq32_t& data);
+		// ---- implement IUpperLayer -----
 
-        // ---- implement IUpperLayer -----
-
-        virtual void on_open_impl() override {}
-        virtual void on_close_impl() override;
-        virtual void on_tx_ready_impl() override;
-        virtual bool on_rx_ready_impl(const seq32_t& data) override;
-
-        // ---- implement ILowerLayer -----
-
-        virtual bool transmit(const seq32_t& data) override;
-        virtual void receive() override;
-        
+		virtual void on_open_impl() override {}
+		virtual void on_close_impl() override;
+		virtual void on_tx_ready_impl() override;
+		virtual bool on_rx_ready_impl(const seq32_t& data) override;
 
         // ---- implement IMessageHandler -----
 

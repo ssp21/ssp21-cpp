@@ -149,7 +149,7 @@ TEST_CASE(SUITE("begin handshake can be repeated prior to auth handshake"))
     test_auth_handshake_success(fix);
 }
 
-// ---------- tests for initialized session -----------
+// ---------- rx tests for initialized session -----------
 
 TEST_CASE(SUITE("auth fails if insufficient data for tag"))
 {
@@ -256,6 +256,42 @@ TEST_CASE(SUITE("can authenticate multiple messages"))
         REQUIRE(fix.upper.pop_rx_message() == data);
     }
 }
+
+// ---------- tx tests for initialized session -----------
+
+TEST_CASE(SUITE("won't transmit if offline"))
+{
+	ResponderFixture fix;
+	Hex msg("");
+
+	REQUIRE_FALSE(fix.responder.transmit(msg));	
+}
+
+TEST_CASE(SUITE("won't transmit if no session"))
+{
+	ResponderFixture fix;
+	fix.responder.on_open();
+	Hex msg("");
+
+	REQUIRE_FALSE(fix.responder.transmit(msg));
+}
+
+TEST_CASE(SUITE("can transmit a message if session is initialized"))
+{
+	ResponderFixture fix;
+	fix.responder.on_open();
+	test_init_session_success(fix);
+	
+	Hex msg("CA FE");
+	REQUIRE(fix.responder.transmit(msg));
+
+	const auto expected = hex::session_data(1, 0, true, true, "CA FE", hex::repeat(0xFF, 16));
+
+	REQUIRE(fix.lower.pop_tx_message() == expected);
+
+}
+
+
 
 // ---------- helper method implementations -----------
 
