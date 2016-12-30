@@ -17,12 +17,12 @@ namespace ssp21
         return this->local_ephemeral_keys.public_key.as_seq();
     }
 
-    void Handshake::set_ck(const RSlice& input)
+    void Handshake::set_ck(const seq32_t& input)
     {
         this->algorithms.handshake.hash({ input }, this->chaining_key);
     }
 
-    void Handshake::mix_ck(const RSlice& input)
+    void Handshake::mix_ck(const seq32_t& input)
     {
         // ck = hash(ck || input)
 
@@ -53,7 +53,7 @@ namespace ssp21
     }
 
     void Handshake::derive_authentication_key(
-        const RSlice& message,
+        const seq32_t& message,
         const PrivateKey& priv_s_dh_key,
         const seq8_t& pub_e_dh_key,
         const seq8_t& pub_s_dh_key,

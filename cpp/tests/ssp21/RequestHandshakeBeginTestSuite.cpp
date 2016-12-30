@@ -20,7 +20,7 @@ using namespace openpal;
 TEST_CASE(SUITE("returns error on empty message"))
 {
     RequestHandshakeBegin msg;
-    auto input = RSlice::empty_slice();
+    auto input = seq32_t::empty();
     REQUIRE(msg.read(input) == ParseError::insufficient_bytes);
 }
 
@@ -161,7 +161,7 @@ TEST_CASE(SUITE("formats default value"))
 {
     openpal::StaticBuffer<uint32_t, RequestHandshakeBegin::min_size_bytes> buffer;
     RequestHandshakeBegin msg;
-    auto dest = buffer.as_wslice();
+    auto dest = buffer.as_wseq();
     auto res = msg.write(dest);
 
     REQUIRE(!res.is_error());
@@ -172,6 +172,6 @@ TEST_CASE(SUITE("returns error if insufficient buffer space"))
 {
     openpal::StaticBuffer < uint32_t, RequestHandshakeBegin::min_size_bytes - 1 > buffer;
     RequestHandshakeBegin msg;
-    auto dest = buffer.as_wslice();
+    auto dest = buffer.as_wseq();
     REQUIRE(msg.write(dest).err == FormatError::insufficient_space);
 }

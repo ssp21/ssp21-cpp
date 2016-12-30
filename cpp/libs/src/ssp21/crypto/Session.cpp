@@ -50,13 +50,13 @@ namespace ssp21
         this->tx_valid = false;
     }
 
-    RSlice Session::validate_message(const SessionData& message, const openpal::Timestamp& now, std::error_code& ec)
+    seq32_t Session::validate_message(const SessionData& message, const openpal::Timestamp& now, std::error_code& ec)
     {
         if (!this->rx_valid)
         {
             this->statistics.num_user_data_without_session.increment();
             ec = CryptoError::no_valid_session;
-            return RSlice::empty_slice();
+            return seq32_t::empty();
         }
 
         auto dest = this->rx_auth_buffer.as_wslice();
@@ -65,14 +65,14 @@ namespace ssp21
         if (ec)
         {
             this->statistics.num_auth_fail.increment();
-            return RSlice::empty_slice();
+            return seq32_t::empty();
         }
 
         if (payload.is_empty())
         {
             ec = CryptoError::empty_user_data;
             this->statistics.num_auth_fail.increment();
-            return RSlice::empty_slice();
+            return seq32_t::empty();
         }
 
         const auto current_session_time = now.milliseconds - this->session_start.milliseconds;
@@ -82,7 +82,7 @@ namespace ssp21
         {
             this->statistics.num_ttl_expiration.increment();
             ec = CryptoError::expired_ttl;
-            return RSlice::empty_slice();
+            return seq32_t::empty();
         }
 
         // check the nonce
@@ -90,7 +90,7 @@ namespace ssp21
         {
             this->statistics.num_nonce_fail.increment();
             ec = CryptoError::invalid_rx_nonce;
-            return RSlice::empty_slice();
+            return seq32_t::empty();
         }
 
         this->rx_nonce.set(message.metadata.nonce.value);

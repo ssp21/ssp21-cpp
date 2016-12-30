@@ -29,7 +29,7 @@ namespace ssp21
         std::string write_message(const IMessage& msg)
         {
             openpal::StaticBuffer<uint32_t, 1024> buffer;
-            auto dest = buffer.as_wslice();
+            auto dest = buffer.as_wseq();
             auto result = msg.write(dest);
 
             assert(!result.is_error());

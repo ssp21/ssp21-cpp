@@ -31,7 +31,7 @@ namespace ssp21
         if (!Crypto::secure_equals(msg.auth_tag, truncated_mac)) // authentication failure
         {
             ec = CryptoError::mac_auth_fail;
-            return seq16_t::empty_slice();
+            return seq16_t::empty();
         }
 
         // we're authenticated, so return the user_data slice
@@ -54,7 +54,7 @@ namespace ssp21
         if (user_data.length() > max_userdata_length)
         {
             ec = CryptoError::bad_buffer_size;
-            return seq16_t::empty_slice();
+            return seq16_t::empty();
         }
 
         metadata_buffer_t buffer;

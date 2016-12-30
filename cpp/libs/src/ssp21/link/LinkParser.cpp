@@ -28,7 +28,7 @@ namespace ssp21
 
     }
 
-    bool LinkParser::parse(RSlice& input)
+    bool LinkParser::parse(seq32_t& input)
     {
         this->state_ = parse_many(this->state_, this->context_, input);
 
@@ -47,7 +47,7 @@ namespace ssp21
         return current_state;
     }
 
-    LinkParser::State LinkParser::parse_one(const State& state, Context& ctx, RSlice& input)
+    LinkParser::State LinkParser::parse_one(const State& state, Context& ctx, seq32_t& input)
     {
         switch (state.value)
         {

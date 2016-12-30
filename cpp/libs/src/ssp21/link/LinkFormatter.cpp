@@ -7,19 +7,17 @@
 #include "openpal/util/Comparisons.h"
 #include "openpal/serialization/BigEndian.h"
 
-
-
 using namespace openpal;
 
 namespace ssp21
 {
-    RSlice LinkFormatter::write(WSlice dest, const Addresses& addr, const seq32_t& payload)
+    seq32_t LinkFormatter::write(wseq32_t dest, const Addresses& addr, const seq32_t& payload)
     {
-        const auto start = dest.as_rslice();
+        const auto start = dest.readonly();
 
         if (dest.length() < consts::link::min_frame_size)
         {
-            return RSlice::empty_slice();
+            return seq32_t::empty();
         }
 
         const uint32_t max_payload_length = min<uint32_t>(
@@ -31,7 +29,7 @@ namespace ssp21
 
         if (payload.length() > max_payload_length)
         {
-            return RSlice::empty_slice();
+            return seq32_t::empty();
         }
 
         // safe cast since we've already validated the payload length relative to the maximum allowed

@@ -62,7 +62,7 @@ TEST_CASE(SUITE("Correct deserialization"))
 
 TEST_CASE(SUITE("rejects empty output"))
 {
-    auto output = wseq32_t::empty_slice();
+    auto output = wseq32_t::empty();
     SessionFlags flags;
     auto err = flags.write(output);
     REQUIRE(err == FormatError::insufficient_space);
@@ -70,7 +70,7 @@ TEST_CASE(SUITE("rejects empty output"))
 
 TEST_CASE(SUITE("rejects empty input"))
 {
-    auto input = seq32_t::empty_slice();
+    auto input = seq32_t::empty();
     SessionFlags flags;
     auto err = flags.read(input);
     REQUIRE(err == ParseError::insufficient_bytes);

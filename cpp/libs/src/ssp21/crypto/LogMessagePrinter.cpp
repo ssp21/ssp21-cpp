@@ -36,7 +36,7 @@ namespace ssp21
         logger_.log(level_, LOCATION, message);
     }
 
-    void LogMessagePrinter::print(const char* name, const RSlice& data)
+    void LogMessagePrinter::print(const char* name, const seq32_t& data)
     {
         char message[max_log_entry_size];
         SAFE_STRING_FORMAT(message, max_log_entry_size, "%s (length = %u)", name, data.length());

@@ -18,7 +18,7 @@ TEST_CASE(SUITE("sha256"))
 {
     std::string text("The quick brown fox");
 
-    auto slice = RSlice(reinterpret_cast<const uint8_t*>(text.c_str()), text.size());
+    auto slice = seq32_t(reinterpret_cast<const uint8_t*>(text.c_str()), text.size());
 
     HashOutput output;
     Crypto::hash_sha256({slice}, output);
@@ -31,7 +31,7 @@ TEST_CASE(SUITE("sha256"))
 TEST_CASE(SUITE("sha256 can safely be invoked on its own output buffer"))
 {
     std::string text("The quick brown fox");
-    auto slice = RSlice(reinterpret_cast<const uint8_t*>(text.c_str()), text.size());
+    auto slice = seq32_t(reinterpret_cast<const uint8_t*>(text.c_str()), text.size());
 
     HashOutput output;
     Crypto::hash_sha256({ slice }, output);
@@ -48,7 +48,7 @@ TEST_CASE(SUITE("HMAC-sha256"))
     std::string text("The quick brown fox");
     std::string key("somesecret");
 
-    auto text_slice = RSlice(reinterpret_cast<const uint8_t*>(text.c_str()), text.size());
+    auto text_slice = seq32_t(reinterpret_cast<const uint8_t*>(text.c_str()), text.size());
     auto key_slice = seq8_t(reinterpret_cast<const uint8_t*>(key.c_str()), static_cast<uint8_t>(key.size()));
 
     HashOutput output;

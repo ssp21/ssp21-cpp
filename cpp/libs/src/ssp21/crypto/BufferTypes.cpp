@@ -19,7 +19,7 @@ namespace ssp21
 
     wseq32_t BufferBase::as_wseq()
     {
-        return this->buffer.as_wslice();
+        return this->buffer.as_wseq();
     }
 
     void BufferBase::set_type(BufferType buffer_type)
@@ -30,7 +30,7 @@ namespace ssp21
 
     void BufferBase::copy(const BufferBase& other)
     {
-        memcpy(this->buffer.as_wslice(), other.buffer.as_seq(), consts::crypto::max_primitive_buffer_length);
+        memcpy(this->buffer.as_wseq(), other.buffer.as_seq(), consts::crypto::max_primitive_buffer_length);
     }
 
     uint8_t BufferBase::get_buffer_length(BufferType key_type)
@@ -52,7 +52,7 @@ namespace ssp21
 
     SecureBuffer::~SecureBuffer()
     {
-        Crypto::zero_memory(this->buffer.as_wslice());
+        Crypto::zero_memory(this->buffer.as_wseq());
     }
 
 }

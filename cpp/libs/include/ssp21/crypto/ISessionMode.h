@@ -73,14 +73,14 @@ namespace ssp21
 
         inline static seq32_t get_metadata_bytes(const AuthMetadata& metadata, metadata_buffer_t& buffer)
         {
-            auto dest = buffer.as_wslice();
+            auto dest = buffer.as_wseq();
             metadata.write(dest);
             return buffer.as_seq();
         }
 
         inline static seq32_t get_user_data_length_bytes(uint16_t user_data_length, user_data_length_buffer_t& buffer)
         {
-            auto dest = buffer.as_wslice();
+            auto dest = buffer.as_wseq();
             openpal::UInt16::write_to(dest, user_data_length);
             return buffer.as_seq();
         }

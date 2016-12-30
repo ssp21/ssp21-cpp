@@ -98,7 +98,7 @@ TEST_CASE(SUITE("reads Seq8 correctly"))
 TEST_CASE(SUITE("returns error if Seq8 empty"))
 {
     SeqField<openpal::UInt8> field;
-    auto input = RSlice::empty_slice();
+    auto input = seq32_t::empty();
     auto err = MessageParser::read_fields(input, field);
     REQUIRE(err == ParseError::insufficient_bytes);
 }
