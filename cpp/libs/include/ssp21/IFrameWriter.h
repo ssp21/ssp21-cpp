@@ -7,43 +7,43 @@
 namespace ssp21
 {
 
-	class WriteResult final : public FormatResult
-	{
-	  public:
+    class WriteResult final : public FormatResult
+    {
+    public:
 
-		  seq32_t frame;
+        seq32_t frame;
 
-		  static WriteResult error(FormatError err)
-		  {
-			  return WriteResult(err, seq32_t::empty(), seq32_t::empty());
-		  }
+        static WriteResult error(FormatError err)
+        {
+            return WriteResult(err, seq32_t::empty(), seq32_t::empty());
+        }
 
-		  static WriteResult success(FormatResult res, const seq32_t& frame)
-		  {
-			  return WriteResult(res.err, res.written, frame);
-		  }
+        static WriteResult success(FormatResult res, const seq32_t& frame)
+        {
+            return WriteResult(res.err, res.written, frame);
+        }
 
-	  private:
+    private:
 
-		  WriteResult(FormatError err, const seq32_t& written, const seq32_t& frame) : FormatResult(err, written), frame(frame)
-		  {}
-	};
+        WriteResult(FormatError err, const seq32_t& written, const seq32_t& frame) : FormatResult(err, written), frame(frame)
+        {}
+    };
 
     /**
-	*
+    *
     * Abstract interface for formatting a frame inside the cryptographic layer
-	*
-	* Allows crypto messages to be written directly into output message buffers to avoid
-	* unnecessary copying.
-	*
+    *
+    * Allows crypto messages to be written directly into output message buffers to avoid
+    * unnecessary copying.
+    *
     */
     struct IFrameWriter
     {
-		virtual ~IFrameWriter() {}
+        virtual ~IFrameWriter() {}
 
-        virtual WriteResult write(const IWritable& payload) = 0;		
+        virtual WriteResult write(const IWritable& payload) = 0;
 
-		virtual uint16_t get_max_payload_size() const = 0;
+        virtual uint16_t get_max_payload_size() const = 0;
 
     };
 

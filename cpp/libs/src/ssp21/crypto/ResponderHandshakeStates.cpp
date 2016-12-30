@@ -30,7 +30,7 @@ namespace ssp21
         // now format our response - in the future, this we'll add certificates after this call
         ReplyHandshakeBegin reply(public_ephem_dh_key);
 
-		const auto res = ctx.transmit_to_lower(reply);        
+        const auto res = ctx.transmit_to_lower(reply);
 
         if (res.is_error())
         {
@@ -53,7 +53,7 @@ namespace ssp21
             FORMAT_LOG_BLOCK(ctx.logger, levels::error, "error deriving auth key: %s", ec.message().c_str());
             ctx.reply_with_handshake_error(HandshakeError::internal);
             return *this;
-        }        
+        }
 
         return HandshakeWaitForAuth::get();
     }
@@ -91,7 +91,7 @@ namespace ssp21
 
         ReplyHandshakeAuth reply(seq8_t(reply_mac.as_seq()));
 
-		const auto res = ctx.transmit_to_lower(reply);
+        const auto res = ctx.transmit_to_lower(reply);
 
         if (res.is_error())
         {
@@ -101,7 +101,7 @@ namespace ssp21
 
         ctx.handshake.mix_ck(res.written);
 
-        ctx.handshake.initialize_session(ctx.session, ctx.executor->get_time());        
+        ctx.handshake.initialize_session(ctx.session, ctx.executor->get_time());
 
         ctx.upper->on_open();
 

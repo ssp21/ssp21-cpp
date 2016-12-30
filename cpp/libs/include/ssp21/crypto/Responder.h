@@ -41,7 +41,7 @@ namespace ssp21
         struct Config
         {
             // configuration for the session
-            Session::Config session;            
+            Session::Config session;
 
             /// The maximum size of a reassembled message
             uint16_t max_reassembly_size = consts::link::max_config_payload_size;
@@ -51,9 +51,9 @@ namespace ssp21
         {
             Context(
                 const Config& config,
-				std::unique_ptr<IFrameWriter> frame_writer,
+                std::unique_ptr<IFrameWriter> frame_writer,
                 std::unique_ptr<KeyPair> local_static_key_pair,
-                std::unique_ptr<PublicKey> remote_static_public_key,				
+                std::unique_ptr<PublicKey> remote_static_public_key,
                 const openpal::Logger& logger,
                 const std::shared_ptr<openpal::IExecutor>& executor,
                 ILowerLayer& lower
@@ -62,19 +62,19 @@ namespace ssp21
             void log_message(openpal::LogLevel msg_level, openpal::LogLevel field_level, Function func, const IMessage& msg);
 
             template <class T>
-			FormatResult transmit_to_lower(const T& msg);
+            FormatResult transmit_to_lower(const T& msg);
 
             void reply_with_handshake_error(HandshakeError err);
 
             void set_upper_layer(IUpperLayer& upper)
             {
                 this->upper = &upper;
-            }            
+            }
 
             HandshakeError validate(const RequestHandshakeBegin& msg);
 
             Config config;
-			const std::unique_ptr<IFrameWriter> frame_writer;
+            const std::unique_ptr<IFrameWriter> frame_writer;
 
             std::unique_ptr<KeyPair> local_static_key_pair;
             std::unique_ptr<PublicKey> remote_static_public_key;
@@ -89,7 +89,7 @@ namespace ssp21
             TxState tx_state;
 
             ILowerLayer* const lower;
-            IUpperLayer* upper = nullptr;            
+            IUpperLayer* upper = nullptr;
         };
 
         struct IHandshakeState
@@ -99,7 +99,7 @@ namespace ssp21
         };
 
         Responder(const Config& config,
-			      std::unique_ptr<IFrameWriter> frame_writer,
+                  std::unique_ptr<IFrameWriter> frame_writer,
                   std::unique_ptr<KeyPair> local_static_key_pair,
                   std::unique_ptr<PublicKey> remote_static_public_key,
                   const openpal::Logger& logger,
@@ -116,30 +116,30 @@ namespace ssp21
         {
             return ResponderStatistics(this->ctx.session.get_statistics());
         }
-		
-		// ---- implement ILowerLayer -----
 
-		virtual bool transmit(const seq32_t& data) override;
-		virtual void receive() override;
+        // ---- implement ILowerLayer -----
+
+        virtual bool transmit(const seq32_t& data) override;
+        virtual void receive() override;
 
     private:
 
         void check_receive();
         void check_transmit();
-		
-		inline bool can_receive() const
-		{
-			return ctx.lower->get_is_tx_ready() && !this->is_rx_ready;
-		}
-		
-		void process(const seq32_t& data);               
 
-		// ---- implement IUpperLayer -----
+        inline bool can_receive() const
+        {
+            return ctx.lower->get_is_tx_ready() && !this->is_rx_ready;
+        }
 
-		virtual void on_open_impl() override {}
-		virtual void on_close_impl() override;
-		virtual void on_tx_ready_impl() override;
-		virtual bool on_rx_ready_impl(const seq32_t& data) override;
+        void process(const seq32_t& data);
+
+        // ---- implement IUpperLayer -----
+
+        virtual void on_open_impl() override {}
+        virtual void on_close_impl() override;
+        virtual void on_tx_ready_impl() override;
+        virtual bool on_rx_ready_impl(const seq32_t& data) override;
 
         // ---- implement IMessageHandler -----
 
@@ -163,16 +163,16 @@ namespace ssp21
     };
 
     template <class T>
-	FormatResult Responder::Context::transmit_to_lower(const T& msg)
+    FormatResult Responder::Context::transmit_to_lower(const T& msg)
     {
         this->log_message(levels::tx_crypto_msg, levels::tx_crypto_msg_fields, T::function, msg);
 
-		const auto res = this->frame_writer->write(msg);
-		if (res.is_error()) return res;
+        const auto res = this->frame_writer->write(msg);
+        if (res.is_error()) return res;
 
         this->lower->transmit(res.frame);
 
-		return res;
+        return res;
     }
 
 }

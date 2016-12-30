@@ -19,39 +19,39 @@
 #include <memory>
 
 namespace ssp21
-{	
+{
 
     class ResponderFixture
     {
     private:
 
-		struct MockFrameWriter : public IFrameWriter
-		{
-		public:
+        struct MockFrameWriter : public IFrameWriter
+        {
+        public:
 
-			MockFrameWriter(uint16_t max_payload_size) : max_payload_size(max_payload_size), buffer(max_payload_size) {}
+            MockFrameWriter(uint16_t max_payload_size) : max_payload_size(max_payload_size), buffer(max_payload_size) {}
 
-			virtual WriteResult write(const IWritable& payload)  override
-			{
-				auto dest = buffer.as_wslice();
-				const auto res = payload.write(dest);
-				if (res.is_error()) return WriteResult::error(res.err);
-				else
-				{
-					return WriteResult::success(res, res.written);
-				}
-			}
+            virtual WriteResult write(const IWritable& payload)  override
+            {
+                auto dest = buffer.as_wslice();
+                const auto res = payload.write(dest);
+                if (res.is_error()) return WriteResult::error(res.err);
+                else
+                {
+                    return WriteResult::success(res, res.written);
+                }
+            }
 
-			virtual uint16_t get_max_payload_size() const override
-			{
-				return max_payload_size;
-			}
+            virtual uint16_t get_max_payload_size() const override
+            {
+                return max_payload_size;
+            }
 
-		private:
+        private:
 
-			uint16_t max_payload_size;
-			openpal::Buffer buffer;
-		};
+            uint16_t max_payload_size;
+            openpal::Buffer buffer;
+        };
 
         struct Keys
         {
@@ -87,7 +87,7 @@ namespace ssp21
         {
             MockCryptoBackend::instance.clear_actions();
             responder.set_upper_layer(upper);
-			this->lower.set_upper_layer(responder);
+            this->lower.set_upper_layer(responder);
         }
 
         void set_tx_ready()
@@ -96,10 +96,10 @@ namespace ssp21
             responder.on_tx_ready();
         }
 
-		static std::unique_ptr<IFrameWriter> default_frame_writer()
-		{
-			return std::make_unique<MockFrameWriter>(consts::link::max_config_payload_size);
-		}
+        static std::unique_ptr<IFrameWriter> default_frame_writer()
+        {
+            return std::make_unique<MockFrameWriter>(consts::link::max_config_payload_size);
+        }
 
     private:
 

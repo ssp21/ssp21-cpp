@@ -10,9 +10,9 @@ namespace ssp21
     * something that can be written to an output buffer
     */
     struct IWritable
-    {            
+    {
 
-        virtual FormatResult write(wseq32_t& output) const = 0;      
+        virtual FormatResult write(wseq32_t& output) const = 0;
 
     };
 

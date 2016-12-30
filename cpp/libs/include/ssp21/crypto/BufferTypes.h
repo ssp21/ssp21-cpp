@@ -29,9 +29,9 @@ namespace ssp21
 
         seq8_t as_seq() const;
 
-		wseq32_t as_wseq();
+        wseq32_t as_wseq();
 
-        BufferType get_type() const;        
+        BufferType get_type() const;
 
         void set_type(BufferType key_type);
 

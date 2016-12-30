@@ -11,35 +11,35 @@
 
 namespace ssp21
 {
-    
+
     class LinkFrameWriter final : public IFrameWriter
     {
 
-    public:        
+    public:
 
-		LinkFrameWriter(Addresses addr, uint16_t max_payload_size);
+        LinkFrameWriter(Addresses addr, uint16_t max_payload_size);
 
-		virtual WriteResult write(const IWritable& payload) override;		
+        virtual WriteResult write(const IWritable& payload) override;
 
-		virtual uint16_t get_max_payload_size() const override
-		{
-			return max_payload_size;
-		}
+        virtual uint16_t get_max_payload_size() const override
+        {
+            return max_payload_size;
+        }
 
-	private:		
+    private:
 
-		FormatResult write_body_and_crc(const IWritable& payload);
+        FormatResult write_body_and_crc(const IWritable& payload);
 
-		static constexpr uint32_t get_buffer_size(uint16_t max_payload_size)
-		{
-			return static_cast<uint32_t>(consts::link::min_frame_size) + static_cast<uint32_t>(max_payload_size);
-		}
+        static constexpr uint32_t get_buffer_size(uint16_t max_payload_size)
+        {
+            return static_cast<uint32_t>(consts::link::min_frame_size) + static_cast<uint32_t>(max_payload_size);
+        }
 
-		seq32_t last_frame;
+        seq32_t last_frame;
 
-		Addresses addr;
-		uint16_t max_payload_size;
-		openpal::Buffer frame_buffer;
+        Addresses addr;
+        uint16_t max_payload_size;
+        openpal::Buffer frame_buffer;
 
 
 

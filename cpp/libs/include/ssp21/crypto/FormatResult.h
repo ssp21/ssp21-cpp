@@ -16,8 +16,8 @@ namespace ssp21
 
         static FormatResult error(FormatError err)
         {
-			return FormatResult(err);
-		}
+            return FormatResult(err);
+        }
 
         FormatError err;
         seq32_t written;
@@ -36,8 +36,8 @@ namespace ssp21
             written(written)
         {}
 
-		FormatResult(FormatError err) : err(err)			
-		{}
+        explicit FormatResult(FormatError err) : err(err)
+        {}
     };
 }
 

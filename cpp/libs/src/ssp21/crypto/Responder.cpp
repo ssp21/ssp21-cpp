@@ -18,7 +18,7 @@ namespace ssp21
 {
     Responder::Context::Context(
         const Config& config,
-		std::unique_ptr<IFrameWriter> frame_writer,
+        std::unique_ptr<IFrameWriter> frame_writer,
         std::unique_ptr<KeyPair> local_static_key_pair,
         std::unique_ptr<PublicKey> remote_static_public_key,
         const openpal::Logger& logger,
@@ -26,7 +26,7 @@ namespace ssp21
         ILowerLayer& lower) :
 
         config(config),
-		frame_writer(std::move(frame_writer)),
+        frame_writer(std::move(frame_writer)),
         local_static_key_pair(std::move(local_static_key_pair)),
         remote_static_public_key(std::move(remote_static_public_key)),
         logger(logger),
@@ -34,7 +34,7 @@ namespace ssp21
         handshake(EntityId::Responder),
         session(config.session),
         reassembler(config.max_reassembly_size),
-        lower(&lower)        
+        lower(&lower)
     {
 
     }
@@ -42,7 +42,7 @@ namespace ssp21
     void Responder::Context::reply_with_handshake_error(HandshakeError err)
     {
         ReplyHandshakeError msg(err);
-		this->transmit_to_lower(msg);
+        this->transmit_to_lower(msg);
     }
 
     void Responder::Context::log_message(openpal::LogLevel msg_level, openpal::LogLevel field_level, Function func, const IMessage& msg)
@@ -84,20 +84,20 @@ namespace ssp21
     }
 
     Responder::Responder(const Config& config,
-		                 std::unique_ptr<IFrameWriter> frame_writer,
+                         std::unique_ptr<IFrameWriter> frame_writer,
                          std::unique_ptr<KeyPair> local_static_key_pair,
                          std::unique_ptr<PublicKey> remote_static_public_key,
                          const openpal::Logger& logger,
                          const std::shared_ptr<openpal::IExecutor>& executor,
                          ILowerLayer& lower
                         ) :
-        ctx(config, 
-			std::move(frame_writer),
-			std::move(local_static_key_pair),
-			std::move(remote_static_public_key),
-			logger,
-			executor, 
-			lower),
+        ctx(config,
+            std::move(frame_writer),
+            std::move(local_static_key_pair),
+            std::move(remote_static_public_key),
+            logger,
+            executor,
+            lower),
         handshake_state(&HandshakeIdle::get())
     {}
 
@@ -123,19 +123,19 @@ namespace ssp21
 
     bool Responder::on_rx_ready_impl(const seq32_t& data)
     {
-		if (this->can_receive())
-		{
-			this->process(data);
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+        if (this->can_receive())
+        {
+            this->process(data);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     void Responder::check_receive()
-    {        
+    {
         if (this->can_receive())
         {
             ctx.lower->receive();
@@ -171,7 +171,7 @@ namespace ssp21
                 return;
             }
 
-            ctx.tx_state.begin_transmit(remainder);            
+            ctx.tx_state.begin_transmit(remainder);
         }
     }
 
@@ -201,9 +201,9 @@ namespace ssp21
     void Responder::receive()
     {
         if (this->is_rx_ready && this->ctx.upper->on_rx_ready(this->ctx.reassembler.get_data()))
-        {            
-			this->is_rx_ready = false;
-        }        
+        {
+            this->is_rx_ready = false;
+        }
     }
 
     void Responder::process(const seq32_t& message)
@@ -278,7 +278,7 @@ namespace ssp21
             return true; // do nothing
 
         case(ReassemblyResult::complete):
-            this->is_rx_ready = !this->ctx.upper->on_rx_ready(ctx.reassembler.get_data());            
+            this->is_rx_ready = !this->ctx.upper->on_rx_ready(ctx.reassembler.get_data());
             return true;
 
         default: // error

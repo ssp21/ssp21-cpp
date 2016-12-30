@@ -8,7 +8,7 @@
 
 namespace ssp21
 {
-   
+
     class ILowerLayer
     {
 
@@ -16,13 +16,13 @@ namespace ssp21
 
         virtual bool transmit(const seq32_t& data) = 0;
 
-		// tell this layer to push any data it might have
+        // tell this layer to push any data it might have
         virtual void receive() = 0;
 
         inline bool get_is_tx_ready() const
         {
             return this->is_tx_ready;
-        }		
+        }
 
     protected:
 
@@ -70,7 +70,7 @@ namespace ssp21
 
         inline bool on_rx_ready(const seq32_t& data)
         {
-			return (this->is_open) ? this->on_rx_ready_impl(data) : false;
+            return (this->is_open) ? this->on_rx_ready_impl(data) : false;
         }
 
         inline bool get_is_open() const

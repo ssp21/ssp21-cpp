@@ -41,17 +41,17 @@ namespace ssp21
             return this->is_open;
         }
 
-		uint32_t num_tx_ready = 0;
+        uint32_t num_tx_ready = 0;
 
     private:
 
-        bool is_open = false;        
+        bool is_open = false;
 
         typedef std::deque<std::string> message_queue_t;
 
         message_queue_t rx_messages;
 
-        ILowerLayer* const lower;       
+        ILowerLayer* const lower;
 
         virtual void on_open_impl() override
         {
@@ -63,15 +63,15 @@ namespace ssp21
             this->is_open = false;
         }
 
-        virtual void on_tx_ready_impl() override 
-		{
-			++num_tx_ready;
-		}
+        virtual void on_tx_ready_impl() override
+        {
+            ++num_tx_ready;
+        }
 
         virtual bool on_rx_ready_impl(const seq32_t& data) override
         {
-			this->rx_messages.push_back(to_hex(data));
-			return true;
+            this->rx_messages.push_back(to_hex(data));
+            return true;
         }
 
     };
