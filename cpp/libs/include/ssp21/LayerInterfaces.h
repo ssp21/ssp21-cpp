@@ -2,7 +2,6 @@
 #ifndef SSP21_LAYER_INTERFACES_H
 #define SSP21_LAYER_INTERFACES_H
 
-#include "openpal/container/RSlice.h"
 #include "openpal/util/Uncopyable.h"
 
 namespace ssp21

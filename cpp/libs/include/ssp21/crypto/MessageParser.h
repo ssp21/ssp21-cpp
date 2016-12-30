@@ -6,7 +6,6 @@
 
 #include "ssp21/crypto/EnumField.h"
 
-#include "openpal/container/RSlice.h"
 #include "openpal/util/Uncopyable.h"
 
 namespace ssp21

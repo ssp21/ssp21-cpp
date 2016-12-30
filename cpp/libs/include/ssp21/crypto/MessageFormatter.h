@@ -6,7 +6,6 @@
 #include "ssp21/crypto/FormatResult.h"
 #include "ssp21/crypto/EnumField.h"
 
-#include "openpal/container/WSlice.h"
 #include "openpal/util/Uncopyable.h"
 
 namespace ssp21

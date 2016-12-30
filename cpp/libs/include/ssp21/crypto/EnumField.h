@@ -4,8 +4,6 @@
 #include "ssp21/crypto/gen/ParseError.h"
 #include "ssp21/crypto/gen/FormatError.h"
 #include "ssp21/crypto/IMessagePrinter.h"
-#include "openpal/container/RSlice.h"
-#include "openpal/container/WSlice.h"
 
 #include "openpal/serialization/BigEndian.h"
 

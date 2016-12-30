@@ -4,9 +4,6 @@
 
 #include "openpal/util/Uncopyable.h"
 
-#include "openpal/container/RSlice.h"
-#include "openpal/container/WSlice.h"
-
 #include "ssp21/link/Addresses.h"
 
 #include "ssp21/SequenceTypes.h"

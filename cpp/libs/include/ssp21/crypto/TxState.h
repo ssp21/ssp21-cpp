@@ -2,8 +2,6 @@
 #ifndef SSP21_TXSTATE_H
 #define SSP21_TXSTATE_H
 
-#include "openpal/container/RSlice.h"
-
 #include "ssp21/crypto/Session.h"
 
 #include "openpal/util/Uncopyable.h"
