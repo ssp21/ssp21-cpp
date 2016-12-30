@@ -36,7 +36,7 @@ namespace ssp21
 
             static void init_key(BufferBase& buffer, BufferType key_type)
             {
-                buffer.get_write_slice().set_all_to(0xFF);
+                buffer.as_wseq().set_all_to(0xFF);
                 buffer.set_type(key_type);
             }
 

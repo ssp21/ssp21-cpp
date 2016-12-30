@@ -14,7 +14,7 @@ namespace ssp21
     {
         this->algorithms.handshake.gen_keypair(this->local_ephemeral_keys);
 
-        return this->local_ephemeral_keys.public_key.as_slice();
+        return this->local_ephemeral_keys.public_key.as_seq();
     }
 
     void Handshake::set_ck(const RSlice& input)
@@ -27,7 +27,7 @@ namespace ssp21
         // ck = hash(ck || input)
 
         this->algorithms.handshake.hash(
-        { this->chaining_key.as_slice(), input },
+        { this->chaining_key.as_seq(), input },
         this->chaining_key
         );
     }
@@ -74,9 +74,9 @@ namespace ssp21
         if (ec) return;
 
         this->algorithms.handshake.kdf(
-            this->chaining_key.as_slice(),
+            this->chaining_key.as_seq(),
         {
-            dh1.as_slice(), dh2.as_slice(), dh3.as_slice()
+            dh1.as_seq(), dh2.as_seq(), dh3.as_seq()
         },
         this->chaining_key,
         this->authentication_key
@@ -90,11 +90,11 @@ namespace ssp21
         // keys are swapped for initiator vs responder
         if (this->id == EntityId::Initiator)
         {
-            this->algorithms.handshake.kdf(this->chaining_key.as_slice(), {}, keys.tx_key, keys.rx_key);
+            this->algorithms.handshake.kdf(this->chaining_key.as_seq(), {}, keys.tx_key, keys.rx_key);
         }
         else
         {
-            this->algorithms.handshake.kdf(this->chaining_key.as_slice(), {}, keys.rx_key, keys.tx_key);
+            this->algorithms.handshake.kdf(this->chaining_key.as_seq(), {}, keys.rx_key, keys.tx_key);
         }
 
         session.initialize(this->algorithms.session, session_init_time, keys);

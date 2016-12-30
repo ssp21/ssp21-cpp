@@ -27,11 +27,11 @@ namespace ssp21
 
         virtual ~BufferBase() {}
 
-        seq8_t as_slice() const;
+        seq8_t as_seq() const;
 
-        BufferType get_type() const;
+		wseq32_t as_wseq();
 
-        wseq32_t get_write_slice();
+        BufferType get_type() const;        
 
         void set_type(BufferType key_type);
 

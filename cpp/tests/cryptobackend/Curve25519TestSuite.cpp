@@ -29,17 +29,17 @@ TEST_CASE(SUITE("key pair generation and dh operations result in same shared key
 
     // derive the shared secrets
     DHOutput shared_secret1;
-    Crypto::dh_x25519(kp2.private_key, kp1.public_key.as_slice(), shared_secret1, ec);
+    Crypto::dh_x25519(kp2.private_key, kp1.public_key.as_seq(), shared_secret1, ec);
     REQUIRE(!ec);
     REQUIRE(shared_secret1.get_type() == BufferType::x25519_key);
 
     DHOutput shared_secret2;
-    Crypto::dh_x25519(kp1.private_key, kp2.public_key.as_slice(), shared_secret2, ec);
+    Crypto::dh_x25519(kp1.private_key, kp2.public_key.as_seq(), shared_secret2, ec);
     REQUIRE(!ec);
     REQUIRE(shared_secret2.get_type() == BufferType::x25519_key);
 
     // compare the shared secrets
-    REQUIRE(Crypto::secure_equals(shared_secret1.as_slice(), shared_secret2.as_slice()));
+    REQUIRE(Crypto::secure_equals(shared_secret1.as_seq(), shared_secret2.as_seq()));
 }
 
 TEST_CASE(SUITE("performing dh operation on null public key fails"))
@@ -48,13 +48,13 @@ TEST_CASE(SUITE("performing dh operation on null public key fails"))
     Crypto::gen_keypair_x25519(kp1);
 
     PublicKey pub;
-    pub.get_write_slice().set_all_to(0);
+    pub.as_wseq().set_all_to(0);
     pub.set_type(BufferType::x25519_key);
 
     std::error_code ec;
 
     // derive the shared secrets
     DHOutput shared_secret;
-    Crypto::dh_x25519(kp1.private_key, pub.as_slice(), shared_secret, ec);
+    Crypto::dh_x25519(kp1.private_key, pub.as_seq(), shared_secret, ec);
     REQUIRE(ec);
 }

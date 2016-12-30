@@ -7,7 +7,7 @@
 
 namespace ssp21
 {
-    seq8_t BufferBase::as_slice() const
+    seq8_t BufferBase::as_seq() const
     {
         return this->buffer.as_seq();
     }
@@ -17,7 +17,7 @@ namespace ssp21
         return this->buffer_type;
     }
 
-    wseq32_t BufferBase::get_write_slice()
+    wseq32_t BufferBase::as_wseq()
     {
         return this->buffer.as_wslice();
     }

@@ -28,14 +28,14 @@ namespace ssp21
     void MockCryptoBackend::hash_sha256(std::initializer_list<seq32_t> data, SecureBuffer& output)
     {
         actions.push_back(CryptoAction::hash_sha256);
-        output.get_write_slice().take(consts::crypto::sha256_hash_output_length).set_all_to(fill_byte);
+        output.as_wseq().take(consts::crypto::sha256_hash_output_length).set_all_to(fill_byte);
         output.set_type(BufferType::sha256);
     }
 
     void MockCryptoBackend::hmac_sha256(const seq8_t& key, std::initializer_list<seq32_t> data, SecureBuffer& output)
     {
         actions.push_back(CryptoAction::hmac_sha256);
-        output.get_write_slice().take(consts::crypto::sha256_hash_output_length).set_all_to(fill_byte);
+        output.as_wseq().take(consts::crypto::sha256_hash_output_length).set_all_to(fill_byte);
         output.set_type(BufferType::sha256);
     }
 
@@ -43,10 +43,10 @@ namespace ssp21
     {
         actions.push_back(CryptoAction::gen_keypair_x25519);
 
-        pair.private_key.get_write_slice().take(consts::crypto::x25519_key_length).set_all_to(fill_byte);
+        pair.private_key.as_wseq().take(consts::crypto::x25519_key_length).set_all_to(fill_byte);
         pair.private_key.set_type(BufferType::x25519_key);
 
-        pair.public_key.get_write_slice().take(consts::crypto::x25519_key_length).set_all_to(fill_byte);
+        pair.public_key.as_wseq().take(consts::crypto::x25519_key_length).set_all_to(fill_byte);
         pair.public_key.set_type(BufferType::x25519_key);
     }
 
@@ -54,7 +54,7 @@ namespace ssp21
     {
         actions.push_back(CryptoAction::dh_x25519);
 
-        output.get_write_slice().take(consts::crypto::x25519_key_length).set_all_to(fill_byte);
+        output.as_wseq().take(consts::crypto::x25519_key_length).set_all_to(fill_byte);
         output.set_type(BufferType::x25519_key);
     }
 

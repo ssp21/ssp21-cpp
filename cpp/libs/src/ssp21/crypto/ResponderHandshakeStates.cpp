@@ -44,7 +44,7 @@ namespace ssp21
             wresult.written,
             ctx.local_static_key_pair->private_key,
             msg.ephemeral_public_key,
-            ctx.remote_static_public_key->as_slice(),
+            ctx.remote_static_public_key->as_seq(),
             ec
         );
 
@@ -91,7 +91,7 @@ namespace ssp21
         HashOutput reply_mac;
         ctx.handshake.calc_auth_handshake_reply_mac(reply_mac);
 
-        ReplyHandshakeAuth reply(seq8_t(reply_mac.as_slice()));
+        ReplyHandshakeAuth reply(seq8_t(reply_mac.as_seq()));
 
         const auto wresult = ctx.write_msg(reply);
 

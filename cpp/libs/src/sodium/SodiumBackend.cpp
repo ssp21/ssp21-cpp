@@ -43,7 +43,7 @@ namespace ssp21
                 crypto_hash_sha256_update(&state, item, item.length());
             }
 
-            crypto_hash_sha256_final(&state, output.get_write_slice());
+            crypto_hash_sha256_final(&state, output.as_wseq());
 
             output.set_type(BufferType::sha256);
         }
@@ -59,16 +59,16 @@ namespace ssp21
             }
 
 
-            crypto_auth_hmacsha256_final(&state, output.get_write_slice());
+            crypto_auth_hmacsha256_final(&state, output.as_wseq());
 
             output.set_type(BufferType::sha256);
         }
 
         void SodiumBackend::gen_keypair_x25519(KeyPair& pair)
         {
-            auto dest = pair.private_key.get_write_slice();
+            auto dest = pair.private_key.as_wseq();
             randombytes_buf(dest, crypto_scalarmult_BYTES);
-            crypto_scalarmult_base(pair.public_key.get_write_slice(), dest);
+            crypto_scalarmult_base(pair.public_key.as_wseq(), dest);
 
             pair.public_key.set_type(BufferType::x25519_key);
             pair.private_key.set_type(BufferType::x25519_key);
@@ -76,7 +76,7 @@ namespace ssp21
 
         void SodiumBackend::dh_x25519(const PrivateKey& priv_key, const seq8_t& pub_key, DHOutput& output, std::error_code& ec)
         {
-            if (crypto_scalarmult(output.get_write_slice(), priv_key.as_slice(), pub_key) != 0)
+            if (crypto_scalarmult(output.as_wseq(), priv_key.as_seq(), pub_key) != 0)
             {
                 ec = ssp21::CryptoError::dh_x25519_fail;
                 return;

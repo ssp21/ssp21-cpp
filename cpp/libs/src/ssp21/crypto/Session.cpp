@@ -157,7 +157,7 @@ namespace ssp21
 
         msg.metadata = metadata;
         msg.user_data = written_user_data;
-        msg.auth_tag = this->auth_tag_buffer.as_slice();
+        msg.auth_tag = this->auth_tag_buffer.as_seq();
 
         // everything succeeded, so increment the nonce and advance the input buffer
         this->tx_nonce.increment();

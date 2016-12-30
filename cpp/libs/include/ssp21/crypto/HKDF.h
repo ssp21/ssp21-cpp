@@ -28,8 +28,8 @@ namespace ssp21
         const uint8_t TWO = 0x02;
 
         // expand
-        mac_func(temp_key.as_slice(), { seq32_t(&ONE, 1) }, output1);
-        mac_func(temp_key.as_slice(), { output1.as_slice(), seq32_t(&TWO, 1) }, output2);
+        mac_func(temp_key.as_seq(), { seq32_t(&ONE, 1) }, output1);
+        mac_func(temp_key.as_seq(), { output1.as_seq(), seq32_t(&TWO, 1) }, output2);
 
         // this will truncate the lengths in the event that the hmac-output length_ is > the symmetric key length_ we need
         // TODO: research how noise implementations handle this
