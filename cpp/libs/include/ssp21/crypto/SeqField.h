@@ -15,7 +15,7 @@
 namespace ssp21
 {
     template <class T>
-    class SeqField final
+    class SeqField final : public openpal::RSeq<typename T::type_t>
     {
     public:
 
@@ -24,12 +24,12 @@ namespace ssp21
         SeqField() {}
 
         SeqField& operator=(const seq_t& other)
-        {
-            this->seq = other;
-            return *this;
+        {            
+			seq_t::operator=(other);
+			return *this;
         }
 
-        explicit SeqField(const seq_t& value) : seq(value)
+        explicit SeqField(const seq_t& value) : seq_t(value)
         {}
 
         ParseError read(openpal::RSlice& input)
@@ -43,46 +43,30 @@ namespace ssp21
                 return ParseError::insufficient_bytes;
             }
 
-            seq = input.take(count.value);
+            *this = input.take(count.value);
             input.advance(count);
             return ParseError::ok;
         }
 
         FormatError write(openpal::WSlice& dest) const
         {
-            IntegerField<T> count(seq.length());
+            IntegerField<T> count(this->length());
 
             auto err = count.write(dest);
             if (any(err)) return err;
 
-            if (dest.length() < seq.length()) return FormatError::insufficient_space;
+            if (dest.length() < this->length()) return FormatError::insufficient_space;
 
-            dest.copy_from(seq);
+            dest.copy_from(*this);
 
             return FormatError::ok;
         }
 
         void print(const char* name, IMessagePrinter& printer) const
         {
-            printer.print(name, seq);
+            printer.print(name, *this);
         }
-
-        inline operator seq_t& ()
-        {
-            return seq;
-        }
-
-        inline operator const seq_t& () const
-        {
-            return seq;
-        }
-
-        inline typename T::type_t length() const
-        {
-            return seq.length();
-        }
-
-        seq_t seq;
+		
     };
 
 }

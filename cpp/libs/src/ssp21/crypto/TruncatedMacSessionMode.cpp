@@ -25,7 +25,7 @@ namespace ssp21
 
         // Now calculate the expected MAC
         HashOutput calc_mac_buffer;
-        mac_func(key.as_slice(), { ad_bytes, user_data_length_bytes, msg.user_data.seq }, calc_mac_buffer);
+        mac_func(key.as_slice(), { ad_bytes, user_data_length_bytes, msg.user_data }, calc_mac_buffer);
         const auto truncated_mac = calc_mac_buffer.as_slice().take(this->auth_tag_length);
 
         if (!Crypto::secure_equals(msg.auth_tag, truncated_mac)) // authentication failure

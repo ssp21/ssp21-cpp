@@ -75,7 +75,7 @@ TEST_CASE(SUITE("successfully parses message"))
     REQUIRE(msg.spec.session_mode == SessionMode::hmac_sha256_16);
     REQUIRE(msg.certificate_mode == CertificateMode::preshared_keys);
 
-    REQUIRE(to_hex(msg.ephemeral_public_key.seq) == "AA AA AA");
+    REQUIRE(to_hex(msg.ephemeral_public_key) == "AA AA AA");
 
     REQUIRE(msg.certificates.count() == 1);
     Seq16 cert;

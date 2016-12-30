@@ -92,7 +92,7 @@ TEST_CASE(SUITE("reads Seq8 correctly"))
 
     REQUIRE_FALSE(any(err));
     REQUIRE(input.length() == 1);
-    REQUIRE(to_hex(field.seq) == "00 01 02 03");
+    REQUIRE(to_hex(field) == "00 01 02 03");
 }
 
 TEST_CASE(SUITE("returns error if Seq8 empty"))
