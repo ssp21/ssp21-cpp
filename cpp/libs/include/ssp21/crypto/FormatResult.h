@@ -25,7 +25,7 @@ namespace ssp21
             return any(err);
         }
 
-    private:
+    protected:
 
         FormatResult() = delete;
 

@@ -2,11 +2,12 @@
 
 #include "catch.hpp"
 
-#include "ssp21/link/LinkFormatter.h"
-#include "ssp21/link/LinkConstants.h"
+#include "ssp21/link/LinkFrameWriter.h"
+#include "ssp21/crypto/SeqField.h"
 
 #include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
+
 
 #include "openpal/container/StaticBuffer.h"
 
@@ -15,33 +16,46 @@
 using namespace ssp21;
 using namespace openpal;
 
+class HexWritable : public ssp21::IWritable
+{	
+
+public:
+
+	HexWritable(const std::string& payload) : payload(payload)
+	{}
+
+	virtual FormatResult write(wseq32_t& output) const override
+	{
+		const auto src = payload.as_rslice();
+		return src.length() < output.length() ? FormatResult::Success(output.copy_from(src)) : FormatResult(FormatError::insufficient_space);		
+	}
+
+private:
+
+	Hex payload;
+};
+
 TEST_CASE(SUITE("correctly formats output"))
-{
-    StaticBuffer<uint32_t, 100> buffer;
+{        
+	LinkFrameWriter writer(Addresses(1, 2), 6);
 
-    Hex payload("DD DD DD DD DD DD");
-
-    auto result = LinkFormatter::write(buffer.as_wseq(), Addresses(1, 2), payload);
-    REQUIRE(result.length() == consts::link::min_frame_size + 6);
-    REQUIRE(to_hex(result) == "07 AA 00 01 00 02 00 06 11 FB E3 40 DD DD DD DD DD DD 51 0D 37 6B");
+	HexWritable payload("DD DD DD DD DD DD");
+	auto result = writer.write(payload);
+    
+	REQUIRE_FALSE(result.is_error());
+	REQUIRE(to_hex(result.written) == "DD DD DD DD DD DD");
+	REQUIRE(to_hex(result.frame) == "07 AA 00 01 00 02 00 06 11 FB E3 40 DD DD DD DD DD DD 51 0D 37 6B");
 }
 
-TEST_CASE(SUITE("returns empty buffer if less space than minimum frame size"))
+TEST_CASE(SUITE("fails if insufficient space to write payload"))
 {
-    StaticBuffer < uint32_t, consts::link::min_frame_size - 1 > buffer;
+	LinkFrameWriter writer(Addresses(1, 2), 5);
 
-    auto result = LinkFormatter::write(buffer.as_wseq(), Addresses(1, 2), seq32_t::empty());
+	HexWritable payload("DD DD DD DD DD DD");
+	auto result = writer.write(payload);
 
-    REQUIRE(result.is_empty());
-}
-
-TEST_CASE(SUITE("returns empty buffer if insufficient space for payload"))
-{
-    StaticBuffer < uint32_t, consts::link::min_frame_size + 5 > buffer;
-
-    Hex payload("DD DD DD DD DD DD");
-
-    auto result = LinkFormatter::write(buffer.as_wseq(), Addresses(1, 2), payload);
-
-    REQUIRE(result.is_empty());
+	REQUIRE(result.is_error());
+	REQUIRE(result.err == FormatError::insufficient_space);
+	REQUIRE(result.written.is_empty());
+	REQUIRE(result.frame.is_empty());
 }
