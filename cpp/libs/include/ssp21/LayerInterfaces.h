@@ -22,12 +22,7 @@ namespace ssp21
         inline bool get_is_tx_ready() const
         {
             return this->is_tx_ready;
-        }
-
-        inline bool get_is_rx_ready() const
-        {
-            return this->is_rx_ready;
-        }
+        }		
 
     protected:
 

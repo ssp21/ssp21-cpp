@@ -133,7 +133,7 @@ namespace ssp21
 		
 		inline bool can_receive() const
 		{
-			return ctx.lower->get_is_tx_ready() && !this->get_is_rx_ready();
+			return ctx.lower->get_is_tx_ready() && !this->is_rx_ready;
 		}
 		
 

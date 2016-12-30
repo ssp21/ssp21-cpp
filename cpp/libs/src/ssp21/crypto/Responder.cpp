@@ -48,6 +48,7 @@ namespace ssp21
         {
             this->transmit_to_lower(msg, result.written);
         }
+
     }
 
     void Responder::Context::log_message(openpal::LogLevel msg_level, openpal::LogLevel field_level, Function func, const IMessage& msg, uint32_t length)
