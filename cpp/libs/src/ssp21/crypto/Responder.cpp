@@ -5,7 +5,6 @@
 
 #include "ssp21/LogLevels.h"
 
-#include "ssp21/crypto/LogMessagePrinter.h"
 #include "ssp21/crypto/Crypto.h"
 #include "ssp21/crypto/ResponderHandshakeStates.h"
 
@@ -38,23 +37,16 @@ namespace ssp21
     {
 
     }
-
-    void Responder::Context::reply_with_handshake_error(HandshakeError err)
-    {
-        ReplyHandshakeError msg(err);
-        this->transmit_to_lower(msg);
-    }
-
-    void Responder::Context::log_message(openpal::LogLevel msg_level, openpal::LogLevel field_level, Function func, const IMessage& msg)
-    {
-        FORMAT_LOG_BLOCK(this->logger, msg_level, "%s", FunctionSpec::to_string(func));
-
-        if (this->logger.is_enabled(field_level))
-        {
-            LogMessagePrinter printer(this->logger, field_level);
-            msg.print(printer);
-        }
-    }
+	
+	void Responder::Context::reply_with_handshake_error(HandshakeError err)
+	{
+		ReplyHandshakeError msg(err);
+		const auto res = this->prepare_msg_for_tx(msg);
+		if (!res.is_error())
+		{
+			this->lower->transmit(res.frame);
+		}
+	}
 
     HandshakeError Responder::Context::validate(const RequestHandshakeBegin& msg)
     {
@@ -163,13 +155,14 @@ namespace ssp21
                 return;
             }
 
-            const auto result = this->ctx.transmit_to_lower(msg);
+            const auto result = this->ctx.prepare_msg_for_tx(msg);
 
             if (result.is_error())
-            {
-                FORMAT_LOG_BLOCK(ctx.logger, levels::error, "Error writing session message: %s", FormatErrorSpec::to_string(result.err));
+            {                
                 return;
             }
+
+			ctx.lower->transmit(result.frame);
 
             ctx.tx_state.begin_transmit(remainder);
         }
@@ -243,23 +236,19 @@ namespace ssp21
     }
 
     bool Responder::on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
-    {
-        ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, msg.function, msg);
+    {        
         this->handshake_state = &this->handshake_state->on_message(ctx, raw_data, msg);
         return true;
     }
 
     bool Responder::on_message(const RequestHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
-    {
-        ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, msg.function, msg);
+    {       
         this->handshake_state = &this->handshake_state->on_message(ctx, raw_data, msg);
         return true;
     }
 
     bool Responder::on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
-    {
-        ctx.log_message(levels::rx_crypto_msg, levels::rx_crypto_msg_fields, Function::session_data, msg);
-
+    {        
         std::error_code ec;
         const auto payload = this->ctx.session.validate_message(msg, now, ec);
 

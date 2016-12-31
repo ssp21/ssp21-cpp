@@ -17,6 +17,7 @@
 #include "ssp21/crypto/Reassembler.h"
 #include "ssp21/crypto/TxState.h"
 #include "ssp21/crypto/IMessageHandler.h"
+#include "ssp21/crypto/LogMessagePrinter.h"
 
 #include "ssp21/IFrameWriter.h"
 #include "ssp21/LogLevels.h"
@@ -57,12 +58,10 @@ namespace ssp21
                 const openpal::Logger& logger,
                 const std::shared_ptr<openpal::IExecutor>& executor,
                 ILowerLayer& lower
-            );
-
-            void log_message(openpal::LogLevel msg_level, openpal::LogLevel field_level, Function func, const IMessage& msg);
+            );            
 
             template <class T>
-            FormatResult transmit_to_lower(const T& msg);
+            WriteResult prepare_msg_for_tx(const T& msg);
 
             void reply_with_handshake_error(HandshakeError err);
 
@@ -162,18 +161,27 @@ namespace ssp21
         IHandshakeState* handshake_state;
     };
 
-    template <class T>
-    FormatResult Responder::Context::transmit_to_lower(const T& msg)
-    {
-        this->log_message(levels::tx_crypto_msg, levels::tx_crypto_msg_fields, T::function, msg);
+	template <class T>
+	WriteResult Responder::Context::prepare_msg_for_tx(const T& msg)
+	{
+		const auto res = this->frame_writer->write(msg);
 
-        const auto res = this->frame_writer->write(msg);
-        if (res.is_error()) return res;
+		if (res.is_error())
+		{
+			FORMAT_LOG_BLOCK(this->logger, levels::error, "Error writing message: %s", FormatErrorSpec::to_string(res.err));
+			return res;
+		}
 
-        this->lower->transmit(res.frame);
+		FORMAT_LOG_BLOCK(this->logger, levels::tx_crypto_msg, "%s", FunctionSpec::to_string(T::function));
 
-        return res;
-    }
+		if (this->logger.is_enabled(levels::tx_crypto_msg_fields))
+		{
+			LogMessagePrinter printer(this->logger, levels::tx_crypto_msg_fields);
+			msg.print(printer);
+		}		
+
+		return res;
+	}
 
 }
 

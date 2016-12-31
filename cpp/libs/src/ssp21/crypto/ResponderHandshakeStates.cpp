@@ -27,14 +27,13 @@ namespace ssp21
         seq8_t public_ephem_dh_key(ctx.handshake.initialize());	// generate our local ephemeral keys
         ctx.handshake.set_ck(msg_bytes);						// initialize the chaining key
 
-        // now format our response - in the future, this we'll add certificates after this call
+        // now format our response - in the future, this we'll add certificates after this call if applicable
         ReplyHandshakeBegin reply(public_ephem_dh_key);
 
-        const auto res = ctx.transmit_to_lower(reply);
+        const auto res = ctx.prepare_msg_for_tx(reply);
 
         if (res.is_error())
-        {
-            FORMAT_LOG_BLOCK(ctx.logger, levels::error, "error formatting reply: %s", FormatErrorSpec::to_string(res.err));
+        {            
             return *this;
         }
 
@@ -54,6 +53,8 @@ namespace ssp21
             ctx.reply_with_handshake_error(HandshakeError::internal);
             return *this;
         }
+
+		ctx.lower->transmit(res.frame);
 
         return HandshakeWaitForAuth::get();
     }
@@ -91,17 +92,18 @@ namespace ssp21
 
         ReplyHandshakeAuth reply(seq8_t(reply_mac.as_seq()));
 
-        const auto res = ctx.transmit_to_lower(reply);
+        const auto res = ctx.prepare_msg_for_tx(reply);
 
         if (res.is_error())
-        {
-            FORMAT_LOG_BLOCK(ctx.logger, levels::error, "Unable to format reply: %s", FormatErrorSpec::to_string(res.err));
+        {            
             return HandshakeIdle::get();
         }
 
         ctx.handshake.mix_ck(res.written);
 
         ctx.handshake.initialize_session(ctx.session, ctx.executor->get_time());
+
+		ctx.lower->transmit(res.frame);
 
         ctx.upper->on_open();
 
