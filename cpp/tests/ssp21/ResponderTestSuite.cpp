@@ -276,19 +276,20 @@ TEST_CASE(SUITE("won't transmit if no session"))
     REQUIRE_FALSE(fix.responder.transmit(msg));
 }
 
-TEST_CASE(SUITE("can transmit a message if session is initialized"))
+TEST_CASE(SUITE("can transmit multiple messages if session is initialized"))
 {
     ResponderFixture fix;
     fix.responder.on_open();
     test_init_session_success(fix);
 
+	const auto payload = "CA FE";
 
 	for (uint16_t i = 0; i < 3; ++i)
 	{
-		Hex msg("CA FE");
+		Hex msg(payload);
 		REQUIRE(fix.responder.transmit(msg));
 
-		const auto expected = hex::session_data(i+1, consts::crypto::default_ttl_pad_ms, true, true, "CA FE", hex::repeat(0xFF, 16));
+		const auto expected = hex::session_data(i+1, consts::crypto::default_ttl_pad_ms, true, true, payload, hex::repeat(0xFF, 16));
 		REQUIRE(fix.lower.pop_tx_message() == expected);
 		REQUIRE(fix.upper.num_tx_ready == i);
 
@@ -297,7 +298,34 @@ TEST_CASE(SUITE("can transmit a message if session is initialized"))
 		REQUIRE(fix.upper.num_tx_ready == i + 1);
 		REQUIRE(fix.lower.num_tx_messages() == 0);
 	}
+}
 
+TEST_CASE(SUITE("defers transmission if lower layer is not tx_ready"))
+{
+	ResponderFixture fix;
+	fix.responder.on_open();
+	test_init_session_success(fix);
+
+	const auto payload = "CA FE";
+
+	fix.lower.set_tx_ready(false); 
+
+	Hex msg(payload);
+	REQUIRE(fix.responder.transmit(msg));
+	REQUIRE(fix.lower.num_tx_messages() == 0);
+	REQUIRE(fix.upper.num_tx_ready == 0);
+
+	fix.lower.set_tx_ready(true);
+	fix.responder.on_tx_ready();
+
+	
+	const auto expected = hex::session_data(1, consts::crypto::default_ttl_pad_ms, true, true, payload, hex::repeat(0xFF, 16));
+	REQUIRE(fix.lower.pop_tx_message() == expected);
+	REQUIRE(fix.upper.num_tx_ready == 0);
+	
+	fix.responder.on_tx_ready();
+	REQUIRE(fix.upper.num_tx_ready == 1);
+	REQUIRE(fix.lower.num_tx_messages() == 0);
 }
 
 // ---------- helper method implementations -----------
