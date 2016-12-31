@@ -77,12 +77,12 @@ namespace ssp21
 
     public:
 
-        ResponderFixture(BufferType key_type = BufferType::x25519_key, std::unique_ptr<IFrameWriter> frame_writer = default_frame_writer(), const Responder::Config& config = Responder::Config()) :
-            keys(key_type),
+        ResponderFixture(uint16_t max_message_size = consts::link::max_config_payload_size, const Responder::Config& config = Responder::Config()) :
+            keys(BufferType::x25519_key),
             log("responder"),
             exe(openpal::MockExecutor::Create()),
             lower(),
-            responder(config, std::move(frame_writer), std::move(keys.local_kp), std::move(keys.remote_static_key), log.logger, exe, lower),
+            responder(config, get_frame_writer(max_message_size), std::move(keys.local_kp), std::move(keys.remote_static_key), log.logger, exe, lower),
             upper(responder)
         {
             MockCryptoBackend::instance.clear_actions();
@@ -92,13 +92,13 @@ namespace ssp21
 
         void set_tx_ready()
         {
-            lower.set_tx_ready();
+            lower.set_tx_ready(true);
             responder.on_tx_ready();
         }
 
-        static std::unique_ptr<IFrameWriter> default_frame_writer()
+        static std::unique_ptr<IFrameWriter> get_frame_writer(uint16_t max_message_size)
         {
-            return std::make_unique<MockFrameWriter>(consts::link::max_config_payload_size);
+            return std::make_unique<MockFrameWriter>(max_message_size);
         }
 
     private:

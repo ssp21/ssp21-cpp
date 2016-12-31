@@ -282,15 +282,23 @@ TEST_CASE(SUITE("can transmit a message if session is initialized"))
     fix.responder.on_open();
     test_init_session_success(fix);
 
-    Hex msg("CA FE");
-    REQUIRE(fix.responder.transmit(msg));
 
-    const auto expected = hex::session_data(1, consts::crypto::default_ttl_pad_ms, true, true, "CA FE", hex::repeat(0xFF, 16));
+	for (uint16_t i = 0; i < 3; ++i)
+	{
+		Hex msg("CA FE");
+		REQUIRE(fix.responder.transmit(msg));
 
-    REQUIRE(fix.lower.pop_tx_message() == expected);
+		const auto expected = hex::session_data(i+1, consts::crypto::default_ttl_pad_ms, true, true, "CA FE", hex::repeat(0xFF, 16));
+		REQUIRE(fix.lower.pop_tx_message() == expected);
+		REQUIRE(fix.upper.num_tx_ready == i);
+
+		// tell the responder that we're done transmitting
+		fix.responder.on_tx_ready();
+		REQUIRE(fix.upper.num_tx_ready == i + 1);
+		REQUIRE(fix.lower.num_tx_messages() == 0);
+	}
+
 }
-
-
 
 // ---------- helper method implementations -----------
 

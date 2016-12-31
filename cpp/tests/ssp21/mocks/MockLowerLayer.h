@@ -25,9 +25,9 @@ namespace ssp21
             this->upper = &upper;
         }
 
-        void set_tx_ready()
+        void set_tx_ready(bool value)
         {
-            this->is_tx_ready = true;
+            this->is_tx_ready = value;
         }
 
         virtual bool transmit(const seq32_t& message) override
@@ -37,8 +37,7 @@ namespace ssp21
                 throw std::logic_error("transmit called when tx_ready == false");
             }
 
-            this->tx_messages.push_back(std::make_unique<message_t>(message));
-            this->is_tx_ready = false;
+            this->tx_messages.push_back(std::make_unique<message_t>(message));            
             return true;
         }
 
@@ -86,6 +85,11 @@ namespace ssp21
             this->tx_messages.pop_front();
             return hex;
         }
+
+		size_t num_tx_messages() const
+		{
+			return tx_messages.size();
+		}
 
     private:
 

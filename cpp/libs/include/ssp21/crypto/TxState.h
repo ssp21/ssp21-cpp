@@ -27,7 +27,7 @@ namespace ssp21
 
         bool initialize(const seq32_t& data)
         {
-            if (transmitting) return false;
+            if (transmitting || data.is_empty()) return false;
 
             this->fir = true;
             this->transmitting = false;
@@ -36,14 +36,22 @@ namespace ssp21
             return true;
         }
 
-        void on_tx_complete()
+        bool on_tx_complete()
         {
-            this->transmitting = false;
+			if (this->transmitting)
+			{
+				this->transmitting = false;
+
+				// if there's nothing left to transmit, the entire tx sequence is complete
+				return this->remainder.is_empty();
+			}			
+			
+			return false;
         }
 
         bool begin_transmit(const seq32_t& remainder)
         {
-            if (!transmitting) return false;
+            if (this->remainder.is_empty()) return false;
 
             this->fir = false;
             this->transmitting = true;

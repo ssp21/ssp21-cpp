@@ -107,7 +107,12 @@ namespace ssp21
 
     void Responder::on_tx_ready_impl()
     {
-        ctx.tx_state.on_tx_complete();
+		if (ctx.tx_state.on_tx_complete())
+		{
+			// ready to transmit more data
+			this->is_tx_ready = true;			
+			ctx.upper->on_tx_ready();
+		}
 
         this->check_receive();
         this->check_transmit();
