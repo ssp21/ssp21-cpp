@@ -27,7 +27,10 @@ namespace ssp21
         {
             Config() {}
 
-            uint16_t max_link_payload_length = consts::link::max_config_payload_size;
+			//  the total maximum message length for the cryptographic layer
+            uint16_t max_message_length = consts::link::max_config_payload_size;
+
+			// the TTL padding added to every message
             uint32_t ttl_pad_ms = consts::crypto::default_ttl_pad_ms;
         };
 
@@ -66,8 +69,9 @@ namespace ssp21
         // calculated during construction
         const uint16_t max_crypto_payload_length;
 
-        openpal::Buffer rx_auth_buffer;
-        openpal::Buffer tx_encrypt_user_data_buffer;
+		// buffers used as scratch space for encryption/decyption operations
+        openpal::Buffer decrypt_scratch_buffer;
+		openpal::Buffer encrypt_scratch_buffer;
 
         AuthenticationTag auth_tag_buffer;
 
