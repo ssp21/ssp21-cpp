@@ -13,9 +13,10 @@ using namespace openpal;
 namespace ssp21
 {
 
-    Session::Session(const Config& config) :
-        config(config),
-        max_crypto_payload_length(calc_max_crypto_payload_length(config.max_message_length)),
+    Session::Session(const std::shared_ptr<IFrameWriter>& frame_writer, const Config& config) :
+		frame_writer(frame_writer),
+        config(config),		
+        max_crypto_payload_length(calc_max_crypto_payload_length(frame_writer->get_max_payload_size())),
         decrypt_scratch_buffer(max_crypto_payload_length),
         encrypt_scratch_buffer(max_crypto_payload_length)
     {}

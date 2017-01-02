@@ -15,6 +15,7 @@
 #include "ssp21/crypto/SessionModes.h"
 
 #include "ssp21/crypto/gen/SessionData.h"
+#include "ssp21/IFrameWriter.h"
 
 namespace ssp21
 {
@@ -25,16 +26,13 @@ namespace ssp21
 
         struct Config
         {
-            Config() {}
-
-			//  the total maximum message length for the cryptographic layer
-            uint16_t max_message_length = consts::link::max_config_payload_size;
+            Config() {}			
 
 			// the TTL padding added to every message
             uint32_t ttl_pad_ms = consts::crypto::default_ttl_pad_ms;
         };
 
-        explicit Session(const Config& config = Config());
+        explicit Session(const std::shared_ptr<IFrameWriter>& frame_writer, const Config& config = Config());
 
         bool initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const SessionKeys& keys, uint16_t nonce_start = 0);
 
@@ -64,6 +62,7 @@ namespace ssp21
         static uint32_t calc_max_crypto_payload_length(uint32_t max_link_payload_size);
 
         SessionStatistics statistics;
+		const std::shared_ptr<IFrameWriter> frame_writer;
         Config config;
 
         // calculated during construction

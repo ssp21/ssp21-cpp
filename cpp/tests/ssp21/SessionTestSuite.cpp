@@ -10,6 +10,7 @@
 
 #include "mocks/HexMessageBuilders.h"
 #include "mocks/HexSequences.h"
+#include "mocks/MockFrameWriter.h"
 
 #include <array>
 
@@ -30,7 +31,7 @@ TEST_CASE(SUITE("won't validate user data when not initialized"))
 {
     CryptoTest crypto;
 
-    Session session;
+	Session session(std::make_shared<MockFrameWriter>());
     std::error_code ec;
     const auto user_data = validate(session, 1, 0, 0, "", "", ec);
     REQUIRE(ec == CryptoError::no_valid_session);
@@ -46,7 +47,7 @@ TEST_CASE(SUITE("authenticates data"))
 
 TEST_CASE(SUITE("won't intialize with invalid keys"))
 {
-    Session session;
+    Session session(std::make_shared<MockFrameWriter>());
     REQUIRE_FALSE(session.initialize(Algorithms::Session(), Timestamp(0), SessionKeys()));
 }
 
@@ -95,7 +96,7 @@ TEST_CASE(SUITE("rejects minimum ttl + 1"))
 
 TEST_CASE(SUITE("can't format a message without a valid session"))
 {
-    Session s;
+    Session s(std::make_shared<MockFrameWriter>());
     StaticBuffer<uint32_t, consts::link::max_config_payload_size> buffer;
     Hex hex("CAFE");
 
@@ -108,7 +109,7 @@ TEST_CASE(SUITE("can't format a message without a valid session"))
 
 TEST_CASE(SUITE("can't format a with maximum nonce value"))
 {
-    Session s;
+    Session s(std::make_shared<MockFrameWriter>());
     init(s, std::numeric_limits<uint16_t>::max());
     StaticBuffer<uint32_t, consts::link::max_config_payload_size> buffer;
     Hex hex("CAFE");
@@ -123,7 +124,7 @@ TEST_CASE(SUITE("can't format a with maximum nonce value"))
 
 TEST_CASE(SUITE("can't format a message if the session time has exceed 2^32 - 1"))
 {
-    Session s;
+    Session s(std::make_shared<MockFrameWriter>());
     init(s);
     StaticBuffer<uint32_t, consts::link::max_config_payload_size> buffer;
     Hex hex("CAFE");
@@ -138,7 +139,7 @@ TEST_CASE(SUITE("can't format a message if the session time has exceed 2^32 - 1"
 
 TEST_CASE(SUITE("can't format a maximum if the session time has overflowed"))
 {
-    Session s;
+    Session s(std::make_shared<MockFrameWriter>());
     init(s);
     StaticBuffer<uint32_t, consts::link::max_config_payload_size> buffer;
     Hex hex("CAFE");
@@ -156,7 +157,7 @@ TEST_CASE(SUITE("successfully formats and increments nonce"))
 {
     CryptoTest test;
 
-    Session s;
+    Session s(std::make_shared<MockFrameWriter>());
     init(s);
     StaticBuffer<uint32_t, consts::link::max_config_payload_size> buffer;
     Hex hex("CAFE");
@@ -210,7 +211,7 @@ std::string test_validation_success(uint16_t nonce_init, Timestamp session_init_
 {
     CryptoTest crypto;
 
-    Session session;
+    Session session(std::make_shared<MockFrameWriter>());
 
     init(session, nonce_init, session_init_time);
 
@@ -227,7 +228,7 @@ void test_validation_failure(uint16_t nonce_init, Timestamp session_init_time, u
 {
     CryptoTest crypto;
 
-    Session session;
+    Session session(std::make_shared<MockFrameWriter>());
 
     init(session, nonce_init, session_init_time);
 

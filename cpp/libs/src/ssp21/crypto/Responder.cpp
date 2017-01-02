@@ -25,13 +25,13 @@ namespace ssp21
         ILowerLayer& lower) :
 
         config(config),
-        frame_writer(std::move(frame_writer)),
+        frame_writer(frame_writer),
         local_static_key_pair(std::move(local_static_key_pair)),
         remote_static_public_key(std::move(remote_static_public_key)),
         logger(logger),
         executor(executor),
         handshake(EntityId::Responder),
-        session(config.session),
+        session(frame_writer, config.session),
         reassembler(config.max_reassembly_size),
         lower(&lower)
     {

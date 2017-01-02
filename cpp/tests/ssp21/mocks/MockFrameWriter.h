@@ -5,6 +5,7 @@
 
 #include "ssp21/IFrameWriter.h"
 #include "openpal/container/Buffer.h"
+#include "ssp21/link/LinkConstants.h"
 
 namespace ssp21
 {
@@ -14,7 +15,7 @@ class MockFrameWriter : public IFrameWriter
 {
 public:
 
-    MockFrameWriter(uint16_t max_payload_size) : max_payload_size(max_payload_size), buffer(max_payload_size) {}
+    explicit MockFrameWriter(uint16_t max_payload_size = consts::link::max_config_payload_size) : max_payload_size(max_payload_size), buffer(max_payload_size) {}
 
     virtual WriteResult write(const IWritable& payload)  override
     {
