@@ -52,7 +52,7 @@ namespace ssp21
         {
             Context(
                 const Config& config,
-                std::unique_ptr<IFrameWriter> frame_writer,
+                const std::shared_ptr<IFrameWriter>& frame_writer,
                 std::unique_ptr<KeyPair> local_static_key_pair,
                 std::unique_ptr<PublicKey> remote_static_public_key,
                 const openpal::Logger& logger,
@@ -73,7 +73,7 @@ namespace ssp21
             HandshakeError validate(const RequestHandshakeBegin& msg);
 
             Config config;
-            const std::unique_ptr<IFrameWriter> frame_writer;
+            const std::shared_ptr<IFrameWriter> frame_writer;
 
             std::unique_ptr<KeyPair> local_static_key_pair;
             std::unique_ptr<PublicKey> remote_static_public_key;
@@ -98,7 +98,7 @@ namespace ssp21
         };
 
         Responder(const Config& config,
-                  std::unique_ptr<IFrameWriter> frame_writer,
+			      const std::shared_ptr<IFrameWriter>& frame_writer,
                   std::unique_ptr<KeyPair> local_static_key_pair,
                   std::unique_ptr<PublicKey> remote_static_public_key,
                   const openpal::Logger& logger,

@@ -13,6 +13,7 @@
 #include "../mocks/MockUpperLayer.h"
 #include "../mocks/MockCryptoBackend.h"
 #include "../mocks/HexMessageBuilders.h"
+#include "../mocks/MockFrameWriter.h"
 
 #include "ssp21/link/LinkConstants.h"
 
@@ -23,35 +24,7 @@ namespace ssp21
 
     class ResponderFixture
     {
-    private:
-
-        struct MockFrameWriter : public IFrameWriter
-        {
-        public:
-
-            MockFrameWriter(uint16_t max_payload_size) : max_payload_size(max_payload_size), buffer(max_payload_size) {}
-
-            virtual WriteResult write(const IWritable& payload)  override
-            {
-                auto dest = buffer.as_wslice();
-                const auto res = payload.write(dest);
-                if (res.is_error()) return WriteResult::error(res.err);
-                else
-                {
-                    return WriteResult::success(res, res.written);
-                }
-            }
-
-            virtual uint16_t get_max_payload_size() const override
-            {
-                return max_payload_size;
-            }
-
-        private:
-
-            uint16_t max_payload_size;
-            openpal::Buffer buffer;
-        };
+    private:       
 
         struct Keys
         {
@@ -96,9 +69,9 @@ namespace ssp21
             responder.on_tx_ready();
         }
 
-        static std::unique_ptr<IFrameWriter> get_frame_writer(uint16_t max_message_size)
+        static std::shared_ptr<IFrameWriter> get_frame_writer(uint16_t max_message_size)
         {
-            return std::make_unique<MockFrameWriter>(max_message_size);
+            return std::make_shared<MockFrameWriter>(max_message_size);
         }
 
     private:
