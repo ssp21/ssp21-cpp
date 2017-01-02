@@ -7,13 +7,14 @@
 namespace ssp21
 {
 
-    LinkFrameWriter::LinkFrameWriter(Addresses addr, uint16_t max_payload_size) :
+	LinkFrameWriter::LinkFrameWriter(const openpal::Logger& logger, Addresses addr, uint16_t max_payload_size) :
+		IFrameWriter(logger),
         addr(addr),
         max_payload_size(max_payload_size),
         frame_buffer(get_buffer_size(max_payload_size))
     {}
 
-    WriteResult LinkFrameWriter::write(const IWritable& payload)
+    WriteResult LinkFrameWriter::write_impl(const IWritable& payload)
     {
         const auto res = this->write_body_and_crc(payload);
         if (res.is_error()) return WriteResult::error(res.err);

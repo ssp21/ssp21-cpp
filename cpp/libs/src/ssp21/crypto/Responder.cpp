@@ -41,7 +41,7 @@ namespace ssp21
 	void Responder::Context::reply_with_handshake_error(HandshakeError err)
 	{
 		ReplyHandshakeError msg(err);
-		const auto res = this->prepare_msg_for_tx(msg);
+		const auto res = this->frame_writer->write(msg);
 		if (!res.is_error())
 		{
 			this->lower->transmit(res.frame);
@@ -152,24 +152,17 @@ namespace ssp21
             const auto fir = this->ctx.tx_state.get_fir();
             const auto now = this->ctx.executor->get_time();
 
-            SessionData msg;
-            const auto err = ctx.session.format_message(msg, fir, now, remainder);
+			std::error_code err;
+            const auto data = ctx.session.format_session_message(fir, now, remainder, err);
             if (err)
             {
                 FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "Error formatting session message: %s", err.message().c_str());
                 return;
-            }
+            }            
 
-            const auto result = this->ctx.prepare_msg_for_tx(msg);
+			ctx.tx_state.begin_transmit(remainder);
 
-            if (result.is_error())
-            {                
-                return;
-            }
-
-			ctx.lower->transmit(result.frame);
-
-            ctx.tx_state.begin_transmit(remainder);
+			ctx.lower->transmit(data);            
         }
     }
 

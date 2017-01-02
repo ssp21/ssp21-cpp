@@ -3,6 +3,7 @@
 #define SSP21_IFRAMEWRITER_H
 
 #include "ssp21/IWritable.h"
+#include "openpal/logging/Logger.h"
 
 namespace ssp21
 {
@@ -37,14 +38,23 @@ namespace ssp21
     * unnecessary copying.
     *
     */
-    struct IFrameWriter
+    class IFrameWriter
     {
+	public:
+
+		explicit IFrameWriter(const openpal::Logger& logger);
+
         virtual ~IFrameWriter() {}
 
-        virtual WriteResult write(const IWritable& payload) = 0;
+		WriteResult write(const IWritable& payload);
 
         virtual uint16_t get_max_payload_size() const = 0;
 
+	private:
+
+		virtual WriteResult write_impl(const IWritable& payload) = 0;
+
+		openpal::Logger logger;
     };
 
 }

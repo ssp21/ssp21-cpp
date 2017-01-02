@@ -58,10 +58,7 @@ namespace ssp21
                 const openpal::Logger& logger,
                 const std::shared_ptr<openpal::IExecutor>& executor,
                 ILowerLayer& lower
-            );            
-
-            template <class T>
-            WriteResult prepare_msg_for_tx(const T& msg);
+            );                      
 
             void reply_with_handshake_error(HandshakeError err);
 
@@ -159,29 +156,7 @@ namespace ssp21
 
         // state instance for the handshake
         IHandshakeState* handshake_state;
-    };
-
-	template <class T>
-	WriteResult Responder::Context::prepare_msg_for_tx(const T& msg)
-	{
-		const auto res = this->frame_writer->write(msg);
-
-		if (res.is_error())
-		{
-			FORMAT_LOG_BLOCK(this->logger, levels::error, "Error writing message: %s", FormatErrorSpec::to_string(res.err));
-			return res;
-		}
-
-		FORMAT_LOG_BLOCK(this->logger, levels::tx_crypto_msg, "%s", FunctionSpec::to_string(T::function));
-
-		if (this->logger.is_enabled(levels::tx_crypto_msg_fields))
-		{
-			LogMessagePrinter printer(this->logger, levels::tx_crypto_msg_fields);
-			msg.print(printer);
-		}		
-
-		return res;
-	}
+    };	
 
 }
 

@@ -30,6 +30,8 @@ public:
         return src.length() < output.length() ? FormatResult::success(output.copy_from(src)) : FormatResult::error(FormatError::insufficient_space);
     }
 
+	virtual void print(IMessagePrinter& printer) const override {}
+
 private:
 
     Hex payload;
@@ -37,7 +39,7 @@ private:
 
 TEST_CASE(SUITE("correctly formats output"))
 {
-    LinkFrameWriter writer(Addresses(1, 2), 6);
+    LinkFrameWriter writer(openpal::Logger::empty(), Addresses(1, 2), 6);
 
     HexWritable payload("DD DD DD DD DD DD");
     auto result = writer.write(payload);
@@ -49,7 +51,7 @@ TEST_CASE(SUITE("correctly formats output"))
 
 TEST_CASE(SUITE("fails if insufficient space to write payload"))
 {
-    LinkFrameWriter writer(Addresses(1, 2), 5);
+    LinkFrameWriter writer(openpal::Logger::empty(), Addresses(1, 2), 5);
 
     HexWritable payload("DD DD DD DD DD DD");
     auto result = writer.write(payload);

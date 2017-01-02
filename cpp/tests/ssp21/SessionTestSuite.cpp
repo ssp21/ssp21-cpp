@@ -32,6 +32,7 @@ TEST_CASE(SUITE("won't validate user data when not initialized"))
     CryptoTest crypto;
 
 	Session session(std::make_shared<MockFrameWriter>());
+
     std::error_code ec;
     const auto user_data = validate(session, 1, 0, 0, "", "", ec);
     REQUIRE(ec == CryptoError::no_valid_session);
@@ -101,10 +102,13 @@ TEST_CASE(SUITE("can't format a message without a valid session"))
     Hex hex("CAFE");
 
     auto input = hex.as_rslice();
-    SessionData msg;
-    const auto err = s.format_message(msg, true, Timestamp(0), input);
-    REQUIRE(err == CryptoError::no_valid_session);
+    
+
+	std::error_code ec;
+    const auto data = s.format_session_message(true, Timestamp(0), input, ec);
+    REQUIRE(ec == CryptoError::no_valid_session);
     REQUIRE(input.length() == 2);
+	REQUIRE(data.is_empty());
 }
 
 TEST_CASE(SUITE("can't format a with maximum nonce value"))
@@ -114,12 +118,13 @@ TEST_CASE(SUITE("can't format a with maximum nonce value"))
     StaticBuffer<uint32_t, consts::link::max_config_payload_size> buffer;
     Hex hex("CAFE");
 
-
     auto input = hex.as_rslice();
-    SessionData msg;
-    const auto err = s.format_message(msg, true, Timestamp(0), input);
-    REQUIRE(err == CryptoError::invalid_tx_nonce);
+
+	std::error_code ec;
+    const auto data = s.format_session_message(true, Timestamp(0), input, ec);
+    REQUIRE(ec == CryptoError::invalid_tx_nonce);
     REQUIRE(input.length() == 2);
+	REQUIRE(data.is_empty());
 }
 
 TEST_CASE(SUITE("can't format a message if the session time has exceed 2^32 - 1"))
@@ -129,12 +134,14 @@ TEST_CASE(SUITE("can't format a message if the session time has exceed 2^32 - 1"
     StaticBuffer<uint32_t, consts::link::max_config_payload_size> buffer;
     Hex hex("CAFE");
 
-    auto input = hex.as_rslice();
-    SessionData msg;
+    auto input = hex.as_rslice();    
     const auto time = static_cast<int64_t>(std::numeric_limits<uint32_t>::max()) + 1;
-    const auto err = s.format_message(msg, true, Timestamp(time), input);
-    REQUIRE(err == CryptoError::ttl_overflow);
+
+	std::error_code ec;
+    const auto data = s.format_session_message(true, Timestamp(time), input, ec);
+    REQUIRE(ec == CryptoError::ttl_overflow);
     REQUIRE(input.length() == 2);
+	REQUIRE(data.is_empty());
 }
 
 TEST_CASE(SUITE("can't format a maximum if the session time has overflowed"))
@@ -147,10 +154,12 @@ TEST_CASE(SUITE("can't format a maximum if the session time has overflowed"))
     auto input = hex.as_rslice();
     SessionData msg;
 
+	std::error_code ec;
     const auto time = std::numeric_limits<uint32_t>::max() - consts::crypto::default_ttl_pad_ms + 1;
-    const auto err = s.format_message(msg, true, Timestamp(time), input);
-    REQUIRE(err == CryptoError::ttl_overflow);
+    const auto data = s.format_session_message(true, Timestamp(time), input, ec);
+    REQUIRE(ec == CryptoError::ttl_overflow);
     REQUIRE(input.length() == 2);
+	REQUIRE(data.is_empty());
 }
 
 TEST_CASE(SUITE("successfully formats and increments nonce"))
@@ -168,10 +177,10 @@ TEST_CASE(SUITE("successfully formats and increments nonce"))
     {
 
         auto input = hex.as_rslice();
-        SessionData msg;
+		std::error_code ec;
 
-        const auto err = s.format_message(msg, true, Timestamp(0), input);
-        REQUIRE_FALSE(err);
+        const auto data = s.format_session_message(true, Timestamp(0), input, ec);
+        REQUIRE_FALSE(ec);
         REQUIRE(input.is_empty());
         test->expect({ CryptoAction::hmac_sha256 });
     }

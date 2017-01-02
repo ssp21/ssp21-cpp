@@ -55,7 +55,7 @@ namespace ssp21
             log("responder"),
             exe(openpal::MockExecutor::Create()),
             lower(),
-            responder(config, get_frame_writer(max_message_size), std::move(keys.local_kp), std::move(keys.remote_static_key), log.logger, exe, lower),
+            responder(config, get_frame_writer(log.logger, max_message_size), std::move(keys.local_kp), std::move(keys.remote_static_key), log.logger, exe, lower),
             upper(responder)
         {
             MockCryptoBackend::instance.clear_actions();
@@ -69,9 +69,9 @@ namespace ssp21
             responder.on_tx_ready();
         }
 
-        static std::shared_ptr<IFrameWriter> get_frame_writer(uint16_t max_message_size)
+        static std::shared_ptr<IFrameWriter> get_frame_writer(const openpal::Logger& logger, uint16_t max_message_size)
         {
-            return std::make_shared<MockFrameWriter>(max_message_size);
+            return std::make_shared<MockFrameWriter>(logger, max_message_size);
         }
 
     private:

@@ -30,7 +30,7 @@ namespace ssp21
         // now format our response - in the future, this we'll add certificates after this call if applicable
         ReplyHandshakeBegin reply(public_ephem_dh_key);
 
-        const auto res = ctx.prepare_msg_for_tx(reply);
+        const auto res = ctx.frame_writer->write(reply);
 
         if (res.is_error())
         {            
@@ -92,7 +92,7 @@ namespace ssp21
 
         ReplyHandshakeAuth reply(seq8_t(reply_mac.as_seq()));
 
-        const auto res = ctx.prepare_msg_for_tx(reply);
+        const auto res = ctx.frame_writer->write(reply);
 
         if (res.is_error())
         {            

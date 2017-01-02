@@ -45,16 +45,16 @@ namespace ssp21
 
         seq32_t validate_message(const SessionData& message, const openpal::Timestamp& now, std::error_code& ec);
 
-        std::error_code format_message(SessionData& msg, bool fir, const openpal::Timestamp& now, seq32_t& cleartext);
+        seq32_t format_session_message(bool fir, const openpal::Timestamp& now, seq32_t& cleartext, std::error_code& ec);
 
         bool can_transmit() const
         {
-            return this->tx_valid && !tx_nonce.is_max_value();
+            return this->valid && !tx_nonce.is_max_value();
         }
 
     private:
 
-        std::error_code format_message_impl(SessionData& msg, bool fir, const openpal::Timestamp& now, seq32_t& cleartext);
+		seq32_t format_session_message_impl(bool fir, const openpal::Timestamp& now, seq32_t& cleartext, std::error_code& ec);
 
         /**
         * Given a maximum link layer payload, how big could the crypto payload be?
@@ -74,8 +74,7 @@ namespace ssp21
 
         AuthenticationTag auth_tag_buffer;
 
-        bool rx_valid = false;
-        bool tx_valid = false;
+        bool valid = false;        
 
         Nonce rx_nonce;
         Nonce tx_nonce;
