@@ -37,8 +37,8 @@ const char* CryptoErrorSpec::to_string(CryptoError arg)
             return "no_valid_session";
         case(CryptoError::expired_ttl):
             return "expired_ttl";
-        case(CryptoError::invalid_rx_nonce):
-            return "invalid_rx_nonce";
+        case(CryptoError::nonce_replay):
+            return "nonce_replay";
         case(CryptoError::rx_nonce_maximum):
             return "rx_nonce_maximum";
         case(CryptoError::invalid_tx_nonce):

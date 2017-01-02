@@ -66,12 +66,12 @@ TEST_CASE(SUITE("rejects empty user data"))
 
 TEST_CASE(SUITE("rejects initial nonce of zero"))
 {
-    test_validation_failure(0, Timestamp(0), 0, 0, 0, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::invalid_rx_nonce);
+    test_validation_failure(0, Timestamp(0), 0, 0, 0, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::nonce_replay);
 }
 
 TEST_CASE(SUITE("rejects rollover nonce when initialized with maximum nonce"))
 {
-    test_validation_failure(65535, Timestamp(0), 0, 0, 0, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::invalid_rx_nonce);
+    test_validation_failure(65535, Timestamp(0), 0, 0, 0, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::nonce_replay);
 }
 
 //// ---- validation ttl tests ----

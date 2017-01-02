@@ -94,7 +94,7 @@ namespace ssp21
         if (!this->algorithms.verify_nonce(this->rx_nonce.get(), message.metadata.nonce))
         {
             this->statistics.num_nonce_fail.increment();
-            ec = CryptoError::invalid_rx_nonce;
+            ec = CryptoError::nonce_replay;
             return seq32_t::empty();
         }
 

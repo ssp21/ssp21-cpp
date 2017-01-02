@@ -41,8 +41,8 @@ enum class CryptoError : uint8_t
     no_valid_session = 0x5,
     /// The TTL on a message is expired
     expired_ttl = 0x6,
-    /// The nonce on a received message is invalid
-    invalid_rx_nonce = 0x7,
+    /// The nonce on a received message has been replayed
+    nonce_replay = 0x7,
     /// The nonce on a received message exceeded the configured maximum
     rx_nonce_maximum = 0x8,
     /// The tx nonce reached the maximum valid before the session was reinitialized
