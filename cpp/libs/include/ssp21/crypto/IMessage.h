@@ -15,7 +15,7 @@ namespace ssp21
 
     public:
 
-        virtual ParseError read(seq32_t input) = 0;        
+        virtual ParseError read(seq32_t input) = 0;
 
     };
 

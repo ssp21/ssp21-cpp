@@ -40,21 +40,21 @@ namespace ssp21
     */
     class IFrameWriter
     {
-	public:
+    public:
 
-		explicit IFrameWriter(const openpal::Logger& logger);
+        explicit IFrameWriter(const openpal::Logger& logger);
 
         virtual ~IFrameWriter() {}
 
-		WriteResult write(const IWritable& payload);
+        WriteResult write(const IWritable& payload);
 
         virtual uint16_t get_max_payload_size() const = 0;
 
-	private:
+    private:
 
-		virtual WriteResult write_impl(const IWritable& payload) = 0;
+        virtual WriteResult write_impl(const IWritable& payload) = 0;
 
-		openpal::Logger logger;
+        openpal::Logger logger;
     };
 
 }

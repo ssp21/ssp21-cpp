@@ -26,9 +26,9 @@ namespace ssp21
 
         struct Config
         {
-            Config() {}			
+            Config() {}
 
-			// the TTL padding added to every message
+            // the TTL padding added to every message
             uint32_t ttl_pad_ms = consts::crypto::default_ttl_pad_ms;
         };
 
@@ -54,7 +54,7 @@ namespace ssp21
 
     private:
 
-		seq32_t format_session_message_impl(bool fir, const openpal::Timestamp& now, seq32_t& cleartext, std::error_code& ec);
+        seq32_t format_session_message_impl(bool fir, const openpal::Timestamp& now, seq32_t& cleartext, std::error_code& ec);
 
         /**
         * Given a maximum link layer payload, how big could the crypto payload be?
@@ -62,19 +62,19 @@ namespace ssp21
         static uint32_t calc_max_crypto_payload_length(uint32_t max_link_payload_size);
 
         SessionStatistics statistics;
-		const std::shared_ptr<IFrameWriter> frame_writer;
+        const std::shared_ptr<IFrameWriter> frame_writer;
         Config config;
 
         // calculated during construction
         const uint16_t max_crypto_payload_length;
 
-		// buffers used as scratch space for encryption/decyption operations
+        // buffers used as scratch space for encryption/decyption operations
         openpal::Buffer decrypt_scratch_buffer;
-		openpal::Buffer encrypt_scratch_buffer;
+        openpal::Buffer encrypt_scratch_buffer;
 
         AuthenticationTag auth_tag_buffer;
 
-        bool valid = false;        
+        bool valid = false;
 
         Nonce rx_nonce;
         Nonce tx_nonce;

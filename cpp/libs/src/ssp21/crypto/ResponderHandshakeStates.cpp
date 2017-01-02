@@ -33,7 +33,7 @@ namespace ssp21
         const auto res = ctx.frame_writer->write(reply);
 
         if (res.is_error())
-        {            
+        {
             return *this;
         }
 
@@ -54,7 +54,7 @@ namespace ssp21
             return *this;
         }
 
-		ctx.lower->transmit(res.frame);
+        ctx.lower->transmit(res.frame);
 
         return HandshakeWaitForAuth::get();
     }
@@ -95,7 +95,7 @@ namespace ssp21
         const auto res = ctx.frame_writer->write(reply);
 
         if (res.is_error())
-        {            
+        {
             return HandshakeIdle::get();
         }
 
@@ -103,7 +103,7 @@ namespace ssp21
 
         ctx.handshake.initialize_session(ctx.session, ctx.executor->get_time());
 
-		ctx.lower->transmit(res.frame);
+        ctx.lower->transmit(res.frame);
 
         ctx.upper->on_open();
 

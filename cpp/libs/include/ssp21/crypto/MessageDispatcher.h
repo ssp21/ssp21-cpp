@@ -23,7 +23,7 @@ namespace ssp21
         static void handle_parse_error(openpal::Logger& logger, Function function, ParseError error, IMessageHandler& handler);
 
         template <class MsgType>
-		static bool handle_message(openpal::Logger& logger, const seq32_t& message, const openpal::Timestamp& now, IMessageHandler& handler);
+        static bool handle_message(openpal::Logger& logger, const seq32_t& message, const openpal::Timestamp& now, IMessageHandler& handler);
 
     };
 

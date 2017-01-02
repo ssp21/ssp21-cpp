@@ -24,7 +24,7 @@ namespace ssp21
 
     class ResponderFixture
     {
-    private:       
+    private:
 
         struct Keys
         {

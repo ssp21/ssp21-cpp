@@ -37,7 +37,7 @@ namespace ssp21
                 throw std::logic_error("transmit called when tx_ready == false");
             }
 
-            this->tx_messages.push_back(std::make_unique<message_t>(message));            
+            this->tx_messages.push_back(std::make_unique<message_t>(message));
             return true;
         }
 
@@ -86,10 +86,10 @@ namespace ssp21
             return hex;
         }
 
-		size_t num_tx_messages() const
-		{
-			return tx_messages.size();
-		}
+        size_t num_tx_messages() const
+        {
+            return tx_messages.size();
+        }
 
     private:
 

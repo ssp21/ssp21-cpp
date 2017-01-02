@@ -15,7 +15,7 @@ namespace ssp21
 
         virtual FormatResult write(wseq32_t& output) const = 0;
 
-		virtual void print(IMessagePrinter& printer) const = 0;
+        virtual void print(IMessagePrinter& printer) const = 0;
 
     };
 

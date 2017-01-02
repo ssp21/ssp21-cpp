@@ -17,7 +17,7 @@ namespace ssp21
 {
     Responder::Context::Context(
         const Config& config,
-		const std::shared_ptr<IFrameWriter>& frame_writer,
+        const std::shared_ptr<IFrameWriter>& frame_writer,
         std::unique_ptr<KeyPair> local_static_key_pair,
         std::unique_ptr<PublicKey> remote_static_public_key,
         const openpal::Logger& logger,
@@ -37,16 +37,16 @@ namespace ssp21
     {
 
     }
-	
-	void Responder::Context::reply_with_handshake_error(HandshakeError err)
-	{
-		ReplyHandshakeError msg(err);
-		const auto res = this->frame_writer->write(msg);
-		if (!res.is_error())
-		{
-			this->lower->transmit(res.frame);
-		}
-	}
+
+    void Responder::Context::reply_with_handshake_error(HandshakeError err)
+    {
+        ReplyHandshakeError msg(err);
+        const auto res = this->frame_writer->write(msg);
+        if (!res.is_error())
+        {
+            this->lower->transmit(res.frame);
+        }
+    }
 
     HandshakeError Responder::Context::validate(const RequestHandshakeBegin& msg)
     {
@@ -76,7 +76,7 @@ namespace ssp21
     }
 
     Responder::Responder(const Config& config,
-		                 const std::shared_ptr<IFrameWriter>& frame_writer,
+                         const std::shared_ptr<IFrameWriter>& frame_writer,
                          std::unique_ptr<KeyPair> local_static_key_pair,
                          std::unique_ptr<PublicKey> remote_static_public_key,
                          const openpal::Logger& logger,
@@ -107,12 +107,12 @@ namespace ssp21
 
     void Responder::on_tx_ready_impl()
     {
-		if (ctx.tx_state.on_tx_complete())
-		{
-			// ready to transmit more data
-			this->is_tx_ready = true;			
-			ctx.upper->on_tx_ready();
-		}
+        if (ctx.tx_state.on_tx_complete())
+        {
+            // ready to transmit more data
+            this->is_tx_ready = true;
+            ctx.upper->on_tx_ready();
+        }
 
         this->check_receive();
         this->check_transmit();
@@ -152,17 +152,17 @@ namespace ssp21
             const auto fir = this->ctx.tx_state.get_fir();
             const auto now = this->ctx.executor->get_time();
 
-			std::error_code err;
+            std::error_code err;
             const auto data = ctx.session.format_session_message(fir, now, remainder, err);
             if (err)
             {
                 FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "Error formatting session message: %s", err.message().c_str());
                 return;
-            }            
+            }
 
-			ctx.tx_state.begin_transmit(remainder);
+            ctx.tx_state.begin_transmit(remainder);
 
-			ctx.lower->transmit(data);            
+            ctx.lower->transmit(data);
         }
     }
 
@@ -234,19 +234,19 @@ namespace ssp21
     }
 
     bool Responder::on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
-    {        
+    {
         this->handshake_state = &this->handshake_state->on_message(ctx, raw_data, msg);
         return true;
     }
 
     bool Responder::on_message(const RequestHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
-    {       
+    {
         this->handshake_state = &this->handshake_state->on_message(ctx, raw_data, msg);
         return true;
     }
 
     bool Responder::on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
-    {        
+    {
         std::error_code ec;
         const auto payload = this->ctx.session.validate_message(msg, now, ec);
 

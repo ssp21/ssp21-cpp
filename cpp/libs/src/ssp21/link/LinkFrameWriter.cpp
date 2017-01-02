@@ -7,8 +7,8 @@
 namespace ssp21
 {
 
-	LinkFrameWriter::LinkFrameWriter(const openpal::Logger& logger, Addresses addr, uint16_t max_payload_size) :
-		IFrameWriter(logger),
+    LinkFrameWriter::LinkFrameWriter(const openpal::Logger& logger, Addresses addr, uint16_t max_payload_size) :
+        IFrameWriter(logger),
         addr(addr),
         max_payload_size(max_payload_size),
         frame_buffer(get_buffer_size(max_payload_size))

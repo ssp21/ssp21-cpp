@@ -282,50 +282,50 @@ TEST_CASE(SUITE("can transmit multiple messages if session is initialized"))
     fix.responder.on_open();
     test_init_session_success(fix);
 
-	const auto payload = "CA FE";
+    const auto payload = "CA FE";
 
-	for (uint16_t i = 0; i < 3; ++i)
-	{
-		Hex msg(payload);
-		REQUIRE(fix.responder.transmit(msg));
+    for (uint16_t i = 0; i < 3; ++i)
+    {
+        Hex msg(payload);
+        REQUIRE(fix.responder.transmit(msg));
 
-		const auto expected = hex::session_data(i+1, consts::crypto::default_ttl_pad_ms, true, true, payload, hex::repeat(0xFF, 16));
-		REQUIRE(fix.lower.pop_tx_message() == expected);
-		REQUIRE(fix.upper.num_tx_ready == i);
+        const auto expected = hex::session_data(i + 1, consts::crypto::default_ttl_pad_ms, true, true, payload, hex::repeat(0xFF, 16));
+        REQUIRE(fix.lower.pop_tx_message() == expected);
+        REQUIRE(fix.upper.num_tx_ready == i);
 
-		// tell the responder that we're done transmitting
-		fix.responder.on_tx_ready();
-		REQUIRE(fix.upper.num_tx_ready == i + 1);
-		REQUIRE(fix.lower.num_tx_messages() == 0);
-	}
+        // tell the responder that we're done transmitting
+        fix.responder.on_tx_ready();
+        REQUIRE(fix.upper.num_tx_ready == i + 1);
+        REQUIRE(fix.lower.num_tx_messages() == 0);
+    }
 }
 
 TEST_CASE(SUITE("defers transmission if lower layer is not tx_ready"))
 {
-	ResponderFixture fix;
-	fix.responder.on_open();
-	test_init_session_success(fix);
+    ResponderFixture fix;
+    fix.responder.on_open();
+    test_init_session_success(fix);
 
-	const auto payload = "CA FE";
+    const auto payload = "CA FE";
 
-	fix.lower.set_tx_ready(false); 
+    fix.lower.set_tx_ready(false);
 
-	Hex msg(payload);
-	REQUIRE(fix.responder.transmit(msg));
-	REQUIRE(fix.lower.num_tx_messages() == 0);
-	REQUIRE(fix.upper.num_tx_ready == 0);
+    Hex msg(payload);
+    REQUIRE(fix.responder.transmit(msg));
+    REQUIRE(fix.lower.num_tx_messages() == 0);
+    REQUIRE(fix.upper.num_tx_ready == 0);
 
-	fix.lower.set_tx_ready(true);
-	fix.responder.on_tx_ready();
+    fix.lower.set_tx_ready(true);
+    fix.responder.on_tx_ready();
 
-	
-	const auto expected = hex::session_data(1, consts::crypto::default_ttl_pad_ms, true, true, payload, hex::repeat(0xFF, 16));
-	REQUIRE(fix.lower.pop_tx_message() == expected);
-	REQUIRE(fix.upper.num_tx_ready == 0);
-	
-	fix.responder.on_tx_ready();
-	REQUIRE(fix.upper.num_tx_ready == 1);
-	REQUIRE(fix.lower.num_tx_messages() == 0);
+
+    const auto expected = hex::session_data(1, consts::crypto::default_ttl_pad_ms, true, true, payload, hex::repeat(0xFF, 16));
+    REQUIRE(fix.lower.pop_tx_message() == expected);
+    REQUIRE(fix.upper.num_tx_ready == 0);
+
+    fix.responder.on_tx_ready();
+    REQUIRE(fix.upper.num_tx_ready == 1);
+    REQUIRE(fix.lower.num_tx_messages() == 0);
 }
 
 // ---------- helper method implementations -----------

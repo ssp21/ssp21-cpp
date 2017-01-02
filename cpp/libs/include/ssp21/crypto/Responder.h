@@ -58,7 +58,7 @@ namespace ssp21
                 const openpal::Logger& logger,
                 const std::shared_ptr<openpal::IExecutor>& executor,
                 ILowerLayer& lower
-            );                      
+            );
 
             void reply_with_handshake_error(HandshakeError err);
 
@@ -95,7 +95,7 @@ namespace ssp21
         };
 
         Responder(const Config& config,
-			      const std::shared_ptr<IFrameWriter>& frame_writer,
+                  const std::shared_ptr<IFrameWriter>& frame_writer,
                   std::unique_ptr<KeyPair> local_static_key_pair,
                   std::unique_ptr<PublicKey> remote_static_public_key,
                   const openpal::Logger& logger,
@@ -156,7 +156,7 @@ namespace ssp21
 
         // state instance for the handshake
         IHandshakeState* handshake_state;
-    };	
+    };
 
 }
 

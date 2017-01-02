@@ -38,15 +38,15 @@ namespace ssp21
 
         bool on_tx_complete()
         {
-			if (this->transmitting)
-			{
-				this->transmitting = false;
+            if (this->transmitting)
+            {
+                this->transmitting = false;
 
-				// if there's nothing left to transmit, the entire tx sequence is complete
-				return this->remainder.is_empty();
-			}			
-			
-			return false;
+                // if there's nothing left to transmit, the entire tx sequence is complete
+                return this->remainder.is_empty();
+            }
+
+            return false;
         }
 
         bool begin_transmit(const seq32_t& remainder)

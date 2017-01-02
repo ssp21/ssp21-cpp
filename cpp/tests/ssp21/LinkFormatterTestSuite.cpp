@@ -30,7 +30,7 @@ public:
         return src.length() < output.length() ? FormatResult::success(output.copy_from(src)) : FormatResult::error(FormatError::insufficient_space);
     }
 
-	virtual void print(IMessagePrinter& printer) const override {}
+    virtual void print(IMessagePrinter& printer) const override {}
 
 private:
 
