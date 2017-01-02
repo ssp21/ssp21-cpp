@@ -135,7 +135,7 @@ namespace ssp21
         {
             ec = CryptoError::ttl_overflow;
             return seq32_t::empty();
-        }       
+        }
 
         // the metadata we're encoding
         AuthMetadata metadata(
@@ -151,7 +151,7 @@ namespace ssp21
         }
 
         // everything succeeded, so increment the nonce and advance the input buffer
-        this->tx_nonce.increment();        
+        this->tx_nonce.increment();
 
         return frame;
     }

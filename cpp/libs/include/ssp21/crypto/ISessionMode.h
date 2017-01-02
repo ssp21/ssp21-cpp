@@ -40,9 +40,9 @@ namespace ssp21
         /**
         * Writes a SessionData message using the supplied IFrameWriter
         *
-		* @writer interface used to write the message (and any framing) to an output buffer owned by the IFrameWriter
+        * @writer interface used to write the message (and any framing) to an output buffer owned by the IFrameWriter
         * @key the symmetric key used for authentication (and possibly encryption)
-		* @metadata the metadata to use with the message. The FIN bit will be set if all of the user_data is consumed.
+        * @metadata the metadata to use with the message. The FIN bit will be set if all of the user_data is consumed.
         * @user_data the cleartext userdata that will be authenticated (and possibly encrypted). Buffer mat only be partially consumed if insufficient space.
         * @encrypt_scratch_space buffer that can be used as scratch space for intermediate encryption results if required
         * @ec An error condition will be signaled if the output buffer is too small for the payload
@@ -50,14 +50,14 @@ namespace ssp21
         * @return A slice pointing to the possibly encrypted user data. This slice will be empty if an error occured.
         */
         virtual seq32_t write(
-			IFrameWriter& writer,
+            IFrameWriter& writer,
             const SymmetricKey& key,
-			AuthMetadata& metadata,
-            seq32_t& user_data,            
+            AuthMetadata& metadata,
+            seq32_t& user_data,
             const wseq32_t& encrypt_scratch_space,
             std::error_code& ec
         ) const = 0;
-      
+
     protected:
 
         typedef openpal::StaticBuffer<uint32_t, AuthMetadata::fixed_size_bytes> metadata_buffer_t;

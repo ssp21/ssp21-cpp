@@ -27,14 +27,14 @@ namespace ssp21
             std::error_code& ec
         ) const override;
 
-		virtual seq32_t write(
-			IFrameWriter& writer,
-			const SymmetricKey& key,
-			AuthMetadata& metadata,
-			seq32_t& user_data,
-			const wseq32_t& encrypt_scratch_space,
-			std::error_code& ec
-		) const override;
+        virtual seq32_t write(
+            IFrameWriter& writer,
+            const SymmetricKey& key,
+            AuthMetadata& metadata,
+            seq32_t& user_data,
+            const wseq32_t& encrypt_scratch_space,
+            std::error_code& ec
+        ) const override;
 
     private:
 
