@@ -30,6 +30,8 @@ namespace ssp21
 
             const uint32_t default_ttl_pad_ms = 10000;
 
+            const uint16_t default_max_nonce = 32768;
+
         }
     }
 }

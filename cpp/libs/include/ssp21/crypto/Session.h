@@ -30,6 +30,9 @@ namespace ssp21
 
             // the TTL padding added to every message
             uint32_t ttl_pad_ms = consts::crypto::default_ttl_pad_ms;
+
+            // maximum allowed nonce value for rx or tx
+            uint16_t max_nonce = consts::crypto::default_max_nonce;
         };
 
         explicit Session(const std::shared_ptr<IFrameWriter>& frame_writer, const Config& config = Config());
@@ -62,15 +65,13 @@ namespace ssp21
         static uint32_t calc_max_crypto_payload_length(uint32_t max_link_payload_size);
 
         SessionStatistics statistics;
-        const std::shared_ptr<IFrameWriter> frame_writer;
-        Config config;
 
-        // calculated during construction
-        const uint16_t max_crypto_payload_length;
+        const std::shared_ptr<IFrameWriter> frame_writer;
+        const Config config;
 
         // buffers used as scratch space for encryption/decyption operations
         openpal::Buffer decrypt_scratch_buffer;
-        openpal::Buffer encrypt_scratch_buffer;        
+        openpal::Buffer encrypt_scratch_buffer;
 
         bool valid = false;
 

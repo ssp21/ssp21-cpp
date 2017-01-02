@@ -16,9 +16,8 @@ namespace ssp21
     Session::Session(const std::shared_ptr<IFrameWriter>& frame_writer, const Config& config) :
         frame_writer(frame_writer),
         config(config),
-        max_crypto_payload_length(calc_max_crypto_payload_length(frame_writer->get_max_payload_size())),
-        decrypt_scratch_buffer(max_crypto_payload_length),
-        encrypt_scratch_buffer(max_crypto_payload_length)
+        decrypt_scratch_buffer(calc_max_crypto_payload_length(frame_writer->get_max_payload_size())),
+        encrypt_scratch_buffer(decrypt_scratch_buffer.length())
     {}
 
     uint32_t Session::calc_max_crypto_payload_length(uint32_t max_link_payload_size)
@@ -83,8 +82,16 @@ namespace ssp21
             return seq32_t::empty();
         }
 
-        // check the nonce
-        if (!this->algorithms.verify_nonce(this->rx_nonce.get(), message.metadata.nonce.value))
+        // check the nonce via the configured maximum
+        if (message.metadata.nonce > config.max_nonce)
+        {
+            this->statistics.num_nonce_fail.increment();
+            ec = CryptoError::rx_nonce_maximum;
+            return seq32_t::empty();
+        }
+
+        // check the nonce via the verification function
+        if (!this->algorithms.verify_nonce(this->rx_nonce.get(), message.metadata.nonce))
         {
             this->statistics.num_nonce_fail.increment();
             ec = CryptoError::invalid_rx_nonce;

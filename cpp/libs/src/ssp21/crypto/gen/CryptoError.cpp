@@ -39,6 +39,8 @@ const char* CryptoErrorSpec::to_string(CryptoError arg)
             return "expired_ttl";
         case(CryptoError::invalid_rx_nonce):
             return "invalid_rx_nonce";
+        case(CryptoError::rx_nonce_maximum):
+            return "rx_nonce_maximum";
         case(CryptoError::invalid_tx_nonce):
             return "invalid_tx_nonce";
         case(CryptoError::ttl_overflow):
