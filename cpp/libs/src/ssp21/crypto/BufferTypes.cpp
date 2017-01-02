@@ -41,8 +41,6 @@ namespace ssp21
             return consts::crypto::x25519_key_length;
         case(BufferType::sha256) :
             return consts::crypto::sha256_hash_output_length;
-        case(BufferType::mac_trunc16) :
-            return consts::crypto::trunc16;
         case(BufferType::symmetric_key) :
             return consts::crypto::symmetric_ley_length;
         default:

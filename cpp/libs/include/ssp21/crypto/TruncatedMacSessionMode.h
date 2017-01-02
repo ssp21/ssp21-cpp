@@ -14,10 +14,9 @@ namespace ssp21
 
     public:
 
-        TruncatedMacSessionMode(mac_func_t mac_func, uint8_t auth_tag_length, BufferType buffer_type) :
+        TruncatedMacSessionMode(mac_func_t mac_func, uint8_t auth_tag_length) :
             mac_func(mac_func),
-            auth_tag_length(auth_tag_length),
-            buffer_type(buffer_type)
+            auth_tag_length(auth_tag_length)            
         {}
 
         virtual seq16_t read(
@@ -39,8 +38,7 @@ namespace ssp21
     private:
 
         const mac_func_t mac_func;
-        const uint8_t auth_tag_length;
-        const BufferType buffer_type;
+        const uint8_t auth_tag_length;        
 
     };
 

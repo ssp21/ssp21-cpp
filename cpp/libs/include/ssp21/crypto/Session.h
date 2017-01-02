@@ -70,9 +70,7 @@ namespace ssp21
 
         // buffers used as scratch space for encryption/decyption operations
         openpal::Buffer decrypt_scratch_buffer;
-        openpal::Buffer encrypt_scratch_buffer;
-
-        AuthenticationTag auth_tag_buffer;
+        openpal::Buffer encrypt_scratch_buffer;        
 
         bool valid = false;
 
