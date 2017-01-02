@@ -27,16 +27,14 @@ namespace ssp21
             std::error_code& ec
         ) const override;
 
-        virtual seq16_t write(
-            const SymmetricKey& key,
-            const AuthMetadata& metadata,
-            const seq16_t& user_data,
-            AuthenticationTag& auth_tag,
-            wseq32_t dest,
-            std::error_code& ec
-        ) const override;
-
-        virtual uint16_t max_writable_user_data_length(uint16_t max_payload_size) const override;
+		virtual seq32_t write(
+			IFrameWriter& writer,
+			const SymmetricKey& key,
+			AuthMetadata& metadata,
+			seq32_t& user_data,
+			const wseq32_t& encrypt_scratch_space,
+			std::error_code& ec
+		) const override;
 
     private:
 

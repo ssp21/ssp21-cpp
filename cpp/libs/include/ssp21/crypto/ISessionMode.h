@@ -6,6 +6,7 @@
 #include "ssp21/SequenceTypes.h"
 #include "ssp21/crypto/BufferTypes.h"
 #include "ssp21/crypto/gen/SessionData.h"
+#include "ssp21/IFrameWriter.h"
 
 #include <system_error>
 
@@ -37,35 +38,26 @@ namespace ssp21
         ) const = 0;
 
         /**
-        * Writes an authenticated (and possibly encrypted) payload into the destination output buffer
+        * Writes a SessionData message using the supplied IFrameWriter
         *
+		* @writer interface used to write the message (and any framing) to an output buffer owned by the IFrameWriter
         * @key the symmetric key used for authentication (and possibly encryption)
-        * @metadata associated data that is also covered by the authentication tag
-        * @userdata the cleartext userdata that will be authentiacted (and possibly encrypted) and placed placed into the destination buffer
-        * @auth_tag buffer into which the authentication tag will be written. No modification if an error occured.
-        * @dest The output buffer into which the encrypted payload will be written if this mode is an encryption mode
+		* @metadata the metadata to use with the message. The FIN bit will be set if all of the user_data is consumed.
+        * @user_data the cleartext userdata that will be authenticated (and possibly encrypted). Buffer mat only be partially consumed if insufficient space.
+        * @encrypt_scratch_space buffer that can be used as scratch space for intermediate encryption results if required
         * @ec An error condition will be signaled if the output buffer is too small for the payload
         *
         * @return A slice pointing to the possibly encrypted user data. This slice will be empty if an error occured.
         */
-        virtual seq16_t write(
+        virtual seq32_t write(
+			IFrameWriter& writer,
             const SymmetricKey& key,
-            const AuthMetadata& metadata,
-            const seq16_t& user_data,
-            AuthenticationTag& auth_tag,
-            wseq32_t dest,
+			AuthMetadata& metadata,
+            seq32_t& user_data,            
+            const wseq32_t& encrypt_scratch_space,
             std::error_code& ec
         ) const = 0;
-
-        /**
-        * Calculates the maximum possible user data length factoring the overhead from any authentication tags and padding
-        *
-        * @max_payload_size the maximum allowed payload size
-        *
-        * @return maximum possible user data length
-        */
-        virtual uint16_t max_writable_user_data_length(uint16_t max_payload_size) const = 0;
-
+      
     protected:
 
         typedef openpal::StaticBuffer<uint32_t, AuthMetadata::fixed_size_bytes> metadata_buffer_t;

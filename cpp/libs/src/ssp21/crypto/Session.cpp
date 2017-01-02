@@ -108,7 +108,7 @@ namespace ssp21
         return ret;
     }
 
-    seq32_t Session::format_session_message_impl(bool fir, const openpal::Timestamp& now, seq32_t& cleartext, std::error_code& ec)
+    seq32_t Session::format_session_message_impl(bool fir, const openpal::Timestamp& now, seq32_t& user_data, std::error_code& ec)
     {
         if (!this->valid)
         {
@@ -135,46 +135,25 @@ namespace ssp21
         {
             ec = CryptoError::ttl_overflow;
             return seq32_t::empty();
-        }
-
-        // how big can the user data be?
-        const uint16_t max_user_data_length = this->algorithms.mode->max_writable_user_data_length(this->max_crypto_payload_length);
-        const auto fin = cleartext.length() <= max_user_data_length;
-        const uint16_t user_data_length = fin ? static_cast<uint16_t>(cleartext.length()) : max_user_data_length;
-        const auto user_data = cleartext.take<uint16_t>(user_data_length);
+        }       
 
         // the metadata we're encoding
         AuthMetadata metadata(
             this->tx_nonce.get() + 1,
             session_time + config.ttl_pad_ms,
-            SessionFlags(fir, fin)
+            SessionFlags(fir, true) // doesn't matter what FIN is as the write function will determine how much it can transmit
         );
 
-        const auto written_user_data = this->algorithms.mode->write(this->keys.tx_key, metadata, user_data, this->auth_tag_buffer, this->decrypt_scratch_buffer.as_wslice(), ec);
+        const auto frame = this->algorithms.mode->write(*this->frame_writer, this->keys.tx_key, metadata, user_data, this->encrypt_scratch_buffer.as_wslice(), ec);
         if (ec)
         {
             return seq32_t::empty();
         }
 
-        SessionData msg(
-            metadata,
-            written_user_data,
-            this->auth_tag_buffer.as_seq()
-        );
-
-        auto res = this->frame_writer->write(msg);
-
-        if (res.is_error())
-        {
-            ec = res.err;
-            return seq32_t::empty();
-        }
-
         // everything succeeded, so increment the nonce and advance the input buffer
-        this->tx_nonce.increment();
-        cleartext.advance(user_data_length);
+        this->tx_nonce.increment();        
 
-        return res.frame;
+        return frame;
     }
 
 }
