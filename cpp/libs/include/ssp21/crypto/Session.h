@@ -37,7 +37,7 @@ namespace ssp21
 
         explicit Session(const std::shared_ptr<IFrameWriter>& frame_writer, const Config& config = Config());
 
-        bool initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const SessionKeys& keys, uint16_t nonce_start = 0);
+        bool initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const SessionKeys& keys);
 
         void reset();
 

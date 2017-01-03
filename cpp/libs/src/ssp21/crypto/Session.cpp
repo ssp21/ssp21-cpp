@@ -25,7 +25,7 @@ namespace ssp21
         return (max_link_payload_size > SessionData::min_size_bytes) ? max_link_payload_size - SessionData::min_size_bytes : 0;
     }
 
-    bool Session::initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const SessionKeys& keys, uint16_t nonce_start)
+    bool Session::initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const SessionKeys& keys)
     {
         if (!keys.valid()) return false;
 
@@ -33,8 +33,8 @@ namespace ssp21
 
         this->valid = true;
 
-        this->rx_nonce.set(nonce_start);
-        this->tx_nonce.set(nonce_start);
+        this->rx_nonce.set(0);
+        this->tx_nonce.set(0);
         this->algorithms = algorithms;
         this->session_start = session_start;
         this->keys.copy(keys);
