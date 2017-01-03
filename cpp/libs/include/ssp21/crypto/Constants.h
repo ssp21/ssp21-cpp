@@ -28,9 +28,11 @@ namespace ssp21
             // maximum length_ required buffer_ length_ across algorithm types
             const uint8_t max_primitive_buffer_length = x25519_key_length;
 
-            const uint32_t default_ttl_pad_ms = 10000;
 
+			// defaults for the Session
+            const uint32_t default_ttl_pad_ms = 10000;
             const uint16_t default_max_nonce = 32768;
+			const uint32_t default_max_session_time_ms = 60 * 60 * 1000; // 1 hour in milliseconds
 
         }
     }

@@ -28,14 +28,23 @@ namespace ssp21
         {
             Config() {}
 
-            // the TTL padding added to every message
+			Config(uint32_t ttl_pad_ms, uint16_t max_nonce, uint32_t max_session_time) : 
+				ttl_pad_ms(ttl_pad_ms), 
+				max_nonce(max_nonce),
+				max_session_time(max_session_time)
+			{}
+
+            // the TTL padding added to the current session time of every message
             uint32_t ttl_pad_ms = consts::crypto::default_ttl_pad_ms;
 
-            // maximum allowed nonce value for rx or tx
+            // maximum allowed nonce value for receiving or transmitting
             uint16_t max_nonce = consts::crypto::default_max_nonce;
+
+			// maximum allowed session time for receiving or transmitting
+			uint32_t max_session_time = consts::crypto::default_max_session_time_ms;
         };
 
-        explicit Session(const std::shared_ptr<IFrameWriter>& frame_writer, const Config& config = Config());
+        Session(const std::shared_ptr<IFrameWriter>& frame_writer, const Config& config = Config());
 
         bool initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const SessionKeys& keys);
 
@@ -57,22 +66,21 @@ namespace ssp21
 
     private:
 
+		bool valid = false;
+
+		const std::shared_ptr<IFrameWriter> frame_writer;
+		const Config config;
 
         /**
         * Given a maximum link layer payload, how big could the crypto payload be?
         */
         static uint32_t calc_max_crypto_payload_length(uint32_t max_link_payload_size);
 
-        SessionStatistics statistics;
-
-        const std::shared_ptr<IFrameWriter> frame_writer;
-        const Config config;
-
+		SessionStatistics statistics;
+        
         // buffers used as scratch space for encryption/decyption operations
         openpal::Buffer decrypt_scratch_buffer;
-        openpal::Buffer encrypt_scratch_buffer;
-
-        bool valid = false;
+        openpal::Buffer encrypt_scratch_buffer;        
 
         Nonce rx_nonce;
         Nonce tx_nonce;
