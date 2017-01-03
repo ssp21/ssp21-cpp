@@ -5,28 +5,17 @@
 #include "openpal/util/Uncopyable.h"
 
 #include <cstdint>
-#include <limits>
 
 namespace ssp21
 {
     class Nonce final : private openpal::Uncopyable
     {
 
-    public:
+    public:       
 
-        inline bool is_max_value() const
-        {
-            return value == std::numeric_limits<uint16_t>::max();
-        }
-
-        bool increment()
-        {
-            if (is_max_value()) return false;
-            else
-            {
-                ++value;
-                return true;
-            }
+        void increment()
+        {            
+            ++value;                         
         }
 
         void set(uint16_t new_value)

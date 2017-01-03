@@ -86,7 +86,7 @@ namespace ssp21
         if (message.metadata.nonce > config.max_nonce)
         {
             this->statistics.num_nonce_fail.increment();
-            ec = CryptoError::rx_nonce_maximum;
+            ec = CryptoError::nonce_config_max;
             return seq32_t::empty();
         }
 
@@ -123,9 +123,9 @@ namespace ssp21
             return seq32_t::empty();
         }
 
-        if (this->tx_nonce.is_max_value())
+        if (this->tx_nonce.get() == this->config.max_nonce)
         {
-            ec = CryptoError::invalid_tx_nonce;
+            ec = CryptoError::nonce_config_max;
             return seq32_t::empty();
         }
 

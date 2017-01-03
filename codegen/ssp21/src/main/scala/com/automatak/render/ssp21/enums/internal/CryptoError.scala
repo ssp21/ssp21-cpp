@@ -22,10 +22,9 @@ object CryptoError {
     EnumValue("no_valid_session", 5, "No validate session for authenticating user data"),
     EnumValue("expired_ttl", 6, "The TTL on a message is expired"),
     EnumValue("nonce_replay", 7, "The nonce on a received message has been replayed"),
-    EnumValue("rx_nonce_maximum", 8, "The nonce on a received message exceeded the configured maximum"),
-    EnumValue("invalid_tx_nonce", 9, "The tx nonce reached the maximum valid before the session was reinitialized"),
-    EnumValue("ttl_overflow", 10, "The TTL could not be set because the value would overflow the representation"),
-    EnumValue("empty_user_data", 11, "Received a session message with no user data")
+    EnumValue("nonce_config_max", 8, "A nonce has reached a configured maximum value or the intended operation would exceed the configured maximum"),
+    EnumValue("ttl_overflow", 9, "The TTL could not be set because the value would overflow the representation"),
+    EnumValue("empty_user_data", 10, "Received a session message with no user data")
   )
 
 }

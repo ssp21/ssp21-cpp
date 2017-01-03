@@ -43,14 +43,12 @@ enum class CryptoError : uint8_t
     expired_ttl = 0x6,
     /// The nonce on a received message has been replayed
     nonce_replay = 0x7,
-    /// The nonce on a received message exceeded the configured maximum
-    rx_nonce_maximum = 0x8,
-    /// The tx nonce reached the maximum valid before the session was reinitialized
-    invalid_tx_nonce = 0x9,
+    /// A nonce has reached a configured maximum value or the intended operation would exceed the configured maximum
+    nonce_config_max = 0x8,
     /// The TTL could not be set because the value would overflow the representation
-    ttl_overflow = 0xA,
+    ttl_overflow = 0x9,
     /// Received a session message with no user data
-    empty_user_data = 0xB
+    empty_user_data = 0xA
 };
 
 struct CryptoErrorSpec : private openpal::StaticOnly

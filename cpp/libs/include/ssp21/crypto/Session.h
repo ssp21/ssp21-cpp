@@ -52,7 +52,7 @@ namespace ssp21
 
         bool can_transmit() const
         {
-            return this->valid && !tx_nonce.is_max_value();
+			return this->valid;
         }
 
     private:

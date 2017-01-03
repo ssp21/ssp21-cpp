@@ -111,10 +111,13 @@ TEST_CASE(SUITE("can't format a message without a valid session"))
     REQUIRE(data.is_empty());
 }
 
-TEST_CASE(SUITE("can't format a with maximum nonce value"))
+TEST_CASE(SUITE("can't format a message with maximum nonce value already reached"))
 {
-    Session s(std::make_shared<MockFrameWriter>());
-    init(s, std::numeric_limits<uint16_t>::max());
+	Session::Config config;
+	config.max_nonce = 0;
+
+    Session s(std::make_shared<MockFrameWriter>(), config);
+    init(s);
     StaticBuffer<uint32_t, consts::link::max_config_payload_size> buffer;
     Hex hex("CAFE");
 
@@ -122,7 +125,7 @@ TEST_CASE(SUITE("can't format a with maximum nonce value"))
 
     std::error_code ec;
     const auto data = s.format_session_message(true, Timestamp(0), input, ec);
-    REQUIRE(ec == CryptoError::invalid_tx_nonce);
+    REQUIRE(ec == CryptoError::nonce_config_max);
     REQUIRE(input.length() == 2);
     REQUIRE(data.is_empty());
 }
