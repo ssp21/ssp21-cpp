@@ -39,10 +39,10 @@ const char* CryptoErrorSpec::to_string(CryptoError arg)
             return "expired_ttl";
         case(CryptoError::nonce_replay):
             return "nonce_replay";
-        case(CryptoError::nonce_config_max):
-            return "nonce_config_max";
-        case(CryptoError::ttl_overflow):
-            return "ttl_overflow";
+        case(CryptoError::max_nonce_exceeded):
+            return "max_nonce_exceeded";
+        case(CryptoError::max_session_time_exceeded):
+            return "max_session_time_exceeded";
         case(CryptoError::empty_user_data):
             return "empty_user_data";
         default:

@@ -43,10 +43,10 @@ enum class CryptoError : uint8_t
     expired_ttl = 0x6,
     /// The nonce on a received message has been replayed
     nonce_replay = 0x7,
-    /// A nonce has reached a configured maximum value or the intended operation would exceed the configured maximum
-    nonce_config_max = 0x8,
-    /// The TTL could not be set because the value would overflow the representation
-    ttl_overflow = 0x9,
+    /// A nonce has reached a configured maximum value
+    max_nonce_exceeded = 0x8,
+    /// The session time has reached a configured maximum value
+    max_session_time_exceeded = 0x9,
     /// Received a session message with no user data
     empty_user_data = 0xA
 };

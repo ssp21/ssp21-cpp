@@ -27,7 +27,7 @@ namespace ssp21
         Statistic num_reset;
         Statistic num_user_data_without_session;
         Statistic num_auth_fail;
-        Statistic num_ttl_expiration;
+        Statistic num_ttl_expiration;		
         Statistic num_nonce_fail;
         Statistic num_success;
     };
