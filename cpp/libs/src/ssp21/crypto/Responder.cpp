@@ -146,7 +146,7 @@ namespace ssp21
         * 2) Lower-layer must be ready to transmit
         * 3) transmission state must have some data to send
         */
-        if (ctx.session.can_transmit() && ctx.lower->get_is_tx_ready() && ctx.tx_state.is_ready_tx())
+        if (ctx.session.is_valid() && ctx.lower->get_is_tx_ready() && ctx.tx_state.is_ready_tx())
         {
             auto remainder = this->ctx.tx_state.get_remainder();
             const auto fir = this->ctx.tx_state.get_fir();

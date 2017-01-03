@@ -50,7 +50,7 @@ namespace ssp21
 
         seq32_t format_session_message(bool fir, const openpal::Timestamp& now, seq32_t& cleartext, std::error_code& ec);
 
-        bool can_transmit() const
+        bool is_valid() const
         {
             return this->valid;
         }
