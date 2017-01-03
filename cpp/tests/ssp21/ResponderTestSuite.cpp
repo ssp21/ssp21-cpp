@@ -300,6 +300,24 @@ TEST_CASE(SUITE("can transmit multiple messages if session is initialized"))
     }
 }
 
+TEST_CASE(SUITE("closes upper layer if nonce exceeds configured maximum"))
+{
+    Responder::Config config;
+    config.session.max_nonce = 0;
+
+    ResponderFixture fix(config);
+    fix.responder.on_open();
+    test_init_session_success(fix);
+
+    const auto payload = "CA FE";
+
+    Hex msg(payload);
+    REQUIRE(fix.responder.transmit(msg));
+    REQUIRE(fix.upper.is_empty());
+    REQUIRE_FALSE(fix.upper.get_is_open());
+
+}
+
 TEST_CASE(SUITE("defers transmission if lower layer is not tx_ready"))
 {
     ResponderFixture fix;
@@ -393,6 +411,8 @@ void test_init_session_success(ResponderFixture& fix)
 {
     test_begin_handshake_success(fix);
     test_auth_handshake_success(fix);
+
+    REQUIRE(fix.upper.get_is_open());
 }
 
 void test_handshake_error(ResponderFixture& fix, const std::string& request, HandshakeError expected_error, std::initializer_list<CryptoAction> actions)

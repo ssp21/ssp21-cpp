@@ -11,11 +11,11 @@ namespace ssp21
     class Nonce final : private openpal::Uncopyable
     {
 
-    public:       
+    public:
 
         void increment()
-        {            
-            ++value;                         
+        {
+            ++value;
         }
 
         void set(uint16_t new_value)

@@ -104,18 +104,7 @@ namespace ssp21
         return payload;
     }
 
-    seq32_t Session::format_session_message(bool fir, const openpal::Timestamp& now, seq32_t& cleartext, std::error_code& ec)
-    {
-        const auto ret = this->format_session_message_impl(fir, now, cleartext, ec);
-        if (ec)
-        {
-            // any error invalidates the tx direction of the session
-            this->valid = false;
-        }
-        return ret;
-    }
-
-    seq32_t Session::format_session_message_impl(bool fir, const openpal::Timestamp& now, seq32_t& user_data, std::error_code& ec)
+    seq32_t Session::format_session_message(bool fir, const openpal::Timestamp& now, seq32_t& user_data, std::error_code& ec)
     {
         if (!this->valid)
         {

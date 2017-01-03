@@ -157,6 +157,11 @@ namespace ssp21
             if (err)
             {
                 FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "Error formatting session message: %s", err.message().c_str());
+
+                // if any error occurs with transmission, we reset the session and notify the upper layer
+                this->ctx.session.reset();
+                this->ctx.upper->on_close();
+
                 return;
             }
 

@@ -50,7 +50,7 @@ namespace ssp21
 
     public:
 
-        ResponderFixture(uint16_t max_message_size = consts::link::max_config_payload_size, const Responder::Config& config = Responder::Config()) :
+        ResponderFixture(const Responder::Config& config = Responder::Config(), uint16_t max_message_size = consts::link::max_config_payload_size) :
             keys(BufferType::x25519_key),
             log("responder"),
             exe(openpal::MockExecutor::Create()),

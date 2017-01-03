@@ -52,12 +52,11 @@ namespace ssp21
 
         bool can_transmit() const
         {
-			return this->valid;
+            return this->valid;
         }
 
     private:
 
-        seq32_t format_session_message_impl(bool fir, const openpal::Timestamp& now, seq32_t& cleartext, std::error_code& ec);
 
         /**
         * Given a maximum link layer payload, how big could the crypto payload be?

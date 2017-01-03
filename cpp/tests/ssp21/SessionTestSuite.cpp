@@ -71,8 +71,8 @@ TEST_CASE(SUITE("rejects initial nonce of zero with nonce replay error"))
 
 TEST_CASE(SUITE("rejects nonce of 1 when initialized with maximum nonce of zero"))
 {
-	Session::Config config;
-	config.max_nonce = 0;
+    Session::Config config;
+    config.max_nonce = 0;
 
     test_validation_failure(config, Timestamp(0), 1, 0, 0, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::nonce_config_max);
 }
@@ -116,8 +116,8 @@ TEST_CASE(SUITE("can't format a message without a valid session"))
 
 TEST_CASE(SUITE("can't format a message with maximum nonce value already reached"))
 {
-	Session::Config config;
-	config.max_nonce = 0;
+    Session::Config config;
+    config.max_nonce = 0;
 
     Session s(std::make_shared<MockFrameWriter>(), config);
     init(s);
