@@ -62,6 +62,14 @@ TEST_CASE(SUITE("rejects empty user data"))
     test_validation_failure(Session::Config(), Timestamp(0), 1, 0, 0, "", test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::empty_user_data);
 }
 
+TEST_CASE(SUITE("rejects data if max session time exceeded"))
+{
+	Session::Config config;
+	config.max_session_time = 10000;
+
+	test_validation_failure(config, Timestamp(0), 1, config.max_session_time, config.max_session_time + 1, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::max_session_time_exceeded);
+}
+
 //// ---- validation nonce tests ----
 
 TEST_CASE(SUITE("rejects initial nonce of zero with nonce replay error"))
