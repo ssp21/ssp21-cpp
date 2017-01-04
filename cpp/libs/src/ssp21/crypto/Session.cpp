@@ -55,7 +55,7 @@ namespace ssp21
             this->statistics.num_user_data_without_session.increment();
             ec = CryptoError::no_valid_session;
             return seq32_t::empty();
-        }		
+        }
 
         const auto payload = this->algorithms.mode->read(this->keys.rx_key, message, this->decrypt_scratch_buffer.as_wslice(), ec);
 
@@ -74,11 +74,11 @@ namespace ssp21
 
         const auto current_session_time = now.milliseconds - this->session_start.milliseconds;
 
-		if (current_session_time > this->config.max_session_time)
-		{
-			ec = CryptoError::max_session_time_exceeded;
-			return seq32_t::empty();
-		}
+        if (current_session_time > this->config.max_session_time)
+        {
+            ec = CryptoError::max_session_time_exceeded;
+            return seq32_t::empty();
+        }
 
         // the message is authentic, check the TTL
         if (current_session_time > message.metadata.valid_until_ms)
@@ -92,7 +92,7 @@ namespace ssp21
         if (message.metadata.nonce > config.max_nonce)
         {
             this->statistics.num_nonce_fail.increment();
-			ec = CryptoError::max_nonce_exceeded;
+            ec = CryptoError::max_nonce_exceeded;
             return seq32_t::empty();
         }
 
@@ -116,7 +116,7 @@ namespace ssp21
         {
             ec = CryptoError::no_valid_session;
             return seq32_t::empty();
-        }		
+        }
 
         if (this->tx_nonce.get() >= this->config.max_nonce)
         {
@@ -132,7 +132,7 @@ namespace ssp21
         }
 
         const auto session_time = static_cast<uint32_t>(session_time_long); // safe downcast since session_time_long <= the uin32_t above
-        const auto remainder = config.max_session_time - session_time;	    // safe substract since session_time > config.max_session_time  
+        const auto remainder = config.max_session_time - session_time;	    // safe substract since session_time > config.max_session_time
         if (remainder < config.ttl_pad_ms)
         {
             ec = CryptoError::max_session_time_exceeded;

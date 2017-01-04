@@ -135,8 +135,8 @@ TEST_CASE(SUITE("can't format a message with maximum nonce value already reached
 
 TEST_CASE(SUITE("can't format a message if the session time exceeds the configured time"))
 {
-	Session::Config config;
-	config.max_session_time = 60;
+    Session::Config config;
+    config.max_session_time = 60;
 
 
     Session s(std::make_shared<MockFrameWriter>(), config);
@@ -144,7 +144,7 @@ TEST_CASE(SUITE("can't format a message if the session time exceeds the configur
     StaticBuffer<uint32_t, consts::link::max_config_payload_size> buffer;
     Hex hex("CAFE");
 
-    auto input = hex.as_rslice();    
+    auto input = hex.as_rslice();
 
     std::error_code ec;
     const auto data = s.format_session_message(true, Timestamp(config.max_session_time + 1), input, ec);
@@ -155,8 +155,8 @@ TEST_CASE(SUITE("can't format a message if the session time exceeds the configur
 
 TEST_CASE(SUITE("can't format a maximum if adding the TTL exceed the maximum session time"))
 {
-	Session::Config config;
-	config.max_session_time = consts::crypto::default_ttl_pad_ms - 1;
+    Session::Config config;
+    config.max_session_time = consts::crypto::default_ttl_pad_ms - 1;
 
     Session s(std::make_shared<MockFrameWriter>(), config);
     init(s);
@@ -166,7 +166,7 @@ TEST_CASE(SUITE("can't format a maximum if adding the TTL exceed the maximum ses
     auto input = hex.as_rslice();
     SessionData msg;
 
-    std::error_code ec;    
+    std::error_code ec;
     const auto data = s.format_session_message(true, Timestamp(0), input, ec);
     REQUIRE(ec == CryptoError::max_session_time_exceeded);
     REQUIRE(input.length() == 2);
