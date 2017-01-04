@@ -45,6 +45,16 @@ case class StructFieldGenerator(sf: StructField) extends FieldGenerator with Pas
   def defaultValue: Option[String] = None
 }
 
+object U8FieldGenerator extends FieldGenerator with PassByValue {
+  override def includes = Set(Includes.cstdint, Includes.integerField, Includes.bigEndian)
+
+  override def cppType: String = "IntegerField<openpal::UInt8>"
+
+  override def paramType: String = "uint8_t"
+
+  def defaultValue: Option[String] = None
+}
+
 object U16FieldGenerator extends FieldGenerator with PassByValue {
   override def includes = Set(Includes.cstdint, Includes.integerField, Includes.bigEndian)
 

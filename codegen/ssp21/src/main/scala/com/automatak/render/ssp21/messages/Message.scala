@@ -30,6 +30,13 @@ case class BitfieldField(name: String, bf: Bitfield) extends  Field {
   def fixedSize: Option[Int] = Some(1)
 }
 
+sealed case class U8(name: String) extends Field {
+  def cpp = U8FieldGenerator
+
+  def minSizeBytes: Int = 1
+
+  def fixedSize: Option[Int] = Some(1)
+}
 
 sealed case class U16(name: String) extends Field {
   def cpp = U16FieldGenerator
