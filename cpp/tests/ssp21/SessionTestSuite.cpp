@@ -64,10 +64,15 @@ TEST_CASE(SUITE("rejects empty user data"))
 
 TEST_CASE(SUITE("rejects data if max session time exceeded"))
 {
-	Session::Config config;
-	config.max_session_time = 10000;
+    Session::Config config;
+    config.max_session_time = 10000;
 
-	test_validation_failure(config, Timestamp(0), 1, config.max_session_time, config.max_session_time + 1, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::max_session_time_exceeded);
+    test_validation_failure(config, Timestamp(0), 1, config.max_session_time, config.max_session_time + 1, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::max_session_time_exceeded);
+}
+
+TEST_CASE(SUITE("rejects data if clock rollback detected"))
+{
+    test_validation_failure(Session::Config(), Timestamp(1), 1, 1, 0, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::clock_rollback);
 }
 
 //// ---- validation nonce tests ----
@@ -161,7 +166,24 @@ TEST_CASE(SUITE("can't format a message if the session time exceeds the configur
     REQUIRE(data.is_empty());
 }
 
-TEST_CASE(SUITE("can't format a maximum if adding the TTL exceed the maximum session time"))
+TEST_CASE(SUITE("won't format a maximum if the clock has rolled back since initialization"))
+{
+    Session s(std::make_shared<MockFrameWriter>(), Session::Config());
+    init(s, Timestamp(1));
+    StaticBuffer<uint32_t, consts::link::max_config_payload_size> buffer;
+    Hex hex("CAFE");
+
+    auto input = hex.as_rslice();
+    SessionData msg;
+
+    std::error_code ec;
+    const auto data = s.format_session_message(true, Timestamp(0), input, ec);
+    REQUIRE(ec == CryptoError::clock_rollback);
+    REQUIRE(input.length() == 2);
+    REQUIRE(data.is_empty());
+}
+
+TEST_CASE(SUITE("won't format a maximum if adding the TTL would exceed the maximum session time"))
 {
     Session::Config config;
     config.max_session_time = consts::crypto::default_ttl_pad_ms - 1;
