@@ -39,26 +39,6 @@ TEST_CASE(SUITE("responds to malformed handshake begin with bad_message_format")
     test_handshake_error(fix, "00", HandshakeError::bad_message_format, {});
 }
 
-TEST_CASE(SUITE("responds to m2m certificate mode with unsupported_certificate_mode error"))
-{
-    ResponderFixture fix;
-    fix.responder.on_open();
-
-    const auto request = hex::request_handshake_begin(
-                             0,
-                             NonceMode::increment_last_rx,
-                             DHMode::x25519,
-                             HandshakeHash::sha256,
-                             HandshakeKDF::hkdf_sha256,
-                             HandshakeMAC::hmac_sha256,
-                             SessionMode::hmac_sha256_16,
-                             CertificateMode::m2m,
-                             hex::repeat(0xFF, consts::crypto::x25519_key_length)
-                         );
-
-    test_handshake_error(fix, request, HandshakeError::unsupported_certificate_mode, {});
-}
-
 TEST_CASE(SUITE("responds to invalid key length with bad_message_format"))
 {
     ResponderFixture fix;
