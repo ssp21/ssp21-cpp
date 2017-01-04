@@ -131,6 +131,17 @@ TEST_CASE(SUITE("begin handshake can be repeated prior to auth handshake"))
 
 // ---------- rx tests for initialized session -----------
 
+TEST_CASE(SUITE("closing the responder closes the upper layer"))
+{
+    ResponderFixture fix;
+    fix.responder.on_open();
+
+    test_init_session_success(fix);
+    REQUIRE(fix.upper.get_is_open());
+    fix.responder.on_close();
+    REQUIRE_FALSE(fix.upper.get_is_open());
+}
+
 TEST_CASE(SUITE("auth fails if insufficient data for tag"))
 {
     ResponderFixture fix;
