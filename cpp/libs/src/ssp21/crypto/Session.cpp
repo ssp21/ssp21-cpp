@@ -72,6 +72,12 @@ namespace ssp21
             return seq32_t::empty();
         }
 
+		if (now.milliseconds < this->session_start.milliseconds)
+		{
+			ec = CryptoError::clock_rollback;
+			return seq32_t::empty();
+		}
+
         const auto current_session_time = now.milliseconds - this->session_start.milliseconds;
 
         if (current_session_time > this->config.max_session_time)
@@ -124,7 +130,14 @@ namespace ssp21
             return seq32_t::empty();
         }
 
+		if (now.milliseconds < this->session_start.milliseconds)
+		{
+			ec = CryptoError::clock_rollback;
+			return seq32_t::empty();
+		}
+
         const auto session_time_long = now.milliseconds - this->session_start.milliseconds;
+
         if (session_time_long > config.max_session_time)
         {
             ec = CryptoError::max_session_time_exceeded;

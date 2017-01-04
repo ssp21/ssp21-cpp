@@ -45,6 +45,8 @@ const char* CryptoErrorSpec::to_string(CryptoError arg)
             return "max_session_time_exceeded";
         case(CryptoError::empty_user_data):
             return "empty_user_data";
+        case(CryptoError::clock_rollback):
+            return "clock_rollback";
         default:
             return "undefined";
     }

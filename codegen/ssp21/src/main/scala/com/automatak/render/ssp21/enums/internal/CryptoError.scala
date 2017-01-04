@@ -24,7 +24,8 @@ object CryptoError {
     EnumValue("nonce_replay", 7, "The nonce on a received message has been replayed"),
     EnumValue("max_nonce_exceeded", 8, "A nonce has reached a configured maximum value"),
     EnumValue("max_session_time_exceeded", 9, "The session time has reached a configured maximum value"),
-    EnumValue("empty_user_data", 10, "Received a session message with no user data")
+    EnumValue("empty_user_data", 10, "Received a session message with no user data"),
+    EnumValue("clock_rollback", 11, "A rollback of the monotonic clock was detected")
   )
 
 }

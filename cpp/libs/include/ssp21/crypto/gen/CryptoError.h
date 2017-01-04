@@ -48,7 +48,9 @@ enum class CryptoError : uint8_t
     /// The session time has reached a configured maximum value
     max_session_time_exceeded = 0x9,
     /// Received a session message with no user data
-    empty_user_data = 0xA
+    empty_user_data = 0xA,
+    /// A rollback of the monotonic clock was detected
+    clock_rollback = 0xB
 };
 
 struct CryptoErrorSpec : private openpal::StaticOnly
