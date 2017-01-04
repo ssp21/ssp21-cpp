@@ -24,6 +24,8 @@ std::string validate(Session& session, uint16_t nonce, uint32_t ttl, int64_t now
 void test_validation_failure(const Session::Config& config, Timestamp session_init_time, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex, std::initializer_list<CryptoAction> actions, CryptoError error);
 std::string test_validation_success(const Session::Config& config, Timestamp session_init_time, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex);
 
+void test_format_failure(const Session::Config& config, int64_t session_init_time, const std::shared_ptr<IFrameWriter>& frame_writer, const Timestamp& now, const std::string& clear_text, const std::error_code& expected);
+
 const auto test_user_data = "CA FE";
 const auto test_auth_tag = repeat_hex(0xFF, consts::crypto::trunc16);
 
@@ -114,7 +116,6 @@ TEST_CASE(SUITE("rejects minimum ttl + 1"))
 TEST_CASE(SUITE("can't format a message without a valid session"))
 {
     Session s(std::make_shared<MockFrameWriter>());
-    StaticBuffer<uint32_t, consts::link::max_config_payload_size> buffer;
     Hex hex("CAFE");
 
     auto input = hex.as_rslice();
@@ -132,18 +133,7 @@ TEST_CASE(SUITE("can't format a message with maximum nonce value already reached
     Session::Config config;
     config.max_nonce = 0;
 
-    Session s(std::make_shared<MockFrameWriter>(), config);
-    init(s);
-    StaticBuffer<uint32_t, consts::link::max_config_payload_size> buffer;
-    Hex hex("CAFE");
-
-    auto input = hex.as_rslice();
-
-    std::error_code ec;
-    const auto data = s.format_session_message(true, Timestamp(0), input, ec);
-    REQUIRE(ec == CryptoError::max_nonce_exceeded);
-    REQUIRE(input.length() == 2);
-    REQUIRE(data.is_empty());
+    test_format_failure(config, 0, std::make_shared<MockFrameWriter>(), Timestamp(0), "CA FE", CryptoError::max_nonce_exceeded);
 }
 
 TEST_CASE(SUITE("can't format a message if the session time exceeds the configured time"))
@@ -151,36 +141,12 @@ TEST_CASE(SUITE("can't format a message if the session time exceeds the configur
     Session::Config config;
     config.max_session_time = 60;
 
-
-    Session s(std::make_shared<MockFrameWriter>(), config);
-    init(s);
-    StaticBuffer<uint32_t, consts::link::max_config_payload_size> buffer;
-    Hex hex("CAFE");
-
-    auto input = hex.as_rslice();
-
-    std::error_code ec;
-    const auto data = s.format_session_message(true, Timestamp(config.max_session_time + 1), input, ec);
-    REQUIRE(ec == CryptoError::max_session_time_exceeded);
-    REQUIRE(input.length() == 2);
-    REQUIRE(data.is_empty());
+    test_format_failure(config, 0, std::make_shared<MockFrameWriter>(), Timestamp(config.max_session_time + 1), "CA FE", CryptoError::max_session_time_exceeded);
 }
 
 TEST_CASE(SUITE("won't format a maximum if the clock has rolled back since initialization"))
 {
-    Session s(std::make_shared<MockFrameWriter>(), Session::Config());
-    init(s, Timestamp(1));
-    StaticBuffer<uint32_t, consts::link::max_config_payload_size> buffer;
-    Hex hex("CAFE");
-
-    auto input = hex.as_rslice();
-    SessionData msg;
-
-    std::error_code ec;
-    const auto data = s.format_session_message(true, Timestamp(0), input, ec);
-    REQUIRE(ec == CryptoError::clock_rollback);
-    REQUIRE(input.length() == 2);
-    REQUIRE(data.is_empty());
+    test_format_failure(Session::Config(), 1, std::make_shared<MockFrameWriter>(), Timestamp(0), "CA FE", CryptoError::clock_rollback);
 }
 
 TEST_CASE(SUITE("won't format a maximum if adding the TTL would exceed the maximum session time"))
@@ -188,19 +154,12 @@ TEST_CASE(SUITE("won't format a maximum if adding the TTL would exceed the maxim
     Session::Config config;
     config.max_session_time = consts::crypto::default_ttl_pad_ms - 1;
 
-    Session s(std::make_shared<MockFrameWriter>(), config);
-    init(s);
-    StaticBuffer<uint32_t, consts::link::max_config_payload_size> buffer;
-    Hex hex("CAFE");
+    test_format_failure(config, 0, std::make_shared<MockFrameWriter>(), Timestamp(0), "CA FE", CryptoError::max_session_time_exceeded);
+}
 
-    auto input = hex.as_rslice();
-    SessionData msg;
-
-    std::error_code ec;
-    const auto data = s.format_session_message(true, Timestamp(0), input, ec);
-    REQUIRE(ec == CryptoError::max_session_time_exceeded);
-    REQUIRE(input.length() == 2);
-    REQUIRE(data.is_empty());
+TEST_CASE(SUITE("forwards the formatting error if the session::write function can't write to the output buffer"))
+{
+    test_format_failure(Session::Config(), 0, std::make_shared<MockFrameWriter>(openpal::Logger::empty(), 0), Timestamp(0), "CA FE", CryptoError::bad_buffer_size);
 }
 
 TEST_CASE(SUITE("successfully formats and increments nonce"))
@@ -209,7 +168,6 @@ TEST_CASE(SUITE("successfully formats and increments nonce"))
 
     Session s(std::make_shared<MockFrameWriter>());
     init(s);
-    StaticBuffer<uint32_t, consts::link::max_config_payload_size> buffer;
     Hex hex("CAFE");
 
     std::error_code ec;
@@ -289,4 +247,20 @@ void test_validation_failure(const Session::Config& config, Timestamp session_in
 
     crypto->expect(actions);
 
+}
+
+void test_format_failure(const Session::Config& config, int64_t session_init_time, const std::shared_ptr<IFrameWriter>& frame_writer, const Timestamp& now, const std::string& clear_text, const std::error_code& expected)
+{
+    Session s(frame_writer, config);
+    init(s, Timestamp(session_init_time));
+
+    Hex hex(clear_text);
+    auto input = hex.as_rslice();
+    const auto start_length = input.length();
+
+    std::error_code ec;
+    const auto data = s.format_session_message(true, now, input, ec);
+    REQUIRE(ec == expected);
+    REQUIRE(input.length() == start_length);
+    REQUIRE(data.is_empty());
 }
