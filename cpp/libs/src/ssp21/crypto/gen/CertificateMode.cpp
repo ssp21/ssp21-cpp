@@ -27,8 +27,6 @@ CertificateMode CertificateModeSpec::from_type(uint8_t arg)
     {
         case(0x0):
             return CertificateMode::preshared_keys;
-        case(0x1):
-            return CertificateMode::m2m;
         default:
             return CertificateMode::undefined;
     }
@@ -39,8 +37,6 @@ const char* CertificateModeSpec::to_string(CertificateMode arg)
     {
         case(CertificateMode::preshared_keys):
             return "preshared_keys";
-        case(CertificateMode::m2m):
-            return "m2m";
         default:
             return "undefined";
     }

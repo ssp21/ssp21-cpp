@@ -315,7 +315,6 @@ TEST_CASE(SUITE("closes upper layer if nonce exceeds configured maximum"))
     REQUIRE(fix.responder.transmit(msg));
     REQUIRE(fix.upper.is_empty());
     REQUIRE_FALSE(fix.upper.get_is_open());
-
 }
 
 TEST_CASE(SUITE("defers transmission if lower layer is not tx_ready"))

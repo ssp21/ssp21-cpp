@@ -22,8 +22,7 @@ object CertificateMode {
 
 
   private val codes = List(
-    EnumValue("preshared_keys", 0, "both parties know each others public DH keys"),
-    EnumValue("m2m", 1, "machine-to-machine certificate format")
+    EnumValue("preshared_keys", 0, "both parties know each others public DH keys")
   )
 
 }
