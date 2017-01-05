@@ -93,21 +93,7 @@ namespace ssp21
 
         this->check_receive();
         this->check_transmit();
-    }
-
-    bool Responder::on_rx_ready_impl(const seq32_t& data)
-    {
-        if (this->can_receive())
-        {
-            this->parse(data);
-
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
+    }    
 
     void Responder::check_receive()
     {

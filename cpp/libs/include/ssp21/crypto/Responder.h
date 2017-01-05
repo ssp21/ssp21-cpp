@@ -60,12 +60,7 @@ namespace ssp21
 
         void check_receive();
 
-        void check_transmit();
-
-        inline bool can_receive() const
-        {
-            return this->lower->get_is_tx_ready() && !this->is_rx_ready;
-        }
+        void check_transmit();       
 
         void reply_with_handshake_error(HandshakeError err);
 
@@ -77,9 +72,7 @@ namespace ssp21
 
         virtual void on_close_impl() override;
 
-        virtual void on_tx_ready_impl() override;
-
-        virtual bool on_rx_ready_impl(const seq32_t& data) override;
+        virtual void on_tx_ready_impl() override;        
 
         // ---- implement CryptoLayer -----
 

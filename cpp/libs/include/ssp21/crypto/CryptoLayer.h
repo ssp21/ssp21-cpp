@@ -56,7 +56,18 @@ namespace ssp21
 
     protected:
 
-        bool parse(const seq32_t& data);
+		// ------ helper methods methods ------
+
+        bool process(const seq32_t& data);
+
+		inline bool can_receive() const
+		{
+			return this->lower->get_is_tx_ready() && !this->is_rx_ready;
+		}
+
+		// ----- final implementations from IUpperlayer ----
+
+		virtual bool on_rx_ready_impl(const seq32_t& data) override final;
 
         // ------ methods to be overriden by super class ------
 

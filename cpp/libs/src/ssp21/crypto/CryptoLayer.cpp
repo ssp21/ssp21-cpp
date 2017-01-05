@@ -57,7 +57,21 @@ namespace ssp21
         }
     }
 
-    bool CryptoLayer::parse(const seq32_t& message)
+	bool CryptoLayer::on_rx_ready_impl(const seq32_t& data)
+	{
+		if (this->can_receive())
+		{
+			this->process(data);
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+    bool CryptoLayer::process(const seq32_t& message)
     {
         const auto now = this->executor->get_time();
 
