@@ -88,6 +88,18 @@ namespace ssp21
         }
     }
 
+	void CryptoLayer::on_close_impl()
+	{
+		// let the super class reset
+		this->reset_state();
+
+		this->session.reset();
+		this->reassembler.reset();
+		this->upper->on_close();
+		this->tx_state.reset();
+		this->reset_lower_layer();
+	}
+
 	bool CryptoLayer::on_rx_ready_impl(const seq32_t& data)
 	{
 		if (this->can_receive())
@@ -102,17 +114,18 @@ namespace ssp21
 		}
 	}
 
-	void CryptoLayer::on_close_impl()
+	void CryptoLayer::on_tx_ready_impl()
 	{
-		// let the super class reset
-		this->reset_state();
+		if (this->tx_state.on_tx_complete())
+		{
+			// ready to transmit more data
+			this->is_tx_ready = true;
+			this->upper->on_tx_ready();
+		}
 
-		this->session.reset();
-		this->reassembler.reset();
-		this->upper->on_close();
-		this->tx_state.reset();
-		this->reset_lower_layer();		
-	}	
+		this->check_receive();
+		this->check_transmit();
+	}
 
     bool CryptoLayer::process(const seq32_t& message)
     {

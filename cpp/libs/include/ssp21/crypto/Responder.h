@@ -54,13 +54,8 @@ namespace ssp21
 
         void reply_with_handshake_error(HandshakeError err);
 
-        HandshakeError configure_feature_support(const RequestHandshakeBegin& msg);
-
-        // ---- implement IUpperLayer -----
-
-        virtual void on_open_impl() override {}        
-
-        virtual void on_tx_ready_impl() override;        
+        HandshakeError configure_feature_support(const RequestHandshakeBegin& msg);            
+        
 
         // ---- implement CryptoLayer -----
 

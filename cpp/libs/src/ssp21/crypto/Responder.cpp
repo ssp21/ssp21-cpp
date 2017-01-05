@@ -73,20 +73,7 @@ namespace ssp21
     void Responder::reset_state()
     {
         this->handshake_state = &HandshakeIdle::get();
-    }
-
-    void Responder::on_tx_ready_impl()
-    {
-        if (this->tx_state.on_tx_complete())
-        {
-            // ready to transmit more data
-            this->is_tx_ready = true;
-            this->upper->on_tx_ready();
-        }
-
-        this->check_receive();
-        this->check_transmit();
-    }             
+    }                
 
     bool Responder::supports(Function function) const
     {
