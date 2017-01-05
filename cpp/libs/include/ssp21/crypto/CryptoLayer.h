@@ -36,7 +36,7 @@ namespace ssp21
         };
 
         CryptoLayer(
-            EntityType type,
+            HandshakeMode type,
             const Config& context_config,
             const Session::Config& session_config,
             const openpal::Logger& logger,

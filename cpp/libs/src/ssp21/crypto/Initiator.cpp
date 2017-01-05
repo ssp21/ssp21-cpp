@@ -15,7 +15,7 @@ namespace ssp21
         std::unique_ptr<PublicKey> remote_static_public_key
     ) :
         CryptoLayer(
-            EntityType::Initiator,
+            HandshakeMode::Initiator,
             context_config,
             session_config,
             logger,

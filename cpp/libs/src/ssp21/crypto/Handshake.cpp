@@ -37,9 +37,9 @@ namespace ssp21
         return HandshakeAuthentication::auth_handshake_with_mac(
                    this->algorithms.handshake.session_auth_mac,
                    this->authentication_key,
-                   this->id,
+                   this->mode,
                    mac
-               );
+        );
     }
 
     void Handshake::calc_auth_handshake_reply_mac(HashOutput& output) const
@@ -47,7 +47,7 @@ namespace ssp21
         HandshakeAuthentication::calc_handshake_mac_with_macfunc(
             this->algorithms.handshake.session_auth_mac,
             this->authentication_key,
-            this->id,
+            this->mode,
             output
         );
     }
@@ -88,7 +88,7 @@ namespace ssp21
         SessionKeys keys;
 
         // keys are swapped for initiator vs responder
-        if (this->id == EntityType::Initiator)
+        if (this->mode == HandshakeMode::Initiator)
         {
             this->algorithms.handshake.kdf(this->chaining_key.as_seq(), {}, keys.tx_key, keys.rx_key);
         }

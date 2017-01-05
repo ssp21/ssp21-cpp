@@ -9,15 +9,15 @@
 
 namespace ssp21
 {
-    enum class EntityType : uint8_t
+    enum class HandshakeMode : uint8_t
     {
         Initiator,
         Responder
     };
 
-    typedef bool (*auth_handshake_t)(const SymmetricKey& key, EntityType id, const seq32_t& mac);
+    typedef bool (*auth_handshake_t)(const SymmetricKey& key, HandshakeMode mode, const seq32_t& mac);
 
-    typedef void (*calc_handshake_mac_t)(const SymmetricKey& key, EntityType id, HashOutput& output);
+    typedef void (*calc_handshake_mac_t)(const SymmetricKey& key, HandshakeMode mode, HashOutput& output);
 
 
 
@@ -26,20 +26,20 @@ namespace ssp21
 
     public:
 
-        static bool auth_handshake_with_mac(mac_func_t mac_func, const SymmetricKey& key, EntityType id, const seq8_t& mac_value);
+        static bool auth_handshake_with_mac(mac_func_t mac_func, const SymmetricKey& key, HandshakeMode mode, const seq8_t& mac_value);
 
-        static void calc_handshake_mac_with_macfunc(mac_func_t mac_func, const SymmetricKey& key, EntityType id, HashOutput& output);
+        static void calc_handshake_mac_with_macfunc(mac_func_t mac_func, const SymmetricKey& key, HandshakeMode mode, HashOutput& output);
 
     private:
 
-        inline static uint8_t get_calc_byte(EntityType id)
+        inline static uint8_t get_calc_byte(HandshakeMode mode)
         {
-            return (id == EntityType::Initiator) ? 0x01 : 0x02;
+            return (mode == HandshakeMode::Initiator) ? 0x01 : 0x02;
         }
 
-        inline static uint8_t get_auth_byte(EntityType id)
+        inline static uint8_t get_auth_byte(HandshakeMode mode)
         {
-            return (id == EntityType::Responder) ? 0x01 : 0x02;
+            return (mode == HandshakeMode::Responder) ? 0x01 : 0x02;
         }
 
 
