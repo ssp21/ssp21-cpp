@@ -69,17 +69,10 @@ namespace ssp21
             std::unique_ptr<PublicKey> remote_static_public_key
         );
 
-        void bind_layers(const std::shared_ptr<ILowerLayer>& lower, const std::shared_ptr<IUpperLayer>& upper)
+        void bind_layers(ILowerLayer& lower, IUpperLayer& upper)
         {
-            this->ctx.upper = upper;
-            this->ctx.lower = lower;
-        }
-
-        void release_layers()
-        {
-            this->ctx.upper.reset();
-            this->ctx.lower.reset();
-        }
+			this->ctx.bind_layers(lower, upper);            
+        }        
 
         ResponderStatistics get_statistics() const
         {

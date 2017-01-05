@@ -36,6 +36,14 @@ namespace ssp21
             std::unique_ptr<PublicKey> remote_static_public_key
         );
 
+		/// ------ helper methods ------
+
+		void bind_layers(ILowerLayer& lower, IUpperLayer& upper)
+		{
+			this->lower = &lower;
+			this->upper = &upper;			
+		}
+
         /// ------ member variables ------
 
         openpal::Logger logger;
@@ -50,8 +58,8 @@ namespace ssp21
         Reassembler reassembler;
         TxState tx_state;
 
-        std::shared_ptr<ILowerLayer> lower;
-        std::shared_ptr<IUpperLayer> upper;
+        ILowerLayer* lower = nullptr;
+		IUpperLayer* upper = nullptr;
     };
 }
 

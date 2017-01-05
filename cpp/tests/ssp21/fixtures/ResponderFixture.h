@@ -66,8 +66,8 @@ namespace ssp21
                 exe,
                 std::move(keys.local_kp), std::move(keys.remote_static_key)
             ),
-            lower(std::make_shared<MockLowerLayer>(responder)),
-            upper(std::make_shared<MockUpperLayer>(responder))
+            lower(responder),
+            upper(responder)
         {
             MockCryptoBackend::instance.clear_actions();
 
@@ -76,7 +76,7 @@ namespace ssp21
 
         void set_tx_ready()
         {
-            lower->set_tx_ready(true);
+            lower.set_tx_ready(true);
             responder.on_tx_ready();
         }
 
@@ -94,8 +94,8 @@ namespace ssp21
         ssp21::MockLogHandler log;
         const std::shared_ptr<openpal::MockExecutor> exe;
         Responder responder;
-        const std::shared_ptr<MockLowerLayer> lower;
-        const std::shared_ptr<MockUpperLayer> upper;
+        MockLowerLayer lower;
+        MockUpperLayer upper;
 
     };
 
