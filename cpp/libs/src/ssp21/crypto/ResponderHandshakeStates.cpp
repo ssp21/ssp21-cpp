@@ -15,7 +15,7 @@ namespace ssp21
 
     Responder::IHandshakeState& HandshakeIdle::on_message(Responder& ctx, const seq32_t& msg_bytes, const RequestHandshakeBegin& msg)
     {
-        auto err = ctx.validate(msg);
+        auto err = ctx.configure_feature_support(msg);
 
         if (any(err))
         {

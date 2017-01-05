@@ -43,7 +43,7 @@ namespace ssp21
         }
     }
 
-    HandshakeError Responder::validate(const RequestHandshakeBegin& msg)
+    HandshakeError Responder::configure_feature_support(const RequestHandshakeBegin& msg)
     {
         if (msg.version != consts::crypto::protocol_version)
         {

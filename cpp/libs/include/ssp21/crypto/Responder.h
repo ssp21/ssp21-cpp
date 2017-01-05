@@ -66,7 +66,7 @@ namespace ssp21
 		
 		void reply_with_handshake_error(HandshakeError err);
 		
-		HandshakeError validate(const RequestHandshakeBegin& msg);
+		HandshakeError configure_feature_support(const RequestHandshakeBegin& msg);
 
         // ---- implement IUpperLayer -----
 
