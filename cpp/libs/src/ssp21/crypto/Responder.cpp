@@ -86,62 +86,7 @@ namespace ssp21
 
         this->check_receive();
         this->check_transmit();
-    }       
-
-    void Responder::check_transmit()
-    {
-        /**
-        * 1) The session must be able to transmit
-        * 2) Lower-layer must be ready to transmit
-        * 3) transmission state must have some data to send
-        */
-        if (this->session.is_valid() && this->lower->get_is_tx_ready() && this->tx_state.is_ready_tx())
-        {
-            auto remainder = this->tx_state.get_remainder();
-            const auto fir = this->tx_state.get_fir();
-            const auto now = this->executor->get_time();
-
-            std::error_code err;
-            const auto data = this->session.format_session_message(fir, now, remainder, err);
-            if (err)
-            {
-                FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error formatting session message: %s", err.message().c_str());
-
-                // if any error occurs with transmission, we reset the session and notify the upper layer
-                this->session.reset();
-                this->upper->on_close();
-
-                return;
-            }
-
-            this->tx_state.begin_transmit(remainder);
-
-            this->lower->transmit(data);
-        }
-    }
-
-    bool Responder::transmit(const seq32_t& data)
-    {
-        if (!this->get_is_open())
-        {
-            return false;
-        }
-
-        if (!this->upper->get_is_open())
-        {
-            return false;
-        }
-
-        // already transmitting on behalf on the upper layer
-        if (!tx_state.initialize(data))
-        {
-            return false;
-        }
-
-        this->check_transmit();
-
-        return true;
-    }   
+    }             
 
     bool Responder::supports(Function function) const
     {

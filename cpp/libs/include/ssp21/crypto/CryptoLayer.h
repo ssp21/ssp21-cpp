@@ -54,6 +54,12 @@ namespace ssp21
             this->upper = &upper;
         }
 
+		// ---- final implementations from ILowerLayer -----		
+
+		virtual void receive() override final;
+
+		virtual bool transmit(const seq32_t& data) override final;
+
     protected:
 
 		// ------ helper methods methods ------
@@ -67,15 +73,13 @@ namespace ssp21
 
 		void check_receive();
 
+		void check_transmit();
+
 		// ----- final implementations from IUpperlayer ----
 
 		virtual bool on_rx_ready_impl(const seq32_t& data) override final;
 
-		virtual void on_close_impl() override final;
-
-		// ---- final implementations from ILowerLayer -----		
-
-		virtual void receive() override final;
+		virtual void on_close_impl() override final;		
 
         // ------ methods to be overriden by super class ------
 

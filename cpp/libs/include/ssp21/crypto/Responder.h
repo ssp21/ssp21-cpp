@@ -46,17 +46,11 @@ namespace ssp21
         ResponderStatistics get_statistics() const
         {
             return ResponderStatistics(this->session.get_statistics());
-        }
-
-        // ---- implement ILowerLayer -----
-
-        virtual bool transmit(const seq32_t& data) override;        
+        }           
 
     private:
 
-        // ---- private helper methods -----        
-
-        void check_transmit();       
+        // ---- private helper methods -----                
 
         void reply_with_handshake_error(HandshakeError err);
 
