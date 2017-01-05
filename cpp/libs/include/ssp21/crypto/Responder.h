@@ -46,20 +46,20 @@ namespace ssp21
         ResponderStatistics get_statistics() const
         {
             return ResponderStatistics(this->session.get_statistics());
-        }           
+        }
 
     private:
 
-        // ---- private helper methods -----                
+        // ---- private helper methods -----
 
         void reply_with_handshake_error(HandshakeError err);
 
-        HandshakeError configure_feature_support(const RequestHandshakeBegin& msg);            
-        
+        HandshakeError configure_feature_support(const RequestHandshakeBegin& msg);
+
 
         // ---- implement CryptoLayer -----
 
-		virtual void reset_state() override;
+        virtual void reset_state() override;
 
         virtual bool supports(Function function) const override;
 
@@ -69,7 +69,7 @@ namespace ssp21
 
         virtual bool on_message(const RequestHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
 
-        virtual bool on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;		
+        virtual bool on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
 
         // ---- private members -----
 

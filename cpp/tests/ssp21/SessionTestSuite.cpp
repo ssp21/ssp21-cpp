@@ -181,7 +181,7 @@ TEST_CASE(SUITE("successfully formats and increments nonce"))
         const auto data = s.format_session_message(true, Timestamp(0), input, ec);
         REQUIRE_FALSE(ec);
         REQUIRE(input.is_empty());
-		REQUIRE(data.is_not_empty());
+        REQUIRE(data.is_not_empty());
         test->expect({ CryptoAction::hmac_sha256 });
     }
 

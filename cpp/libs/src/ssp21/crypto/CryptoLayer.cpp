@@ -30,36 +30,36 @@ namespace ssp21
         reassembler(context_config.max_reassembly_size)
     {}
 
-	void CryptoLayer::receive()
-	{
-		if (this->is_rx_ready && this->upper->on_rx_ready(this->reassembler.get_data()))
-		{
-			this->is_rx_ready = false;
-		}
-	}
+    void CryptoLayer::receive()
+    {
+        if (this->is_rx_ready && this->upper->on_rx_ready(this->reassembler.get_data()))
+        {
+            this->is_rx_ready = false;
+        }
+    }
 
-	bool CryptoLayer::transmit(const seq32_t& data)
-	{
-		if (!this->get_is_open())
-		{
-			return false;
-		}
+    bool CryptoLayer::transmit(const seq32_t& data)
+    {
+        if (!this->get_is_open())
+        {
+            return false;
+        }
 
-		if (!this->upper->get_is_open())
-		{
-			return false;
-		}
+        if (!this->upper->get_is_open())
+        {
+            return false;
+        }
 
-		// already transmitting on behalf on the upper layer
-		if (!tx_state.initialize(data))
-		{
-			return false;
-		}
+        // already transmitting on behalf on the upper layer
+        if (!tx_state.initialize(data))
+        {
+            return false;
+        }
 
-		this->check_transmit();
+        this->check_transmit();
 
-		return true;
-	}
+        return true;
+    }
 
     template <class MsgType>
     bool CryptoLayer::handle_message(const seq32_t& message, const openpal::Timestamp& now)
@@ -88,44 +88,44 @@ namespace ssp21
         }
     }
 
-	void CryptoLayer::on_close_impl()
-	{
-		// let the super class reset
-		this->reset_state();
+    void CryptoLayer::on_close_impl()
+    {
+        // let the super class reset
+        this->reset_state();
 
-		this->session.reset();
-		this->reassembler.reset();
-		this->upper->on_close();
-		this->tx_state.reset();
-		this->reset_lower_layer();
-	}
+        this->session.reset();
+        this->reassembler.reset();
+        this->upper->on_close();
+        this->tx_state.reset();
+        this->reset_lower_layer();
+    }
 
-	bool CryptoLayer::on_rx_ready_impl(const seq32_t& data)
-	{
-		if (this->can_receive())
-		{
-			this->process(data);
+    bool CryptoLayer::on_rx_ready_impl(const seq32_t& data)
+    {
+        if (this->can_receive())
+        {
+            this->process(data);
 
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
-	void CryptoLayer::on_tx_ready_impl()
-	{
-		if (this->tx_state.on_tx_complete())
-		{
-			// ready to transmit more data
-			this->is_tx_ready = true;
-			this->upper->on_tx_ready();
-		}
+    void CryptoLayer::on_tx_ready_impl()
+    {
+        if (this->tx_state.on_tx_complete())
+        {
+            // ready to transmit more data
+            this->is_tx_ready = true;
+            this->upper->on_tx_ready();
+        }
 
-		this->check_receive();
-		this->check_transmit();
-	}
+        this->check_receive();
+        this->check_transmit();
+    }
 
     bool CryptoLayer::process(const seq32_t& message)
     {
@@ -165,45 +165,45 @@ namespace ssp21
         }
     }
 
-	void CryptoLayer::check_receive()
-	{
-		if (this->can_receive())
-		{
-			this->lower->receive();
-		}
-	}
+    void CryptoLayer::check_receive()
+    {
+        if (this->can_receive())
+        {
+            this->lower->receive();
+        }
+    }
 
-	void CryptoLayer::check_transmit()
-	{
-		/**
-		* 1) The session must be able to transmit
-		* 2) Lower-layer must be ready to transmit
-		* 3) transmission state must have some data to send
-		*/
-		if (this->session.is_valid() && this->lower->get_is_tx_ready() && this->tx_state.is_ready_tx())
-		{
-			auto remainder = this->tx_state.get_remainder();
-			const auto fir = this->tx_state.get_fir();
-			const auto now = this->executor->get_time();
+    void CryptoLayer::check_transmit()
+    {
+        /**
+        * 1) The session must be able to transmit
+        * 2) Lower-layer must be ready to transmit
+        * 3) transmission state must have some data to send
+        */
+        if (this->session.is_valid() && this->lower->get_is_tx_ready() && this->tx_state.is_ready_tx())
+        {
+            auto remainder = this->tx_state.get_remainder();
+            const auto fir = this->tx_state.get_fir();
+            const auto now = this->executor->get_time();
 
-			std::error_code err;
-			const auto data = this->session.format_session_message(fir, now, remainder, err);
-			if (err)
-			{
-				FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error formatting session message: %s", err.message().c_str());
+            std::error_code err;
+            const auto data = this->session.format_session_message(fir, now, remainder, err);
+            if (err)
+            {
+                FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error formatting session message: %s", err.message().c_str());
 
-				// if any error occurs with transmission, we reset the session and notify the upper layer
-				this->session.reset();
-				this->upper->on_close();
+                // if any error occurs with transmission, we reset the session and notify the upper layer
+                this->session.reset();
+                this->upper->on_close();
 
-				return;
-			}
+                return;
+            }
 
-			this->tx_state.begin_transmit(remainder);
+            this->tx_state.begin_transmit(remainder);
 
-			this->lower->transmit(data);
-		}
-	}
+            this->lower->transmit(data);
+        }
+    }
 
 
 }

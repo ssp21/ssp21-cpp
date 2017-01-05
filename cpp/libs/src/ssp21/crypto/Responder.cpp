@@ -73,7 +73,7 @@ namespace ssp21
     void Responder::reset_state()
     {
         this->handshake_state = &HandshakeIdle::get();
-    }                
+    }
 
     bool Responder::supports(Function function) const
     {

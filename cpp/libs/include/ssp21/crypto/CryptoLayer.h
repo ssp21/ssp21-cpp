@@ -54,36 +54,36 @@ namespace ssp21
             this->upper = &upper;
         }
 
-		// ---- final implementations from ILowerLayer -----		
+        // ---- final implementations from ILowerLayer -----
 
-		virtual void receive() override final;
+        virtual void receive() override final;
 
-		virtual bool transmit(const seq32_t& data) override final;
+        virtual bool transmit(const seq32_t& data) override final;
 
     protected:
 
-		// ------ helper methods methods ------
+        // ------ helper methods methods ------
 
         bool process(const seq32_t& data);
 
-		inline bool can_receive() const
-		{
-			return this->lower->get_is_tx_ready() && !this->is_rx_ready;
-		}
+        inline bool can_receive() const
+        {
+            return this->lower->get_is_tx_ready() && !this->is_rx_ready;
+        }
 
-		void check_receive();
+        void check_receive();
 
-		void check_transmit();
+        void check_transmit();
 
-		// ----- final implementations from IUpperlayer ----
+        // ----- final implementations from IUpperlayer ----
 
-		virtual void on_open_impl() override final {}
+        virtual void on_open_impl() override final {}
 
-		virtual void on_close_impl() override final;
+        virtual void on_close_impl() override final;
 
-		virtual bool on_rx_ready_impl(const seq32_t& data) override final;
+        virtual bool on_rx_ready_impl(const seq32_t& data) override final;
 
-		virtual void on_tx_ready_impl() override final;		
+        virtual void on_tx_ready_impl() override final;
 
         // ------ methods to be overriden by super class ------
 
@@ -118,7 +118,7 @@ namespace ssp21
             return false;
         }
 
-		virtual void reset_state() = 0;
+        virtual void reset_state() = 0;
 
         /// ------ member variables ------
 
