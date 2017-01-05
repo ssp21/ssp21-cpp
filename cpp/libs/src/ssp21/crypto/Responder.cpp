@@ -29,9 +29,9 @@ namespace ssp21
         remote_static_public_key(std::move(remote_static_public_key)),
         logger(logger),
         executor(executor),
-        handshake(EntityId::Responder),
+        handshake(EntityType::Responder),
         session(frame_writer, config.session),
-        reassembler(config.max_reassembly_size)        
+        reassembler(config.max_reassembly_size)
     {
 
     }
@@ -78,7 +78,7 @@ namespace ssp21
                          std::unique_ptr<KeyPair> local_static_key_pair,
                          std::unique_ptr<PublicKey> remote_static_public_key,
                          const openpal::Logger& logger,
-                         const std::shared_ptr<openpal::IExecutor>& executor                         
+                         const std::shared_ptr<openpal::IExecutor>& executor
                         ) :
         ctx(config,
             std::move(frame_writer),

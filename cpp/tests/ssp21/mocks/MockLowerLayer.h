@@ -16,11 +16,11 @@ namespace ssp21
     {
 
         typedef openpal::Buffer message_t;
-		
+
     public:
 
-		MockLowerLayer(IUpperLayer& upper) : upper(&upper)
-		{}
+        MockLowerLayer(IUpperLayer& upper) : upper(&upper)
+        {}
 
         void set_tx_ready(bool value)
         {

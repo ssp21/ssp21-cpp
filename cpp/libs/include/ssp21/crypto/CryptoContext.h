@@ -1,0 +1,57 @@
+
+#ifndef SSP21_CRYPTO_CONTEXT_H
+#define SSP21_CRYPTO_CONTEXT_H
+
+#include "ssp21/crypto/Session.h"
+#include "ssp21/crypto/Handshake.h"
+#include "ssp21/crypto/Reassembler.h"
+#include "ssp21/crypto/TxState.h"
+
+#include "ssp21/LayerInterfaces.h"
+
+#include "openpal/executor/IExecutor.h"
+
+namespace ssp21
+{
+    /**
+    * Machinery shared by both the responder and the initiator
+    */
+    struct CryptoContext
+    {
+        struct Config
+        {
+            /// The maximum size of a reassembled message
+            uint16_t max_reassembly_size = consts::link::max_config_payload_size;
+        };
+
+        CryptoContext(
+            EntityType type,
+            const openpal::Logger& logger,
+            const std::shared_ptr<IFrameWriter>& frame_writer,
+            const std::shared_ptr<openpal::IExecutor>& executor,
+            const Session::Config& session_config,
+            const Config& context_config,
+            std::unique_ptr<KeyPair> local_static_key_pair,
+            std::unique_ptr<PublicKey> remote_static_public_key
+        );
+
+        /// ------ member variables ------
+
+        openpal::Logger logger;
+        const std::shared_ptr<IFrameWriter> frame_writer;
+        const std::shared_ptr<openpal::IExecutor> executor;
+
+        std::unique_ptr<KeyPair> local_static_key_pair;
+        std::unique_ptr<PublicKey> remote_static_public_key;
+
+        Handshake handshake;
+        Session session;
+        Reassembler reassembler;
+        TxState tx_state;
+
+        std::shared_ptr<ILowerLayer> lower;
+        std::shared_ptr<IUpperLayer> upper;
+    };
+}
+
+#endif

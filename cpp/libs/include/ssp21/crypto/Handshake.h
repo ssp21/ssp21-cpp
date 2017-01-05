@@ -26,7 +26,7 @@ namespace ssp21
     {
     public:
 
-        explicit Handshake(EntityId id) : id(id)
+        explicit Handshake(EntityType id) : id(id)
         {}
 
         HandshakeError set_algorithms(const CryptoSpec& spec);
@@ -60,7 +60,7 @@ namespace ssp21
     private:
 
         /// configures the handshake for initiator or responder mode
-        EntityId id;
+        EntityType id;
 
         /// specific algorithms used to perform steps
         Algorithms algorithms;

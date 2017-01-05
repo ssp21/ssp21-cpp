@@ -88,7 +88,7 @@ namespace ssp21
         SessionKeys keys;
 
         // keys are swapped for initiator vs responder
-        if (this->id == EntityId::Initiator)
+        if (this->id == EntityType::Initiator)
         {
             this->algorithms.handshake.kdf(this->chaining_key.as_seq(), {}, keys.tx_key, keys.rx_key);
         }

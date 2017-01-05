@@ -32,7 +32,8 @@
 namespace ssp21
 {
     /**
-    	WIP - this class will implement the stateful part of the responder.
+    	Responder implementation. Is an upper and lower layer. Dispatches messages
+    	to itself via private IMessageHandler.
     */
     class Responder final : public IUpperLayer, public ILowerLayer, private IMessageHandler
     {
@@ -56,10 +57,10 @@ namespace ssp21
                 std::unique_ptr<KeyPair> local_static_key_pair,
                 std::unique_ptr<PublicKey> remote_static_public_key,
                 const openpal::Logger& logger,
-                const std::shared_ptr<openpal::IExecutor>& executor                
+                const std::shared_ptr<openpal::IExecutor>& executor
             );
 
-            void reply_with_handshake_error(HandshakeError err);            
+            void reply_with_handshake_error(HandshakeError err);
 
             HandshakeError validate(const RequestHandshakeBegin& msg);
 
@@ -79,7 +80,7 @@ namespace ssp21
             TxState tx_state;
 
             std::shared_ptr<ILowerLayer> lower;
-			std::shared_ptr<IUpperLayer> upper;            
+            std::shared_ptr<IUpperLayer> upper;
         };
 
         struct IHandshakeState
@@ -97,15 +98,15 @@ namespace ssp21
 
         void bind_layers(const std::shared_ptr<ILowerLayer>& lower, const std::shared_ptr<IUpperLayer>& upper)
         {
-			this->ctx.upper = upper;
-			this->ctx.lower = lower;
+            this->ctx.upper = upper;
+            this->ctx.lower = lower;
         }
 
-		void release_layers()
-		{
-			this->ctx.upper.reset();
-			this->ctx.lower.reset();
-		}
+        void release_layers()
+        {
+            this->ctx.upper.reset();
+            this->ctx.lower.reset();
+        }
 
         ResponderStatistics get_statistics() const
         {

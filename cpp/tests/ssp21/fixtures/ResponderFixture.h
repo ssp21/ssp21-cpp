@@ -54,13 +54,13 @@ namespace ssp21
             keys(BufferType::x25519_key),
             log("responder"),
             exe(openpal::MockExecutor::Create()),
-			responder(config, get_frame_writer(log.logger, max_message_size), std::move(keys.local_kp), std::move(keys.remote_static_key), log.logger, exe),
-            lower(std::make_shared<MockLowerLayer>(responder)),            
+            responder(config, get_frame_writer(log.logger, max_message_size), std::move(keys.local_kp), std::move(keys.remote_static_key), log.logger, exe),
+            lower(std::make_shared<MockLowerLayer>(responder)),
             upper(std::make_shared<MockUpperLayer>(responder))
         {
             MockCryptoBackend::instance.clear_actions();
 
-			this->responder.bind_layers(lower, upper);                        
+            this->responder.bind_layers(lower, upper);
         }
 
         void set_tx_ready()
@@ -82,10 +82,10 @@ namespace ssp21
 
         ssp21::MockLogHandler log;
         const std::shared_ptr<openpal::MockExecutor> exe;
-		Responder responder;
+        Responder responder;
         const std::shared_ptr<MockLowerLayer> lower;
-		const std::shared_ptr<MockUpperLayer> upper;        
-        
+        const std::shared_ptr<MockUpperLayer> upper;
+
     };
 
 }
