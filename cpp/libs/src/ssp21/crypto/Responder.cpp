@@ -111,35 +111,6 @@ namespace ssp21
     {
         this->handshake_state = &this->handshake_state->on_message(*this, raw_data, msg);
         return true;
-    }
-
-    bool Responder::on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
-    {
-        std::error_code ec;
-        const auto payload = this->session.validate_message(msg, now, ec);
-
-        if (ec)
-        {
-            FORMAT_LOG_BLOCK(this->logger, levels::warn, "validation error: %s", ec.message().c_str());
-            return false;
-        }
-
-        // process the message using the reassembler
-        const auto result = this->reassembler.process(msg.metadata.flags.fir, msg.metadata.flags.fin, msg.metadata.nonce, payload);
-
-        switch (result)
-        {
-        case(ReassemblyResult::partial):
-            return true; // do nothing
-
-        case(ReassemblyResult::complete):
-            this->is_rx_ready = !this->upper->on_rx_ready(this->reassembler.get_data());
-            return true;
-
-        default: // error
-            FORMAT_LOG_BLOCK(this->logger, levels::warn, "reassembly error: %s", ReassemblyResultSpec::to_string(result));
-            return false;
-        }
-    }
+    }    
 
 }
