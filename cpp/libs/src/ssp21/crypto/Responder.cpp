@@ -30,7 +30,7 @@ namespace ssp21
             std::move(local_static_key_pair),
             std::move(remote_static_public_key)
         ),
-		handshake_state(&HandshakeIdle::get())
+        handshake_state(&HandshakeIdle::get())
     {}
 
     void Responder::reply_with_handshake_error(HandshakeError err)
@@ -88,7 +88,7 @@ namespace ssp21
         {
             // ready to transmit more data
             this->is_tx_ready = true;
-			this->upper->on_tx_ready();
+            this->upper->on_tx_ready();
         }
 
         this->check_receive();
@@ -113,7 +113,7 @@ namespace ssp21
     {
         if (this->can_receive())
         {
-			this->lower->receive();
+            this->lower->receive();
         }
     }
 
@@ -143,9 +143,9 @@ namespace ssp21
                 return;
             }
 
-			this->tx_state.begin_transmit(remainder);
+            this->tx_state.begin_transmit(remainder);
 
-			this->lower->transmit(data);
+            this->lower->transmit(data);
         }
     }
 
@@ -178,7 +178,7 @@ namespace ssp21
         {
             this->is_rx_ready = false;
         }
-    }   
+    }
 
     bool Responder::supports(Function function) const
     {

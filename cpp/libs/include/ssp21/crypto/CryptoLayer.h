@@ -27,7 +27,7 @@ namespace ssp21
     class CryptoLayer : public IUpperLayer, public ILowerLayer
     {
 
-	public:
+    public:
 
         struct Config
         {
@@ -35,7 +35,7 @@ namespace ssp21
             uint16_t max_reassembly_size = consts::link::max_config_payload_size;
         };
 
-		CryptoLayer(
+        CryptoLayer(
             EntityType type,
             const Config& context_config,
             const Session::Config& session_config,
@@ -46,32 +46,50 @@ namespace ssp21
             std::unique_ptr<PublicKey> remote_static_public_key
         );
 
-		/// ------ helper methods ------
+        /// ------ helper methods ------
 
-		void bind_layers(ILowerLayer& lower, IUpperLayer& upper)
-		{
-			this->lower = &lower;
-			this->upper = &upper;			
-		}
+        void bind_layers(ILowerLayer& lower, IUpperLayer& upper)
+        {
+            this->lower = &lower;
+            this->upper = &upper;
+        }
 
-	protected:
+    protected:
 
-		bool parse(const seq32_t& data);
+        bool parse(const seq32_t& data);
 
-		// ------ methods to be overriden by super class ------
+        // ------ methods to be overriden by super class ------
 
-		virtual bool supports(Function function) const = 0;
+        virtual bool supports(Function function) const = 0;
 
-		// Called when a parse error occurs for a particular message type		
-		virtual void on_parse_error(Function function, ParseError error) {}
+        // Called when a parse error occurs for a particular message type
+        virtual void on_parse_error(Function function, ParseError error) {}
 
-		// optional overrides for each type of message
-		virtual bool on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) { return false; }
-		virtual bool on_message(const RequestHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now) { return false; }		
-		virtual bool on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) { return false; }		
-		virtual bool on_message(const ReplyHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now) { return false; }		
-		virtual bool on_message(const ReplyHandshakeError& msg, const seq32_t& raw_data, const openpal::Timestamp& now) { return false; }		
-		virtual bool on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now) { return false; }
+        // optional overrides for each type of message
+        virtual bool on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+        {
+            return false;
+        }
+        virtual bool on_message(const RequestHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+        {
+            return false;
+        }
+        virtual bool on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+        {
+            return false;
+        }
+        virtual bool on_message(const ReplyHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+        {
+            return false;
+        }
+        virtual bool on_message(const ReplyHandshakeError& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+        {
+            return false;
+        }
+        virtual bool on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+        {
+            return false;
+        }
 
         /// ------ member variables ------
 
@@ -89,12 +107,12 @@ namespace ssp21
         TxState tx_state;
 
         ILowerLayer* lower = nullptr;
-		IUpperLayer* upper = nullptr;
+        IUpperLayer* upper = nullptr;
 
-	private:
+    private:
 
-		template <class MsgType>
-		bool handle_message(const seq32_t& message, const openpal::Timestamp& now);
+        template <class MsgType>
+        bool handle_message(const seq32_t& message, const openpal::Timestamp& now);
     };
 }
 

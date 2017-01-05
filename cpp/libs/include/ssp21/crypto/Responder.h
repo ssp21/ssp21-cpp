@@ -20,12 +20,12 @@ namespace ssp21
     */
     class Responder final : public CryptoLayer
     {
-		friend class HandshakeIdle;
-		friend class HandshakeWaitForAuth;
+        friend class HandshakeIdle;
+        friend class HandshakeWaitForAuth;
 
     public:
 
-        struct Config : public CryptoLayer::Config {};       
+        struct Config : public CryptoLayer::Config {};
 
         struct IHandshakeState
         {
@@ -42,7 +42,7 @@ namespace ssp21
             std::unique_ptr<KeyPair> local_static_key_pair,
             std::unique_ptr<PublicKey> remote_static_public_key
         );
-                
+
         ResponderStatistics get_statistics() const
         {
             return ResponderStatistics(this->session.get_statistics());
@@ -51,32 +51,35 @@ namespace ssp21
         // ---- implement ILowerLayer -----
 
         virtual bool transmit(const seq32_t& data) override;
-        
-		virtual void receive() override;
+
+        virtual void receive() override;
 
     private:
 
-		// ---- private helper methods -----
+        // ---- private helper methods -----
 
         void check_receive();
 
         void check_transmit();
-		
-		inline bool can_receive() const { return this->lower->get_is_tx_ready() && !this->is_rx_ready; }        
-		
-		void reply_with_handshake_error(HandshakeError err);
-		
-		HandshakeError configure_feature_support(const RequestHandshakeBegin& msg);
+
+        inline bool can_receive() const
+        {
+            return this->lower->get_is_tx_ready() && !this->is_rx_ready;
+        }
+
+        void reply_with_handshake_error(HandshakeError err);
+
+        HandshakeError configure_feature_support(const RequestHandshakeBegin& msg);
 
         // ---- implement IUpperLayer -----
 
         virtual void on_open_impl() override {}
-        
-		virtual void on_close_impl() override;
-        
-		virtual void on_tx_ready_impl() override;
-        
-		virtual bool on_rx_ready_impl(const seq32_t& data) override;
+
+        virtual void on_close_impl() override;
+
+        virtual void on_tx_ready_impl() override;
+
+        virtual bool on_rx_ready_impl(const seq32_t& data) override;
 
         // ---- implement CryptoLayer -----
 
@@ -90,7 +93,7 @@ namespace ssp21
 
         virtual bool on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
 
-        // ---- private members -----        
+        // ---- private members -----
 
         // state instance for the handshake
         IHandshakeState* handshake_state;
