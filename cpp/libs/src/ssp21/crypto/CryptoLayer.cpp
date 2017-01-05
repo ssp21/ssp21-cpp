@@ -71,6 +71,18 @@ namespace ssp21
 		}
 	}
 
+	void CryptoLayer::on_close_impl()
+	{
+		// let the super class reset
+		this->reset_state();
+
+		this->session.reset();
+		this->reassembler.reset();
+		this->upper->on_close();
+		this->tx_state.reset();
+		this->reset_lower_layer();		
+	}
+
     bool CryptoLayer::process(const seq32_t& message)
     {
         const auto now = this->executor->get_time();

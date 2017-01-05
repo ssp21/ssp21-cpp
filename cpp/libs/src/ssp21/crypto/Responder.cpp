@@ -70,16 +70,9 @@ namespace ssp21
         return handshake.set_algorithms(msg.spec);
     }
 
-    void Responder::on_close_impl()
+    void Responder::reset_state()
     {
         this->handshake_state = &HandshakeIdle::get();
-
-        this->session.reset();
-        this->reassembler.reset();
-        this->upper->on_close();
-        this->tx_state.reset();
-
-        this->reset_lower_layer();
     }
 
     void Responder::on_tx_ready_impl()

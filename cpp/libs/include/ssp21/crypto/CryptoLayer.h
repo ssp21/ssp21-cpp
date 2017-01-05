@@ -69,6 +69,8 @@ namespace ssp21
 
 		virtual bool on_rx_ready_impl(const seq32_t& data) override final;
 
+		virtual void on_close_impl() override final;
+
         // ------ methods to be overriden by super class ------
 
         virtual bool supports(Function function) const = 0;
@@ -101,6 +103,8 @@ namespace ssp21
         {
             return false;
         }
+
+		virtual void reset_state() = 0;
 
         /// ------ member variables ------
 

@@ -68,13 +68,13 @@ namespace ssp21
 
         // ---- implement IUpperLayer -----
 
-        virtual void on_open_impl() override {}
-
-        virtual void on_close_impl() override;
+        virtual void on_open_impl() override {}        
 
         virtual void on_tx_ready_impl() override;        
 
         // ---- implement CryptoLayer -----
+
+		virtual void reset_state() override;
 
         virtual bool supports(Function function) const override;
 
@@ -84,7 +84,7 @@ namespace ssp21
 
         virtual bool on_message(const RequestHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
 
-        virtual bool on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
+        virtual bool on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;		
 
         // ---- private members -----
 
