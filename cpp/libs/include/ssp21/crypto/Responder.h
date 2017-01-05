@@ -2,18 +2,7 @@
 #ifndef SSP21_RESPONDER_H
 #define SSP21_RESPONDER_H
 
-#include "ssp21/crypto/gen/RequestHandshakeBegin.h"
-#include "ssp21/crypto/gen/RequestHandshakeAuth.h"
-#include "ssp21/crypto/gen/SessionData.h"
-
-#include "ssp21/crypto/gen/Function.h"
-#include "ssp21/crypto/gen/HandshakeError.h"
-
-#include "ssp21/link/LinkConstants.h"
-
-#include "ssp21/crypto/IMessageHandler.h"
-#include "ssp21/crypto/LogMessagePrinter.h"
-#include "ssp21/crypto/CryptoContext.h"
+#include "ssp21/crypto/CryptoLayer.h"
 
 #include "ssp21/LogLevels.h"
 
@@ -29,34 +18,19 @@ namespace ssp21
     	Responder implementation. Is an upper and lower layer. Dispatches messages
     	to itself via private IMessageHandler.
     */
-    class Responder final : public IUpperLayer, public ILowerLayer, private IMessageHandler
+    class Responder final : public CryptoLayer
     {
+		friend class HandshakeIdle;
+		friend class HandshakeWaitForAuth;
 
     public:
 
-        struct Config : public CryptoContext::Config {};
-
-        struct Context : public CryptoContext
-        {
-            Context(
-                const Config& context_config,
-                const Session::Config& session_config,
-                const openpal::Logger& logger,
-                const std::shared_ptr<IFrameWriter>& frame_writer,
-                const std::shared_ptr<openpal::IExecutor>& executor,
-                std::unique_ptr<KeyPair> local_static_key_pair,
-                std::unique_ptr<PublicKey> remote_static_public_key
-            );
-
-            void reply_with_handshake_error(HandshakeError err);
-
-            HandshakeError validate(const RequestHandshakeBegin& msg);
-        };
+        struct Config : public CryptoLayer::Config {};       
 
         struct IHandshakeState
         {
-            virtual IHandshakeState& on_message(Context& ctx, const seq32_t& msg_bytes, const RequestHandshakeBegin& msg) = 0;
-            virtual IHandshakeState& on_message(Context& ctx, const seq32_t& msg_bytes, const RequestHandshakeAuth& msg) = 0;
+            virtual IHandshakeState& on_message(Responder& ctx, const seq32_t& msg_bytes, const RequestHandshakeBegin& msg) = 0;
+            virtual IHandshakeState& on_message(Responder& ctx, const seq32_t& msg_bytes, const RequestHandshakeAuth& msg) = 0;
         };
 
         Responder(
@@ -68,42 +42,43 @@ namespace ssp21
             std::unique_ptr<KeyPair> local_static_key_pair,
             std::unique_ptr<PublicKey> remote_static_public_key
         );
-
-        void bind_layers(ILowerLayer& lower, IUpperLayer& upper)
-        {
-			this->ctx.bind_layers(lower, upper);            
-        }        
-
+                
         ResponderStatistics get_statistics() const
         {
-            return ResponderStatistics(this->ctx.session.get_statistics());
+            return ResponderStatistics(this->session.get_statistics());
         }
 
         // ---- implement ILowerLayer -----
 
         virtual bool transmit(const seq32_t& data) override;
-        virtual void receive() override;
+        
+		virtual void receive() override;
 
     private:
 
+		// ---- private helper methods -----
+
         void check_receive();
+
         void check_transmit();
-
-        inline bool can_receive() const
-        {
-            return ctx.lower->get_is_tx_ready() && !this->is_rx_ready;
-        }
-
-        void process(const seq32_t& data);
+		
+		inline bool can_receive() const { return this->lower->get_is_tx_ready() && !this->is_rx_ready; }        
+		
+		void reply_with_handshake_error(HandshakeError err);
+		
+		HandshakeError validate(const RequestHandshakeBegin& msg);
 
         // ---- implement IUpperLayer -----
 
         virtual void on_open_impl() override {}
-        virtual void on_close_impl() override;
-        virtual void on_tx_ready_impl() override;
-        virtual bool on_rx_ready_impl(const seq32_t& data) override;
+        
+		virtual void on_close_impl() override;
+        
+		virtual void on_tx_ready_impl() override;
+        
+		virtual bool on_rx_ready_impl(const seq32_t& data) override;
 
-        // ---- implement IMessageHandler -----
+        // ---- implement CryptoLayer -----
 
         virtual bool supports(Function function) const override;
 
@@ -115,10 +90,7 @@ namespace ssp21
 
         virtual bool on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
 
-        // ---- private members -----
-
-        // All of the state in the responder except for the actual state instances
-        Context ctx;
+        // ---- private members -----        
 
         // state instance for the handshake
         IHandshakeState* handshake_state;
