@@ -16,25 +16,24 @@ using namespace openpal;
 namespace ssp21
 {
     Responder::Context::Context(
-        const Config& config,
-        const std::shared_ptr<IFrameWriter>& frame_writer,
-        std::unique_ptr<KeyPair> local_static_key_pair,
-        std::unique_ptr<PublicKey> remote_static_public_key,
+        const Config& context_config,
+        const Session::Config& session_config,
         const openpal::Logger& logger,
-        const std::shared_ptr<openpal::IExecutor>& executor) :
-
-        config(config),
-        frame_writer(frame_writer),
-        local_static_key_pair(std::move(local_static_key_pair)),
-        remote_static_public_key(std::move(remote_static_public_key)),
-        logger(logger),
-        executor(executor),
-        handshake(EntityType::Responder),
-        session(frame_writer, config.session),
-        reassembler(config.max_reassembly_size)
-    {
-
-    }
+        const std::shared_ptr<IFrameWriter>& frame_writer,
+        const std::shared_ptr<openpal::IExecutor>& executor,
+        std::unique_ptr<KeyPair> local_static_key_pair,
+        std::unique_ptr<PublicKey> remote_static_public_key) :
+        CryptoContext(
+            EntityType::Responder,
+            context_config,
+            session_config,
+            logger,
+            frame_writer,
+            executor,
+            std::move(local_static_key_pair),
+            std::move(remote_static_public_key)
+        )
+    {}
 
     void Responder::Context::reply_with_handshake_error(HandshakeError err)
     {
@@ -73,19 +72,24 @@ namespace ssp21
         return handshake.set_algorithms(msg.spec);
     }
 
-    Responder::Responder(const Config& config,
-                         const std::shared_ptr<IFrameWriter>& frame_writer,
-                         std::unique_ptr<KeyPair> local_static_key_pair,
-                         std::unique_ptr<PublicKey> remote_static_public_key,
-                         const openpal::Logger& logger,
-                         const std::shared_ptr<openpal::IExecutor>& executor
-                        ) :
-        ctx(config,
-            std::move(frame_writer),
-            std::move(local_static_key_pair),
-            std::move(remote_static_public_key),
+    Responder::Responder(
+        const Config& context_config,
+        const Session::Config& session_config,
+        const openpal::Logger& logger,
+        const std::shared_ptr<IFrameWriter>& frame_writer,
+        const std::shared_ptr<openpal::IExecutor>& executor,
+        std::unique_ptr<KeyPair> local_static_key_pair,
+        std::unique_ptr<PublicKey> remote_static_public_key
+    ) :
+        ctx(
+            context_config,
+            session_config,
             logger,
-            executor),
+            frame_writer,
+            executor,
+            std::move(local_static_key_pair),
+            std::move(remote_static_public_key)
+        ),
         handshake_state(&HandshakeIdle::get())
     {}
 

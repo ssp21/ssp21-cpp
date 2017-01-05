@@ -10,21 +10,15 @@
 #include "ssp21/crypto/gen/HandshakeError.h"
 
 #include "ssp21/link/LinkConstants.h"
-#include "ssp21/LayerInterfaces.h"
 
-#include "ssp21/crypto/Handshake.h"
-#include "ssp21/crypto/Session.h"
-#include "ssp21/crypto/Reassembler.h"
-#include "ssp21/crypto/TxState.h"
 #include "ssp21/crypto/IMessageHandler.h"
 #include "ssp21/crypto/LogMessagePrinter.h"
+#include "ssp21/crypto/CryptoContext.h"
 
-#include "ssp21/IFrameWriter.h"
 #include "ssp21/LogLevels.h"
 
-#include "openpal/logging/Logger.h"
 #include "openpal/container/Buffer.h"
-#include "openpal/executor/IExecutor.h"
+
 
 #include <memory>
 
@@ -40,47 +34,23 @@ namespace ssp21
 
     public:
 
-        struct Config
-        {
-            // configuration for the session
-            Session::Config session;
+        struct Config : public CryptoContext::Config {};
 
-            /// The maximum size of a reassembled message
-            uint16_t max_reassembly_size = consts::link::max_config_payload_size;
-        };
-
-        struct Context
+        struct Context : public CryptoContext
         {
             Context(
-                const Config& config,
-                const std::shared_ptr<IFrameWriter>& frame_writer,
-                std::unique_ptr<KeyPair> local_static_key_pair,
-                std::unique_ptr<PublicKey> remote_static_public_key,
+                const Config& context_config,
+                const Session::Config& session_config,
                 const openpal::Logger& logger,
-                const std::shared_ptr<openpal::IExecutor>& executor
+                const std::shared_ptr<IFrameWriter>& frame_writer,
+                const std::shared_ptr<openpal::IExecutor>& executor,
+                std::unique_ptr<KeyPair> local_static_key_pair,
+                std::unique_ptr<PublicKey> remote_static_public_key
             );
 
             void reply_with_handshake_error(HandshakeError err);
 
             HandshakeError validate(const RequestHandshakeBegin& msg);
-
-            Config config;
-            const std::shared_ptr<IFrameWriter> frame_writer;
-
-            std::unique_ptr<KeyPair> local_static_key_pair;
-            std::unique_ptr<PublicKey> remote_static_public_key;
-
-            openpal::Logger logger;
-
-            const std::shared_ptr<openpal::IExecutor> executor;
-
-            Handshake handshake;
-            Session session;
-            Reassembler reassembler;
-            TxState tx_state;
-
-            std::shared_ptr<ILowerLayer> lower;
-            std::shared_ptr<IUpperLayer> upper;
         };
 
         struct IHandshakeState
@@ -89,12 +59,15 @@ namespace ssp21
             virtual IHandshakeState& on_message(Context& ctx, const seq32_t& msg_bytes, const RequestHandshakeAuth& msg) = 0;
         };
 
-        Responder(const Config& config,
-                  const std::shared_ptr<IFrameWriter>& frame_writer,
-                  std::unique_ptr<KeyPair> local_static_key_pair,
-                  std::unique_ptr<PublicKey> remote_static_public_key,
-                  const openpal::Logger& logger,
-                  const std::shared_ptr<openpal::IExecutor>& executor);
+        Responder(
+            const Config& context_config,
+            const Session::Config& session_config,
+            const openpal::Logger& logger,
+            const std::shared_ptr<IFrameWriter>& frame_writer,
+            const std::shared_ptr<openpal::IExecutor>& executor,
+            std::unique_ptr<KeyPair> local_static_key_pair,
+            std::unique_ptr<PublicKey> remote_static_public_key
+        );
 
         void bind_layers(const std::shared_ptr<ILowerLayer>& lower, const std::shared_ptr<IUpperLayer>& upper)
         {

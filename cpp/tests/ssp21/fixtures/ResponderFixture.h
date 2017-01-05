@@ -50,11 +50,22 @@ namespace ssp21
 
     public:
 
-        ResponderFixture(const Responder::Config& config = Responder::Config(), uint16_t max_message_size = consts::link::max_config_payload_size) :
+        ResponderFixture(
+            const Session::Config& session_config = Session::Config(),
+            const Responder::Config& config = Responder::Config(),
+            uint16_t max_message_size = consts::link::max_config_payload_size
+        ) :
             keys(BufferType::x25519_key),
             log("responder"),
             exe(openpal::MockExecutor::Create()),
-            responder(config, get_frame_writer(log.logger, max_message_size), std::move(keys.local_kp), std::move(keys.remote_static_key), log.logger, exe),
+            responder(
+                config,
+                session_config,
+                log.logger,
+                get_frame_writer(log.logger, max_message_size),
+                exe,
+                std::move(keys.local_kp), std::move(keys.remote_static_key)
+            ),
             lower(std::make_shared<MockLowerLayer>(responder)),
             upper(std::make_shared<MockUpperLayer>(responder))
         {

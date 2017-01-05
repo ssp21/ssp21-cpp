@@ -293,8 +293,8 @@ TEST_CASE(SUITE("can transmit multiple messages if session is initialized"))
 
 TEST_CASE(SUITE("closes upper layer if nonce exceeds configured maximum"))
 {
-    Responder::Config config;
-    config.session.max_nonce = 0;
+    Session::Config config;
+    config.max_nonce = 0;
 
     ResponderFixture fix(config);
     fix.responder.on_open();

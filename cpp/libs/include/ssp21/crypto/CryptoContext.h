@@ -8,6 +8,7 @@
 #include "ssp21/crypto/TxState.h"
 
 #include "ssp21/LayerInterfaces.h"
+#include "ssp21/IFrameWriter.h"
 
 #include "openpal/executor/IExecutor.h"
 
@@ -26,11 +27,11 @@ namespace ssp21
 
         CryptoContext(
             EntityType type,
+            const Config& context_config,
+            const Session::Config& session_config,
             const openpal::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
             const std::shared_ptr<openpal::IExecutor>& executor,
-            const Session::Config& session_config,
-            const Config& context_config,
             std::unique_ptr<KeyPair> local_static_key_pair,
             std::unique_ptr<PublicKey> remote_static_public_key
         );
