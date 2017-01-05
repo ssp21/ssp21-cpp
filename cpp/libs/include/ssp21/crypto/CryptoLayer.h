@@ -1,6 +1,6 @@
 
-#ifndef SSP21_CRYPTO_LAYER_H
-#define SSP21_CRYPTO_LAYER_H
+#ifndef SSP21_CRYPTOLAYER_H
+#define SSP21_CRYPTOLAYER_H
 
 #include "ssp21/crypto/Session.h"
 #include "ssp21/crypto/Handshake.h"
