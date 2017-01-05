@@ -16,14 +16,11 @@ namespace ssp21
     {
 
         typedef openpal::Buffer message_t;
-
-
+		
     public:
 
-        void set_upper_layer(IUpperLayer& upper)
-        {
-            this->upper = &upper;
-        }
+		MockLowerLayer(IUpperLayer& upper) : upper(&upper)
+		{}
 
         void set_tx_ready(bool value)
         {
@@ -95,7 +92,7 @@ namespace ssp21
 
         typedef std::deque<std::unique_ptr<message_t>> message_queue_t;
 
-        IUpperLayer* upper = nullptr;
+        IUpperLayer* const upper;
 
         message_queue_t tx_messages;
 

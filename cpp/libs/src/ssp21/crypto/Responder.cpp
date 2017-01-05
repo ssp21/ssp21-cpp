@@ -21,8 +21,7 @@ namespace ssp21
         std::unique_ptr<KeyPair> local_static_key_pair,
         std::unique_ptr<PublicKey> remote_static_public_key,
         const openpal::Logger& logger,
-        const std::shared_ptr<openpal::IExecutor>& executor,
-        ILowerLayer& lower) :
+        const std::shared_ptr<openpal::IExecutor>& executor) :
 
         config(config),
         frame_writer(frame_writer),
@@ -32,8 +31,7 @@ namespace ssp21
         executor(executor),
         handshake(EntityId::Responder),
         session(frame_writer, config.session),
-        reassembler(config.max_reassembly_size),
-        lower(&lower)
+        reassembler(config.max_reassembly_size)        
     {
 
     }
@@ -80,16 +78,14 @@ namespace ssp21
                          std::unique_ptr<KeyPair> local_static_key_pair,
                          std::unique_ptr<PublicKey> remote_static_public_key,
                          const openpal::Logger& logger,
-                         const std::shared_ptr<openpal::IExecutor>& executor,
-                         ILowerLayer& lower
+                         const std::shared_ptr<openpal::IExecutor>& executor                         
                         ) :
         ctx(config,
             std::move(frame_writer),
             std::move(local_static_key_pair),
             std::move(remote_static_public_key),
             logger,
-            executor,
-            lower),
+            executor),
         handshake_state(&HandshakeIdle::get())
     {}
 

@@ -56,16 +56,10 @@ namespace ssp21
                 std::unique_ptr<KeyPair> local_static_key_pair,
                 std::unique_ptr<PublicKey> remote_static_public_key,
                 const openpal::Logger& logger,
-                const std::shared_ptr<openpal::IExecutor>& executor,
-                ILowerLayer& lower
+                const std::shared_ptr<openpal::IExecutor>& executor                
             );
 
-            void reply_with_handshake_error(HandshakeError err);
-
-            void set_upper_layer(IUpperLayer& upper)
-            {
-                this->upper = &upper;
-            }
+            void reply_with_handshake_error(HandshakeError err);            
 
             HandshakeError validate(const RequestHandshakeBegin& msg);
 
@@ -84,8 +78,8 @@ namespace ssp21
             Reassembler reassembler;
             TxState tx_state;
 
-            ILowerLayer* const lower;
-            IUpperLayer* upper = nullptr;
+            std::shared_ptr<ILowerLayer> lower;
+			std::shared_ptr<IUpperLayer> upper;            
         };
 
         struct IHandshakeState
@@ -99,14 +93,19 @@ namespace ssp21
                   std::unique_ptr<KeyPair> local_static_key_pair,
                   std::unique_ptr<PublicKey> remote_static_public_key,
                   const openpal::Logger& logger,
-                  const std::shared_ptr<openpal::IExecutor>& executor,
-                  ILowerLayer& lower
-                 );
+                  const std::shared_ptr<openpal::IExecutor>& executor);
 
-        void set_upper_layer(IUpperLayer& upper)
+        void bind_layers(const std::shared_ptr<ILowerLayer>& lower, const std::shared_ptr<IUpperLayer>& upper)
         {
-            this->ctx.set_upper_layer(upper);
+			this->ctx.upper = upper;
+			this->ctx.lower = lower;
         }
+
+		void release_layers()
+		{
+			this->ctx.upper.reset();
+			this->ctx.lower.reset();
+		}
 
         ResponderStatistics get_statistics() const
         {

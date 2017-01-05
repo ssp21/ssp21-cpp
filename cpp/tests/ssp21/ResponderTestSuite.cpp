@@ -65,11 +65,11 @@ TEST_CASE(SUITE("ignores user data without a session"))
     fix.responder.on_open();
 
     const auto request = hex::session_data(1, 0, true, true, "CA FE", hex::repeat(0xFF, 16));
-    fix.lower.enqueue_message(request);
+    fix.lower->enqueue_message(request);
 
     const auto stats = fix.responder.get_statistics();
     REQUIRE(stats.session.num_user_data_without_session == 1);
-    REQUIRE(fix.upper.is_empty());
+    REQUIRE(fix.upper->is_empty());
 }
 
 // ---------- tests for handshake state wait for auth -----------
@@ -79,9 +79,9 @@ TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_AUTH with REPLY_HANDSHAKE_AUTH"))
     ResponderFixture fix;
     fix.responder.on_open();
 
-    REQUIRE_FALSE(fix.upper.get_is_open());
+    REQUIRE_FALSE(fix.upper->get_is_open());
     test_init_session_success(fix);
-    REQUIRE(fix.upper.get_is_open());
+    REQUIRE(fix.upper->get_is_open());
 }
 
 TEST_CASE(SUITE("responds to auth request w/ invalid HMAC"))
@@ -137,9 +137,9 @@ TEST_CASE(SUITE("closing the responder closes the upper layer"))
     fix.responder.on_open();
 
     test_init_session_success(fix);
-    REQUIRE(fix.upper.get_is_open());
+    REQUIRE(fix.upper->get_is_open());
     fix.responder.on_close();
-    REQUIRE_FALSE(fix.upper.get_is_open());
+    REQUIRE_FALSE(fix.upper->get_is_open());
 }
 
 TEST_CASE(SUITE("auth fails if insufficient data for tag"))
@@ -150,12 +150,12 @@ TEST_CASE(SUITE("auth fails if insufficient data for tag"))
     test_init_session_success(fix);
 
     const auto short_tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16 - 1);
-    fix.lower.enqueue_message(hex::session_data(1, 0xFFFFFFFF, true, true, "AA", short_tag));
+    fix.lower->enqueue_message(hex::session_data(1, 0xFFFFFFFF, true, true, "AA", short_tag));
 
     const auto stats = fix.responder.get_statistics();
 
     REQUIRE(stats.session.num_auth_fail == 1);
-    REQUIRE(fix.upper.is_empty());
+    REQUIRE(fix.upper->is_empty());
 }
 
 TEST_CASE(SUITE("auth fails if TTL expired"))
@@ -168,12 +168,12 @@ TEST_CASE(SUITE("auth fails if TTL expired"))
     fix.exe->advance_time(TimeDuration::milliseconds(3));
 
     const auto tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
-    fix.lower.enqueue_message(hex::session_data(1, 2, true, true, "AA", tag)); // session TTL of 2
+    fix.lower->enqueue_message(hex::session_data(1, 2, true, true, "AA", tag)); // session TTL of 2
 
     const auto stats = fix.responder.get_statistics();
 
     REQUIRE(stats.session.num_ttl_expiration == 1);
-    REQUIRE(fix.upper.is_empty());
+    REQUIRE(fix.upper->is_empty());
 }
 
 TEST_CASE(SUITE("auth fails on nonce of zero"))
@@ -184,12 +184,12 @@ TEST_CASE(SUITE("auth fails on nonce of zero"))
     test_init_session_success(fix);
 
     const auto tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
-    fix.lower.enqueue_message(hex::session_data(0, 0, true, true, "AA", tag)); // nonce of zero
+    fix.lower->enqueue_message(hex::session_data(0, 0, true, true, "AA", tag)); // nonce of zero
 
     const auto stats = fix.responder.get_statistics();
 
     REQUIRE(stats.session.num_nonce_fail == 1);
-    REQUIRE(fix.upper.is_empty());
+    REQUIRE(fix.upper->is_empty());
 }
 
 TEST_CASE(SUITE("fails on empty user data"))
@@ -201,12 +201,12 @@ TEST_CASE(SUITE("fails on empty user data"))
 
     const auto tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
 
-    fix.lower.enqueue_message(hex::session_data(1, 0xFFFFFFFF, true, true, "", tag));
+    fix.lower->enqueue_message(hex::session_data(1, 0xFFFFFFFF, true, true, "", tag));
 
     const auto stats = fix.responder.get_statistics();
 
     REQUIRE(stats.session.num_auth_fail == 1);
-    REQUIRE(fix.upper.is_empty());
+    REQUIRE(fix.upper->is_empty());
 }
 
 TEST_CASE(SUITE("can authenticate session data"))
@@ -219,12 +219,12 @@ TEST_CASE(SUITE("can authenticate session data"))
     const auto data = "01";
     const auto tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
 
-    fix.lower.enqueue_message(hex::session_data(1, 0, true, true, data, tag));
+    fix.lower->enqueue_message(hex::session_data(1, 0, true, true, data, tag));
 
     const auto stats = fix.responder.get_statistics();
 
     REQUIRE(stats.session.num_success == 1);
-    REQUIRE(fix.upper.pop_rx_message() == data);
+    REQUIRE(fix.upper->pop_rx_message() == data);
 }
 
 TEST_CASE(SUITE("can authenticate multiple messages"))
@@ -239,12 +239,12 @@ TEST_CASE(SUITE("can authenticate multiple messages"))
         const auto data = to_hex(&i, 1);
         const auto tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
 
-        fix.lower.enqueue_message(hex::session_data(i + 1, 0, true, true, data, tag));
+        fix.lower->enqueue_message(hex::session_data(i + 1, 0, true, true, data, tag));
 
         const auto stats = fix.responder.get_statistics();
 
         REQUIRE(stats.session.num_success == (i + 1));
-        REQUIRE(fix.upper.pop_rx_message() == data);
+        REQUIRE(fix.upper->pop_rx_message() == data);
     }
 }
 
@@ -281,13 +281,13 @@ TEST_CASE(SUITE("can transmit multiple messages if session is initialized"))
         REQUIRE(fix.responder.transmit(msg));
 
         const auto expected = hex::session_data(i + 1, consts::crypto::default_ttl_pad_ms, true, true, payload, hex::repeat(0xFF, 16));
-        REQUIRE(fix.lower.pop_tx_message() == expected);
-        REQUIRE(fix.upper.num_tx_ready == i);
+        REQUIRE(fix.lower->pop_tx_message() == expected);
+        REQUIRE(fix.upper->num_tx_ready == i);
 
         // tell the responder that we're done transmitting
         fix.responder.on_tx_ready();
-        REQUIRE(fix.upper.num_tx_ready == i + 1);
-        REQUIRE(fix.lower.num_tx_messages() == 0);
+        REQUIRE(fix.upper->num_tx_ready == i + 1);
+        REQUIRE(fix.lower->num_tx_messages() == 0);
     }
 }
 
@@ -304,8 +304,8 @@ TEST_CASE(SUITE("closes upper layer if nonce exceeds configured maximum"))
 
     Hex msg(payload);
     REQUIRE(fix.responder.transmit(msg));
-    REQUIRE(fix.upper.is_empty());
-    REQUIRE_FALSE(fix.upper.get_is_open());
+    REQUIRE(fix.upper->is_empty());
+    REQUIRE_FALSE(fix.upper->get_is_open());
 }
 
 TEST_CASE(SUITE("defers transmission if lower layer is not tx_ready"))
@@ -316,24 +316,24 @@ TEST_CASE(SUITE("defers transmission if lower layer is not tx_ready"))
 
     const auto payload = "CA FE";
 
-    fix.lower.set_tx_ready(false);
+    fix.lower->set_tx_ready(false);
 
     Hex msg(payload);
     REQUIRE(fix.responder.transmit(msg));
-    REQUIRE(fix.lower.num_tx_messages() == 0);
-    REQUIRE(fix.upper.num_tx_ready == 0);
+    REQUIRE(fix.lower->num_tx_messages() == 0);
+    REQUIRE(fix.upper->num_tx_ready == 0);
 
-    fix.lower.set_tx_ready(true);
+    fix.lower->set_tx_ready(true);
     fix.responder.on_tx_ready();
 
 
     const auto expected = hex::session_data(1, consts::crypto::default_ttl_pad_ms, true, true, payload, hex::repeat(0xFF, 16));
-    REQUIRE(fix.lower.pop_tx_message() == expected);
-    REQUIRE(fix.upper.num_tx_ready == 0);
+    REQUIRE(fix.lower->pop_tx_message() == expected);
+    REQUIRE(fix.upper->num_tx_ready == 0);
 
     fix.responder.on_tx_ready();
-    REQUIRE(fix.upper.num_tx_ready == 1);
-    REQUIRE(fix.lower.num_tx_messages() == 0);
+    REQUIRE(fix.upper->num_tx_ready == 1);
+    REQUIRE(fix.lower->num_tx_messages() == 0);
 }
 
 // ---------- helper method implementations -----------
@@ -352,7 +352,7 @@ void test_begin_handshake_success(ResponderFixture& fix)
                              hex::repeat(0xFF, consts::crypto::x25519_key_length)
                          );
 
-    fix.lower.enqueue_message(request);
+    fix.lower->enqueue_message(request);
 
     // expected order of crypto operations
     MockCryptoBackend::instance.expect(
@@ -369,7 +369,7 @@ void test_begin_handshake_success(ResponderFixture& fix)
     });
 
     const auto reply = hex::reply_handshake_begin(hex::repeat(0xFF, consts::crypto::x25519_key_length));
-    REQUIRE(fix.lower.pop_tx_message() == reply);
+    REQUIRE(fix.lower->pop_tx_message() == reply);
     fix.set_tx_ready();
 }
 
@@ -377,9 +377,9 @@ void test_auth_handshake_success(ResponderFixture& fix)
 {
     const auto mac_hex = hex::repeat(0xFF, consts::crypto::sha256_hash_output_length);
 
-    fix.lower.enqueue_message(hex::request_handshake_auth(mac_hex));
+    fix.lower->enqueue_message(hex::request_handshake_auth(mac_hex));
 
-    REQUIRE(fix.lower.pop_tx_message() == hex::request_handshake_auth(mac_hex));
+    REQUIRE(fix.lower->pop_tx_message() == hex::request_handshake_auth(mac_hex));
 
     // expected order of crypto operations
     MockCryptoBackend::instance.expect(
@@ -402,17 +402,17 @@ void test_init_session_success(ResponderFixture& fix)
     test_begin_handshake_success(fix);
     test_auth_handshake_success(fix);
 
-    REQUIRE(fix.upper.get_is_open());
+    REQUIRE(fix.upper->get_is_open());
 }
 
 void test_handshake_error(ResponderFixture& fix, const std::string& request, HandshakeError expected_error, std::initializer_list<CryptoAction> actions)
 {
-    fix.lower.enqueue_message(request);
-    REQUIRE(fix.lower.num_rx_messages() == 0);
+    fix.lower->enqueue_message(request);
+    REQUIRE(fix.lower->num_rx_messages() == 0);
 
     MockCryptoBackend::instance.expect(actions);
 
-    REQUIRE(fix.lower.pop_tx_message() == hex::reply_handshake_error(expected_error));
+    REQUIRE(fix.lower->pop_tx_message() == hex::reply_handshake_error(expected_error));
     fix.set_tx_ready();
 }
 
