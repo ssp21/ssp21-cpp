@@ -86,15 +86,7 @@ namespace ssp21
 
         this->check_receive();
         this->check_transmit();
-    }    
-
-    void Responder::check_receive()
-    {
-        if (this->can_receive())
-        {
-            this->lower->receive();
-        }
-    }
+    }       
 
     void Responder::check_transmit()
     {
@@ -149,15 +141,7 @@ namespace ssp21
         this->check_transmit();
 
         return true;
-    }
-
-    void Responder::receive()
-    {
-        if (this->is_rx_ready && this->upper->on_rx_ready(this->reassembler.get_data()))
-        {
-            this->is_rx_ready = false;
-        }
-    }
+    }   
 
     bool Responder::supports(Function function) const
     {

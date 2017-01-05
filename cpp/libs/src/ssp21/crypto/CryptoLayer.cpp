@@ -83,6 +83,14 @@ namespace ssp21
 		this->reset_lower_layer();		
 	}
 
+	void CryptoLayer::receive()
+	{
+		if (this->is_rx_ready && this->upper->on_rx_ready(this->reassembler.get_data()))
+		{
+			this->is_rx_ready = false;
+		}
+	}
+
     bool CryptoLayer::process(const seq32_t& message)
     {
         const auto now = this->executor->get_time();
@@ -120,6 +128,14 @@ namespace ssp21
             return false;
         }
     }
+
+	void CryptoLayer::check_receive()
+	{
+		if (this->can_receive())
+		{
+			this->lower->receive();
+		}
+	}
 
 
 }

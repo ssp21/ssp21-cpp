@@ -65,11 +65,17 @@ namespace ssp21
 			return this->lower->get_is_tx_ready() && !this->is_rx_ready;
 		}
 
+		void check_receive();
+
 		// ----- final implementations from IUpperlayer ----
 
 		virtual bool on_rx_ready_impl(const seq32_t& data) override final;
 
 		virtual void on_close_impl() override final;
+
+		// ---- final implementations from ILowerLayer -----		
+
+		virtual void receive() override final;
 
         // ------ methods to be overriden by super class ------
 
