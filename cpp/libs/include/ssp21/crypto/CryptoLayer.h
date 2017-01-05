@@ -114,8 +114,8 @@ namespace ssp21
             return false;
         }
 
-		// non-virtual b/c both sides implement it the same way
-		bool on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now);
+        // non-virtual b/c both sides implement it the same way
+        bool on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now);
 
         virtual void reset_state() = 0;
 

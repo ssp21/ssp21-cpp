@@ -111,6 +111,6 @@ namespace ssp21
     {
         this->handshake_state = &this->handshake_state->on_message(*this, raw_data, msg);
         return true;
-    }    
+    }
 
 }

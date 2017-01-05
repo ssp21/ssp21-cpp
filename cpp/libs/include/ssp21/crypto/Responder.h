@@ -4,19 +4,12 @@
 
 #include "ssp21/crypto/CryptoLayer.h"
 
-#include "ssp21/LogLevels.h"
-
-#include "openpal/container/Buffer.h"
-
-
-#include <memory>
-
-
 namespace ssp21
 {
     /**
-    	Responder implementation. Is an upper and lower layer. Dispatches messages
-    	to itself via private IMessageHandler.
+    	Responder implementation - Inherits most of its functionality from the CryptoLayer base class.
+
+    	Adds responder hand shaking support.
     */
     class Responder final : public CryptoLayer
     {
@@ -68,7 +61,7 @@ namespace ssp21
         virtual bool on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
 
         virtual bool on_message(const RequestHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
-        
+
 
         // ---- private members -----
 
