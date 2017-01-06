@@ -28,7 +28,9 @@ namespace ssp21
     {}
 
     void Initiator::reset_state_on_close()
-    {}
+    {
+        this->handshake_state = &InitiatorHandshakeStateIdle::get();
+    }
 
     bool Initiator::supports(Function function) const
     {
