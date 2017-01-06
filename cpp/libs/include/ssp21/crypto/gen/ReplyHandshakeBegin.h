@@ -35,7 +35,7 @@ struct ReplyHandshakeBegin final : public IMessage, private openpal::Uncopyable
     virtual FormatResult write(wseq32_t& output) const override;
     virtual void print(IMessagePrinter& printer) const override;
 
-    static const uint32_t min_size_bytes = 3;
+    static const uint8_t min_size_bytes = 3;
     static const Function function = Function::reply_handshake_begin;
 
     SeqField<openpal::UInt8> ephemeral_public_key;

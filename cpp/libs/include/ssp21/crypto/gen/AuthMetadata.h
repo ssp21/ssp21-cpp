@@ -37,7 +37,7 @@ struct AuthMetadata final
         const SessionFlags& flags
     );
 
-    static const uint32_t fixed_size_bytes = 7;
+    static const uint8_t fixed_size_bytes = 7;
 
     IntegerField<openpal::UInt16> nonce;
     IntegerField<openpal::UInt32> valid_until_ms;

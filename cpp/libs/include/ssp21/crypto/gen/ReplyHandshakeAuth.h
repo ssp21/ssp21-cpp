@@ -34,7 +34,7 @@ struct ReplyHandshakeAuth final : public IMessage, private openpal::Uncopyable
     virtual FormatResult write(wseq32_t& output) const override;
     virtual void print(IMessagePrinter& printer) const override;
 
-    static const uint32_t min_size_bytes = 2;
+    static const uint8_t min_size_bytes = 2;
     static const Function function = Function::request_handshake_auth;
 
     SeqField<openpal::UInt8> mac;

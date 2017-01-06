@@ -37,7 +37,7 @@ struct SessionData final : public IMessage, private openpal::Uncopyable
     virtual FormatResult write(wseq32_t& output) const override;
     virtual void print(IMessagePrinter& printer) const override;
 
-    static const uint32_t min_size_bytes = 11;
+    static const uint8_t min_size_bytes = 11;
     static const Function function = Function::session_data;
 
     AuthMetadata metadata;

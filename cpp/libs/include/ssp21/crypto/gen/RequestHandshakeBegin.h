@@ -44,7 +44,7 @@ struct RequestHandshakeBegin final : public IMessage, private openpal::Uncopyabl
     virtual FormatResult write(wseq32_t& output) const override;
     virtual void print(IMessagePrinter& printer) const override;
 
-    static const uint32_t min_size_bytes = 12;
+    static const uint8_t min_size_bytes = 12;
     static const Function function = Function::request_handshake_begin;
 
     IntegerField<openpal::UInt16> version;

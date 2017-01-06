@@ -46,9 +46,16 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
       if(outputReadWritePrint) readSig ++ writeSig ++ printSig else Iterator.empty
     }
 
+    def getMinRepresentation(num: Int) : String = num match {
+      case num if (num < 256) => "uint8_t"
+      case num if (num < 65536) => "uint16_t"
+      case _ => "uint32_t"
+
+    }
+
     def sizeBytes = sf.fixedSize match {
-      case Some(size) => "static const uint32_t fixed_size_bytes = %s;".format(size).iter
-      case None => "static const uint32_t min_size_bytes = %s;".format(sf.minSizeBytes).iter
+      case Some(size) => "static const %s fixed_size_bytes = %s;".format(getMinRepresentation(size), size).iter
+      case None => "static const %s min_size_bytes = %s;".format(getMinRepresentation(sf.minSizeBytes), sf.minSizeBytes).iter
     }
 
     def constants = sizeBytes ++ extraHeaderConstants

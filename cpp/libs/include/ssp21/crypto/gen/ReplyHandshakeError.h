@@ -35,7 +35,7 @@ struct ReplyHandshakeError final : public IMessage, private openpal::Uncopyable
     virtual FormatResult write(wseq32_t& output) const override;
     virtual void print(IMessagePrinter& printer) const override;
 
-    static const uint32_t fixed_size_bytes = 2;
+    static const uint8_t fixed_size_bytes = 2;
     static const Function function = Function::reply_handshake_error;
 
     EnumField<HandshakeErrorSpec> handshake_error;
