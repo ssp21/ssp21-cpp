@@ -95,7 +95,7 @@ TEST_CASE(SUITE("correctly encodes module 2"))
 
 TEST_CASE(SUITE("correctly encodes long input"))
 {
-	test_encoding(long_result, long_base64);
+    test_encoding(long_result, long_base64);
 }
 
 /// -------- decoding --------
@@ -146,6 +146,6 @@ TEST_CASE(SUITE("correctly decodes six bytes"))
 }
 
 TEST_CASE(SUITE("correctly decodes long input"))
-{   
+{
     test_decoding_success(long_base64, long_result);
 }

@@ -13,7 +13,7 @@ namespace ssp21
 
     // -------------------------- HandshakeIdle -----------------------------
 
-    Responder::IHandshakeState& HandshakeIdle::on_message(Responder& ctx, const seq32_t& msg_bytes, const RequestHandshakeBegin& msg)
+    Responder::IHandshakeState& ResponderHandshakeIdle::on_message(Responder& ctx, const seq32_t& msg_bytes, const RequestHandshakeBegin& msg)
     {
         auto err = ctx.configure_feature_support(msg);
 
@@ -56,10 +56,10 @@ namespace ssp21
 
         ctx.lower->transmit(res.frame);
 
-        return HandshakeWaitForAuth::get();
+        return ResponderHandshakeWaitForAuth::get();
     }
 
-    Responder::IHandshakeState& HandshakeIdle::on_message(Responder& ctx, const seq32_t& msg_bytes, const RequestHandshakeAuth& msg)
+    Responder::IHandshakeState& ResponderHandshakeIdle::on_message(Responder& ctx, const seq32_t& msg_bytes, const RequestHandshakeAuth& msg)
     {
         SIMPLE_LOG_BLOCK(ctx.logger, levels::info, "no prior request_handshake_begin");
 
@@ -70,19 +70,19 @@ namespace ssp21
 
     // -------------------------- HandshakeWaitForAuth -----------------------------
 
-    Responder::IHandshakeState& HandshakeWaitForAuth::on_message(Responder& ctx, const seq32_t& msg_bytes, const RequestHandshakeBegin& msg)
+    Responder::IHandshakeState& ResponderHandshakeWaitForAuth::on_message(Responder& ctx, const seq32_t& msg_bytes, const RequestHandshakeBegin& msg)
     {
         // process via HandshakeIdle
-        return HandshakeIdle::get().on_message(ctx, msg_bytes, msg);
+        return ResponderHandshakeIdle::get().on_message(ctx, msg_bytes, msg);
     }
 
-    Responder::IHandshakeState& HandshakeWaitForAuth::on_message(Responder& ctx, const seq32_t& msg_bytes, const RequestHandshakeAuth& msg)
+    Responder::IHandshakeState& ResponderHandshakeWaitForAuth::on_message(Responder& ctx, const seq32_t& msg_bytes, const RequestHandshakeAuth& msg)
     {
         if (!ctx.handshake.auth_handshake(msg.mac)) // auth success
         {
             SIMPLE_LOG_BLOCK(ctx.logger, levels::warn, "RequestHandshakeAuth: authentication failure");
             ctx.reply_with_handshake_error(HandshakeError::authentication_error);
-            return HandshakeIdle::get();
+            return ResponderHandshakeIdle::get();
         }
 
         ctx.handshake.mix_ck(msg_bytes);
@@ -96,7 +96,7 @@ namespace ssp21
 
         if (res.is_error())
         {
-            return HandshakeIdle::get();
+            return ResponderHandshakeIdle::get();
         }
 
         ctx.handshake.mix_ck(res.written);
@@ -107,7 +107,7 @@ namespace ssp21
 
         ctx.upper->on_open();
 
-        return HandshakeIdle::get();
+        return ResponderHandshakeIdle::get();
     }
 
 }

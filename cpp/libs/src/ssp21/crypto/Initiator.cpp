@@ -26,7 +26,7 @@ namespace ssp21
         )
     {}
 
-    void Initiator::reset_state()
+    void Initiator::reset_state_on_close()
     {}
 
     bool Initiator::supports(Function function) const

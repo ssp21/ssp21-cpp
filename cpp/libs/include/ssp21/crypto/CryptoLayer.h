@@ -62,19 +62,6 @@ namespace ssp21
 
     protected:
 
-        // ------ helper methods methods ------
-
-        bool process(const seq32_t& data);
-
-        inline bool can_receive() const
-        {
-            return this->lower->get_is_tx_ready() && !this->is_rx_ready;
-        }
-
-        void check_receive();
-
-        void check_transmit();
-
         // ----- final implementations from IUpperlayer ----
 
         virtual void on_open_impl() override final {}
@@ -87,6 +74,10 @@ namespace ssp21
 
         // ------ methods to be overriden by super class ------
 
+        // inherited class can perform additional cleanup when layer is closed
+        virtual void reset_state_on_close() = 0;
+
+        // should a paritcular function code even be parsed?
         virtual bool supports(Function function) const = 0;
 
         // Called when a parse error occurs for a particular message type
@@ -117,8 +108,6 @@ namespace ssp21
         // non-virtual b/c both sides implement it the same way
         bool on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now);
 
-        virtual void reset_state() = 0;
-
         /// ------ member variables ------
 
         openpal::Logger logger;
@@ -138,6 +127,19 @@ namespace ssp21
         IUpperLayer* upper = nullptr;
 
     private:
+
+        // ------ private helper methods ------
+
+        bool process(const seq32_t& data);
+
+        inline bool can_receive() const
+        {
+            return this->lower->get_is_tx_ready() && !this->is_rx_ready;
+        }
+
+        void check_receive();
+
+        void check_transmit();
 
         template <class MsgType>
         bool handle_message(const seq32_t& message, const openpal::Timestamp& now);

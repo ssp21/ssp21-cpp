@@ -39,7 +39,7 @@ namespace ssp21
                    this->authentication_key,
                    this->mode,
                    mac
-        );
+               );
     }
 
     void Handshake::calc_auth_handshake_reply_mac(HashOutput& output) const

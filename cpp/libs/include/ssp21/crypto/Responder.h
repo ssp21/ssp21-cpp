@@ -13,8 +13,8 @@ namespace ssp21
     */
     class Responder final : public CryptoLayer
     {
-        friend class HandshakeIdle;
-        friend class HandshakeWaitForAuth;
+        friend class ResponderHandshakeIdle;
+        friend class ResponderHandshakeWaitForAuth;
 
     public:
 
@@ -52,7 +52,7 @@ namespace ssp21
 
         // ---- implement CryptoLayer -----
 
-        virtual void reset_state() override;
+        virtual void reset_state_on_close() override;
 
         virtual bool supports(Function function) const override;
 

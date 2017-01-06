@@ -91,7 +91,7 @@ namespace ssp21
     void CryptoLayer::on_close_impl()
     {
         // let the super class reset
-        this->reset_state();
+        this->reset_state_on_close();
 
         this->session.reset();
         this->reassembler.reset();

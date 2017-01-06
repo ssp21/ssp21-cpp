@@ -28,6 +28,13 @@ namespace ssp21
             std::unique_ptr<PublicKey> remote_static_public_key
         );
 
+        struct IHandshakeState
+        {
+            virtual IHandshakeState& on_message(Initiator& ctx, const seq32_t& msg_bytes, const ReplyHandshakeBegin& msg) = 0;
+            virtual IHandshakeState& on_message(Initiator& ctx, const seq32_t& msg_bytes, const ReplyHandshakeAuth& msg) = 0;
+            virtual IHandshakeState& on_message(Initiator& ctx, const seq32_t& msg_bytes, const ReplyHandshakeError& msg) = 0;
+        };
+
     private:
 
         // ---- private helper methods -----
@@ -35,7 +42,7 @@ namespace ssp21
 
         // ---- implement CryptoLayer -----
 
-        virtual void reset_state() override;
+        virtual void reset_state_on_close() override;
 
         virtual bool supports(Function function) const override;
 
