@@ -13,9 +13,9 @@ namespace ssp21
 
     public:
 
-        virtual Responder::IHandshakeState& on_message(Responder& ctx, const seq32_t& msg_bytes, const RequestHandshakeBegin& msg) override;
+        virtual Responder::IHandshakeState& on_message(Responder& ctx, const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) override;
 
-        virtual Responder::IHandshakeState& on_message(Responder& ctx, const seq32_t& msg_bytes, const RequestHandshakeAuth& msg) override;
+        virtual Responder::IHandshakeState& on_message(Responder& ctx, const RequestHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) override;
 
         static Responder::IHandshakeState& get()
         {
@@ -31,9 +31,9 @@ namespace ssp21
 
     public:
 
-        virtual Responder::IHandshakeState& on_message(Responder& ctx, const seq32_t& msg_bytes, const RequestHandshakeBegin& msg) override;
+        virtual Responder::IHandshakeState& on_message(Responder& ctx, const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) override;
 
-        virtual Responder::IHandshakeState& on_message(Responder& ctx, const seq32_t& msg_bytes, const RequestHandshakeAuth& msg) override;
+        virtual Responder::IHandshakeState& on_message(Responder& ctx, const RequestHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) override;
 
         static Responder::IHandshakeState& get()
         {

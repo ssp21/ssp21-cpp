@@ -103,12 +103,12 @@ namespace ssp21
 
     void Responder::on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
-        this->handshake_state = &this->handshake_state->on_message(*this, raw_data, msg);
+        this->handshake_state = &this->handshake_state->on_message(*this, msg, raw_data, now);
     }
 
     void Responder::on_message(const RequestHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
-        this->handshake_state = &this->handshake_state->on_message(*this, raw_data, msg);
+        this->handshake_state = &this->handshake_state->on_message(*this, msg, raw_data, now);
     }
 
 }

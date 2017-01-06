@@ -22,8 +22,8 @@ namespace ssp21
 
         struct IHandshakeState : private openpal::Uncopyable
         {
-            virtual IHandshakeState& on_message(Responder& ctx, const seq32_t& msg_bytes, const RequestHandshakeBegin& msg) = 0;
-            virtual IHandshakeState& on_message(Responder& ctx, const seq32_t& msg_bytes, const RequestHandshakeAuth& msg) = 0;
+            virtual IHandshakeState& on_message(Responder& ctx, const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) = 0;
+            virtual IHandshakeState& on_message(Responder& ctx, const RequestHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) = 0;
         };
 
         Responder(
@@ -42,6 +42,10 @@ namespace ssp21
         }
 
     private:
+
+        // ---- final implementations from IUpperLayer ----
+
+        virtual void on_open_impl() override final {} // no need to do anything when the layer opens
 
         // ---- private helper methods -----
 

@@ -13,7 +13,7 @@ namespace ssp21
 
     // -------------------------- HandshakeIdle -----------------------------
 
-    Responder::IHandshakeState& ResponderHandshakeIdle::on_message(Responder& ctx, const seq32_t& msg_bytes, const RequestHandshakeBegin& msg)
+    Responder::IHandshakeState& ResponderHandshakeIdle::on_message(Responder& ctx, const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
     {
         auto err = ctx.configure_feature_support(msg);
 
@@ -59,7 +59,7 @@ namespace ssp21
         return ResponderHandshakeWaitForAuth::get();
     }
 
-    Responder::IHandshakeState& ResponderHandshakeIdle::on_message(Responder& ctx, const seq32_t& msg_bytes, const RequestHandshakeAuth& msg)
+    Responder::IHandshakeState& ResponderHandshakeIdle::on_message(Responder& ctx, const RequestHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
     {
         SIMPLE_LOG_BLOCK(ctx.logger, levels::info, "no prior request_handshake_begin");
 
@@ -70,13 +70,13 @@ namespace ssp21
 
     // -------------------------- HandshakeWaitForAuth -----------------------------
 
-    Responder::IHandshakeState& ResponderHandshakeWaitForAuth::on_message(Responder& ctx, const seq32_t& msg_bytes, const RequestHandshakeBegin& msg)
+    Responder::IHandshakeState& ResponderHandshakeWaitForAuth::on_message(Responder& ctx, const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
     {
         // process via HandshakeIdle
-        return ResponderHandshakeIdle::get().on_message(ctx, msg_bytes, msg);
+        return ResponderHandshakeIdle::get().on_message(ctx, msg, msg_bytes, now);
     }
 
-    Responder::IHandshakeState& ResponderHandshakeWaitForAuth::on_message(Responder& ctx, const seq32_t& msg_bytes, const RequestHandshakeAuth& msg)
+    Responder::IHandshakeState& ResponderHandshakeWaitForAuth::on_message(Responder& ctx, const RequestHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
     {
         if (!ctx.handshake.auth_handshake(msg.mac)) // auth success
         {
@@ -101,7 +101,7 @@ namespace ssp21
 
         ctx.handshake.mix_ck(res.written);
 
-        ctx.handshake.initialize_session(ctx.session, ctx.executor->get_time());
+        ctx.handshake.initialize_session(ctx.session, now);
 
         ctx.lower->transmit(res.frame);
 

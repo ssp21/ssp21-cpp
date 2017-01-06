@@ -41,8 +41,9 @@ namespace ssp21
 
     private:
 
-        // ---- private helper methods -----
+        // ---- final implementations from IUpperLayer ----
 
+        virtual void on_open_impl() override;
 
         // ---- implement CryptoLayer -----
 

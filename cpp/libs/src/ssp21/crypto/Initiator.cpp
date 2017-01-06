@@ -27,6 +27,11 @@ namespace ssp21
         handshake_state(&InitiatorHandshakeStateIdle::get())
     {}
 
+    void Initiator::on_open_impl()
+    {
+        // TODO - kick of the handshake process
+    }
+
     void Initiator::reset_state_on_close()
     {
         this->handshake_state = &InitiatorHandshakeStateIdle::get();

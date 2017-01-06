@@ -64,8 +64,6 @@ namespace ssp21
 
         // ----- final implementations from IUpperlayer ----
 
-        virtual void on_open_impl() override final {}
-
         virtual void on_close_impl() override final;
 
         virtual bool on_rx_ready_impl(const seq32_t& data) override final;
@@ -120,7 +118,7 @@ namespace ssp21
 
         // ------ private helper methods ------
 
-        void process(const seq32_t& data);
+        void process(const seq32_t& message_data);
 
         inline bool can_receive() const
         {
