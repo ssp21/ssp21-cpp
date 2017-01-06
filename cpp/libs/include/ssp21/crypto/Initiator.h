@@ -4,6 +4,8 @@
 
 #include "ssp21/crypto/CryptoLayer.h"
 
+#include "openpal/util/Uncopyable.h"
+
 namespace ssp21
 {
     /**
@@ -28,11 +30,13 @@ namespace ssp21
             std::unique_ptr<PublicKey> remote_static_public_key
         );
 
-        struct IHandshakeState
+        struct IHandshakeState : private openpal::Uncopyable
         {
-            virtual IHandshakeState& on_message(Initiator& ctx, const seq32_t& msg_bytes, const ReplyHandshakeBegin& msg) = 0;
-            virtual IHandshakeState& on_message(Initiator& ctx, const seq32_t& msg_bytes, const ReplyHandshakeAuth& msg) = 0;
-            virtual IHandshakeState& on_message(Initiator& ctx, const seq32_t& msg_bytes, const ReplyHandshakeError& msg) = 0;
+            virtual IHandshakeState& on_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) = 0;
+            virtual IHandshakeState& on_message(Initiator& ctx, const ReplyHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) = 0;
+            virtual IHandshakeState& on_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) = 0;
+
+            virtual IHandshakeState& on_response_timeout(Initiator& ctx) = 0;
         };
 
     private:
@@ -56,6 +60,7 @@ namespace ssp21
 
         // ---- private members -----
 
+		IHandshakeState* handshake_state;
     };
 
 }

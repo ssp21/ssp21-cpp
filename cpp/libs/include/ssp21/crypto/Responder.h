@@ -20,7 +20,7 @@ namespace ssp21
 
         struct Config : public CryptoLayer::Config {};
 
-        struct IHandshakeState
+        struct IHandshakeState : private openpal::Uncopyable
         {
             virtual IHandshakeState& on_message(Responder& ctx, const seq32_t& msg_bytes, const RequestHandshakeBegin& msg) = 0;
             virtual IHandshakeState& on_message(Responder& ctx, const seq32_t& msg_bytes, const RequestHandshakeAuth& msg) = 0;

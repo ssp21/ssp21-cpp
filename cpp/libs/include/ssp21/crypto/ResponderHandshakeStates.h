@@ -4,12 +4,10 @@
 
 #include "ssp21/crypto/Responder.h"
 
-#include "openpal/util/Uncopyable.h"
-
 namespace ssp21
 {
 
-    class ResponderHandshakeIdle : public Responder::IHandshakeState, private openpal::Uncopyable
+    class ResponderHandshakeIdle final : public Responder::IHandshakeState
     {
         ResponderHandshakeIdle() {}
 
@@ -27,7 +25,7 @@ namespace ssp21
 
     };
 
-    class ResponderHandshakeWaitForAuth : public Responder::IHandshakeState, private openpal::Uncopyable
+    class ResponderHandshakeWaitForAuth final : public Responder::IHandshakeState
     {
         ResponderHandshakeWaitForAuth() {}
 
