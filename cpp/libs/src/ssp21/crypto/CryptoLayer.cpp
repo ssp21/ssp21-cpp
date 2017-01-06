@@ -181,34 +181,31 @@ namespace ssp21
 
     void CryptoLayer::check_transmit()
     {
-        /**
-        * 1) The session must be able to transmit
-        * 2) Lower-layer must be ready to transmit
-        * 3) transmission state must have some data to send
-        */
-        if (this->session.is_valid() && this->lower->get_is_tx_ready() && this->tx_state.is_ready_tx())
+        if (!this->can_transmit_session_data())
         {
-            auto remainder = this->tx_state.get_remainder();
-            const auto fir = this->tx_state.get_fir();
-            const auto now = this->executor->get_time();
-
-            std::error_code err;
-            const auto data = this->session.format_session_message(fir, now, remainder, err);
-            if (err)
-            {
-                FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error formatting session message: %s", err.message().c_str());
-
-                // if any error occurs with transmission, we reset the session and notify the upper layer
-                this->session.reset();
-                this->upper->on_close();
-
-                return;
-            }
-
-            this->tx_state.begin_transmit(remainder);
-
-            this->lower->transmit(data);
+            return;
         }
+
+        auto remainder = this->tx_state.get_remainder();
+        const auto fir = this->tx_state.get_fir();
+        const auto now = this->executor->get_time();
+
+        std::error_code err;
+        const auto data = this->session.format_session_message(fir, now, remainder, err);
+        if (err)
+        {
+            FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error formatting session message: %s", err.message().c_str());
+
+            // if any error occurs with transmission, we reset the session and notify the upper layer
+            this->session.reset();
+            this->upper->on_close();
+
+            return;
+        }
+
+        this->tx_state.begin_transmit(remainder);
+
+        this->lower->transmit(data);
     }
 
     void CryptoLayer::on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)

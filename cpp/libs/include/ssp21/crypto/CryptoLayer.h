@@ -127,6 +127,17 @@ namespace ssp21
             return this->lower->get_is_tx_ready() && !this->is_rx_ready;
         }
 
+        inline bool can_transmit_session_data() const
+        {
+            /**
+            * 1) The session must be valid
+            * 2) Lower-layer must be ready to transmit
+            * 3) transmission state must have some data to send
+            */
+
+            return this->session.is_valid() && this->lower->get_is_tx_ready() && this->tx_state.is_ready_tx();
+        }
+
         void check_receive();
 
         void check_transmit();
