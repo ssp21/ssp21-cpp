@@ -3,6 +3,8 @@
 
 #include "ssp21/crypto/InitiatorHandshakeStates.h"
 
+#include "ssp21/LogLevels.h"
+
 namespace ssp21
 {
     Initiator::Initiator(
@@ -27,6 +29,29 @@ namespace ssp21
         handshake_state(&InitiatorHandshakeStateIdle::get()),
         response_timer(*executor)
     {}
+
+    Initiator::IHandshakeState& Initiator::IHandshakeState::on_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
+    {
+        this->log_unexpected_message(ctx.logger, msg.function);
+        return *this;
+    }
+
+    Initiator::IHandshakeState& Initiator::IHandshakeState::on_message(Initiator& ctx, const ReplyHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
+    {
+        this->log_unexpected_message(ctx.logger, msg.function);
+        return *this;
+    }
+
+    Initiator::IHandshakeState& Initiator::IHandshakeState::on_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
+    {
+        this->log_unexpected_message(ctx.logger, msg.function);
+        return *this;
+    }
+
+    void Initiator::IHandshakeState::log_unexpected_message(openpal::Logger& logger, Function function)
+    {
+        FORMAT_LOG_BLOCK(logger, levels::warn, "Received unexpected message: %s", FunctionSpec::to_string(function));
+    }
 
     void Initiator::on_open_impl()
     {
