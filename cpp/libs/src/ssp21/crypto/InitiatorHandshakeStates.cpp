@@ -3,6 +3,10 @@
 
 namespace ssp21
 {
+    Initiator::IHandshakeState& InitiatorHandshakeStateIdle::initialize(Initiator& ctx, const openpal::Timestamp& now)
+    {
+        return *this;
+    }
 
     Initiator::IHandshakeState& InitiatorHandshakeStateIdle::on_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
     {

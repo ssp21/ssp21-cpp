@@ -24,17 +24,19 @@ namespace ssp21
             std::move(local_static_key_pair),
             std::move(remote_static_public_key)
         ),
-        handshake_state(&InitiatorHandshakeStateIdle::get())
+        handshake_state(&InitiatorHandshakeStateIdle::get()),
+        response_timer(*executor)
     {}
 
     void Initiator::on_open_impl()
     {
-        // TODO - kick of the handshake process
+        this->handshake_state = &this->handshake_state->initialize(*this, this->executor->get_time());
     }
 
     void Initiator::reset_state_on_close()
     {
         this->handshake_state = &InitiatorHandshakeStateIdle::get();
+        this->response_timer.cancel();
     }
 
     bool Initiator::supports(Function function) const

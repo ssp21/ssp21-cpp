@@ -4,7 +4,7 @@
 
 #include "ssp21/crypto/CryptoLayer.h"
 
-#include "openpal/util/Uncopyable.h"
+#include "openpal/executor/TimerRef.h"
 
 namespace ssp21
 {
@@ -32,10 +32,14 @@ namespace ssp21
 
         struct IHandshakeState : private openpal::Uncopyable
         {
+            // called when conditions are met that require we renegotiate the session
+            virtual IHandshakeState& initialize(Initiator& ctx, const openpal::Timestamp& now) = 0;
+
             virtual IHandshakeState& on_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) = 0;
             virtual IHandshakeState& on_message(Initiator& ctx, const ReplyHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) = 0;
             virtual IHandshakeState& on_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) = 0;
 
+            // called when the response timeout timer fires
             virtual IHandshakeState& on_response_timeout(Initiator& ctx) = 0;
         };
 
@@ -62,6 +66,8 @@ namespace ssp21
         // ---- private members -----
 
         IHandshakeState* handshake_state;
+
+        openpal::TimerRef response_timer;
     };
 
 }
