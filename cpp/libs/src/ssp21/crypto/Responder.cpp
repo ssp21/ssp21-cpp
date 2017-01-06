@@ -101,16 +101,14 @@ namespace ssp21
         }
     }
 
-    bool Responder::on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+    void Responder::on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
         this->handshake_state = &this->handshake_state->on_message(*this, raw_data, msg);
-        return true;
     }
 
-    bool Responder::on_message(const RequestHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+    void Responder::on_message(const RequestHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
         this->handshake_state = &this->handshake_state->on_message(*this, raw_data, msg);
-        return true;
     }
 
 }

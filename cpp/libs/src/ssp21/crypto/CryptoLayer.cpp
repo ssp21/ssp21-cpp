@@ -127,14 +127,14 @@ namespace ssp21
         this->check_transmit();
     }
 
-    bool CryptoLayer::process(const seq32_t& message)
+    void CryptoLayer::process(const seq32_t& message)
     {
         const auto now = this->executor->get_time();
 
         if (message.is_empty())
         {
             SIMPLE_LOG_BLOCK(logger, levels::warn, "Received zero length message");
-            return false;
+            return;
         }
 
         const auto raw_function = message[0];
@@ -143,25 +143,31 @@ namespace ssp21
         if (!this->supports(function))
         {
             FORMAT_LOG_BLOCK(logger, levels::warn, "Received unsupported function: %s(%u)", FunctionSpec::to_string(function), raw_function);
-            return false;
+            return;
         }
 
         switch (function)
         {
         case(Function::request_handshake_begin):
-            return handle_message<RequestHandshakeBegin>(message, now);
+            handle_message<RequestHandshakeBegin>(message, now);
+            break;
         case(Function::request_handshake_auth):
-            return handle_message<RequestHandshakeAuth>(message, now);
+            handle_message<RequestHandshakeAuth>(message, now);
+            break;
         case(Function::reply_handshake_begin):
-            return handle_message<ReplyHandshakeBegin>(message, now);
+            handle_message<ReplyHandshakeBegin>(message, now);
+            break;
         case(Function::reply_handshake_auth):
-            return handle_message<ReplyHandshakeAuth>(message, now);
+            handle_message<ReplyHandshakeAuth>(message, now);
+            break;
         case(Function::reply_handshake_error):
-            return handle_message<ReplyHandshakeError>(message, now);
+            handle_message<ReplyHandshakeError>(message, now);
+            break;
         case(Function::session_data):
-            return handle_message<SessionData>(message, now);
+            handle_message<SessionData>(message, now);
+            break;
         default:
-            return false;
+            break;
         }
     }
 
@@ -205,7 +211,7 @@ namespace ssp21
         }
     }
 
-    bool CryptoLayer::on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+    void CryptoLayer::on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
         std::error_code ec;
         const auto payload = this->session.validate_message(msg, now, ec);
@@ -213,7 +219,7 @@ namespace ssp21
         if (ec)
         {
             FORMAT_LOG_BLOCK(this->logger, levels::warn, "validation error: %s", ec.message().c_str());
-            return false;
+            return;
         }
 
         // process the message using the reassembler
@@ -222,15 +228,15 @@ namespace ssp21
         switch (result)
         {
         case(ReassemblyResult::partial):
-            return true; // do nothing
+            break; // do nothing
 
         case(ReassemblyResult::complete):
             this->is_rx_ready = !this->upper->on_rx_ready(this->reassembler.get_data());
-            return true;
+            break;
 
         default: // error
             FORMAT_LOG_BLOCK(this->logger, levels::warn, "reassembly error: %s", ReassemblyResultSpec::to_string(result));
-            return false;
+            break;
         }
     }
 

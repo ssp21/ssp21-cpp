@@ -84,29 +84,19 @@ namespace ssp21
         virtual void on_parse_error(Function function, ParseError error) {}
 
         // optional overrides for each type of message
-        virtual bool on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
-        {
-            return false;
-        }
-        virtual bool on_message(const RequestHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
-        {
-            return false;
-        }
-        virtual bool on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
-        {
-            return false;
-        }
-        virtual bool on_message(const ReplyHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
-        {
-            return false;
-        }
-        virtual bool on_message(const ReplyHandshakeError& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
-        {
-            return false;
-        }
+        virtual void on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}
+
+        virtual void on_message(const RequestHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}
+
+        virtual void on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}
+
+        virtual void on_message(const ReplyHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}
+
+        virtual void on_message(const ReplyHandshakeError& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}
+
 
         // non-virtual b/c both sides implement it the same way
-        bool on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now);
+        void on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now);
 
         /// ------ member variables ------
 
@@ -130,7 +120,7 @@ namespace ssp21
 
         // ------ private helper methods ------
 
-        bool process(const seq32_t& data);
+        void process(const seq32_t& data);
 
         inline bool can_receive() const
         {

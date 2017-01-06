@@ -24,7 +24,7 @@ namespace ssp21
             std::move(local_static_key_pair),
             std::move(remote_static_public_key)
         ),
-		handshake_state(&InitiatorHandshakeStateIdle::get())
+        handshake_state(&InitiatorHandshakeStateIdle::get())
     {}
 
     void Initiator::reset_state_on_close()
@@ -44,25 +44,19 @@ namespace ssp21
         }
     }
 
-    bool Initiator::on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+    void Initiator::on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
-		this->handshake_state = &this->handshake_state->on_message(*this, msg, raw_data, now);
-
-        return true;
+        this->handshake_state = &this->handshake_state->on_message(*this, msg, raw_data, now);
     }
 
-    bool Initiator::on_message(const ReplyHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+    void Initiator::on_message(const ReplyHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
-		this->handshake_state = &this->handshake_state->on_message(*this, msg, raw_data, now);
-
-        return false;
+        this->handshake_state = &this->handshake_state->on_message(*this, msg, raw_data, now);
     }
 
-    bool Initiator::on_message(const ReplyHandshakeError& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+    void Initiator::on_message(const ReplyHandshakeError& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
-		this->handshake_state = &this->handshake_state->on_message(*this, msg, raw_data, now);
-
-        return false;
+        this->handshake_state = &this->handshake_state->on_message(*this, msg, raw_data, now);
     }
 
 }
