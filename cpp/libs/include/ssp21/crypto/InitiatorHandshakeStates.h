@@ -60,6 +60,19 @@ namespace ssp21
         }
     };
 
+    class InitiatorHandshakeBadConfiguration final : public Initiator::IHandshakeState
+    {
+        InitiatorHandshakeBadConfiguration() {}
+
+    public:
+
+        static Initiator::IHandshakeState* get()
+        {
+            static InitiatorHandshakeBadConfiguration instance;
+            return &instance;
+        }
+    };
+
 }
 
 #endif

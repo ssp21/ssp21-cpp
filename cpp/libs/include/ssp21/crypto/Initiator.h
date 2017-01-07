@@ -16,23 +16,24 @@ namespace ssp21
     class Initiator final : public CryptoLayer
     {
 
-		friend class InitiatorHandshakeIdle;
+        friend class InitiatorHandshakeIdle;
 
     public:
 
-        struct Config : public CryptoLayer::Config 
-		{
-			struct Suite {
-				NonceMode nonce_mode = NonceMode::increment_last_rx;
-				DHMode dh_mode = DHMode::x25519;
-				HandshakeHash handshake_hash = HandshakeHash::sha256;
-				HandshakeKDF handshake_kdf = HandshakeKDF::hkdf_sha256;
-				HandshakeMAC handshake_mac = HandshakeMAC::hmac_sha256;
-				SessionMode session_mode = SessionMode::hmac_sha256_16;
-			};
+        struct Config : public CryptoLayer::Config
+        {
+            struct Suite
+            {
+                NonceMode nonce_mode = NonceMode::increment_last_rx;
+                DHMode dh_mode = DHMode::x25519;
+                HandshakeHash handshake_hash = HandshakeHash::sha256;
+                HandshakeKDF handshake_kdf = HandshakeKDF::hkdf_sha256;
+                HandshakeMAC handshake_mac = HandshakeMAC::hmac_sha256;
+                SessionMode session_mode = SessionMode::hmac_sha256_16;
+            };
 
-			Suite suite;
-		};
+            Suite suite;
+        };
 
         Initiator(
             const Config& context_config,
@@ -92,12 +93,12 @@ namespace ssp21
 
         // ---- private members -----
 
-        IHandshakeState* handshake_state;		
-		
-		const Config::Suite suite;
+        IHandshakeState* handshake_state;
+
+        const Config::Suite suite;
 
         openpal::TimerRef response_timer;
-		
+
     };
 
 }

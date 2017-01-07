@@ -27,7 +27,7 @@ namespace ssp21
             std::move(remote_static_public_key)
         ),
         handshake_state(InitiatorHandshakeIdle::get()),
-		suite(context_config.suite),
+        suite(context_config.suite),
         response_timer(*executor)
     {}
 
