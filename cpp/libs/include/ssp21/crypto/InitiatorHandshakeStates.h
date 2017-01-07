@@ -6,18 +6,57 @@
 
 namespace ssp21
 {
-    class InitiatorHandshakeStateIdle final : public Initiator::IHandshakeState
+    class InitiatorHandshakeIdle final : public Initiator::IHandshakeState
     {
-        InitiatorHandshakeStateIdle() {}
+        InitiatorHandshakeIdle() {}
 
     public:
 
-        virtual IHandshakeState& on_handshake_required(Initiator& ctx, const openpal::Timestamp& now) override;
+        virtual IHandshakeState* on_handshake_required(Initiator& ctx, const openpal::Timestamp& now) override;
 
-        static Initiator::IHandshakeState& get()
+        static Initiator::IHandshakeState* get()
         {
-            static InitiatorHandshakeStateIdle instance;
-            return instance;
+            static InitiatorHandshakeIdle instance;
+            return &instance;
+        }
+    };
+
+    class InitiatorHandshakeWaitForBeginReply final : public Initiator::IHandshakeState
+    {
+        InitiatorHandshakeWaitForBeginReply() {}
+
+    public:
+
+        static Initiator::IHandshakeState* get()
+        {
+            static InitiatorHandshakeWaitForBeginReply instance;
+            return &instance;
+        }
+    };
+
+    class InitiatorHandshakeWaitForAuthReply final : public Initiator::IHandshakeState
+    {
+        InitiatorHandshakeWaitForAuthReply() {}
+
+    public:
+
+        static Initiator::IHandshakeState* get()
+        {
+            static InitiatorHandshakeWaitForAuthReply instance;
+            return &instance;
+        }
+    };
+
+    class InitiatorHandshakeWaitForRetry final : public Initiator::IHandshakeState
+    {
+        InitiatorHandshakeWaitForRetry() {}
+
+    public:
+
+        static Initiator::IHandshakeState* get()
+        {
+            static InitiatorHandshakeWaitForRetry instance;
+            return &instance;
         }
     };
 

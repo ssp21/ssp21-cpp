@@ -22,8 +22,8 @@ namespace ssp21
 
         struct IHandshakeState : private openpal::Uncopyable
         {
-            virtual IHandshakeState& on_message(Responder& ctx, const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) = 0;
-            virtual IHandshakeState& on_message(Responder& ctx, const RequestHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) = 0;
+            virtual IHandshakeState* on_message(Responder& ctx, const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) = 0;
+            virtual IHandshakeState* on_message(Responder& ctx, const RequestHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) = 0;
         };
 
         Responder(

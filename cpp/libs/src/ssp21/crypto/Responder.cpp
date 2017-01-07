@@ -30,7 +30,7 @@ namespace ssp21
             std::move(local_static_key_pair),
             std::move(remote_static_public_key)
         ),
-        handshake_state(&ResponderHandshakeIdle::get())
+        handshake_state(ResponderHandshakeIdle::get())
     {}
 
     void Responder::reply_with_handshake_error(HandshakeError err)
@@ -72,7 +72,7 @@ namespace ssp21
 
     void Responder::reset_state_on_close()
     {
-        this->handshake_state = &ResponderHandshakeIdle::get();
+        this->handshake_state = ResponderHandshakeIdle::get();
     }
 
     bool Responder::supports(Function function) const
@@ -103,12 +103,12 @@ namespace ssp21
 
     void Responder::on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
-        this->handshake_state = &this->handshake_state->on_message(*this, msg, raw_data, now);
+        this->handshake_state = this->handshake_state->on_message(*this, msg, raw_data, now);
     }
 
     void Responder::on_message(const RequestHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
-        this->handshake_state = &this->handshake_state->on_message(*this, msg, raw_data, now);
+        this->handshake_state = this->handshake_state->on_message(*this, msg, raw_data, now);
     }
 
 }

@@ -35,19 +35,19 @@ namespace ssp21
 
         public:
             // called when conditions are met that require we renegotiate the session
-            virtual IHandshakeState& on_handshake_required(Initiator& ctx, const openpal::Timestamp& now)
+            virtual IHandshakeState* on_handshake_required(Initiator& ctx, const openpal::Timestamp& now)
             {
-                return *this;
+                return this;
             }
 
-            virtual IHandshakeState& on_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now);
-            virtual IHandshakeState& on_message(Initiator& ctx, const ReplyHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now);
-            virtual IHandshakeState& on_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now);
+            virtual IHandshakeState* on_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now);
+            virtual IHandshakeState* on_message(Initiator& ctx, const ReplyHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now);
+            virtual IHandshakeState* on_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now);
 
             // called when the response timeout timer fires
-            virtual IHandshakeState& on_response_timeout(Initiator& ctx)
+            virtual IHandshakeState* on_response_timeout(Initiator& ctx)
             {
-                return *this;
+                return this;
             }
 
         private:
