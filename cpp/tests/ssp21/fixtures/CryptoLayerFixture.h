@@ -49,7 +49,7 @@ namespace ssp21
 
 		CryptoLayerFixture(
             const Session::Config& session_config = Session::Config(),
-            const typename LayerType::Config& config = LayerType::Config(),
+            const typename LayerType::Config& config = typename LayerType::Config(),
             uint16_t max_message_size = consts::link::max_config_payload_size
         ) :
             keys(BufferType::x25519_key),
