@@ -55,7 +55,7 @@ namespace ssp21
 
     void Initiator::on_open_impl()
     {
-        this->handshake_state = &this->handshake_state->initialize(*this, this->executor->get_time());
+        this->handshake_state = &this->handshake_state->on_handshake_required(*this, this->executor->get_time());
     }
 
     void Initiator::reset_state_on_close()

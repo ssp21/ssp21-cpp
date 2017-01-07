@@ -12,7 +12,7 @@ namespace ssp21
 
     public:
 
-        virtual IHandshakeState& initialize(Initiator& ctx, const openpal::Timestamp& now) override;
+        virtual IHandshakeState& on_handshake_required(Initiator& ctx, const openpal::Timestamp& now) override;
 
         static Initiator::IHandshakeState& get()
         {

@@ -35,7 +35,7 @@ namespace ssp21
 
         public:
             // called when conditions are met that require we renegotiate the session
-            virtual IHandshakeState& initialize(Initiator& ctx, const openpal::Timestamp& now)
+            virtual IHandshakeState& on_handshake_required(Initiator& ctx, const openpal::Timestamp& now)
             {
                 return *this;
             }
