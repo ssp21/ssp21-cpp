@@ -52,6 +52,8 @@ namespace ssp21
 
         ctx.lower->transmit(result.frame);
 
+        ctx.start_response_timer();
+
         return InitiatorHandshakeWaitForBeginReply::get();
     }
 }

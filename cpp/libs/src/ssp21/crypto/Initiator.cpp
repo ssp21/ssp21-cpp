@@ -28,6 +28,7 @@ namespace ssp21
         ),
         handshake_state(InitiatorHandshakeIdle::get()),
         suite(context_config.suite),
+        params(context_config.params),
         response_timer(*executor)
     {}
 
@@ -52,6 +53,16 @@ namespace ssp21
     void Initiator::IHandshakeState::log_unexpected_message(openpal::Logger& logger, Function function)
     {
         FORMAT_LOG_BLOCK(logger, levels::warn, "Received unexpected message: %s", FunctionSpec::to_string(function));
+    }
+
+    void Initiator::start_response_timer()
+    {
+        auto on_timeout = [this]()
+        {
+            this->handshake_state = this->handshake_state->on_response_timeout(*this);
+        };
+
+        this->response_timer.restart(this->params.response_timeout, on_timeout);
     }
 
     void Initiator::on_open_impl()

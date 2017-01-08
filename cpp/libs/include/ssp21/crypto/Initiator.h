@@ -32,7 +32,13 @@ namespace ssp21
                 SessionMode session_mode = SessionMode::hmac_sha256_16;
             };
 
+            struct Params
+            {
+                openpal::TimeDuration response_timeout = openpal::TimeDuration::seconds(2);
+            };
+
             Suite suite;
+            Params params;
         };
 
         Initiator(
@@ -73,6 +79,10 @@ namespace ssp21
 
     private:
 
+        // ---- private helper methods -----
+
+        void start_response_timer();
+
         // ---- final implementations from IUpperLayer ----
 
         virtual void on_open_impl() override;
@@ -96,6 +106,7 @@ namespace ssp21
         IHandshakeState* handshake_state;
 
         const Config::Suite suite;
+        const Config::Params params;
 
         openpal::TimerRef response_timer;
 
