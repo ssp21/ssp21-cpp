@@ -8,7 +8,9 @@
 using namespace ssp21;
 using namespace openpal;
 
-// ---------- tests for handshake state idle -----------
+void test_open(InitiatorFixture& fix);
+
+// ---------- tests for initial handshake message -----------
 
 TEST_CASE(SUITE("construction"))
 {
@@ -18,6 +20,21 @@ TEST_CASE(SUITE("construction"))
 TEST_CASE(SUITE("transmits REQUEST_HANDSHAKE_BEGIN when opened"))
 {
     InitiatorFixture fix;
+    test_open(fix);
+}
+
+TEST_CASE(SUITE("stops timer when closed"))
+{
+    InitiatorFixture fix;
+    test_open(fix);
+    fix.initiator.on_close();
+    REQUIRE(fix.exe->num_active() == 0);
+}
+
+// ---------- helper implementations -----------
+
+void test_open(InitiatorFixture& fix)
+{
     REQUIRE(fix.lower.num_tx_messages() == 0);
     fix.initiator.on_open();
     REQUIRE(fix.lower.num_tx_messages() == 1);
