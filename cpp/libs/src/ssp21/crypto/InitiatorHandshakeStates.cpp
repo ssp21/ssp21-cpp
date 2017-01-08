@@ -8,7 +8,7 @@
 namespace ssp21
 {
 
-    Initiator::IHandshakeState* InitiatorHandshakeIdle::on_handshake_required(Initiator& ctx, const openpal::Timestamp& now)
+    Initiator::IHandshakeState* InitiatorHandshake::Idle::on_handshake_required(Initiator& ctx, const openpal::Timestamp& now)
     {
         if (!ctx.lower->get_is_tx_ready())
         {
@@ -29,7 +29,7 @@ namespace ssp21
         {
             FORMAT_LOG_BLOCK(ctx.logger, levels::error, "Error configured handshake algorithms: %s", HandshakeErrorSpec::to_string(err));
             // There's nothing we can do about a bad configuration, so just go to an error state
-            return InitiatorHandshakeBadConfiguration::get();
+            return InitiatorHandshake::BadConfiguration::get();
         }
 
         const auto public_key = ctx.handshake.initialize();
@@ -45,7 +45,7 @@ namespace ssp21
 
         if (result.is_error())
         {
-            return InitiatorHandshakeBadConfiguration::get();
+            return InitiatorHandshake::BadConfiguration::get();
         }
 
         ctx.handshake.set_ck(result.written);
@@ -54,7 +54,7 @@ namespace ssp21
 
         ctx.start_response_timer();
 
-        return InitiatorHandshakeWaitForBeginReply::get();
+        return InitiatorHandshake::WaitForBeginReply::get();
     }
 }
 

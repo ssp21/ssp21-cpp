@@ -26,7 +26,7 @@ namespace ssp21
             std::move(local_static_key_pair),
             std::move(remote_static_public_key)
         ),
-        handshake_state(InitiatorHandshakeIdle::get()),
+        handshake_state(InitiatorHandshake::Idle::get()),
         suite(context_config.suite),
         params(context_config.params),
         response_timer(*executor)
@@ -72,7 +72,7 @@ namespace ssp21
 
     void Initiator::reset_state_on_close()
     {
-        this->handshake_state = InitiatorHandshakeIdle::get();
+        this->handshake_state = InitiatorHandshake::Idle::get();
         this->response_timer.cancel();
     }
 

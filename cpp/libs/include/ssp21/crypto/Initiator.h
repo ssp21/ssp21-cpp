@@ -16,7 +16,7 @@ namespace ssp21
     class Initiator final : public CryptoLayer
     {
 
-        friend class InitiatorHandshakeIdle;
+        friend struct InitiatorHandshake;
 
     public:
 

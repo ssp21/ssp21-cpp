@@ -6,72 +6,77 @@
 
 namespace ssp21
 {
-    class InitiatorHandshakeIdle final : public Initiator::IHandshakeState
+    struct InitiatorHandshake
     {
-        InitiatorHandshakeIdle() {}
-
-    public:
-
-        virtual IHandshakeState* on_handshake_required(Initiator& ctx, const openpal::Timestamp& now) override;
-
-        static Initiator::IHandshakeState* get()
+        class Idle final : public Initiator::IHandshakeState
         {
-            static InitiatorHandshakeIdle instance;
-            return &instance;
-        }
+            Idle() {}
+
+        public:
+
+            virtual IHandshakeState* on_handshake_required(Initiator& ctx, const openpal::Timestamp& now) override;
+
+            static Initiator::IHandshakeState* get()
+            {
+                static Idle instance;
+                return &instance;
+            }
+        };
+
+        class WaitForBeginReply final : public Initiator::IHandshakeState
+        {
+            WaitForBeginReply() {}
+
+        public:
+
+            static Initiator::IHandshakeState* get()
+            {
+                static WaitForBeginReply instance;
+                return &instance;
+            }
+        };
+
+        class WaitForAuthReply final : public Initiator::IHandshakeState
+        {
+            WaitForAuthReply() {}
+
+        public:
+
+            static Initiator::IHandshakeState* get()
+            {
+                static WaitForAuthReply instance;
+                return &instance;
+            }
+        };
+
+        class WaitForRetry final : public Initiator::IHandshakeState
+        {
+            WaitForRetry() {}
+
+        public:
+
+            static Initiator::IHandshakeState* get()
+            {
+                static WaitForRetry instance;
+                return &instance;
+            }
+        };
+
+        class BadConfiguration final : public Initiator::IHandshakeState
+        {
+            BadConfiguration() {}
+
+        public:
+
+            static Initiator::IHandshakeState* get()
+            {
+                static BadConfiguration instance;
+                return &instance;
+            }
+        };
     };
 
-    class InitiatorHandshakeWaitForBeginReply final : public Initiator::IHandshakeState
-    {
-        InitiatorHandshakeWaitForBeginReply() {}
 
-    public:
-
-        static Initiator::IHandshakeState* get()
-        {
-            static InitiatorHandshakeWaitForBeginReply instance;
-            return &instance;
-        }
-    };
-
-    class InitiatorHandshakeWaitForAuthReply final : public Initiator::IHandshakeState
-    {
-        InitiatorHandshakeWaitForAuthReply() {}
-
-    public:
-
-        static Initiator::IHandshakeState* get()
-        {
-            static InitiatorHandshakeWaitForAuthReply instance;
-            return &instance;
-        }
-    };
-
-    class InitiatorHandshakeWaitForRetry final : public Initiator::IHandshakeState
-    {
-        InitiatorHandshakeWaitForRetry() {}
-
-    public:
-
-        static Initiator::IHandshakeState* get()
-        {
-            static InitiatorHandshakeWaitForRetry instance;
-            return &instance;
-        }
-    };
-
-    class InitiatorHandshakeBadConfiguration final : public Initiator::IHandshakeState
-    {
-        InitiatorHandshakeBadConfiguration() {}
-
-    public:
-
-        static Initiator::IHandshakeState* get()
-        {
-            static InitiatorHandshakeBadConfiguration instance;
-            return &instance;
-        }
-    };
 
 }
 

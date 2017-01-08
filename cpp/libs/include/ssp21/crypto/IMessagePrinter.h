@@ -9,7 +9,7 @@ namespace ssp21
 
     /**
     * A simple interface for pretty printing
-    * complex messages as a sequence of
+    * complex messages as a sequence of individual fields
     */
     class IMessagePrinter
     {
