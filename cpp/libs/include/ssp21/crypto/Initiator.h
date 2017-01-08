@@ -35,6 +35,7 @@ namespace ssp21
             struct Params
             {
                 openpal::TimeDuration response_timeout = openpal::TimeDuration::seconds(2);
+                openpal::TimeDuration retry_timeout = openpal::TimeDuration::seconds(5);
             };
 
             Suite suite;
@@ -71,6 +72,12 @@ namespace ssp21
                 return this;
             }
 
+            // called when the retry timeout timer fires
+            virtual IHandshakeState* on_retry_timeout(Initiator& ctx)
+            {
+                return this;
+            }
+
         private:
 
             void log_unexpected_message(openpal::Logger& logger, Function func);
@@ -82,6 +89,8 @@ namespace ssp21
         // ---- private helper methods -----
 
         void start_response_timer();
+
+        void start_retry_timer();
 
         // ---- final implementations from IUpperLayer ----
 
@@ -108,7 +117,7 @@ namespace ssp21
         const Config::Suite suite;
         const Config::Params params;
 
-        openpal::TimerRef response_timer;
+        openpal::TimerRef response_and_retry_timer;
 
     };
 

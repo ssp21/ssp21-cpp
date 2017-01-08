@@ -31,6 +31,17 @@ TEST_CASE(SUITE("stops timer when closed"))
     REQUIRE(fix.exe->num_active() == 0);
 }
 
+TEST_CASE(SUITE("cancels response timer and starts retry timer when error message received"))
+{
+    InitiatorFixture fix;
+    test_open(fix);
+
+    fix.lower.enqueue_message(hex::reply_handshake_error(HandshakeError::bad_message_format));
+    REQUIRE(fix.exe->num_timer_cancel() == 1);
+    REQUIRE(fix.exe->num_pending_timers() == 1);
+
+}
+
 // ---------- helper implementations -----------
 
 void test_open(InitiatorFixture& fix)
