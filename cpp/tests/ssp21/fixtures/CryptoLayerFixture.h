@@ -19,62 +19,41 @@
 namespace ssp21
 {
 
-	struct MockKeys
-	{
-		MockKeys(BufferType key_type) :
-			local_kp(std::make_unique<KeyPair>()),
-			remote_static_key(std::make_unique<PublicKey>())
-		{
-			init_key(local_kp->private_key, key_type);
-			init_key(local_kp->public_key, key_type);
-			init_key(*remote_static_key, key_type);
-		}
+    struct MockKeys
+    {
+        MockKeys(BufferType key_type) :
+            local_kp(std::make_unique<KeyPair>()),
+            remote_static_key(std::make_unique<PublicKey>())
+        {
+            init_key(local_kp->private_key, key_type);
+            init_key(local_kp->public_key, key_type);
+            init_key(*remote_static_key, key_type);
+        }
 
-		static void init_key(BufferBase& buffer, BufferType key_type)
-		{
-			buffer.as_wseq().set_all_to(0xFF);
-			buffer.set_type(key_type);
-		}
+        static void init_key(BufferBase& buffer, BufferType key_type)
+        {
+            buffer.as_wseq().set_all_to(0xFF);
+            buffer.set_type(key_type);
+        }
 
-		std::unique_ptr<KeyPair> local_kp;
-		std::unique_ptr<PublicKey> remote_static_key;
-	};
+        std::unique_ptr<KeyPair> local_kp;
+        std::unique_ptr<PublicKey> remote_static_key;
+    };
 
-	template <class LayerType>
     class CryptoLayerFixture
     {
-    private:
 
     public:
 
-		CryptoLayerFixture(
+        CryptoLayerFixture(
             const Session::Config& session_config = Session::Config(),
-            const typename LayerType::Config& config = typename LayerType::Config(),
             uint16_t max_message_size = consts::link::max_config_payload_size
         ) :
             keys(BufferType::x25519_key),
             log("responder"),
-            exe(openpal::MockExecutor::Create()),
-            layer(
-                config,
-                session_config,
-                log.logger,
-                get_frame_writer(log.logger, max_message_size),
-                exe,
-                std::move(keys.local_kp), std::move(keys.remote_static_key)
-            ),
-            lower(layer),
-            upper(layer)
+            exe(openpal::MockExecutor::Create())
         {
             MockCryptoBackend::instance.clear_actions();
-
-            this->layer.bind_layers(lower, upper);
-        }
-
-        void set_tx_ready()
-        {
-            lower.set_tx_ready(true);
-            layer.on_tx_ready();
         }
 
         static std::shared_ptr<IFrameWriter> get_frame_writer(const openpal::Logger& logger, uint16_t max_message_size)
@@ -82,7 +61,7 @@ namespace ssp21
             return std::make_shared<MockFrameWriter>(logger, max_message_size);
         }
 
-    private:
+    protected:
 
         MockKeys keys;
 
@@ -90,13 +69,52 @@ namespace ssp21
 
         ssp21::MockLogHandler log;
         const std::shared_ptr<openpal::MockExecutor> exe;
-		LayerType layer;
         MockLowerLayer lower;
         MockUpperLayer upper;
+
     };
 
-	typedef CryptoLayerFixture<Responder> ResponderFixture;
-	typedef CryptoLayerFixture<Initiator> InitiatorFixture;
+    struct ResponderFixture : public CryptoLayerFixture
+    {
+        ResponderFixture(
+            const Session::Config& session_config = Session::Config(),
+            const Responder::Config& config = Responder::Config(),
+            uint16_t max_message_size = consts::link::max_config_payload_size
+        ) :
+            CryptoLayerFixture(session_config, max_message_size),
+            responder(config, session_config, this->log.logger, get_frame_writer(this->log.logger, max_message_size), this->exe, std::move(this->keys.local_kp), std::move(this->keys.remote_static_key))
+        {
+            lower.bind_upper(responder);
+            upper.bind_lower(responder);
+            responder.bind_layers(lower, upper);
+        }
+
+        void set_tx_ready()
+        {
+            lower.set_tx_ready(true);
+            responder.on_tx_ready();
+        }
+
+        Responder responder;
+    };
+
+    struct InitiatorFixture : public CryptoLayerFixture
+    {
+        InitiatorFixture(
+            const Session::Config& session_config = Session::Config(),
+            const Initiator::Config& config = Initiator::Config(),
+            uint16_t max_message_size = consts::link::max_config_payload_size
+        ) :
+            CryptoLayerFixture(session_config, max_message_size),
+            initiator(config, session_config, this->log.logger, get_frame_writer(this->log.logger, max_message_size), this->exe, std::move(this->keys.local_kp), std::move(this->keys.remote_static_key))
+        {
+            lower.bind_upper(initiator);
+            upper.bind_lower(initiator);
+            initiator.bind_layers(lower, upper);
+        }
+
+        Initiator initiator;
+    };
 
 }
 

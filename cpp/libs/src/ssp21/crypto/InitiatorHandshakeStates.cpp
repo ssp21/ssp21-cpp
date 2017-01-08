@@ -10,6 +10,11 @@ namespace ssp21
 
     Initiator::IHandshakeState* InitiatorHandshakeIdle::on_handshake_required(Initiator& ctx, const openpal::Timestamp& now)
     {
+        if (!ctx.lower->get_is_tx_ready())
+        {
+            return this;
+        }
+
         const CryptoSpec crypto_spec(
             ctx.suite.nonce_mode,
             ctx.suite.dh_mode,

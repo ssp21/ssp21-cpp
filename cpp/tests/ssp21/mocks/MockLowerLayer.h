@@ -19,8 +19,10 @@ namespace ssp21
 
     public:
 
-        MockLowerLayer(IUpperLayer& upper) : upper(&upper)
-        {}
+        void bind_upper(IUpperLayer& upper)
+        {
+            this->upper = &upper;
+        }
 
         void set_tx_ready(bool value)
         {
@@ -92,7 +94,7 @@ namespace ssp21
 
         typedef std::deque<std::unique_ptr<message_t>> message_queue_t;
 
-        IUpperLayer* const upper;
+        IUpperLayer* upper = nullptr;
 
         message_queue_t tx_messages;
 

@@ -15,3 +15,9 @@ TEST_CASE(SUITE("construction"))
     InitiatorFixture fix;
 }
 
+TEST_CASE(SUITE("transmits REQUEST_HANDSHAKE_BEGIN when opened"))
+{
+    InitiatorFixture fix;
+    REQUIRE(fix.lower.num_tx_messages() == 0);
+}
+

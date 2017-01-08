@@ -16,8 +16,10 @@ namespace ssp21
 
     public:
 
-        MockUpperLayer(ILowerLayer& lower) : lower(&lower)
-        {}
+        void bind_lower(ILowerLayer& lower)
+        {
+            this->lower = &lower;
+        }
 
         std::string pop_rx_message()
         {
@@ -51,7 +53,7 @@ namespace ssp21
 
         message_queue_t rx_messages;
 
-        ILowerLayer* const lower;
+        ILowerLayer* lower = nullptr;
 
         virtual void on_open_impl() override
         {
