@@ -8,6 +8,8 @@
 namespace ssp21
 {
 
+    // -------- Idle --------
+
     Initiator::IHandshakeState* InitiatorHandshake::Idle::on_handshake_required(Initiator& ctx, const openpal::Timestamp& now)
     {
         if (!ctx.lower->get_is_tx_ready())
@@ -55,6 +57,23 @@ namespace ssp21
         ctx.start_response_timer();
 
         return InitiatorHandshake::WaitForBeginReply::get();
+    }
+
+    // -------- WaitForBeginReply --------
+
+    Initiator::IHandshakeState* InitiatorHandshake::WaitForBeginReply::on_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
+    {
+        return this;
+    }
+
+    Initiator::IHandshakeState* InitiatorHandshake::WaitForBeginReply::on_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
+    {
+        return this;
+    }
+
+    Initiator::IHandshakeState* InitiatorHandshake::WaitForBeginReply::on_response_timeout(Initiator& ctx)
+    {
+        return this;
     }
 }
 
