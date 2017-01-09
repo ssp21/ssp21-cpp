@@ -13,7 +13,7 @@ namespace ssp21
 
     // -------------------------- HandshakeIdle -----------------------------
 
-    Responder::IHandshakeState* ResponderHandshakeIdle::on_message(Responder& ctx, const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
+    Responder::IHandshakeState* ResponderHandshake::Idle::on_message(Responder& ctx, const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
     {
         auto err = ctx.configure_feature_support(msg);
 
@@ -56,10 +56,10 @@ namespace ssp21
 
         ctx.lower->transmit(res.frame);
 
-        return ResponderHandshakeWaitForAuth::get();
+        return ResponderHandshake::WaitForAuth::get();
     }
 
-    Responder::IHandshakeState* ResponderHandshakeIdle::on_message(Responder& ctx, const RequestHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
+    Responder::IHandshakeState* ResponderHandshake::Idle::on_message(Responder& ctx, const RequestHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
     {
         SIMPLE_LOG_BLOCK(ctx.logger, levels::info, "no prior request_handshake_begin");
 
@@ -70,19 +70,19 @@ namespace ssp21
 
     // -------------------------- HandshakeWaitForAuth -----------------------------
 
-    Responder::IHandshakeState* ResponderHandshakeWaitForAuth::on_message(Responder& ctx, const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
+    Responder::IHandshakeState* ResponderHandshake::WaitForAuth::on_message(Responder& ctx, const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
     {
         // process via HandshakeIdle
-        return ResponderHandshakeIdle::get()->on_message(ctx, msg, msg_bytes, now);
+        return ResponderHandshake::Idle::get()->on_message(ctx, msg, msg_bytes, now);
     }
 
-    Responder::IHandshakeState* ResponderHandshakeWaitForAuth::on_message(Responder& ctx, const RequestHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
+    Responder::IHandshakeState* ResponderHandshake::WaitForAuth::on_message(Responder& ctx, const RequestHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
     {
         if (!ctx.handshake.auth_handshake(msg.mac)) // auth success
         {
             SIMPLE_LOG_BLOCK(ctx.logger, levels::warn, "RequestHandshakeAuth: authentication failure");
             ctx.reply_with_handshake_error(HandshakeError::authentication_error);
-            return ResponderHandshakeIdle::get();
+            return ResponderHandshake::Idle::get();
         }
 
         ctx.handshake.mix_ck(msg_bytes);
@@ -96,7 +96,7 @@ namespace ssp21
 
         if (res.is_error())
         {
-            return ResponderHandshakeIdle::get();
+            return ResponderHandshake::Idle::get();
         }
 
         ctx.handshake.mix_ck(res.written);
@@ -107,7 +107,7 @@ namespace ssp21
 
         ctx.upper->on_open();
 
-        return ResponderHandshakeIdle::get();
+        return ResponderHandshake::Idle::get();
     }
 
 }

@@ -96,7 +96,7 @@ TEST_CASE(SUITE("goes to retry state when handshake reply error received while w
 
 void test_open(InitiatorFixture& fix)
 {
-	REQUIRE(fix.initiator.get_state_enum() == HandshakeState::Idle);
+    REQUIRE(fix.initiator.get_state_enum() == HandshakeState::Idle);
     REQUIRE(fix.lower.num_tx_messages() == 0);
     MockCryptoBackend::instance.expect_empty();
 
@@ -115,7 +115,7 @@ void test_open(InitiatorFixture& fix)
                               hex::repeat(0xFF, 32)
                           );
 
-	REQUIRE(fix.initiator.get_state_enum() == HandshakeState::WaitForBeginReply);
+    REQUIRE(fix.initiator.get_state_enum() == HandshakeState::WaitForBeginReply);
     REQUIRE(fix.lower.pop_tx_message() == expected);
     REQUIRE(fix.exe->num_pending_timers() == 1);
 
@@ -124,7 +124,7 @@ void test_open(InitiatorFixture& fix)
 
 void test_response_timeout(InitiatorFixture& fix, HandshakeState new_state)
 {
-	const auto num_timer_cancel = fix.exe->num_timer_cancel();
+    const auto num_timer_cancel = fix.exe->num_timer_cancel();
 
     REQUIRE(fix.exe->next_timer_expiration_rel() == consts::crypto::initiator::default_response_timeout);
     REQUIRE(fix.exe->advance_to_next_timer());
@@ -133,16 +133,16 @@ void test_response_timeout(InitiatorFixture& fix, HandshakeState new_state)
     REQUIRE(fix.exe->num_pending_timers() == 1);
     REQUIRE(fix.lower.num_rx_messages() == 0);
 
-	REQUIRE(fix.initiator.get_state_enum() == HandshakeState::WaitForRetry);
+    REQUIRE(fix.initiator.get_state_enum() == HandshakeState::WaitForRetry);
 
     MockCryptoBackend::instance.expect_empty();
 }
 
 void test_reply_handshake_begin(InitiatorFixture& fix)
 {
-	REQUIRE(fix.initiator.get_state_enum() == HandshakeState::WaitForBeginReply);
-    
-	const auto num_timer_cancel = fix.exe->num_timer_cancel();
+    REQUIRE(fix.initiator.get_state_enum() == HandshakeState::WaitForBeginReply);
+
+    const auto num_timer_cancel = fix.exe->num_timer_cancel();
 
     MockCryptoBackend::instance.expect_empty();
     fix.lower.enqueue_message(hex::reply_handshake_begin(hex::repeat(0xFF, consts::crypto::x25519_key_length)));
@@ -150,7 +150,7 @@ void test_reply_handshake_begin(InitiatorFixture& fix)
     const auto expected = hex::request_handshake_auth(hex::repeat(0xFF, consts::crypto::sha256_hash_output_length));
     REQUIRE(fix.lower.pop_tx_message() == expected);
 
-	REQUIRE(fix.initiator.get_state_enum() == HandshakeState::WaitForAuthReply);
+    REQUIRE(fix.initiator.get_state_enum() == HandshakeState::WaitForAuthReply);
 
     // causes the master to go through key derivation
     MockCryptoBackend::instance.expect(

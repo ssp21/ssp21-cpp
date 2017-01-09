@@ -30,7 +30,7 @@ namespace ssp21
             std::move(local_static_key_pair),
             std::move(remote_static_public_key)
         ),
-        handshake_state(ResponderHandshakeIdle::get())
+        handshake_state(ResponderHandshake::Idle::get())
     {}
 
     void Responder::reply_with_handshake_error(HandshakeError err)
@@ -72,7 +72,7 @@ namespace ssp21
 
     void Responder::reset_state_on_close()
     {
-        this->handshake_state = ResponderHandshakeIdle::get();
+        this->handshake_state = ResponderHandshake::Idle::get();
     }
 
     bool Responder::supports(Function function) const

@@ -13,8 +13,7 @@ namespace ssp21
     */
     class Responder final : public CryptoLayer
     {
-        friend class ResponderHandshakeIdle;
-        friend class ResponderHandshakeWaitForAuth;
+        friend struct ResponderHandshake;
 
     public:
 
