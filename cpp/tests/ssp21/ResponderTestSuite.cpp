@@ -379,7 +379,7 @@ void test_auth_handshake_success(ResponderFixture& fix)
 
     fix.lower.enqueue_message(hex::request_handshake_auth(mac_hex));
 
-    REQUIRE(fix.lower.pop_tx_message() == hex::request_handshake_auth(mac_hex));
+    REQUIRE(fix.lower.pop_tx_message() == hex::reply_handshake_auth(mac_hex));
 
     // expected order of crypto operations
     MockCryptoBackend::instance.expect(

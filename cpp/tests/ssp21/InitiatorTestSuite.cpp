@@ -63,7 +63,7 @@ TEST_CASE(SUITE("starts retry timer when response timeout fires"))
 
 // ---------- tests for WaitBeginReply -----------
 
-TEST_CASE(SUITE("send REQUEST_HANDSHAKE_AUTH afte receving REPLY_HANDSHAKE_BEGIN"))
+TEST_CASE(SUITE("send REQUEST_HANDSHAKE_AUTH after receving REPLY_HANDSHAKE_BEGIN"))
 {
     InitiatorFixture fix;
     test_open(fix);
