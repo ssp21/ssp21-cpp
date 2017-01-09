@@ -10,7 +10,7 @@ namespace ssp21
     {
         class Idle final : public Initiator::IHandshakeState
         {
-            Idle() {}
+            Idle() : Initiator::IHandshakeState(Initiator::IHandshakeState::Enum::Idle) {}
 
         public:
 
@@ -25,7 +25,7 @@ namespace ssp21
 
         class WaitForBeginReply final : public Initiator::IHandshakeState
         {
-            WaitForBeginReply() {}
+            WaitForBeginReply() : Initiator::IHandshakeState(Initiator::IHandshakeState::Enum::WaitForBeginReply) {}
 
         public:
 
@@ -42,7 +42,7 @@ namespace ssp21
 
         class WaitForAuthReply final : public Initiator::IHandshakeState
         {
-            WaitForAuthReply() {}
+            WaitForAuthReply() : Initiator::IHandshakeState(Initiator::IHandshakeState::Enum::WaitForAuthReply) {}
 
             virtual IHandshakeState* on_message(Initiator& ctx, const ReplyHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) override;
             virtual IHandshakeState* on_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) override;
@@ -59,7 +59,7 @@ namespace ssp21
 
         class WaitForRetry final : public Initiator::IHandshakeState
         {
-            WaitForRetry() {}
+            WaitForRetry() : Initiator::IHandshakeState(Initiator::IHandshakeState::Enum::WaitForRetry) {}
 
         public:
 
@@ -72,7 +72,7 @@ namespace ssp21
 
         class BadConfiguration final : public Initiator::IHandshakeState
         {
-            BadConfiguration() {}
+            BadConfiguration() : Initiator::IHandshakeState(Initiator::IHandshakeState::Enum::BadConfiguration) {}
 
         public:
 

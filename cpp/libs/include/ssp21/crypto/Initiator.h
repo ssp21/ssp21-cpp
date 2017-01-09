@@ -56,6 +56,20 @@ namespace ssp21
         {
 
         public:
+
+			enum Enum
+			{
+				Idle,
+				WaitForBeginReply,
+				WaitForAuthReply,
+				WaitForRetry,
+				BadConfiguration
+			};
+
+			IHandshakeState(Enum enum_value) : enum_value(enum_value)
+			{}
+
+
             // called when conditions are met that require we renegotiate the session
             virtual IHandshakeState* on_handshake_required(Initiator& ctx, const openpal::Timestamp& now)
             {
@@ -78,11 +92,18 @@ namespace ssp21
                 return this;
             }
 
-        private:
+			const Enum enum_value;
+
+        private:			
 
             void log_unexpected_message(openpal::Logger& logger, Function func);
 
         };
+
+		inline IHandshakeState::Enum get_state_enum() const 
+		{
+			return this->handshake_state->enum_value;
+		}
 
     private:
 
