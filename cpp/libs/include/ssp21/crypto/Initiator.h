@@ -40,7 +40,7 @@ namespace ssp21
 
             Suite suite;
             Params params;
-        };		
+        };
 
         Initiator(
             const Config& context_config,
@@ -82,7 +82,7 @@ namespace ssp21
 
             void log_unexpected_message(openpal::Logger& logger, Function func);
 
-        };		
+        };
 
     private:
 
