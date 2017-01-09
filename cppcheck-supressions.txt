@@ -1,0 +1,3 @@
+passedByValue:cpp/libs/src/ssp21/crypto/CryptoLayer.cpp
+passedByValue:cpp/libs/src/ssp21/crypto/Initiator.cpp
+passedByValue:cpp/libs/src/ssp21/crypto/Responder.cpp
