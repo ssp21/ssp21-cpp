@@ -372,7 +372,7 @@ void test_begin_handshake_success(ResponderFixture& fix)
     REQUIRE(fix.lower.pop_tx_message() == reply);
     fix.set_tx_ready();
 
-	REQUIRE(fix.responder.get_state_enum() == Responder::IHandshakeState::Enum::wait_for_auth);
+    REQUIRE(fix.responder.get_state_enum() == Responder::IHandshakeState::Enum::wait_for_auth);
 }
 
 void test_auth_handshake_success(ResponderFixture& fix)
@@ -398,7 +398,7 @@ void test_auth_handshake_success(ResponderFixture& fix)
 
     fix.set_tx_ready();
 
-	REQUIRE(fix.responder.get_state_enum() == Responder::IHandshakeState::Enum::idle);
+    REQUIRE(fix.responder.get_state_enum() == Responder::IHandshakeState::Enum::idle);
 }
 
 void test_init_session_success(ResponderFixture& fix)
