@@ -9,6 +9,7 @@ using namespace ssp21;
 using namespace openpal;
 
 void test_open(InitiatorFixture& fix);
+void test_response_timeout(InitiatorFixture& fix);
 
 // ---------- tests for initial handshake message -----------
 
@@ -45,10 +46,7 @@ TEST_CASE(SUITE("starts retry timer when response timeout fires"))
 {
     InitiatorFixture fix;
     test_open(fix);
-
-    REQUIRE(fix.exe->advance_to_next_timer());
-    REQUIRE(fix.exe->num_timer_cancel() == 0);
-    REQUIRE(fix.exe->num_pending_timers() == 1);
+	test_response_timeout(fix);	
 }
 
 // ---------- helper implementations -----------
@@ -56,9 +54,11 @@ TEST_CASE(SUITE("starts retry timer when response timeout fires"))
 void test_open(InitiatorFixture& fix)
 {
     REQUIRE(fix.lower.num_tx_messages() == 0);
-    fix.initiator.on_open();
+	MockCryptoBackend::instance.expect_empty();
+		
+	fix.initiator.on_open();
     REQUIRE(fix.lower.num_tx_messages() == 1);
-
+	
     const auto expected = hex::request_handshake_begin(
                               0,
                               NonceMode::increment_last_rx,
@@ -73,5 +73,18 @@ void test_open(InitiatorFixture& fix)
 
     REQUIRE(fix.lower.pop_tx_message() == expected);
     REQUIRE(fix.exe->num_pending_timers() == 1);
+
+	MockCryptoBackend::instance.expect({CryptoAction::gen_keypair_x25519, CryptoAction::hash_sha256});
 }
 
+void test_response_timeout(InitiatorFixture& fix)
+{
+	REQUIRE(fix.exe->next_timer_expiration_rel() == consts::crypto::initiator::default_response_timeout);
+	REQUIRE(fix.exe->advance_to_next_timer());
+	REQUIRE(fix.exe->run_many() == 1);
+	REQUIRE(fix.exe->num_timer_cancel() == 0);
+	REQUIRE(fix.exe->num_pending_timers() == 1);
+	REQUIRE(fix.lower.num_rx_messages() == 0);
+
+	MockCryptoBackend::instance.expect_empty();
+}

@@ -4,6 +4,7 @@
 #include <cstdint>
 
 #include "ssp21/link/LinkConstants.h"
+#include "openpal/executor/TimeDuration.h"
 
 namespace ssp21
 {
@@ -34,6 +35,13 @@ namespace ssp21
             const uint16_t default_max_nonce = 32768;
             const uint32_t default_max_session_time_ms = 60 * 60 * 1000; // 1 hour in milliseconds
 
+			// defaults for the initiator
+			namespace initiator {
+				
+				const openpal::TimeDuration default_response_timeout = openpal::TimeDuration::seconds(2);				
+				const openpal::TimeDuration default_retry_timeout = openpal::TimeDuration::seconds(5);
+
+			}						
         }
     }
 }
