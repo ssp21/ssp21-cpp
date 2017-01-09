@@ -59,11 +59,11 @@ namespace ssp21
 
             enum Enum
             {
-                Idle,
-                WaitForBeginReply,
-                WaitForAuthReply,
-                WaitForRetry,
-                BadConfiguration
+                idle,
+                wait_for_begin_reply,
+                wait_for_auth_reply,
+                wait_for_retry,
+                bad_configuration
             };
 
             IHandshakeState(Enum enum_value) : enum_value(enum_value)

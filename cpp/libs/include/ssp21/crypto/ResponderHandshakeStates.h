@@ -10,7 +10,7 @@ namespace ssp21
     {
         class Idle final : public Responder::IHandshakeState
         {
-            Idle() {}
+            Idle() : Responder::IHandshakeState(Responder::IHandshakeState::Enum::idle) {}
 
         public:
 
@@ -28,7 +28,7 @@ namespace ssp21
 
         class WaitForAuth final : public Responder::IHandshakeState
         {
-            WaitForAuth() {}
+            WaitForAuth() : Responder::IHandshakeState(Responder::IHandshakeState::Enum::wait_for_auth) {}
 
         public:
 

@@ -21,8 +21,19 @@ namespace ssp21
 
         struct IHandshakeState : private openpal::Uncopyable
         {
+            enum Enum
+            {
+                idle,
+                wait_for_auth
+            };
+
+            IHandshakeState(Enum enum_value) : enum_value(enum_value)
+            {}
+
             virtual IHandshakeState* on_message(Responder& ctx, const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) = 0;
             virtual IHandshakeState* on_message(Responder& ctx, const RequestHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) = 0;
+
+            const Enum enum_value;
         };
 
         Responder(
@@ -35,9 +46,14 @@ namespace ssp21
             std::unique_ptr<PublicKey> remote_static_public_key
         );
 
-        ResponderStatistics get_statistics() const
+        inline ResponderStatistics get_statistics() const
         {
             return ResponderStatistics(this->session.get_statistics());
+        }
+
+        inline IHandshakeState::Enum get_state_enum() const
+        {
+            return this->handshake_state->enum_value;
         }
 
     private:
