@@ -66,7 +66,7 @@ namespace ssp21
                 bad_configuration
             };
 
-            IHandshakeState(Enum enum_value) : enum_value(enum_value)
+            explicit IHandshakeState(Enum enum_value) : enum_value(enum_value)
             {}
 
 

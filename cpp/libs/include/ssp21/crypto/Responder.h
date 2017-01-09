@@ -27,7 +27,7 @@ namespace ssp21
                 wait_for_auth
             };
 
-            IHandshakeState(Enum enum_value) : enum_value(enum_value)
+            explicit IHandshakeState(Enum enum_value) : enum_value(enum_value)
             {}
 
             virtual IHandshakeState* on_message(Responder& ctx, const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) = 0;
