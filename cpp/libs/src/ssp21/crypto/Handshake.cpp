@@ -42,7 +42,7 @@ namespace ssp21
                );
     }
 
-    void Handshake::calc_auth_handshake_reply_mac(HashOutput& output) const
+    void Handshake::calc_auth_handshake_mac(HashOutput& output) const
     {
         HandshakeAuthentication::calc_handshake_mac_with_macfunc(
             this->algorithms.handshake.session_auth_mac,

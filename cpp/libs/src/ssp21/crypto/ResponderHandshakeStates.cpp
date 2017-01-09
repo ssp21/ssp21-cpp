@@ -88,7 +88,7 @@ namespace ssp21
         ctx.handshake.mix_ck(msg_bytes);
 
         HashOutput reply_mac;
-        ctx.handshake.calc_auth_handshake_reply_mac(reply_mac);
+        ctx.handshake.calc_auth_handshake_mac(reply_mac);
 
         ReplyHandshakeAuth reply(seq8_t(reply_mac.as_seq()));
 

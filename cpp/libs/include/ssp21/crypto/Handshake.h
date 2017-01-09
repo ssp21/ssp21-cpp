@@ -55,7 +55,7 @@ namespace ssp21
 
         bool auth_handshake(const seq8_t& mac) const;
 
-        void calc_auth_handshake_reply_mac(HashOutput& output) const;
+        void calc_auth_handshake_mac(HashOutput& output) const;
 
     private:
 

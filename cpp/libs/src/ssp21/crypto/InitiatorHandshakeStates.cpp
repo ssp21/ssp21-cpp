@@ -63,11 +63,42 @@ namespace ssp21
 
     Initiator::IHandshakeState* InitiatorHandshake::WaitForBeginReply::on_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
     {
-        return this;
+        ctx.response_and_retry_timer.cancel();
+
+        std::error_code ec;
+        ctx.handshake.derive_authentication_key(msg_bytes, ctx.local_static_key_pair->private_key, msg.ephemeral_public_key, ctx.remote_static_public_key->as_seq(), ec);
+
+        if (ec)
+        {
+            FORMAT_LOG_BLOCK(ctx.logger, levels::error, "error deriving authentication key: %s", ec.message().c_str());
+            ctx.start_retry_timer();
+            return WaitForRetry::get();
+        }
+
+        HashOutput hash;
+        ctx.handshake.calc_auth_handshake_mac(hash);
+
+        const RequestHandshakeAuth request(hash.as_seq());
+
+        const auto result = ctx.frame_writer->write(request);
+
+        if (result.is_error())
+        {
+            return InitiatorHandshake::BadConfiguration::get();
+        }
+
+        ctx.handshake.mix_ck(result.written);
+
+        ctx.lower->transmit(result.frame);
+
+        ctx.start_response_timer();
+
+        return WaitForAuthReply::get();
     }
 
     Initiator::IHandshakeState* InitiatorHandshake::WaitForBeginReply::on_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
     {
+        ctx.response_and_retry_timer.cancel();
         FORMAT_LOG_BLOCK(ctx.logger, levels::error, "responder handshake error: %s", HandshakeErrorSpec::to_string(msg.handshake_error));
         ctx.start_retry_timer();
         return WaitForRetry::get();
