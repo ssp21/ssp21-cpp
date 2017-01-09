@@ -115,6 +115,8 @@ namespace ssp21
 
     Initiator::IHandshakeState* InitiatorHandshake::WaitForAuthReply::on_message(Initiator& ctx, const ReplyHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
     {
+        // TODO - finish the handshake!!
+
         return this;
     }
 

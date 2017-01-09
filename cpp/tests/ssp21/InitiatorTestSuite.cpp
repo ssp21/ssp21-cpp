@@ -78,6 +78,18 @@ TEST_CASE(SUITE("goes to retry state when response timeout occurs while waiting 
     test_response_timeout(fix, 1);
 }
 
+TEST_CASE(SUITE("goes to retry state when handshake reply error received while waiting for REPLY_HANDSHAKE_AUTH"))
+{
+    InitiatorFixture fix;
+    test_open(fix);
+    test_reply_handshake_begin(fix);
+
+    REQUIRE(fix.exe->num_timer_cancel() == 1);
+    fix.lower.enqueue_message(hex::reply_handshake_error(HandshakeError::no_prior_handshake_begin)); // can be any error code
+    REQUIRE(fix.exe->num_timer_cancel() == 2);
+    REQUIRE(fix.exe->num_pending_timers() == 1);
+}
+
 // ---------- helper implementations -----------
 
 void test_open(InitiatorFixture& fix)
