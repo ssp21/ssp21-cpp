@@ -29,7 +29,7 @@ namespace ssp21
         handshake_state(InitiatorHandshake::Idle::get()),
         suite(context_config.suite),
         params(context_config.params),
-        response_and_retry_timer(*executor)
+        response_and_retry_timer(executor)
     {}
 
     Initiator::IHandshakeState* Initiator::IHandshakeState::on_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)

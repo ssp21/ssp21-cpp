@@ -110,6 +110,28 @@ namespace ssp21
         ctx.start_retry_timer();
         return WaitForRetry::get();
     }
+
+    // -------- WaitForAuthReply --------
+
+    Initiator::IHandshakeState* InitiatorHandshake::WaitForAuthReply::on_message(Initiator& ctx, const ReplyHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
+    {
+        return this;
+    }
+
+    Initiator::IHandshakeState* InitiatorHandshake::WaitForAuthReply::on_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
+    {
+        ctx.response_and_retry_timer.cancel();
+        FORMAT_LOG_BLOCK(ctx.logger, levels::error, "responder handshake error: %s", HandshakeErrorSpec::to_string(msg.handshake_error));
+        ctx.start_retry_timer();
+        return WaitForRetry::get();
+    }
+
+    Initiator::IHandshakeState* InitiatorHandshake::WaitForAuthReply::on_response_timeout(Initiator& ctx)
+    {
+        SIMPLE_LOG_BLOCK(ctx.logger, levels::error, "timeout while waiting for ReplyHandshakeAuth");
+        ctx.start_retry_timer();
+        return WaitForRetry::get();
+    }
 }
 
 

@@ -9,7 +9,7 @@ using namespace ssp21;
 using namespace openpal;
 
 void test_open(InitiatorFixture& fix);
-void test_response_timeout(InitiatorFixture& fix);
+void test_response_timeout(InitiatorFixture& fix, size_t num_timer_cancel);
 void test_reply_handshake_begin(InitiatorFixture& fix);
 
 // ---------- tests for initial state -----------
@@ -27,13 +27,13 @@ TEST_CASE(SUITE("transmits REQUEST_HANDSHAKE_BEGIN when opened"))
 
 TEST_CASE(SUITE("ignores reply handshake auth while waiting for reply handshake begin"))
 {
-	InitiatorFixture fix;
-	test_open(fix);	
+    InitiatorFixture fix;
+    test_open(fix);
 
-	REQUIRE(fix.exe->num_timer_cancel() == 0);
-	fix.lower.enqueue_message(hex::reply_handshake_auth(hex::repeat(0xFF, consts::crypto::sha256_hash_output_length)));
-	REQUIRE(fix.exe->num_timer_cancel() == 0);
-	REQUIRE(fix.lower.num_tx_messages() == 0);
+    REQUIRE(fix.exe->num_timer_cancel() == 0);
+    fix.lower.enqueue_message(hex::reply_handshake_auth(hex::repeat(0xFF, consts::crypto::sha256_hash_output_length)));
+    REQUIRE(fix.exe->num_timer_cancel() == 0);
+    REQUIRE(fix.lower.num_tx_messages() == 0);
 }
 
 TEST_CASE(SUITE("stops timer when closed"))
@@ -58,7 +58,7 @@ TEST_CASE(SUITE("starts retry timer when response timeout fires"))
 {
     InitiatorFixture fix;
     test_open(fix);
-    test_response_timeout(fix);
+    test_response_timeout(fix, 0);
 }
 
 // ---------- tests for WaitBeginReply -----------
@@ -68,6 +68,14 @@ TEST_CASE(SUITE("send REQUEST_HANDSHAKE_AUTH after receving REPLY_HANDSHAKE_BEGI
     InitiatorFixture fix;
     test_open(fix);
     test_reply_handshake_begin(fix);
+}
+
+TEST_CASE(SUITE("goes to retry state when response timeout occurs while waiting for REPLY_HANDSHAKE_AUTH"))
+{
+    InitiatorFixture fix;
+    test_open(fix);
+    test_reply_handshake_begin(fix);
+    test_response_timeout(fix, 1);
 }
 
 // ---------- helper implementations -----------
@@ -98,12 +106,12 @@ void test_open(InitiatorFixture& fix)
     MockCryptoBackend::instance.expect({CryptoAction::gen_keypair_x25519, CryptoAction::hash_sha256});
 }
 
-void test_response_timeout(InitiatorFixture& fix)
+void test_response_timeout(InitiatorFixture& fix, size_t num_timer_cancel)
 {
     REQUIRE(fix.exe->next_timer_expiration_rel() == consts::crypto::initiator::default_response_timeout);
     REQUIRE(fix.exe->advance_to_next_timer());
     REQUIRE(fix.exe->run_many() == 1);
-    REQUIRE(fix.exe->num_timer_cancel() == 0);
+    REQUIRE(fix.exe->num_timer_cancel() == num_timer_cancel);
     REQUIRE(fix.exe->num_pending_timers() == 1);
     REQUIRE(fix.lower.num_rx_messages() == 0);
 
