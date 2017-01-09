@@ -39,7 +39,16 @@ TEST_CASE(SUITE("cancels response timer and starts retry timer when error messag
     fix.lower.enqueue_message(hex::reply_handshake_error(HandshakeError::bad_message_format));
     REQUIRE(fix.exe->num_timer_cancel() == 1);
     REQUIRE(fix.exe->num_pending_timers() == 1);
+}
 
+TEST_CASE(SUITE("starts retry timer when response timeout fires"))
+{
+    InitiatorFixture fix;
+    test_open(fix);
+
+    REQUIRE(fix.exe->advance_to_next_timer());
+    REQUIRE(fix.exe->num_timer_cancel() == 0);
+    REQUIRE(fix.exe->num_pending_timers() == 1);
 }
 
 // ---------- helper implementations -----------
