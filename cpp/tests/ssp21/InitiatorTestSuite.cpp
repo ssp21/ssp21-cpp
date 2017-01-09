@@ -25,6 +25,17 @@ TEST_CASE(SUITE("transmits REQUEST_HANDSHAKE_BEGIN when opened"))
     test_open(fix);
 }
 
+TEST_CASE(SUITE("ignores reply handshake auth while waiting for reply handshake begin"))
+{
+	InitiatorFixture fix;
+	test_open(fix);	
+
+	REQUIRE(fix.exe->num_timer_cancel() == 0);
+	fix.lower.enqueue_message(hex::reply_handshake_auth(hex::repeat(0xFF, consts::crypto::sha256_hash_output_length)));
+	REQUIRE(fix.exe->num_timer_cancel() == 0);
+	REQUIRE(fix.lower.num_tx_messages() == 0);
+}
+
 TEST_CASE(SUITE("stops timer when closed"))
 {
     InitiatorFixture fix;

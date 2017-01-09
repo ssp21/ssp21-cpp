@@ -41,7 +41,7 @@ ParseError ReplyHandshakeAuth::read(seq32_t input)
         );
     };
 
-    return MessageParser::read_message(input, Function::request_handshake_auth, read_fields);
+    return MessageParser::read_message(input, Function::reply_handshake_auth, read_fields);
 }
 
 FormatResult ReplyHandshakeAuth::write(wseq32_t& output) const
@@ -54,7 +54,7 @@ FormatResult ReplyHandshakeAuth::write(wseq32_t& output) const
         );
     };
 
-    return MessageFormatter::write_message(output, Function::request_handshake_auth, write_fields);
+    return MessageFormatter::write_message(output, Function::reply_handshake_auth, write_fields);
 }
 void ReplyHandshakeAuth::print(IMessagePrinter& printer) const
 {
