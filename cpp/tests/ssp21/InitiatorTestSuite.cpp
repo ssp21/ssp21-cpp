@@ -93,6 +93,16 @@ TEST_CASE(SUITE("goes to retry state when handshake reply error received while w
     REQUIRE(fix.exe->num_pending_timers() == 1);
 }
 
+TEST_CASE(SUITE("goes to retry state when DH fails"))
+{
+    InitiatorFixture fix;
+    test_open(fix);
+
+    MockCryptoBackend::instance.fail_dh_x25519 = true;
+    fix.lower.enqueue_message(hex::reply_handshake_begin(hex::repeat(0xFF, consts::crypto::x25519_key_length)));
+    REQUIRE(fix.initiator.get_state_enum() == HandshakeState::wait_for_retry);
+}
+
 TEST_CASE(SUITE("initializes session when a proper auth reply is received"))
 {
     InitiatorFixture fix;

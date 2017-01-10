@@ -31,8 +31,6 @@ namespace ssp21
 
         virtual void dh_x25519(const PrivateKey& priv_key, const seq8_t& pub_key, DHOutput& output, std::error_code& ec) override;
 
-        uint8_t fill_byte = 0xFF;
-
         bool empty_actions() const
         {
             return actions.empty();
@@ -88,9 +86,10 @@ namespace ssp21
             this->fill_byte = 0xFF;
         }
 
-    private:
-
         bool fail_dh_x25519 = false;
+        uint8_t fill_byte = 0xFF;
+
+    private:
 
         std::deque<CryptoAction> actions;
 
@@ -107,11 +106,6 @@ namespace ssp21
         MockCryptoBackend* operator->()
         {
             return &MockCryptoBackend::instance;
-        }
-
-        void set_dh_x22519_fail(bool fail_if_true)
-        {
-            MockCryptoBackend::instance.fail_dh_x25519 = fail_if_true;
         }
 
         ~CryptoTest()

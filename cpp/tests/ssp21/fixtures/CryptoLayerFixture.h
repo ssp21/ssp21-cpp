@@ -56,6 +56,11 @@ namespace ssp21
             MockCryptoBackend::instance.reset();
         }
 
+        ~CryptoLayerFixture()
+        {
+            MockCryptoBackend::instance.reset();
+        }
+
         static std::shared_ptr<IFrameWriter> get_frame_writer(const openpal::Logger& logger, uint16_t max_message_size)
         {
             return std::make_shared<MockFrameWriter>(logger, max_message_size);
