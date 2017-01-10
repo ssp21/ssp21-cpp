@@ -53,7 +53,7 @@ namespace ssp21
             log("responder"),
             exe(openpal::MockExecutor::Create())
         {
-            MockCryptoBackend::instance.clear_actions();
+            MockCryptoBackend::instance.reset();
         }
 
         static std::shared_ptr<IFrameWriter> get_frame_writer(const openpal::Logger& logger, uint16_t max_message_size)

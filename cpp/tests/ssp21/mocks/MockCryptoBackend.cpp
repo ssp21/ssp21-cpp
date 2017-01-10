@@ -2,6 +2,7 @@
 #include "MockCryptoBackend.h"
 
 #include "testlib/HexConversions.h"
+#include "ssp21/crypto/gen/CryptoError.h"
 
 #include <cstring>
 
@@ -53,6 +54,12 @@ namespace ssp21
     void MockCryptoBackend::dh_x25519(const PrivateKey& priv_key, const seq8_t& pub_key, DHOutput& output, std::error_code& ec)
     {
         actions.push_back(CryptoAction::dh_x25519);
+
+        if (this->fail_dh_x25519)
+        {
+            ec = CryptoError::dh_x25519_fail;
+            return;
+        }
 
         output.as_wseq().take(consts::crypto::x25519_key_length).set_all_to(fill_byte);
         output.set_type(BufferType::x25519_key);

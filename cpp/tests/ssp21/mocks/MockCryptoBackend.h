@@ -13,6 +13,7 @@ namespace ssp21
 {
     class MockCryptoBackend : public ICryptoBackend, private openpal::Uncopyable
     {
+        friend struct CryptoTest;
 
     public:
 
@@ -35,11 +36,6 @@ namespace ssp21
         bool empty_actions() const
         {
             return actions.empty();
-        }
-
-        void clear_actions()
-        {
-            actions.clear();
         }
 
         void expect(const std::initializer_list<CryptoAction>& expected)
@@ -85,7 +81,16 @@ namespace ssp21
             this->expect({});
         }
 
+        void reset()
+        {
+            this->actions.clear();
+            this->fail_dh_x25519 = false;
+            this->fill_byte = 0xFF;
+        }
+
     private:
+
+        bool fail_dh_x25519 = false;
 
         std::deque<CryptoAction> actions;
 
@@ -96,7 +101,7 @@ namespace ssp21
     {
         CryptoTest()
         {
-            MockCryptoBackend::instance.clear_actions();
+            MockCryptoBackend::instance.reset();
         }
 
         MockCryptoBackend* operator->()
@@ -104,9 +109,14 @@ namespace ssp21
             return &MockCryptoBackend::instance;
         }
 
+        void set_dh_x22519_fail(bool fail_if_true)
+        {
+            MockCryptoBackend::instance.fail_dh_x25519 = fail_if_true;
+        }
+
         ~CryptoTest()
         {
-            MockCryptoBackend::instance.clear_actions();
+            MockCryptoBackend::instance.reset();
         }
     };
 
