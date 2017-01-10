@@ -36,7 +36,7 @@ namespace ssp21
 
         const auto public_key = ctx.handshake.initialize();
 
-        RequestHandshakeBegin request(
+        const RequestHandshakeBegin request(
             consts::crypto::protocol_version,
             crypto_spec,
             CertificateMode::preshared_keys,
@@ -53,6 +53,9 @@ namespace ssp21
         ctx.handshake.set_ck(result.written);
 
         ctx.lower->transmit(result.frame);
+
+        // record when we transmited the request so we can estimate the time base later
+        ctx.request_handshake_begin_time_tx = ctx.executor->get_time();
 
         ctx.start_response_timer();
 
@@ -115,9 +118,24 @@ namespace ssp21
 
     Initiator::IHandshakeState* InitiatorHandshake::WaitForAuthReply::on_message(Initiator& ctx, const ReplyHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
     {
-        // TODO - finish the handshake!!
+        ctx.response_and_retry_timer.cancel();
 
-        return this;
+        if (!ctx.handshake.auth_handshake(msg.mac))
+        {
+            SIMPLE_LOG_BLOCK(ctx.logger, levels::warn, "authentication failure");
+            ctx.start_retry_timer();
+            return WaitForRetry::get();
+        }
+
+        ctx.handshake.mix_ck(msg_bytes);
+
+        // TODO - be paranoid about clock rollback?
+        const auto elapsed_ms = now.milliseconds - ctx.request_handshake_begin_time_tx.milliseconds;
+        const auto estimated_init_time = now.milliseconds - (elapsed_ms / 2);
+
+        ctx.handshake.initialize_session(ctx.session, openpal::Timestamp(estimated_init_time));
+
+        return Idle::get();
     }
 
     Initiator::IHandshakeState* InitiatorHandshake::WaitForAuthReply::on_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
