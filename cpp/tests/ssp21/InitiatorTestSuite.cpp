@@ -98,8 +98,36 @@ TEST_CASE(SUITE("initializes session when a proper auth reply is received"))
     InitiatorFixture fix;
     test_open(fix);
     test_reply_handshake_begin(fix);
-	test_reply_handshake_auth(fix);
+    test_reply_handshake_auth(fix);
 }
+
+TEST_CASE(SUITE("goes to retry state if auth reply doesn't authenticate"))
+{
+    InitiatorFixture fix;
+    test_open(fix);
+    test_reply_handshake_begin(fix);
+
+    const auto start_num_timer_cancel = fix.exe->num_timer_cancel();
+    const auto start_stats = fix.initiator.get_statistics();
+
+    // incorrect MAC
+    fix.lower.enqueue_message(hex::reply_handshake_auth(hex::repeat(0xEE, consts::crypto::sha256_hash_output_length)));
+
+    const auto end_stats = fix.initiator.get_statistics();
+    const auto end_num_timer_cancel = fix.exe->num_timer_cancel();
+
+    REQUIRE(fix.initiator.get_state_enum() == HandshakeState::wait_for_retry);
+    REQUIRE(end_num_timer_cancel == (start_num_timer_cancel + 1));
+    REQUIRE(end_stats.session.num_init == start_stats.session.num_init);
+
+    // causes the master to go through key derivation
+    MockCryptoBackend::instance.expect(
+    {
+        CryptoAction::hmac_sha256,  // authenticate
+        CryptoAction::secure_equals // last action since it fails
+    });
+}
+
 
 // ---------- helper implementations -----------
 
@@ -183,26 +211,26 @@ void test_reply_handshake_begin(InitiatorFixture& fix)
 
 void test_reply_handshake_auth(InitiatorFixture& fix)
 {
-	const auto start_num_timer_cancel = fix.exe->num_timer_cancel();
-	const auto start_stats = fix.initiator.get_statistics();
+    const auto start_num_timer_cancel = fix.exe->num_timer_cancel();
+    const auto start_stats = fix.initiator.get_statistics();
 
-	fix.lower.enqueue_message(hex::reply_handshake_auth(hex::repeat(0xFF, consts::crypto::sha256_hash_output_length)));
+    fix.lower.enqueue_message(hex::reply_handshake_auth(hex::repeat(0xFF, consts::crypto::sha256_hash_output_length)));
 
-	const auto end_stats = fix.initiator.get_statistics();
-	const auto end_num_timer_cancel = fix.exe->num_timer_cancel();
+    const auto end_stats = fix.initiator.get_statistics();
+    const auto end_num_timer_cancel = fix.exe->num_timer_cancel();
 
-	REQUIRE(fix.initiator.get_state_enum() == HandshakeState::idle);
-	REQUIRE(end_num_timer_cancel == (start_num_timer_cancel + 1));
-	REQUIRE(end_stats.session.num_init == (start_stats.session.num_init + 1));
+    REQUIRE(fix.initiator.get_state_enum() == HandshakeState::idle);
+    REQUIRE(end_num_timer_cancel == (start_num_timer_cancel + 1));
+    REQUIRE(end_stats.session.num_init == (start_stats.session.num_init + 1));
 
-	// causes the master to go through key derivation
-	MockCryptoBackend::instance.expect(
-	{
-		CryptoAction::hmac_sha256, // authenticate
-		CryptoAction::secure_equals,
-		CryptoAction::hash_sha256, // mix ck
-		CryptoAction::hmac_sha256, // HKDF
-		CryptoAction::hmac_sha256,
-		CryptoAction::hmac_sha256
-	});
+    // causes the master to go through key derivation
+    MockCryptoBackend::instance.expect(
+    {
+        CryptoAction::hmac_sha256, // authenticate
+        CryptoAction::secure_equals,
+        CryptoAction::hash_sha256, // mix ck
+        CryptoAction::hmac_sha256, // HKDF
+        CryptoAction::hmac_sha256,
+        CryptoAction::hmac_sha256
+    });
 }
