@@ -29,7 +29,7 @@ namespace ssp21
         const auto err = ctx.handshake.set_algorithms(crypto_spec);
         if (any(err))
         {
-            FORMAT_LOG_BLOCK(ctx.logger, levels::error, "Error configured handshake algorithms: %s", HandshakeErrorSpec::to_string(err));
+            FORMAT_LOG_BLOCK(ctx.logger, levels::error, "Error configuring handshake algorithms: %s", HandshakeErrorSpec::to_string(err));
             // There's nothing we can do about a bad configuration, so just go to an error state
             return InitiatorHandshake::BadConfiguration::get();
         }
