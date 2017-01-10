@@ -28,6 +28,18 @@ TEST_CASE(SUITE("transmits REQUEST_HANDSHAKE_BEGIN when opened"))
     test_open(fix);
 }
 
+TEST_CASE(SUITE("goes to bad_configuration state if algorithms aren't supported"))
+{
+    Initiator::Config config;
+    config.suite.dh_mode = DHMode::undefined;
+
+    InitiatorFixture fix(Session::Config(), config);
+    fix.initiator.on_open();
+    REQUIRE(fix.initiator.get_state_enum() == HandshakeState::bad_configuration);
+    REQUIRE(fix.exe->num_pending_timers() == 0);
+    REQUIRE(fix.lower.num_tx_messages() == 0);
+}
+
 TEST_CASE(SUITE("ignores reply handshake auth while waiting for reply handshake begin"))
 {
     InitiatorFixture fix;
