@@ -92,6 +92,25 @@ TEST_CASE(SUITE("goes to retry state when handshake reply error received while w
     REQUIRE(fix.exe->num_pending_timers() == 1);
 }
 
+TEST_CASE(SUITE("initializes session when a proper auth reply is received"))
+{
+    InitiatorFixture fix;
+    test_open(fix);
+    test_reply_handshake_begin(fix);
+
+    const auto start_num_timer_cancel = fix.exe->num_timer_cancel();
+    const auto start_stats = fix.initiator.get_statistics();
+
+    fix.lower.enqueue_message(hex::reply_handshake_auth(hex::repeat(0xFF, consts::crypto::sha256_hash_output_length)));
+
+    const auto end_stats = fix.initiator.get_statistics();
+    const auto end_num_timer_cancel = fix.exe->num_timer_cancel();
+
+    REQUIRE(fix.initiator.get_state_enum() == HandshakeState::idle);
+    REQUIRE(end_num_timer_cancel == (start_num_timer_cancel + 1));
+    REQUIRE(end_stats.session.num_init == (start_stats.session.num_init + 1));
+}
+
 // ---------- helper implementations -----------
 
 void test_open(InitiatorFixture& fix)

@@ -105,6 +105,18 @@ namespace ssp21
             return this->handshake_state->enum_value;
         }
 
+        struct Statistics
+        {
+            Statistics(const SessionStatistics& session) : session(session) {}
+
+            SessionStatistics session;
+        };
+
+        Statistics get_statistics() const
+        {
+            return Statistics(session.get_statistics());
+        }
+
     private:
 
         // ---- private helper methods -----
