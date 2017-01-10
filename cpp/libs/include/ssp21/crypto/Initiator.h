@@ -107,7 +107,7 @@ namespace ssp21
 
         struct Statistics
         {
-            Statistics(const SessionStatistics& session) : session(session) {}
+            explicit Statistics(const SessionStatistics& session) : session(session) {}
 
             SessionStatistics session;
         };
