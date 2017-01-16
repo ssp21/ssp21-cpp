@@ -27,11 +27,13 @@ RequestHandshakeBegin::RequestHandshakeBegin()
 RequestHandshakeBegin::RequestHandshakeBegin(
     uint16_t version,
     const CryptoSpec& spec,
+    const SessionConstraints& constraints,
     CertificateMode certificate_mode,
     const seq8_t& ephemeral_public_key
 ) :
     version(version),
     spec(spec),
+    constraints(constraints),
     certificate_mode(certificate_mode),
     ephemeral_public_key(ephemeral_public_key)
 {}
@@ -45,6 +47,7 @@ ParseError RequestHandshakeBegin::read(seq32_t input)
             input,
             version,
             spec,
+            constraints,
             certificate_mode,
             ephemeral_public_key,
             certificates
@@ -62,6 +65,7 @@ FormatResult RequestHandshakeBegin::write(wseq32_t& output) const
             output,
             version,
             spec,
+            constraints,
             certificate_mode,
             ephemeral_public_key,
             certificates
@@ -78,6 +82,8 @@ void RequestHandshakeBegin::print(IMessagePrinter& printer) const
         version,
         "spec",
         spec,
+        "constraints",
+        constraints,
         "certificate_mode",
         certificate_mode,
         "ephemeral_public_key",

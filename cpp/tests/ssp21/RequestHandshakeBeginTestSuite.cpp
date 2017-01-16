@@ -100,6 +100,10 @@ TEST_CASE(SUITE("pretty prints message"))
             HandshakeMAC::hmac_sha256,
             SessionMode::hmac_sha256_16
         ),
+		SessionConstraints(
+			0xAABB,
+			0xCAFEBABE
+		),
         CertificateMode::preshared_keys,
         publicKey
     );

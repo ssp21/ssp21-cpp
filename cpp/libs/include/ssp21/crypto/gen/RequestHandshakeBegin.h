@@ -21,6 +21,7 @@
 #include "ssp21/crypto/gen/Function.h"
 #include "ssp21/crypto/gen/CertificateMode.h"
 #include "ssp21/crypto/gen/CryptoSpec.h"
+#include "ssp21/crypto/gen/SessionConstraints.h"
 #include "ssp21/crypto/SeqField.h"
 #include "ssp21/crypto/IMessage.h"
 #include "ssp21/crypto/EnumField.h"
@@ -36,6 +37,7 @@ struct RequestHandshakeBegin final : public IMessage, private openpal::Uncopyabl
     RequestHandshakeBegin(
         uint16_t version,
         const CryptoSpec& spec,
+        const SessionConstraints& constraints,
         CertificateMode certificate_mode,
         const seq8_t& ephemeral_public_key
     );
@@ -44,11 +46,12 @@ struct RequestHandshakeBegin final : public IMessage, private openpal::Uncopyabl
     virtual FormatResult write(wseq32_t& output) const override;
     virtual void print(IMessagePrinter& printer) const override;
 
-    static const uint8_t min_size_bytes = 12;
+    static const uint8_t min_size_bytes = 18;
     static const Function function = Function::request_handshake_begin;
 
     IntegerField<openpal::UInt16> version;
     CryptoSpec spec;
+    SessionConstraints constraints;
     EnumField<CertificateModeSpec> certificate_mode;
     SeqField<openpal::UInt8> ephemeral_public_key;
     SeqSeqField<openpal::UInt8, openpal::UInt16, 6> certificates;

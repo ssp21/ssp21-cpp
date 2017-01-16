@@ -39,6 +39,10 @@ namespace ssp21
         const RequestHandshakeBegin request(
             consts::crypto::protocol_version,
             crypto_spec,
+			SessionConstraints(
+				ctx.params.max_nonce_value,
+				ctx.params.max_session_time_ms
+			),
             CertificateMode::preshared_keys,
             public_key
         );
