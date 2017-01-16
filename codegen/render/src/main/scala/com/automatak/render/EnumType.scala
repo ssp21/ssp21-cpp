@@ -28,5 +28,6 @@ object EnumType {
 
     def typ = "uint32_t"
   }
+
 }
 

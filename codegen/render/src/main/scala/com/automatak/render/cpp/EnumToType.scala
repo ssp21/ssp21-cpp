@@ -13,15 +13,15 @@ object EnumToType extends HeaderImplModelRender[EnumModel] {
 
   private object HeaderRender extends Renderer[EnumModel] {
     def render(em: EnumModel)(implicit indent: Indentation): Iterator[String] = {
-      "static %s to_type(%s arg);".format(em.cpp.typ, em.name).iter
+      "static %s to_type(%s arg);".format(em.enumType.typ, em.name).iter
     }
   }
 
   private object ImplRender extends Renderer[EnumModel] {
     def render(em: EnumModel)(implicit indent: Indentation): Iterator[String] = {
 
-      def sig = "%s %s::to_type(%s arg)".format(em.cpp.typ, em.specName, em.name).iter
-      def inner = "return static_cast<%s>(arg);".format(em.cpp.typ).iter
+      def sig = "%s %s::to_type(%s arg)".format(em.enumType.typ, em.specName, em.name).iter
+      def inner = "return static_cast<%s>(arg);".format(em.enumType.typ).iter
 
       sig ++ bracket {
         inner

@@ -8,12 +8,12 @@ object CryptoSpec extends Struct {
   override def name: String = "CryptoSpec"
 
   override def fields: List[Field] = List(
-    Enum(NonceMode()),
-    Enum(DHMode()),
-    Enum(HandshakeHash()),
-    Enum(HandshakeKDF()),
-    Enum(HandshakeMAC()),
-    Enum(SessionMode())
+    Enum(NonceMode),
+    Enum(DHMode),
+    Enum(HandshakeHash),
+    Enum(HandshakeKDF),
+    Enum(HandshakeMAC),
+    Enum(SessionMode)
   )
 
 }
@@ -38,7 +38,7 @@ object RequestHandshakeBegin extends Message {
     U16("version"),
     StructField("spec", CryptoSpec),
     StructField("constraints", SessionConstraints),
-    Enum(CertificateMode()),
+    Enum(CertificateMode),
     CommonFields.ephemerialPublicKey,
     CommonFields.certificates
   )

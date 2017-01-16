@@ -16,7 +16,7 @@ object EnumModelRenderer extends Renderer[EnumModel] {
     def leadingDefinition(ev: EnumValue): String = lastDefinition(ev) + ","
 
     def header: Iterator[String] = {
-      "enum class %s : %s".format(enum.name, enum.cpp.typ).iter
+      "enum class %s : %s".format(enum.name, enum.enumType.typ).iter
     }
 
     def lines(definition: String, comment: String): Iterator[String] = {

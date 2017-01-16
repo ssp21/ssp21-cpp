@@ -28,7 +28,7 @@ case class EnumGenerator(cfg: EnumConfig, headerPath: Option[String]) extends Wr
     def license = commented(LicenseHeader.lines)
     def enum = EnumModelRenderer.render(cfg.model)
     def signatures = renderers.map(c => c.header.render(cfg.model)).flatten.toIterator
-    def nameLine : Iterator[String] = if(cfg.model.errorCategory.isDefined) {
+    def nameLine: Iterator[String] = if (cfg.model.errorCategory.isDefined) {
       space ++ "static const char* name;".iter
     } else Iterator.empty
 
@@ -51,7 +51,7 @@ case class EnumGenerator(cfg: EnumConfig, headerPath: Option[String]) extends Wr
       }
     }
 
-    def errorCategory : Iterator[String] = cfg.model.errorCategory match {
+    def errorCategory: Iterator[String] = cfg.model.errorCategory match {
       case Some(cat) => {
         space ++
           "typedef ErrorCategory<%s> %s;".format(cfg.model.specName, cat.className).iter ++
@@ -65,10 +65,10 @@ case class EnumGenerator(cfg: EnumConfig, headerPath: Option[String]) extends Wr
 
     def includes: List[Include] = {
       val baseIncludes = List(Includes.uncopyable, Includes.cstdint)
-      if(cfg.model.errorCategory.isDefined) Includes.errorCategory :: baseIncludes else baseIncludes
+      if (cfg.model.errorCategory.isDefined) Includes.errorCategory :: baseIncludes else baseIncludes
     }
 
-    def isErrorCodeEnum : Iterator[String] = cfg.model.errorCategory match {
+    def isErrorCodeEnum: Iterator[String] = cfg.model.errorCategory match {
       case Some(cat) => space ++ namespace("std") {
         "template <>".iter ++
           "struct is_error_code_enum<ssp21::%s> : public true_type {};".format(cfg.model.name).iter
@@ -87,7 +87,7 @@ case class EnumGenerator(cfg: EnumConfig, headerPath: Option[String]) extends Wr
 
     def license = commented(LicenseHeader.lines)
     def funcs = renderers.map(r => r.impl.render(cfg.model)).flatten.toIterator
-    def constants : Iterator[String] = cfg.model.errorCategory match {
+    def constants: Iterator[String] = cfg.model.errorCategory match {
       case Some(cat) => "const char* %s::name = %s;".format(cfg.model.specName, quoted(cat.stringName)).iter ++ space
       case None => Iterator.empty
     }

@@ -43,10 +43,10 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
     def printSig = "void print(const char* name, IMessagePrinter& printer) const;".iter
 
     def readWritePrint = {
-      if(outputReadWritePrint) readSig ++ writeSig ++ printSig else Iterator.empty
+      if (outputReadWritePrint) readSig ++ writeSig ++ printSig else Iterator.empty
     }
 
-    def getMinRepresentation(num: Int) : String = num match {
+    def getMinRepresentation(num: Int): String = num match {
       case num if (num < 256) => "uint8_t"
       case num if (num < 65536) => "uint16_t"
       case _ => "uint32_t"
@@ -111,7 +111,7 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
 
   }
 
-  protected def printInternals(implicit indent: Indentation) : Iterator[String] = {
+  protected def printInternals(implicit indent: Indentation): Iterator[String] = {
     def printArgs = commas(sf.fields.map(f => List(quoted(f.name), f.name)).flatten)
 
     "MessagePrinting::print_fields(".iter ++ indent {
@@ -170,8 +170,8 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
       } ++ bracketsOnly
     }
 
-    def readWritePrint : Iterator[String] = {
-      if(outputReadWritePrint) {
+    def readWritePrint: Iterator[String] = {
+      if (outputReadWritePrint) {
         readFunc ++ space ++ writeFunc ++ space ++ printFunc
       }
       else {
@@ -180,7 +180,7 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
     }
 
     def funcs = {
-        defaultConstructorImpl ++
+      defaultConstructorImpl ++
         space ++
         fullConstructorImpl ++
         space ++
@@ -210,7 +210,7 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
     def funcName = if (impl) {
       "%s::%s(".format(sf.name, sf.name).iter
     } else {
-      if(fields.size == 1) ("explicit " + sf.name + "(").iter else (sf.name + "(").iter
+      if (fields.size == 1) ("explicit " + sf.name + "(").iter else (sf.name + "(").iter
     }
 
     def terminator = if (impl) ") :".iter else ");".iter

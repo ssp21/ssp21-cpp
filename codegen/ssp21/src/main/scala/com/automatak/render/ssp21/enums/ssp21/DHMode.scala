@@ -5,11 +5,17 @@ package com.automatak.render.ssp21.enums.ssp21
 
 import com.automatak.render._
 
-object DHMode {
+object DHMode extends EnumModel {
 
-  private val comments = List("Specifies which Diffie Hellman function is used during the handshake")
+  override def name: String = "DHMode"
 
-  def apply(): EnumModel = EnumModel("DHMode", "dh_mode", comments, EnumType.UInt8, codes, Some(EnumValue.undefined(255)), None, Hex)
+  override def underscoredName: String = "dh_mode"
+
+  override def comments: List[String] = List("Specifies which Diffie Hellman function is used during the handshake")
+
+  override def nonDefaultValues: List[EnumValue] = codes
+
+  override def defaultValue: Option[EnumValue] = Some(EnumValue.undefined(255))
 
   private val codes = List(
     EnumValue("x25519", 0, "Use the x25519 algorithm")

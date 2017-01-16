@@ -5,13 +5,19 @@ package com.automatak.render.ssp21.enums.internal
 
 import com.automatak.render._
 
-object CryptoError {
+object CryptoError extends EnumModel {
 
-  private val comments = List("Various errors in the cryptographic layer")
+  override def name: String = "CryptoError"
 
-  def category = Some(ErrorCategory("CryptoErrorCategory", "crypto error"))
+  override def underscoredName: String = "crypto_error"
 
-  def apply(): EnumModel = EnumModel("CryptoError", "crypto_error", comments, EnumType.UInt8, codes, None, None, Hex, category)
+  override def comments: List[String] = List("Various errors in the cryptographic layer")
+
+  override def nonDefaultValues: List[EnumValue] = codes
+
+  override def defaultValue: Option[EnumValue] = None
+
+  override def errorCategory: Option[ErrorCategory] = Some(ErrorCategory("CryptoErrorCategory", "crypto error"))
 
   private val codes = List(
     EnumValue("bad_key_type", 0, "attempted operation with bad key type"),

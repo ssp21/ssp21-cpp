@@ -5,11 +5,19 @@ package com.automatak.render.ssp21.enums.internal
 
 import com.automatak.render._
 
-object Base64DecodeError {
+object Base64DecodeError extends EnumModel {
 
-  private val comments = List("The result of a base64 decode operation")
+  override def name: String = "Base64DecodeError"
 
-  def apply(): EnumModel = EnumModel("Base64DecodeError", "base64_decode_error", comments, EnumType.UInt8, codes, None, Some(falseValue), Hex)
+  override def underscoredName: String = "base64_decode_error"
+
+  override def comments: List[String] = List("The result of a base64 decode operation")
+
+  override def nonDefaultValues: List[EnumValue] = codes
+
+  override def defaultValue: Option[EnumValue] = None
+
+  override def boolCastValue: Option[EnumValue] = Some(falseValue)
 
   private val falseValue = EnumValue("ok", 0, "decode success")
 
@@ -22,5 +30,12 @@ object Base64DecodeError {
 
 }
 
+/*
+override def name : String
+override def underscoredName: String
+override def comments : List[String]
+override def nonDefaultValues : List[EnumValue]
+override def defaultValue : Option[EnumValue]
+*/
 
 

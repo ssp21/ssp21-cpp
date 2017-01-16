@@ -24,16 +24,28 @@ case object Base10 extends IntRender {
 
 case class ErrorCategory(className: String, stringName: String)
 
-case class EnumModel(
-                      name: String,
-                      underscoredName: String,
-                      comments: List[String],
-                      cpp: EnumType.Type,
-                      nonDefaultValues: List[EnumValue],
-                      defaultValue: Option[EnumValue],
-                      boolCastValue: Option[EnumValue] = None,
-                      render: IntRender = Base10,
-                      errorCategory: Option[ErrorCategory] = None) {
+trait EnumModel {
+
+  // required definitions
+
+  def name: String
+
+  def underscoredName: String
+
+  def comments: List[String]
+
+  def nonDefaultValues: List[EnumValue]
+
+  def defaultValue: Option[EnumValue]
+
+  // optional overrides
+  def enumType: EnumType.Type = EnumType.UInt8
+
+  def boolCastValue: Option[EnumValue] = None
+
+  def render: IntRender = Base10
+
+  def errorCategory: Option[ErrorCategory] = None
 
   def specName = name + "Spec"
 

@@ -5,13 +5,21 @@ package com.automatak.render.ssp21.enums.internal
 
 import com.automatak.render._
 
-object FormatError {
+object FormatError extends EnumModel {
 
-  private val comments = List("The result of a message format operation")
+  override def name: String = "FormatError"
 
-  def category = Some(ErrorCategory("FormatErrorCategory", "message format error"))
+  override def underscoredName: String = "format_error"
 
-  def apply(): EnumModel = EnumModel("FormatError", "format_error", comments, EnumType.UInt8, codes, None, Some(falseValue), Hex, category)
+  override def comments: List[String] = List("The result of a message format operation")
+
+  override def nonDefaultValues: List[EnumValue] = codes
+
+  override def defaultValue: Option[EnumValue] = None
+
+  override def errorCategory = Some(ErrorCategory("FormatErrorCategory", "message format error"))
+
+  override def boolCastValue: Option[EnumValue] = Some(falseValue)
 
   private val falseValue = EnumValue("ok", 0, "message was formatted successfully")
 
