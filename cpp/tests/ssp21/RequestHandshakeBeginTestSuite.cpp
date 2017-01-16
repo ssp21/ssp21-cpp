@@ -74,10 +74,10 @@ TEST_CASE(SUITE("successfully parses message"))
     REQUIRE(msg.spec.handshake_kdf == HandshakeKDF::hkdf_sha256);
     REQUIRE(msg.spec.handshake_mac == HandshakeMAC::hmac_sha256);
     REQUIRE(msg.spec.session_mode == SessionMode::hmac_sha256_16);
-    
-	REQUIRE(msg.constraints.max_nonce == 0xFFFF);
-	REQUIRE(msg.constraints.max_session_duration == 0xCAFEBABE);
-	REQUIRE(msg.certificate_mode == CertificateMode::preshared_keys);	
+
+    REQUIRE(msg.constraints.max_nonce == 0xFFFF);
+    REQUIRE(msg.constraints.max_session_duration == 0xCAFEBABE);
+    REQUIRE(msg.certificate_mode == CertificateMode::preshared_keys);
     REQUIRE(to_hex(msg.ephemeral_public_key) == "AA AA AA");
 
     REQUIRE(msg.certificates.count() == 1);
@@ -103,10 +103,10 @@ TEST_CASE(SUITE("pretty prints message"))
             HandshakeMAC::hmac_sha256,
             SessionMode::hmac_sha256_16
         ),
-		SessionConstraints(
-			32768,
-			0xCAFEBABE
-		),
+        SessionConstraints(
+            32768,
+            0xCAFEBABE
+        ),
         CertificateMode::preshared_keys,
         publicKey
     );
@@ -128,8 +128,8 @@ TEST_CASE(SUITE("pretty prints message"))
         "handshake_kdf: hkdf_sha256",
         "handshake_mac: hmac_sha256",
         "session_mode: hmac_sha256_16",
-		"max_nonce: 32768",
-		"max_session_duration: 3405691582",
+        "max_nonce: 32768",
+        "max_session_duration: 3405691582",
         "certificate_mode: preshared_keys",
         "ephemeral_public_key (length = 2)",
         "CA:FE",

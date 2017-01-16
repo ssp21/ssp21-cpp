@@ -28,14 +28,24 @@ namespace ssp21
         {
             Config() {}
 
-            Config(uint32_t ttl_pad_ms, uint16_t max_nonce, uint32_t max_session_time) :
-                ttl_pad_ms(ttl_pad_ms),
+            Config(uint32_t ttl_pad_ms) : ttl_pad_ms(ttl_pad_ms) {}
+
+            // the TTL padding added to the current session time of every message
+            uint32_t ttl_pad_ms = consts::crypto::default_ttl_pad_ms;
+        };
+
+        struct Param
+        {
+            Param() {}
+
+            Param(const openpal::Timestamp& session_start, uint16_t max_nonce, uint32_t max_session_time) :
+                session_start(session_start),
                 max_nonce(max_nonce),
                 max_session_time(max_session_time)
             {}
 
-            // the TTL padding added to the current session time of every message
-            uint32_t ttl_pad_ms = consts::crypto::default_ttl_pad_ms;
+            // time of session initialization
+            openpal::Timestamp session_start;
 
             // maximum allowed nonce value for receiving or transmitting
             uint16_t max_nonce = consts::crypto::default_max_nonce;
@@ -46,7 +56,7 @@ namespace ssp21
 
         Session(const std::shared_ptr<IFrameWriter>& frame_writer, const Config& config = Config());
 
-        bool initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const SessionKeys& keys);
+        bool initialize(const Algorithms::Session& algorithms, const Param& parameters, const SessionKeys& keys);
 
         void reset();
 
@@ -87,7 +97,7 @@ namespace ssp21
 
         SessionKeys keys;
         Algorithms::Session algorithms;
-        openpal::Timestamp session_start = openpal::Timestamp::min_value();
+        Param parameters;
 
     };
 

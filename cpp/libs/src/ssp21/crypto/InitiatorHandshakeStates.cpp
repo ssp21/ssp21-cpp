@@ -39,10 +39,10 @@ namespace ssp21
         const RequestHandshakeBegin request(
             consts::crypto::protocol_version,
             crypto_spec,
-			SessionConstraints(
-				ctx.params.max_nonce_value,
-				ctx.params.max_session_time_ms
-			),
+            SessionConstraints(
+                ctx.params.max_nonce_value,
+                ctx.params.max_session_time_ms
+            ),
             CertificateMode::preshared_keys,
             public_key
         );
@@ -54,7 +54,7 @@ namespace ssp21
             return InitiatorHandshake::BadConfiguration::get();
         }
 
-        ctx.handshake.set_ck(result.written);
+        ctx.handshake.begin_handshake(request, result.written);
 
         ctx.lower->transmit(result.frame);
 

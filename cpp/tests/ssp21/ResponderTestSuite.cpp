@@ -52,9 +52,9 @@ TEST_CASE(SUITE("responds to invalid key length with bad_message_format"))
                              HandshakeKDF::hkdf_sha256,
                              HandshakeMAC::hmac_sha256,
                              SessionMode::hmac_sha256_16,
-		                     consts::crypto::default_max_nonce,
-		                     consts::crypto::default_max_session_time_ms,
-                             CertificateMode::preshared_keys,                             
+                             consts::crypto::default_max_nonce,
+                             consts::crypto::default_max_session_time_ms,
+                             CertificateMode::preshared_keys,
                              hex::repeat(0xFF, (consts::crypto::x25519_key_length - 1))
                          );
 
@@ -295,10 +295,7 @@ TEST_CASE(SUITE("can transmit multiple messages if session is initialized"))
 
 TEST_CASE(SUITE("closes upper layer if nonce exceeds configured maximum"))
 {
-    Session::Config config;
-    config.max_nonce = 0;
-
-    ResponderFixture fix(config);
+    ResponderFixture fix;
     fix.responder.on_open();
     test_init_session_success(fix);
 
@@ -350,8 +347,8 @@ void test_begin_handshake_success(ResponderFixture& fix)
                              HandshakeKDF::hkdf_sha256,
                              HandshakeMAC::hmac_sha256,
                              SessionMode::hmac_sha256_16,
-		                     consts::crypto::default_max_nonce,
-		                     consts::crypto::default_max_session_time_ms,
+                             consts::crypto::default_max_nonce,
+                             consts::crypto::default_max_session_time_ms,
                              CertificateMode::preshared_keys,
                              hex::repeat(0xFF, consts::crypto::x25519_key_length)
                          );

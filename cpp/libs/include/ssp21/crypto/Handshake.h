@@ -7,8 +7,7 @@
 #include "ssp21/SequenceTypes.h"
 
 #include "ssp21/crypto/gen/HandshakeError.h"
-#include "ssp21/crypto/gen/DHMode.h"
-#include "ssp21/crypto/gen/HandshakeHash.h"
+#include "ssp21/crypto/gen/RequestHandshakeBegin.h"
 
 #include "ssp21/crypto/Crypto.h"
 #include "ssp21/crypto/NonceFunctions.h"
@@ -35,8 +34,9 @@ namespace ssp21
         /// to the ephemeral public DH key
         seq8_t initialize();
 
-        /// calculate a new ck: ck = hash(input)
-        void set_ck(const seq32_t& input);
+        /// reads session constraints from the message
+        /// sets ck = hash(raw_msg)
+        void begin_handshake(const RequestHandshakeBegin& msg, const seq32_t& raw_msg);
 
         /// mix the input input the chaining key: ck = hash(ck | input)
         void mix_ck(const seq32_t& input);
@@ -51,7 +51,7 @@ namespace ssp21
         );
 
         /// derive the session keys and initialize the session
-        void initialize_session(Session& session, const openpal::Timestamp& session_init_time) const;
+        void initialize_session(Session& session, const openpal::Timestamp& session_start) const;
 
         bool auth_handshake(const seq8_t& mac) const;
 
@@ -60,7 +60,10 @@ namespace ssp21
     private:
 
         /// configures the handshake for initiator or responder mode
-        HandshakeMode mode;
+        const HandshakeMode mode;
+
+        /// session constraints used to initialize the session
+        SessionConstraints constraints;
 
         /// specific algorithms used to perform steps
         Algorithms algorithms;

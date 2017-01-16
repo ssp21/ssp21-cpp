@@ -19,12 +19,12 @@
 using namespace ssp21;
 using namespace openpal;
 
-void init(Session& session, Timestamp session_init_time = Timestamp(0));
+void init(Session& session, const Session::Param& parameters = Session::Param());
 std::string validate(Session& session, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex, std::error_code& ec);
-void test_validation_failure(const Session::Config& config, Timestamp session_init_time, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex, std::initializer_list<CryptoAction> actions, CryptoError error);
-std::string test_validation_success(const Session::Config& config, Timestamp session_init_time, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex);
+void test_validation_failure(const Session::Config& config, const Session::Param& parameters, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex, std::initializer_list<CryptoAction> actions, CryptoError error);
+std::string test_validation_success(const Session::Config& config, const Session::Param& parameters, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex);
 
-void test_format_failure(const Session::Config& config, int64_t session_init_time, const std::shared_ptr<IFrameWriter>& frame_writer, const Timestamp& now, const std::string& clear_text, const std::error_code& expected);
+void test_format_failure(const Session::Config& config, const Session::Param& parameters, const std::shared_ptr<IFrameWriter>& frame_writer, const Timestamp& now, const std::string& clear_text, const std::error_code& expected);
 
 const auto test_user_data = "CA FE";
 const auto test_auth_tag = repeat_hex(0xFF, consts::crypto::trunc16);
@@ -45,69 +45,74 @@ TEST_CASE(SUITE("won't validate user data when not initialized"))
 
 TEST_CASE(SUITE("authenticates data"))
 {
-    REQUIRE(test_user_data == test_validation_success(Session::Config(), Timestamp(0), 1, 0, 0, test_user_data, test_auth_tag));
+    REQUIRE(test_user_data == test_validation_success(Session::Config(), Session::Param(), 1, 0, 0, test_user_data, test_auth_tag));
 }
 
 TEST_CASE(SUITE("won't intialize with invalid keys"))
 {
     Session session(std::make_shared<MockFrameWriter>());
-    REQUIRE_FALSE(session.initialize(Algorithms::Session(), Timestamp(0), SessionKeys()));
+    REQUIRE_FALSE(session.initialize(Algorithms::Session(), Session::Param(), SessionKeys()));
 }
 
 TEST_CASE(SUITE("empty max results in mac_auth_fail"))
 {
-    test_validation_failure(Session::Config(), Timestamp(0), 1, 0, 0, "", "", { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::mac_auth_fail);
+    test_validation_failure(Session::Config(), Session::Param(), 1, 0, 0, "", "", { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::mac_auth_fail);
 }
 
 TEST_CASE(SUITE("rejects empty user data"))
 {
-    test_validation_failure(Session::Config(), Timestamp(0), 1, 0, 0, "", test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::empty_user_data);
+    test_validation_failure(Session::Config(), Session::Param(), 1, 0, 0, "", test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::empty_user_data);
 }
 
 TEST_CASE(SUITE("rejects data if max session time exceeded"))
 {
-    Session::Config config;
-    config.max_session_time = 10000;
+    Session::Param parameters;
 
-    test_validation_failure(config, Timestamp(0), 1, config.max_session_time, config.max_session_time + 1, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::max_session_time_exceeded);
+
+    test_validation_failure(Session::Config(), Session::Param(), 1, parameters.max_session_time, parameters.max_session_time + 1, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::max_session_time_exceeded);
 }
 
 TEST_CASE(SUITE("rejects data if clock rollback detected"))
 {
-    test_validation_failure(Session::Config(), Timestamp(1), 1, 1, 0, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::clock_rollback);
+    Session::Param param;
+    param.session_start = openpal::Timestamp(1);
+
+    test_validation_failure(Session::Config(), param, 1, 1, 0, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::clock_rollback);
 }
 
 //// ---- validation nonce tests ----
 
 TEST_CASE(SUITE("rejects initial nonce of zero with nonce replay error"))
 {
-    test_validation_failure(Session::Config(), Timestamp(0), 0, 0, 0, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::nonce_replay);
+    test_validation_failure(Session::Config(), Session::Param(), 0, 0, 0, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::nonce_replay);
 }
 
 TEST_CASE(SUITE("rejects nonce of 1 when initialized with maximum nonce of zero"))
 {
-    Session::Config config;
-    config.max_nonce = 0;
+    Session::Param param;
+    param.max_nonce = 0;
 
-    test_validation_failure(config, Timestamp(0), 1, 0, 0, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::max_nonce_exceeded);
+    test_validation_failure(Session::Config(), param, 1, 0, 0, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::max_nonce_exceeded);
 }
 
 //// ---- validation ttl tests ----
 
 TEST_CASE(SUITE("accepts minimum ttl"))
 {
-    const auto init_time = Timestamp(4);
+    Session::Param param;
+    param.session_start = Timestamp(4);
     const auto ttl = 3;
 
-    REQUIRE(test_user_data == test_validation_success(Session::Config(), init_time, 1, ttl, init_time.milliseconds + ttl, test_user_data, test_auth_tag));
+    REQUIRE(test_user_data == test_validation_success(Session::Config(), param, 1, ttl, param.session_start.milliseconds + ttl, test_user_data, test_auth_tag));
 }
 
 TEST_CASE(SUITE("rejects minimum ttl + 1"))
 {
-    const auto init_time = Timestamp(4);
+    Session::Param param;
+    param.session_start = Timestamp(4);
     const auto ttl = 3;
 
-    test_validation_failure(Session::Config(), init_time, 1, ttl, init_time.milliseconds + ttl + 1, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::expired_ttl);
+    test_validation_failure(Session::Config(), param, 1, ttl, param.session_start.milliseconds + ttl + 1, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::expired_ttl);
 }
 
 
@@ -130,36 +135,39 @@ TEST_CASE(SUITE("can't format a message without a valid session"))
 
 TEST_CASE(SUITE("can't format a message with maximum nonce value already reached"))
 {
-    Session::Config config;
-    config.max_nonce = 0;
+    Session::Param param;
+    param.max_nonce = 0;
 
-    test_format_failure(config, 0, std::make_shared<MockFrameWriter>(), Timestamp(0), "CA FE", CryptoError::max_nonce_exceeded);
+    test_format_failure(Session::Config(), param, std::make_shared<MockFrameWriter>(), Timestamp(0), "CA FE", CryptoError::max_nonce_exceeded);
 }
 
 TEST_CASE(SUITE("can't format a message if the session time exceeds the configured time"))
 {
-    Session::Config config;
-    config.max_session_time = 60;
+    Session::Param param;
+    param.max_session_time = 60;
 
-    test_format_failure(config, 0, std::make_shared<MockFrameWriter>(), Timestamp(config.max_session_time + 1), "CA FE", CryptoError::max_session_time_exceeded);
+    test_format_failure(Session::Config(), param, std::make_shared<MockFrameWriter>(), Timestamp(param.max_session_time + 1), "CA FE", CryptoError::max_session_time_exceeded);
 }
 
 TEST_CASE(SUITE("won't format a maximum if the clock has rolled back since initialization"))
 {
-    test_format_failure(Session::Config(), 1, std::make_shared<MockFrameWriter>(), Timestamp(0), "CA FE", CryptoError::clock_rollback);
+    Session::Param param;
+    param.session_start = Timestamp(1);
+
+    test_format_failure(Session::Config(), param, std::make_shared<MockFrameWriter>(), Timestamp(0), "CA FE", CryptoError::clock_rollback);
 }
 
 TEST_CASE(SUITE("won't format a maximum if adding the TTL would exceed the maximum session time"))
 {
-    Session::Config config;
-    config.max_session_time = consts::crypto::default_ttl_pad_ms - 1;
+    Session::Param param;
+    param.max_session_time = consts::crypto::default_ttl_pad_ms - 1;
 
-    test_format_failure(config, 0, std::make_shared<MockFrameWriter>(), Timestamp(0), "CA FE", CryptoError::max_session_time_exceeded);
+    test_format_failure(Session::Config(), param, std::make_shared<MockFrameWriter>(), Timestamp(0), "CA FE", CryptoError::max_session_time_exceeded);
 }
 
 TEST_CASE(SUITE("forwards the formatting error if the session::write function can't write to the output buffer"))
 {
-    test_format_failure(Session::Config(), 0, std::make_shared<MockFrameWriter>(openpal::Logger::empty(), 0), Timestamp(0), "CA FE", CryptoError::bad_buffer_size);
+    test_format_failure(Session::Config(), Session::Param(), std::make_shared<MockFrameWriter>(openpal::Logger::empty(), 0), Timestamp(0), "CA FE", CryptoError::bad_buffer_size);
 }
 
 TEST_CASE(SUITE("successfully formats and increments nonce"))
@@ -189,13 +197,13 @@ TEST_CASE(SUITE("successfully formats and increments nonce"))
 
 /// ------- helpers methods impls -------------
 
-void init(Session& session, Timestamp session_init_time)
+void init(Session& session, const Session::Param& parameters)
 {
     SessionKeys keys;
     keys.rx_key.set_type(BufferType::symmetric_key);
     keys.tx_key.set_type(BufferType::symmetric_key);
 
-    REQUIRE(session.initialize(Algorithms::Session(), session_init_time, keys));
+    REQUIRE(session.initialize(Algorithms::Session(), parameters, keys));
 }
 
 std::string validate(Session& session, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex, std::error_code& ec)
@@ -216,13 +224,13 @@ std::string validate(Session& session, uint16_t nonce, uint32_t ttl, int64_t now
     return to_hex(session.validate_message(msg, Timestamp(now), ec));
 }
 
-std::string test_validation_success(const Session::Config& config, Timestamp session_init_time, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex)
+std::string test_validation_success(const Session::Config& config, const Session::Param& parameters, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex)
 {
     CryptoTest crypto;
 
     Session session(std::make_shared<MockFrameWriter>(), config);
 
-    init(session, session_init_time);
+    init(session, parameters);
 
     std::error_code ec;
     const auto user_data = validate(session, nonce, ttl, now, user_data_hex, auth_tag_hex, ec);
@@ -233,13 +241,13 @@ std::string test_validation_success(const Session::Config& config, Timestamp ses
     return user_data;
 }
 
-void test_validation_failure(const Session::Config& config, Timestamp session_init_time, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex, std::initializer_list<CryptoAction> actions, CryptoError error)
+void test_validation_failure(const Session::Config& config, const Session::Param& parameters, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex, std::initializer_list<CryptoAction> actions, CryptoError error)
 {
     CryptoTest crypto;
 
     Session session(std::make_shared<MockFrameWriter>(), config);
 
-    init(session, session_init_time);
+    init(session, parameters);
 
     std::error_code ec;
     const auto user_data = validate(session, nonce, ttl, now, user_data_hex, auth_tag_hex, ec);
@@ -250,10 +258,10 @@ void test_validation_failure(const Session::Config& config, Timestamp session_in
 
 }
 
-void test_format_failure(const Session::Config& config, int64_t session_init_time, const std::shared_ptr<IFrameWriter>& frame_writer, const Timestamp& now, const std::string& clear_text, const std::error_code& expected)
+void test_format_failure(const Session::Config& config, const Session::Param& parameters, const std::shared_ptr<IFrameWriter>& frame_writer, const Timestamp& now, const std::string& clear_text, const std::error_code& expected)
 {
     Session s(frame_writer, config);
-    init(s, Timestamp(session_init_time));
+    init(s, parameters);
 
     Hex hex(clear_text);
     auto input = hex.as_rslice();

@@ -170,8 +170,8 @@ void test_open(InitiatorFixture& fix)
                               HandshakeKDF::hkdf_sha256,
                               HandshakeMAC::hmac_sha256,
                               SessionMode::hmac_sha256_16,
- 		                      consts::crypto::default_max_nonce,
-		                      consts::crypto::default_max_session_time_ms,		                      		                      
+                              consts::crypto::default_max_nonce,
+                              consts::crypto::default_max_session_time_ms,
                               CertificateMode::preshared_keys,
                               hex::repeat(0xFF, 32)
                           );

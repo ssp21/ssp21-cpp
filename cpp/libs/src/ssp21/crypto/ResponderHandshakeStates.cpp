@@ -25,7 +25,8 @@ namespace ssp21
         }
 
         seq8_t public_ephem_dh_key(ctx.handshake.initialize());	// generate our local ephemeral keys
-        ctx.handshake.set_ck(msg_bytes);						// initialize the chaining key
+
+        ctx.handshake.begin_handshake(msg, msg_bytes);
 
         // now format our response - in the future, this we'll add certificates after this call if applicable
         ReplyHandshakeBegin reply(public_ephem_dh_key);

@@ -17,9 +17,11 @@ namespace ssp21
         return this->local_ephemeral_keys.public_key.as_seq();
     }
 
-    void Handshake::set_ck(const seq32_t& input)
+    void Handshake::begin_handshake(const RequestHandshakeBegin& msg, const seq32_t& raw_msg)
     {
-        this->algorithms.handshake.hash({ input }, this->chaining_key);
+        this->constraints = msg.constraints;
+
+        this->algorithms.handshake.hash({ raw_msg }, this->chaining_key);
     }
 
     void Handshake::mix_ck(const seq32_t& input)
@@ -83,7 +85,7 @@ namespace ssp21
         );
     }
 
-    void Handshake::initialize_session(Session& session, const openpal::Timestamp& session_init_time) const
+    void Handshake::initialize_session(Session& session, const openpal::Timestamp& session_start) const
     {
         SessionKeys keys;
 
@@ -97,7 +99,15 @@ namespace ssp21
             this->algorithms.handshake.kdf(this->chaining_key.as_seq(), {}, keys.rx_key, keys.tx_key);
         }
 
-        session.initialize(this->algorithms.session, session_init_time, keys);
+        session.initialize(
+            this->algorithms.session,
+            Session::Param(
+                session_start,
+                this->constraints.max_nonce,
+                this->constraints.max_session_duration
+            ),
+            keys
+        );
     }
 
 }

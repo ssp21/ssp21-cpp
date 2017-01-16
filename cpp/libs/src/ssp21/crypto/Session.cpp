@@ -25,7 +25,7 @@ namespace ssp21
         return (max_link_payload_size > SessionData::min_size_bytes) ? max_link_payload_size - SessionData::min_size_bytes : 0;
     }
 
-    bool Session::initialize(const Algorithms::Session& algorithms, const openpal::Timestamp& session_start, const SessionKeys& keys)
+    bool Session::initialize(const Algorithms::Session& algorithms, const Param& parameters, const SessionKeys& keys)
     {
         if (!keys.valid()) return false;
 
@@ -36,7 +36,7 @@ namespace ssp21
         this->rx_nonce.set(0);
         this->tx_nonce.set(0);
         this->algorithms = algorithms;
-        this->session_start = session_start;
+        this->parameters = parameters;
         this->keys.copy(keys);
 
         return true;
@@ -72,15 +72,15 @@ namespace ssp21
             return seq32_t::empty();
         }
 
-        if (now.milliseconds < this->session_start.milliseconds)
+        if (now.milliseconds < this->parameters.session_start.milliseconds)
         {
             ec = CryptoError::clock_rollback;
             return seq32_t::empty();
         }
 
-        const auto current_session_time = now.milliseconds - this->session_start.milliseconds;
+        const auto current_session_time = now.milliseconds - this->parameters.session_start.milliseconds;
 
-        if (current_session_time > this->config.max_session_time)
+        if (current_session_time > this->parameters.max_session_time)
         {
             ec = CryptoError::max_session_time_exceeded;
             return seq32_t::empty();
@@ -95,7 +95,7 @@ namespace ssp21
         }
 
         // check the nonce via the configured maximum
-        if (message.metadata.nonce > config.max_nonce)
+        if (message.metadata.nonce > this->parameters.max_nonce)
         {
             this->statistics.num_nonce_fail.increment();
             ec = CryptoError::max_nonce_exceeded;
@@ -124,28 +124,28 @@ namespace ssp21
             return seq32_t::empty();
         }
 
-        if (this->tx_nonce.get() >= this->config.max_nonce)
+        if (this->tx_nonce.get() >= this->parameters.max_nonce)
         {
             ec = CryptoError::max_nonce_exceeded;
             return seq32_t::empty();
         }
 
-        if (now.milliseconds < this->session_start.milliseconds)
+        if (now.milliseconds < this->parameters.session_start.milliseconds)
         {
             ec = CryptoError::clock_rollback;
             return seq32_t::empty();
         }
 
-        const auto session_time_long = now.milliseconds - this->session_start.milliseconds;
+        const auto session_time_long = now.milliseconds - this->parameters.session_start.milliseconds;
 
-        if (session_time_long > config.max_session_time)
+        if (session_time_long > this->parameters.max_session_time)
         {
             ec = CryptoError::max_session_time_exceeded;
             return seq32_t::empty();
         }
 
         const auto session_time = static_cast<uint32_t>(session_time_long); // safe downcast since session_time_long <= the uin32_t above
-        const auto remainder = config.max_session_time - session_time;	    // safe substract since session_time > config.max_session_time
+        const auto remainder = this->parameters.max_session_time - session_time;	    // safe substract since session_time > config.max_session_time
         if (remainder < config.ttl_pad_ms)
         {
             ec = CryptoError::max_session_time_exceeded;

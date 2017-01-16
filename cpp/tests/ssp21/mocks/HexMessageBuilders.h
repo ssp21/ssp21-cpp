@@ -31,8 +31,8 @@ namespace ssp21
             HandshakeKDF handshake_kdf,
             HandshakeMAC handshake_mac,
             SessionMode session_mode,
-			uint16_t max_nonce,
-			uint32_t max_session_time,
+            uint16_t max_nonce,
+            uint32_t max_session_time,
             CertificateMode certificate_mode,
             const std::string& hex_ephem_pub_key,
             std::initializer_list<std::string> certificates = {}

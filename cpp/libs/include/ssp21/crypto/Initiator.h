@@ -36,8 +36,8 @@ namespace ssp21
             {
                 openpal::TimeDuration response_timeout = openpal::TimeDuration::seconds(2);
                 openpal::TimeDuration retry_timeout = openpal::TimeDuration::seconds(5);
-				uint32_t max_session_time_ms = consts::crypto::default_max_session_time_ms;
-				uint16_t max_nonce_value = consts::crypto::default_max_nonce;
+                uint32_t max_session_time_ms = consts::crypto::default_max_session_time_ms;
+                uint16_t max_nonce_value = consts::crypto::default_max_nonce;
             };
 
             Suite suite;
