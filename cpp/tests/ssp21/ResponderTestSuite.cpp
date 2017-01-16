@@ -9,9 +9,9 @@ using namespace ssp21;
 using namespace openpal;
 
 // helper methods
-void test_begin_handshake_success(ResponderFixture& fix);
+void test_begin_handshake_success(ResponderFixture& fix, uint16_t max_nonce = consts::crypto::default_max_nonce, uint32_t max_session_time = consts::crypto::default_max_session_time_ms);
 void test_auth_handshake_success(ResponderFixture& fix);
-void test_init_session_success(ResponderFixture& fix);
+void test_init_session_success(ResponderFixture& fix, uint16_t max_nonce = consts::crypto::default_max_nonce, uint32_t max_session_time = consts::crypto::default_max_session_time_ms);
 void test_handshake_error(ResponderFixture& fix, const std::string& request, HandshakeError expected_error, std::initializer_list<CryptoAction> actions);
 
 // ---------- tests for handshake state idle -----------
@@ -297,7 +297,7 @@ TEST_CASE(SUITE("closes upper layer if nonce exceeds configured maximum"))
 {
     ResponderFixture fix;
     fix.responder.on_open();
-    test_init_session_success(fix);
+    test_init_session_success(fix, 0); //set max nonce to zero
 
     const auto payload = "CA FE";
 
@@ -337,7 +337,7 @@ TEST_CASE(SUITE("defers transmission if lower layer is not tx_ready"))
 
 // ---------- helper method implementations -----------
 
-void test_begin_handshake_success(ResponderFixture& fix)
+void test_begin_handshake_success(ResponderFixture& fix, uint16_t max_nonce, uint32_t max_session_time)
 {
     const auto request = hex::request_handshake_begin(
                              0,
@@ -347,8 +347,8 @@ void test_begin_handshake_success(ResponderFixture& fix)
                              HandshakeKDF::hkdf_sha256,
                              HandshakeMAC::hmac_sha256,
                              SessionMode::hmac_sha256_16,
-                             consts::crypto::default_max_nonce,
-                             consts::crypto::default_max_session_time_ms,
+                             max_nonce,
+                             max_session_time,
                              CertificateMode::preshared_keys,
                              hex::repeat(0xFF, consts::crypto::x25519_key_length)
                          );
@@ -402,9 +402,9 @@ void test_auth_handshake_success(ResponderFixture& fix)
     REQUIRE(fix.responder.get_state_enum() == Responder::IHandshakeState::Enum::idle);
 }
 
-void test_init_session_success(ResponderFixture& fix)
+void test_init_session_success(ResponderFixture& fix, uint16_t max_nonce, uint32_t max_session_time)
 {
-    test_begin_handshake_success(fix);
+    test_begin_handshake_success(fix, max_nonce, max_session_time);
     test_auth_handshake_success(fix);
 
     REQUIRE(fix.upper.get_is_open());
