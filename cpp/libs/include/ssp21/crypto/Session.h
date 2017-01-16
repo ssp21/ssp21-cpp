@@ -28,7 +28,7 @@ namespace ssp21
         {
             Config() {}
 
-            Config(uint32_t ttl_pad_ms) : ttl_pad_ms(ttl_pad_ms) {}
+            explicit Config(uint32_t ttl_pad_ms) : ttl_pad_ms(ttl_pad_ms) {}
 
             // the TTL padding added to the current session time of every message
             uint32_t ttl_pad_ms = consts::crypto::default_ttl_pad_ms;
