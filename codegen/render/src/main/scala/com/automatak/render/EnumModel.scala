@@ -43,7 +43,7 @@ trait EnumModel {
 
   def boolCastValue: Option[EnumValue] = None
 
-  def render: IntRender = Base10
+  def render: IntRender = Hex
 
   def errorCategory: Option[ErrorCategory] = None
 
