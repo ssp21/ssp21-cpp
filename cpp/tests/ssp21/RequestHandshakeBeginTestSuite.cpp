@@ -4,6 +4,7 @@
 
 #include "ssp21/crypto/gen/RequestHandshakeBegin.h"
 #include "ssp21/crypto/LogMessagePrinter.h"
+#include "ssp21/crypto/Constants.h"
 
 #include "testlib/HexConversions.h"
 
@@ -61,7 +62,7 @@ TEST_CASE(SUITE("successfully parses message"))
 {
     RequestHandshakeBegin msg;
 
-    Hex hex("00 D1 D2 00 00 00 00 00 00 00 03 AA AA AA 01 00 02 BB BB");
+    Hex hex("00 D1 D2 00 00 00 00 00 00 FF FF CA FE BA BE 00 03 AA AA AA 01 00 02 BB BB");
 
     auto input = hex.as_rslice();
     auto err = msg.read(input);
@@ -73,8 +74,10 @@ TEST_CASE(SUITE("successfully parses message"))
     REQUIRE(msg.spec.handshake_kdf == HandshakeKDF::hkdf_sha256);
     REQUIRE(msg.spec.handshake_mac == HandshakeMAC::hmac_sha256);
     REQUIRE(msg.spec.session_mode == SessionMode::hmac_sha256_16);
-    REQUIRE(msg.certificate_mode == CertificateMode::preshared_keys);
-
+    
+	REQUIRE(msg.constraints.max_nonce == 0xFFFF);
+	REQUIRE(msg.constraints.max_session_duration == 0xCAFEBABE);
+	REQUIRE(msg.certificate_mode == CertificateMode::preshared_keys);	
     REQUIRE(to_hex(msg.ephemeral_public_key) == "AA AA AA");
 
     REQUIRE(msg.certificates.count() == 1);
@@ -101,7 +104,7 @@ TEST_CASE(SUITE("pretty prints message"))
             SessionMode::hmac_sha256_16
         ),
 		SessionConstraints(
-			0xAABB,
+			32768,
 			0xCAFEBABE
 		),
         CertificateMode::preshared_keys,
@@ -125,6 +128,8 @@ TEST_CASE(SUITE("pretty prints message"))
         "handshake_kdf: hkdf_sha256",
         "handshake_mac: hmac_sha256",
         "session_mode: hmac_sha256_16",
+		"max_nonce: 32768",
+		"max_session_duration: 3405691582",
         "certificate_mode: preshared_keys",
         "ephemeral_public_key (length = 2)",
         "CA:FE",
@@ -154,7 +159,7 @@ TEST_CASE(SUITE("rejects trailing data"))
 {
     RequestHandshakeBegin msg;
 
-    Hex hex("00 D1 D2 00 00 00 00 00 00 00 03 AA AA AA 01 00 02 BB BB FF FF FF");
+    Hex hex("00 D1 D2 00 00 00 00 00 00 FF FF CA FE BA BE 00 03 AA AA AA 01 00 02 BB BB FF FF FF");
 
     auto input = hex.as_rslice();
     auto err = msg.read(input);
@@ -169,7 +174,7 @@ TEST_CASE(SUITE("formats default value"))
     auto res = msg.write(dest);
 
     REQUIRE(!res.is_error());
-    REQUIRE(to_hex(res.written) == "00 00 00 FF FF FF FF FF FF FF 00 00");
+    REQUIRE(to_hex(res.written) == "00 00 00 FF FF FF FF FF FF 00 00 00 00 00 00 FF 00 00");
 }
 
 TEST_CASE(SUITE("returns error if insufficient buffer space"))
