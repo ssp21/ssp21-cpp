@@ -5,15 +5,18 @@
 
 #include "ssp21/LogLevels.h"
 
+using namespace openpal;
+
 namespace ssp21
 {
 
     // -------- Idle --------
 
-    Initiator::IHandshakeState* InitiatorHandshake::Idle::on_handshake_required(Initiator& ctx, const openpal::Timestamp& now)
+    Initiator::IHandshakeState* InitiatorHandshake::Idle::on_handshake_required(Initiator& ctx, const Timestamp& now)
     {
         if (!ctx.lower->get_is_tx_ready())
         {
+            ctx.handshake_required = true;
             return this;
         }
 
@@ -68,7 +71,7 @@ namespace ssp21
 
     // -------- WaitForBeginReply --------
 
-    Initiator::IHandshakeState* InitiatorHandshake::WaitForBeginReply::on_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
+    Initiator::IHandshakeState* InitiatorHandshake::WaitForBeginReply::on_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const Timestamp& now)
     {
         ctx.response_and_retry_timer.cancel();
 
@@ -103,7 +106,7 @@ namespace ssp21
         return WaitForAuthReply::get();
     }
 
-    Initiator::IHandshakeState* InitiatorHandshake::WaitForBeginReply::on_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
+    Initiator::IHandshakeState* InitiatorHandshake::WaitForBeginReply::on_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const Timestamp& now)
     {
         ctx.response_and_retry_timer.cancel();
         FORMAT_LOG_BLOCK(ctx.logger, levels::error, "responder handshake error: %s", HandshakeErrorSpec::to_string(msg.handshake_error));
@@ -120,7 +123,7 @@ namespace ssp21
 
     // -------- WaitForAuthReply --------
 
-    Initiator::IHandshakeState* InitiatorHandshake::WaitForAuthReply::on_message(Initiator& ctx, const ReplyHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
+    Initiator::IHandshakeState* InitiatorHandshake::WaitForAuthReply::on_message(Initiator& ctx, const ReplyHandshakeAuth& msg, const seq32_t& msg_bytes, const Timestamp& now)
     {
         ctx.response_and_retry_timer.cancel();
 
@@ -133,16 +136,24 @@ namespace ssp21
 
         ctx.handshake.mix_ck(msg_bytes);
 
-        // TODO - be paranoid about clock rollback?
+		if (now.milliseconds < ctx.request_handshake_begin_time_tx.milliseconds)
+		{
+			SIMPLE_LOG_BLOCK(ctx.logger, levels::error, "clock rollback detected");
+			ctx.start_retry_timer();
+			return WaitForRetry::get();
+		}
+        
         const auto elapsed_ms = now.milliseconds - ctx.request_handshake_begin_time_tx.milliseconds;
         const auto estimated_init_time = now.milliseconds - (elapsed_ms / 2);
 
-        ctx.handshake.initialize_session(ctx.session, openpal::Timestamp(estimated_init_time));
+        ctx.handshake.initialize_session(ctx.session, Timestamp(estimated_init_time));
+
+        ctx.handshake_required = false;
 
         return Idle::get();
     }
 
-    Initiator::IHandshakeState* InitiatorHandshake::WaitForAuthReply::on_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
+    Initiator::IHandshakeState* InitiatorHandshake::WaitForAuthReply::on_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const Timestamp& now)
     {
         ctx.response_and_retry_timer.cancel();
         FORMAT_LOG_BLOCK(ctx.logger, levels::error, "responder handshake error: %s", HandshakeErrorSpec::to_string(msg.handshake_error));

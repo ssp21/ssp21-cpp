@@ -87,6 +87,7 @@ namespace ssp21
             // called when conditions are met that require we renegotiate the session
             virtual IHandshakeState* on_handshake_required(Initiator& ctx, const openpal::Timestamp& now)
             {
+                ctx.handshake_required = true; // defer renegotiation
                 return this;
             }
 
@@ -166,6 +167,7 @@ namespace ssp21
 
         openpal::TimerRef response_and_retry_timer;
         openpal::Timestamp request_handshake_begin_time_tx;
+        bool handshake_required = false;
     };
 
 }

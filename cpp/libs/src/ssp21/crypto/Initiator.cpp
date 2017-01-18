@@ -84,6 +84,7 @@ namespace ssp21
     {
         this->handshake_state = InitiatorHandshake::Idle::get();
         this->response_and_retry_timer.cancel();
+        this->handshake_required = false;
     }
 
     bool Initiator::supports(Function function) const
