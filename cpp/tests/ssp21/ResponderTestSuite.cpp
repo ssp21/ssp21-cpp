@@ -9,9 +9,9 @@ using namespace ssp21;
 using namespace openpal;
 
 // helper methods
-void test_begin_handshake_success(ResponderFixture& fix, uint16_t max_nonce = consts::crypto::default_max_nonce, uint32_t max_session_time = consts::crypto::default_max_session_time_ms);
+void test_begin_handshake_success(ResponderFixture& fix, uint16_t max_nonce = consts::crypto::initiator::default_max_nonce, uint32_t max_session_time = consts::crypto::initiator::default_max_session_time_ms);
 void test_auth_handshake_success(ResponderFixture& fix);
-void test_init_session_success(ResponderFixture& fix, uint16_t max_nonce = consts::crypto::default_max_nonce, uint32_t max_session_time = consts::crypto::default_max_session_time_ms);
+void test_init_session_success(ResponderFixture& fix, uint16_t max_nonce = consts::crypto::initiator::default_max_nonce, uint32_t max_session_time = consts::crypto::initiator::default_max_session_time_ms);
 void test_handshake_error(ResponderFixture& fix, const std::string& request, HandshakeError expected_error, std::initializer_list<CryptoAction> actions);
 
 // ---------- tests for handshake state idle -----------
@@ -52,8 +52,8 @@ TEST_CASE(SUITE("responds to invalid key length with bad_message_format"))
                              HandshakeKDF::hkdf_sha256,
                              HandshakeMAC::hmac_sha256,
                              SessionMode::hmac_sha256_16,
-                             consts::crypto::default_max_nonce,
-                             consts::crypto::default_max_session_time_ms,
+                             consts::crypto::initiator::default_max_nonce,
+                             consts::crypto::initiator::default_max_session_time_ms,
                              CertificateMode::preshared_keys,
                              hex::repeat(0xFF, (consts::crypto::x25519_key_length - 1))
                          );

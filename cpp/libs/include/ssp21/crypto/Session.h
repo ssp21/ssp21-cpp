@@ -48,10 +48,10 @@ namespace ssp21
             openpal::Timestamp session_start;
 
             // maximum allowed nonce value for receiving or transmitting
-            uint16_t max_nonce = consts::crypto::default_max_nonce;
+            uint16_t max_nonce = consts::crypto::initiator::default_max_nonce;
 
             // maximum allowed session time for receiving or transmitting
-            uint32_t max_session_time = consts::crypto::default_max_session_time_ms;
+            uint32_t max_session_time = consts::crypto::initiator::default_max_session_time_ms;
         };
 
         Session(const std::shared_ptr<IFrameWriter>& frame_writer, const Config& config = Config());

@@ -22,6 +22,7 @@ namespace ssp21
 
         struct Config : public CryptoLayer::Config
         {
+            /// The cyrptographic modes that the initiator will request from the responder
             struct Suite
             {
                 NonceMode nonce_mode = NonceMode::increment_last_rx;
@@ -34,10 +35,20 @@ namespace ssp21
 
             struct Params
             {
-                openpal::TimeDuration response_timeout = openpal::TimeDuration::seconds(2);
-                openpal::TimeDuration retry_timeout = openpal::TimeDuration::seconds(5);
-                uint32_t max_session_time_ms = consts::crypto::default_max_session_time_ms;
-                uint16_t max_nonce_value = consts::crypto::default_max_nonce;
+                /// How long the initiator will will for responses
+                openpal::TimeDuration response_timeout = consts::crypto::initiator::default_response_timeout;
+                /// How long the initiator will wait before retrying a failed timeout
+                openpal::TimeDuration retry_timeout = consts::crypto::initiator::default_retry_timeout;
+
+                /// The maximum session time that the initiator will request in the handshake
+                uint32_t max_session_time_ms = consts::crypto::initiator::default_max_session_time_ms;
+                /// The initiator will begin renegotiating when the session time is within this number of ms of timing out
+                uint32_t time_renegotiation_trigger_ms = consts::crypto::initiator::default_time_renegotiation_trigger_ms;
+
+                /// The maximum tx or rx nonce value that the initiator will request in the handshake
+                uint16_t max_nonce_value = consts::crypto::initiator::default_max_nonce;
+                /// The initiator will begin renegotiating when either session nonce is within this value of exceeding the limit
+                uint16_t nonce_renegotiation_trigger = consts::crypto::initiator::default_nonce_renegotiation_trigger;
             };
 
             Suite suite;
