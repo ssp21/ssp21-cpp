@@ -144,9 +144,9 @@ namespace ssp21
         }
 
         const auto elapsed_ms = now.milliseconds - ctx.request_handshake_begin_time_tx.milliseconds;
-        const auto estimated_init_time = now.milliseconds - (elapsed_ms / 2);
+        const auto session_init_time = now.milliseconds - (elapsed_ms / 2); // estimate
 
-        ctx.handshake.initialize_session(ctx.session, Timestamp(estimated_init_time));
+        ctx.handshake.initialize_session(ctx.session, Timestamp(session_init_time));
 
         ctx.handshake_required = false;
 
@@ -154,7 +154,7 @@ namespace ssp21
         const auto renegotiation_session_time = (ctx.params.time_renegotiation_trigger_ms < ctx.params.max_session_time_ms) ? (ctx.params.max_session_time_ms - ctx.params.time_renegotiation_trigger_ms) : 0;
 
         // the absolute time at which a renegotation should be triggered
-        const Timestamp session_timeout_abs_time(now.milliseconds + renegotiation_session_time);
+        const Timestamp session_timeout_abs_time(session_init_time + renegotiation_session_time);
 
         ctx.session_timeout_timer.restart(session_timeout_abs_time, [&ctx]()
         {
