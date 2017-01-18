@@ -29,7 +29,8 @@ namespace ssp21
         handshake_state(InitiatorHandshake::Idle::get()),
         suite(context_config.suite),
         params(context_config.params),
-        response_and_retry_timer(executor)
+        response_and_retry_timer(executor),
+        session_timeout_timer(executor)
     {}
 
     Initiator::IHandshakeState* Initiator::IHandshakeState::on_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
@@ -75,15 +76,23 @@ namespace ssp21
         this->response_and_retry_timer.restart(this->params.retry_timeout, on_timeout);
     }
 
+    void Initiator::on_handshake_required()
+    {
+        this->session_timeout_timer.cancel();
+
+        this->handshake_state = this->handshake_state->on_handshake_required(*this, this->executor->get_time());
+    }
+
     void Initiator::on_open_impl()
     {
-        this->handshake_state = this->handshake_state->on_handshake_required(*this, this->executor->get_time());
+        this->on_handshake_required();
     }
 
     void Initiator::reset_state_on_close()
     {
         this->handshake_state = InitiatorHandshake::Idle::get();
         this->response_and_retry_timer.cancel();
+        this->session_timeout_timer.cancel();
         this->handshake_required = false;
     }
 

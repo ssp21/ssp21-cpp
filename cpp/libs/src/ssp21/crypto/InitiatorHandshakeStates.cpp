@@ -150,6 +150,17 @@ namespace ssp21
 
         ctx.handshake_required = false;
 
+        // the session time at which we should trigger a new handshake
+        const auto renegotiation_session_time = (ctx.params.time_renegotiation_trigger_ms < ctx.params.max_session_time_ms) ? (ctx.params.max_session_time_ms - ctx.params.time_renegotiation_trigger_ms) : 0;
+
+        // the absolute time at which a renegotation should be triggered
+        const Timestamp session_timeout_abs_time(now.milliseconds + renegotiation_session_time);
+
+        ctx.session_timeout_timer.restart(session_timeout_abs_time, [&ctx]()
+        {
+            ctx.on_handshake_required();
+        });
+
         return Idle::get();
     }
 

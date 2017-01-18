@@ -140,6 +140,8 @@ namespace ssp21
 
         void start_retry_timer();
 
+        void on_handshake_required();
+
         // ---- final implementations from IUpperLayer ----
 
         virtual void on_open_impl() override;
@@ -166,6 +168,8 @@ namespace ssp21
         const Config::Params params;
 
         openpal::TimerRef response_and_retry_timer;
+        openpal::TimerRef session_timeout_timer;
+
         openpal::Timestamp request_handshake_begin_time_tx;
         bool handshake_required = false;
     };
