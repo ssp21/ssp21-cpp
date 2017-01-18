@@ -116,6 +116,10 @@ namespace ssp21
 
     void CryptoLayer::on_tx_ready_impl()
     {
+        // TODO - evaluate the appropriate priority of these checks
+
+        this->on_pre_tx_ready();
+
         if (this->tx_state.on_tx_complete())
         {
             // ready to transmit more data

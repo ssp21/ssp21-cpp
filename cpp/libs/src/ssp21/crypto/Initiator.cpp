@@ -80,8 +80,6 @@ namespace ssp21
 
     void Initiator::on_handshake_required()
     {
-        this->session_timeout_timer.cancel();
-
         this->handshake_state = this->handshake_state->on_handshake_required(*this, this->executor->get_time());
     }
 
@@ -115,6 +113,15 @@ namespace ssp21
     void Initiator::on_session_nonce_change(uint16_t rx_nonce, uint16_t tx_nonce)
     {
         if (max(tx_nonce, rx_nonce) >= this->params.nonce_renegotiation_trigger_value)
+        {
+            this->session_timeout_timer.cancel();
+            this->on_handshake_required();
+        }
+    }
+
+    void Initiator::on_pre_tx_ready()
+    {
+        if (this->handshake_required)
         {
             this->on_handshake_required();
         }

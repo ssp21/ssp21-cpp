@@ -158,6 +158,8 @@ namespace ssp21
 
         virtual void on_session_nonce_change(uint16_t rx_nonce, uint16_t tx_nonce) override;
 
+        virtual void on_pre_tx_ready() override;
+
         virtual void on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
 
         virtual void on_message(const ReplyHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
