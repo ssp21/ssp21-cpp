@@ -11,6 +11,7 @@ using namespace openpal;
 using HandshakeState = Initiator::IHandshakeState::Enum;
 
 void test_open(InitiatorFixture& fix);
+void test_request_handshake_begin(InitiatorFixture& fix);
 void test_response_timeout(InitiatorFixture& fix, HandshakeState new_state);
 void test_reply_handshake_begin(InitiatorFixture& fix);
 void test_reply_handshake_auth(InitiatorFixture& fix);
@@ -122,6 +123,17 @@ TEST_CASE(SUITE("initializes session when a proper auth reply is received"))
     test_open_and_full_handshake(fix);
 }
 
+TEST_CASE(SUITE("triggers session renegotiation after timeout"))
+{
+	InitiatorFixture fix;
+	test_open_and_full_handshake(fix);
+
+	REQUIRE(fix.exe->advance_to_next_timer());
+	REQUIRE(fix.exe->run_many() == 1);
+
+	test_request_handshake_begin(fix);
+}
+
 TEST_CASE(SUITE("goes to retry state if auth reply doesn't authenticate"))
 {
     InitiatorFixture fix;
@@ -159,27 +171,33 @@ void test_open(InitiatorFixture& fix)
     MockCryptoBackend::instance.expect_empty();
 
     fix.initiator.on_open();
-    REQUIRE(fix.lower.num_tx_messages() == 1);
+   
+	test_request_handshake_begin(fix);
+}
 
-    const auto expected = hex::request_handshake_begin(
-                              0,
-                              NonceMode::increment_last_rx,
-                              DHMode::x25519,
-                              HandshakeHash::sha256,
-                              HandshakeKDF::hkdf_sha256,
-                              HandshakeMAC::hmac_sha256,
-                              SessionMode::hmac_sha256_16,
-                              consts::crypto::initiator::default_max_nonce,
-                              consts::crypto::initiator::default_max_session_time_ms,
-                              CertificateMode::preshared_keys,
-                              hex::repeat(0xFF, 32)
-                          );
+void test_request_handshake_begin(InitiatorFixture& fix)
+{
+	REQUIRE(fix.lower.num_tx_messages() == 1);
 
-    REQUIRE(fix.initiator.get_state_enum() == HandshakeState::wait_for_begin_reply);
-    REQUIRE(fix.lower.pop_tx_message() == expected);
-    REQUIRE(fix.exe->num_pending_timers() == 1);
+	const auto expected = hex::request_handshake_begin(
+		0,
+		NonceMode::increment_last_rx,
+		DHMode::x25519,
+		HandshakeHash::sha256,
+		HandshakeKDF::hkdf_sha256,
+		HandshakeMAC::hmac_sha256,
+		SessionMode::hmac_sha256_16,
+		consts::crypto::initiator::default_max_nonce,
+		consts::crypto::initiator::default_max_session_time_ms,
+		CertificateMode::preshared_keys,
+		hex::repeat(0xFF, 32)
+	);
 
-    MockCryptoBackend::instance.expect({CryptoAction::gen_keypair_x25519, CryptoAction::hash_sha256});
+	REQUIRE(fix.initiator.get_state_enum() == HandshakeState::wait_for_begin_reply);
+	REQUIRE(fix.lower.pop_tx_message() == expected);
+	REQUIRE(fix.exe->num_pending_timers() == 1);
+
+	MockCryptoBackend::instance.expect({ CryptoAction::gen_keypair_x25519, CryptoAction::hash_sha256 });
 }
 
 void test_response_timeout(InitiatorFixture& fix, HandshakeState new_state)
