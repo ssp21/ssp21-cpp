@@ -14,6 +14,7 @@ void test_open(InitiatorFixture& fix);
 void test_response_timeout(InitiatorFixture& fix, HandshakeState new_state);
 void test_reply_handshake_begin(InitiatorFixture& fix);
 void test_reply_handshake_auth(InitiatorFixture& fix);
+void test_open_and_full_handshake(InitiatorFixture& fix);
 
 // ---------- tests for initial state -----------
 
@@ -118,9 +119,7 @@ TEST_CASE(SUITE("goes to retry state when DH fails"))
 TEST_CASE(SUITE("initializes session when a proper auth reply is received"))
 {
     InitiatorFixture fix;
-    test_open(fix);
-    test_reply_handshake_begin(fix);
-    test_reply_handshake_auth(fix);
+    test_open_and_full_handshake(fix);
 }
 
 TEST_CASE(SUITE("goes to retry state if auth reply doesn't authenticate"))
@@ -246,6 +245,8 @@ void test_reply_handshake_auth(InitiatorFixture& fix)
     REQUIRE(fix.initiator.get_state_enum() == HandshakeState::idle);
     REQUIRE(end_num_timer_cancel == (start_num_timer_cancel + 1));
     REQUIRE(end_stats.session.num_init == (start_stats.session.num_init + 1));
+	
+	REQUIRE(fix.exe->num_pending_timers() == 1); // the session timeout timer should be the only timer active
 
     // causes the master to go through key derivation
     MockCryptoBackend::instance.expect(
@@ -257,4 +258,11 @@ void test_reply_handshake_auth(InitiatorFixture& fix)
         CryptoAction::hmac_sha256,
         CryptoAction::hmac_sha256
     });
+}
+
+void test_open_and_full_handshake(InitiatorFixture& fix)
+{
+	test_open(fix);
+	test_reply_handshake_begin(fix);
+	test_reply_handshake_auth(fix);
 }
