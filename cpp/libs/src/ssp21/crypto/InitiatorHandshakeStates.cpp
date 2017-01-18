@@ -136,13 +136,13 @@ namespace ssp21
 
         ctx.handshake.mix_ck(msg_bytes);
 
-		if (now.milliseconds < ctx.request_handshake_begin_time_tx.milliseconds)
-		{
-			SIMPLE_LOG_BLOCK(ctx.logger, levels::error, "clock rollback detected");
-			ctx.start_retry_timer();
-			return WaitForRetry::get();
-		}
-        
+        if (now.milliseconds < ctx.request_handshake_begin_time_tx.milliseconds)
+        {
+            SIMPLE_LOG_BLOCK(ctx.logger, levels::error, "clock rollback detected");
+            ctx.start_retry_timer();
+            return WaitForRetry::get();
+        }
+
         const auto elapsed_ms = now.milliseconds - ctx.request_handshake_begin_time_tx.milliseconds;
         const auto estimated_init_time = now.milliseconds - (elapsed_ms / 2);
 
