@@ -74,6 +74,16 @@ namespace ssp21
             return this->valid;
         }
 
+        uint16_t get_rx_nonce() const
+        {
+            return rx_nonce.get();
+        }
+
+        uint16_t get_tx_nonce() const
+        {
+            return tx_nonce.get();
+        }
+
     private:
 
         bool valid = false;

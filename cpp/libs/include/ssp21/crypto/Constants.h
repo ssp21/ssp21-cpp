@@ -39,10 +39,10 @@ namespace ssp21
                 const openpal::TimeDuration default_retry_timeout = openpal::TimeDuration::seconds(5);
 
                 const uint16_t default_max_nonce = 32768;
-                const uint16_t default_nonce_renegotiation_trigger = 64;
+                const uint16_t default_nonce_renegotiation_trigger = default_max_nonce - 128;
 
-                const uint32_t default_max_session_time_ms = 60 * 60 * 1000; // 1 hour in milliseconds
-                const uint32_t default_time_renegotiation_trigger_ms = 60 * 1 * 1000; // 1 minute in milliseconds
+                const uint32_t default_max_session_time_ms = 1 * 60 * 60 * 1000; // 1 hour in milliseconds
+                const uint32_t default_session_time_renegotiation_trigger_ms = default_max_session_time_ms - (1 * 60 * 1000); // minus 1 minute in milliseconds
             }
         }
     }

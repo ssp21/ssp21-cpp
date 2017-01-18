@@ -81,6 +81,9 @@ namespace ssp21
         // Called when a parse error occurs for a particular message type
         virtual void on_parse_error(Function function, ParseError error) {}
 
+        // Called when either the rx or tx nonces change
+        virtual void on_session_nonce_change(uint16_t rx_nonce, uint16_t tx_nonce) {}
+
         // optional overrides for each type of message
         virtual void on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}
 

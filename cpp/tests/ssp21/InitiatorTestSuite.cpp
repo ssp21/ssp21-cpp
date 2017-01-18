@@ -134,7 +134,7 @@ TEST_CASE(SUITE("triggers session renegotiation after timeout"))
     REQUIRE(fix.exe->run_many() == 1);
 
     const auto actual_elapsed_ms = fix.exe->get_time().milliseconds - before_time.milliseconds;
-    const auto expected_elapsed_ms = (consts::crypto::initiator::default_max_session_time_ms - consts::crypto::initiator::default_time_renegotiation_trigger_ms);
+    const auto expected_elapsed_ms = consts::crypto::initiator::default_session_time_renegotiation_trigger_ms;
 
     REQUIRE(actual_elapsed_ms == expected_elapsed_ms);
 

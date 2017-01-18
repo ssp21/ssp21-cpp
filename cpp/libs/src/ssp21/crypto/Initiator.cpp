@@ -5,14 +5,16 @@
 
 #include "ssp21/LogLevels.h"
 
+using namespace openpal;
+
 namespace ssp21
 {
     Initiator::Initiator(
         const Config& context_config,
         const Session::Config& session_config,
-        const openpal::Logger& logger,
+        const Logger& logger,
         const std::shared_ptr<IFrameWriter>& frame_writer,
-        const std::shared_ptr<openpal::IExecutor>& executor,
+        const std::shared_ptr<IExecutor>& executor,
         std::unique_ptr<KeyPair> local_static_key_pair,
         std::unique_ptr<PublicKey> remote_static_public_key
     ) :
@@ -33,25 +35,25 @@ namespace ssp21
         session_timeout_timer(executor)
     {}
 
-    Initiator::IHandshakeState* Initiator::IHandshakeState::on_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
+    Initiator::IHandshakeState* Initiator::IHandshakeState::on_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const Timestamp& now)
     {
         this->log_unexpected_message(ctx.logger, msg.function);
         return this;
     }
 
-    Initiator::IHandshakeState* Initiator::IHandshakeState::on_message(Initiator& ctx, const ReplyHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
+    Initiator::IHandshakeState* Initiator::IHandshakeState::on_message(Initiator& ctx, const ReplyHandshakeAuth& msg, const seq32_t& msg_bytes, const Timestamp& now)
     {
         this->log_unexpected_message(ctx.logger, msg.function);
         return this;
     }
 
-    Initiator::IHandshakeState* Initiator::IHandshakeState::on_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
+    Initiator::IHandshakeState* Initiator::IHandshakeState::on_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const Timestamp& now)
     {
         this->log_unexpected_message(ctx.logger, msg.function);
         return this;
     }
 
-    void Initiator::IHandshakeState::log_unexpected_message(openpal::Logger& logger, Function function)
+    void Initiator::IHandshakeState::log_unexpected_message(Logger& logger, Function function)
     {
         FORMAT_LOG_BLOCK(logger, levels::warn, "Received unexpected message: %s", FunctionSpec::to_string(function));
     }
@@ -110,17 +112,25 @@ namespace ssp21
         }
     }
 
-    void Initiator::on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+    void Initiator::on_session_nonce_change(uint16_t rx_nonce, uint16_t tx_nonce)
+    {
+        if (max(tx_nonce, rx_nonce) >= this->params.nonce_renegotiation_trigger_value)
+        {
+            this->on_handshake_required();
+        }
+    }
+
+    void Initiator::on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const Timestamp& now)
     {
         this->handshake_state = this->handshake_state->on_message(*this, msg, raw_data, now);
     }
 
-    void Initiator::on_message(const ReplyHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+    void Initiator::on_message(const ReplyHandshakeAuth& msg, const seq32_t& raw_data, const Timestamp& now)
     {
         this->handshake_state = this->handshake_state->on_message(*this, msg, raw_data, now);
     }
 
-    void Initiator::on_message(const ReplyHandshakeError& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+    void Initiator::on_message(const ReplyHandshakeError& msg, const seq32_t& raw_data, const Timestamp& now)
     {
         this->handshake_state = this->handshake_state->on_message(*this, msg, raw_data, now);
     }

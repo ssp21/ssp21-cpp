@@ -33,22 +33,26 @@ namespace ssp21
                 SessionMode session_mode = SessionMode::hmac_sha256_16;
             };
 
+            // TODO - Add a copy constructor that applies reasonable limits/relationships to some of these values
             struct Params
             {
                 /// How long the initiator will will for responses
                 openpal::TimeDuration response_timeout = consts::crypto::initiator::default_response_timeout;
+
                 /// How long the initiator will wait before retrying a failed timeout
                 openpal::TimeDuration retry_timeout = consts::crypto::initiator::default_retry_timeout;
 
                 /// The maximum session time that the initiator will request in the handshake
                 uint32_t max_session_time_ms = consts::crypto::initiator::default_max_session_time_ms;
-                /// The initiator will begin renegotiating when the session time is within this number of ms of timing out
-                uint32_t time_renegotiation_trigger_ms = consts::crypto::initiator::default_time_renegotiation_trigger_ms;
+
+                /// The initiator will begin renegotiating when the session time reaches this value
+                uint32_t session_time_renegotiation_trigger_ms = consts::crypto::initiator::default_session_time_renegotiation_trigger_ms;
 
                 /// The maximum tx or rx nonce value that the initiator will request in the handshake
                 uint16_t max_nonce_value = consts::crypto::initiator::default_max_nonce;
-                /// The initiator will begin renegotiating when either session nonce is within this value of exceeding the limit
-                uint16_t nonce_renegotiation_trigger = consts::crypto::initiator::default_nonce_renegotiation_trigger;
+
+                /// The initiator will begin renegotiating when either nonce value reaches this trigger level
+                uint16_t nonce_renegotiation_trigger_value = consts::crypto::initiator::default_nonce_renegotiation_trigger;
             };
 
             Suite suite;
@@ -152,7 +156,7 @@ namespace ssp21
 
         virtual bool supports(Function function) const override;
 
-        virtual void on_parse_error(Function function, ParseError error) override {}
+        virtual void on_session_nonce_change(uint16_t rx_nonce, uint16_t tx_nonce) override;
 
         virtual void on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
 

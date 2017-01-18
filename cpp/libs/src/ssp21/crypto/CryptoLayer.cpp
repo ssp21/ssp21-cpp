@@ -206,6 +206,8 @@ namespace ssp21
         this->tx_state.begin_transmit(remainder);
 
         this->lower->transmit(data);
+
+        this->on_session_nonce_change(this->session.get_rx_nonce(), this->session.get_tx_nonce());
     }
 
     void CryptoLayer::on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
@@ -218,6 +220,8 @@ namespace ssp21
             FORMAT_LOG_BLOCK(this->logger, levels::warn, "validation error: %s", ec.message().c_str());
             return;
         }
+
+        this->on_session_nonce_change(this->session.get_rx_nonce(), this->session.get_tx_nonce());
 
         // process the message using the reassembler
         const auto result = this->reassembler.process(msg.metadata.flags.fir, msg.metadata.flags.fin, msg.metadata.nonce, payload);
