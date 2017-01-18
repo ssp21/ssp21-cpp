@@ -125,13 +125,20 @@ TEST_CASE(SUITE("initializes session when a proper auth reply is received"))
 
 TEST_CASE(SUITE("triggers session renegotiation after timeout"))
 {
-	InitiatorFixture fix;
-	test_open_and_full_handshake(fix);
+    InitiatorFixture fix;
+    test_open_and_full_handshake(fix);
 
-	REQUIRE(fix.exe->advance_to_next_timer());
-	REQUIRE(fix.exe->run_many() == 1);
+    const auto before_time = fix.exe->get_time();
 
-	test_request_handshake_begin(fix);
+    REQUIRE(fix.exe->advance_to_next_timer());
+    REQUIRE(fix.exe->run_many() == 1);
+
+    const auto actual_elapsed_ms = fix.exe->get_time().milliseconds - before_time.milliseconds;
+    const auto expected_elapsed_ms = (consts::crypto::initiator::default_max_session_time_ms - consts::crypto::initiator::default_time_renegotiation_trigger_ms);
+
+    REQUIRE(actual_elapsed_ms == expected_elapsed_ms);
+
+    test_request_handshake_begin(fix);
 }
 
 TEST_CASE(SUITE("goes to retry state if auth reply doesn't authenticate"))
@@ -171,33 +178,33 @@ void test_open(InitiatorFixture& fix)
     MockCryptoBackend::instance.expect_empty();
 
     fix.initiator.on_open();
-   
-	test_request_handshake_begin(fix);
+
+    test_request_handshake_begin(fix);
 }
 
 void test_request_handshake_begin(InitiatorFixture& fix)
 {
-	REQUIRE(fix.lower.num_tx_messages() == 1);
+    REQUIRE(fix.lower.num_tx_messages() == 1);
 
-	const auto expected = hex::request_handshake_begin(
-		0,
-		NonceMode::increment_last_rx,
-		DHMode::x25519,
-		HandshakeHash::sha256,
-		HandshakeKDF::hkdf_sha256,
-		HandshakeMAC::hmac_sha256,
-		SessionMode::hmac_sha256_16,
-		consts::crypto::initiator::default_max_nonce,
-		consts::crypto::initiator::default_max_session_time_ms,
-		CertificateMode::preshared_keys,
-		hex::repeat(0xFF, 32)
-	);
+    const auto expected = hex::request_handshake_begin(
+                              0,
+                              NonceMode::increment_last_rx,
+                              DHMode::x25519,
+                              HandshakeHash::sha256,
+                              HandshakeKDF::hkdf_sha256,
+                              HandshakeMAC::hmac_sha256,
+                              SessionMode::hmac_sha256_16,
+                              consts::crypto::initiator::default_max_nonce,
+                              consts::crypto::initiator::default_max_session_time_ms,
+                              CertificateMode::preshared_keys,
+                              hex::repeat(0xFF, 32)
+                          );
 
-	REQUIRE(fix.initiator.get_state_enum() == HandshakeState::wait_for_begin_reply);
-	REQUIRE(fix.lower.pop_tx_message() == expected);
-	REQUIRE(fix.exe->num_pending_timers() == 1);
+    REQUIRE(fix.initiator.get_state_enum() == HandshakeState::wait_for_begin_reply);
+    REQUIRE(fix.lower.pop_tx_message() == expected);
+    REQUIRE(fix.exe->num_pending_timers() == 1);
 
-	MockCryptoBackend::instance.expect({ CryptoAction::gen_keypair_x25519, CryptoAction::hash_sha256 });
+    MockCryptoBackend::instance.expect({ CryptoAction::gen_keypair_x25519, CryptoAction::hash_sha256 });
 }
 
 void test_response_timeout(InitiatorFixture& fix, HandshakeState new_state)
@@ -263,8 +270,8 @@ void test_reply_handshake_auth(InitiatorFixture& fix)
     REQUIRE(fix.initiator.get_state_enum() == HandshakeState::idle);
     REQUIRE(end_num_timer_cancel == (start_num_timer_cancel + 1));
     REQUIRE(end_stats.session.num_init == (start_stats.session.num_init + 1));
-	
-	REQUIRE(fix.exe->num_pending_timers() == 1); // the session timeout timer should be the only timer active
+
+    REQUIRE(fix.exe->num_pending_timers() == 1); // the session timeout timer should be the only timer active
 
     // causes the master to go through key derivation
     MockCryptoBackend::instance.expect(
@@ -280,7 +287,7 @@ void test_reply_handshake_auth(InitiatorFixture& fix)
 
 void test_open_and_full_handshake(InitiatorFixture& fix)
 {
-	test_open(fix);
-	test_reply_handshake_begin(fix);
-	test_reply_handshake_auth(fix);
+    test_open(fix);
+    test_reply_handshake_begin(fix);
+    test_reply_handshake_auth(fix);
 }
