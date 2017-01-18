@@ -18,7 +18,7 @@ namespace ssp21
     ) :
         CryptoLayer(
             HandshakeMode::Initiator,
-            context_config,
+            context_config.config,
             session_config,
             logger,
             frame_writer,

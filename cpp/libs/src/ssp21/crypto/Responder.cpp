@@ -22,7 +22,7 @@ namespace ssp21
         std::unique_ptr<PublicKey> remote_static_public_key) :
         CryptoLayer(
             HandshakeMode::Responder,
-            context_config,
+            context_config.config,
             session_config,
             logger,
             frame_writer,

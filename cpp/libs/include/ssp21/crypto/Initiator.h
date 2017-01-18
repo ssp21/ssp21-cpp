@@ -20,7 +20,7 @@ namespace ssp21
 
     public:
 
-        struct Config : public CryptoLayer::Config
+        struct Config
         {
             /// The cyrptographic modes that the initiator will request from the responder
             struct Suite
@@ -53,6 +53,7 @@ namespace ssp21
 
             Suite suite;
             Params params;
+            CryptoLayer::Config config;
         };
 
         Initiator(

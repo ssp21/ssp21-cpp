@@ -17,7 +17,10 @@ namespace ssp21
 
     public:
 
-        struct Config : public CryptoLayer::Config {};
+        struct Config
+        {
+            CryptoLayer::Config config;
+        };
 
         struct IHandshakeState : private openpal::Uncopyable
         {
