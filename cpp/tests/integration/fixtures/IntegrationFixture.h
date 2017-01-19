@@ -36,8 +36,8 @@ namespace ssp21
             auto responder_pub_copy = std::make_unique<PublicKey>(kp_responder->public_key);
             auto initiator_pub_copy = std::make_unique<PublicKey>(kp_initiator->public_key);
 
-            initiator = std::make_unique<Initiator>(Initiator::Config(), Session::Config(), log.logger, std::make_shared<MessageOnlyFrameWriter>(), exe, std::move(kp_initiator), std::move(responder_pub_copy));
-            responder = std::make_unique<Responder>(Responder::Config(), Session::Config(), log.logger, std::make_shared<MessageOnlyFrameWriter>(), exe, std::move(kp_responder), std::move(initiator_pub_copy));
+            initiator = std::make_unique<Initiator>(Initiator::Config(), Session::Config(), ilog.logger, std::make_shared<MessageOnlyFrameWriter>(ilog.logger), exe, std::move(kp_initiator), std::move(responder_pub_copy));
+            responder = std::make_unique<Responder>(Responder::Config(), Session::Config(), rlog.logger, std::make_shared<MessageOnlyFrameWriter>(rlog.logger), exe, std::move(kp_responder), std::move(initiator_pub_copy));
 
             // wire the lower layers together
             initiator_lower.configure(*initiator, responder_lower);
@@ -54,7 +54,8 @@ namespace ssp21
 
 
         const std::shared_ptr<openpal::MockExecutor> exe;
-        openpal::MockLogHandler log;
+        openpal::MockLogHandler ilog;
+        openpal::MockLogHandler rlog;
 
         LowerLayer initiator_lower;
         LowerLayer responder_lower;
