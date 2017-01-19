@@ -8,7 +8,7 @@
 #include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
 
-#include "MakeUnique.h"
+#include "ssp21/MakeUnique.h"
 
 namespace ssp21
 {
