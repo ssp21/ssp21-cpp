@@ -10,6 +10,7 @@
 #include "ssp21/crypto/Initiator.h"
 #include "ssp21/crypto/Responder.h"
 #include "ssp21/crypto/MessageOnlyFrameWriter.h"
+#include "ssp21/MakeUnique.h"
 
 namespace ssp21
 {
