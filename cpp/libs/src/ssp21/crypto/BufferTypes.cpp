@@ -30,7 +30,7 @@ namespace ssp21
 
     void BufferBase::copy(const BufferBase& other)
     {
-		this->buffer_type = other.buffer_type;
+        this->buffer_type = other.buffer_type;
         memcpy(this->buffer.as_wseq(), other.buffer.as_seq(), get_buffer_length(other.buffer_type));
     }
 

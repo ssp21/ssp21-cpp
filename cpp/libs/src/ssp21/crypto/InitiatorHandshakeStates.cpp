@@ -76,7 +76,14 @@ namespace ssp21
         ctx.response_and_retry_timer.cancel();
 
         std::error_code ec;
-        ctx.handshake.derive_authentication_key(msg_bytes, ctx.local_static_key_pair->private_key, msg.ephemeral_public_key, ctx.remote_static_public_key->as_seq(), ec);
+
+        ctx.handshake.derive_authentication_key(
+            msg_bytes,
+            ctx.local_static_key_pair->private_key,
+            msg.ephemeral_public_key,
+            ctx.remote_static_public_key->as_seq(),
+            ec
+        );
 
         if (ec)
         {

@@ -67,12 +67,14 @@ namespace ssp21
         this->algorithms.handshake.dh(this->local_ephemeral_keys.private_key, pub_e_dh_key, dh1, ec);
         if (ec) return;
 
+        // dh2 and dh3 are flipped for the initiator and the responder
         DHOutput dh2;
-        this->algorithms.handshake.dh(this->local_ephemeral_keys.private_key, pub_s_dh_key, dh2, ec);
+        DHOutput dh3;
+
+        this->algorithms.handshake.dh(this->local_ephemeral_keys.private_key, pub_s_dh_key, (this->mode == HandshakeMode::Initiator) ? dh2 : dh3, ec);
         if (ec) return;
 
-        DHOutput dh3;
-        this->algorithms.handshake.dh(priv_s_dh_key, pub_e_dh_key, dh3, ec);
+        this->algorithms.handshake.dh(priv_s_dh_key, pub_e_dh_key, (this->mode == HandshakeMode::Initiator) ? dh3 : dh2, ec);
         if (ec) return;
 
         this->algorithms.handshake.kdf(

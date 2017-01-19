@@ -14,7 +14,6 @@
 #include "ssp21/crypto/Algorithms.h"
 #include "ssp21/crypto/Session.h"
 
-
 namespace ssp21
 {
 

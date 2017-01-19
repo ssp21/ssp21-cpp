@@ -6,7 +6,6 @@
 
 #include "openpal/logging/LogMacros.h"
 
-
 namespace ssp21
 {
 
