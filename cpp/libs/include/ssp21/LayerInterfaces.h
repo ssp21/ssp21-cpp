@@ -4,7 +4,7 @@
 
 #include "openpal/util/Uncopyable.h"
 
-#include "openpal/container/SequenceTypes.h"
+#include "ssp21/SequenceTypes.h"
 
 namespace ssp21
 {

@@ -1,7 +1,7 @@
 
 
-#ifndef RESPONDER_MOCKFRAMEWRITER_H
-#define RESPONDER_MOCKFRAMEWRITER_H
+#ifndef SSP21_MESSAGEONLYFRAMEWRITER_H
+#define SSP21_MESSAGEONLYFRAMEWRITER_H
 
 #include "ssp21/IFrameWriter.h"
 #include "openpal/container/Buffer.h"
@@ -11,11 +11,11 @@ namespace ssp21
 {
 
 
-    class MockFrameWriter : public IFrameWriter
+    class MessageOnlyFrameWriter final : public IFrameWriter
     {
     public:
 
-        explicit MockFrameWriter(openpal::Logger logger = openpal::Logger::empty(), uint16_t max_payload_size = consts::link::max_config_payload_size) :
+        MessageOnlyFrameWriter(const openpal::Logger& logger = openpal::Logger::empty(), uint16_t max_payload_size = consts::link::max_config_payload_size) :
             IFrameWriter(logger),
             max_payload_size(max_payload_size),
             buffer(max_payload_size)

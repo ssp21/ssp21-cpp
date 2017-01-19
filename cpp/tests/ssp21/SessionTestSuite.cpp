@@ -2,6 +2,7 @@
 #include "catch.hpp"
 
 #include "ssp21/crypto/Session.h"
+#include "ssp21/crypto/MessageOnlyFrameWriter.h"
 #include "ssp21/crypto/gen/CryptoError.h"
 
 #include "testlib/HexConversions.h"
@@ -10,7 +11,6 @@
 
 #include "mocks/HexMessageBuilders.h"
 #include "mocks/HexSequences.h"
-#include "mocks/MockFrameWriter.h"
 
 #include <array>
 
@@ -33,7 +33,7 @@ TEST_CASE(SUITE("won't validate user data when not initialized"))
 {
     CryptoTest crypto;
 
-    Session session(std::make_shared<MockFrameWriter>());
+    Session session(std::make_shared<MessageOnlyFrameWriter>());
 
     std::error_code ec;
     const auto user_data = validate(session, 1, 0, 0, "", "", ec);
@@ -50,7 +50,7 @@ TEST_CASE(SUITE("authenticates data"))
 
 TEST_CASE(SUITE("won't intialize with invalid keys"))
 {
-    Session session(std::make_shared<MockFrameWriter>());
+    Session session(std::make_shared<MessageOnlyFrameWriter>());
     REQUIRE_FALSE(session.initialize(Algorithms::Session(), Session::Param(), SessionKeys()));
 }
 
@@ -120,7 +120,7 @@ TEST_CASE(SUITE("rejects minimum ttl + 1"))
 
 TEST_CASE(SUITE("can't format a message without a valid session"))
 {
-    Session s(std::make_shared<MockFrameWriter>());
+    Session s(std::make_shared<MessageOnlyFrameWriter>());
     Hex hex("CAFE");
 
     auto input = hex.as_rslice();
@@ -138,7 +138,7 @@ TEST_CASE(SUITE("can't format a message with maximum nonce value already reached
     Session::Param param;
     param.max_nonce = 0;
 
-    test_format_failure(Session::Config(), param, std::make_shared<MockFrameWriter>(), Timestamp(0), "CA FE", CryptoError::max_nonce_exceeded);
+    test_format_failure(Session::Config(), param, std::make_shared<MessageOnlyFrameWriter>(), Timestamp(0), "CA FE", CryptoError::max_nonce_exceeded);
 }
 
 TEST_CASE(SUITE("can't format a message if the session time exceeds the configured time"))
@@ -146,7 +146,7 @@ TEST_CASE(SUITE("can't format a message if the session time exceeds the configur
     Session::Param param;
     param.max_session_time = 60;
 
-    test_format_failure(Session::Config(), param, std::make_shared<MockFrameWriter>(), Timestamp(param.max_session_time + 1), "CA FE", CryptoError::max_session_time_exceeded);
+    test_format_failure(Session::Config(), param, std::make_shared<MessageOnlyFrameWriter>(), Timestamp(param.max_session_time + 1), "CA FE", CryptoError::max_session_time_exceeded);
 }
 
 TEST_CASE(SUITE("won't format a maximum if the clock has rolled back since initialization"))
@@ -154,7 +154,7 @@ TEST_CASE(SUITE("won't format a maximum if the clock has rolled back since initi
     Session::Param param;
     param.session_start = Timestamp(1);
 
-    test_format_failure(Session::Config(), param, std::make_shared<MockFrameWriter>(), Timestamp(0), "CA FE", CryptoError::clock_rollback);
+    test_format_failure(Session::Config(), param, std::make_shared<MessageOnlyFrameWriter>(), Timestamp(0), "CA FE", CryptoError::clock_rollback);
 }
 
 TEST_CASE(SUITE("won't format a maximum if adding the TTL would exceed the maximum session time"))
@@ -162,19 +162,19 @@ TEST_CASE(SUITE("won't format a maximum if adding the TTL would exceed the maxim
     Session::Param param;
     param.max_session_time = consts::crypto::default_ttl_pad_ms - 1;
 
-    test_format_failure(Session::Config(), param, std::make_shared<MockFrameWriter>(), Timestamp(0), "CA FE", CryptoError::max_session_time_exceeded);
+    test_format_failure(Session::Config(), param, std::make_shared<MessageOnlyFrameWriter>(), Timestamp(0), "CA FE", CryptoError::max_session_time_exceeded);
 }
 
 TEST_CASE(SUITE("forwards the formatting error if the session::write function can't write to the output buffer"))
 {
-    test_format_failure(Session::Config(), Session::Param(), std::make_shared<MockFrameWriter>(openpal::Logger::empty(), 0), Timestamp(0), "CA FE", CryptoError::bad_buffer_size);
+    test_format_failure(Session::Config(), Session::Param(), std::make_shared<MessageOnlyFrameWriter>(openpal::Logger::empty(), 0), Timestamp(0), "CA FE", CryptoError::bad_buffer_size);
 }
 
 TEST_CASE(SUITE("successfully formats and increments nonce"))
 {
     CryptoTest test;
 
-    Session s(std::make_shared<MockFrameWriter>());
+    Session s(std::make_shared<MessageOnlyFrameWriter>());
     init(s);
     Hex hex("CAFE");
 
@@ -228,7 +228,7 @@ std::string test_validation_success(const Session::Config& config, const Session
 {
     CryptoTest crypto;
 
-    Session session(std::make_shared<MockFrameWriter>(), config);
+    Session session(std::make_shared<MessageOnlyFrameWriter>(), config);
 
     init(session, parameters);
 
@@ -245,7 +245,7 @@ void test_validation_failure(const Session::Config& config, const Session::Param
 {
     CryptoTest crypto;
 
-    Session session(std::make_shared<MockFrameWriter>(), config);
+    Session session(std::make_shared<MessageOnlyFrameWriter>(), config);
 
     init(session, parameters);
 

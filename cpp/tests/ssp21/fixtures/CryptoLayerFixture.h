@@ -3,9 +3,9 @@
 #ifndef SSP21_CRYPTOLAYERFIXTURE_H
 #define SSP21_CRYPTOLAYERFIXTURE_H
 
-
 #include "ssp21/crypto/Responder.h"
 #include "ssp21/crypto/Initiator.h"
+#include "ssp21/crypto/MessageOnlyFrameWriter.h"
 
 #include "testlib/MockExecutor.h"
 
@@ -14,7 +14,6 @@
 #include "../mocks/MockUpperLayer.h"
 #include "../mocks/MockCryptoBackend.h"
 #include "../mocks/HexMessageBuilders.h"
-#include "../mocks/MockFrameWriter.h"
 
 namespace ssp21
 {
@@ -63,7 +62,7 @@ namespace ssp21
 
         static std::shared_ptr<IFrameWriter> get_frame_writer(const openpal::Logger& logger, uint16_t max_message_size)
         {
-            return std::make_shared<MockFrameWriter>(logger, max_message_size);
+            return std::make_shared<MessageOnlyFrameWriter>(logger, max_message_size);
         }
 
     protected:

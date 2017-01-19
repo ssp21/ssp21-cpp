@@ -67,7 +67,17 @@ namespace ssp21
 
     // specialized types that actually get used
 
-    class PublicKey final : public BufferBase {};
+    class PublicKey final : public BufferBase
+    {
+    public:
+
+        PublicKey() = default;
+
+        PublicKey(const PublicKey& other)
+        {
+            this->copy(other);
+        }
+    };
 
     class PrivateKey final : public SecureBuffer {};
 
