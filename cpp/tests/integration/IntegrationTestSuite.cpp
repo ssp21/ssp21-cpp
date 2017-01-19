@@ -27,5 +27,5 @@ TEST_CASE(SUITE("completes handshake"))
     fix.responder->on_open();
     fix.initiator->on_open();
 
-    fix.exe->run_one();
+    REQUIRE(fix.exe->run_many() > 0);
 }

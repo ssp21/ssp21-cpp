@@ -63,7 +63,10 @@ namespace ssp21
 
                 this->is_tx_ready = true;
 
-                this->upper->on_tx_ready();
+                executor->post([upper = this->upper]()
+                {
+                    upper->on_tx_ready();
+                });
 
                 return true;
             }
