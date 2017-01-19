@@ -32,6 +32,11 @@ public:
 
     virtual void print(IMessagePrinter& printer) const override {}
 
+    virtual Function get_function() const
+    {
+        return Function::undefined;
+    }
+
 private:
 
     Hex payload;

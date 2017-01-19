@@ -74,7 +74,7 @@ namespace ssp21
         }
         else
         {
-            FORMAT_LOG_BLOCK(this->logger, levels::rx_crypto_msg, "%s", FunctionSpec::to_string(MsgType::function));
+            FORMAT_LOG_BLOCK(this->logger, levels::rx_crypto_msg, "%s (length = %u)", FunctionSpec::to_string(MsgType::function), message.length());
 
             if (this->logger.is_enabled(levels::rx_crypto_msg_fields))
             {

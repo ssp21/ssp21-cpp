@@ -4,6 +4,7 @@
 
 #include "ssp21/crypto/FormatResult.h"
 #include "ssp21/crypto/IMessagePrinter.h"
+#include "ssp21/crypto/gen/Function.h"
 
 namespace ssp21
 {
@@ -16,6 +17,8 @@ namespace ssp21
         virtual FormatResult write(wseq32_t& output) const = 0;
 
         virtual void print(IMessagePrinter& printer) const = 0;
+
+        virtual Function get_function() const = 0;
 
     };
 

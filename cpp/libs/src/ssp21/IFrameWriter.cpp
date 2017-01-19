@@ -23,6 +23,8 @@ namespace ssp21
             return res;
         }
 
+        FORMAT_LOG_BLOCK(this->logger, levels::tx_crypto_msg, "%s (length = %u)", FunctionSpec::to_string(payload.get_function()), res.written.length());
+
         if (this->logger.is_enabled(levels::tx_crypto_msg_fields))
         {
             LogMessagePrinter printer(this->logger, levels::tx_crypto_msg_fields);
