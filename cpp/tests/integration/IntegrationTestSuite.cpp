@@ -21,11 +21,13 @@ TEST_CASE(SUITE("completes handshake"))
 {
     IntegrationFixture fix;
 
+	/*
     fix.ilog.log_everything();
     fix.ilog.add_backend(std::make_shared<ConsolePrettyPrinter>());
 
     fix.rlog.log_everything();
     fix.rlog.add_backend(std::make_shared<ConsolePrettyPrinter>());
+	*/
 
     fix.responder->on_open();
     fix.initiator->on_open();

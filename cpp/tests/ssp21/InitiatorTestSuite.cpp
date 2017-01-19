@@ -283,6 +283,8 @@ void test_reply_handshake_auth(InitiatorFixture& fix)
         CryptoAction::hmac_sha256,
         CryptoAction::hmac_sha256
     });
+
+	REQUIRE(fix.upper.get_is_open());
 }
 
 void test_open_and_full_handshake(InitiatorFixture& fix)
