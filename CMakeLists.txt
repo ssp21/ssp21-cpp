@@ -36,7 +36,7 @@ enable_testing()
 include_directories(./cpp/tests/catch)
 include_directories(./deps/openpal/cpp/tests)
 
-# ---- openpal ----
+# ---- testlib ----
 file(GLOB_RECURSE testlib_SRC ./deps/openpal/cpp/tests/testlib/*.cpp ./deps/openpal/cpp/tests/testlib/*.h)
 add_library(testlib ${LIB_TYPE} ${testlib_SRC})
 target_link_libraries(testlib openpal)
@@ -56,6 +56,13 @@ add_executable (testcryptobackend ${cryptobackend_SRC})
 target_link_libraries (testcryptobackend sodiumbackend testlib)
 set_target_properties(testcryptobackend PROPERTIES FOLDER tests)
 add_test(testcryptobackend-sodium testcryptobackend --sodium)
+
+# ----integration tests ----
+file(GLOB_RECURSE integration_SRC ./cpp/tests/integration/*.cpp ./cpp/tests/integration/*.h)
+add_executable (testintegration ${integration_SRC})
+target_link_libraries (testintegration ssp21 sodiumbackend testlib)
+set_target_properties(testintegration PROPERTIES FOLDER tests)
+add_test(testintegration-sodium testintegration --sodium)
 
 # ---- ssp21 tests ----
 file(GLOB_RECURSE testssp21_SRC ./cpp/tests/ssp21/*.cpp ./cpp/tests/ssp21/*.h)
