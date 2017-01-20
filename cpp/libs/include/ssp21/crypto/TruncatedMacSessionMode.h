@@ -19,14 +19,16 @@ namespace ssp21
             auth_tag_length(auth_tag_length)
         {}
 
-        virtual seq16_t read(
+    private:
+
+        virtual seq16_t read_impl(
             const SymmetricKey& key,
             const SessionData& msg,
             wseq32_t dest,
             std::error_code& ec
         ) const override;
 
-        virtual seq32_t write(
+        virtual seq32_t write_impl(
             IFrameWriter& writer,
             const SymmetricKey& key,
             AuthMetadata& metadata,
@@ -34,8 +36,6 @@ namespace ssp21
             const wseq32_t& encrypt_scratch_space,
             std::error_code& ec
         ) const override;
-
-    private:
 
         const mac_func_t mac_func;
         const uint8_t auth_tag_length;

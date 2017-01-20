@@ -8,6 +8,8 @@
 #include "ssp21/crypto/gen/SessionData.h"
 #include "ssp21/IFrameWriter.h"
 
+#include "ssp21/crypto/gen/CryptoError.h"
+
 #include <system_error>
 
 namespace ssp21
@@ -20,6 +22,32 @@ namespace ssp21
 
         virtual ~ISessionMode() {}
 
+        // checks preconditions and invokes the read implementation
+        seq16_t read(const SymmetricKey& key, const SessionData& msg, wseq32_t dest, std::error_code& ec) const
+        {
+            if (key.get_type() != BufferType::symmetric_key)
+            {
+                ec = CryptoError::bad_buffer_size;
+                return seq16_t::empty();
+            }
+
+            return this->read_impl(key, msg, dest, ec);
+        }
+
+        // checks preconditions and invokes the write implementation
+        seq32_t write(IFrameWriter& writer, const SymmetricKey& key, AuthMetadata& metadata, seq32_t& user_data, const wseq32_t& encrypt_scratch_space, std::error_code& ec) const
+        {
+            if (key.get_type() != BufferType::symmetric_key)
+            {
+                ec = CryptoError::bad_buffer_size;
+                return seq16_t::empty();
+            }
+
+            return this->write_impl(writer, key, metadata, user_data, encrypt_scratch_space, ec);
+        }
+
+    protected:
+
         /**
         * Authenticates (and possibly decrypts) a session message payload and returns a slice pointing to the cleartext output.
         *
@@ -30,7 +58,7 @@ namespace ssp21
         *
         * @return A slice pointing to the cleartext. This slice will be empty if an error occured.
         */
-        virtual seq16_t read(
+        virtual seq16_t read_impl(
             const SymmetricKey& key,
             const SessionData& msg,
             wseq32_t dest,
@@ -49,7 +77,7 @@ namespace ssp21
         *
         * @return A slice pointing to the possibly encrypted user data. This slice will be empty if an error occured.
         */
-        virtual seq32_t write(
+        virtual seq32_t write_impl(
             IFrameWriter& writer,
             const SymmetricKey& key,
             AuthMetadata& metadata,
@@ -57,8 +85,6 @@ namespace ssp21
             const wseq32_t& encrypt_scratch_space,
             std::error_code& ec
         ) const = 0;
-
-    protected:
 
         typedef openpal::StaticBuffer<uint32_t, AuthMetadata::fixed_size_bytes> metadata_buffer_t;
         typedef openpal::StaticBuffer<uint32_t, openpal::UInt16::size> user_data_length_buffer_t;

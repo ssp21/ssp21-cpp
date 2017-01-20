@@ -8,7 +8,7 @@ using namespace openpal;
 
 namespace ssp21
 {
-    seq16_t TruncatedMacSessionMode::read(
+    seq16_t TruncatedMacSessionMode::read_impl(
         const SymmetricKey& key,
         const SessionData& msg,
         wseq32_t, // ignored in MAC mode
@@ -36,7 +36,7 @@ namespace ssp21
         return msg.user_data;
     }
 
-    seq32_t TruncatedMacSessionMode::write(
+    seq32_t TruncatedMacSessionMode::write_impl(
         IFrameWriter& writer,
         const SymmetricKey& key,
         AuthMetadata& metadata,
