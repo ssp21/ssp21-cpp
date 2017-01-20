@@ -36,6 +36,13 @@ enable_testing()
 include_directories(./cpp/tests/catch)
 include_directories(./deps/openpal/cpp/tests)
 
+# ----- install -----
+
+# common pattern and exludes for all installed headers
+set(INSTALL_ARGS FILES_MATCHING PATTERN "*.h" PATTERN ".deps" EXCLUDE PATTERN ".libs" EXCLUDE)
+install(DIRECTORY ./cpp/libs/include/ DESTINATION include ${INSTALL_ARGS})
+install(DIRECTORY ./deps/openpal/cpp/libs/include/ DESTINATION include ${INSTALL_ARGS})
+
 # ---- testlib ----
 file(GLOB_RECURSE testlib_SRC ./deps/openpal/cpp/tests/testlib/*.cpp ./deps/openpal/cpp/tests/testlib/*.h)
 add_library(testlib ${LIB_TYPE} ${testlib_SRC})
