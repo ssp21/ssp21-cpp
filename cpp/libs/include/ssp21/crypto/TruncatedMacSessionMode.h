@@ -39,7 +39,6 @@ namespace ssp21
 
         const mac_func_t mac_func;
         const uint8_t auth_tag_length;
-
     };
 
 }

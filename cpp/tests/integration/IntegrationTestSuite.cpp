@@ -36,8 +36,6 @@ TEST_CASE(SUITE("can transfer data from initiator to responder"))
     for (int i = 0; i < size; ++i) payload[i] = i % 255;
     const auto slice = seq32_t(payload, size);
 
-    enable_all_logging(fix);
-
     fix.initiator->transmit(slice);
     REQUIRE(fix.exe->run_many() > 0);
     REQUIRE(fix.responder_upper.num_bytes_rx == 64);

@@ -8,8 +8,6 @@ using namespace openpal;
 
 namespace ssp21
 {
-
-
     seq16_t TruncatedMacSessionMode::read(
         const SymmetricKey& key,
         const SessionData& msg,
@@ -78,10 +76,12 @@ namespace ssp21
         // Now calculate the mac
         mac_func(key.as_seq(), { ad_bytes, user_data_length_bytes, user_data }, tag);
 
+        const auto trunacted_mac = tag.as_seq().take(this->auth_tag_length);
+
         SessionData message(
             metadata,
             user_data.take(tx_user_data_length),
-            tag.as_seq().take(this->auth_tag_length) // truncate the MAC
+            trunacted_mac // truncate the MAC
         );
 
         const auto res = writer.write(message);

@@ -101,7 +101,7 @@ namespace ssp21
         inline void copy(const SessionKeys& other)
         {
             this->rx_key.copy(other.rx_key);
-            this->rx_key.copy(other.tx_key);
+            this->tx_key.copy(other.tx_key);
         }
 
         bool valid() const
