@@ -13,6 +13,7 @@
 #include "ssp21/MakeUnique.h"
 
 #include <stdexcept>
+#include <deque>
 
 namespace ssp21
 {
@@ -75,24 +76,40 @@ namespace ssp21
     {
     public:
 
-        SeqValidator(const seq32_t& data) : data(data) {}
-
         virtual void validate(const seq32_t& data) override
         {
-            if (!data.equals(this->data))
+            if (this->expected_seqs.empty())
+            {
+                throw std::logic_error("not expecting data!");
+            }
+
+            const auto expected = expected_seqs.front();
+            expected_seqs.pop_front();
+
+            if (!data.equals(expected))
             {
                 throw std::logic_error("bad comparison!");
             }
         }
 
-        static std::shared_ptr<IReceiveValidator> create(const seq32_t& data)
+        void expect(const seq32_t& data)
         {
-            return std::make_shared<SeqValidator>(data);
+            this->expected_seqs.push_back(data);
+        }
+
+        bool is_empty() const
+        {
+            return expected_seqs.empty();
+        }
+
+        static std::shared_ptr<SeqValidator> create()
+        {
+            return std::make_shared<SeqValidator>();
         }
 
     private:
 
-        seq32_t data;
+        std::deque<seq32_t> expected_seqs;
     };
 
 }

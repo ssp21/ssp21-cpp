@@ -36,9 +36,14 @@ TEST_CASE(SUITE("can transfer data from initiator to responder"))
     for (int i = 0; i < size; ++i) payload[i] = i % 255;
     const auto slice = seq32_t(payload, size);
 
+    const auto validator = SeqValidator::create();
+    fix.responder_upper.add_validator(validator);
+    validator->expect(slice);
+
     fix.initiator->transmit(slice);
     REQUIRE(fix.exe->run_many() > 0);
     REQUIRE(fix.responder_upper.num_bytes_rx == 64);
+    REQUIRE(validator->is_empty());
 }
 
 void open_and_test_handshake(IntegrationFixture& fix)
