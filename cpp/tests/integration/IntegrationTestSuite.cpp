@@ -13,6 +13,7 @@ using namespace ssp21;
 using namespace openpal;
 
 void open_and_test_handshake(IntegrationFixture& fix);
+void test_bidirectional_data_transfer(IntegrationFixture& fix, const seq32_t& data);
 void enable_all_logging(IntegrationFixture& fix);
 
 TEST_CASE(SUITE("fixture construction"))
@@ -38,16 +39,7 @@ TEST_CASE(SUITE("can transfer data bidirectionally multiple times"))
 
     for (int i = 0; i < 3; ++i)
     {
-        fix.responder_validator->expect(slice);
-        fix.initiator_validator->expect(slice);
-
-        fix.initiator->transmit(slice);
-        fix.responder->transmit(slice);
-
-        REQUIRE(fix.exe->run_many() > 0);
-
-        REQUIRE(fix.responder_validator->is_empty());
-        REQUIRE(fix.initiator_validator->is_empty());
+        test_bidirectional_data_transfer(fix, slice);
     }
 }
 
@@ -63,6 +55,23 @@ void open_and_test_handshake(IntegrationFixture& fix)
 
     REQUIRE(fix.responder_upper.get_is_open());
     REQUIRE(fix.initiator_upper.get_is_open());
+}
+
+void test_bidirectional_data_transfer(IntegrationFixture& fix, const seq32_t& data)
+{
+    REQUIRE(fix.responder_validator->is_empty());
+    REQUIRE(fix.initiator_validator->is_empty());
+
+    fix.responder_validator->expect(data);
+    fix.initiator_validator->expect(data);
+
+    REQUIRE(fix.initiator->transmit(data));
+    REQUIRE(fix.responder->transmit(data));
+
+    REQUIRE(fix.exe->run_many() > 0);
+
+    REQUIRE(fix.responder_validator->is_empty());
+    REQUIRE(fix.initiator_validator->is_empty());
 }
 
 void enable_all_logging(IntegrationFixture& fix)
