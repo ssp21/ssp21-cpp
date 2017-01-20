@@ -15,7 +15,7 @@ namespace ssp21
 
     class LowerLayer final : public ILowerLayer
     {
-		typedef openpal::Buffer message_t;
+        typedef openpal::Buffer message_t;
 
     public:
 
@@ -29,22 +29,22 @@ namespace ssp21
                 throw std::logic_error("already transmitting");
             }
 
-			this->messages.push_back(std::make_unique<message_t>(data));
+            this->messages.push_back(std::make_unique<message_t>(data));
 
             this->is_tx_ready = false;
 
-			// notify the sibling that theres data available to be read
+            // notify the sibling that theres data available to be read
             executor->post([sibling = this->sibling]()
             {
                 sibling->on_sibling_rx_ready();
             });
 
-			// simulate asynchronous transmission
-			executor->post([this]()
-			{
-				this->is_tx_ready = true;
-				this->upper->on_tx_ready();
-			});
+            // simulate asynchronous transmission
+            executor->post([this]()
+            {
+                this->is_tx_ready = true;
+                this->upper->on_tx_ready();
+            });
 
             return true;
         }
@@ -66,11 +66,11 @@ namespace ssp21
         // sibling layer requests that the data be pushed into its upper layer
         bool read(IUpperLayer& upper)
         {
-            if (messages.empty()) return false;			
+            if (messages.empty()) return false;
 
             if (upper.on_rx_ready(messages.front()->as_rslice()))
             {
-				messages.pop_front();                                
+                messages.pop_front();
                 return true;
             }
 
@@ -84,7 +84,7 @@ namespace ssp21
 
         const std::shared_ptr<openpal::IExecutor> executor;
 
-		std::deque<std::unique_ptr<message_t>> messages;
+        std::deque<std::unique_ptr<message_t>> messages;
 
         // set during configure step
         IUpperLayer* upper = nullptr;
