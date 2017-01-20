@@ -15,8 +15,12 @@ namespace ssp21
 
     public:
 
-        struct Settings
+        class Settings
         {
+        
+         public:
+            Settings() {}
+
             bool printId = true;
         };
 
