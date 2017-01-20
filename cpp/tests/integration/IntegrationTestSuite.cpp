@@ -26,24 +26,34 @@ TEST_CASE(SUITE("completes handshake"))
     open_and_test_handshake(fix);
 }
 
-TEST_CASE(SUITE("can transfer data from initiator to responder"))
+TEST_CASE(SUITE("can transfer data bidirectionally"))
 {
     IntegrationFixture fix;
     open_and_test_handshake(fix);
 
-    const auto size = 64;
-    uint8_t payload[size] = { 0x00 };
-    for (int i = 0; i < size; ++i) payload[i] = i % 255;
-    const auto slice = seq32_t(payload, size);
+    const auto num_bytes_tx = 64;
+    uint8_t payload[num_bytes_tx] = { 0x00 };
+    for (int i = 0; i < num_bytes_tx; ++i) payload[i] = i % 255;
+    const auto slice = seq32_t(payload, num_bytes_tx);
 
-    const auto validator = SeqValidator::create();
-    fix.responder_upper.add_validator(validator);
-    validator->expect(slice);
+    const auto responder_validator = SeqValidator::create();
+    fix.responder_upper.add_validator(responder_validator);
+
+	const auto initiator_validator = SeqValidator::create();
+	fix.responder_upper.add_validator(initiator_validator);	
+	
+	responder_validator->expect(slice);
+	initiator_validator->expect(slice);	
 
     fix.initiator->transmit(slice);
-    REQUIRE(fix.exe->run_many() > 0);
-    REQUIRE(fix.responder_upper.num_bytes_rx == 64);
-    REQUIRE(validator->is_empty());
+	fix.responder->transmit(slice);
+    	
+	REQUIRE(fix.exe->run_many() > 0);
+    
+    REQUIRE(responder_validator->is_empty());
+	REQUIRE(initiator_validator->is_empty());
+	REQUIRE(fix.responder_upper.num_bytes_rx == num_bytes_tx);
+	REQUIRE(fix.initiator_upper.num_bytes_rx == num_bytes_tx);
 }
 
 void open_and_test_handshake(IntegrationFixture& fix)
