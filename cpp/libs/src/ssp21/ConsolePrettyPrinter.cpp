@@ -20,7 +20,14 @@ namespace ssp21
 
         ostringstream oss;
 
-        oss << "ms(" << millis << ") " << get_prefix(level.value) << message;
+        oss << "ms(" << millis << ") ";
+
+        if (settings.printId)
+        {
+            oss << id << " ";
+        }
+
+        oss << get_prefix(level.value) << message;
 
 
         std::cout << oss.str() << std::endl;

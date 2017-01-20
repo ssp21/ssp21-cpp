@@ -165,7 +165,7 @@ namespace ssp21
             ctx.on_handshake_required();
         });
 
-		ctx.upper->on_open();
+        ctx.upper->on_open();
 
         return Idle::get();
     }

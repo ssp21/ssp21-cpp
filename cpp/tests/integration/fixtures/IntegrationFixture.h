@@ -12,6 +12,8 @@
 #include "ssp21/crypto/MessageOnlyFrameWriter.h"
 #include "ssp21/MakeUnique.h"
 
+#include <stdexcept>
+
 namespace ssp21
 {
 
@@ -22,6 +24,8 @@ namespace ssp21
 
         IntegrationFixture() :
             exe(std::make_shared<openpal::MockExecutor>()),
+            ilog("initiator"),
+            rlog("responder"),
             initiator_lower(exe),
             responder_lower(exe)
         {
@@ -65,6 +69,30 @@ namespace ssp21
 
         std::unique_ptr<Initiator> initiator;
         std::unique_ptr<Responder> responder;
+    };
+
+    class SeqValidator final : public IReceiveValidator
+    {
+    public:
+
+        SeqValidator(const seq32_t& data) : data(data) {}
+
+        virtual void validate(const seq32_t& data) override
+        {
+            if (!data.equals(this->data))
+            {
+                throw std::logic_error("bad comparison!");
+            }
+        }
+
+        static std::shared_ptr<IReceiveValidator> create(const seq32_t& data)
+        {
+            return std::make_shared<SeqValidator>(data);
+        }
+
+    private:
+
+        seq32_t data;
     };
 
 }

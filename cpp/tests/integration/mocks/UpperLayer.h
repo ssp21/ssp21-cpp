@@ -3,8 +3,15 @@
 
 #include "ssp21/LayerInterfaces.h"
 
+#include <vector>
+
 namespace ssp21
 {
+    struct IReceiveValidator
+    {
+        virtual void validate(const seq32_t& data) = 0;
+    };
+
 
     class UpperLayer final : public IUpperLayer
     {
@@ -14,6 +21,13 @@ namespace ssp21
         void configure(ILowerLayer& lower)
         {
             this->lower = &lower;
+        }
+
+        uint32_t num_bytes_rx = 0;
+
+        void add_validator(const std::shared_ptr<IReceiveValidator>& validator)
+        {
+            this->validators.push_back(validator);
         }
 
     private:
@@ -26,11 +40,20 @@ namespace ssp21
 
         virtual bool on_rx_ready_impl(const seq32_t& data)
         {
+            num_bytes_rx += data.length();
+
+            for (auto& v : this->validators)
+            {
+                v->validate(data);
+            }
+
             return true;
         }
 
         // set during configure step
         ILowerLayer* lower = nullptr;
+
+        std::vector<std::shared_ptr<IReceiveValidator>> validators;
     };
 
 }
