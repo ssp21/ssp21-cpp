@@ -34,6 +34,7 @@ object GeneratedFiles {
     FormatError,
     CryptoError,
     Base64DecodeError,
+    PEMDecodeError,
     ReassemblyResult
   ).map(x => EnumConfig(x, false, true)).map(e => EnumGenerator(e, Some(basePath)))
 

@@ -17,8 +17,8 @@ namespace ssp21
 
         class Settings
         {
-        
-         public:
+
+        public:
             Settings() {}
 
             bool printId = true;

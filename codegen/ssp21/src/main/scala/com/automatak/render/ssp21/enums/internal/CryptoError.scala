@@ -20,6 +20,7 @@ object CryptoError extends EnumModel {
   override def errorCategory: Option[ErrorCategory] = Some(ErrorCategory("CryptoErrorCategory", "crypto error"))
 
   private val codes = List(
+    EnumValue("ok", 0, "no error"),
     EnumValue("bad_key_type", 1, "attempted operation with bad key type"),
     EnumValue("dh_x25519_fail", 2, "X25519 DH operation failed. Bad public key?"),
     EnumValue("undefined_algorithm", 3, "a procedure cannot be executed b/c of an undefined algorithm"),

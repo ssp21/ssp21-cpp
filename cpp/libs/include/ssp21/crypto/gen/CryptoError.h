@@ -27,6 +27,8 @@ namespace ssp21 {
 */
 enum class CryptoError : uint8_t
 {
+    /// no error
+    ok = 0x0,
     /// attempted operation with bad key type
     bad_key_type = 0x1,
     /// X25519 DH operation failed. Bad public key?

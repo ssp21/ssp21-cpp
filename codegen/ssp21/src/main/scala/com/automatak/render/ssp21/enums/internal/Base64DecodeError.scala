@@ -30,12 +30,4 @@ object Base64DecodeError extends EnumModel {
 
 }
 
-/*
-override def name : String
-override def underscoredName: String
-override def comments : List[String]
-override def nonDefaultValues : List[EnumValue]
-override def defaultValue : Option[EnumValue]
-*/
-
 

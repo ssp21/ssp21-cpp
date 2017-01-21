@@ -23,6 +23,8 @@ const char* CryptoErrorSpec::to_string(CryptoError arg)
 {
     switch(arg)
     {
+        case(CryptoError::ok):
+            return "ok";
         case(CryptoError::bad_key_type):
             return "bad_key_type";
         case(CryptoError::dh_x25519_fail):
