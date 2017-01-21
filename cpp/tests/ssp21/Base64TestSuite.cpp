@@ -2,7 +2,7 @@
 
 #include "catch.hpp"
 
-#include "ssp21/crypto/Base64.h"
+#include "ssp21/util/Base64.h"
 #include "testlib/Hex.h"
 
 #define SUITE(name) "Base64TestSuite - " name
