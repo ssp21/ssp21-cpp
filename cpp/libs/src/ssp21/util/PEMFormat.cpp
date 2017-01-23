@@ -1,5 +1,7 @@
 #include "ssp21/util/PEMFormat.h"
 
+#include <cstring>
+
 namespace ssp21
 {
 
