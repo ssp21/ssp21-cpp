@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 2.8)
-project (ssp21cpp)
+project (ssp21-cpp)
 set(SSP21CPP_VERSION 0.0.1)
 
 include(${PROJECT_SOURCE_DIR}/cmake/settings.cmake)

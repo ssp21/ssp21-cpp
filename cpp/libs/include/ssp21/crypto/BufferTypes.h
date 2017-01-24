@@ -36,13 +36,13 @@ namespace ssp21
 
         void copy(const BufferBase& other);
 
+        static uint8_t get_buffer_length(BufferType);
+
     protected:
 
         BufferBase() = default;
 
     private:
-
-        static uint8_t get_buffer_length(BufferType);
 
         uint8_t length = 0;
         BufferType buffer_type = BufferType::empty;
