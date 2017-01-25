@@ -6,6 +6,7 @@
 #include <iostream>
 #include <chrono>
 #include <sstream>
+#include <iomanip>
 
 using namespace std;
 using namespace std::chrono;
@@ -22,9 +23,20 @@ namespace ssp21
 
         oss << "ms(" << millis << ") ";
 
+        std::string id_str(id);
+
+        if (id_str.size() > settings.max_id_size)
+        {
+            id_str = id_str.substr(0, settings.max_id_size);
+        }
+        else if (id_str.size() << settings.max_id_size)
+        {
+            id_str = id_str + std::string(settings.max_id_size - id_str.size(), ' ');
+        }
+
         if (settings.printId)
         {
-            oss << id << " ";
+            oss << id_str << " ";
         }
 
         oss << get_prefix(level.value) << message;

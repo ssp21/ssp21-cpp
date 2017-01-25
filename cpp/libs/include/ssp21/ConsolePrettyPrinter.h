@@ -22,6 +22,7 @@ namespace ssp21
             Settings() {}
 
             bool printId = true;
+            size_t max_id_size = 10;
         };
 
         ConsolePrettyPrinter(const Settings& settings = Settings()) : settings(settings) {}
@@ -30,7 +31,7 @@ namespace ssp21
 
     private:
 
-        Settings settings;
+        const Settings settings;
 
         static const char* get_prefix(int level);
     };
