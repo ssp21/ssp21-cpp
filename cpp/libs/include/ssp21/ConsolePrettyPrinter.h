@@ -3,6 +3,7 @@
 #define SSP21_CONSOLEPRETTYPRINTER_H
 
 #include "openpal/logging/ILogHandler.h"
+#include <cstddef>
 
 namespace ssp21
 {
