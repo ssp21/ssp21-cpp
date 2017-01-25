@@ -42,8 +42,8 @@ namespace ssp21
             const openpal::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
             const std::shared_ptr<openpal::IExecutor>& executor,
-            std::unique_ptr<KeyPair> local_static_key_pair,
-            std::unique_ptr<PublicKey> remote_static_public_key
+            const std::shared_ptr<const KeyPair>& local_static_key_pair,
+            const std::shared_ptr<const PublicKey>& remote_static_public_key
         );
 
         /// ------ helper methods ------
@@ -109,8 +109,8 @@ namespace ssp21
         const std::shared_ptr<IFrameWriter> frame_writer;
         const std::shared_ptr<openpal::IExecutor> executor;
 
-        const std::unique_ptr<KeyPair> local_static_key_pair;
-        const std::unique_ptr<PublicKey> remote_static_public_key;
+        const std::shared_ptr<const KeyPair> local_static_key_pair;
+        const std::shared_ptr<const PublicKey> remote_static_public_key;
 
         Handshake handshake;
         Session session;

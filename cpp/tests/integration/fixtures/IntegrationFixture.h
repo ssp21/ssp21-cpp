@@ -70,18 +70,18 @@ namespace ssp21
             responder_lower(exe)
         {
             // we need to first perform some key derivation so we can inject private keys, and share public keys
-            auto kp_responder = std::make_unique<KeyPair>();
-            auto kp_initiator = std::make_unique<KeyPair>();
+            const auto kp_responder = std::make_shared<KeyPair>();
+            const auto kp_initiator = std::make_shared<KeyPair>();
 
             Crypto::gen_keypair_x25519(*kp_responder);
             Crypto::gen_keypair_x25519(*kp_initiator);
 
             // make copies of the public keys
-            auto responder_pub_copy = std::make_unique<PublicKey>(kp_responder->public_key);
-            auto initiator_pub_copy = std::make_unique<PublicKey>(kp_initiator->public_key);
+            const auto responder_pub_copy = std::make_shared<PublicKey>(kp_responder->public_key);
+            const auto initiator_pub_copy = std::make_shared<PublicKey>(kp_initiator->public_key);
 
-            initiator = std::make_unique<Initiator>(Initiator::Config(), Session::Config(), ilog.logger, std::make_shared<MessageOnlyFrameWriter>(ilog.logger), exe, std::move(kp_initiator), std::move(responder_pub_copy));
-            responder = std::make_unique<Responder>(Responder::Config(), Session::Config(), rlog.logger, std::make_shared<MessageOnlyFrameWriter>(rlog.logger), exe, std::move(kp_responder), std::move(initiator_pub_copy));
+            initiator = std::make_unique<Initiator>(Initiator::Config(), Session::Config(), ilog.logger, std::make_shared<MessageOnlyFrameWriter>(ilog.logger), exe, kp_initiator, responder_pub_copy);
+            responder = std::make_unique<Responder>(Responder::Config(), Session::Config(), rlog.logger, std::make_shared<MessageOnlyFrameWriter>(rlog.logger), exe, kp_responder, initiator_pub_copy);
 
             // wire the lower layers together
             initiator_lower.configure(*initiator, responder_lower);
