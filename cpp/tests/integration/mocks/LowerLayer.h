@@ -57,7 +57,7 @@ namespace ssp21
             sibling->read(*this->upper);
         }
 
-        void configure(IUpperLayer& upper, LowerLayer& sibling)
+        void configure(crypto_upper_layer_t& upper, LowerLayer& sibling)
         {
             this->upper = &upper;
             this->sibling = &sibling;
@@ -66,7 +66,7 @@ namespace ssp21
     private:
 
         // sibling layer requests that the data be pushed into its upper layer
-        bool read(IUpperLayer& upper)
+        bool read(crypto_upper_layer_t& upper)
         {
             if (messages.empty()) return false;
 
@@ -89,7 +89,7 @@ namespace ssp21
         std::deque<std::unique_ptr<message_t>> messages;
 
         // set during configure step
-        IUpperLayer* upper = nullptr;
+		crypto_upper_layer_t* upper = nullptr;
         LowerLayer* sibling = nullptr;
     };
 

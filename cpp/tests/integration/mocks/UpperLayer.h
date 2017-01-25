@@ -13,7 +13,7 @@ namespace ssp21
     };
 
 
-    class UpperLayer final : public IUpperLayer
+    class UpperLayer final : public crypto_upper_layer_t
     {
 
     public:

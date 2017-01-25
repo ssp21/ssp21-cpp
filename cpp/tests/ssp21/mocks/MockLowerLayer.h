@@ -19,7 +19,7 @@ namespace ssp21
 
     public:
 
-        void bind_upper(IUpperLayer& upper)
+        void bind_upper(crypto_upper_layer_t& upper)
         {
             this->upper = &upper;
         }
@@ -94,7 +94,7 @@ namespace ssp21
 
         typedef std::deque<std::unique_ptr<message_t>> message_queue_t;
 
-        IUpperLayer* upper = nullptr;
+		crypto_upper_layer_t* upper = nullptr;
 
         message_queue_t tx_messages;
 

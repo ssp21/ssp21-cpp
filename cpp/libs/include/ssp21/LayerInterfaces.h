@@ -37,6 +37,7 @@ namespace ssp21
 
     };
 
+	template <class RxType>
     class IUpperLayer
     {
 
@@ -68,7 +69,7 @@ namespace ssp21
             }
         }
 
-        inline bool on_rx_ready(const seq32_t& data)
+        inline bool on_rx_ready(RxType data)
         {
             return (this->is_open) ? this->on_rx_ready_impl(data) : false;
         }
@@ -86,13 +87,16 @@ namespace ssp21
 
         virtual void on_tx_ready_impl() = 0;
 
-        virtual bool on_rx_ready_impl(const seq32_t& data) = 0;
+        virtual bool on_rx_ready_impl(RxType data) = 0;
 
     private:
 
         bool is_open = false;
 
     };
+
+	typedef IUpperLayer<const seq32_t&> crypto_upper_layer_t;
+	typedef IUpperLayer<const seq32_t&> user_upper_layer_t;
 
 }
 

@@ -24,7 +24,7 @@ namespace ssp21
     /**
     * Common base class for initiator and responder
     */
-    class CryptoLayer : public IUpperLayer, public ILowerLayer
+    class CryptoLayer : public crypto_upper_layer_t, public ILowerLayer
     {
 
     public:

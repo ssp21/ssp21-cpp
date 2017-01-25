@@ -11,7 +11,7 @@
 
 namespace ssp21
 {
-    class MockUpperLayer : public IUpperLayer, private openpal::Uncopyable
+    class MockUpperLayer : public user_upper_layer_t, private openpal::Uncopyable
     {
 
     public:
