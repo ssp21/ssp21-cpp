@@ -89,7 +89,7 @@ namespace ssp21
         std::deque<std::unique_ptr<message_t>> messages;
 
         // set during configure step
-		crypto_upper_layer_t* upper = nullptr;
+        crypto_upper_layer_t* upper = nullptr;
         LowerLayer* sibling = nullptr;
     };
 

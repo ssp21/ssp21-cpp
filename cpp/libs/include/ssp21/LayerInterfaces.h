@@ -37,7 +37,7 @@ namespace ssp21
 
     };
 
-	template <class RxType>
+    template <class RxType>
     class IUpperLayer
     {
 
@@ -95,8 +95,9 @@ namespace ssp21
 
     };
 
-	typedef IUpperLayer<const seq32_t&> crypto_upper_layer_t;
-	typedef IUpperLayer<const seq32_t&> user_upper_layer_t;
+    typedef IUpperLayer<const seq32_t&> crypto_upper_layer_t;
+    typedef IUpperLayer<const seq32_t&> user_upper_layer_t;
+    typedef IUpperLayer<seq32_t&> link_upper_layer_t;
 
 }
 

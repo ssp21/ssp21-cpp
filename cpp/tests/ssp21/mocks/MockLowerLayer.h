@@ -94,7 +94,7 @@ namespace ssp21
 
         typedef std::deque<std::unique_ptr<message_t>> message_queue_t;
 
-		crypto_upper_layer_t* upper = nullptr;
+        crypto_upper_layer_t* upper = nullptr;
 
         message_queue_t tx_messages;
 
