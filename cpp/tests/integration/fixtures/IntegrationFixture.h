@@ -70,18 +70,35 @@ namespace ssp21
             responder_lower(exe)
         {
             // we need to first perform some key derivation so we can inject private keys, and share public keys
-            const auto kp_responder = std::make_shared<KeyPair>();
-            const auto kp_initiator = std::make_shared<KeyPair>();
+            KeyPair kp_responder;
+            KeyPair kp_initiator;
 
-            Crypto::gen_keypair_x25519(*kp_responder);
-            Crypto::gen_keypair_x25519(*kp_initiator);
+            Crypto::gen_keypair_x25519(kp_responder);
+            Crypto::gen_keypair_x25519(kp_initiator);
 
-            // make copies of the public keys
-            const auto responder_pub_copy = std::make_shared<PublicKey>(kp_responder->public_key);
-            const auto initiator_pub_copy = std::make_shared<PublicKey>(kp_initiator->public_key);
+            // make copies of the all the keys on the heap
+            const auto responder_pub = std::make_shared<const PublicKey>(kp_responder.public_key);
+            const auto initiator_pub = std::make_shared<const PublicKey>(kp_initiator.public_key);
+            const auto responder_priv = std::make_shared<const PrivateKey>(kp_responder.private_key);
+            const auto initiator_priv = std::make_shared<const PrivateKey>(kp_initiator.private_key);
 
-            initiator = std::make_unique<Initiator>(Initiator::Config(), Session::Config(), ilog.logger, std::make_shared<MessageOnlyFrameWriter>(ilog.logger), exe, kp_initiator, responder_pub_copy);
-            responder = std::make_unique<Responder>(Responder::Config(), Session::Config(), rlog.logger, std::make_shared<MessageOnlyFrameWriter>(rlog.logger), exe, kp_responder, initiator_pub_copy);
+            initiator = std::make_unique<Initiator>(
+                            Initiator::Config(),
+                            Session::Config(),
+                            ilog.logger,
+                            std::make_shared<MessageOnlyFrameWriter>(ilog.logger),
+                            exe,
+                            CryptoLayer::Keys(initiator_pub, responder_pub, initiator_priv)
+                        );
+
+            responder = std::make_unique<Responder>(
+                            Responder::Config(),
+                            Session::Config(),
+                            rlog.logger,
+                            std::make_shared<MessageOnlyFrameWriter>(rlog.logger),
+                            exe,
+                            CryptoLayer::Keys(responder_pub, initiator_pub, responder_priv)
+                        );
 
             // wire the lower layers together
             initiator_lower.configure(*initiator, responder_lower);

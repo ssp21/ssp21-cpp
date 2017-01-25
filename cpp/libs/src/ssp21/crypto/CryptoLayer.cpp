@@ -16,14 +16,12 @@ namespace ssp21
         const openpal::Logger& logger,
         const std::shared_ptr<IFrameWriter>& frame_writer,
         const std::shared_ptr<openpal::IExecutor>& executor,
-        const std::shared_ptr<const KeyPair>& local_static_key_pair,
-        const std::shared_ptr<const PublicKey>& remote_static_public_key
+        const Keys& keys
     ) :
         logger(logger),
         frame_writer(frame_writer),
         executor(executor),
-        local_static_key_pair(local_static_key_pair),
-        remote_static_public_key(remote_static_public_key),
+        keys(keys),
         handshake(type),
         session(frame_writer, session_config),
         reassembler(context_config.max_reassembly_size)

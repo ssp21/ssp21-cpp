@@ -71,7 +71,7 @@ namespace ssp21
     {
     public:
 
-        PublicKey() = default;
+        PublicKey() {}
 
         PublicKey(const PublicKey& other)
         {
@@ -79,7 +79,17 @@ namespace ssp21
         }
     };
 
-    class PrivateKey final : public SecureBuffer {};
+    class PrivateKey final : public SecureBuffer
+    {
+    public:
+
+        PrivateKey() {}
+
+        PrivateKey(const PrivateKey& other)
+        {
+            this->copy(other);
+        }
+    };
 
     class DHOutput final : public SecureBuffer {};
 

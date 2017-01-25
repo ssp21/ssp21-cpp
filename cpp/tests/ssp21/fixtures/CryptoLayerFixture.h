@@ -17,28 +17,6 @@
 
 namespace ssp21
 {
-
-    struct MockKeys
-    {
-        MockKeys(BufferType key_type) :
-            local_kp(std::make_shared<KeyPair>()),
-            remote_static_key(std::make_shared<PublicKey>())
-        {
-            init_key(local_kp->private_key, key_type);
-            init_key(local_kp->public_key, key_type);
-            init_key(*remote_static_key, key_type);
-        }
-
-        static void init_key(BufferBase& buffer, BufferType key_type)
-        {
-            buffer.as_wseq().set_all_to(0xFF);
-            buffer.set_type(key_type);
-        }
-
-        const std::shared_ptr<KeyPair> local_kp;
-        const std::shared_ptr<PublicKey> remote_static_key;
-    };
-
     class CryptoLayerFixture
     {
 
@@ -48,7 +26,6 @@ namespace ssp21
             const Session::Config& session_config = Session::Config(),
             uint16_t max_message_size = consts::link::max_config_payload_size
         ) :
-            keys(BufferType::x25519_key),
             log("responder"),
             exe(openpal::MockExecutor::Create())
         {
@@ -67,7 +44,24 @@ namespace ssp21
 
     protected:
 
-        MockKeys keys;
+        static CryptoLayer::Keys get_keys()
+        {
+            const auto local_pub = std::make_shared<PublicKey>();
+            const auto remote_pub = std::make_shared<PublicKey>();
+            const auto local_priv = std::make_shared<PrivateKey>();
+
+            init_key(*local_pub);
+            init_key(*remote_pub);
+            init_key(*local_priv);
+
+            return CryptoLayer::Keys(local_pub, remote_pub, local_priv);
+        }
+
+        static void init_key(BufferBase& buffer)
+        {
+            buffer.as_wseq().set_all_to(0xFF);
+            buffer.set_type(BufferType::x25519_key);
+        }
 
     public:
 
@@ -86,7 +80,7 @@ namespace ssp21
             uint16_t max_message_size = consts::link::max_config_payload_size
         ) :
             CryptoLayerFixture(session_config, max_message_size),
-            responder(config, session_config, this->log.logger, get_frame_writer(this->log.logger, max_message_size), this->exe, this->keys.local_kp, this->keys.remote_static_key)
+            responder(config, session_config, this->log.logger, get_frame_writer(this->log.logger, max_message_size), this->exe, get_keys())
         {
             lower.bind_upper(responder);
             upper.bind_lower(responder);
@@ -110,7 +104,7 @@ namespace ssp21
             uint16_t max_message_size = consts::link::max_config_payload_size
         ) :
             CryptoLayerFixture(session_config, max_message_size),
-            initiator(config, session_config, this->log.logger, get_frame_writer(this->log.logger, max_message_size), this->exe, this->keys.local_kp, this->keys.remote_static_key)
+            initiator(config, session_config, this->log.logger, get_frame_writer(this->log.logger, max_message_size), this->exe, get_keys())
         {
             lower.bind_upper(initiator);
             upper.bind_lower(initiator);

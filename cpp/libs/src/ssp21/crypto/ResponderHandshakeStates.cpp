@@ -42,9 +42,9 @@ namespace ssp21
 
         ctx.handshake.derive_authentication_key(
             res.written,
-            ctx.local_static_key_pair->private_key,
+            *ctx.keys.local_static_private_key,
             msg.ephemeral_public_key,
-            ctx.remote_static_public_key->as_seq(),
+            ctx.keys.remote_static_public_key->as_seq(),
             ec
         );
 

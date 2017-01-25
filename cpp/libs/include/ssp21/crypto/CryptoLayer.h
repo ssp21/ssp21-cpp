@@ -35,6 +35,23 @@ namespace ssp21
             uint16_t max_reassembly_size = consts::link::max_config_payload_size;
         };
 
+        struct Keys
+        {
+            Keys(
+                const std::shared_ptr<const PublicKey> local_static_public_key,
+                const std::shared_ptr<const PublicKey> remote_static_public_key,
+                const std::shared_ptr<const PrivateKey> local_static_private_key
+            ) :
+                local_static_public_key(local_static_public_key),
+                remote_static_public_key(remote_static_public_key),
+                local_static_private_key(local_static_private_key)
+            {}
+
+            const std::shared_ptr<const PublicKey> local_static_public_key;
+            const std::shared_ptr<const PublicKey> remote_static_public_key;
+            const std::shared_ptr<const PrivateKey> local_static_private_key;
+        };
+
         CryptoLayer(
             HandshakeMode type,
             const Config& context_config,
@@ -42,8 +59,7 @@ namespace ssp21
             const openpal::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
             const std::shared_ptr<openpal::IExecutor>& executor,
-            const std::shared_ptr<const KeyPair>& local_static_key_pair,
-            const std::shared_ptr<const PublicKey>& remote_static_public_key
+            const Keys& keys
         );
 
         /// ------ helper methods ------
@@ -109,8 +125,7 @@ namespace ssp21
         const std::shared_ptr<IFrameWriter> frame_writer;
         const std::shared_ptr<openpal::IExecutor> executor;
 
-        const std::shared_ptr<const KeyPair> local_static_key_pair;
-        const std::shared_ptr<const PublicKey> remote_static_public_key;
+        const Keys keys;
 
         Handshake handshake;
         Session session;

@@ -66,8 +66,7 @@ namespace ssp21
             const openpal::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
             const std::shared_ptr<openpal::IExecutor>& executor,
-            const std::shared_ptr<const KeyPair>& local_static_key_pair,
-            const std::shared_ptr<const PublicKey>& remote_static_public_key
+            const Keys& keys
         );
 
         class IHandshakeState : private openpal::Uncopyable
