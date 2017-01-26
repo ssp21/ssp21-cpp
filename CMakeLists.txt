@@ -47,7 +47,6 @@ install(DIRECTORY ./deps/openpal/cpp/libs/include/ DESTINATION include ${INSTALL
 file(GLOB_RECURSE testlib_SRC ./deps/openpal/cpp/tests/testlib/*.cpp ./deps/openpal/cpp/tests/testlib/*.h)
 add_library(testlib ${LIB_TYPE} ${testlib_SRC})
 target_link_libraries(testlib openpal)
-install(TARGETS testlib DESTINATION lib)
 set_target_properties(testlib PROPERTIES FOLDER tests)
 
 # ---- testopenpal ----
