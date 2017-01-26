@@ -92,11 +92,17 @@ namespace ssp21
 
     };
 
-    /*
-        typedef IUpperLayer<const seq32_t&> crypto_upper_layer_t;
-        typedef IUpperLayer<const seq32_t&> user_upper_layer_t;
-        typedef IUpperLayer<seq32_t&> link_upper_layer_t;
-    */
+    /**
+     * dual layers are both lower/upper and can be bound to a lower/upper
+     */
+    class IDualLayer : public ILowerLayer, public IUpperLayer
+    {
+    public:
+
+        virtual ~IDualLayer() {}
+
+        virtual void bind(ILowerLayer& lower, IUpperLayer& upper) = 0;
+    };
 
 }
 

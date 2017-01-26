@@ -109,8 +109,8 @@ namespace ssp21
             responder_upper.configure(*responder);
 
             // wire the initiator and responder
-            initiator->bind_layers(initiator_lower, initiator_upper);
-            responder->bind_layers(responder_lower, responder_upper);
+            initiator->bind(initiator_lower, initiator_upper);
+            responder->bind(responder_lower, responder_upper);
 
             // wire the upper layer validators
             initiator_upper.add_validator(initiator_validator);

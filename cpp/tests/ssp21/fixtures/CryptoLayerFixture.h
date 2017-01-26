@@ -84,7 +84,7 @@ namespace ssp21
         {
             lower.bind_upper(responder);
             upper.bind_lower(responder);
-            responder.bind_layers(lower, upper);
+            responder.bind(lower, upper);
         }
 
         void set_tx_ready()
@@ -108,7 +108,7 @@ namespace ssp21
         {
             lower.bind_upper(initiator);
             upper.bind_lower(initiator);
-            initiator.bind_layers(lower, upper);
+            initiator.bind(lower, upper);
         }
 
         Initiator initiator;

@@ -24,7 +24,7 @@ namespace ssp21
     /**
     * Common base class for initiator and responder
     */
-    class CryptoLayer : public IUpperLayer, public ILowerLayer
+    class CryptoLayer : public IDualLayer
     {
 
     public:
@@ -62,9 +62,9 @@ namespace ssp21
             const Keys& keys
         );
 
-        /// ------ helper methods ------
+        /// ------ IDualLayer ------
 
-        void bind_layers(ILowerLayer& lower, IUpperLayer& upper)
+        virtual void bind(ILowerLayer& lower, IUpperLayer& upper) override final
         {
             this->lower = &lower;
             this->upper = &upper;
