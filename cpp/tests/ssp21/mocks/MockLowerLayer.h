@@ -10,6 +10,8 @@
 
 #include "ssp21/MakeUnique.h"
 
+#include <deque>
+
 namespace ssp21
 {
     class MockLowerLayer : public ILowerLayer, private openpal::Uncopyable
@@ -19,7 +21,7 @@ namespace ssp21
 
     public:
 
-        void bind_upper(crypto_upper_layer_t& upper)
+        void bind_upper(IUpperLayer& upper)
         {
             this->upper = &upper;
         }
@@ -94,7 +96,7 @@ namespace ssp21
 
         typedef std::deque<std::unique_ptr<message_t>> message_queue_t;
 
-        crypto_upper_layer_t* upper = nullptr;
+        IUpperLayer* upper = nullptr;
 
         message_queue_t tx_messages;
 

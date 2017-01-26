@@ -26,13 +26,14 @@ namespace ssp21
         upper->on_tx_ready();
     }
 
-    bool LinkLayer::on_rx_ready_impl(seq32_t& data)
+    bool LinkLayer::on_rx_ready_impl(const seq32_t& data)
     {
         if (!result.payload.is_empty()) // still have data waiting to be read
         {
             return false;
         }
 
+        /*
         if (parser.parse(data) && parser.read(this->result))
         {
             if (this->upper->on_rx_ready(result.payload))
@@ -40,8 +41,9 @@ namespace ssp21
                 this->result.payload.make_empty();
             }
         }
+        */
 
-        return true;
+        return false;
     }
 
     bool LinkLayer::transmit(const seq32_t& data)

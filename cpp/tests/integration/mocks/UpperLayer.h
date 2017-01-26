@@ -3,6 +3,7 @@
 
 #include "ssp21/LayerInterfaces.h"
 
+#include <memory>
 #include <vector>
 
 namespace ssp21
@@ -12,8 +13,7 @@ namespace ssp21
         virtual void validate(const seq32_t& data) = 0;
     };
 
-
-    class UpperLayer final : public crypto_upper_layer_t
+    class UpperLayer final : public IUpperLayer
     {
 
     public:

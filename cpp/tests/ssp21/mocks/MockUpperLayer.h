@@ -8,10 +8,11 @@
 #include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
 
+#include <deque>
 
 namespace ssp21
 {
-    class MockUpperLayer : public user_upper_layer_t, private openpal::Uncopyable
+    class MockUpperLayer : public IUpperLayer, private openpal::Uncopyable
     {
 
     public:

@@ -2,8 +2,6 @@
 #ifndef SSP21_LAYER_INTERFACES_H
 #define SSP21_LAYER_INTERFACES_H
 
-#include "openpal/util/Uncopyable.h"
-
 #include "ssp21/SequenceTypes.h"
 
 namespace ssp21
@@ -37,7 +35,6 @@ namespace ssp21
 
     };
 
-    template <class RxType>
     class IUpperLayer
     {
 
@@ -69,7 +66,7 @@ namespace ssp21
             }
         }
 
-        inline bool on_rx_ready(RxType data)
+        inline bool on_rx_ready(const seq32_t& data)
         {
             return (this->is_open) ? this->on_rx_ready_impl(data) : false;
         }
@@ -87,7 +84,7 @@ namespace ssp21
 
         virtual void on_tx_ready_impl() = 0;
 
-        virtual bool on_rx_ready_impl(RxType data) = 0;
+        virtual bool on_rx_ready_impl(const seq32_t& data) = 0;
 
     private:
 
@@ -95,9 +92,11 @@ namespace ssp21
 
     };
 
-    typedef IUpperLayer<const seq32_t&> crypto_upper_layer_t;
-    typedef IUpperLayer<const seq32_t&> user_upper_layer_t;
-    typedef IUpperLayer<seq32_t&> link_upper_layer_t;
+    /*
+        typedef IUpperLayer<const seq32_t&> crypto_upper_layer_t;
+        typedef IUpperLayer<const seq32_t&> user_upper_layer_t;
+        typedef IUpperLayer<seq32_t&> link_upper_layer_t;
+    */
 
 }
 
