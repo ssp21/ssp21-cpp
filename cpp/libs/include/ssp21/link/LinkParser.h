@@ -34,6 +34,8 @@ namespace ssp21
 
         LinkParser(uint16_t max_payload_length, IReporter& reporter);
 
+        void reset();
+
         bool parse(seq32_t& input);
 
         template <class Fun>

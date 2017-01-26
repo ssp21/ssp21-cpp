@@ -28,6 +28,11 @@ namespace ssp21
 
     }
 
+    void LinkParser::reset()
+    {
+        this->state_ = State::wait_sync1();
+    }
+
     bool LinkParser::parse(seq32_t& input)
     {
         this->state_ = parse_many(this->state_, this->context_, input);
