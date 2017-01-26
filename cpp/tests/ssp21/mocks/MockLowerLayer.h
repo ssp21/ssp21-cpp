@@ -26,20 +26,20 @@ namespace ssp21
             this->upper = &upper;
         }
 
-        void set_tx_ready(bool value)
+        virtual bool start_tx(const seq32_t& message) override
         {
-            this->is_tx_ready = value;
-        }
-
-        virtual bool transmit(const seq32_t& message) override
-        {
-            if (!this->is_tx_ready)
+            if (!this->is_tx_ready())
             {
-                throw std::logic_error("transmit called when tx_ready == false");
+                throw std::logic_error("start_tx called when not tx ready");
             }
 
             this->tx_messages.push_back(std::make_unique<message_t>(message));
             return true;
+        }
+
+        virtual bool is_tx_ready() const override
+        {
+            return this->is_tx_ready_flag;
         }
 
         virtual void receive() override
@@ -92,7 +92,14 @@ namespace ssp21
             return tx_messages.size();
         }
 
+        void set_tx_ready(bool value)
+        {
+            this->is_tx_ready_flag = value;
+        }
+
     private:
+
+        bool is_tx_ready_flag = true;
 
         typedef std::deque<std::unique_ptr<message_t>> message_queue_t;
 

@@ -34,7 +34,7 @@ namespace ssp21
 
         // ---- ILowerLayer ----
 
-        virtual bool transmit(const seq32_t& data) override;
+        virtual bool start_tx(const seq32_t& data) override;
         virtual void receive() override;
 
         // ---- LinkParser::IReporter ----

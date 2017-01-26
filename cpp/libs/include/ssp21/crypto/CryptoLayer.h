@@ -74,7 +74,9 @@ namespace ssp21
 
         virtual void receive() override final;
 
-        virtual bool transmit(const seq32_t& data) override final;
+        virtual bool start_tx(const seq32_t& data) override final;
+
+        virtual bool is_tx_ready() const override final;
 
     protected:
 
@@ -143,7 +145,7 @@ namespace ssp21
 
         inline bool can_receive() const
         {
-            return this->lower->get_is_tx_ready() && !this->is_rx_ready;
+            return this->lower->is_tx_ready() && !this->is_rx_ready;
         }
 
         inline bool can_transmit_session_data() const
@@ -154,7 +156,7 @@ namespace ssp21
             * 3) transmission state must have some data to send
             */
 
-            return this->session.is_valid() && this->lower->get_is_tx_ready() && this->tx_state.is_ready_tx();
+            return this->session.is_valid() && this->lower->is_tx_ready() && this->tx_state.is_ready_tx();
         }
 
         void check_receive();

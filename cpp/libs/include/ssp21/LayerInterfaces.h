@@ -6,31 +6,40 @@
 
 namespace ssp21
 {
-
+    /**
+    * Performs asynchronous rx/tx operations on behalf of an IUpperLayer
+    */
     class ILowerLayer
     {
 
     public:
 
-        virtual bool transmit(const seq32_t& data) = 0;
+        /**
+        *
+        *   Start an asynchronous transmission. The underlying buffer pointed to by 'data'
+        *   is loaned out to this layer and must not be mutated until IUpperLayer::on_tx_ready()
+        *   is called.
+        *
+        *   @param data bytes to be transmitted
+        */
+        virtual bool start_tx(const seq32_t& data) = 0;
+
+        /**
+        *   True if ready to start_tx(..) will succeed
+        */
+        virtual bool is_tx_ready() const = 0;
 
         // tell this layer to push any data it might have
         virtual void receive() = 0;
-
-        inline bool get_is_tx_ready() const
-        {
-            return this->is_tx_ready;
-        }
 
     protected:
 
         void reset_lower_layer()
         {
-            this->is_tx_ready = true;
             this->is_rx_ready = false;
         }
 
-        bool is_tx_ready = true;
+        // bool is_tx_ready = true;
         bool is_rx_ready = false;
 
     };

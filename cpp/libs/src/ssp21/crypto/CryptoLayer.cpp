@@ -35,27 +35,29 @@ namespace ssp21
         }
     }
 
-    bool CryptoLayer::transmit(const seq32_t& data)
+    bool CryptoLayer::start_tx(const seq32_t& data)
     {
-        if (!this->get_is_open())
+        if (this->is_tx_ready())
+        {
+            this->tx_state.initialize(data);
+            this->check_transmit();
+            return true;
+        }
+        else
         {
             return false;
         }
+    }
 
-        if (!this->upper->get_is_open())
-        {
-            return false;
-        }
+    bool CryptoLayer::is_tx_ready() const
+    {
+        /*
+           1) This layer must be open
+           2) We must have already opened the upper layer
+           3) We shouldn't already be transmitting on behalf of the upper layer
+        */
 
-        // already transmitting on behalf on the upper layer
-        if (!tx_state.initialize(data))
-        {
-            return false;
-        }
-
-        this->check_transmit();
-
-        return true;
+        return this->get_is_open() && this->upper->get_is_open() && this->tx_state.is_idle();
     }
 
     template <class MsgType>
@@ -120,7 +122,6 @@ namespace ssp21
         if (this->tx_state.on_tx_complete())
         {
             // ready to transmit more data
-            this->is_tx_ready = true;
             this->upper->on_tx_ready();
         }
 
@@ -206,7 +207,7 @@ namespace ssp21
 
         this->tx_state.begin_transmit(remainder);
 
-        this->lower->transmit(data);
+        this->lower->start_tx(data);
 
         this->on_session_nonce_change(this->session.get_rx_nonce(), this->session.get_tx_nonce());
     }

@@ -14,7 +14,7 @@ namespace ssp21
 
     Initiator::IHandshakeState* InitiatorHandshake::Idle::on_handshake_required(Initiator& ctx, const Timestamp& now)
     {
-        if (!ctx.lower->get_is_tx_ready())
+        if (!ctx.lower->is_tx_ready())
         {
             ctx.handshake_required = true;
             return this;
@@ -59,7 +59,7 @@ namespace ssp21
 
         ctx.handshake.begin_handshake(request, result.written);
 
-        ctx.lower->transmit(result.frame);
+        ctx.lower->start_tx(result.frame);
 
         // record when we transmited the request so we can estimate the time base later
         ctx.request_handshake_begin_time_tx = ctx.executor->get_time();
@@ -106,7 +106,7 @@ namespace ssp21
 
         ctx.handshake.mix_ck(result.written);
 
-        ctx.lower->transmit(result.frame);
+        ctx.lower->start_tx(result.frame);
 
         ctx.start_response_timer();
 

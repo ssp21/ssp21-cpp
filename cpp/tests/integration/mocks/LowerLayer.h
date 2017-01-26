@@ -24,16 +24,9 @@ namespace ssp21
         explicit LowerLayer(const std::shared_ptr<openpal::IExecutor>& executor) : executor(executor)
         {}
 
-        virtual bool transmit(const seq32_t& data) override
+        virtual bool start_tx(const seq32_t& data) override
         {
-            if (!this->is_tx_ready)
-            {
-                throw std::logic_error("already transmitting");
-            }
-
             this->messages.push_back(std::make_unique<message_t>(data));
-
-            this->is_tx_ready = false;
 
             // notify the sibling that theres data available to be read
             executor->post([sibling = this->sibling]()
@@ -44,10 +37,14 @@ namespace ssp21
             // simulate asynchronous transmission
             executor->post([this]()
             {
-                this->is_tx_ready = true;
                 this->upper->on_tx_ready();
             });
 
+            return true;
+        }
+
+        virtual bool is_tx_ready() const override
+        {
             return true;
         }
 

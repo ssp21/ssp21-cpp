@@ -22,7 +22,6 @@ namespace ssp21
 
     void LinkLayer::on_tx_ready_impl()
     {
-        this->is_tx_ready = true;
         upper->on_tx_ready();
     }
 
@@ -46,10 +45,9 @@ namespace ssp21
         return false;
     }
 
-    bool LinkLayer::transmit(const seq32_t& data)
+    bool LinkLayer::start_tx(const seq32_t& data)
     {
-        this->is_tx_ready = false;
-        return this->lower->transmit(data);
+        return this->lower->start_tx(data);
     }
 
     void LinkLayer::receive()

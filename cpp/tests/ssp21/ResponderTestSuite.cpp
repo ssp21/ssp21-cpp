@@ -257,7 +257,7 @@ TEST_CASE(SUITE("won't transmit if offline"))
     ResponderFixture fix;
     Hex msg("");
 
-    REQUIRE_FALSE(fix.responder.transmit(msg));
+    REQUIRE_FALSE(fix.responder.start_tx(msg));
 }
 
 TEST_CASE(SUITE("won't transmit if no session"))
@@ -266,7 +266,7 @@ TEST_CASE(SUITE("won't transmit if no session"))
     fix.responder.on_open();
     Hex msg("");
 
-    REQUIRE_FALSE(fix.responder.transmit(msg));
+    REQUIRE_FALSE(fix.responder.start_tx(msg));
 }
 
 TEST_CASE(SUITE("can transmit multiple messages if session is initialized"))
@@ -280,7 +280,7 @@ TEST_CASE(SUITE("can transmit multiple messages if session is initialized"))
     for (uint16_t i = 0; i < 3; ++i)
     {
         Hex msg(payload);
-        REQUIRE(fix.responder.transmit(msg));
+        REQUIRE(fix.responder.start_tx(msg));
 
         const auto expected = hex::session_data(i + 1, consts::crypto::default_ttl_pad_ms, true, true, payload, hex::repeat(0xFF, 16));
         REQUIRE(fix.lower.pop_tx_message() == expected);
@@ -302,7 +302,7 @@ TEST_CASE(SUITE("closes upper layer if nonce exceeds configured maximum"))
     const auto payload = "CA FE";
 
     Hex msg(payload);
-    REQUIRE(fix.responder.transmit(msg));
+    REQUIRE(fix.responder.start_tx(msg));
     REQUIRE(fix.upper.is_empty());
     REQUIRE_FALSE(fix.upper.get_is_open());
 }
@@ -318,7 +318,7 @@ TEST_CASE(SUITE("defers transmission if lower layer is not tx_ready"))
     fix.lower.set_tx_ready(false);
 
     Hex msg(payload);
-    REQUIRE(fix.responder.transmit(msg));
+    REQUIRE(fix.responder.start_tx(msg));
     REQUIRE(fix.lower.num_tx_messages() == 0);
     REQUIRE(fix.upper.num_tx_ready == 0);
 

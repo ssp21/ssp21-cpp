@@ -65,8 +65,8 @@ void test_bidirectional_data_transfer(IntegrationFixture& fix, const seq32_t& da
     fix.responder_validator->expect(data);
     fix.initiator_validator->expect(data);
 
-    REQUIRE(fix.initiator->transmit(data));
-    REQUIRE(fix.responder->transmit(data));
+    REQUIRE(fix.initiator->start_tx(data));
+    REQUIRE(fix.responder->start_tx(data));
 
     REQUIRE(fix.exe->run_many() > 0);
 

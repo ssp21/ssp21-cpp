@@ -25,15 +25,16 @@ namespace ssp21
             this->remainder.make_empty();
         }
 
-        bool initialize(const seq32_t& data)
+        void initialize(const seq32_t& data)
         {
-            if (transmitting || data.is_empty()) return false;
-
             this->fir = true;
             this->transmitting = false;
             this->remainder = data;
+        }
 
-            return true;
+        bool is_idle() const
+        {
+            return !this->transmitting && this->remainder.is_empty();
         }
 
         bool on_tx_complete()
