@@ -27,12 +27,11 @@ namespace ssp21
         reassembler(context_config.max_reassembly_size)
     {}
 
-    void CryptoLayer::receive()
+    void CryptoLayer::on_rx_ready()
     {
-        if (this->is_rx_ready && this->upper->on_rx_ready(this->reassembler.get_data()))
-        {
-            this->is_rx_ready = false;
-        }
+        // upper layer has indicated that it is ready to to receive data
+
+        
     }
 
     bool CryptoLayer::start_tx(const seq32_t& data)
@@ -57,7 +56,7 @@ namespace ssp21
            3) We shouldn't already be transmitting on behalf of the upper layer
         */
 
-        return this->get_is_open() && this->upper->get_is_open() && this->tx_state.is_idle();
+        return this->is_open() && this->upper->is_open() && this->tx_state.is_idle();
     }
 
     template <class MsgType>
@@ -96,22 +95,17 @@ namespace ssp21
         this->reassembler.reset();
         this->upper->on_close();
         this->tx_state.reset();
-        this->reset_lower_layer();
     }
 
-    bool CryptoLayer::on_rx_ready_impl(const seq32_t& data)
+    void CryptoLayer::start_rx_impl(const seq32_t& data)
     {
-        if (this->can_receive())
-        {
-            this->process(data);
-
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+		this->process(data);
     }
+
+	bool CryptoLayer::is_rx_ready_impl()
+	{
+		return this->lower->is_tx_ready() && !this->reassembler.has_data();
+	}
 
     void CryptoLayer::on_tx_ready_impl()
     {
@@ -175,10 +169,7 @@ namespace ssp21
 
     void CryptoLayer::check_receive()
     {
-        if (this->can_receive())
-        {
-            this->lower->receive();
-        }
+       // TODO
     }
 
     void CryptoLayer::check_transmit()
@@ -234,7 +225,7 @@ namespace ssp21
             break; // do nothing
 
         case(ReassemblyResult::complete):
-            this->is_rx_ready = !this->upper->on_rx_ready(this->reassembler.get_data());
+			this->upper->start_rx(this->reassembler.get_data()); // try to start an rx operation
             break;
 
         default: // error

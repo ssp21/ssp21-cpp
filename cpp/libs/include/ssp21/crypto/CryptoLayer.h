@@ -72,7 +72,7 @@ namespace ssp21
 
         // ---- final implementations from ILowerLayer -----
 
-        virtual void receive() override final;
+        virtual void on_rx_ready() override final;
 
         virtual bool start_tx(const seq32_t& data) override final;
 
@@ -84,7 +84,9 @@ namespace ssp21
 
         virtual void on_close_impl() override final;
 
-        virtual bool on_rx_ready_impl(const seq32_t& data) override final;
+        virtual void start_rx_impl(const seq32_t& data) override final;
+
+		virtual bool is_rx_ready_impl() override final;
 
         virtual void on_tx_ready_impl() override final;
 
@@ -142,11 +144,6 @@ namespace ssp21
         // ------ private helper methods ------
 
         void process(const seq32_t& message_data);
-
-        inline bool can_receive() const
-        {
-            return this->lower->is_tx_ready() && !this->is_rx_ready;
-        }
 
         inline bool can_transmit_session_data() const
         {
