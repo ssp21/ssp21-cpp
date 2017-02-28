@@ -42,18 +42,20 @@ namespace ssp21
             return this->is_tx_ready_flag;
         }
 
-        virtual void receive() override
+        virtual void on_rx_ready() override
         {
             if (!this->rx_messages.empty())
             {
                 auto& front = this->rx_messages.front();
 
-                if (upper->on_rx_ready(front->as_rslice()))
+                if (upper->start_rx(front->as_rslice()))
                 {
                     this->rx_messages.pop_front();
+
                     if (this->rx_messages.empty())
                     {
-                        this->is_rx_ready = false;
+                        // TODO
+                        // this->is_rx_ready = false;
                     }
                 }
             }
@@ -63,11 +65,13 @@ namespace ssp21
         {
             openpal::Hex hexdata(hex);
 
-            if (!upper->on_rx_ready(hexdata))
+            /* TODO
+            if (!upper->is_rx_ready())
             {
                 this->rx_messages.push_back(std::make_unique<message_t>(hexdata.as_rslice()));
                 this->is_rx_ready = true;
             }
+            */
         }
 
         size_t num_rx_messages() const

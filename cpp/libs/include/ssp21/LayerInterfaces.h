@@ -25,118 +25,118 @@ namespace ssp21
         virtual bool start_tx(const seq32_t& data) = 0;
 
         /**
-		*   Check the transmit readiness of the layer
-		*
+        *   Check the transmit readiness of the layer
+        *
         *   @return true if ready to start_tx(..) will succeed, false if it will fail
         */
         virtual bool is_tx_ready() const = 0;
 
         /**
-		*    Called by the upper layer when its ready to receive the next chunk of data via IUpperLayer::start_rx(...)
-		*    Any previously received slices are no longer valid, and the underlying buffers made be mutated for the
-		*    next start_rx(..) operation.
-		*/
+        *    Called by the upper layer when its ready to receive the next chunk of data via IUpperLayer::start_rx(...)
+        *    Any previously received slices are no longer valid, and the underlying buffers made be mutated for the
+        *    next start_rx(..) operation.
+        */
         virtual void on_rx_ready() = 0;
 
     };
 
-	/**
-	* Performs asynchronous rx/tx operations on behalf of an ILowerLayer
-	*/
+    /**
+    * Performs asynchronous rx/tx operations on behalf of an ILowerLayer
+    */
     class IUpperLayer
     {
 
     public:
 
-		/**
-		* open the layer if closed
-		*
-		* @return false if the layer is already open, true otherwise
-		*/
+        /**
+        * open the layer if closed
+        *
+        * @return false if the layer is already open, true otherwise
+        */
         inline bool on_open()
         {
             if (this->is_open_flag)
             {
-				return false;
+                return false;
             }
-			else
-			{
-				this->is_open_flag = true;
-				this->on_open_impl();
-				return true;
-			}
+            else
+            {
+                this->is_open_flag = true;
+                this->on_open_impl();
+                return true;
+            }
         }
 
-		/**
-		* close the layer if closed
-		*
-		* @return false if the layer is already closed, true otherwise
-		*/
+        /**
+        * close the layer if closed
+        *
+        * @return false if the layer is already closed, true otherwise
+        */
         inline bool on_close()
         {
             if (this->is_open_flag)
             {
                 this->is_open_flag = false;
                 this->on_close_impl();
-				return true;
+                return true;
             }
-			else
-			{
-				return false;
-			}
+            else
+            {
+                return false;
+            }
         }
 
-		/**
-		*   Start an asynchronous rx operation. The underlying buffer pointed to by 'data'
+        /**
+        *   Start an asynchronous rx operation. The underlying buffer pointed to by 'data'
         *   is loaned out to this layer and must not be mutated until ILowerLayer::on_rx_ready()
         *   is called.
-		*
-		*   @return true if the operation can be started, false otherwise.
-		*/
+        *
+        *   @return true if the operation can be started, false otherwise.
+        */
         inline bool start_rx(const seq32_t& data)
         {
-			if (this->is_rx_ready())
-			{
-				this->start_rx_impl(data);
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+            if (this->is_rx_ready())
+            {
+                this->start_rx_impl(data);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
-		/**
-		*   Check the transmit readiness of the layer
-		*
-		*   @return true if ready to start_rx(..) will succeed, false if it will fail
-		*/
-		inline bool is_rx_ready()
-		{
-			return this->is_open_flag && this->is_rx_ready_impl();
-		}
+        /**
+        *   Check the transmit readiness of the layer
+        *
+        *   @return true if ready to start_rx(..) will succeed, false if it will fail
+        */
+        inline bool is_rx_ready()
+        {
+            return this->is_open_flag && this->is_rx_ready_impl();
+        }
 
-		/**
-		* Called by the lower layer when the ready to transmit on behalf of the upper layer
-		*
-		* @return true if the layer is open, false if closed
-		*/
-		inline bool on_tx_ready()
-		{
-			if (this->is_open_flag)
-			{
-				this->on_tx_ready_impl();
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
+        /**
+        * Called by the lower layer when the ready to transmit on behalf of the upper layer
+        *
+        * @return true if the layer is open, false if closed
+        */
+        inline bool on_tx_ready()
+        {
+            if (this->is_open_flag)
+            {
+                this->on_tx_ready_impl();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
-		/**
-		* @return true if the layer is open, false if closed.  
-		*/
+        /**
+        * @return true if the layer is open, false if closed.
+        */
         inline bool is_open() const
         {
             return is_open_flag;
@@ -152,7 +152,7 @@ namespace ssp21
 
         virtual void start_rx_impl(const seq32_t& data) = 0;
 
-		virtual bool is_rx_ready_impl() = 0;
+        virtual bool is_rx_ready_impl() = 0;
 
     private:
 

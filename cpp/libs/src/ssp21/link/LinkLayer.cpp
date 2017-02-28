@@ -1,4 +1,5 @@
 
+/*
 #include "ssp21/link/LinkLayer.h"
 
 namespace ssp21
@@ -32,7 +33,6 @@ namespace ssp21
             return false;
         }
 
-        /*
         if (parser.parse(data) && parser.read(this->result))
         {
             if (this->upper->on_rx_ready(result.payload))
@@ -40,7 +40,6 @@ namespace ssp21
                 this->result.payload.make_empty();
             }
         }
-        */
 
         return false;
     }
@@ -61,3 +60,4 @@ namespace ssp21
 
 }
 
+*/

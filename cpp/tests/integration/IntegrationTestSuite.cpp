@@ -48,13 +48,13 @@ void open_and_test_handshake(IntegrationFixture& fix)
     fix.responder->on_open();
     fix.initiator->on_open();
 
-    REQUIRE_FALSE(fix.responder_upper.get_is_open());
-    REQUIRE_FALSE(fix.initiator_upper.get_is_open());
+    REQUIRE_FALSE(fix.responder_upper.is_open());
+    REQUIRE_FALSE(fix.initiator_upper.is_open());
 
     REQUIRE(fix.exe->run_many() > 0);
 
-    REQUIRE(fix.responder_upper.get_is_open());
-    REQUIRE(fix.initiator_upper.get_is_open());
+    REQUIRE(fix.responder_upper.is_open());
+    REQUIRE(fix.initiator_upper.is_open());
 }
 
 void test_bidirectional_data_transfer(IntegrationFixture& fix, const seq32_t& data)

@@ -71,10 +71,14 @@ namespace ssp21
             ++num_tx_ready;
         }
 
-        virtual bool on_rx_ready_impl(const seq32_t& data) override
+        virtual void start_rx_impl(const seq32_t& data) override
         {
             this->rx_messages.push_back(to_hex(data));
-            return true;
+        }
+
+        virtual bool is_rx_ready_impl() override
+        {
+            return true;  // TODO
         }
 
     };

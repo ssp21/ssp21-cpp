@@ -31,7 +31,7 @@ namespace ssp21
     {
         // upper layer has indicated that it is ready to to receive data
 
-        
+
     }
 
     bool CryptoLayer::start_tx(const seq32_t& data)
@@ -99,13 +99,13 @@ namespace ssp21
 
     void CryptoLayer::start_rx_impl(const seq32_t& data)
     {
-		this->process(data);
+        this->process(data);
     }
 
-	bool CryptoLayer::is_rx_ready_impl()
-	{
-		return this->lower->is_tx_ready() && !this->reassembler.has_data();
-	}
+    bool CryptoLayer::is_rx_ready_impl()
+    {
+        return this->lower->is_tx_ready() && !this->reassembler.has_data();
+    }
 
     void CryptoLayer::on_tx_ready_impl()
     {
@@ -169,7 +169,7 @@ namespace ssp21
 
     void CryptoLayer::check_receive()
     {
-       // TODO
+        // TODO
     }
 
     void CryptoLayer::check_transmit()
@@ -225,7 +225,7 @@ namespace ssp21
             break; // do nothing
 
         case(ReassemblyResult::complete):
-			this->upper->start_rx(this->reassembler.get_data()); // try to start an rx operation
+            this->upper->start_rx(this->reassembler.get_data()); // try to start an rx operation
             break;
 
         default: // error

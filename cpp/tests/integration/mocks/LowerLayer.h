@@ -49,7 +49,7 @@ namespace ssp21
         }
 
         // tell this layer to push any data it might have
-        virtual void receive() override
+        virtual void on_rx_ready() override
         {
             sibling->read(*this->upper);
         }
@@ -67,7 +67,7 @@ namespace ssp21
         {
             if (messages.empty()) return false;
 
-            if (upper.on_rx_ready(messages.front()->as_rslice()))
+            if (upper.start_rx(messages.front()->as_rslice()))
             {
                 messages.pop_front();
                 return true;

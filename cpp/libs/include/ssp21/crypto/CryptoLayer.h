@@ -86,7 +86,7 @@ namespace ssp21
 
         virtual void start_rx_impl(const seq32_t& data) override final;
 
-		virtual bool is_rx_ready_impl() override final;
+        virtual bool is_rx_ready_impl() override final;
 
         virtual void on_tx_ready_impl() override final;
 

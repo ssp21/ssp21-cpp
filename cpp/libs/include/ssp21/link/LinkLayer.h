@@ -1,6 +1,7 @@
 #ifndef SSP21_LINKLAYER_H
 #define SSP21_LINKLAYER_H
 
+/*
 #include "ssp21/LayerInterfaces.h"
 #include "ssp21/link/LinkParser.h"
 
@@ -55,5 +56,6 @@ namespace ssp21
     };
 
 }
+*/
 
 #endif
