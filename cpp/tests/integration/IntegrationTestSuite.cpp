@@ -24,6 +24,9 @@ TEST_CASE(SUITE("fixture construction"))
 TEST_CASE(SUITE("completes handshake"))
 {
     IntegrationFixture fix;
+
+    enable_all_logging(fix);
+
     open_and_test_handshake(fix);
 }
 

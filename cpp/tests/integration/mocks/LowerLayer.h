@@ -58,26 +58,26 @@ namespace ssp21
 
         virtual void discard_rx_data() override
         {
-            // TODO
+            if (sibling->messages.empty()) throw std::logic_error("no sibling data to discard");
+            else
+            {
+                sibling->messages.pop_front();
+            }
         }
 
         virtual void on_rx_ready_impl() override
         {
-            sibling->read(*this->upper);
+            this->rx_processing = true;
+            if (!sibling->read(*this->upper))
+            {
+                this->rx_processing = false;
+            }
         }
 
         // sibling layer requests that the data be pushed into its upper layer
         bool read(IUpperLayer& upper)
         {
-            if (messages.empty()) return false;
-
-            if (upper.start_rx(messages.front()->as_rslice()))
-            {
-                messages.pop_front();
-                return true;
-            }
-
-            return false;
+            return messages.empty() ? false : upper.start_rx(messages.front()->as_rslice());
         }
 
         void on_sibling_rx_ready()

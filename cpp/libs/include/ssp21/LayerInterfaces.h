@@ -15,19 +15,6 @@ namespace ssp21
     public:
 
         /**
-        * tracks the state of upper layer data processing
-        */
-        enum class RxState
-        {
-            /// upper layer has not requested data
-            idle,
-            /// upper layer has requested data, but is not currently processing any
-            ready,
-            /// upper layer is currently processing data
-            processing
-        };
-
-        /**
         *
         *   Start an asynchronous tx operation. The underlying buffer pointed to by 'data'
         *   is loaned out to this layer and must not be mutated until IUpperLayer::on_tx_ready()
@@ -62,10 +49,19 @@ namespace ssp21
 
     protected:
 
+        /**
+        * Called when a previous Upper->start_rx() operation completes
+        */
         virtual void discard_rx_data() = 0;
 
+        /**
+        * Called to check if any data is available for reading
+        */
         virtual void on_rx_ready_impl() = 0;
 
+        /**
+        * Tracks if the upper layer is currently processing some data
+        */
         bool rx_processing = false;
 
     };
