@@ -28,10 +28,10 @@ namespace ssp21
     {}
 
     void CryptoLayer::on_rx_ready_impl()
-    {        
-		this->try_start_rx();
+    {
+        this->try_start_rx();
 
-		// TODO - begin receiving more data?
+        this->lower->on_rx_ready();
     }
 
     void CryptoLayer::discard_rx_data()
@@ -100,7 +100,7 @@ namespace ssp21
         this->reassembler.reset();
         this->upper->on_close();
         this->tx_state.reset();
-		this->rx_processing = false;
+        this->rx_processing = false;
     }
 
     void CryptoLayer::start_rx_impl(const seq32_t& data)
@@ -251,15 +251,20 @@ namespace ssp21
             return false;
         }
 
+        if (this->rx_processing)
+        {
+            return false;
+        }
+
         // speculatively set this to processing
         // the upper layer could immediately call LowerLayer::receive()
-		this->rx_processing = true;
+        this->rx_processing = true;
 
         const auto started = this->upper->start_rx(this->reassembler.get_data());
         if (!started)
         {
             // if it didn't acutally start, set the processing flag back to false
-			this->rx_processing = false;
+            this->rx_processing = false;
         }
 
         return started;

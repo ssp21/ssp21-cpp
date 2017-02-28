@@ -29,7 +29,7 @@ namespace ssp21
             keys
         ),
         handshake_state(ResponderHandshake::Idle::get())
-    {}    
+    {}
 
     void Responder::reply_with_handshake_error(HandshakeError err)
     {

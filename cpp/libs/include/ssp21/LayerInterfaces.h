@@ -53,9 +53,9 @@ namespace ssp21
         {
             if (this->rx_processing)
             {
-				this->discard_rx_data();
-				this->rx_processing = false;                
-            }            
+                this->discard_rx_data();
+                this->rx_processing = false;
+            }
 
             this->on_rx_ready_impl();
         }

@@ -53,8 +53,8 @@ namespace ssp21
         {
             openpal::Hex hexdata(hex);
             this->rx_messages.push_back(std::make_unique<message_t>(hexdata.as_rslice()));
-			
-			this->try_start_next_rx();           
+
+            this->try_start_next_rx();
         }
 
         size_t num_rx_messages() const
@@ -102,9 +102,9 @@ namespace ssp21
 
         bool try_start_next_rx()
         {
-			if (this->rx_processing) return false;
+            if (this->rx_processing) return false;
 
-			this->rx_processing = true;
+            this->rx_processing = true;
 
             if (this->upper->start_rx(this->rx_messages.front()->as_rslice()))
             {
@@ -112,7 +112,7 @@ namespace ssp21
             }
             else
             {
-				this->rx_processing = false;
+                this->rx_processing = false;
                 return false;
             }
         }
