@@ -48,12 +48,6 @@ namespace ssp21
             return true;
         }
 
-        // tell this layer to push any data it might have
-        virtual void on_rx_ready() override
-        {
-            sibling->read(*this->upper);
-        }
-
         void configure(IUpperLayer& upper, LowerLayer& sibling)
         {
             this->upper = &upper;
@@ -61,6 +55,16 @@ namespace ssp21
         }
 
     private:
+
+        virtual void discard_rx_data() override
+        {
+            // TODO
+        }
+
+        virtual void on_rx_ready_impl() override
+        {
+            sibling->read(*this->upper);
+        }
 
         // sibling layer requests that the data be pushed into its upper layer
         bool read(IUpperLayer& upper)

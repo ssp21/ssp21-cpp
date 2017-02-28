@@ -74,6 +74,9 @@ namespace ssp21
         virtual void start_rx_impl(const seq32_t& data) override
         {
             this->rx_messages.push_back(to_hex(data));
+
+            // TODO - provide an option to differ this behavior
+            this->lower->on_rx_ready();
         }
 
         virtual bool is_rx_ready_impl() override

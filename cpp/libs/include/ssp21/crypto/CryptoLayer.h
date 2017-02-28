@@ -72,13 +72,15 @@ namespace ssp21
 
         // ---- final implementations from ILowerLayer -----
 
-        virtual void on_rx_ready() override final;
-
         virtual bool start_tx(const seq32_t& data) override final;
 
         virtual bool is_tx_ready() const override final;
 
     protected:
+
+        virtual void on_rx_ready_impl() override final;
+
+        virtual void discard_rx_data() override final;
 
         // ----- final implementations from IUpperlayer ----
 
@@ -159,6 +161,8 @@ namespace ssp21
         void check_receive();
 
         void check_transmit();
+
+        bool try_start_rx();
 
         template <class MsgType>
         bool handle_message(const seq32_t& message, const openpal::Timestamp& now);

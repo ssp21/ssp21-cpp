@@ -27,11 +27,15 @@ namespace ssp21
         reassembler(context_config.max_reassembly_size)
     {}
 
-    void CryptoLayer::on_rx_ready()
+    void CryptoLayer::on_rx_ready_impl()
     {
-        // upper layer has indicated that it is ready to to receive data
+        // TODO - begin receiving more data
 
+    }
 
+    void CryptoLayer::discard_rx_data()
+    {
+        this->reassembler.reset();
     }
 
     bool CryptoLayer::start_tx(const seq32_t& data)
@@ -95,6 +99,7 @@ namespace ssp21
         this->reassembler.reset();
         this->upper->on_close();
         this->tx_state.reset();
+        this->rx_state = RxState::idle;
     }
 
     void CryptoLayer::start_rx_impl(const seq32_t& data)
@@ -229,13 +234,34 @@ namespace ssp21
             break; // do nothing
 
         case(ReassemblyResult::complete):
-            this->upper->start_rx(this->reassembler.get_data()); // try to start an rx operation
+            this->try_start_rx();
             break;
 
         default: // error
             FORMAT_LOG_BLOCK(this->logger, levels::warn, "reassembly error: %s", ReassemblyResultSpec::to_string(result));
             break;
         }
+    }
+
+    bool CryptoLayer::try_start_rx()
+    {
+        if (!this->reassembler.has_data() && this->rx_state == RxState::ready)
+        {
+            return false;
+        }
+
+        // speculatively set this to processing
+        // the upper layer could immediately call LowerLayer::receive()
+        this->rx_state = RxState::processing;
+
+        const auto started = this->upper->start_rx(this->reassembler.get_data());
+        if (!started)
+        {
+            // if it didn't acutally start, set the state abck to ready
+            this->rx_state = RxState::ready;
+        }
+
+        return started;
     }
 
 

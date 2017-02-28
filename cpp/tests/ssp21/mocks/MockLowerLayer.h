@@ -19,13 +19,6 @@ namespace ssp21
 
     public:
 
-        enum class RxState
-        {
-            idle,         // upper layer has not requested data
-            ready,        // upper layer has requested data, but it has not yet been provided
-            processing    // upper layer is currently processing the front of the queue
-        };
-
         void bind_upper(IUpperLayer& upper)
         {
             this->upper = &upper;
@@ -48,23 +41,9 @@ namespace ssp21
             return this->is_tx_ready_flag;
         }
 
-        virtual void on_rx_ready() override
+        virtual void on_rx_ready_impl() override
         {
-            if (this->rx_state == RxState::processing)
-            {
-                if (rx_messages.empty()) throw std::logic_error("expected a frame but rx_messages is empty");
-                else
-                {
-                    this->rx_messages.pop_front();
-                    this->rx_state = RxState::ready;
-                }
-            }
-
-            if (this->rx_messages.empty())
-            {
-                this->rx_state = RxState::ready;
-            }
-            else
+            if (!this->rx_messages.empty())
             {
                 this->try_start_next_rx();
             }
@@ -115,6 +94,15 @@ namespace ssp21
 
     private:
 
+        virtual void discard_rx_data() override
+        {
+            if (rx_messages.empty()) throw std::logic_error("expected a frame to discard but rx_messages is empty");
+            else
+            {
+                this->rx_messages.pop_front();
+            }
+        }
+
         bool try_start_next_rx()
         {
             this->rx_state = RxState::processing;
@@ -131,8 +119,6 @@ namespace ssp21
 
         bool is_tx_ready_flag = true;
 
-
-        RxState rx_state = RxState::idle;
 
         typedef std::deque<std::unique_ptr<message_t>> message_queue_t;
 
