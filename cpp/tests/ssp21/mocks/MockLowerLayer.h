@@ -16,8 +16,14 @@ namespace ssp21
 {
     class MockLowerLayer : public ILowerLayer, private openpal::Uncopyable
     {
-
         typedef openpal::Buffer message_t;
+
+        enum class RxState
+        {
+            idle,         // upper layer has not requested data
+            ready,        // upper layer has requested data, but it has not yet been provided
+            processing    // upper layer is currently processing the front of the queue
+        };
 
     public:
 
@@ -34,6 +40,7 @@ namespace ssp21
             }
 
             this->tx_messages.push_back(std::make_unique<message_t>(message));
+
             return true;
         }
 
@@ -44,34 +51,31 @@ namespace ssp21
 
         virtual void on_rx_ready() override
         {
-            if (!this->rx_messages.empty())
+            if (this->rx_state == RxState::processing)
             {
-                auto& front = this->rx_messages.front();
-
-                if (upper->start_rx(front->as_rslice()))
+                if (rx_messages.empty()) throw std::logic_error("expected a frame but rx_messages is empty");
+                else
                 {
                     this->rx_messages.pop_front();
-
-                    if (this->rx_messages.empty())
-                    {
-                        // TODO
-                        // this->is_rx_ready = false;
-                    }
+                    this->rx_state = RxState::ready;
                 }
+            }
+
+            if (!this->rx_messages.empty())
+            {
+                this->start_next_rx();
             }
         }
 
         void enqueue_message(const std::string& hex)
         {
             openpal::Hex hexdata(hex);
+            this->rx_messages.push_back(std::make_unique<message_t>(hexdata.as_rslice()));
 
-            /* TODO
-            if (!upper->is_rx_ready())
+            if (this->rx_state == RxState::ready)
             {
-                this->rx_messages.push_back(std::make_unique<message_t>(hexdata.as_rslice()));
-                this->is_rx_ready = true;
+                this->start_next_rx();
             }
-            */
         }
 
         size_t num_rx_messages() const
@@ -103,7 +107,17 @@ namespace ssp21
 
     private:
 
+        void start_next_rx()
+        {
+            this->rx_state = RxState::processing;
+            const auto success = this->upper->start_rx(this->rx_messages.front()->as_rslice());
+            if (!success) throw std::logic_error("upper layer unexpected refused start_rx()");
+        }
+
         bool is_tx_ready_flag = true;
+
+
+        RxState rx_state = RxState::idle;
 
         typedef std::deque<std::unique_ptr<message_t>> message_queue_t;
 
