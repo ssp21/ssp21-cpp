@@ -99,7 +99,11 @@ namespace ssp21
 
     void CryptoLayer::start_rx_impl(const seq32_t& data)
     {
+        // completely process the data, possibly responding
         this->process(data);
+
+        // tell the lower layer that we're ready for another message
+        this->lower->on_rx_ready();
     }
 
     bool CryptoLayer::is_rx_ready_impl()

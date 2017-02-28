@@ -378,6 +378,8 @@ void test_begin_handshake_success(ResponderFixture& fix, uint16_t max_nonce, uin
 
 void test_auth_handshake_success(ResponderFixture& fix)
 {
+    REQUIRE(fix.lower.get_rx_state() == MockLowerLayer::RxState::ready);
+
     const auto mac_hex = hex::repeat(0xFF, consts::crypto::sha256_hash_output_length);
 
     fix.lower.enqueue_message(hex::request_handshake_auth(mac_hex));
@@ -412,8 +414,9 @@ void test_init_session_success(ResponderFixture& fix, uint16_t max_nonce, uint32
 
 void test_handshake_error(ResponderFixture& fix, const std::string& request, HandshakeError expected_error, std::initializer_list<CryptoAction> actions)
 {
+    REQUIRE(fix.lower.get_rx_state() == MockLowerLayer::RxState::ready);
     fix.lower.enqueue_message(request);
-    REQUIRE(fix.lower.num_rx_messages() == 0);
+    REQUIRE(fix.lower.get_rx_state() == MockLowerLayer::RxState::ready);
 
     MockCryptoBackend::instance.expect(actions);
 

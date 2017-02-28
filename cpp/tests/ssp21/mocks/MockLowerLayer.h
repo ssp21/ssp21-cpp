@@ -11,12 +11,13 @@
 #include "ssp21/MakeUnique.h"
 
 #include <deque>
-
 namespace ssp21
 {
     class MockLowerLayer : public ILowerLayer, private openpal::Uncopyable
     {
         typedef openpal::Buffer message_t;
+
+    public:
 
         enum class RxState
         {
@@ -24,8 +25,6 @@ namespace ssp21
             ready,        // upper layer has requested data, but it has not yet been provided
             processing    // upper layer is currently processing the front of the queue
         };
-
-    public:
 
         void bind_upper(IUpperLayer& upper)
         {
@@ -67,7 +66,7 @@ namespace ssp21
             }
             else
             {
-                this->start_next_rx();
+                this->try_start_next_rx();
             }
         }
 
@@ -78,7 +77,7 @@ namespace ssp21
 
             if (this->rx_state == RxState::ready)
             {
-                this->start_next_rx();
+                this->try_start_next_rx();
             }
         }
 
@@ -109,13 +108,25 @@ namespace ssp21
             this->is_tx_ready_flag = value;
         }
 
+        RxState get_rx_state() const
+        {
+            return this->rx_state;
+        }
+
     private:
 
-        void start_next_rx()
+        bool try_start_next_rx()
         {
             this->rx_state = RxState::processing;
-            const auto success = this->upper->start_rx(this->rx_messages.front()->as_rslice());
-            if (!success) throw std::logic_error("upper layer unexpected refused start_rx()");
+            if (this->upper->start_rx(this->rx_messages.front()->as_rslice()))
+            {
+                return true;
+            }
+            else
+            {
+                this->rx_state = RxState::ready;
+                return false;
+            }
         }
 
         bool is_tx_ready_flag = true;
