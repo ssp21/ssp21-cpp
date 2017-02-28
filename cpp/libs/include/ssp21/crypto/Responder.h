@@ -62,7 +62,7 @@ namespace ssp21
 
         // ---- final implementations from IUpperLayer ----
 
-        virtual void on_open_impl() override {} // no need to do anything when the layer opens
+        virtual void on_open_impl() override;
 
         // ---- private helper methods -----
 

@@ -31,6 +31,12 @@ namespace ssp21
         handshake_state(ResponderHandshake::Idle::get())
     {}
 
+    void Responder::on_open_impl()
+    {
+        // tell the lower layer we're ready to receive data
+        this->lower->on_rx_ready();
+    }
+
     void Responder::reply_with_handshake_error(HandshakeError err)
     {
         ReplyHandshakeError msg(err);

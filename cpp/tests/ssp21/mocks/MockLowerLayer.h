@@ -61,7 +61,11 @@ namespace ssp21
                 }
             }
 
-            if (!this->rx_messages.empty())
+            if (this->rx_messages.empty())
+            {
+                this->rx_state = RxState::ready;
+            }
+            else
             {
                 this->start_next_rx();
             }
