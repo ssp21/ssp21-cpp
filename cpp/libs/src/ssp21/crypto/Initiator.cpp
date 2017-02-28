@@ -82,9 +82,7 @@ namespace ssp21
     }
 
     void Initiator::on_open_impl()
-    {
-        this->lower->on_rx_ready();
-
+    {        
         this->on_handshake_required();
     }
 

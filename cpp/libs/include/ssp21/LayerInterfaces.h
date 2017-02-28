@@ -51,12 +51,11 @@ namespace ssp21
         */
         void on_rx_ready()
         {
-            if (rx_state == RxState::processing)
+            if (this->rx_processing)
             {
-                this->discard_rx_data();
-            }
-
-            this->rx_state = RxState::ready;
+				this->discard_rx_data();
+				this->rx_processing = false;                
+            }            
 
             this->on_rx_ready_impl();
         }
@@ -67,7 +66,7 @@ namespace ssp21
 
         virtual void on_rx_ready_impl() = 0;
 
-        RxState rx_state = RxState::idle;
+        bool rx_processing = false;
 
     };
 
@@ -122,7 +121,7 @@ namespace ssp21
         *   is loaned out to this layer and must not be mutated until ILowerLayer::on_rx_ready()
         *   is called.
         *
-        *   @return true if the operation can be started, false otherwise.
+        *   @return true if the operation has been started, false otherwise.
         */
         inline bool start_rx(const seq32_t& data)
         {
