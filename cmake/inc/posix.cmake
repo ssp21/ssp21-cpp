@@ -28,44 +28,25 @@ if (UNIX)
 	set(CMAKE_CXX_FLAGS_RELEASE        "-O4 -DNDEBUG")
 	set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
 
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-parentheses --std=c++11")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-parentheses --std=c++14")
 
-
-	# Compiler-specific C++11 activation.
-	if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
-		execute_process(
-		COMMAND ${CMAKE_CXX_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VERSION)
-		if (NOT (GCC_VERSION VERSION_GREATER 4.7 OR GCC_VERSION VERSION_EQUAL 4.7))
-			message(FATAL_ERROR "${PROJECT_NAME} requires g++ 4.7 or greater.")
-		endif ()
+	# Compiler-specific detection
+	if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+		if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.9.3")
+                	message(FATAL_ERROR "GCC version 4.9.3 or greater is required")
+		endif()	
 	elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
 	else ()
-		message(FATAL_ERROR "Your C++ compiler does not support C++11.")
+		message(FATAL_ERROR "Your C++ compiler is not supported at this time: ${CMAKE_CXX_COMPILER_ID}")
 	endif ()
 
 	if(COVERAGE)
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage -g -O0")
-		#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage -g -O0")
 	endif()
 
 	if (WERROR)
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
 	endif()
-
-	# There's problem with detecting usage of pthread with gcc 4.8.x
-	# http://ubuntuforums.org/showthread.php?t=2183408
-	if(CMAKE_COMPILER_IS_GNUCXX)      
-		if(CMAKE_CXX_COMPILER_VERSION MATCHES 4.8.*)
-			message("Adding pthread workaround for GCC version: ${CMAKE_CXX_COMPILER_VERSION}")
-			SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,--no-as-needed" )            
-		endif()
-	endif()
-
-	if(CMAKE_COMPILER_IS_GNUCXX)      
-		#if(CMAKE_CXX_COMPILER_VERSION MATCHES 4.8.*)		
-			add_definitions("-DNO_MAKE_UNIQUE_SUPPORT")			
-		#endif()
-	endif()
-
+		
 endif()

@@ -14,8 +14,6 @@
 
 #include "HexSequences.h"
 
-#include "ssp21/MakeUnique.h"
-
 #include <vector>
 #include <assert.h>
 

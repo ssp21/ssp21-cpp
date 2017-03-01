@@ -8,9 +8,8 @@
 #include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
 
-#include "ssp21/MakeUnique.h"
-
 #include <deque>
+
 namespace ssp21
 {
     class MockLowerLayer : public ILowerLayer, private openpal::Uncopyable

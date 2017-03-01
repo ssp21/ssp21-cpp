@@ -10,8 +10,6 @@
 #include <memory>
 #include <deque>
 
-#include "ssp21/MakeUnique.h"
-
 namespace ssp21
 {
 
