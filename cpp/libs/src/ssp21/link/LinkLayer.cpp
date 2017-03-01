@@ -1,5 +1,4 @@
 
-/*
 #include "ssp21/link/LinkLayer.h"
 
 namespace ssp21
@@ -26,8 +25,12 @@ namespace ssp21
         upper->on_tx_ready();
     }
 
-    bool LinkLayer::on_rx_ready_impl(const seq32_t& data)
+    void LinkLayer::start_rx_impl(const seq32_t& data)
     {
+		/*
+
+		TODO
+
         if (!result.payload.is_empty()) // still have data waiting to be read
         {
             return false;
@@ -42,6 +45,7 @@ namespace ssp21
         }
 
         return false;
+		*/
     }
 
     bool LinkLayer::start_tx(const seq32_t& data)
@@ -49,15 +53,18 @@ namespace ssp21
         return this->lower->start_tx(data);
     }
 
-    void LinkLayer::receive()
+    void LinkLayer::on_rx_ready_impl()
     {
+		/*
+
+		TODO
+
         if (result.payload.is_not_empty() && upper->on_rx_ready(result.payload))
         {
             result.payload.make_empty();
             lower->receive();
         }
+		*/
     }
 
 }
-
-*/
