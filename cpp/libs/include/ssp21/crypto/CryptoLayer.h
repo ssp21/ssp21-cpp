@@ -6,6 +6,7 @@
 #include "ssp21/crypto/Handshake.h"
 #include "ssp21/crypto/Reassembler.h"
 #include "ssp21/crypto/TxState.h"
+#include "ssp21/crypto/Keys.h"
 
 #include "ssp21/crypto/gen/RequestHandshakeBegin.h"
 #include "ssp21/crypto/gen/ReplyHandshakeBegin.h"
@@ -33,24 +34,7 @@ namespace ssp21
         {
             /// The maximum size of a reassembled message
             uint16_t max_reassembly_size = consts::link::max_config_payload_size;
-        };
-
-        struct Keys
-        {
-            Keys(
-                const std::shared_ptr<const PublicKey> local_static_public_key,
-                const std::shared_ptr<const PublicKey> remote_static_public_key,
-                const std::shared_ptr<const PrivateKey> local_static_private_key
-            ) :
-                local_static_public_key(local_static_public_key),
-                remote_static_public_key(remote_static_public_key),
-                local_static_private_key(local_static_private_key)
-            {}
-
-            const std::shared_ptr<const PublicKey> local_static_public_key;
-            const std::shared_ptr<const PublicKey> remote_static_public_key;
-            const std::shared_ptr<const PrivateKey> local_static_private_key;
-        };
+        };       
 
         CryptoLayer(
             HandshakeMode type,

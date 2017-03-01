@@ -87,7 +87,7 @@ namespace ssp21
                             ilog.logger,
                             std::make_shared<MessageOnlyFrameWriter>(ilog.logger),
                             exe,
-                            CryptoLayer::Keys(initiator_pub, responder_pub, initiator_priv)
+                            Keys(initiator_pub, responder_pub, initiator_priv)
                         );
 
             responder = std::make_unique<Responder>(
@@ -96,7 +96,7 @@ namespace ssp21
                             rlog.logger,
                             std::make_shared<MessageOnlyFrameWriter>(rlog.logger),
                             exe,
-                            CryptoLayer::Keys(responder_pub, initiator_pub, responder_priv)
+                            Keys(responder_pub, initiator_pub, responder_priv)
                         );
 
             // wire the lower layers together

@@ -44,7 +44,7 @@ namespace ssp21
 
     protected:
 
-        static CryptoLayer::Keys get_keys()
+        static Keys get_keys()
         {
             const auto local_pub = std::make_shared<PublicKey>();
             const auto remote_pub = std::make_shared<PublicKey>();
@@ -54,7 +54,7 @@ namespace ssp21
             init_key(*remote_pub);
             init_key(*local_priv);
 
-            return CryptoLayer::Keys(local_pub, remote_pub, local_priv);
+            return Keys(local_pub, remote_pub, local_priv);
         }
 
         static void init_key(BufferBase& buffer)
