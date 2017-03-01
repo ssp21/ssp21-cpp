@@ -13,7 +13,7 @@ using namespace openpal;
 namespace ssp21
 {
     Responder::Responder(
-        const Config& context_config,
+        const ResponderConfig& context_config,
         const Session::Config& session_config,
         const openpal::Logger& logger,
         const std::shared_ptr<IFrameWriter>& frame_writer,

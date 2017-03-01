@@ -17,11 +17,6 @@ namespace ssp21
 
     public:
 
-        struct Config
-        {
-            CryptoLayerConfig config;
-        };
-
         struct IHandshakeState : private openpal::Uncopyable
         {
             enum Enum
@@ -40,7 +35,7 @@ namespace ssp21
         };
 
         Responder(
-            const Config& context_config,
+            const ResponderConfig& context_config,
             const Session::Config& session_config,
             const openpal::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,

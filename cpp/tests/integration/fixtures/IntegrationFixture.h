@@ -91,7 +91,7 @@ namespace ssp21
                         );
 
             responder = std::make_unique<Responder>(
-                            Responder::Config(),
+                            ResponderConfig(),
                             Session::Config(),
                             rlog.logger,
                             std::make_shared<MessageOnlyFrameWriter>(rlog.logger),

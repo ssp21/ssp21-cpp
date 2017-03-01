@@ -76,7 +76,7 @@ namespace ssp21
     {
         ResponderFixture(
             const Session::Config& session_config = Session::Config(),
-            const Responder::Config& config = Responder::Config(),
+            const ResponderConfig& config = ResponderConfig(),
             uint16_t max_message_size = consts::link::max_config_payload_size
         ) :
             CryptoLayerFixture(session_config, max_message_size),

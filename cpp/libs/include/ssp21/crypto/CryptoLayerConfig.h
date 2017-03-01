@@ -15,6 +15,10 @@ namespace ssp21
         uint16_t max_reassembly_size = consts::link::max_config_payload_size;
     };
 
+    struct ResponderConfig
+    {
+        CryptoLayerConfig config;
+    };
 
     struct InitiatorConfig
     {
