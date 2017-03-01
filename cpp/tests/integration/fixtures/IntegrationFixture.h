@@ -82,7 +82,7 @@ namespace ssp21
             const auto initiator_priv = std::make_shared<const PrivateKey>(kp_initiator.private_key);
 
             initiator = std::make_unique<Initiator>(
-                            Initiator::Config(),
+                            InitiatorConfig(),
                             Session::Config(),
                             ilog.logger,
                             std::make_shared<MessageOnlyFrameWriter>(ilog.logger),

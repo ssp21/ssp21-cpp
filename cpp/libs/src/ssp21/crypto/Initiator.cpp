@@ -10,7 +10,7 @@ using namespace openpal;
 namespace ssp21
 {
     Initiator::Initiator(
-        const Config& context_config,
+        const InitiatorConfig& context_config,
         const Session::Config& session_config,
         const Logger& logger,
         const std::shared_ptr<IFrameWriter>& frame_writer,

@@ -100,7 +100,7 @@ namespace ssp21
     {
         InitiatorFixture(
             const Session::Config& session_config = Session::Config(),
-            const Initiator::Config& config = Initiator::Config(),
+            const InitiatorConfig& config = InitiatorConfig(),
             uint16_t max_message_size = consts::link::max_config_payload_size
         ) :
             CryptoLayerFixture(session_config, max_message_size),

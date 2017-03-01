@@ -32,7 +32,7 @@ TEST_CASE(SUITE("transmits REQUEST_HANDSHAKE_BEGIN when opened"))
 
 TEST_CASE(SUITE("goes to bad_configuration state if algorithms aren't supported"))
 {
-    Initiator::Config config;
+    InitiatorConfig config;
     config.suite.dh_mode = DHMode::undefined;
 
     InitiatorFixture fix(Session::Config(), config);
