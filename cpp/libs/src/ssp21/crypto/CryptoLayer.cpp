@@ -129,7 +129,12 @@ namespace ssp21
             this->upper->on_tx_ready();
         }
 
-        this->check_receive();
+		// having the lower tx_ready may enable us being ready to receive data
+		if (!rx_processing) 
+		{
+			this->lower->on_rx_ready();
+		}
+        
         this->check_transmit();
     }
 
@@ -175,12 +180,7 @@ namespace ssp21
         default:
             break;
         }
-    }
-
-    void CryptoLayer::check_receive()
-    {
-        // TODO
-    }
+    }    
 
     void CryptoLayer::check_transmit()
     {

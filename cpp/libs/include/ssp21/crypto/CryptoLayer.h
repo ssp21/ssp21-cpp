@@ -156,9 +156,7 @@ namespace ssp21
             */
 
             return this->session.is_valid() && this->lower->is_tx_ready() && this->tx_state.is_ready_tx();
-        }
-
-        void check_receive();
+        }        
 
         void check_transmit();
 
