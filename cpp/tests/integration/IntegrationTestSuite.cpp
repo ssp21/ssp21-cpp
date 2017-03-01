@@ -37,7 +37,7 @@ TEST_CASE(SUITE("can transfer data bidirectionally multiple times"))
     for (int i = 0; i < num_bytes_tx; ++i) payload[i] = i % 256;
     const auto slice = seq32_t(payload, num_bytes_tx);
 
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < 5; ++i)
     {
         test_bidirectional_data_transfer(fix, slice);
     }

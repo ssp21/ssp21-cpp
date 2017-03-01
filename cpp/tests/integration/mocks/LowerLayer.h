@@ -58,7 +58,10 @@ namespace ssp21
 
         virtual void discard_rx_data() override
         {
-            if (this->messages.empty()) throw std::logic_error("no messages to discard");
+            if (this->messages.empty())
+            {
+                throw std::logic_error("no messages to discard");
+            }
             else
             {
                 this->messages.pop_front();
@@ -67,25 +70,31 @@ namespace ssp21
 
         virtual void on_rx_ready_impl() override
         {
-            this->rx_processing = true;
-            if (this->try_start_rx())
-            {
-                this->rx_processing = false;
-            }
+            this->try_start_rx();
         }
 
-        // sibling layer requests that the data be pushed into its upper layer
+
         bool try_start_rx()
         {
-            return messages.empty() ? false : this->upper->start_rx(messages.front()->as_rslice());
+            if (this->rx_processing || messages.empty()) return false;
+
+            this->rx_processing = true;
+
+            if (this->upper->start_rx(messages.front()->as_rslice()))
+            {
+                return true;
+            }
+            else
+            {
+                this->rx_processing = false;
+                return false;
+            }
         }
 
+        // sibling layer notification that data has been placed in queue
         void on_new_data()
         {
-            if (!this->rx_processing)
-            {
-                this->on_rx_ready_impl();
-            }
+            this->try_start_rx();
         }
 
         const std::shared_ptr<openpal::IExecutor> executor;

@@ -47,6 +47,7 @@ namespace ssp21
                 v->validate(data);
             }
 
+            lower->on_rx_ready();
         }
 
         virtual bool is_rx_ready_impl() override
