@@ -26,12 +26,12 @@ namespace ssp21
 
         virtual bool start_tx(const seq32_t& data) override
         {
-            this->messages.push_back(std::make_unique<message_t>(data));
+            this->sibling->messages.push_back(std::make_unique<message_t>(data));
 
-            // notify the sibling that theres data available to be read
-            executor->post([sibling = this->sibling]()
+            // notify the sibling that there's data available to be read
+            executor->post([this]()
             {
-                sibling->on_sibling_rx_ready();
+                this->sibling->on_new_data();
             });
 
             // simulate asynchronous transmission
@@ -58,31 +58,34 @@ namespace ssp21
 
         virtual void discard_rx_data() override
         {
-            if (sibling->messages.empty()) throw std::logic_error("no sibling data to discard");
+            if (this->messages.empty()) throw std::logic_error("no messages to discard");
             else
             {
-                sibling->messages.pop_front();
+                this->messages.pop_front();
             }
         }
 
         virtual void on_rx_ready_impl() override
         {
             this->rx_processing = true;
-            if (!sibling->read(*this->upper))
+            if (this->try_start_rx())
             {
                 this->rx_processing = false;
             }
         }
 
         // sibling layer requests that the data be pushed into its upper layer
-        bool read(IUpperLayer& upper)
+        bool try_start_rx()
         {
-            return messages.empty() ? false : upper.start_rx(messages.front()->as_rslice());
+            return messages.empty() ? false : this->upper->start_rx(messages.front()->as_rslice());
         }
 
-        void on_sibling_rx_ready()
+        void on_new_data()
         {
-            sibling->read(*upper);
+            if (!this->rx_processing)
+            {
+                this->on_rx_ready_impl();
+            }
         }
 
         const std::shared_ptr<openpal::IExecutor> executor;
