@@ -11,7 +11,7 @@ namespace ssp21
 
     CryptoLayer::CryptoLayer(
         HandshakeMode type,
-        const Config& context_config,
+        const CryptoLayerConfig& context_config,
         const Session::Config& session_config,
         const openpal::Logger& logger,
         const std::shared_ptr<IFrameWriter>& frame_writer,
@@ -129,12 +129,12 @@ namespace ssp21
             this->upper->on_tx_ready();
         }
 
-		// having the lower tx_ready may enable us being ready to receive data
-		if (!rx_processing) 
-		{
-			this->lower->on_rx_ready();
-		}
-        
+        // having the lower tx_ready may enable us being ready to receive data
+        if (!rx_processing)
+        {
+            this->lower->on_rx_ready();
+        }
+
         this->check_transmit();
     }
 
@@ -180,7 +180,7 @@ namespace ssp21
         default:
             break;
         }
-    }    
+    }
 
     void CryptoLayer::check_transmit()
     {

@@ -57,7 +57,7 @@ namespace ssp21
 
             Suite suite;
             Params params;
-            CryptoLayer::Config config;
+            CryptoLayerConfig config;
         };
 
         Initiator(

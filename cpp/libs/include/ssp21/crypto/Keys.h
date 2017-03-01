@@ -7,7 +7,7 @@
 #include <memory>
 
 namespace ssp21
-{    
+{
     struct Keys
     {
         Keys(

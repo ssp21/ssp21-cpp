@@ -7,6 +7,7 @@
 #include "ssp21/crypto/Reassembler.h"
 #include "ssp21/crypto/TxState.h"
 #include "ssp21/crypto/Keys.h"
+#include "ssp21/crypto/CryptoLayerConfig.h"
 
 #include "ssp21/crypto/gen/RequestHandshakeBegin.h"
 #include "ssp21/crypto/gen/ReplyHandshakeBegin.h"
@@ -30,15 +31,9 @@ namespace ssp21
 
     public:
 
-        struct Config
-        {
-            /// The maximum size of a reassembled message
-            uint16_t max_reassembly_size = consts::link::max_config_payload_size;
-        };       
-
         CryptoLayer(
             HandshakeMode type,
-            const Config& context_config,
+            const CryptoLayerConfig& context_config,
             const Session::Config& session_config,
             const openpal::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
@@ -140,7 +135,7 @@ namespace ssp21
             */
 
             return this->session.is_valid() && this->lower->is_tx_ready() && this->tx_state.is_ready_tx();
-        }        
+        }
 
         void check_transmit();
 
