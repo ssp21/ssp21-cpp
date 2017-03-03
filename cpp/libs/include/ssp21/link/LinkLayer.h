@@ -34,8 +34,6 @@ namespace ssp21
         virtual void start_rx_impl(const seq32_t& data) override;
         virtual bool is_rx_ready_impl() override;
 
-
-
         // ---- ILowerLayer ----
         virtual bool is_tx_ready() const override;
         virtual void discard_rx_data() override;

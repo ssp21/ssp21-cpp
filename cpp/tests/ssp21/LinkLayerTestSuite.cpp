@@ -2,7 +2,7 @@
 
 #include "catch.hpp"
 
-#include "ssp21/link/LinkLayer.h"
+#include "fixtures/LinkLayerFixture.h"
 
 #define SUITE(name) "LinkLayerTestSuite - " name
 
@@ -11,6 +11,6 @@ using namespace openpal;
 
 TEST_CASE(SUITE("construction"))
 {
-    LinkLayer link(1, 10);
+    LinkLayerFixture fix;
 }
 
