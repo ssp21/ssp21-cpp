@@ -41,8 +41,6 @@ namespace ssp21
         uint16_t max_payload_size;
         openpal::Buffer frame_buffer;
 
-
-
     };
 
 }
