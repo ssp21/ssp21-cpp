@@ -74,19 +74,9 @@ namespace ssp21
 
         bool try_start_rx()
         {
-            if (this->rx_processing || messages.empty()) return false;
+            if (this->is_rx_processing() || messages.empty()) return false;
 
-            this->rx_processing = true;
-
-            if (this->upper->start_rx(messages.front()->as_rslice()))
-            {
-                return true;
-            }
-            else
-            {
-                this->rx_processing = false;
-                return false;
-            }
+            return this->try_start_upper_rx(messages.front()->as_rslice());
         }
 
         // sibling layer notification that data has been placed in queue
@@ -100,7 +90,6 @@ namespace ssp21
         std::deque<std::unique_ptr<message_t>> messages;
 
         // set during configure step
-        IUpperLayer* upper = nullptr;
         LowerLayer* sibling = nullptr;
     };
 

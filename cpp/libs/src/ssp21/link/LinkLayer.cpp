@@ -35,12 +35,7 @@ namespace ssp21
     {
         if (this->parser.parse(this->remainder) && this->parser.read(this->result))
         {
-            // try to start an rx of the upper layer
-            this->rx_processing = true;
-            if (!this->upper->start_rx(this->result.payload))
-            {
-                this->rx_processing = false;
-            }
+            this->try_start_upper_rx(this->result.payload);
         }
 
         if (this->is_rx_ready_impl())
@@ -51,7 +46,7 @@ namespace ssp21
 
     bool LinkLayer::is_rx_ready_impl()
     {
-        return this->result.payload.is_empty() && !this->rx_processing && this->remainder.is_empty();
+        return this->result.payload.is_empty() && !this->is_rx_processing() && this->remainder.is_empty();
     }
 
     bool LinkLayer::is_tx_ready() const

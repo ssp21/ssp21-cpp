@@ -48,7 +48,6 @@ namespace ssp21
         virtual void on_bad_body_crc(uint32_t expected, uint32_t actual) override {}
         virtual void on_bad_body_length(uint32_t max_allowed, uint32_t actual) override {}
 
-        IUpperLayer* upper = nullptr;
         ILowerLayer* lower = nullptr;
 
         const uint16_t local_addr;

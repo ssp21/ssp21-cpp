@@ -83,11 +83,6 @@ namespace ssp21
             this->is_tx_ready_flag = value;
         }
 
-        bool get_rx_processing() const
-        {
-            return this->rx_processing;
-        }
-
     private:
 
         virtual void discard_rx_data() override
@@ -101,27 +96,14 @@ namespace ssp21
 
         bool try_start_next_rx()
         {
-            if (this->rx_processing) return false;
+            if (this->is_rx_processing()) return false;
 
-            this->rx_processing = true;
-
-            if (this->upper->start_rx(this->rx_messages.front()->as_rslice()))
-            {
-                return true;
-            }
-            else
-            {
-                this->rx_processing = false;
-                return false;
-            }
+            return this->try_start_upper_rx(this->rx_messages.front()->as_rslice());
         }
 
         bool is_tx_ready_flag = true;
 
-
         typedef std::deque<std::unique_ptr<message_t>> message_queue_t;
-
-        IUpperLayer* upper = nullptr;
 
         message_queue_t tx_messages;
 

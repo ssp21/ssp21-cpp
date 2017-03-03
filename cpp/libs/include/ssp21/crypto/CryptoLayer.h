@@ -118,7 +118,6 @@ namespace ssp21
         TxState tx_state;
 
         ILowerLayer* lower = nullptr;
-        IUpperLayer* upper = nullptr;
 
     private:
 
