@@ -23,7 +23,6 @@ namespace ssp21
             link.bind(lower, upper);
         }
 
-
         ssp21::MockLogHandler log;
         MockLowerLayer lower;
         MockUpperLayer upper;

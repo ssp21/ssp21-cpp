@@ -27,30 +27,31 @@ namespace ssp21
 
     void LinkLayer::start_rx_impl(const seq32_t& data)
     {
-        /*
+        this->remainder = data;
+        this->process_remainder();
+    }
 
-        TODO
-
-        if (!result.payload.is_empty()) // still have data waiting to be read
+    void LinkLayer::process_remainder()
+    {
+        if (this->parser.parse(this->remainder) && this->parser.read(this->result))
         {
-            return false;
-        }
-
-        if (parser.parse(data) && parser.read(this->result))
-        {
-            if (this->upper->on_rx_ready(result.payload))
+            // try to start an rx of the upper layer
+            this->rx_processing = true;
+            if (!this->upper->start_rx(this->result.payload))
             {
-                this->result.payload.make_empty();
+                this->rx_processing = false;
             }
         }
 
-        return false;
-        */
+        if (this->is_rx_ready_impl())
+        {
+            lower->on_rx_ready();
+        }
     }
 
     bool LinkLayer::is_rx_ready_impl()
     {
-        return this->result.payload.is_empty() && this->remainder.is_empty();
+        return this->result.payload.is_empty() && !this->rx_processing && this->remainder.is_empty();
     }
 
     bool LinkLayer::is_tx_ready() const
@@ -71,16 +72,14 @@ namespace ssp21
 
     void LinkLayer::on_rx_ready_impl()
     {
-        /*
-
-        TODO
-
-        if (result.payload.is_not_empty() && upper->on_rx_ready(result.payload))
+        if (this->remainder.is_not_empty())
         {
-            result.payload.make_empty();
-            lower->receive();
+            this->process_remainder();
         }
-        */
+        else
+        {
+            this->lower->on_rx_ready();
+        }
     }
 
 }

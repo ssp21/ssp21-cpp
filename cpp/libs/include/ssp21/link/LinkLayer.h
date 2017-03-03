@@ -26,6 +26,8 @@ namespace ssp21
 
     private:
 
+        void process_remainder();
+
         // ---- link_upper_layer_t ----
 
         virtual void on_open_impl() override;

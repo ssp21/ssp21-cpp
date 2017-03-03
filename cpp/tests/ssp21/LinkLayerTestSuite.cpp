@@ -3,6 +3,7 @@
 #include "catch.hpp"
 
 #include "fixtures/LinkLayerFixture.h"
+#include "mocks/HexMessageBuilders.h"
 
 #define SUITE(name) "LinkLayerTestSuite - " name
 
@@ -22,7 +23,7 @@ TEST_CASE(SUITE("processes a valid frame"))
 {
     LinkLayerFixture fix;
     fix.link.on_open();
-
-
+    fix.lower.enqueue_message(hex::link_frame(10, 1, "CA FE"));
+    REQUIRE(fix.upper.pop_rx_message() == "CA FE");
 }
 
