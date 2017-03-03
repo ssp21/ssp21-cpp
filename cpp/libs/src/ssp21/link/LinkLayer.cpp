@@ -48,8 +48,24 @@ namespace ssp21
         */
     }
 
+    bool LinkLayer::is_rx_ready_impl()
+    {
+        return this->result.payload.is_empty() && this->remainder.is_empty();
+    }
+
+    bool LinkLayer::is_tx_ready() const
+    {
+        return this->lower->is_tx_ready();
+    }
+
+    void LinkLayer::discard_rx_data()
+    {
+        this->result.payload.make_empty();
+    }
+
     bool LinkLayer::start_tx(const seq32_t& data)
     {
+        // The upper layer formats the frame for efficiency purposes
         return this->lower->start_tx(data);
     }
 

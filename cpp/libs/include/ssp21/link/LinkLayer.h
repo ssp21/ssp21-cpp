@@ -22,6 +22,8 @@ namespace ssp21
             this->upper = &upper;
         }
 
+
+
     private:
 
         // ---- link_upper_layer_t ----
@@ -30,10 +32,13 @@ namespace ssp21
         virtual void on_close_impl() override;
         virtual void on_tx_ready_impl() override;
         virtual void start_rx_impl(const seq32_t& data) override;
+        virtual bool is_rx_ready_impl() override;
+
 
 
         // ---- ILowerLayer ----
-
+        virtual bool is_tx_ready() const override;
+        virtual void discard_rx_data() override;
         virtual bool start_tx(const seq32_t& data) override;
         virtual void on_rx_ready_impl() override;
 
@@ -51,6 +56,7 @@ namespace ssp21
 
         LinkParser::Result result;
 
+        seq32_t remainder;
         LinkParser parser;
     };
 
