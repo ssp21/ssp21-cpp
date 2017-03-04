@@ -6,6 +6,13 @@
 
 #include "ssp21/crypto/Constants.h"
 
+#include "ssp21/crypto/gen/NonceMode.h"
+#include "ssp21/crypto/gen/DHMode.h"
+#include "ssp21/crypto/gen/HandshakeHash.h"
+#include "ssp21/crypto/gen/HandshakeKDF.h"
+#include "ssp21/crypto/gen/HandshakeMAC.h"
+#include "ssp21/crypto/gen/SessionMode.h"
+
 namespace ssp21
 {
 
@@ -28,6 +35,7 @@ namespace ssp21
     struct ResponderConfig
     {
         CryptoLayerConfig config;
+        SessionConfig session;
     };
 
     struct InitiatorConfig
@@ -68,6 +76,7 @@ namespace ssp21
         Suite suite;
         Params params;
         CryptoLayerConfig config;
+        SessionConfig session;
     };
 
 }

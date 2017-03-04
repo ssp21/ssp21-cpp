@@ -21,8 +21,7 @@ namespace ssp21
     public:
 
         Initiator(
-            const InitiatorConfig& context_config,
-            const SessionConfig& session_config,
+            const InitiatorConfig& config,
             const openpal::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
             const std::shared_ptr<openpal::IExecutor>& executor,

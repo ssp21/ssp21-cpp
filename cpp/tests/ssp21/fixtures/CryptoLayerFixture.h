@@ -75,12 +75,11 @@ namespace ssp21
     struct ResponderFixture : public CryptoLayerFixture
     {
         ResponderFixture(
-            const SessionConfig& session_config = SessionConfig(),
             const ResponderConfig& config = ResponderConfig(),
             uint16_t max_message_size = consts::link::max_config_payload_size
         ) :
-            CryptoLayerFixture(session_config, max_message_size),
-            responder(config, session_config, this->log.logger, get_frame_writer(this->log.logger, max_message_size), this->exe, get_keys())
+            CryptoLayerFixture(config.session, max_message_size),
+            responder(config, this->log.logger, get_frame_writer(this->log.logger, max_message_size), this->exe, get_keys())
         {
             lower.bind_upper(responder);
             upper.bind_lower(responder);
@@ -99,12 +98,11 @@ namespace ssp21
     struct InitiatorFixture : public CryptoLayerFixture
     {
         InitiatorFixture(
-            const SessionConfig& session_config = SessionConfig(),
             const InitiatorConfig& config = InitiatorConfig(),
             uint16_t max_message_size = consts::link::max_config_payload_size
         ) :
-            CryptoLayerFixture(session_config, max_message_size),
-            initiator(config, session_config, this->log.logger, get_frame_writer(this->log.logger, max_message_size), this->exe, get_keys())
+            CryptoLayerFixture(config.session, max_message_size),
+            initiator(config, this->log.logger, get_frame_writer(this->log.logger, max_message_size), this->exe, get_keys())
         {
             lower.bind_upper(initiator);
             upper.bind_lower(initiator);

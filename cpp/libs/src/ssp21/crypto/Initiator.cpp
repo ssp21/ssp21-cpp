@@ -10,8 +10,7 @@ using namespace openpal;
 namespace ssp21
 {
     Initiator::Initiator(
-        const InitiatorConfig& context_config,
-        const SessionConfig& session_config,
+        const InitiatorConfig& config,
         const Logger& logger,
         const std::shared_ptr<IFrameWriter>& frame_writer,
         const std::shared_ptr<IExecutor>& executor,
@@ -19,16 +18,16 @@ namespace ssp21
     ) :
         CryptoLayer(
             HandshakeMode::Initiator,
-            context_config.config,
-            session_config,
+            config.config,
+            config.session,
             logger,
             frame_writer,
             executor,
             keys
         ),
         handshake_state(InitiatorHandshake::Idle::get()),
-        suite(context_config.suite),
-        params(context_config.params),
+        suite(config.suite),
+        params(config.params),
         response_and_retry_timer(executor),
         session_timeout_timer(executor)
     {}

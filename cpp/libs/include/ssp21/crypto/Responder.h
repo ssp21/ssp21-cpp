@@ -35,8 +35,7 @@ namespace ssp21
         };
 
         Responder(
-            const ResponderConfig& context_config,
-            const SessionConfig& session_config,
+            const ResponderConfig& config,
             const openpal::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
             const std::shared_ptr<openpal::IExecutor>& executor,

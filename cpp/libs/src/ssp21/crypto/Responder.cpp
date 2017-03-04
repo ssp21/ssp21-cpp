@@ -13,16 +13,15 @@ using namespace openpal;
 namespace ssp21
 {
     Responder::Responder(
-        const ResponderConfig& context_config,
-        const SessionConfig& session_config,
+        const ResponderConfig& config,
         const openpal::Logger& logger,
         const std::shared_ptr<IFrameWriter>& frame_writer,
         const std::shared_ptr<openpal::IExecutor>& executor,
         const Keys& keys) :
         CryptoLayer(
             HandshakeMode::Responder,
-            context_config.config,
-            session_config,
+            config.config,
+            config.session,
             logger,
             frame_writer,
             executor,

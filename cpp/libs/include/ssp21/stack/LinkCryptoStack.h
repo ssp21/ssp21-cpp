@@ -4,23 +4,24 @@
 
 #include "ssp21/link/LinkLayer.h"
 #include "ssp21/crypto/Responder.h"
+#include "ssp21/crypto/Initiator.h"
 #include "ssp21/link/LinkFrameWriter.h"
+#include "ssp21/IStack.h"
 
 namespace ssp21
 {
-    class ResponderStack final : public IDualLayer
+    class ResponderStack final : public IStack
     {
     public:
 
         ResponderStack(
             Addresses addresses,
-            const Session::Config& sconfig,
-            const ResponderConfig& rconfig,
+            const ResponderConfig& config,
             openpal::Logger logger,
             const std::shared_ptr<openpal::IExecutor>& executor,
             const Keys& keys) :
             link(addresses.source, addresses.destination),
-            responder(rconfig, sconfig, logger, get_frame_writer(logger, addresses, consts::link::max_config_payload_size), executor,  keys)
+            responder(config, logger, get_frame_writer(logger, addresses, consts::link::max_config_payload_size), executor,  keys)
         {
 
         }
@@ -52,7 +53,48 @@ namespace ssp21
         Responder responder;
     };
 
+    class InitiatorStack final : public IStack
+    {
+    public:
 
+        InitiatorStack(
+            Addresses addresses,
+            const InitiatorConfig& config,
+            openpal::Logger logger,
+            const std::shared_ptr<openpal::IExecutor>& executor,
+            const Keys& keys) :
+            link(addresses.source, addresses.destination),
+            initiator(config, logger, get_frame_writer(logger, addresses, consts::link::max_config_payload_size), executor, keys)
+        {
+
+        }
+
+        virtual void bind(ILowerLayer& lower, IUpperLayer& upper) override
+        {
+            this->link.bind(lower, initiator);
+            this->initiator.bind(link, upper);
+        }
+
+        virtual ILowerLayer& get_lower() override
+        {
+            return this->link;
+        }
+
+        virtual IUpperLayer& get_upper() override
+        {
+            return this->initiator;
+        }
+
+    private:
+
+        static std::shared_ptr<IFrameWriter> get_frame_writer(openpal::Logger logger, Addresses addresses, uint16_t max_payload_size)
+        {
+            return std::make_shared<LinkFrameWriter>(logger, addresses, max_payload_size);
+        }
+
+        LinkLayer link;
+        Initiator initiator;
+    };
 }
 
 #endif
