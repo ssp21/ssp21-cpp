@@ -1,7 +1,7 @@
 #ifndef SSP21_UPPERLAYER_H
 #define SSP21_UPPERLAYER_H
 
-#include "ssp21/LayerInterfaces.h"
+#include "ssp21/IUpperLayer.h"
 
 #include <memory>
 #include <vector>

@@ -3,7 +3,7 @@
 
 #include "openpal/util/Uncopyable.h"
 
-#include "ssp21/LayerInterfaces.h"
+#include "ssp21/IUpperLayer.h"
 
 #include "testlib/Hex.h"
 #include "testlib/HexConversions.h"

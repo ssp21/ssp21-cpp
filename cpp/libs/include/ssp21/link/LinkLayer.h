@@ -1,7 +1,7 @@
 #ifndef SSP21_LINKLAYER_H
 #define SSP21_LINKLAYER_H
 
-#include "ssp21/LayerInterfaces.h"
+#include "ssp21/ILowerLayer.h"
 #include "ssp21/link/LinkParser.h"
 
 #include "ssp21/link/LinkConstants.h"

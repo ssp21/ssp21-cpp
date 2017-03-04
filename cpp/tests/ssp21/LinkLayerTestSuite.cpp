@@ -67,7 +67,7 @@ TEST_CASE(SUITE("forwards transmitted data"))
 
     Hex message("CA FE");
     IUpperLayer& link_upper = fix.link;
-	ILowerLayer& link_lower = fix.link;
+    ILowerLayer& link_lower = fix.link;
 
     for (int i = 0; i < 3; ++i)
     {
