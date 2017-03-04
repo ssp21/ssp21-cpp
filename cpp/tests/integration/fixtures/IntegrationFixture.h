@@ -83,7 +83,7 @@ namespace ssp21
 
             initiator = std::make_unique<Initiator>(
                             InitiatorConfig(),
-                            Session::Config(),
+                            SessionConfig(),
                             ilog.logger,
                             std::make_shared<MessageOnlyFrameWriter>(ilog.logger),
                             exe,
@@ -92,7 +92,7 @@ namespace ssp21
 
             responder = std::make_unique<Responder>(
                             ResponderConfig(),
-                            Session::Config(),
+                            SessionConfig(),
                             rlog.logger,
                             std::make_shared<MessageOnlyFrameWriter>(rlog.logger),
                             exe,

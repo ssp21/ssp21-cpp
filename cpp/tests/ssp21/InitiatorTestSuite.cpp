@@ -35,7 +35,7 @@ TEST_CASE(SUITE("goes to bad_configuration state if algorithms aren't supported"
     InitiatorConfig config;
     config.suite.dh_mode = DHMode::undefined;
 
-    InitiatorFixture fix(Session::Config(), config);
+    InitiatorFixture fix(SessionConfig(), config);
     fix.initiator.on_open();
     REQUIRE(fix.initiator.get_state_enum() == HandshakeState::bad_configuration);
     REQUIRE(fix.exe->num_pending_timers() == 0);

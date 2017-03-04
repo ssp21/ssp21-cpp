@@ -23,7 +23,7 @@ namespace ssp21
     public:
 
         CryptoLayerFixture(
-            const Session::Config& session_config = Session::Config(),
+            const SessionConfig& session_config = SessionConfig(),
             uint16_t max_message_size = consts::link::max_config_payload_size
         ) :
             log("responder"),
@@ -75,7 +75,7 @@ namespace ssp21
     struct ResponderFixture : public CryptoLayerFixture
     {
         ResponderFixture(
-            const Session::Config& session_config = Session::Config(),
+            const SessionConfig& session_config = SessionConfig(),
             const ResponderConfig& config = ResponderConfig(),
             uint16_t max_message_size = consts::link::max_config_payload_size
         ) :
@@ -99,7 +99,7 @@ namespace ssp21
     struct InitiatorFixture : public CryptoLayerFixture
     {
         InitiatorFixture(
-            const Session::Config& session_config = Session::Config(),
+            const SessionConfig& session_config = SessionConfig(),
             const InitiatorConfig& config = InitiatorConfig(),
             uint16_t max_message_size = consts::link::max_config_payload_size
         ) :

@@ -9,6 +9,16 @@
 namespace ssp21
 {
 
+    struct SessionConfig
+    {
+        SessionConfig() {}
+
+        explicit SessionConfig(uint32_t ttl_pad_ms) : ttl_pad_ms(ttl_pad_ms) {}
+
+        // the TTL padding added to the current session time of every message
+        uint32_t ttl_pad_ms = consts::crypto::default_ttl_pad_ms;
+    };
+
     struct CryptoLayerConfig
     {
         /// The maximum size of a reassembled message

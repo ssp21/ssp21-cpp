@@ -11,7 +11,7 @@ namespace ssp21
 {
     Initiator::Initiator(
         const InitiatorConfig& context_config,
-        const Session::Config& session_config,
+        const SessionConfig& session_config,
         const Logger& logger,
         const std::shared_ptr<IFrameWriter>& frame_writer,
         const std::shared_ptr<IExecutor>& executor,

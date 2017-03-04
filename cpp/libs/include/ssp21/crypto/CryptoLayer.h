@@ -34,7 +34,7 @@ namespace ssp21
         CryptoLayer(
             HandshakeMode type,
             const CryptoLayerConfig& context_config,
-            const Session::Config& session_config,
+            const SessionConfig& session_config,
             const openpal::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
             const std::shared_ptr<openpal::IExecutor>& executor,

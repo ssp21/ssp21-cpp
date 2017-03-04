@@ -13,6 +13,7 @@
 #include "ssp21/crypto/Statistics.h"
 #include "ssp21/crypto/BufferTypes.h"
 #include "ssp21/crypto/SessionModes.h"
+#include "ssp21/crypto/CryptoLayerConfig.h"
 
 #include "ssp21/crypto/gen/SessionData.h"
 #include "ssp21/IFrameWriter.h"
@@ -23,16 +24,6 @@ namespace ssp21
     {
 
     public:
-
-        struct Config
-        {
-            Config() {}
-
-            explicit Config(uint32_t ttl_pad_ms) : ttl_pad_ms(ttl_pad_ms) {}
-
-            // the TTL padding added to the current session time of every message
-            uint32_t ttl_pad_ms = consts::crypto::default_ttl_pad_ms;
-        };
 
         struct Param
         {
@@ -54,7 +45,7 @@ namespace ssp21
             uint32_t max_session_time = consts::crypto::initiator::default_max_session_time_ms;
         };
 
-        Session(const std::shared_ptr<IFrameWriter>& frame_writer, const Config& config = Config());
+        Session(const std::shared_ptr<IFrameWriter>& frame_writer, const SessionConfig& config = SessionConfig());
 
         bool initialize(const Algorithms::Session& algorithms, const Param& parameters, const SessionKeys& keys);
 
@@ -89,7 +80,7 @@ namespace ssp21
         bool valid = false;
 
         const std::shared_ptr<IFrameWriter> frame_writer;
-        const Config config;
+        const SessionConfig config;
 
         /**
         * Given a maximum link layer payload, how big could the crypto payload be?
