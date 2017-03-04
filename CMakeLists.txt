@@ -19,6 +19,7 @@ add_library(ssp21 ${LIB_TYPE} ${ssp21_SRC})
 target_link_libraries(ssp21 openpal)
 install(TARGETS ssp21 DESTINATION lib)
 set_target_properties(ssp21 PROPERTIES FOLDER libs)
+target_include_directories(ssp21 PRIVATE ./cpp/libs/src)
 
 # ---- sodiumbackend library ----
 file(GLOB_RECURSE sodiumbackend_SRC ./cpp/libs/src/sodium/*.cpp ./cpp/libs/src/sodium/*.h ./cpp/libs/include/sodium/*.h)
@@ -75,6 +76,7 @@ file(GLOB_RECURSE testssp21_SRC ./cpp/tests/ssp21/*.cpp ./cpp/tests/ssp21/*.h)
 add_executable (testssp21 ${testssp21_SRC})
 target_link_libraries (testssp21 ssp21 testlib)
 set_target_properties(testssp21 PROPERTIES FOLDER tests)
+target_include_directories(testssp21 PRIVATE ./cpp/libs/src)
 add_test(testssp21 testssp21)
 
 add_custom_target(
