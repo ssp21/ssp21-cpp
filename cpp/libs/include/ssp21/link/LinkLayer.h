@@ -22,8 +22,6 @@ namespace ssp21
             this->upper = &upper;
         }
 
-
-
     private:
 
         void process_remainder();

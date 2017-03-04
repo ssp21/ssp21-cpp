@@ -60,3 +60,25 @@ TEST_CASE(SUITE("processes multiple frames received in a single chunk"))
     REQUIRE(fix.upper.pop_rx_message() == "BA BE");
 }
 
+TEST_CASE(SUITE("forwards transmitted data"))
+{
+    LinkLayerFixture fix;
+    fix.link.on_open();
+
+    Hex message("CA FE");
+    IDualLayer& link = fix.link;
+
+    for (int i = 0; i < 3; ++i)
+    {
+        REQUIRE(fix.upper.num_tx_ready == i);
+        REQUIRE(link.start_tx(message.as_rslice()));
+        REQUIRE(fix.lower.pop_tx_message() == "CA FE");
+        REQUIRE(fix.lower.num_tx_messages() == 0);
+
+        REQUIRE(link.on_tx_ready());
+        REQUIRE(fix.upper.num_tx_ready == i + 1);
+    }
+
+
+}
+
