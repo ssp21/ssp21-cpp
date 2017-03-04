@@ -9,14 +9,14 @@
 namespace ssp21
 {
 
-    class LinkLayer final : public IDualLayer, private LinkParser::IReporter
+    class LinkLayer final : public IUpperLayer, public ILowerLayer, private LinkParser::IReporter
     {
 
     public:
 
         LinkLayer(uint16_t local_addr, uint16_t remote_addr);
 
-        void bind(ILowerLayer& lower, IUpperLayer& upper) override
+        void bind(ILowerLayer& lower, IUpperLayer& upper)
         {
             this->lower = &lower;
             this->upper = &upper;
