@@ -34,12 +34,12 @@ namespace ssp21
 
         virtual ILowerLayer& get_lower() override
         {
-            return this->link;
+            return this->responder;
         }
 
         virtual IUpperLayer& get_upper() override
         {
-            return this->responder;
+            return this->link;
         }
 
     private:
@@ -77,12 +77,12 @@ namespace ssp21
 
         virtual ILowerLayer& get_lower() override
         {
-            return this->link;
+            return this->initiator;
         }
 
         virtual IUpperLayer& get_upper() override
         {
-            return this->initiator;
+            return this->link;
         }
 
     private:

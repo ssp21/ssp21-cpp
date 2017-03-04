@@ -45,8 +45,8 @@ TEST_CASE(SUITE("can transfer data bidirectionally multiple times"))
 
 void open_and_test_handshake(IntegrationFixture& fix)
 {
-    fix.responder->on_open();
-    fix.initiator->on_open();
+    fix.responder->get_upper().on_open();
+    fix.initiator->get_upper().on_open();
 
     REQUIRE_FALSE(fix.responder_upper.is_open());
     REQUIRE_FALSE(fix.initiator_upper.is_open());
@@ -65,8 +65,8 @@ void test_bidirectional_data_transfer(IntegrationFixture& fix, const seq32_t& da
     fix.responder_validator->expect(data);
     fix.initiator_validator->expect(data);
 
-    REQUIRE(fix.initiator->start_tx(data));
-    REQUIRE(fix.responder->start_tx(data));
+    REQUIRE(fix.initiator->get_lower().start_tx(data));
+    REQUIRE(fix.responder->get_lower().start_tx(data));
 
     REQUIRE(fix.exe->run_many() > 0);
 

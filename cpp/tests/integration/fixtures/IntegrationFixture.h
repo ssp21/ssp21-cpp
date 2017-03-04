@@ -7,9 +7,8 @@
 #include "testlib/MockExecutor.h"
 #include "testlib/MockLogHandler.h"
 
-#include "ssp21/crypto/Initiator.h"
-#include "ssp21/crypto/Responder.h"
-#include "ssp21/crypto/MessageOnlyFrameWriter.h"
+#include "ssp21/stack/Factory.h"
+#include "ssp21/crypto/Crypto.h"
 
 #include <stdexcept>
 #include <deque>
@@ -81,29 +80,29 @@ namespace ssp21
             const auto responder_priv = std::make_shared<const PrivateKey>(kp_responder.private_key);
             const auto initiator_priv = std::make_shared<const PrivateKey>(kp_initiator.private_key);
 
-            initiator = std::make_unique<Initiator>(
+            initiator = Factory::initiator(
+                            Addresses(1, 10),
                             InitiatorConfig(),
                             ilog.logger,
-                            std::make_shared<MessageOnlyFrameWriter>(ilog.logger),
                             exe,
                             Keys(initiator_pub, responder_pub, initiator_priv)
                         );
 
-            responder = std::make_unique<Responder>(
+            responder = Factory::responder(
+                            Addresses(10, 1),
                             ResponderConfig(),
                             rlog.logger,
-                            std::make_shared<MessageOnlyFrameWriter>(rlog.logger),
                             exe,
                             Keys(responder_pub, initiator_pub, responder_priv)
                         );
 
             // wire the lower layers together
-            initiator_lower.configure(*initiator, responder_lower);
-            responder_lower.configure(*responder, initiator_lower);
+            initiator_lower.configure(initiator->get_upper(), responder_lower);
+            responder_lower.configure(responder->get_upper(), initiator_lower);
 
             // wire the upper layers
-            initiator_upper.configure(*initiator);
-            responder_upper.configure(*responder);
+            initiator_upper.configure(initiator->get_lower());
+            responder_upper.configure(responder->get_lower());
 
             // wire the initiator and responder
             initiator->bind(initiator_lower, initiator_upper);
@@ -125,8 +124,8 @@ namespace ssp21
         UpperLayer initiator_upper;
         UpperLayer responder_upper;
 
-        std::unique_ptr<Initiator> initiator;
-        std::unique_ptr<Responder> responder;
+        std::shared_ptr<IStack> initiator;
+        std::shared_ptr<IStack> responder;
 
         const std::shared_ptr<SeqValidator> initiator_validator = SeqValidator::create();
         const std::shared_ptr<SeqValidator> responder_validator = SeqValidator::create();
