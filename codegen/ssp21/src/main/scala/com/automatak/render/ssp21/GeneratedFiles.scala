@@ -13,12 +13,12 @@ import com.automatak.render.ssp21.messages.generators.{BitfieldStructGenerator, 
 
 object GeneratedFiles {
 
-  def list: List[WriteCppFiles] = internalEnums ::: ssp21Enums ::: bitfiends ::: structs ::: messsages
+  def api: List[WriteCppFiles] = ssp21EnumsAPI
+  def impl : List[WriteCppFiles] = ssp21EnumsImpl ::: internalEnums ::: bitfiends ::: structs ::: messsages
 
   val basePath = "ssp21/crypto/gen/"
 
-  private def ssp21Enums = List(
-    CryptoFunction,
+  private def ssp21EnumsAPI = List(
     HandshakeHash,
     NonceMode,
     DHMode,
@@ -27,6 +27,10 @@ object GeneratedFiles {
     HandshakeError,
     HandshakeKDF,
     HandshakeMAC
+  ).map(x => EnumConfig(x, true, true)).map(e => EnumGenerator(e, Some(basePath)))
+
+  private def ssp21EnumsImpl = List(
+    CryptoFunction
   ).map(x => EnumConfig(x, true, true)).map(e => EnumGenerator(e, Some(basePath)))
 
   private def internalEnums = List(
