@@ -5,7 +5,7 @@
 #include "fixtures/IntegrationFixture.h"
 
 #include "ssp21/LogLevels.h"
-#include "ssp21/ConsolePrettyPrinter.h"
+#include "ssp21/util/ConsolePrettyPrinter.h"
 
 #define SUITE(name) "IntegrationTestSuite - " name
 
