@@ -18,7 +18,7 @@
 
 #include <cstdint>
 #include "openpal/util/Uncopyable.h"
-#include "ssp21/ErrorCategory.h"
+#include "ssp21/util/ErrorCategory.h"
 
 namespace ssp21 {
 
