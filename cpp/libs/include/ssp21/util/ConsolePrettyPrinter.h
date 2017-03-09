@@ -26,7 +26,7 @@ namespace ssp21
             size_t max_id_size = 10;
         };
 
-        ConsolePrettyPrinter(const Settings& settings = Settings()) : settings(settings) {}
+        explicit ConsolePrettyPrinter(const Settings& settings = Settings()) : settings(settings) {}
 
         virtual void log(openpal::ModuleId module, const char* id, openpal::LogLevel level, char const* location, char const* message) override;
 
