@@ -5,7 +5,7 @@
 #include "openpal/util/Uncopyable.h"
 #include "openpal/container/Buffer.h"
 
-#include "ssp21/SequenceTypes.h"
+#include "ssp21/util/SequenceTypes.h"
 
 #include "ssp21/link/Addresses.h"
 

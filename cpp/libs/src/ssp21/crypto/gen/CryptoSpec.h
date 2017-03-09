@@ -24,7 +24,7 @@
 #include "ssp21/crypto/gen/HandshakeKDF.h"
 #include "ssp21/crypto/gen/HandshakeMAC.h"
 #include "ssp21/crypto/gen/HandshakeHash.h"
-#include "ssp21/SequenceTypes.h"
+#include "ssp21/util/SequenceTypes.h"
 #include "ssp21/crypto/EnumField.h"
 #include "ssp21/crypto/IMessagePrinter.h"
 

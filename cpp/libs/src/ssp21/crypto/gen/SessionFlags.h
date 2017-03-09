@@ -18,7 +18,7 @@
 
 #include "ssp21/crypto/gen/ParseError.h"
 #include "ssp21/crypto/gen/FormatError.h"
-#include "ssp21/SequenceTypes.h"
+#include "ssp21/util/SequenceTypes.h"
 #include "ssp21/crypto/IMessagePrinter.h"
 
 namespace ssp21 {

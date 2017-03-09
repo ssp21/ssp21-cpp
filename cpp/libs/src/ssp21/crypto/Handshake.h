@@ -2,7 +2,7 @@
 #ifndef SSP21_HANDSHAKE_H
 #define SSP21_HANDSHAKE_H
 
-#include "ssp21/SequenceTypes.h"
+#include "ssp21/util/SequenceTypes.h"
 
 #include "ssp21/crypto/gen/HandshakeError.h"
 #include "ssp21/crypto/gen/RequestHandshakeBegin.h"

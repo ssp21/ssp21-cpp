@@ -2,7 +2,7 @@
 #ifndef SSP21_IMESSAGEPRINTER_H
 #define SSP21_IMESSAGEPRINTER_H
 
-#include "ssp21/SequenceTypes.h"
+#include "ssp21/util/SequenceTypes.h"
 
 namespace ssp21
 {

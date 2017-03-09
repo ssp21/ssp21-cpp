@@ -28,7 +28,7 @@ object Includes {
   val function = enum("Function")
 
   val errorCategory = ssp21("util/ErrorCategory")
-  val seqTypes = ssp21("SequenceTypes")
+  val seqTypes = ssp21("util/SequenceTypes")
 
   val imessage = crypto("IMessage")
   val enumField = crypto("EnumField")

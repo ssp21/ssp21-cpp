@@ -2,7 +2,7 @@
 #ifndef SSP21_IUPPERLAYER_H
 #define SSP21_IUPPERLAYER_H
 
-#include "ssp21/SequenceTypes.h"
+#include "ssp21/util/SequenceTypes.h"
 
 namespace ssp21
 {

@@ -1,7 +1,7 @@
 #ifndef SSP21_CASTAGNOLI_CRC32_H
 #define SSP21_CASTAGNOLI_CRC32_H
 
-#include "ssp21/SequenceTypes.h"
+#include "ssp21/util/SequenceTypes.h"
 
 #include <openpal/util/Uncopyable.h>
 

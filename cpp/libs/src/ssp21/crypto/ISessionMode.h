@@ -3,7 +3,7 @@
 #define SSP21_ISESSIONMODE_H
 
 
-#include "ssp21/SequenceTypes.h"
+#include "ssp21/util/SequenceTypes.h"
 #include "ssp21/crypto/BufferTypes.h"
 #include "ssp21/crypto/gen/SessionData.h"
 #include "ssp21/IFrameWriter.h"
