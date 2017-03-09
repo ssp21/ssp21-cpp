@@ -9,9 +9,7 @@ namespace ssp21
     /**
     * An implementation of HKDF based on some arbitrary mac_func_t
     *
-    * This is provided in the event that backends have the hash/hmac functions
-    * but do not implement HKDF internally.
-    *
+    * Libsodium does not implement HKDF internally.
     */
     template <mac_func_t mac_func>
     void hkdf(
