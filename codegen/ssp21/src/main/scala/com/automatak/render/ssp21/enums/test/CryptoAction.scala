@@ -21,8 +21,9 @@ object CryptoAction extends EnumModel {
     EnumValue("secure_equals", 0, ""),
     EnumValue("hash_sha256", 1, ""),
     EnumValue("hmac_sha256", 2, ""),
-    EnumValue("gen_keypair_x25519", 3, ""),
-    EnumValue("dh_x25519", 4, "")
+    EnumValue("hkdf_sha256", 3, ""),
+    EnumValue("gen_keypair_x25519", 4, ""),
+    EnumValue("dh_x25519", 5, "")
   )
 
 }

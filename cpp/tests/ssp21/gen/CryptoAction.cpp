@@ -27,6 +27,8 @@ const char* CryptoActionSpec::to_string(CryptoAction arg)
             return "hash_sha256";
         case(CryptoAction::hmac_sha256):
             return "hmac_sha256";
+        case(CryptoAction::hkdf_sha256):
+            return "hkdf_sha256";
         case(CryptoAction::gen_keypair_x25519):
             return "gen_keypair_x25519";
         case(CryptoAction::dh_x25519):

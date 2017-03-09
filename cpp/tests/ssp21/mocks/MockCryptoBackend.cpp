@@ -40,6 +40,20 @@ namespace ssp21
         output.set_type(BufferType::sha256);
     }
 
+    void MockCryptoBackend::hkdf_sha256(const seq8_t& chaining_key, std::initializer_list<seq32_t> input_key_material, SymmetricKey& key1, SymmetricKey& key2)
+    {
+        actions.push_back(CryptoAction::hkdf_sha256);
+
+        for (auto key :
+                {
+                    &key1, &key2
+                })
+        {
+            key->as_wseq().take(consts::crypto::sha256_hash_output_length).set_all_to(fill_byte);
+            key->set_type(BufferType::symmetric_key);
+        }
+    }
+
     void MockCryptoBackend::gen_keypair_x25519(KeyPair& pair)
     {
         actions.push_back(CryptoAction::gen_keypair_x25519);

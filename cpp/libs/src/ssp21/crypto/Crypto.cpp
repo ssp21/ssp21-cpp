@@ -3,8 +3,6 @@
 
 #include "ssp21/crypto/gen/CryptoError.h"
 
-#include "ssp21/crypto/HKDF.h"
-
 #include <assert.h>
 
 namespace ssp21
@@ -60,12 +58,13 @@ namespace ssp21
     }
 
     void Crypto::hkdf_sha256(
-        const seq8_t& chaining_key,
+        const seq8_t& salt,
         std::initializer_list<seq32_t> input_key_material,
         SymmetricKey& output1,
         SymmetricKey& output2)
     {
-        hkdf<hmac_sha256>(chaining_key, input_key_material, output1, output2);
+        assert(backend_);
+        backend_->hkdf_sha256(salt, input_key_material, output1, output2);
     }
 
     void Crypto::inititalize(ICryptoBackend& backend)

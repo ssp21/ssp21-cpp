@@ -4,6 +4,8 @@
 
 #include "ssp21/crypto/gen/CryptoError.h"
 
+#include "HKDF.h"
+
 #include <sodium.h>
 #include <assert.h>
 
@@ -48,7 +50,7 @@ namespace ssp21
             output.set_type(BufferType::sha256);
         }
 
-        void SodiumBackend::hmac_sha256(const seq8_t& key, std::initializer_list<seq32_t> data, SecureBuffer& output)
+        void SodiumBackend::hmac_sha256_impl(const seq8_t& key, std::initializer_list<seq32_t> data, SecureBuffer& output)
         {
             crypto_auth_hmacsha256_state state;
             crypto_auth_hmacsha256_init(&state, key, key.length());
@@ -62,6 +64,11 @@ namespace ssp21
             crypto_auth_hmacsha256_final(&state, output.as_wseq());
 
             output.set_type(BufferType::sha256);
+        }
+
+        void SodiumBackend::hkdf_sha256(const seq8_t& salt, std::initializer_list<seq32_t> input_key_material, SymmetricKey& key1, SymmetricKey& key2)
+        {
+            ssp21::hkdf<hmac_sha256_impl>(salt, input_key_material, key1, key2);
         }
 
         void SodiumBackend::gen_keypair_x25519(KeyPair& pair)

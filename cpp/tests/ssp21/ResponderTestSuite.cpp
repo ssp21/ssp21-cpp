@@ -362,11 +362,9 @@ void test_begin_handshake_success(ResponderFixture& fix, uint16_t max_nonce, uin
         CryptoAction::hash_sha256,			// mix ck of received message
         CryptoAction::hash_sha256,          // mix ck of transmitted message
         CryptoAction::dh_x25519,		    // 3 DH operations to calculate ak and ck
-        CryptoAction::dh_x25519,			//
-        CryptoAction::dh_x25519,			//
-        CryptoAction::hmac_sha256,			// 3 HMACs for the initial HKDF
-        CryptoAction::hmac_sha256,			//
-        CryptoAction::hmac_sha256			//
+        CryptoAction::dh_x25519,
+        CryptoAction::dh_x25519,
+        CryptoAction::hkdf_sha256
     });
 
     const auto reply = hex::reply_handshake_begin(hex::repeat(0xFF, consts::crypto::x25519_key_length));
@@ -392,9 +390,7 @@ void test_auth_handshake_success(ResponderFixture& fix)
         CryptoAction::hash_sha256,		// mix the received message
         CryptoAction::hmac_sha256,		// calculate reply value
         CryptoAction::hash_sha256,		// mix the reply
-        CryptoAction::hmac_sha256,		// 3 HMACs for the final HKDF to calculate session keys
-        CryptoAction::hmac_sha256,		//
-        CryptoAction::hmac_sha256		//
+        CryptoAction::hkdf_sha256
     });
 
     fix.set_tx_ready();

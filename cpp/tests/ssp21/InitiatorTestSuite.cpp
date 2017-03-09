@@ -244,10 +244,10 @@ void test_reply_handshake_begin(InitiatorFixture& fix)
         CryptoAction::dh_x25519,   // triple DH
         CryptoAction::dh_x25519,
         CryptoAction::dh_x25519,
-        CryptoAction::hmac_sha256, // KDF
+
+        CryptoAction::hkdf_sha256, // KDF        ,
         CryptoAction::hmac_sha256,
-        CryptoAction::hmac_sha256,
-        CryptoAction::hmac_sha256,
+
         CryptoAction::hash_sha256  // mix ck
     });
 
@@ -279,9 +279,7 @@ void test_reply_handshake_auth(InitiatorFixture& fix)
         CryptoAction::hmac_sha256, // authenticate
         CryptoAction::secure_equals,
         CryptoAction::hash_sha256, // mix ck
-        CryptoAction::hmac_sha256, // HKDF
-        CryptoAction::hmac_sha256,
-        CryptoAction::hmac_sha256
+        CryptoAction::hkdf_sha256
     });
 
     REQUIRE(fix.upper.get_is_open());

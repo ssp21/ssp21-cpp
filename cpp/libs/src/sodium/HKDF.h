@@ -2,7 +2,7 @@
 #ifndef SSP21_HKDF_H
 #define SSP21_HKDF_H
 
-#include "CryptoTypedefs.h"
+#include "ssp21/crypto/CryptoTypedefs.h"
 
 namespace ssp21
 {
@@ -15,14 +15,14 @@ namespace ssp21
     */
     template <mac_func_t mac_func>
     void hkdf(
-        const seq8_t& chaining_key,
+        const seq8_t& salt,
         std::initializer_list<seq32_t> input_key_material,
         SymmetricKey& output1,
         SymmetricKey& output2)
     {
         // extract
         HashOutput temp_key;
-        mac_func(chaining_key, input_key_material, temp_key);
+        mac_func(salt, input_key_material, temp_key);
 
         const uint8_t ONE = 0x01;
         const uint8_t TWO = 0x02;

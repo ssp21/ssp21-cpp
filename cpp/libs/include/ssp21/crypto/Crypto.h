@@ -44,9 +44,8 @@ namespace ssp21
             std::error_code& ec
         );
 
-        // HKDF using HMAC-SHA256
         static void hkdf_sha256(
-            const seq8_t& chaining_key,
+            const seq8_t& salt,
             std::initializer_list<seq32_t> input_key_material,
             SymmetricKey& key1,
             SymmetricKey& key2
