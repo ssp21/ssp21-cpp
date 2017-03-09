@@ -2,8 +2,7 @@
 #ifndef SSP21_ALGORITHMS_H
 #define SSP21_ALGORITHMS_H
 
-#include "CryptoTypedefs.h"
-
+#include "ssp21/crypto/CryptoTypedefs.h"
 #include "ssp21/crypto/NonceFunctions.h"
 #include "ssp21/crypto/SessionModes.h"
 #include "ssp21/crypto/HandshakeAuthentication.h"

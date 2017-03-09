@@ -2,7 +2,7 @@
 #ifndef SSP21_BUFFER_TYPES_H
 #define SSP21_BUFFER_TYPES_H
 
-#include "Constants.h"
+#include "ssp21/crypto/Constants.h"
 
 #include "ssp21/util/SequenceTypes.h"
 
