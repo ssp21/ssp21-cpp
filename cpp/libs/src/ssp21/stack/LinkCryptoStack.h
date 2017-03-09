@@ -6,7 +6,7 @@
 #include "ssp21/crypto/Responder.h"
 #include "ssp21/crypto/Initiator.h"
 #include "ssp21/link/LinkFrameWriter.h"
-#include "ssp21/IStack.h"
+#include "ssp21/stack/IStack.h"
 
 namespace ssp21
 {

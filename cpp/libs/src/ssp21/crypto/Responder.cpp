@@ -3,7 +3,7 @@
 
 #include "openpal/logging/LogMacros.h"
 
-#include "ssp21/LogLevels.h"
+#include "ssp21/stack/LogLevels.h"
 
 #include "ssp21/crypto/Crypto.h"
 #include "ssp21/crypto/ResponderHandshakeStates.h"

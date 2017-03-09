@@ -1,7 +1,7 @@
 
 #include "ssp21/util/ConsolePrettyPrinter.h"
 
-#include "ssp21/LogLevels.h"
+#include "ssp21/stack/LogLevels.h"
 
 #include <iostream>
 #include <chrono>

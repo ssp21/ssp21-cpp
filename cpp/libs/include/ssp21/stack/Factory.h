@@ -2,7 +2,8 @@
 #ifndef SSP21_FACTORY_H
 #define SSP21_FACTORY_H
 
-#include "ssp21/IStack.h"
+#include "ssp21/stack/IStack.h"
+
 #include "ssp21/crypto/CryptoLayerConfig.h"
 #include "ssp21/link/Addresses.h"
 #include "ssp21/crypto/Keys.h"

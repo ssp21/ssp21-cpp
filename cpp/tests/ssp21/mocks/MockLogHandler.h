@@ -4,7 +4,7 @@
 #include "openpal/logging/Logger.h"
 #include "openpal/util/Uncopyable.h"
 
-#include "ssp21/LogLevels.h"
+#include "ssp21/stack/LogLevels.h"
 
 #include "catch.hpp"
 

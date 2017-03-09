@@ -1,7 +1,7 @@
 #ifndef SSP21_LOWERLAYER_H
 #define SSP21_LOWERLAYER_H
 
-#include "ssp21/ILowerLayer.h"
+#include "ssp21/stack/ILowerLayer.h"
 
 #include "openpal/executor/IExecutor.h"
 #include "openpal/container/Buffer.h"

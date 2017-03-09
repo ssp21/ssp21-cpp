@@ -16,7 +16,7 @@
 #include "ssp21/crypto/gen/ReplyHandshakeAuth.h"
 #include "ssp21/crypto/gen/SessionData.h"
 
-#include "ssp21/ILowerLayer.h"
+#include "ssp21/stack/ILowerLayer.h"
 #include "ssp21/IFrameWriter.h"
 
 #include "openpal/executor/IExecutor.h"

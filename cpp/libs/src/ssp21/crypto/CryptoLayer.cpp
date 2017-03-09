@@ -2,7 +2,7 @@
 #include "ssp21/crypto/CryptoLayer.h"
 
 #include "ssp21/crypto/LogMessagePrinter.h"
-#include "ssp21/LogLevels.h"
+#include "ssp21/stack/LogLevels.h"
 
 #include "openpal/logging/LogMacros.h"
 

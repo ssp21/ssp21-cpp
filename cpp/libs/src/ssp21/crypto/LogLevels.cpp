@@ -1,6 +1,6 @@
 
 
-#include "ssp21/LogLevels.h"
+#include "ssp21/stack/LogLevels.h"
 
 namespace ssp21
 {

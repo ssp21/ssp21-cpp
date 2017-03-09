@@ -3,7 +3,7 @@
 
 #include "ssp21/crypto/InitiatorHandshakeStates.h"
 
-#include "ssp21/LogLevels.h"
+#include "ssp21/stack/LogLevels.h"
 
 using namespace openpal;
 
