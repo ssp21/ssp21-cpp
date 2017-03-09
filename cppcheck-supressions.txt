@@ -1,5 +1,1 @@
-passedByValue:cpp/libs/src/ssp21/crypto/CryptoLayer.cpp
-passedByValue:cpp/libs/src/ssp21/crypto/Initiator.cpp
-passedByValue:cpp/libs/src/ssp21/crypto/Responder.cpp
 unusedPrivateFunction:cpp/libs/include/ssp21/crypto/Initiator.h
-unusedFunction:cpp/libs/src/ssp21/link/LinkParser.cpp:31
