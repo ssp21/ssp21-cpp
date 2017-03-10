@@ -18,6 +18,7 @@ namespace ssp21
             const uint16_t header_fields_size = 8;
             const uint16_t header_total_size = header_fields_size + crc_size;
             const uint16_t min_frame_size = header_total_size + crc_size;
+            const uint16_t max_frame_size = min_frame_size + max_config_payload_size;
 
             //defaults
             const uint16_t default_responder_local_address = 1;
