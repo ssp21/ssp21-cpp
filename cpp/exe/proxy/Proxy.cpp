@@ -120,7 +120,7 @@ void Proxy::start_connect(asio::ip::tcp::socket accepted_socket)
                                          std::move(connect->get_upper_layer_socket(this->mode))
                                      ),
                                      factory(
-                                         this->logger.detach_and_append("-s-", id, "-crypto"),
+                                         this->logger.detach_and_append("-s-", id, "-ssp21"),
                                          this->executor
                                      )
                                  );

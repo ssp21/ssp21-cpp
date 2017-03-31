@@ -121,6 +121,8 @@ namespace ssp21
     {
         // TODO - evaluate the appropriate priority of these checks
 
+		SIMPLE_LOG_BLOCK(logger, levels::debug, "on tx ready");
+
         this->on_pre_tx_ready();
 
         if (this->tx_state.on_tx_complete())
