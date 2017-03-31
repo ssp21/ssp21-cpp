@@ -4,6 +4,8 @@ set(SSP21CPP_VERSION 0.0.1)
 
 include(${PROJECT_SOURCE_DIR}/cmake/settings.cmake)
 
+option(SSP21_PROXY "Build all the proxy" ON)
+
 include_directories(./cpp/libs/include)
 include_directories(./deps/openpal/cpp/libs/include)
 
@@ -32,6 +34,22 @@ set_target_properties(sodiumbackend PROPERTIES FOLDER libs)
 add_executable (keygen ./cpp/exe/keygen/main.cpp)
 target_link_libraries(keygen sodiumbackend)
 set_target_properties(keygen PROPERTIES FOLDER exe)
+
+# ---- proxy executable ----
+if(SSP21_PROXY)
+   
+   SET(ASIO_SUBMODULE_DIR "${PROJECT_SOURCE_DIR}/deps/asio/asio/include")
+   if (EXISTS "${ASIO_SUBMODULE_DIR}/asio.hpp")    
+       include_directories(${ASIO_SUBMODULE_DIR})
+   else()
+       message(FATAL_ERROR "ASIO has not been checked out as a submodule!")
+   endif()
+
+   file(GLOB_RECURSE proxy_SRC ./cpp/exe/proxy/*.cpp ./cpp/exe/proxy/*.h)
+   add_executable (ssp21-proxy ${proxy_SRC} ./deps/inih/ini.c)
+   add_definitions(-DASIO_STANDALONE)
+   target_include_directories(ssp21-proxy PRIVATE ./deps)
+endif()
 
 enable_testing()
 
