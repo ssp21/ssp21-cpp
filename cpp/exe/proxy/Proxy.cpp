@@ -7,7 +7,7 @@
 using namespace openpal;
 using namespace asio;
 
-Proxy::Server::Server(asio::io_context& context, const std::string& address, uint16_t port) :
+Proxy::Server::Server(asio::io_service& context, const std::string& address, uint16_t port) :
     local_endpoint(ip::address::from_string(address), port),
     acceptor(context),
     socket(context)

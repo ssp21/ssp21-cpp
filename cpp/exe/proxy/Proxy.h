@@ -20,7 +20,7 @@ class Proxy : private openpal::Uncopyable
 {
     struct Server
     {
-        Server(asio::io_context& context, const std::string& address, uint16_t port);
+        Server(asio::io_service& context, const std::string& address, uint16_t port);
 
         asio::ip::tcp::endpoint endpoint;
         asio::ip::tcp::acceptor acceptor;
@@ -31,7 +31,7 @@ class Proxy : private openpal::Uncopyable
 
     struct ConnectOperation
     {
-        ConnectOperation(asio::io_context& context, asio::ip::tcp::socket socket) : connect_socket(context), listen_socket(std::move(socket))
+        ConnectOperation(asio::io_service& context, asio::ip::tcp::socket socket) : connect_socket(context), listen_socket(std::move(socket))
         {}
 
         asio::ip::tcp::socket& get_lower_layer_socket(ProxyConfig::Mode mode)

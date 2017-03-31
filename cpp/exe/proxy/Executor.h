@@ -30,7 +30,7 @@ public:
         context.run();
     }
 
-    asio::io_context& get_context()
+    asio::io_service& get_context()
     {
         return context;
     }
@@ -39,7 +39,7 @@ private:
 
     openpal::ITimer* Executor::start(const std::chrono::steady_clock::time_point& expiration, const openpal::action_t& runnable);
 
-    asio::io_context context;
+    asio::io_service context;
 
 };
 
