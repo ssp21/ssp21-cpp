@@ -89,7 +89,7 @@ namespace ssp21
         void set_tx_ready()
         {
             lower.set_tx_ready(true);
-            responder.on_tx_ready();
+            responder.on_lower_tx_ready();
         }
 
         Responder responder;

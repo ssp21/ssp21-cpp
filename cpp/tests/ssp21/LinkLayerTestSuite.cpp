@@ -15,16 +15,16 @@ TEST_CASE(SUITE("forwards open/close"))
     LinkLayerFixture fix;
 
     REQUIRE_FALSE(fix.upper.get_is_open());
-    fix.link.on_open_from_lower();
+    fix.link.on_lower_open();
     REQUIRE(fix.upper.get_is_open());
-    fix.link.on_close_from_lower();
+    fix.link.on_lower_close();
     REQUIRE_FALSE(fix.upper.get_is_open());
 }
 
 TEST_CASE(SUITE("processes a valid frame"))
 {
     LinkLayerFixture fix;
-    fix.link.on_open_from_lower();
+    fix.link.on_lower_open();
     fix.lower.enqueue_message(hex::link_frame(10, 1, "CA FE"));
     REQUIRE(fix.upper.pop_rx_message() == "CA FE");
 }
@@ -32,7 +32,7 @@ TEST_CASE(SUITE("processes a valid frame"))
 TEST_CASE(SUITE("processes partial frames"))
 {
     LinkLayerFixture fix;
-    fix.link.on_open_from_lower();
+    fix.link.on_lower_open();
 
     const auto split_at = 3 * consts::link::header_total_size; // split the frame after the header
 
@@ -49,7 +49,7 @@ TEST_CASE(SUITE("processes partial frames"))
 TEST_CASE(SUITE("processes multiple frames received in a single chunk"))
 {
     LinkLayerFixture fix;
-    fix.link.on_open_from_lower();
+    fix.link.on_lower_open();
 
     const auto message1 = hex::link_frame(10, 1, "CA FE");
     const auto message2 = hex::link_frame(10, 1, "BA BE");
@@ -63,7 +63,7 @@ TEST_CASE(SUITE("processes multiple frames received in a single chunk"))
 TEST_CASE(SUITE("forwards transmitted data"))
 {
     LinkLayerFixture fix;
-    fix.link.on_open_from_lower();
+    fix.link.on_lower_open();
 
     Hex message("CA FE");
     IUpperLayer& link_upper = fix.link;
@@ -72,11 +72,11 @@ TEST_CASE(SUITE("forwards transmitted data"))
     for (int i = 0; i < 3; ++i)
     {
         REQUIRE(fix.upper.num_tx_ready == i);
-        REQUIRE(link_lower.start_tx(message.as_rslice()));
+        REQUIRE(link_lower.start_tx_from_upper(message.as_rslice()));
         REQUIRE(fix.lower.pop_tx_message() == "CA FE");
         REQUIRE(fix.lower.num_tx_messages() == 0);
 
-        REQUIRE(link_upper.on_tx_ready());
+        REQUIRE(link_upper.on_lower_tx_ready());
         REQUIRE(fix.upper.num_tx_ready == i + 1);
     }
 

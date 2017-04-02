@@ -4,6 +4,7 @@
 #include "openpal/util/Uncopyable.h"
 
 #include "ssp21/stack/ILowerLayer.h"
+#include "ssp21/stack/IUpperLayer.h"
 
 #include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
@@ -23,7 +24,12 @@ namespace ssp21
             this->upper = &upper;
         }
 
-        virtual bool start_tx(const seq32_t& message) override
+        virtual bool is_tx_ready() const override
+        {
+            return this->is_tx_ready_flag;
+        }
+
+        virtual bool start_tx_from_upper(const seq32_t& message) override
         {
             if (!this->is_tx_ready())
             {
@@ -35,25 +41,19 @@ namespace ssp21
             return true;
         }
 
-        virtual bool is_tx_ready() const override
+        virtual seq32_t start_rx_from_upper_impl() override
         {
-            return this->is_tx_ready_flag;
-        }
-
-        virtual void on_rx_ready_impl() override
-        {
-            if (!this->rx_messages.empty())
-            {
-                this->try_start_next_rx();
-            }
+            return this->rx_messages.empty() ? seq32_t::empty() : this->rx_messages.front()->as_rslice();
         }
 
         void enqueue_message(const std::string& hex)
         {
             openpal::Hex hexdata(hex);
             this->rx_messages.push_back(std::make_unique<message_t>(hexdata.as_rslice()));
-
-            this->try_start_next_rx();
+            if (!this->is_upper_processing_rx())
+            {
+                this->upper->on_lower_rx_ready();
+            }
         }
 
         size_t num_rx_messages() const
@@ -94,12 +94,7 @@ namespace ssp21
             }
         }
 
-        bool try_start_next_rx()
-        {
-            if (this->is_rx_processing()) return false;
-
-            return this->try_start_upper_rx(this->rx_messages.front()->as_rslice());
-        }
+        IUpperLayer* upper = nullptr;
 
         bool is_tx_ready_flag = true;
 

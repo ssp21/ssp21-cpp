@@ -41,14 +41,14 @@ namespace ssp21
             if (this->is_open_flag)
             {
                 this->is_open_flag = false;
-				this->on_lower_close_impl();
+                this->on_lower_close_impl();
                 return true;
             }
             else
             {
                 return false;
             }
-        }       
+        }
 
         /**
         * Called by the lower layer when ready to transmit data
@@ -68,23 +68,23 @@ namespace ssp21
             }
         }
 
-		/**
-		* Called by the lower layer when there is new data ready to receive
-		*
-		* @return true if the layer is open, false if closed
-		*/
-		inline bool on_lower_rx_ready()
-		{
-			if (this->is_open_flag)
-			{
-				this->on_lower_rx_ready_impl();
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
+        /**
+        * Called by the lower layer when there is new data ready to receive
+        *
+        * @return true if the layer is open, false if closed
+        */
+        inline bool on_lower_rx_ready()
+        {
+            if (this->is_open_flag)
+            {
+                this->on_lower_rx_ready_impl();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         /**
         * @return true if the layer is open, false if closed.
@@ -102,7 +102,7 @@ namespace ssp21
 
         virtual void on_lower_tx_ready_impl() = 0;
 
-		virtual void on_lower_rx_ready_impl() = 0;
+        virtual void on_lower_rx_ready_impl() = 0;
 
     private:
 

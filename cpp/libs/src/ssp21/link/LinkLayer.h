@@ -23,20 +23,20 @@ namespace ssp21
             this->upper = &upper;
         }
 
-    private:		
+    private:
 
         // ---- IUpperLayer ----
 
-		virtual void on_lower_open_impl() override;
-		virtual void on_lower_close_impl() override;
-		virtual void on_lower_tx_ready_impl() override;
-		virtual void on_lower_rx_ready_impl() override;
+        virtual void on_lower_open_impl() override;
+        virtual void on_lower_close_impl() override;
+        virtual void on_lower_tx_ready_impl() override;
+        virtual void on_lower_rx_ready_impl() override;
 
         // ---- ILowerLayer ----
         virtual bool is_tx_ready() const override;
-		virtual bool start_tx_from_upper(const seq32_t& data) override;
+        virtual bool start_tx_from_upper(const seq32_t& data) override;
         virtual void discard_rx_data() override;
-		virtual bool start_rx_from_upper_impl(seq32_t& data) override;
+        virtual seq32_t start_rx_from_upper_impl() override;
 
         // ---- LinkParser::IReporter ----
 
@@ -44,16 +44,20 @@ namespace ssp21
         virtual void on_bad_body_crc(uint32_t expected, uint32_t actual) override {}
         virtual void on_bad_body_length(uint32_t max_allowed, uint32_t actual) override {}
 
-		// ---- private helpers ----
+        // ---- private helpers ----
 
-		bool try_read_from_lower();
-		bool process_remainder();
+        bool get_frame();
+
+        // return true to continue
+        bool read_frame_one_iteration();
+
+        bool parse(seq32_t& data);
 
         ILowerLayer* lower = nullptr;
-		IUpperLayer* upper = nullptr;
+        IUpperLayer* upper = nullptr;
 
         const uint16_t local_addr;
-        const uint16_t remote_addr;        
+        const uint16_t remote_addr;
 
         seq32_t remainder;
         LinkParser parser;

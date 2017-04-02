@@ -46,6 +46,16 @@ namespace ssp21
         }
     }
 
+    seq32_t CryptoLayer::start_rx_from_upper_impl()
+    {
+        if (this->reassembler.has_data()) return this->reassembler.get_data();
+        else
+        {
+            this->try_read_from_lower();
+            return seq32_t::empty();
+        }
+    }
+
     bool CryptoLayer::is_tx_ready() const
     {
         /*
@@ -98,8 +108,8 @@ namespace ssp21
 
     void CryptoLayer::on_lower_rx_ready_impl()
     {
-		this->try_read_from_lower();
-    }	
+        this->try_read_from_lower();
+    }
 
     void CryptoLayer::on_lower_tx_ready_impl()
     {
@@ -118,33 +128,33 @@ namespace ssp21
             this->upper->on_lower_tx_ready();
         }
 
-		this->try_read_from_lower();
+        this->try_read_from_lower();
 
         this->check_transmit();
     }
 
-	void CryptoLayer::try_read_from_lower()
-	{		
-		while (this->try_read_one_from_lower());
-	}	
+    void CryptoLayer::try_read_from_lower()
+    {
+        while (this->try_read_one_from_lower());
+    }
 
-	bool CryptoLayer::try_read_one_from_lower()
-	{
-		/**
-		* We can only read data if
-		*
-		* 1) We can immediately transmit a reply if required
-		* 2) There isn't unread session data buffered for the upper layer
-		*
-		*/
-		if (!this->lower->is_tx_ready() || this->reassembler.has_data()) return false;
-		
-		seq32_t message;
-		if (!this->lower->start_rx_from_upper(message)) return false;
+    bool CryptoLayer::try_read_one_from_lower()
+    {
+        /**
+        * We can only read data if
+        *
+        * 1) We can immediately transmit a reply if required
+        * 2) There isn't unread session data buffered for the upper layer
+        *
+        */
+        if (!this->lower->is_tx_ready() || this->reassembler.has_data()) return false;
 
-		this->process(message);
-		return true;
-	}
+        const seq32_t message = this->lower->start_rx_from_upper();
+        if (message.is_empty()) return false;
+
+        this->process(message);
+        return true;
+    }
 
     void CryptoLayer::process(const seq32_t& message)
     {
@@ -243,14 +253,14 @@ namespace ssp21
             break; // do nothing
 
         case(ReassemblyResult::complete):
-			this->upper->on_lower_rx_ready();
+            this->upper->on_lower_rx_ready();
             break;
 
         default: // error
             FORMAT_LOG_BLOCK(this->logger, levels::warn, "reassembly error: %s", ReassemblyResultSpec::to_string(result));
             break;
         }
-    }   
+    }
 
 
 }

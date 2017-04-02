@@ -14,12 +14,12 @@ namespace ssp21
 
     public:
 
-		/**
-		*   Check the transmit readiness of the layer
-		*
-		*   @return true if ready to start_tx(..) will succeed, false if it will fail
-		*/
-		virtual bool is_tx_ready() const = 0;
+        /**
+        *   Check the transmit readiness of the layer
+        *
+        *   @return true if ready to start_tx(..) will succeed, false if it will fail
+        */
+        virtual bool is_tx_ready() const = 0;
 
         /**
         *
@@ -29,17 +29,16 @@ namespace ssp21
         *
         *   @param data bytes to be transmitted
         */
-        virtual bool start_tx_from_upper(const seq32_t& data) = 0;       
+        virtual bool start_tx_from_upper(const seq32_t& data) = 0;
 
         /**
-        *  Called by the upper layer when its ready to receive the next chunk of data. Any previously received slices are no longer valid, 
-		*  and the underlying buffers may once again be mutated.z
-		* 
-		*  @param (output) reference to the slice of data if return value is true
-		*  @return true if there is data to be read, false otherwise
-		*
+        *  Called by the upper layer when its ready to receive the next chunk of data. Returned
+        *  slices remain valid until the next call or until the upper layer is closed.
+        *
+        *  @return A (possibly empty) slice
+        *
         */
-        inline bool start_rx_from_upper(seq32_t& data)
+        inline seq32_t start_rx_from_upper()
         {
             if (this->upper_is_processing_rx_data)
             {
@@ -47,23 +46,24 @@ namespace ssp21
                 this->upper_is_processing_rx_data = false;
             }
 
-			if (this->start_rx_from_upper_impl(data))
-			{
-				this->upper_is_processing_rx_data = true;
-				return true;
-			}
+            const auto ret = this->start_rx_from_upper_impl();
 
-			return false;
+            if (ret.is_not_empty())
+            {
+                this->upper_is_processing_rx_data = true;
+            }
+
+            return ret;
         }
 
-    protected:        
+    protected:
 
         /**
         * Called when a previous start_rx_from_upper operation completes
         */
         virtual void discard_rx_data() = 0;
 
-        virtual bool start_rx_from_upper_impl(seq32_t& data) = 0;
+        virtual seq32_t start_rx_from_upper_impl() = 0;
 
         inline void reset_this_lower_layer()
         {

@@ -36,7 +36,7 @@ TEST_CASE(SUITE("goes to bad_configuration state if algorithms aren't supported"
     config.suite.dh_mode = DHMode::undefined;
 
     InitiatorFixture fix(config);
-    fix.initiator.on_open_from_lower();
+    fix.initiator.on_lower_open();
     REQUIRE(fix.initiator.get_state_enum() == HandshakeState::bad_configuration);
     REQUIRE(fix.exe->num_pending_timers() == 0);
     REQUIRE(fix.lower.num_tx_messages() == 0);
@@ -57,7 +57,7 @@ TEST_CASE(SUITE("stops timer when closed"))
 {
     InitiatorFixture fix;
     test_open(fix);
-    fix.initiator.on_close_from_lower();
+    fix.initiator.on_lower_close();
     REQUIRE(fix.exe->num_active() == 0);
 }
 
@@ -177,7 +177,7 @@ void test_open(InitiatorFixture& fix)
     REQUIRE(fix.lower.num_tx_messages() == 0);
     MockCryptoBackend::instance.expect_empty();
 
-    fix.initiator.on_open_from_lower();
+    fix.initiator.on_lower_open();
 
     test_request_handshake_begin(fix);
 }

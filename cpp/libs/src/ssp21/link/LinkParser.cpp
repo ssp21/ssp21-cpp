@@ -34,11 +34,11 @@ namespace ssp21
     }
 
     bool LinkParser::parse(seq32_t& input)
-    {		
+    {
         this->state = parse_many(this->state, this->context, input);
 
         return state.value == State::Value::wait_read;
-    }	
+    }
 
     LinkParser::State LinkParser::parse_many(const State& state, Context& ctx, seq32_t& input)
     {

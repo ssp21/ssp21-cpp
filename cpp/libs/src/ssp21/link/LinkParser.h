@@ -36,23 +36,23 @@ namespace ssp21
 
         void reset();
 
-        bool parse(seq32_t& input);	        
+        bool parse(seq32_t& input);
 
         bool read(Result& result) const
         {
-			if (!this->state.is_wait_read())
-			{
-				return false;
-			}
+            if (!this->state.is_wait_read())
+            {
+                return false;
+            }
 
-			result = this->context.result;
-			return true;
+            result = this->context.result;
+            return true;
         }
 
-		bool has_result() const
-		{
-			return this->state.is_wait_read();
-		}
+        bool has_result() const
+        {
+            return this->state.is_wait_read();
+        }
 
     private:
 

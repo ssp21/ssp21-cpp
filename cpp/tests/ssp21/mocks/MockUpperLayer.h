@@ -56,32 +56,30 @@ namespace ssp21
 
         ILowerLayer* lower = nullptr;
 
-        virtual void on_open_from_lower_impl() override
+        virtual void on_lower_open_impl() override
         {
             this->is_open = true;
         }
 
-        virtual void on_close_from_lower_impl() override
+        virtual void on_lower_close_impl() override
         {
             this->is_open = false;
         }
 
-        virtual void on_tx_ready_impl() override
+        virtual void on_lower_tx_ready_impl() override
         {
             ++num_tx_ready;
         }
 
-        virtual void start_rx_impl(const seq32_t& data) override
+        virtual void on_lower_rx_ready_impl() override
         {
-            this->rx_messages.push_back(to_hex(data));
-
-            // TODO - provide an option to differ this behavior
-            this->lower->on_rx_ready();
-        }
-
-        virtual bool is_rx_ready_impl() override
-        {
-            return true;  // TODO
+            // read all available data
+            const auto data = this->lower->start_rx_from_upper();
+            if (data.is_not_empty())
+            {
+                this->rx_messages.push_back(to_hex(data));
+                this->on_lower_rx_ready_impl();
+            }
         }
 
     };

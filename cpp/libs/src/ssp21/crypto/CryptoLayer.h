@@ -47,16 +47,16 @@ namespace ssp21
             this->lower = &lower;
             this->upper = &upper;
         }
-       
+
+        // ---- final implementations from ILowerLayer -----
+
+        virtual bool start_tx_from_upper(const seq32_t& data) override final;
+
     protected:
 
-		// ---- final implementations from ILowerLayer -----
+        virtual bool is_tx_ready() const override final;
 
-		virtual bool start_tx_from_upper(const seq32_t& data) override final;
-
-		virtual bool is_tx_ready() const override final;
-
-		virtual bool start_rx_from_upper_impl(seq32_t& data) override final;
+        virtual seq32_t start_rx_from_upper_impl() override final;
 
         virtual void discard_rx_data() override final;
 
@@ -64,9 +64,9 @@ namespace ssp21
 
         virtual void on_lower_close_impl() override final;
 
-        virtual void on_lower_tx_ready_impl() override final; 
+        virtual void on_lower_tx_ready_impl() override final;
 
-		virtual void on_lower_rx_ready_impl() override final;
+        virtual void on_lower_rx_ready_impl() override final;
 
         // ------ methods to be overriden by super class ------
 
@@ -115,13 +115,13 @@ namespace ssp21
         TxState tx_state;
 
         ILowerLayer* lower = nullptr;
-		IUpperLayer* upper = nullptr;
+        IUpperLayer* upper = nullptr;
 
     private:
 
-		void try_read_from_lower();		
+        void try_read_from_lower();
 
-		bool try_read_one_from_lower();
+        bool try_read_one_from_lower();
 
         // ------ private helper methods ------
 
@@ -138,7 +138,7 @@ namespace ssp21
             return this->session.is_valid() && this->lower->is_tx_ready() && this->tx_state.is_ready_tx();
         }
 
-        void check_transmit();       
+        void check_transmit();
 
         template <class MsgType>
         bool handle_message(const seq32_t& message, const openpal::Timestamp& now);
