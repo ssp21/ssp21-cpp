@@ -15,7 +15,7 @@ TEST_CASE(SUITE("forwards open/close"))
     LinkLayerFixture fix;
 
     REQUIRE_FALSE(fix.upper.get_is_open());
-    fix.link.on_open();
+    fix.link.on_open_from_lower();
     REQUIRE(fix.upper.get_is_open());
     fix.link.on_close();
     REQUIRE_FALSE(fix.upper.get_is_open());
@@ -24,7 +24,7 @@ TEST_CASE(SUITE("forwards open/close"))
 TEST_CASE(SUITE("processes a valid frame"))
 {
     LinkLayerFixture fix;
-    fix.link.on_open();
+    fix.link.on_open_from_lower();
     fix.lower.enqueue_message(hex::link_frame(10, 1, "CA FE"));
     REQUIRE(fix.upper.pop_rx_message() == "CA FE");
 }
@@ -32,7 +32,7 @@ TEST_CASE(SUITE("processes a valid frame"))
 TEST_CASE(SUITE("processes partial frames"))
 {
     LinkLayerFixture fix;
-    fix.link.on_open();
+    fix.link.on_open_from_lower();
 
     const auto split_at = 3 * consts::link::header_total_size; // split the frame after the header
 
@@ -49,7 +49,7 @@ TEST_CASE(SUITE("processes partial frames"))
 TEST_CASE(SUITE("processes multiple frames received in a single chunk"))
 {
     LinkLayerFixture fix;
-    fix.link.on_open();
+    fix.link.on_open_from_lower();
 
     const auto message1 = hex::link_frame(10, 1, "CA FE");
     const auto message2 = hex::link_frame(10, 1, "BA BE");
@@ -63,7 +63,7 @@ TEST_CASE(SUITE("processes multiple frames received in a single chunk"))
 TEST_CASE(SUITE("forwards transmitted data"))
 {
     LinkLayerFixture fix;
-    fix.link.on_open();
+    fix.link.on_open_from_lower();
 
     Hex message("CA FE");
     IUpperLayer& link_upper = fix.link;

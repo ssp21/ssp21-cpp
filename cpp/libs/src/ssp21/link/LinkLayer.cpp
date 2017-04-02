@@ -10,9 +10,9 @@ namespace ssp21
         parser(ssp21::consts::link::max_config_payload_size, *this)
     {}
 
-    void LinkLayer::on_open_impl()
+    void LinkLayer::on_open_from_lower_impl()
     {
-        upper->on_open();
+        upper->on_open_from_lower();
     }
 
     void LinkLayer::on_close_impl()

@@ -56,7 +56,7 @@ namespace ssp21
 
         ILowerLayer* lower = nullptr;
 
-        virtual void on_open_impl() override
+        virtual void on_open_from_lower_impl() override
         {
             this->is_open = true;
         }

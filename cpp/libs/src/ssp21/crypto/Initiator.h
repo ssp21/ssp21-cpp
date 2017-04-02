@@ -106,7 +106,7 @@ namespace ssp21
 
         // ---- final implementations from IUpperLayer ----
 
-        virtual void on_open_impl() override;
+        virtual void on_open_from_lower_impl() override;
 
         // ---- implement CryptoLayer -----
 

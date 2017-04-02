@@ -106,7 +106,7 @@ namespace ssp21
 
         ctx.lower->start_tx(res.frame);
 
-        ctx.upper->on_open();
+        ctx.upper->on_open_from_lower();
 
         return ResponderHandshake::Idle::get();
     }

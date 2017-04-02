@@ -19,14 +19,14 @@ void test_handshake_error(ResponderFixture& fix, const std::string& request, Han
 TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_BEGIN with REPLY_HANDSHAKE_BEGIN"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_open_from_lower();
     test_begin_handshake_success(fix);
 }
 
 TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_AUTH with no_prior_handshake error"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_open_from_lower();
 
     const auto request = hex::request_handshake_auth(hex::repeat(0xFF, consts::crypto::sha256_hash_output_length));
     test_handshake_error(fix, request, HandshakeError::no_prior_handshake_begin, {});
@@ -35,14 +35,14 @@ TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_AUTH with no_prior_handshake erro
 TEST_CASE(SUITE("responds to malformed handshake begin with bad_message_format"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_open_from_lower();
     test_handshake_error(fix, "00", HandshakeError::bad_message_format, {});
 }
 
 TEST_CASE(SUITE("responds to invalid key length with bad_message_format"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_open_from_lower();
 
     const auto request = hex::request_handshake_begin(
                              0,
@@ -64,7 +64,7 @@ TEST_CASE(SUITE("responds to invalid key length with bad_message_format"))
 TEST_CASE(SUITE("ignores user data without a session"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_open_from_lower();
 
     const auto request = hex::session_data(1, 0, true, true, "CA FE", hex::repeat(0xFF, 16));
     fix.lower.enqueue_message(request);
@@ -79,7 +79,7 @@ TEST_CASE(SUITE("ignores user data without a session"))
 TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_AUTH with REPLY_HANDSHAKE_AUTH"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_open_from_lower();
 
     REQUIRE_FALSE(fix.upper.get_is_open());
     test_init_session_success(fix);
@@ -89,7 +89,7 @@ TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_AUTH with REPLY_HANDSHAKE_AUTH"))
 TEST_CASE(SUITE("responds to auth request w/ invalid HMAC"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_open_from_lower();
 
     test_begin_handshake_success(fix);
 
@@ -100,7 +100,7 @@ TEST_CASE(SUITE("responds to auth request w/ invalid HMAC"))
 TEST_CASE(SUITE("responds to auth request with insufficient hmac size with authentication error"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_open_from_lower();
 
     test_begin_handshake_success(fix);
 
@@ -111,7 +111,7 @@ TEST_CASE(SUITE("responds to auth request with insufficient hmac size with authe
 TEST_CASE(SUITE("handshake process can be repeated"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_open_from_lower();
 
     for (int i = 0; i < 3; ++i)
     {
@@ -123,7 +123,7 @@ TEST_CASE(SUITE("handshake process can be repeated"))
 TEST_CASE(SUITE("begin handshake can be repeated prior to auth handshake"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_open_from_lower();
 
     test_begin_handshake_success(fix);
     test_begin_handshake_success(fix);
@@ -136,7 +136,7 @@ TEST_CASE(SUITE("begin handshake can be repeated prior to auth handshake"))
 TEST_CASE(SUITE("closing the responder closes the upper layer"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_open_from_lower();
 
     test_init_session_success(fix);
     REQUIRE(fix.upper.get_is_open());
@@ -147,7 +147,7 @@ TEST_CASE(SUITE("closing the responder closes the upper layer"))
 TEST_CASE(SUITE("auth fails if insufficient data for tag"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_open_from_lower();
 
     test_init_session_success(fix);
 
@@ -163,7 +163,7 @@ TEST_CASE(SUITE("auth fails if insufficient data for tag"))
 TEST_CASE(SUITE("auth fails if TTL expired"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_open_from_lower();
 
     test_init_session_success(fix);
 
@@ -181,7 +181,7 @@ TEST_CASE(SUITE("auth fails if TTL expired"))
 TEST_CASE(SUITE("auth fails on nonce of zero"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_open_from_lower();
 
     test_init_session_success(fix);
 
@@ -197,7 +197,7 @@ TEST_CASE(SUITE("auth fails on nonce of zero"))
 TEST_CASE(SUITE("fails on empty user data"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_open_from_lower();
 
     test_init_session_success(fix);
 
@@ -214,7 +214,7 @@ TEST_CASE(SUITE("fails on empty user data"))
 TEST_CASE(SUITE("can authenticate session data"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_open_from_lower();
 
     test_init_session_success(fix);
 
@@ -232,7 +232,7 @@ TEST_CASE(SUITE("can authenticate session data"))
 TEST_CASE(SUITE("can authenticate multiple messages"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_open_from_lower();
 
     test_init_session_success(fix);
 
@@ -263,7 +263,7 @@ TEST_CASE(SUITE("won't transmit if offline"))
 TEST_CASE(SUITE("won't transmit if no session"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_open_from_lower();
     Hex msg("");
 
     REQUIRE_FALSE(fix.responder.start_tx(msg));
@@ -272,7 +272,7 @@ TEST_CASE(SUITE("won't transmit if no session"))
 TEST_CASE(SUITE("can transmit multiple messages if session is initialized"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_open_from_lower();
     test_init_session_success(fix);
 
     const auto payload = "CA FE";
@@ -296,7 +296,7 @@ TEST_CASE(SUITE("can transmit multiple messages if session is initialized"))
 TEST_CASE(SUITE("closes upper layer if nonce exceeds configured maximum"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_open_from_lower();
     test_init_session_success(fix, 0); //set max nonce to zero
 
     const auto payload = "CA FE";
@@ -310,7 +310,7 @@ TEST_CASE(SUITE("closes upper layer if nonce exceeds configured maximum"))
 TEST_CASE(SUITE("defers transmission if lower layer is not tx_ready"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_open_from_lower();
     test_init_session_success(fix);
 
     const auto payload = "CA FE";

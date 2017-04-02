@@ -45,8 +45,8 @@ TEST_CASE(SUITE("can transfer data bidirectionally multiple times"))
 
 void open_and_test_handshake(IntegrationFixture& fix)
 {
-    fix.responder->get_upper().on_open();
-    fix.initiator->get_upper().on_open();
+    fix.responder->get_upper().on_open_from_lower();
+    fix.initiator->get_upper().on_open_from_lower();
 
     REQUIRE_FALSE(fix.responder_upper.is_open());
     REQUIRE_FALSE(fix.initiator_upper.is_open());

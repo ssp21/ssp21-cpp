@@ -19,7 +19,7 @@ namespace ssp21
         *
         * @return false if the layer is already open, true otherwise
         */
-        inline bool on_open()
+        inline bool on_open_from_lower()
         {
             if (this->is_open_flag)
             {
@@ -28,7 +28,7 @@ namespace ssp21
             else
             {
                 this->is_open_flag = true;
-                this->on_open_impl();
+                this->on_open_from_lower_impl();
                 return true;
             }
         }
@@ -110,7 +110,7 @@ namespace ssp21
 
     protected:
 
-        virtual void on_open_impl() = 0;
+        virtual void on_open_from_lower_impl() = 0;
 
         virtual void on_close_impl() = 0;
 

@@ -23,7 +23,7 @@ private:
 
     // --- IUpperLayer ---
 
-    virtual void on_open_impl() override
+    virtual void on_open_from_lower_impl() override
     {
         this->start_rx_from_socket();
     }

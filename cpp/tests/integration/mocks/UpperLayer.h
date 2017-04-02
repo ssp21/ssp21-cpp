@@ -32,7 +32,7 @@ namespace ssp21
 
     private:
 
-        virtual void on_open_impl() override {}
+        virtual void on_open_from_lower_impl() override {}
 
         virtual void on_close_impl() override {}
 

@@ -19,7 +19,7 @@ public:
     {
         this->upper = &upper;
         this->start_rx_from_socket();
-        this->upper->on_open();
+        this->upper->on_open_from_lower();
     }
 
     bool close()
