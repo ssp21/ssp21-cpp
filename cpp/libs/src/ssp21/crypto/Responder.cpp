@@ -36,7 +36,7 @@ namespace ssp21
         const auto res = this->frame_writer->write(msg);
         if (!res.is_error())
         {
-            this->lower->start_tx(res.frame);
+            this->lower->start_tx_from_upper(res.frame);
         }
     }
 

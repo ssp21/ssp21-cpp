@@ -23,22 +23,22 @@ namespace ssp21
     {}
 
     LinkParser::LinkParser(uint16_t max_payload_length, IReporter& reporter) :
-        context_(max_payload_length, reporter)
+        context(max_payload_length, reporter)
     {
 
     }
 
     void LinkParser::reset()
     {
-        this->state_ = State::wait_sync1();
+        this->state = State::wait_sync1();
     }
 
     bool LinkParser::parse(seq32_t& input)
-    {
-        this->state_ = parse_many(this->state_, this->context_, input);
+    {		
+        this->state = parse_many(this->state, this->context, input);
 
-        return state_.value == State::Value::wait_read;
-    }
+        return state.value == State::Value::wait_read;
+    }	
 
     LinkParser::State LinkParser::parse_many(const State& state, Context& ctx, seq32_t& input)
     {

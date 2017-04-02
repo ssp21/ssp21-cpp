@@ -59,7 +59,7 @@ namespace ssp21
 
         ctx.handshake.begin_handshake(request, result.written);
 
-        ctx.lower->start_tx(result.frame);
+        ctx.lower->start_tx_from_upper(result.frame);
 
         // record when we transmited the request so we can estimate the time base later
         ctx.request_handshake_begin_time_tx = ctx.executor->get_time();
@@ -106,7 +106,7 @@ namespace ssp21
 
         ctx.handshake.mix_ck(result.written);
 
-        ctx.lower->start_tx(result.frame);
+        ctx.lower->start_tx_from_upper(result.frame);
 
         ctx.start_response_timer();
 
@@ -165,7 +165,7 @@ namespace ssp21
             ctx.on_handshake_required();
         });
 
-        ctx.upper->on_open_from_lower();
+        ctx.upper->on_lower_open();
 
         return Idle::get();
     }

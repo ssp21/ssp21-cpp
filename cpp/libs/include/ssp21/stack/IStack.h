@@ -3,6 +3,7 @@
 #define SSP21_ISTACK_H
 
 #include "ILowerLayer.h"
+#include "IUpperLayer.h"
 
 namespace ssp21
 {

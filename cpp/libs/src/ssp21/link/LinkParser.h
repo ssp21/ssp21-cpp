@@ -36,32 +36,23 @@ namespace ssp21
 
         void reset();
 
-        bool parse(seq32_t& input);
+        bool parse(seq32_t& input);	        
 
-        template <class Fun>
-        bool read(const Fun& fun)
+        bool read(Result& result) const
         {
-            if (!this->state_.is_wait_read())
-            {
-                return false;
-            }
+			if (!this->state.is_wait_read())
+			{
+				return false;
+			}
 
-            this->state_ = State::wait_sync1();
-
-            fun(this->context_.result);
-
-            return true;
+			result = this->context.result;
+			return true;
         }
 
-        bool read(Result& result)
-        {
-            auto fun = [&result](const Result & m) -> void
-            {
-                result = m;
-            };
-
-            return read(fun);
-        }
+		bool has_result() const
+		{
+			return this->state.is_wait_read();
+		}
 
     private:
 
@@ -143,9 +134,9 @@ namespace ssp21
 
         LinkParser() = delete;
 
-        Context context_;
+        Context context;
 
-        State state_ = State::wait_sync1();
+        State state = State::wait_sync1();
 
     };
 

@@ -27,19 +27,12 @@ namespace ssp21
         reassembler(context_config.max_reassembly_size)
     {}
 
-    void CryptoLayer::on_rx_ready_impl()
-    {
-        this->try_start_rx();
-
-        this->lower->on_rx_ready();
-    }
-
     void CryptoLayer::discard_rx_data()
     {
         this->reassembler.reset();
     }
 
-    bool CryptoLayer::start_tx(const seq32_t& data)
+    bool CryptoLayer::start_tx_from_upper(const seq32_t& data)
     {
         if (this->is_tx_ready())
         {
@@ -91,56 +84,67 @@ namespace ssp21
         }
     }
 
-    void CryptoLayer::on_close_from_lower_impl()
+    void CryptoLayer::on_lower_close_impl()
     {
         // let the super class reset
         this->reset_state_on_close_from_lower();
 
         this->session.reset();
         this->reassembler.reset();
-        this->upper->on_close_from_lower();
+        this->upper->on_lower_close();
         this->tx_state.reset();
         this->reset_this_lower_layer();
     }
 
-    void CryptoLayer::start_rx_impl(const seq32_t& data)
+    void CryptoLayer::on_lower_rx_ready_impl()
     {
-        // completely process the data, possibly responding
-        this->process(data);
+		this->try_read_from_lower();
+    }	
 
-        // tell the lower layer that we're ready for another message
-        this->lower->on_rx_ready();
-    }
-
-    bool CryptoLayer::is_rx_ready_impl()
-    {
-        return this->lower->is_tx_ready() && !this->reassembler.has_data();
-    }
-
-    void CryptoLayer::on_tx_ready_impl()
+    void CryptoLayer::on_lower_tx_ready_impl()
     {
         // TODO - evaluate the appropriate priority of these checks
 
         const bool user_data_tx_complete = this->tx_state.on_tx_complete();
-        const bool upper_rx_processing = this->is_rx_processing();
+        const bool upper_rx_processing = this->is_upper_processing_rx();
 
-        FORMAT_LOG_BLOCK(logger, levels::debug, "on tx ready, tx_complete = %d rx_processing = %d", user_data_tx_complete, upper_rx_processing);
+        FORMAT_LOG_BLOCK(logger, levels::debug, "on tx ready, user tx complete = %d rx processing = %d", user_data_tx_complete, upper_rx_processing);
 
         this->on_pre_tx_ready();
 
         if (user_data_tx_complete)
         {
             // ready to transmit more data
-            this->upper->on_tx_ready();
+            this->upper->on_lower_tx_ready();
         }
 
-        if (!upper_rx_processing)
-        {
-            this->lower->on_rx_ready();
-        }
+		this->try_read_from_lower();
 
         this->check_transmit();
     }
+
+	void CryptoLayer::try_read_from_lower()
+	{		
+		while (this->try_read_one_from_lower());
+	}	
+
+	bool CryptoLayer::try_read_one_from_lower()
+	{
+		/**
+		* We can only read data if
+		*
+		* 1) We can immediately transmit a reply if required
+		* 2) There isn't unread session data buffered for the upper layer
+		*
+		*/
+		if (!this->lower->is_tx_ready() || this->reassembler.has_data()) return false;
+		
+		seq32_t message;
+		if (!this->lower->start_rx_from_upper(message)) return false;
+
+		this->process(message);
+		return true;
+	}
 
     void CryptoLayer::process(const seq32_t& message)
     {
@@ -205,14 +209,14 @@ namespace ssp21
 
             // if any error occurs with transmission, we reset the session and notify the upper layer
             this->session.reset();
-            this->upper->on_close_from_lower();
+            this->upper->on_lower_close();
 
             return;
         }
 
         this->tx_state.begin_transmit(remainder);
 
-        this->lower->start_tx(data);
+        this->lower->start_tx_from_upper(data);
 
         this->on_session_nonce_change(this->session.get_rx_nonce(), this->session.get_tx_nonce());
     }
@@ -239,29 +243,14 @@ namespace ssp21
             break; // do nothing
 
         case(ReassemblyResult::complete):
-            this->try_start_rx();
+			this->upper->on_lower_rx_ready();
             break;
 
         default: // error
             FORMAT_LOG_BLOCK(this->logger, levels::warn, "reassembly error: %s", ReassemblyResultSpec::to_string(result));
             break;
         }
-    }
-
-    bool CryptoLayer::try_start_rx()
-    {
-        if (!this->reassembler.has_data())
-        {
-            return false;
-        }
-
-        if (this->is_rx_processing())
-        {
-            return false;
-        }
-
-        return this->try_start_upper_rx(this->reassembler.get_data());
-    }
+    }   
 
 
 }

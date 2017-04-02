@@ -17,6 +17,7 @@
 #include "ssp21/crypto/gen/SessionData.h"
 
 #include "ssp21/stack/ILowerLayer.h"
+#include "ssp21/stack/IUpperLayer.h"
 #include "ssp21/IFrameWriter.h"
 
 #include "openpal/executor/IExecutor.h"
@@ -46,28 +47,26 @@ namespace ssp21
             this->lower = &lower;
             this->upper = &upper;
         }
-
-        // ---- final implementations from ILowerLayer -----
-
-        virtual bool start_tx(const seq32_t& data) override final;
-
-        virtual bool is_tx_ready() const override final;
-
+       
     protected:
 
-        virtual void on_rx_ready_impl() override final;
+		// ---- final implementations from ILowerLayer -----
+
+		virtual bool start_tx_from_upper(const seq32_t& data) override final;
+
+		virtual bool is_tx_ready() const override final;
+
+		virtual bool start_rx_from_upper_impl(seq32_t& data) override final;
 
         virtual void discard_rx_data() override final;
 
         // ----- final implementations from IUpperlayer ----
 
-        virtual void on_close_from_lower_impl() override final;
+        virtual void on_lower_close_impl() override final;
 
-        virtual void start_rx_impl(const seq32_t& data) override final;
+        virtual void on_lower_tx_ready_impl() override final; 
 
-        virtual bool is_rx_ready_impl() override final;
-
-        virtual void on_tx_ready_impl() override final;
+		virtual void on_lower_rx_ready_impl() override final;
 
         // ------ methods to be overriden by super class ------
 
@@ -116,8 +115,13 @@ namespace ssp21
         TxState tx_state;
 
         ILowerLayer* lower = nullptr;
+		IUpperLayer* upper = nullptr;
 
     private:
+
+		void try_read_from_lower();		
+
+		bool try_read_one_from_lower();
 
         // ------ private helper methods ------
 
@@ -134,9 +138,7 @@ namespace ssp21
             return this->session.is_valid() && this->lower->is_tx_ready() && this->tx_state.is_ready_tx();
         }
 
-        void check_transmit();
-
-        bool try_start_rx();
+        void check_transmit();       
 
         template <class MsgType>
         bool handle_message(const seq32_t& message, const openpal::Timestamp& now);

@@ -80,7 +80,7 @@ namespace ssp21
         this->handshake_state = this->handshake_state->on_handshake_required(*this, this->executor->get_time());
     }
 
-    void Initiator::on_open_from_lower_impl()
+    void Initiator::on_lower_open_impl()
     {
         this->on_handshake_required();
     }

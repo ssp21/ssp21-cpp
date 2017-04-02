@@ -10,44 +10,46 @@ namespace ssp21
         parser(ssp21::consts::link::max_config_payload_size, *this)
     {}
 
-    void LinkLayer::on_open_from_lower_impl()
-    {
-        upper->on_open_from_lower();
-    }
+	// ---- IUpperLayer -----
 
-    void LinkLayer::on_close_from_lower_impl()
-    {
-        upper->on_close_from_lower();
-    }
+	void LinkLayer::on_lower_open_impl()
+	{
+		this->upper->on_lower_open();
+	}
 
-    void LinkLayer::on_tx_ready_impl()
-    {
-        upper->on_tx_ready();
-    }
+	void LinkLayer::on_lower_close_impl()
+	{
+		this->parser.reset();
+		this->upper->on_lower_close();
+	}
 
-    void LinkLayer::start_rx_impl(const seq32_t& data)
-    {
-        this->remainder = data;
-        this->process_remainder();
-    }
+	void LinkLayer::on_lower_tx_ready_impl()
+	{
+		this->upper->on_lower_rx_ready();
+	}
 
-    void LinkLayer::process_remainder()
-    {
-        if (this->parser.parse(this->remainder) && this->parser.read(this->result))
-        {
-            this->try_start_upper_rx(this->result.payload);
-        }
+	void LinkLayer::on_lower_rx_ready_impl()
+	{
+		if (this->remainder.is_empty() && this->try_read_from_lower())
+		{
+			this->upper->on_lower_rx_ready();
+		}		
+	}
 
-        if (this->is_rx_ready_impl())
-        {
-            lower->on_rx_ready();
-        }
-    }
+	// ---- ILowerLayer -----
 
-    bool LinkLayer::is_rx_ready_impl()
+    bool LinkLayer::start_rx_from_upper_impl(seq32_t& data)
     {
-        return this->result.payload.is_empty() && !this->is_rx_processing() && this->remainder.is_empty();
-    }
+		if (this->parser.has_result() || this->process_remainder() || this->try_read_from_lower())
+		{
+			LinkParser::Result result;
+			parser.read(result);
+			data = result.payload;
+			return true;
+		}
+		
+		return false;
+    }		
 
     bool LinkLayer::is_tx_ready() const
     {
@@ -56,25 +58,24 @@ namespace ssp21
 
     void LinkLayer::discard_rx_data()
     {
-        this->result.payload.make_empty();
+		this->parser.reset();
     }
 
-    bool LinkLayer::start_tx(const seq32_t& data)
+    bool LinkLayer::start_tx_from_upper(const seq32_t& data)
     {
         // The upper layer formats the frame for efficiency purposes
-        return this->lower->start_tx(data);
-    }
+        return this->lower->start_tx_from_upper(data);
+    }   
 
-    void LinkLayer::on_rx_ready_impl()
-    {
-        if (this->remainder.is_not_empty())
-        {
-            this->process_remainder();
-        }
-        else
-        {
-            this->lower->on_rx_ready();
-        }
-    }
+	// ---- privat ehelpers -----
 
+	bool LinkLayer::try_read_from_lower()
+	{
+		return this->lower->start_rx_from_upper(this->remainder) && this->process_remainder();
+	}
+
+	bool LinkLayer::process_remainder()
+	{
+		return this->remainder.is_empty() ? false : this->parser.parse(this->remainder);
+	}
 }

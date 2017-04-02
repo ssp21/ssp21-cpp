@@ -55,7 +55,7 @@ namespace ssp21
             return this;
         }
 
-        ctx.lower->start_tx(res.frame);
+        ctx.lower->start_tx_from_upper(res.frame);
 
         return ResponderHandshake::WaitForAuth::get();
     }
@@ -104,9 +104,9 @@ namespace ssp21
 
         ctx.handshake.initialize_session(ctx.session, now);
 
-        ctx.lower->start_tx(res.frame);
+        ctx.lower->start_tx_from_upper(res.frame);
 
-        ctx.upper->on_open_from_lower();
+        ctx.upper->on_lower_open();
 
         return ResponderHandshake::Idle::get();
     }
