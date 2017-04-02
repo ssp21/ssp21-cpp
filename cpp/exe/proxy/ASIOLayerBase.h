@@ -69,7 +69,7 @@ protected:
             else
             {
                 const auto rx_data = this->rx_buffer.as_rslice().take<uint32_t>(num_rx);
-                FORMAT_LOG_BLOCK(this->logger, ssp21::levels::debug, "complete socket rx: %u", rx_data.length());
+                FORMAT_LOG_BLOCK(this->logger, ssp21::levels::debug, "complete socket rx: %u, tx: %s", rx_data.length(), bool_str(this->is_tx_active));
                 openpal::HexLogging::log(this->logger, ssp21::levels::debug, rx_data);
                 this->on_rx_complete(rx_data);
             }
@@ -79,7 +79,7 @@ protected:
 
         this->is_rx_active = true;
 
-        SIMPLE_LOG_BLOCK(this->logger, ssp21::levels::debug, "start socket rx");
+        FORMAT_LOG_BLOCK(this->logger, ssp21::levels::debug, "start socket rx, tx: %s", bool_str(this->is_tx_active));
 
         this->socket.async_read_some(asio::buffer(dest, dest.length()), callback);
 
@@ -105,14 +105,14 @@ protected:
             }
             else
             {
-                FORMAT_LOG_BLOCK(this->logger, ssp21::levels::debug, "complete socket tx: %u", static_cast<uint32_t>(num_tx));
+                FORMAT_LOG_BLOCK(this->logger, ssp21::levels::debug, "complete socket tx: %u - rx: %s", static_cast<uint32_t>(num_tx), bool_str(this->is_rx_active));
                 this->on_tx_complete();
             }
         };
 
-        this->is_rx_active = true;
+        this->is_tx_active = true;
 
-        FORMAT_LOG_BLOCK(this->logger, ssp21::levels::debug, "start socket tx: %d", data.length());
+        FORMAT_LOG_BLOCK(this->logger, ssp21::levels::debug, "start socket tx: %d, rx: %s", data.length(), bool_str(this->is_tx_active));
 
         asio::async_write(this->socket, asio::buffer(data, data.length()), callback);
 
@@ -130,6 +130,11 @@ protected:
     }
 
 private:
+
+    static const char* bool_str(bool value)
+    {
+        return value ? "true" : "false";
+    }
 
     bool is_tx_active = false;
     bool is_rx_active = false;

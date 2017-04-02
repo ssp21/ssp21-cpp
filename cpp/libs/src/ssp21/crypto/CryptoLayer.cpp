@@ -121,18 +121,20 @@ namespace ssp21
     {
         // TODO - evaluate the appropriate priority of these checks
 
-		SIMPLE_LOG_BLOCK(logger, levels::debug, "on tx ready");
+        const bool user_data_tx_complete = this->tx_state.on_tx_complete();
+        const bool upper_rx_processing = this->is_rx_processing();
+
+        FORMAT_LOG_BLOCK(logger, levels::debug, "on tx ready, tx_complete = %d rx_processing = %d", user_data_tx_complete, upper_rx_processing);
 
         this->on_pre_tx_ready();
 
-        if (this->tx_state.on_tx_complete())
+        if (user_data_tx_complete)
         {
             // ready to transmit more data
             this->upper->on_tx_ready();
         }
 
-        // having the lower tx_ready may enable us being ready to receive data
-        if (!this->is_rx_processing())
+        if (!upper_rx_processing)
         {
             this->lower->on_rx_ready();
         }
