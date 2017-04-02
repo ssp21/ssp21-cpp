@@ -34,7 +34,7 @@ namespace ssp21
 
         virtual void on_open_from_lower_impl() override {}
 
-        virtual void on_close_impl() override {}
+        virtual void on_close_from_lower_impl() override {}
 
         virtual void on_tx_ready_impl() override {}
 

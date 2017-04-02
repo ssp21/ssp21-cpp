@@ -91,14 +91,14 @@ namespace ssp21
         }
     }
 
-    void CryptoLayer::on_close_impl()
+    void CryptoLayer::on_close_from_lower_impl()
     {
         // let the super class reset
-        this->reset_state_on_close();
+        this->reset_state_on_close_from_lower();
 
         this->session.reset();
         this->reassembler.reset();
-        this->upper->on_close();
+        this->upper->on_close_from_lower();
         this->tx_state.reset();
         this->reset_this_lower_layer();
     }
@@ -205,7 +205,7 @@ namespace ssp21
 
             // if any error occurs with transmission, we reset the session and notify the upper layer
             this->session.reset();
-            this->upper->on_close();
+            this->upper->on_close_from_lower();
 
             return;
         }

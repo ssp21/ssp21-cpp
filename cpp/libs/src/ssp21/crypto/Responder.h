@@ -67,7 +67,7 @@ namespace ssp21
 
         // ---- implement CryptoLayer -----
 
-        virtual void reset_state_on_close() override;
+        virtual void reset_state_on_close_from_lower() override;
 
         virtual bool supports(Function function) const override;
 

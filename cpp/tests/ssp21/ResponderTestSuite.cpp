@@ -140,7 +140,7 @@ TEST_CASE(SUITE("closing the responder closes the upper layer"))
 
     test_init_session_success(fix);
     REQUIRE(fix.upper.get_is_open());
-    fix.responder.on_close();
+    fix.responder.on_close_from_lower();
     REQUIRE_FALSE(fix.upper.get_is_open());
 }
 

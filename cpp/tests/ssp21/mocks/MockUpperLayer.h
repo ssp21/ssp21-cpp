@@ -61,7 +61,7 @@ namespace ssp21
             this->is_open = true;
         }
 
-        virtual void on_close_impl() override
+        virtual void on_close_from_lower_impl() override
         {
             this->is_open = false;
         }

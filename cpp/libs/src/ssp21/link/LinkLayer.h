@@ -29,7 +29,7 @@ namespace ssp21
         // ---- link_upper_layer_t ----
 
         virtual void on_open_from_lower_impl() override;
-        virtual void on_close_impl() override;
+        virtual void on_close_from_lower_impl() override;
         virtual void on_tx_ready_impl() override;
         virtual void start_rx_impl(const seq32_t& data) override;
         virtual bool is_rx_ready_impl() override;

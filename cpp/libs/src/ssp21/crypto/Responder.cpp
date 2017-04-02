@@ -67,7 +67,7 @@ namespace ssp21
         return handshake.set_algorithms(msg.spec);
     }
 
-    void Responder::reset_state_on_close()
+    void Responder::reset_state_on_close_from_lower()
     {
         this->handshake_state = ResponderHandshake::Idle::get();
     }

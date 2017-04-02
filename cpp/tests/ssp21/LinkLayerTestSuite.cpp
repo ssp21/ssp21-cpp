@@ -17,7 +17,7 @@ TEST_CASE(SUITE("forwards open/close"))
     REQUIRE_FALSE(fix.upper.get_is_open());
     fix.link.on_open_from_lower();
     REQUIRE(fix.upper.get_is_open());
-    fix.link.on_close();
+    fix.link.on_close_from_lower();
     REQUIRE_FALSE(fix.upper.get_is_open());
 }
 

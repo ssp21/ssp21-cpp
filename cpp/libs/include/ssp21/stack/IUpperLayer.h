@@ -34,16 +34,16 @@ namespace ssp21
         }
 
         /**
-        * close the layer if closed
+        * close the layer if open
         *
         * @return false if the layer is already closed, true otherwise
         */
-        inline bool on_close()
+        inline bool on_close_from_lower()
         {
             if (this->is_open_flag)
             {
                 this->is_open_flag = false;
-                this->on_close_impl();
+                this->on_close_from_lower_impl();
                 return true;
             }
             else
@@ -112,7 +112,7 @@ namespace ssp21
 
         virtual void on_open_from_lower_impl() = 0;
 
-        virtual void on_close_impl() = 0;
+        virtual void on_close_from_lower_impl() = 0;
 
         virtual void on_tx_ready_impl() = 0;
 

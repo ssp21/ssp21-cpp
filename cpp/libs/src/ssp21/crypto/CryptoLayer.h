@@ -61,7 +61,7 @@ namespace ssp21
 
         // ----- final implementations from IUpperlayer ----
 
-        virtual void on_close_impl() override final;
+        virtual void on_close_from_lower_impl() override final;
 
         virtual void start_rx_impl(const seq32_t& data) override final;
 
@@ -72,7 +72,7 @@ namespace ssp21
         // ------ methods to be overriden by super class ------
 
         // inherited class can perform additional cleanup when layer is closed
-        virtual void reset_state_on_close() = 0;
+        virtual void reset_state_on_close_from_lower() = 0;
 
         // should a paritcular function code even be parsed?
         virtual bool supports(Function function) const = 0;

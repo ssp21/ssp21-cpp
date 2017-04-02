@@ -28,7 +28,7 @@ private:
         this->start_rx_from_socket();
     }
 
-    virtual void on_close_impl() override
+    virtual void on_close_from_lower_impl() override
     {
         this->try_close_socket();
         this->error_handler();

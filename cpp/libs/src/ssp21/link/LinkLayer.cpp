@@ -15,9 +15,9 @@ namespace ssp21
         upper->on_open_from_lower();
     }
 
-    void LinkLayer::on_close_impl()
+    void LinkLayer::on_close_from_lower_impl()
     {
-        upper->on_close();
+        upper->on_close_from_lower();
     }
 
     void LinkLayer::on_tx_ready_impl()

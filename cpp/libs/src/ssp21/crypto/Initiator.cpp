@@ -85,7 +85,7 @@ namespace ssp21
         this->on_handshake_required();
     }
 
-    void Initiator::reset_state_on_close()
+    void Initiator::reset_state_on_close_from_lower()
     {
         this->handshake_state = InitiatorHandshake::Idle::get();
         this->response_and_retry_timer.cancel();

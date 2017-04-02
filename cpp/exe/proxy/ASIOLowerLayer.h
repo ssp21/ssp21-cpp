@@ -28,7 +28,7 @@ public:
 
         if (this->upper->is_open())
         {
-            return this->upper->on_close();
+            return this->upper->on_close_from_lower();
         }
         else
         {
@@ -60,7 +60,7 @@ private:
 
     virtual void on_rx_or_tx_error() override
     {
-        this->upper->on_close();
+        this->upper->on_close_from_lower();
     }
 
     virtual void on_tx_complete() override

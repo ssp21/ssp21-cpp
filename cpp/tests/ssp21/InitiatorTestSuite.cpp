@@ -57,7 +57,7 @@ TEST_CASE(SUITE("stops timer when closed"))
 {
     InitiatorFixture fix;
     test_open(fix);
-    fix.initiator.on_close();
+    fix.initiator.on_close_from_lower();
     REQUIRE(fix.exe->num_active() == 0);
 }
 
