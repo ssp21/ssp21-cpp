@@ -2,6 +2,7 @@
 #define SSP21_LOWERLAYER_H
 
 #include "ssp21/stack/ILowerLayer.h"
+#include "ssp21/stack/IUpperLayer.h"
 
 #include "openpal/executor/IExecutor.h"
 #include "openpal/container/Buffer.h"
@@ -22,7 +23,7 @@ namespace ssp21
         explicit LowerLayer(const std::shared_ptr<openpal::IExecutor>& executor) : executor(executor)
         {}
 
-        virtual bool start_tx(const seq32_t& data) override
+        virtual bool start_tx_from_upper(const seq32_t& data) override
         {
             this->sibling->messages.push_back(std::make_unique<message_t>(data));
 
@@ -35,10 +36,15 @@ namespace ssp21
             // simulate asynchronous transmission
             executor->post([this]()
             {
-                this->upper->on_tx_ready();
+                this->upper->on_lower_tx_ready();
             });
 
             return true;
+        }
+
+        virtual seq32_t start_rx_from_upper_impl() override
+        {
+            return this->messages.empty() ? seq32_t::empty() : messages.front()->as_rslice();
         }
 
         virtual bool is_tx_ready() const override
@@ -66,23 +72,10 @@ namespace ssp21
             }
         }
 
-        virtual void on_rx_ready_impl() override
-        {
-            this->try_start_rx();
-        }
-
-
-        bool try_start_rx()
-        {
-            if (this->is_rx_processing() || messages.empty()) return false;
-
-            return this->try_start_upper_rx(messages.front()->as_rslice());
-        }
-
         // sibling layer notification that data has been placed in queue
         void on_new_data()
         {
-            this->try_start_rx();
+            this->upper->on_lower_rx_ready();
         }
 
         const std::shared_ptr<openpal::IExecutor> executor;
@@ -91,6 +84,7 @@ namespace ssp21
 
         // set during configure step
         LowerLayer* sibling = nullptr;
+        IUpperLayer* upper = nullptr;
     };
 
 }

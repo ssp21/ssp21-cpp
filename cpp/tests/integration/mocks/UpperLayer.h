@@ -2,6 +2,7 @@
 #define SSP21_UPPERLAYER_H
 
 #include "ssp21/stack/IUpperLayer.h"
+#include "ssp21/stack/ILowerLayer.h"
 
 #include <memory>
 #include <vector>
@@ -32,27 +33,33 @@ namespace ssp21
 
     private:
 
-        virtual void on_open_from_lower_impl() override {}
+        virtual void on_lower_open_impl() override {}
 
-        virtual void on_close_from_lower_impl() override {}
+        virtual void on_lower_close_impl() override {}
 
-        virtual void on_tx_ready_impl() override {}
+        virtual void on_lower_tx_ready_impl() override {}
 
-        virtual void start_rx_impl(const seq32_t& data) override
+        virtual void on_lower_rx_ready_impl() override
         {
-            num_bytes_rx += data.length();
-
-            for (auto& v : this->validators)
-            {
-                v->validate(data);
-            }
-
-            lower->on_rx_ready();
+            while (read_one());
         }
 
-        virtual bool is_rx_ready_impl() override
+        bool read_one()
         {
-            return true;
+            const auto data = lower->start_rx_from_upper();
+            if (data)
+            {
+                this->num_bytes_rx += data.length();
+
+                for (auto& v : this->validators)
+                {
+                    v->validate(data);
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
         // set during configure step
