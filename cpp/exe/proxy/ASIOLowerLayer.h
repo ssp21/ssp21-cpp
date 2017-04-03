@@ -3,7 +3,8 @@
 
 #include "ASIOLayerBase.h"
 
-#include <ssp21/stack/ILowerLayer.h>
+#include "ssp21/stack/ILowerLayer.h"
+#include "ssp21/stack/IUpperLayer.h"
 
 #include <asio.hpp>
 
@@ -19,26 +20,22 @@ public:
     {
         this->upper = &upper;
         this->start_rx_from_socket();
-        this->upper->on_open_from_lower();
+		this->upper->on_lower_open();
     }
 
     bool close()
     {
         this->try_close_socket();
-
-        if (this->upper->is_open())
-        {
-            return this->upper->on_close_from_lower();
-        }
-        else
-        {
-            return false;
-        }
+		return this->upper->on_lower_close();
     }
+
+private:
+
+	ssp21::IUpperLayer* upper = nullptr;
 
     // --- ILowerLayer ---
 
-    virtual bool start_tx(const ssp21::seq32_t& data) override
+    virtual bool start_tx_from_upper(const ssp21::seq32_t& data) override
     {
         return this->start_tx_to_socket(data);
     }
@@ -48,44 +45,37 @@ public:
         return !this->get_is_tx_active();
     }
 
-private:
+	virtual void discard_rx_data() override
+	{
+		this->unread_data.make_empty();
+	}
+
+	virtual ssp21::seq32_t start_rx_from_upper_impl() override
+	{
+		if (this->unread_data.is_empty()) this->start_rx_from_socket();
+
+		return this->unread_data;
+	}
 
     // --- ASIOLayerBase ---
 
     virtual void on_rx_complete(const ssp21::seq32_t& data) override
     {
         this->unread_data = data;
-        this->try_start_upper_rx(this->unread_data);
+		this->upper->on_lower_rx_ready();
     }
 
     virtual void on_rx_or_tx_error() override
     {
-        this->upper->on_close_from_lower();
+        this->upper->on_lower_close();
     }
 
     virtual void on_tx_complete() override
     {
-        this->upper->on_tx_ready();
+		this->upper->on_lower_tx_ready();
     }
 
-    // --- ILowerLayer ---
-
-    virtual void discard_rx_data() override
-    {
-        this->unread_data.make_empty();
-    }
-
-    virtual void on_rx_ready_impl() override
-    {
-        if (this->unread_data.is_empty())
-        {
-            this->start_rx_from_socket();
-        }
-        else
-        {
-            this->try_start_upper_rx(this->unread_data);
-        }
-    }
+    // --- ILowerLayer ---      
 
     ssp21::seq32_t unread_data;
 };
