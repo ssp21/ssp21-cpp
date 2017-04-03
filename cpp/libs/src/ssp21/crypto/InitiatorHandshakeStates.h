@@ -61,6 +61,8 @@ namespace ssp21
         {
             WaitForRetry() : Initiator::IHandshakeState(Initiator::IHandshakeState::Enum::wait_for_retry) {}
 
+            virtual IHandshakeState* on_retry_timeout(Initiator& ctx) override;
+
         public:
 
             static Initiator::IHandshakeState* get()

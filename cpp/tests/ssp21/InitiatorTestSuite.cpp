@@ -61,7 +61,7 @@ TEST_CASE(SUITE("stops timer when closed"))
     REQUIRE(fix.exe->num_active() == 0);
 }
 
-TEST_CASE(SUITE("cancels response timer and starts retry timer when error message received"))
+TEST_CASE(SUITE("cancels response timer and retries handshake when error message received"))
 {
     InitiatorFixture fix;
     test_open(fix);
@@ -69,6 +69,10 @@ TEST_CASE(SUITE("cancels response timer and starts retry timer when error messag
     fix.lower.enqueue_message(hex::reply_handshake_error(HandshakeError::bad_message_format));
     REQUIRE(fix.exe->num_timer_cancel() == 1);
     REQUIRE(fix.exe->num_pending_timers() == 1);
+    REQUIRE(fix.exe->advance_to_next_timer());
+    REQUIRE(fix.exe->run_many() > 0);
+
+    test_request_handshake_begin(fix);
 }
 
 TEST_CASE(SUITE("starts retry timer when response timeout fires"))
@@ -184,6 +188,7 @@ void test_open(InitiatorFixture& fix)
 
 void test_request_handshake_begin(InitiatorFixture& fix)
 {
+    REQUIRE(fix.initiator.get_state_enum() == HandshakeState::wait_for_begin_reply);
     REQUIRE(fix.lower.num_tx_messages() == 1);
 
     const auto expected = hex::request_handshake_begin(
@@ -200,7 +205,6 @@ void test_request_handshake_begin(InitiatorFixture& fix)
                               hex::repeat(0xFF, 32)
                           );
 
-    REQUIRE(fix.initiator.get_state_enum() == HandshakeState::wait_for_begin_reply);
     REQUIRE(fix.lower.pop_tx_message() == expected);
     REQUIRE(fix.exe->num_pending_timers() == 1);
 

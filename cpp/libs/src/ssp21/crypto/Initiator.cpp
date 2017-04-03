@@ -82,6 +82,7 @@ namespace ssp21
         auto on_timeout = [this]()
         {
             this->handshake_state = this->handshake_state->on_retry_timeout(*this);
+            this->on_handshake_required();
         };
 
         this->response_and_retry_timer.restart(this->params.retry_timeout, on_timeout);

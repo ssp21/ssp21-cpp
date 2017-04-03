@@ -184,6 +184,13 @@ namespace ssp21
         ctx.start_retry_timer();
         return WaitForRetry::get();
     }
+
+    // -------- WaitForRetry --------
+
+    Initiator::IHandshakeState* InitiatorHandshake::WaitForRetry::on_retry_timeout(Initiator& ctx)
+    {
+        return Idle::get();
+    }
 }
 
 
