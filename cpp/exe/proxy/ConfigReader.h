@@ -1,20 +1,11 @@
 #ifndef SSP21PROXY_CONFIGREADER_H
 #define SSP21PROXY_CONFIGREADER_H
 
-
 #include "ProxyConfig.h"
+#include "ConfigField.h"
 
 #include <map>
-#include <stdexcept>
 #include <vector>
-#include <sstream>
-
-#define THROW_LOGIC_ERR(build_pattern, section) { \
-    std::ostringstream oss; \
-    oss << build_pattern << " [section = " << section << "]"; \
-    throw std::logic_error(oss.str()); \
-}
-
 
 class ConfigReader
 {
@@ -26,56 +17,6 @@ public:
 private:
 
     ConfigReader() = default;
-
-    template <class T>
-    class SetOnce : openpal::Uncopyable
-    {
-    public:
-
-        SetOnce(const char* key_name) : key_name(key_name)
-        {}
-
-        bool is_defined() const
-        {
-            return defined;
-        }
-
-        inline T& get(const std::string& section)
-        {
-            if (!defined)
-            {
-                THROW_LOGIC_ERR("value not defined: " << key_name, section);
-            }
-            return value;
-        }
-
-        void set(const T& value, const std::string& section)
-        {
-            if (defined)
-            {
-                THROW_LOGIC_ERR("value already defined: " << key_name, section);
-            }
-            defined = true;
-            this->value = value;
-        }
-
-        void move(T& value, const std::string& section)
-        {
-            if (defined)
-            {
-                THROW_LOGIC_ERR("value already defined: " << key_name, section);
-            }
-            defined = true;
-            this->value = std::move(value);
-        }
-
-        const char* const key_name;
-
-    private:
-
-        T value;
-        bool defined = false;
-    };
 
     struct Section : openpal::Uncopyable
     {
@@ -99,22 +40,22 @@ private:
 
         const std::string id;
 
-        SetOnce<std::string> log_levels;
-        SetOnce<ProxyConfig::Mode> mode;
+        ConfigField<std::string> log_levels;
+        ConfigField<ProxyConfig::Mode> mode;
 
-        SetOnce<std::shared_ptr<const ssp21::PublicKey>> local_public_key;
-        SetOnce<std::shared_ptr<const ssp21::PrivateKey>> local_private_key;
-        SetOnce<std::shared_ptr<const ssp21::PublicKey>> remote_public_key;
+        ConfigField<std::shared_ptr<const ssp21::PublicKey>> local_public_key;
+        ConfigField<std::shared_ptr<const ssp21::PrivateKey>> local_private_key;
+        ConfigField<std::shared_ptr<const ssp21::PublicKey>> remote_public_key;
 
-        SetOnce<uint16_t> local_address;
-        SetOnce<uint16_t> remote_address;
+        ConfigField<uint16_t> local_address;
+        ConfigField<uint16_t> remote_address;
 
-        SetOnce<uint16_t> max_sessions;
-        SetOnce<uint16_t> listen_port;
-        SetOnce<std::string> listen_endpoint;
+        ConfigField<uint16_t> max_sessions;
+        ConfigField<uint16_t> listen_port;
+        ConfigField<std::string> listen_endpoint;
 
-        SetOnce<uint16_t> connect_port;
-        SetOnce<std::string> connect_endpoint;
+        ConfigField<uint16_t> connect_port;
+        ConfigField<std::string> connect_endpoint;
 
     private:
 
