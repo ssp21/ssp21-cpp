@@ -11,7 +11,7 @@ public:
 
     ConfigSection(const std::string& id);
 
-    openpal::LogLevels get_levels() const;
+    std::unique_ptr<ProxyConfig> get_config() const;
 
     const std::string id;
 
@@ -33,6 +33,8 @@ public:
     ConfigField<std::string> connect_endpoint;
 
 private:
+
+    openpal::LogLevels get_levels() const;
 
     openpal::LogLevels get_levels_for_char(char value) const;
 };

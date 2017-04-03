@@ -46,27 +46,7 @@ std::vector<std::unique_ptr<ProxyConfig>> ConfigReader::read(const std::string& 
 
     for (auto& pair : c.sections)
     {
-        auto& s = pair.second;
-
-        auto section = std::make_unique<ProxyConfig>(
-                           s->id,
-                           s->get_levels(),
-                           s->mode.get(s->id),
-                           ProxyConfig::SSP21(
-                               s->local_address.get(s->id),
-                               s->remote_address.get(s->id),
-                               s->local_public_key.get(s->id),
-                               s->local_private_key.get(s->id),
-                               s->remote_public_key.get(s->id)
-                           ),
-                           s->max_sessions.get(s->id),
-                           s->listen_port.get(s->id),
-                           s->listen_endpoint.get(s->id),
-                           s->connect_port.get(s->id),
-                           s->connect_endpoint.get(s->id)
-                       );
-
-        ret.push_back(std::move(section));
+        ret.push_back(pair.second->get_config());
     }
 
     return ret;
