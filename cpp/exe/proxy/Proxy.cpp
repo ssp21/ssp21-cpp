@@ -116,15 +116,15 @@ void Proxy::start_connect(asio::ip::tcp::socket accepted_socket)
                                      error_handler,
                                      this->executor,
                                      std::make_unique<socket_lower_layer_t>(
-                                         this->logger.detach_and_append("-s-", id, "-lower"),
+                                         this->logger.detach_and_append("-", id, "-lower"),
                                          std::move(connect->get_lower_layer_socket(this->mode))
                                      ),
                                      std::make_unique<socket_upper_layer_t>(
-                                         this->logger.detach_and_append("-s-", id, "-upper"),
+                                         this->logger.detach_and_append("-", id, "-upper"),
                                          std::move(connect->get_upper_layer_socket(this->mode))
                                      ),
                                      factory(
-                                         this->logger.detach_and_append("-s-", id, "-ssp21"),
+                                         this->logger.detach_and_append("-", id, "-ssp21"),
                                          this->executor
                                      )
                                  );
