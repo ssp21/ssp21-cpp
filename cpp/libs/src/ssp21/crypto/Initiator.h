@@ -58,16 +58,10 @@ namespace ssp21
             virtual IHandshakeState* on_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now);
 
             // called when the response timeout timer fires
-            virtual IHandshakeState* on_response_timeout(Initiator& ctx)
-            {
-                return this;
-            }
+            virtual IHandshakeState* on_response_timeout(Initiator& ctx);
 
             // called when the retry timeout timer fires
-            virtual IHandshakeState* on_retry_timeout(Initiator& ctx)
-            {
-                return this;
-            }
+            virtual IHandshakeState* on_retry_timeout(Initiator& ctx);
 
             const Enum enum_value;
 

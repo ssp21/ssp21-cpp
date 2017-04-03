@@ -50,6 +50,18 @@ namespace ssp21
         return this;
     }
 
+    Initiator::IHandshakeState* Initiator::IHandshakeState::on_response_timeout(Initiator& ctx)
+    {
+        SIMPLE_LOG_BLOCK(ctx.logger, levels::warn, "Unxpected response timeout event");
+        return this;
+    }
+
+    Initiator::IHandshakeState* Initiator::IHandshakeState::on_retry_timeout(Initiator& ctx)
+    {
+        SIMPLE_LOG_BLOCK(ctx.logger, levels::warn, "Unxpected retry timeout event");
+        return this;
+    }
+
     void Initiator::IHandshakeState::log_unexpected_message(Logger& logger, Function function)
     {
         FORMAT_LOG_BLOCK(logger, levels::warn, "Received unexpected message: %s", FunctionSpec::to_string(function));
