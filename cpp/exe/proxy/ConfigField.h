@@ -3,6 +3,8 @@
 
 #include "ExceptionMacros.h"
 
+#include "openpal/util/Uncopyable.h"
+
 template <class T>
 class ConfigField : openpal::Uncopyable
 {
@@ -16,7 +18,7 @@ public:
         return defined;
     }
 
-    inline T& get(const std::string& section)
+    inline const T& get(const std::string& section) const
     {
         if (!defined)
         {

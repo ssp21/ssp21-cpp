@@ -26,39 +26,6 @@ int ConfigReader::config_ini_handler(void* user, const char* section, const char
     }
 }
 
-LogLevels ConfigReader::Section::get_levels()
-{
-    LogLevels levels;
-    for (auto flag : this->log_levels.get(this->id))
-    {
-        levels |= this->get_levels_for_char(flag);
-    }
-    return levels;
-}
-
-LogLevels ConfigReader::Section::get_levels_for_char(char value)
-{
-    switch (value)
-    {
-    case('v'):
-        return LogLevels(ssp21::levels::event.value);
-    case('e'):
-        return LogLevels(ssp21::levels::error.value);
-    case('w'):
-        return LogLevels(ssp21::levels::warn.value);
-    case('i'):
-        return LogLevels(ssp21::levels::info.value);
-    case('d'):
-        return LogLevels(ssp21::levels::debug.value);
-    case('m'):
-        return LogLevels(ssp21::levels::rx_crypto_msg.value | ssp21::levels::tx_crypto_msg.value);
-    case('f'):
-        return LogLevels(ssp21::levels::rx_crypto_msg_fields.value | ssp21::levels::tx_crypto_msg_fields.value);
-    default:
-        THROW_LOGIC_ERR("unknown log level: " << value, this->id);
-    }
-}
-
 std::vector<std::unique_ptr<ProxyConfig>> ConfigReader::read(const std::string& file_path)
 {
     ConfigReader c;
@@ -163,7 +130,7 @@ void ConfigReader::handle(const std::string& section_name, const std::string& ke
     }
 }
 
-void ConfigReader::handle_mode(Section& section, const std::string& value)
+void ConfigReader::handle_mode(ConfigSection& section, const std::string& value)
 {
     if (value == "initiator")
     {
@@ -229,13 +196,13 @@ T ConfigReader::read_integer(const std::string& section, const std::string& valu
     return val;
 }
 
-ConfigReader::Section& ConfigReader::get_or_create_section(const std::string& section)
+ConfigSection& ConfigReader::get_or_create_section(const std::string& section)
 {
     const auto iter = this->sections.find(section);
 
     if (iter == this->sections.end())
     {
-        auto ptr = std::make_unique<Section>(section);
+        auto ptr = std::make_unique<ConfigSection>(section);
         auto& ret = *ptr;
         this->sections[section] = std::move(ptr);
         return ret;
