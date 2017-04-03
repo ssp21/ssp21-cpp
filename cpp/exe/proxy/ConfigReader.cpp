@@ -1,7 +1,9 @@
 
 #include "ConfigReader.h"
 
-#include "inih\ini.h"
+#include "ConfigKeys.h"
+
+#include "inih/ini.h"
 
 #include "ssp21/util/Base64.h"
 #include "ssp21/stack/LogLevels.h"
@@ -11,11 +13,6 @@
 
 using namespace openpal;
 using namespace ssp21;
-
-ConfigReader::ConfigReader()
-{
-
-}
 
 int ConfigReader::config_ini_handler(void* user, const char* section, const char* key, const char* value)
 {
@@ -57,84 +54,104 @@ std::vector<std::unique_ptr<ProxyConfig>> ConfigReader::read(const std::string& 
     return ret;
 }
 
+ConfigReader::ConfigReader()
+{
+    this->key_handler_map[keys::log_levels] = [](ConfigSection & section, const std::string & value)
+    {
+        section.log_levels.set(value, section.id);
+    };
+
+    this->key_handler_map[keys::mode] = [](ConfigSection & section, const std::string & value)
+    {
+        section.mode.set(read_mode(section.id, value), section.id);
+    };
+
+    this->key_handler_map[keys::local_public_key] = [](ConfigSection & section, const std::string & value)
+    {
+        section.local_public_key.move(read_key<ssp21::PublicKey>(section.id, value), section.id);
+    };
+
+    this->key_handler_map[keys::local_private_key] = [](ConfigSection & section, const std::string & value)
+    {
+        section.local_private_key.move(read_key<ssp21::PrivateKey>(section.id, value), section.id);
+    };
+
+    this->key_handler_map[keys::remote_public_key] = [](ConfigSection & section, const std::string & value)
+    {
+        section.remote_public_key.move(read_key<ssp21::PublicKey>(section.id, value), section.id);
+    };
+
+    this->key_handler_map[keys::local_address] = [](ConfigSection & section, const std::string & value)
+    {
+        section.local_address.set(read_integer<uint16_t>(section.id, value), section.id);
+    };
+
+    this->key_handler_map[keys::remote_address] = [](ConfigSection & section, const std::string & value)
+    {
+        section.remote_address.set(read_integer<uint16_t>(section.id, value), section.id);
+    };
+
+    this->key_handler_map[keys::max_sessions] = [](ConfigSection & section, const std::string & value)
+    {
+        section.max_sessions.set(read_integer<uint16_t>(section.id, value), section.id);
+    };
+
+    this->key_handler_map[keys::listen_endpoint] = [](ConfigSection & section, const std::string & value)
+    {
+        section.listen_endpoint.set(value, section.id);
+    };
+
+    this->key_handler_map[keys::listen_port] = [](ConfigSection & section, const std::string & value)
+    {
+        section.listen_port.set(read_integer<uint16_t>(section.id, value), section.id);
+    };
+
+    this->key_handler_map[keys::connect_endpoint] = [](ConfigSection & section, const std::string & value)
+    {
+        section.connect_endpoint.set(value, section.id);
+    };
+
+    this->key_handler_map[keys::connect_port] = [](ConfigSection & section, const std::string & value)
+    {
+        section.connect_port.set(read_integer<uint16_t>(section.id, value), section.id);
+    };
+}
+
 void ConfigReader::handle(const std::string& section_name, const std::string& key, const std::string& value)
 {
     auto& section = this->get_or_create_section(section_name);
 
-    if (key == section.log_levels.key_name)
-    {
-        section.log_levels.set(value, section_name);
-    }
-    else if (key == section.mode.key_name)
-    {
-        handle_mode(section, value);
-    }
-    else if (key == section.local_public_key.key_name)
-    {
-        section.local_public_key.move(read_key<ssp21::PublicKey>(section_name, value, ssp21::BufferType::x25519_key), section_name);
-    }
-    else if (key == section.local_private_key.key_name)
-    {
-        section.local_private_key.move(read_key<ssp21::PrivateKey>(section_name, value, ssp21::BufferType::x25519_key), section_name);
-    }
-    else if (key == section.remote_public_key.key_name)
-    {
-        section.remote_public_key.move(read_key<ssp21::PublicKey>(section_name, value, ssp21::BufferType::x25519_key), section_name);
-    }
-    else if (key == section.local_address.key_name)
-    {
-        section.local_address.set(read_integer<uint16_t>(section_name, value), section_name);
-    }
-    else if (key == section.remote_address.key_name)
-    {
-        section.remote_address.set(read_integer<uint16_t>(section_name, value), section_name);
-    }
-    else if (key == section.max_sessions.key_name)
-    {
-        section.max_sessions.set(read_integer<uint16_t>(section_name, value), section_name);
-    }
-    else if (key == section.listen_endpoint.key_name)
-    {
-        section.listen_endpoint.set(value, section_name);
-    }
-    else if (key == section.listen_port.key_name)
-    {
-        section.listen_port.set(read_integer<uint16_t>(section_name, value), section_name);
-    }
-    else if (key == section.connect_endpoint.key_name)
-    {
-        section.connect_endpoint.set(value, section_name);
-    }
-    else if (key == section.connect_port.key_name)
-    {
-        section.connect_port.set(read_integer<uint16_t>(section_name, value), section_name);
-    }
-    else
+    auto iter = this->key_handler_map.find(key);
+    if(iter == this->key_handler_map.end())
     {
         THROW_LOGIC_ERR("unknown key: " << key, section_name);
     }
+    else
+    {
+        iter->second(section, value);
+    }
 }
 
-void ConfigReader::handle_mode(ConfigSection& section, const std::string& value)
+ProxyConfig::Mode ConfigReader::read_mode(const std::string& section, const std::string& value)
 {
     if (value == "initiator")
     {
-        section.mode.set(ProxyConfig::Mode::initiator, section.id);
+        return ProxyConfig::Mode::initiator;
     }
     else if (value == "responder")
     {
-        section.mode.set(ProxyConfig::Mode::responder, section.id);
+        return ProxyConfig::Mode::responder;
     }
     else
     {
-        THROW_LOGIC_ERR("Unknown mode: " << value, section.id);
+        THROW_LOGIC_ERR("Unknown mode: " << value, section);
     }
 }
 
 template <class T>
-std::shared_ptr<const T> ConfigReader::read_key(const std::string& section, const std::string& value, ssp21::BufferType type)
+std::shared_ptr<const T> ConfigReader::read_key(const std::string& section, const std::string& value)
 {
-    const auto expected_size = ssp21::BufferBase::get_buffer_length(type);
+    const auto expected_size = ssp21::BufferBase::get_buffer_length(ssp21::BufferType::x25519_key);
     size_t num_bytes = 0;
     auto key = std::make_shared<T>();
     auto wseq = key->as_wseq();
@@ -164,7 +181,7 @@ std::shared_ptr<const T> ConfigReader::read_key(const std::string& section, cons
         THROW_LOGIC_ERR("bad key length: " << num_bytes, section);
     }
 
-    key->set_type(type);
+    key->set_type(ssp21::BufferType::x25519_key);
 
     return key;
 }
