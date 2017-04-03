@@ -1,5 +1,6 @@
 [i-proxy]
 mode=initiator
+log_levels=iwemf
 local_public_key=kSK0h1PbI0X2po7tSMigWjuNL43fcsF908DAshf+SEA=
 local_private_key=irkFUNhFKPz+e1c9tDBS50K+hk7z36F0tL/LW5F4YNs=
 remote_public_key=0i1+N78Uqgp5X9W/lZhGMu1NGruTqTmd10Ng8fLkKxc=
@@ -13,6 +14,7 @@ connect_endpoint=127.0.0.1
 
 [r-proxy]
 mode=responder
+log_levels=iwemf
 local_public_key=0i1+N78Uqgp5X9W/lZhGMu1NGruTqTmd10Ng8fLkKxc=
 local_private_key=0F4Mq1TUwtkl4TwGbk7WrbYnnnQMhwSife5QyIIp8QM=
 remote_public_key=kSK0h1PbI0X2po7tSMigWjuNL43fcsF908DAshf+SEA=

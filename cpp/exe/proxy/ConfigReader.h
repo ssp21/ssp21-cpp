@@ -81,6 +81,7 @@ private:
     {
         Section(const std::string& id) :
             id(id),
+            log_levels("log_levels"),
             mode("mode"),
             local_public_key("local_public_key"),
             local_private_key("local_private_key"),
@@ -94,8 +95,11 @@ private:
             connect_endpoint("connect_endpoint")
         {}
 
+        openpal::LogLevels get_levels();
+
         const std::string id;
 
+        SetOnce<std::string> log_levels;
         SetOnce<ProxyConfig::Mode> mode;
 
         SetOnce<std::shared_ptr<const ssp21::PublicKey>> local_public_key;
@@ -111,6 +115,10 @@ private:
 
         SetOnce<uint16_t> connect_port;
         SetOnce<std::string> connect_endpoint;
+
+    private:
+
+        openpal::LogLevels get_levels_for_char(char value);
     };
 
     static int config_ini_handler(void* user, const char* section, const char* key, const char* value);

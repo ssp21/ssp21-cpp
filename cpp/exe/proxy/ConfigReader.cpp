@@ -3,10 +3,14 @@
 
 #include "inih\ini.h"
 
-#include <ssp21/util/Base64.h>
+#include "ssp21/util/Base64.h"
+#include "ssp21/stack/LogLevels.h"
 
 #include <iostream>
 #include <sstream>
+
+using namespace openpal;
+using namespace ssp21;
 
 int ConfigReader::config_ini_handler(void* user, const char* section, const char* key, const char* value)
 {
@@ -19,6 +23,39 @@ int ConfigReader::config_ini_handler(void* user, const char* section, const char
     {
         std::cerr << ex.what() << std::endl;
         return 0;
+    }
+}
+
+LogLevels ConfigReader::Section::get_levels()
+{
+    LogLevels levels;
+    for (auto flag : this->log_levels.get(this->id))
+    {
+        levels |= this->get_levels_for_char(flag);
+    }
+    return levels;
+}
+
+LogLevels ConfigReader::Section::get_levels_for_char(char value)
+{
+    switch (value)
+    {
+    case('v'):
+        return LogLevels(ssp21::levels::event.value);
+    case('e'):
+        return LogLevels(ssp21::levels::error.value);
+    case('w'):
+        return LogLevels(ssp21::levels::warn.value);
+    case('i'):
+        return LogLevels(ssp21::levels::info.value);
+    case('d'):
+        return LogLevels(ssp21::levels::debug.value);
+    case('m'):
+        return LogLevels(ssp21::levels::rx_crypto_msg.value | ssp21::levels::tx_crypto_msg.value);
+    case('f'):
+        return LogLevels(ssp21::levels::rx_crypto_msg_fields.value | ssp21::levels::tx_crypto_msg_fields.value);
+    default:
+        THROW_LOGIC_ERR("unknown log level: " << value, this->id);
     }
 }
 
@@ -46,6 +83,7 @@ std::vector<std::unique_ptr<ProxyConfig>> ConfigReader::read(const std::string& 
 
         auto section = std::make_unique<ProxyConfig>(
                            s->id,
+                           s->get_levels(),
                            s->mode.get(s->id),
                            ProxyConfig::SSP21(
                                s->local_address.get(s->id),
@@ -71,7 +109,11 @@ void ConfigReader::handle(const std::string& section_name, const std::string& ke
 {
     auto& section = this->get_or_create_section(section_name);
 
-    if (key == section.mode.key_name)
+    if (key == section.log_levels.key_name)
+    {
+        section.log_levels.set(value, section_name);
+    }
+    else if (key == section.mode.key_name)
     {
         handle_mode(section, value);
     }

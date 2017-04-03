@@ -70,7 +70,10 @@ protected:
             {
                 const auto rx_data = this->rx_buffer.as_rslice().take<uint32_t>(num_rx);
                 FORMAT_LOG_BLOCK(this->logger, ssp21::levels::debug, "complete socket rx: %u, tx: %s", rx_data.length(), bool_str(this->is_tx_active));
-                openpal::HexLogging::log(this->logger, ssp21::levels::debug, rx_data);
+                if (this->logger.is_enabled(ssp21::levels::debug))
+                {
+                    openpal::HexLogging::log(this->logger, ssp21::levels::debug, rx_data);
+                }
                 this->on_rx_complete(rx_data);
             }
         };

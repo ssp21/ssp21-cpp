@@ -20,18 +20,18 @@ public:
     {
         this->upper = &upper;
         this->start_rx_from_socket();
-		this->upper->on_lower_open();
+        this->upper->on_lower_open();
     }
 
     bool close()
     {
         this->try_close_socket();
-		return this->upper->on_lower_close();
+        return this->upper->on_lower_close();
     }
 
 private:
 
-	ssp21::IUpperLayer* upper = nullptr;
+    ssp21::IUpperLayer* upper = nullptr;
 
     // --- ILowerLayer ---
 
@@ -45,24 +45,24 @@ private:
         return !this->get_is_tx_active();
     }
 
-	virtual void discard_rx_data() override
-	{
-		this->unread_data.make_empty();
-	}
+    virtual void discard_rx_data() override
+    {
+        this->unread_data.make_empty();
+    }
 
-	virtual ssp21::seq32_t start_rx_from_upper_impl() override
-	{
-		if (this->unread_data.is_empty()) this->start_rx_from_socket();
+    virtual ssp21::seq32_t start_rx_from_upper_impl() override
+    {
+        if (this->unread_data.is_empty()) this->start_rx_from_socket();
 
-		return this->unread_data;
-	}
+        return this->unread_data;
+    }
 
     // --- ASIOLayerBase ---
 
     virtual void on_rx_complete(const ssp21::seq32_t& data) override
     {
         this->unread_data = data;
-		this->upper->on_lower_rx_ready();
+        this->upper->on_lower_rx_ready();
     }
 
     virtual void on_rx_or_tx_error() override
@@ -72,10 +72,10 @@ private:
 
     virtual void on_tx_complete() override
     {
-		this->upper->on_lower_tx_ready();
+        this->upper->on_lower_tx_ready();
     }
 
-    // --- ILowerLayer ---      
+    // --- ILowerLayer ---
 
     ssp21::seq32_t unread_data;
 };

@@ -70,7 +70,7 @@ void run(const vector<unique_ptr<ProxyConfig>>& config)
             std::make_unique<Proxy>(
                 *c,
                 executor,
-                logger.detach(c->id)
+                logger.detach(c->id, c->log_levels)
             )
         );
     }

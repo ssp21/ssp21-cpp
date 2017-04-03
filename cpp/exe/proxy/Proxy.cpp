@@ -48,9 +48,9 @@ void Proxy::on_session_error(uint64_t session_id)
     const auto iter = this->sessions.find(session_id);
     if (iter != this->sessions.end())
     {
-		const auto session = iter->second;		        
-		this->sessions.erase(iter);
-		session->shutdown();
+        const auto session = iter->second;
+        this->sessions.erase(iter);
+        session->shutdown();
     }
 }
 
@@ -86,9 +86,9 @@ void Proxy::start_connect(asio::ip::tcp::socket accepted_socket)
         if (ec)
         {
             FORMAT_LOG_BLOCK(this->logger, levels::warn, "error connecting: %s", ec.message().c_str());
-			std::error_code ec;
-			connect->listen_socket.shutdown(asio::ip::tcp::socket::shutdown_both, ec);
-			connect->listen_socket.close(ec);
+            std::error_code ec;
+            connect->listen_socket.shutdown(asio::ip::tcp::socket::shutdown_both, ec);
+            connect->listen_socket.close(ec);
         }
         else
         {

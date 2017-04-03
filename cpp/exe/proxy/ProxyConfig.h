@@ -4,8 +4,10 @@
 #include <string>
 #include <memory>
 
-#include <openpal/util/Uncopyable.h>
-#include <ssp21/crypto/BufferTypes.h>
+#include "openpal/util/Uncopyable.h"
+#include "openpal/logging/LogLevels.h"
+
+#include "ssp21/crypto/BufferTypes.h"
 
 struct ProxyConfig : public openpal::Uncopyable
 {
@@ -43,6 +45,7 @@ struct ProxyConfig : public openpal::Uncopyable
 
     ProxyConfig(
         const std::string& id,
+        openpal::LogLevels log_levels,
         Mode mode,
         const SSP21& ssp21,
         uint16_t max_sessions,
@@ -52,6 +55,7 @@ struct ProxyConfig : public openpal::Uncopyable
         const std::string& connect_endpoint
     ) :
         id(id),
+        log_levels(log_levels),
         mode(mode),
         ssp21(ssp21),
         max_sessions(max_sessions),
@@ -62,6 +66,7 @@ struct ProxyConfig : public openpal::Uncopyable
     {}
 
     const std::string id;
+    openpal::LogLevels log_levels;
     const Mode mode;
 
     const SSP21 ssp21;
