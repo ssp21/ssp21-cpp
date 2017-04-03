@@ -98,7 +98,7 @@ void Proxy::start_connect(asio::ip::tcp::socket accepted_socket)
             {
                 // max_sessions guaranteed to be > 0
                 const auto oldest = this->sessions.begin();
-                FORMAT_LOG_BLOCK(this->logger, levels::warn, "Max sessions exceeded. Shutting down oldest session: %lud", oldest->first);
+                SIMPLE_LOG_BLOCK(this->logger, levels::warn, "Max sessions exceeded, shutting down oldest session");
                 oldest->second->shutdown();
                 this->sessions.erase(oldest);
             }
