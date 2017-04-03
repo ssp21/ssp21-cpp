@@ -5,9 +5,11 @@
 
 #include <map>
 #include <vector>
+#include <functional>
 
 class ConfigReader
 {
+    typedef std::function<void(const std::string& value)> key_handler_func_t;
 
 public:
 
@@ -15,7 +17,9 @@ public:
 
 private:
 
-    ConfigReader() = default;
+    std::map<std::string, key_handler_func_t> key_handler_map;
+
+    ConfigReader();
 
     static int config_ini_handler(void* user, const char* section, const char* key, const char* value);
 

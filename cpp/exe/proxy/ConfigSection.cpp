@@ -3,22 +3,24 @@
 
 #include "ssp21/stack/LogLevels.h"
 
+#include "ConfigKeys.h"
+
 using namespace openpal;
 
 ConfigSection::ConfigSection(const std::string& id) :
     id(id),
-    log_levels("log_levels"),
-    mode("mode"),
-    local_public_key("local_public_key"),
-    local_private_key("local_private_key"),
-    remote_public_key("remote_public_key"),
-    local_address("local_address"),
-    remote_address("remote_address"),
-    max_sessions("max_sessions"),
-    listen_port("listen_port"),
-    listen_endpoint("listen_endpoint"),
-    connect_port("connect_port"),
-    connect_endpoint("connect_endpoint")
+    log_levels(keys::log_levels),
+    mode(keys::mode),
+    local_public_key(keys::local_public_key),
+    local_private_key(keys::local_private_key),
+    remote_public_key(keys::remote_public_key),
+    local_address(keys::local_address),
+    remote_address(keys::remote_address),
+    max_sessions(keys::max_sessions),
+    listen_port(keys::listen_port),
+    listen_endpoint(keys::listen_endpoint),
+    connect_port(keys::connect_port),
+    connect_endpoint(keys::connect_endpoint)
 {}
 
 std::unique_ptr<ProxyConfig> ConfigSection::get_config() const

@@ -12,6 +12,11 @@
 using namespace openpal;
 using namespace ssp21;
 
+ConfigReader::ConfigReader()
+{
+
+}
+
 int ConfigReader::config_ini_handler(void* user, const char* section, const char* key, const char* value)
 {
     try
