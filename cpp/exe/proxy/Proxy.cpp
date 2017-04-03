@@ -8,9 +8,9 @@ using namespace openpal;
 using namespace asio;
 
 Proxy::Server::Server(asio::io_service& context, const std::string& address, uint16_t port) :
-    local_endpoint(ip::address::from_string(address), port),
     acceptor(context),
-    socket(context)
+    socket(context),
+    local_endpoint(ip::address::from_string(address), port)
 {
     acceptor.open(this->local_endpoint.protocol());
     acceptor.bind(this->local_endpoint);
@@ -98,7 +98,7 @@ void Proxy::start_connect(asio::ip::tcp::socket accepted_socket)
             {
                 // max_sessions guaranteed to be > 0
                 const auto oldest = this->sessions.begin();
-                FORMAT_LOG_BLOCK(this->logger, levels::warn, "Max sessions exceeded. Shutting down oldest session: %lld", oldest->first);
+                FORMAT_LOG_BLOCK(this->logger, levels::warn, "Max sessions exceeded. Shutting down oldest session: %lud", oldest->first);
                 oldest->second->shutdown();
                 this->sessions.erase(oldest);
             }
