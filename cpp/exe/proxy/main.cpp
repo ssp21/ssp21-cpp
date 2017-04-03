@@ -49,7 +49,7 @@ void run(const vector<unique_ptr<ProxyConfig>>& config)
 {
     if (config.empty())
     {
-        throw std::exception("no proxy configurations were specified");
+        throw std::logic_error("no proxy configurations were specified");
     }
 
     ConsolePrettyPrinter::Settings settings;

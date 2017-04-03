@@ -37,16 +37,6 @@ public:
         this->value = value;
     }
 
-    void move(T& value, const std::string& section)
-    {
-        if (defined)
-        {
-            THROW_LOGIC_ERR("value already defined: " << key_name, section);
-        }
-        defined = true;
-        this->value = std::move(value);
-    }
-
     const char* const key_name;
 
 private:

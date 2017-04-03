@@ -1,4 +1,4 @@
-#include "sodium\Initialize.h"
+#include "sodium/Initialize.h"
 
 #include "ssp21/crypto/Crypto.h"
 #include "ssp21/util/Base64.h"

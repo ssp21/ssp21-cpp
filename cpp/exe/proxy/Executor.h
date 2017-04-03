@@ -37,7 +37,7 @@ public:
 
 private:
 
-    openpal::ITimer* Executor::start(const std::chrono::steady_clock::time_point& expiration, const openpal::action_t& runnable);
+    openpal::ITimer* start(const std::chrono::steady_clock::time_point& expiration, const openpal::action_t& runnable);
 
     asio::io_service context;
 

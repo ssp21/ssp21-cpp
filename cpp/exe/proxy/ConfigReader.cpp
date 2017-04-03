@@ -39,9 +39,9 @@ std::vector<std::unique_ptr<ProxyConfig>> ConfigReader::read(const std::string& 
     case(0):
         break;
     case(-1):
-        throw std::exception("config file not found");
+        throw std::logic_error("config file not found");
     default:
-        throw std::exception("error reading config file");
+        throw std::logic_error("error reading config file");
     }
 
     std::vector<std::unique_ptr<ProxyConfig>> ret;
@@ -68,17 +68,17 @@ ConfigReader::ConfigReader()
 
     this->key_handler_map[keys::local_public_key] = [](ConfigSection & section, const std::string & value)
     {
-        section.local_public_key.move(read_key<ssp21::PublicKey>(section.id, value), section.id);
+        section.local_public_key.set(read_key<ssp21::PublicKey>(section.id, value), section.id);
     };
 
     this->key_handler_map[keys::local_private_key] = [](ConfigSection & section, const std::string & value)
     {
-        section.local_private_key.move(read_key<ssp21::PrivateKey>(section.id, value), section.id);
+        section.local_private_key.set(read_key<ssp21::PrivateKey>(section.id, value), section.id);
     };
 
     this->key_handler_map[keys::remote_public_key] = [](ConfigSection & section, const std::string & value)
     {
-        section.remote_public_key.move(read_key<ssp21::PublicKey>(section.id, value), section.id);
+        section.remote_public_key.set(read_key<ssp21::PublicKey>(section.id, value), section.id);
     };
 
     this->key_handler_map[keys::local_address] = [](ConfigSection & section, const std::string & value)
