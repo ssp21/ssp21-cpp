@@ -7,6 +7,7 @@ include(${PROJECT_SOURCE_DIR}/cmake/settings.cmake)
 option(SSP21_PROXY "Build the proxy" ON)
 
 include_directories(./cpp/libs/include)
+include_directories(./cpp/libs/src)
 include_directories(./deps/openpal/cpp/libs/include)
 
 # ---- openpal library ----
@@ -21,7 +22,7 @@ add_library(ssp21 ${LIB_TYPE} ${ssp21_SRC})
 target_link_libraries(ssp21 openpal)
 install(TARGETS ssp21 DESTINATION lib)
 set_target_properties(ssp21 PROPERTIES FOLDER libs)
-target_include_directories(ssp21 PRIVATE ./cpp/libs/src)
+
 
 # ---- sodiumbackend library ----
 file(GLOB_RECURSE sodiumbackend_SRC ./cpp/libs/src/sodium/*.cpp ./cpp/libs/src/sodium/*.h ./cpp/libs/include/sodium/*.h)
@@ -47,9 +48,9 @@ if(SSP21_PROXY)
    add_executable (ssp21-proxy ${proxy_SRC} ./deps/inih/ini.c)
    target_link_libraries(ssp21-proxy sodiumbackend ${PTHREAD})
    
-   target_include_directories(ssp21-proxy PRIVATE ./deps ${ASIO_SUBMODULE_DIR})
+   include_directories(./deps ${ASIO_SUBMODULE_DIR})
    target_compile_definitions(ssp21-proxy PRIVATE -DASIO_STANDALONE)
-   set_target_properties(ssp21-proxy PROPERTIES FOLDER exe)
+   #set_target_properties(ssp21-proxy PROPERTIES FOLDER exe)
 
 endif()
 
