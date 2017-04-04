@@ -98,7 +98,6 @@ file(GLOB_RECURSE testssp21_SRC ./cpp/tests/ssp21/*.cpp ./cpp/tests/ssp21/*.h)
 add_executable (testssp21 ${testssp21_SRC})
 target_link_libraries (testssp21 ssp21 testlib)
 set_target_properties(testssp21 PROPERTIES FOLDER tests)
-target_include_directories(testssp21 PRIVATE ./cpp/libs/src)
 add_test(testssp21 testssp21)
 
 add_custom_target(
