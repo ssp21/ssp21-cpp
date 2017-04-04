@@ -49,7 +49,7 @@ if(SSP21_PROXY)
    target_link_libraries(ssp21-proxy sodiumbackend ${PTHREAD})
    
    include_directories(./deps ${ASIO_SUBMODULE_DIR})
-   target_compile_definitions(ssp21-proxy PRIVATE -DASIO_STANDALONE)
+   add_definitions(-DASIO_STANDALONE)
    #set_target_properties(ssp21-proxy PROPERTIES FOLDER exe)
 
 endif()
