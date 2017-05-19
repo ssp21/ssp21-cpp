@@ -1,7 +1,7 @@
 package com.automatak.render.ssp21.messages.generators
 
 import com.automatak.render.EnumModel
-import com.automatak.render.ssp21.messages.{Bitfield, StructField}
+import com.automatak.render.ssp21.messages.{Bitfield, Struct, StructField}
 import com.automatak.render.ssp21.{Include, Includes}
 
 
@@ -91,7 +91,7 @@ object Seq8FieldGenerator extends FieldGenerator with PassByConstRef {
 
   override def paramType: String = "seq8_t"
 
-  override def cppType: String = "SeqField<openpal::UInt8>"
+  override def cppType: String = "SeqByteField<openpal::UInt8>"
 
   def defaultValue: Option[String] = None
 }
@@ -101,20 +101,22 @@ object Seq16FieldGenerator extends FieldGenerator with PassByConstRef {
 
   override def paramType: String = "seq16_t"
 
-  override def cppType: String = "SeqField<openpal::UInt16>"
+  override def cppType: String = "SeqByteField<openpal::UInt16>"
 
   def defaultValue: Option[String] = None
 }
 
-case class Seq8Seq16FieldGenerator(capacity: Int) extends FieldGenerator with PassByConstRef {
+case class Seq8OfStructGenerator(struct: Struct, capacity: Int) extends FieldGenerator with PassByConstRef {
 
-  override def includes = Set(Includes.seqSeqField)
+  override def includes = Set(Includes.seqStructField, Includes.message(struct.name))
 
-  override def cppType: String = "SeqSeqField<openpal::UInt8, openpal::UInt16, %d>".format(capacity)
+  override def cppType: String = "SeqStructField<openpal::UInt8, %s, %d>".format(struct.name, capacity)
 
   def defaultValue: Option[String] = None
 
   override def initializeInFullConstructor: Boolean = false
 }
+
+
 
 

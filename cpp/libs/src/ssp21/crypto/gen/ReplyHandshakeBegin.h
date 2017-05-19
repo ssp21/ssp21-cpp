@@ -17,9 +17,10 @@
 #define SSP21_REPLYHANDSHAKEBEGIN_H
 
 #include "ssp21/crypto/gen/Function.h"
+#include "ssp21/crypto/gen/CertificateEnvelope.h"
 #include "ssp21/crypto/IMessage.h"
-#include "ssp21/crypto/SeqField.h"
-#include "ssp21/crypto/SeqSeqField.h"
+#include "ssp21/crypto/SeqByteField.h"
+#include "ssp21/crypto/SeqStructField.h"
 
 namespace ssp21 {
 
@@ -39,8 +40,8 @@ struct ReplyHandshakeBegin final : public IMessage, private openpal::Uncopyable
     static const uint8_t min_size_bytes = 3;
     static const Function function = Function::reply_handshake_begin;
 
-    SeqField<openpal::UInt8> ephemeral_public_key;
-    SeqSeqField<openpal::UInt8, openpal::UInt16, 6> certificates;
+    SeqByteField<openpal::UInt8> ephemeral_public_key;
+    SeqStructField<openpal::UInt8, CertificateEnvelope, 6> certificates;
 
 };
 

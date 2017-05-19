@@ -21,11 +21,12 @@
 #include "ssp21/crypto/gen/ParseError.h"
 #include "ssp21/crypto/gen/FormatError.h"
 #include "ssp21/crypto/gen/PublicKeyType.h"
+#include "ssp21/crypto/gen/ExtensionEnvelope.h"
 #include "ssp21/util/SequenceTypes.h"
-#include "ssp21/crypto/SeqField.h"
 #include "ssp21/crypto/EnumField.h"
-#include "ssp21/crypto/SeqSeqField.h"
+#include "ssp21/crypto/SeqByteField.h"
 #include "ssp21/crypto/IntegerField.h"
+#include "ssp21/crypto/SeqStructField.h"
 #include "ssp21/crypto/IMessagePrinter.h"
 
 namespace ssp21 {
@@ -48,10 +49,10 @@ struct CertificateBody final
     IntegerField<openpal::UInt32> serial_number;
     IntegerField<openpal::UInt32> valid_after;
     IntegerField<openpal::UInt32> valid_before;
-    SeqField<openpal::UInt8> signing_level;
+    SeqByteField<openpal::UInt8> signing_level;
     EnumField<PublicKeyTypeSpec> public_key_type;
-    SeqField<openpal::UInt8> public_key;
-    SeqSeqField<openpal::UInt8, openpal::UInt16, 5> extensions;
+    SeqByteField<openpal::UInt8> public_key;
+    SeqStructField<openpal::UInt8, ExtensionEnvelope, 5> extensions;
 
     ParseError read(seq32_t& input);
     FormatError write(wseq32_t& output) const;

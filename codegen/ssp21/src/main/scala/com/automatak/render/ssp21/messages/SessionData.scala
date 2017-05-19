@@ -12,8 +12,8 @@ object SessionData extends Message {
 
   override def fields: List[Field] = List(
     StructField("metadata", AuthMetadata),
-    Seq16("user_data"),
-    Seq8("auth_tag")
+    Seq16OfByte("user_data"),
+    Seq8OfByte("auth_tag")
   )
 
 }

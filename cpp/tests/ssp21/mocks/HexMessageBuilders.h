@@ -34,8 +34,7 @@ namespace ssp21
             uint16_t max_nonce,
             uint32_t max_session_time,
             CertificateMode certificate_mode,
-            const std::string& hex_ephem_pub_key,
-            std::initializer_list<std::string> certificates = {}
+            const std::string& hex_ephem_pub_key
         );
 
         std::string request_handshake_auth(const std::string& mac);
@@ -43,8 +42,7 @@ namespace ssp21
         std::string reply_handshake_auth(const std::string& mac);
 
         std::string reply_handshake_begin(
-            const std::string& hex_ephem_pub_key,
-            std::initializer_list<std::string> certificates = {}
+            const std::string& hex_ephem_pub_key
         );
 
         std::string reply_handshake_error(HandshakeError err);

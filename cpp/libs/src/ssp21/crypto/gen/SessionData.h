@@ -19,7 +19,7 @@
 #include "ssp21/crypto/gen/Function.h"
 #include "ssp21/crypto/gen/AuthMetadata.h"
 #include "ssp21/crypto/IMessage.h"
-#include "ssp21/crypto/SeqField.h"
+#include "ssp21/crypto/SeqByteField.h"
 
 namespace ssp21 {
 
@@ -42,8 +42,8 @@ struct SessionData final : public IMessage, private openpal::Uncopyable
     static const Function function = Function::session_data;
 
     AuthMetadata metadata;
-    SeqField<openpal::UInt16> user_data;
-    SeqField<openpal::UInt8> auth_tag;
+    SeqByteField<openpal::UInt16> user_data;
+    SeqByteField<openpal::UInt8> auth_tag;
 
 };
 

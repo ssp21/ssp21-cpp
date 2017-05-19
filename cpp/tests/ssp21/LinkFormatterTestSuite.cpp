@@ -3,7 +3,6 @@
 #include "catch.hpp"
 
 #include "ssp21/link/LinkFrameWriter.h"
-#include "ssp21/crypto/SeqField.h"
 
 #include "testlib/Hex.h"
 #include "testlib/HexConversions.h"

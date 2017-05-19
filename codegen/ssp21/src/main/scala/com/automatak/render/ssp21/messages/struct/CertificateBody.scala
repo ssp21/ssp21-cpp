@@ -11,10 +11,10 @@ object CertificateBody extends Struct {
     U32("serial_number"),
     U32("valid_after"),
     U32("valid_before"),
-    Seq8("signing_level"),
+    Seq8OfByte("signing_level"),
     Enum(PublicKeyType),
-    Seq8("public_key"),
-    Seq8Seq16("extensions", 5)
+    Seq8OfByte("public_key"),
+    Seq8OfStruct("extensions", ExtensionEnvelope, 5)
   )
 
 }

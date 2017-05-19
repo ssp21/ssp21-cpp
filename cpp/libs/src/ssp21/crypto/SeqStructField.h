@@ -1,42 +1,41 @@
 
-#ifndef SSP21_SEQSEQFIELD_H
-#define SSP21_SEQSEQFIELD_H
+#ifndef SSP21_SEQSTRUCTFIELD_H
+#define SSP21_SEQSTRUCTFIELD_H
 
-#include "ssp21/crypto/SeqField.h"
 #include "openpal/logging/Logger.h"
 #include "openpal/logging/LogMacros.h"
 
 namespace ssp21
 {
 
-    template <class OuterType, class InnerType, uint8_t MAX_COUNT>
-    class SeqSeqField
+    template <class CountType, class StructType, uint8_t MAX_COUNT>
+    class SeqStructField
     {
 
     public:
 
-        typedef typename OuterType::type_t count_t;
-        typedef openpal::RSeq<typename InnerType::type_t> seq_t;
+        typedef typename CountType::type_t count_t;
 
         ParseError read(seq32_t& input)
         {
             this->clear();
 
-            IntegerField<OuterType> count;
+            IntegerField<CountType> count;
 
             auto cerr = count.read(input);
             if (any(cerr)) return cerr;
 
             while (count > 0)
             {
-                SeqField<InnerType> slice;
-                auto serr = slice.read(input);
+				StructType item;                ;
+                auto serr = item.read(input);
                 if (any(serr)) return serr;
 
-                if (!this->push(slice))
+                if (!this->push(item))
                 {
                     return ParseError::impl_capacity_limit;
                 }
+
                 --count;
             }
 
@@ -45,15 +44,14 @@ namespace ssp21
 
         FormatError write(wseq32_t& output) const
         {
-            IntegerField<OuterType> count_field(this->count_);
+            IntegerField<CountType> count_field(this->count_);
 
             auto err = count_field.write(output);
             if (any(err)) return err;
 
             for (count_t i = 0; i < this->count_; ++i)
-            {
-                SeqField<InnerType> item(this->items_[i]);
-                auto serr = item.write(output);
+            {                
+                auto serr = this->items_[i].write(output);
                 if (any(serr)) return serr;
             }
 
@@ -66,10 +64,12 @@ namespace ssp21
             SAFE_STRING_FORMAT(message, openpal::max_log_entry_size, "%s (count = %u)", name, this->count());
             printer.print(message);
 
-            for (count_t i = 0; i < this->count_; ++i)
+            for (uint32_t i = 0; i < this->count_; ++i)
             {
-                SAFE_STRING_FORMAT(message, openpal::max_log_entry_size, "#%u", i + 1);
-                printer.print(message, this->items_[i]);
+				SAFE_STRING_FORMAT(message, openpal::max_log_entry_size, "field #%u", i+1);
+				printer.print(message);
+			
+				this->items_[i].print("test", printer); // TODO
             }
         }
 
@@ -78,7 +78,7 @@ namespace ssp21
             this->count_ = 0;
         }
 
-        bool push(const seq_t& item)
+        bool push(const StructType& item)
         {
             if (this->count_ == MAX_COUNT)
             {
@@ -90,7 +90,7 @@ namespace ssp21
             return true;
         }
 
-        bool read(count_t i, seq_t& item) const
+        bool read(count_t i, StructType& item) const
         {
             if (i >= this->count_)
             {
@@ -109,7 +109,7 @@ namespace ssp21
     private:
 
         count_t count_ = 0;
-        seq_t items_[MAX_COUNT];
+		StructType items_[MAX_COUNT];
     };
 
 }

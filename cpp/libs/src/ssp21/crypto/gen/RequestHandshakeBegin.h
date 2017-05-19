@@ -22,11 +22,12 @@
 #include "ssp21/crypto/gen/CertificateMode.h"
 #include "ssp21/crypto/gen/CryptoSpec.h"
 #include "ssp21/crypto/gen/SessionConstraints.h"
-#include "ssp21/crypto/SeqField.h"
+#include "ssp21/crypto/gen/CertificateEnvelope.h"
 #include "ssp21/crypto/IMessage.h"
 #include "ssp21/crypto/EnumField.h"
-#include "ssp21/crypto/SeqSeqField.h"
+#include "ssp21/crypto/SeqByteField.h"
 #include "ssp21/crypto/IntegerField.h"
+#include "ssp21/crypto/SeqStructField.h"
 
 namespace ssp21 {
 
@@ -54,8 +55,8 @@ struct RequestHandshakeBegin final : public IMessage, private openpal::Uncopyabl
     CryptoSpec spec;
     SessionConstraints constraints;
     EnumField<CertificateModeSpec> certificate_mode;
-    SeqField<openpal::UInt8> ephemeral_public_key;
-    SeqSeqField<openpal::UInt8, openpal::UInt16, 6> certificates;
+    SeqByteField<openpal::UInt8> ephemeral_public_key;
+    SeqStructField<openpal::UInt8, CertificateEnvelope, 6> certificates;
 
 };
 

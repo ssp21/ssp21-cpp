@@ -13,32 +13,33 @@
 // Licensed under the terms of the BSDv3 license
 //
 
-#ifndef SSP21_CERTIFICATEENVELOPE_H
-#define SSP21_CERTIFICATEENVELOPE_H
+#ifndef SSP21_EXTENSIONENVELOPE_H
+#define SSP21_EXTENSIONENVELOPE_H
 
+#include <cstdint>
+#include "openpal/serialization/BigEndian.h"
 #include "ssp21/crypto/gen/ParseError.h"
 #include "ssp21/crypto/gen/FormatError.h"
 #include "ssp21/util/SequenceTypes.h"
 #include "ssp21/crypto/SeqByteField.h"
+#include "ssp21/crypto/IntegerField.h"
 #include "ssp21/crypto/IMessagePrinter.h"
 
 namespace ssp21 {
 
-struct CertificateEnvelope final 
+struct ExtensionEnvelope final 
 {
-    CertificateEnvelope();
+    ExtensionEnvelope();
 
-    CertificateEnvelope(
-        const seq8_t& issuer_id,
-        const seq8_t& signature,
-        const seq16_t& certificate_body
+    ExtensionEnvelope(
+        uint32_t identifier,
+        const seq16_t& extension_body
     );
 
-    static const uint8_t min_size_bytes = 4;
+    static const uint8_t min_size_bytes = 6;
 
-    SeqByteField<openpal::UInt8> issuer_id;
-    SeqByteField<openpal::UInt8> signature;
-    SeqByteField<openpal::UInt16> certificate_body;
+    IntegerField<openpal::UInt32> identifier;
+    SeqByteField<openpal::UInt16> extension_body;
 
     ParseError read(seq32_t& input);
     FormatError write(wseq32_t& output) const;

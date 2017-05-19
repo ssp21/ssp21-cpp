@@ -1,0 +1,64 @@
+//
+//  _   _         ______    _ _ _   _             _ _ _
+// | \ | |       |  ____|  | (_) | (_)           | | | |
+// |  \| | ___   | |__   __| |_| |_ _ _ __   __ _| | | |
+// | . ` |/ _ \  |  __| / _` | | __| | '_ \ / _` | | | |
+// | |\  | (_) | | |___| (_| | | |_| | | | | (_| |_|_|_|
+// |_| \_|\___/  |______\__,_|_|\__|_|_| |_|\__, (_|_|_)
+//                                           __/ |
+//                                          |___/
+// 
+// This file is auto-generated. Do not edit manually
+// 
+// Licensed under the terms of the BSDv3 license
+//
+
+#include "ssp21/crypto/gen/ExtensionEnvelope.h"
+
+#include "ssp21/crypto/MessageParser.h"
+#include "ssp21/crypto/MessagePrinting.h"
+#include "ssp21/crypto/MessageFormatter.h"
+
+namespace ssp21 {
+
+ExtensionEnvelope::ExtensionEnvelope()
+{}
+
+ExtensionEnvelope::ExtensionEnvelope(
+    uint32_t identifier,
+    const seq16_t& extension_body
+) :
+    identifier(identifier),
+    extension_body(extension_body)
+{}
+
+ParseError ExtensionEnvelope::read(seq32_t& input)
+{
+    return MessageParser::read_fields(
+        input,
+        identifier,
+        extension_body
+    );
+}
+
+FormatError ExtensionEnvelope::write(wseq32_t& output) const
+{
+    return MessageFormatter::write_fields(
+        output,
+        identifier,
+        extension_body
+    );
+}
+
+void ExtensionEnvelope::print(const char* name, IMessagePrinter& printer) const
+{
+    MessagePrinting::print_fields(
+        printer,
+        "identifier",
+        identifier,
+        "extension_body",
+        extension_body
+    );
+}
+
+}

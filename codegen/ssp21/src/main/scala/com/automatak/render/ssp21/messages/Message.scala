@@ -64,7 +64,7 @@ sealed case class Enum(model: EnumModel) extends Field {
   def fixedSize: Option[Int] = Some(1)
 }
 
-sealed case class Seq8(name: String) extends Field {
+sealed case class Seq8OfByte(name: String) extends Field {
   def cpp = Seq8FieldGenerator
 
   def minSizeBytes: Int = 1
@@ -72,7 +72,7 @@ sealed case class Seq8(name: String) extends Field {
   def fixedSize: Option[Int] = None
 }
 
-sealed case class Seq16(name: String) extends Field {
+sealed case class Seq16OfByte(name: String) extends Field {
   def cpp = Seq16FieldGenerator
 
   def minSizeBytes: Int = 2
@@ -80,16 +80,14 @@ sealed case class Seq16(name: String) extends Field {
   def fixedSize: Option[Int] = None
 }
 
-sealed case class Seq8Seq16(name: String, capacity: Int) extends Field {
+sealed case class Seq8OfStruct(name: String, struct: Struct, capacity: Int) extends Field {
 
-  def cpp = Seq8Seq16FieldGenerator(capacity)
+  def cpp = Seq8OfStructGenerator(struct, capacity)
 
   def minSizeBytes: Int = 1
 
   def fixedSize: Option[Int] = None
 }
-
-//def cpp =
 
 trait Struct {
 

@@ -1,6 +1,6 @@
 
-#ifndef SSP21_SEQFIELD_H
-#define SSP21_SEQFIELD_H
+#ifndef SSP21_SEQBYTEFIELD_H
+#define SSP21_SEQBYTEFIELD_H
 
 #include "openpal/serialization/BigEndian.h"
 
@@ -15,27 +15,27 @@
 
 namespace ssp21
 {
-    template <class T>
-    class SeqField final : public openpal::RSeq<typename T::type_t>
+    template <class CountType>
+    class SeqByteField final : public openpal::RSeq<typename CountType::type_t>
     {
     public:
 
-        typedef openpal::RSeq<typename T::type_t> seq_t;
+        typedef openpal::RSeq<typename CountType::type_t> seq_t;
 
-        SeqField() {}
+		SeqByteField() {}
 
-        SeqField& operator=(const seq_t& other)
+		SeqByteField& operator=(const seq_t& other)
         {
             seq_t::operator=(other);
             return *this;
         }
 
-        explicit SeqField(const seq_t& value) : seq_t(value)
+        explicit SeqByteField(const seq_t& value) : seq_t(value)
         {}
 
         ParseError read(seq32_t& input)
         {
-            IntegerField<T> count;
+            IntegerField<CountType> count;
             auto err = count.read(input);
             if (any(err)) return err;
 
@@ -51,7 +51,7 @@ namespace ssp21
 
         FormatError write(wseq32_t& dest) const
         {
-            IntegerField<T> count(this->length());
+            IntegerField<CountType> count(this->length());
 
             auto err = count.write(dest);
             if (any(err)) return err;

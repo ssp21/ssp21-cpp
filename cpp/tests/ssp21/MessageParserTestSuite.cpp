@@ -6,8 +6,7 @@
 #include "ssp21/crypto/IntegerField.h"
 #include "ssp21/crypto/MessageParser.h"
 
-#include "ssp21/crypto/SeqField.h"
-#include "ssp21/crypto/SeqSeqField.h"
+#include "ssp21/crypto/SeqByteField.h"
 
 #include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
@@ -84,7 +83,7 @@ TEST_CASE(SUITE("ignores extra data after fields"))
 
 TEST_CASE(SUITE("reads Seq8 correctly"))
 {
-    SeqField<openpal::UInt8> field;
+	SeqByteField<openpal::UInt8> field;
     Hex hex("04 00 01 02 03 FF");
 
     auto input = hex.as_rslice();
@@ -97,7 +96,7 @@ TEST_CASE(SUITE("reads Seq8 correctly"))
 
 TEST_CASE(SUITE("returns error if Seq8 empty"))
 {
-    SeqField<openpal::UInt8> field;
+	SeqByteField<openpal::UInt8> field;
     auto input = seq32_t::empty();
     auto err = MessageParser::read_fields(input, field);
     REQUIRE(err == ParseError::insufficient_bytes);
@@ -105,37 +104,10 @@ TEST_CASE(SUITE("returns error if Seq8 empty"))
 
 TEST_CASE(SUITE("returns error if Seq8 incomplete"))
 {
-    SeqField<openpal::UInt8> field;
+	SeqByteField<openpal::UInt8> field;
     Hex hex("04 00 01 02");
     auto input = hex.as_rslice();
     auto err = MessageParser::read_fields(input, field);
     REQUIRE(err == ParseError::insufficient_bytes);
 }
 
-TEST_CASE(SUITE("reads Seq8Seq16 correctly"))
-{
-    SeqSeqField<UInt8, UInt16, 6> seqs;
-    Hex hex("02 00 01 BB 00 02 CA FE DD");
-    auto input = hex.as_rslice();
-    auto err = MessageParser::read_fields(input, seqs);
-    REQUIRE(!any(err));
-    REQUIRE(to_hex(input) == "DD"); // remainder
-    REQUIRE(seqs.count() == 2);
-
-
-    seq16_t slice;
-    REQUIRE(seqs.read(0, slice));
-    REQUIRE(to_hex(slice) == "BB");
-    REQUIRE(seqs.read(1, slice));
-    REQUIRE(to_hex(slice) == "CA FE");
-    REQUIRE_FALSE(seqs.read(2, slice));
-}
-
-TEST_CASE(SUITE("returns err if capacity limit exceeded"))
-{
-    SeqSeqField<UInt8, UInt16, 1> seqs;
-    Hex hex("02 00 01 AA 00 01 BB");
-    auto input = hex.as_rslice();
-    auto err = MessageParser::read_fields(input, seqs);
-    REQUIRE(err == ParseError::impl_capacity_limit);
-}

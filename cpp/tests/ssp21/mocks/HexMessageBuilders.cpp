@@ -58,8 +58,7 @@ namespace ssp21
             uint16_t max_nonce,
             uint32_t max_session_time,
             CertificateMode certificate_mode,
-            const std::string& hex_ephem_pub_key,
-            std::initializer_list<std::string> certificates
+            const std::string& hex_ephem_pub_key
         )
         {
             HexSeq8 pub_key(hex_ephem_pub_key);
@@ -82,6 +81,7 @@ namespace ssp21
                 pub_key
             );
 
+			/*
             std::vector<std::unique_ptr<ssp21::HexSeq16>> certificate_slices;
 
             for (auto& cert : certificates)
@@ -90,6 +90,7 @@ namespace ssp21
                 msg.certificates.push(hex->to_seq());
                 certificate_slices.push_back(std::move(hex));
             }
+			*/
 
             return write_message(msg);
         }
@@ -109,14 +110,15 @@ namespace ssp21
         }
 
         std::string reply_handshake_begin(
-            const std::string& hex_ephem_pub_key,
-            std::initializer_list<std::string> certificates
+            const std::string& hex_ephem_pub_key//,
+            //std::initializer_list<std::string> certificates
         )
         {
             HexSeq8 pub_key(hex_ephem_pub_key);
 
             ReplyHandshakeBegin msg(pub_key);
 
+			/*
             std::vector<std::unique_ptr<HexSeq16>> certificate_slices;
 
             for (auto& cert : certificates)
@@ -125,6 +127,7 @@ namespace ssp21
                 msg.certificates.push(*hex);
                 certificate_slices.push_back(std::move(hex));
             }
+			*/
 
             return write_message(msg);
         }

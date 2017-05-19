@@ -8,6 +8,6 @@ object RequestHandshakeAuth extends Message {
 
   override def function = CryptoFunction.requestHandshakeAuth
 
-  override def fields: List[Field] = List(Seq8("mac"))
+  override def fields: List[Field] = List(Seq8OfByte("mac"))
 
 }

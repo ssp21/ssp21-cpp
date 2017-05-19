@@ -34,8 +34,8 @@ object Includes {
   val enumField = crypto("EnumField")
   val integerField = crypto("IntegerField")
 
-  val seqSeqField = crypto("SeqSeqField")
-  val seqField = crypto("SeqField")
+  val seqField = crypto("SeqByteField")
+  val seqStructField = crypto("SeqStructField")
   val msgFormatter = crypto("MessageFormatter")
   val formatResult = crypto("FormatResult")
   val msgPrinter = crypto("IMessagePrinter")
