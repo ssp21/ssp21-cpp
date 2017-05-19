@@ -9,6 +9,7 @@ import com.automatak.render.ssp21.enums.internal._
 import com.automatak.render.ssp21.enums.ssp21._
 import com.automatak.render.ssp21.messages._
 import com.automatak.render.ssp21.messages.generators.{BitfieldStructGenerator, MessageGenerator, StructGenerator}
+import com.automatak.render.ssp21.messages.struct.{AuthMetadata, CertificateBody, CertificateEnvelope}
 
 
 object GeneratedFiles {

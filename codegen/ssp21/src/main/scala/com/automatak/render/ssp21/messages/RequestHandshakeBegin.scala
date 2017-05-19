@@ -39,7 +39,7 @@ object RequestHandshakeBegin extends Message {
     StructField("spec", CryptoSpec),
     StructField("constraints", SessionConstraints),
     Enum(CertificateMode),
-    CommonFields.ephemerialPublicKey,
+    CommonFields.ephemeralPublicKey,
     CommonFields.certificates
   )
 

@@ -1,4 +1,6 @@
-package com.automatak.render.ssp21.messages
+package com.automatak.render.ssp21.messages.struct
+
+import com.automatak.render.ssp21.messages.{Field, Seq16, Seq8, Struct}
 
 object CertificateEnvelope extends Struct {
 
