@@ -26,7 +26,8 @@ object GeneratedFiles {
     CertificateMode,
     HandshakeError,
     HandshakeKDF,
-    HandshakeMAC
+    HandshakeMAC,
+    PublicKeyType
   ).map(x => EnumConfig(x, true, true)).map(e => EnumGenerator(e, Some(basePath)))
 
   private def ssp21EnumsImpl = List(
@@ -53,7 +54,7 @@ object GeneratedFiles {
     AuthMetadata,
     CryptoSpec,
     CertificateEnvelope,
-    CertificateData,
+    CertificateBody,
     SessionConstraints
   ).map(x => StructGenerator(x))
 

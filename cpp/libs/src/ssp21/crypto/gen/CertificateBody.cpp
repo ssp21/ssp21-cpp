@@ -13,7 +13,7 @@
 // Licensed under the terms of the BSDv3 license
 //
 
-#include "ssp21/crypto/gen/CertificateData.h"
+#include "ssp21/crypto/gen/CertificateBody.h"
 
 #include "ssp21/crypto/MessageParser.h"
 #include "ssp21/crypto/MessagePrinting.h"
@@ -21,67 +21,71 @@
 
 namespace ssp21 {
 
-CertificateData::CertificateData()
+CertificateBody::CertificateBody()
 {}
 
-CertificateData::CertificateData(
+CertificateBody::CertificateBody(
+    uint32_t serial_number,
     uint32_t valid_after,
     uint32_t valid_before,
-    const seq8_t& id,
-    uint8_t role,
-    uint8_t key_type,
+    const seq8_t& signing_level,
+    PublicKeyType public_key_type,
     const seq8_t& public_key
 ) :
+    serial_number(serial_number),
     valid_after(valid_after),
     valid_before(valid_before),
-    id(id),
-    role(role),
-    key_type(key_type),
+    signing_level(signing_level),
+    public_key_type(public_key_type),
     public_key(public_key)
 {}
 
-ParseError CertificateData::read(seq32_t& input)
+ParseError CertificateBody::read(seq32_t& input)
 {
     return MessageParser::read_fields(
         input,
+        serial_number,
         valid_after,
         valid_before,
-        id,
-        role,
-        key_type,
-        public_key
+        signing_level,
+        public_key_type,
+        public_key,
+        extensions
     );
 }
 
-FormatError CertificateData::write(wseq32_t& output) const
+FormatError CertificateBody::write(wseq32_t& output) const
 {
     return MessageFormatter::write_fields(
         output,
+        serial_number,
         valid_after,
         valid_before,
-        id,
-        role,
-        key_type,
-        public_key
+        signing_level,
+        public_key_type,
+        public_key,
+        extensions
     );
 }
 
-void CertificateData::print(const char* name, IMessagePrinter& printer) const
+void CertificateBody::print(const char* name, IMessagePrinter& printer) const
 {
     MessagePrinting::print_fields(
         printer,
+        "serial_number",
+        serial_number,
         "valid_after",
         valid_after,
         "valid_before",
         valid_before,
-        "id",
-        id,
-        "role",
-        role,
-        "key_type",
-        key_type,
+        "signing_level",
+        signing_level,
+        "public_key_type",
+        public_key_type,
         "public_key",
-        public_key
+        public_key,
+        "extensions",
+        extensions
     );
 }
 

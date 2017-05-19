@@ -25,25 +25,22 @@ CertificateEnvelope::CertificateEnvelope()
 {}
 
 CertificateEnvelope::CertificateEnvelope(
-    const seq8_t& certificate_data,
     const seq8_t& issuer_id,
-    uint8_t signature_algorithm,
-    const seq8_t& signature
+    const seq8_t& signature,
+    const seq16_t& certificate_body
 ) :
-    certificate_data(certificate_data),
     issuer_id(issuer_id),
-    signature_algorithm(signature_algorithm),
-    signature(signature)
+    signature(signature),
+    certificate_body(certificate_body)
 {}
 
 ParseError CertificateEnvelope::read(seq32_t& input)
 {
     return MessageParser::read_fields(
         input,
-        certificate_data,
         issuer_id,
-        signature_algorithm,
-        signature
+        signature,
+        certificate_body
     );
 }
 
@@ -51,10 +48,9 @@ FormatError CertificateEnvelope::write(wseq32_t& output) const
 {
     return MessageFormatter::write_fields(
         output,
-        certificate_data,
         issuer_id,
-        signature_algorithm,
-        signature
+        signature,
+        certificate_body
     );
 }
 
@@ -62,14 +58,12 @@ void CertificateEnvelope::print(const char* name, IMessagePrinter& printer) cons
 {
     MessagePrinting::print_fields(
         printer,
-        "certificate_data",
-        certificate_data,
         "issuer_id",
         issuer_id,
-        "signature_algorithm",
-        signature_algorithm,
         "signature",
-        signature
+        signature,
+        "certificate_body",
+        certificate_body
     );
 }
 

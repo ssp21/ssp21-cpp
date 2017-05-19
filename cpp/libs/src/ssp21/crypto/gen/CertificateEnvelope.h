@@ -16,13 +16,10 @@
 #ifndef SSP21_CERTIFICATEENVELOPE_H
 #define SSP21_CERTIFICATEENVELOPE_H
 
-#include <cstdint>
-#include "openpal/serialization/BigEndian.h"
 #include "ssp21/crypto/gen/ParseError.h"
 #include "ssp21/crypto/gen/FormatError.h"
-#include "ssp21/SequenceTypes.h"
+#include "ssp21/util/SequenceTypes.h"
 #include "ssp21/crypto/SeqField.h"
-#include "ssp21/crypto/IntegerField.h"
 #include "ssp21/crypto/IMessagePrinter.h"
 
 namespace ssp21 {
@@ -32,18 +29,16 @@ struct CertificateEnvelope final
     CertificateEnvelope();
 
     CertificateEnvelope(
-        const seq8_t& certificate_data,
         const seq8_t& issuer_id,
-        uint8_t signature_algorithm,
-        const seq8_t& signature
+        const seq8_t& signature,
+        const seq16_t& certificate_body
     );
 
-    static const uint32_t min_size_bytes = 4;
+    static const uint8_t min_size_bytes = 4;
 
-    SeqField<openpal::UInt8> certificate_data;
     SeqField<openpal::UInt8> issuer_id;
-    IntegerField<openpal::UInt8> signature_algorithm;
     SeqField<openpal::UInt8> signature;
+    SeqField<openpal::UInt16> certificate_body;
 
     ParseError read(seq32_t& input);
     FormatError write(wseq32_t& output) const;
