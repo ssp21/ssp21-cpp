@@ -1,8 +1,8 @@
 package com.automatak.render.ssp21.messages.generators
 
+import com.automatak.render.EnumModel
 import com.automatak.render.ssp21.messages.{Bitfield, StructField}
-import com.automatak.render.ssp21.{Include, Includes, Ordering}
-import com.automatak.render.{EnumModel, _}
+import com.automatak.render.ssp21.{Include, Includes}
 
 
 sealed trait FieldGenerator {
@@ -10,7 +10,7 @@ sealed trait FieldGenerator {
 
   def cppType: String
 
-  def paramType : String = cppType
+  def paramType: String = cppType
 
   def defaultValue: Option[String]
 
@@ -89,7 +89,7 @@ case class EnumFieldGenerator(enum: EnumModel) extends FieldGenerator with PassB
 object Seq8FieldGenerator extends FieldGenerator with PassByConstRef {
   override def includes = Set(Includes.seqField)
 
-  override def paramType : String = "seq8_t"
+  override def paramType: String = "seq8_t"
 
   override def cppType: String = "SeqField<openpal::UInt8>"
 
@@ -99,7 +99,7 @@ object Seq8FieldGenerator extends FieldGenerator with PassByConstRef {
 object Seq16FieldGenerator extends FieldGenerator with PassByConstRef {
   override def includes = Set(Includes.seqField)
 
-  override def paramType : String = "seq16_t"
+  override def paramType: String = "seq16_t"
 
   override def cppType: String = "SeqField<openpal::UInt16>"
 

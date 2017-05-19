@@ -1,3 +1,9 @@
 [submodule "deps/openpal"]
 	path = deps/openpal
 	url = git@github.com:automatak/openpal.git
+[submodule "deps/asio"]
+	path = deps/asio
+	url = https://github.com/chriskohlhoff/asio.git
+[submodule "deps/inih"]
+	path = deps/inih
+	url = https://github.com/benhoyt/inih.git

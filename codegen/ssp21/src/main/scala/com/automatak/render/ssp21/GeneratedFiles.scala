@@ -13,28 +13,36 @@ import com.automatak.render.ssp21.messages.generators.{BitfieldStructGenerator, 
 
 object GeneratedFiles {
 
-  def list : List [WriteCppFiles] = internalEnums ::: ssp21Enums ::: bitfiends ::: structs ::: messsages
+  def api: List[WriteCppFiles] = ssp21EnumsAPI ::: internalEnumsAPI
+  def impl : List[WriteCppFiles] = ssp21EnumsImpl ::: internalEnumsImpl ::: bitfiends ::: structs ::: messsages
 
   val basePath = "ssp21/crypto/gen/"
 
-  private def ssp21Enums = List(
-    CryptoFunction(),
-    HandshakeHash(),
-    NonceMode(),
-    DHMode(),
-    SessionMode(),
-    CertificateMode(),
-    HandshakeError(),
-    HandshakeKDF(),
-    HandshakeMAC()
+  private def ssp21EnumsAPI = List(
+    HandshakeHash,
+    NonceMode,
+    DHMode,
+    SessionMode,
+    CertificateMode,
+    HandshakeError,
+    HandshakeKDF,
+    HandshakeMAC
   ).map(x => EnumConfig(x, true, true)).map(e => EnumGenerator(e, Some(basePath)))
 
-  private def internalEnums = List(
-    ParseError(),
-    FormatError(),
-    CryptoError(),
-    Base64DecodeError(),
-    ReassemblyResult()
+  private def ssp21EnumsImpl = List(
+    CryptoFunction
+  ).map(x => EnumConfig(x, true, true)).map(e => EnumGenerator(e, Some(basePath)))
+
+  private def internalEnumsAPI = List(
+    Base64DecodeError,
+    PEMDecodeError,
+    CryptoError
+  ).map(x => EnumConfig(x, false, true)).map(e => EnumGenerator(e, Some(basePath)))
+
+  private def internalEnumsImpl = List(
+    ParseError,
+    FormatError,
+    ReassemblyResult
   ).map(x => EnumConfig(x, false, true)).map(e => EnumGenerator(e, Some(basePath)))
 
   private def bitfiends: List[WriteCppFiles] = List(
@@ -45,7 +53,8 @@ object GeneratedFiles {
     AuthMetadata,
     CryptoSpec,
     CertificateEnvelope,
-    CertificateData
+    CertificateData,
+    SessionConstraints
   ).map(x => StructGenerator(x))
 
   private def messsages: List[WriteCppFiles] = List(

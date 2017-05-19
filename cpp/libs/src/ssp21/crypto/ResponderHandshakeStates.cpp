@@ -5,7 +5,7 @@
 #include "ssp21/crypto/gen/ReplyHandshakeAuth.h"
 
 #include "openpal/logging/LogMacros.h"
-#include "ssp21/LogLevels.h"
+#include "ssp21/stack/LogLevels.h"
 
 
 namespace ssp21
@@ -13,19 +13,20 @@ namespace ssp21
 
     // -------------------------- HandshakeIdle -----------------------------
 
-    Responder::IHandshakeState& HandshakeIdle::on_message(Responder::Context& ctx, const seq32_t& msg_bytes, const RequestHandshakeBegin& msg)
+    Responder::IHandshakeState* ResponderHandshake::Idle::on_message(Responder& ctx, const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
     {
-        auto err = ctx.validate(msg);
+        auto err = ctx.configure_feature_support(msg);
 
         if (any(err))
         {
             FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "handshake error: %s", HandshakeErrorSpec::to_string(err));
             ctx.reply_with_handshake_error(err);
-            return *this;
+            return this;
         }
 
         seq8_t public_ephem_dh_key(ctx.handshake.initialize());	// generate our local ephemeral keys
-        ctx.handshake.set_ck(msg_bytes);						// initialize the chaining key
+
+        ctx.handshake.begin_handshake(msg, msg_bytes);
 
         // now format our response - in the future, this we'll add certificates after this call if applicable
         ReplyHandshakeBegin reply(public_ephem_dh_key);
@@ -34,16 +35,16 @@ namespace ssp21
 
         if (res.is_error())
         {
-            return *this;
+            return this;
         }
 
         std::error_code ec;
 
         ctx.handshake.derive_authentication_key(
             res.written,
-            ctx.local_static_key_pair->private_key,
+            *ctx.keys.local_static_private_key,
             msg.ephemeral_public_key,
-            ctx.remote_static_public_key->as_seq(),
+            ctx.keys.remote_static_public_key->as_seq(),
             ec
         );
 
@@ -51,44 +52,44 @@ namespace ssp21
         {
             FORMAT_LOG_BLOCK(ctx.logger, levels::error, "error deriving auth key: %s", ec.message().c_str());
             ctx.reply_with_handshake_error(HandshakeError::internal);
-            return *this;
+            return this;
         }
 
-        ctx.lower->transmit(res.frame);
+        ctx.lower->start_tx_from_upper(res.frame);
 
-        return HandshakeWaitForAuth::get();
+        return ResponderHandshake::WaitForAuth::get();
     }
 
-    Responder::IHandshakeState& HandshakeIdle::on_message(Responder::Context& ctx, const seq32_t& msg_bytes, const RequestHandshakeAuth& msg)
+    Responder::IHandshakeState* ResponderHandshake::Idle::on_message(Responder& ctx, const RequestHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
     {
         SIMPLE_LOG_BLOCK(ctx.logger, levels::info, "no prior request_handshake_begin");
 
         ctx.reply_with_handshake_error(HandshakeError::no_prior_handshake_begin);
 
-        return *this;
+        return this;
     }
 
     // -------------------------- HandshakeWaitForAuth -----------------------------
 
-    Responder::IHandshakeState& HandshakeWaitForAuth::on_message(Responder::Context& ctx, const seq32_t& msg_bytes, const RequestHandshakeBegin& msg)
+    Responder::IHandshakeState* ResponderHandshake::WaitForAuth::on_message(Responder& ctx, const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
     {
         // process via HandshakeIdle
-        return HandshakeIdle::get().on_message(ctx, msg_bytes, msg);
+        return ResponderHandshake::Idle::get()->on_message(ctx, msg, msg_bytes, now);
     }
 
-    Responder::IHandshakeState& HandshakeWaitForAuth::on_message(Responder::Context& ctx, const seq32_t& msg_bytes, const RequestHandshakeAuth& msg)
+    Responder::IHandshakeState* ResponderHandshake::WaitForAuth::on_message(Responder& ctx, const RequestHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
     {
         if (!ctx.handshake.auth_handshake(msg.mac)) // auth success
         {
             SIMPLE_LOG_BLOCK(ctx.logger, levels::warn, "RequestHandshakeAuth: authentication failure");
             ctx.reply_with_handshake_error(HandshakeError::authentication_error);
-            return HandshakeIdle::get();
+            return ResponderHandshake::Idle::get();
         }
 
         ctx.handshake.mix_ck(msg_bytes);
 
         HashOutput reply_mac;
-        ctx.handshake.calc_auth_handshake_reply_mac(reply_mac);
+        ctx.handshake.calc_auth_handshake_mac(reply_mac);
 
         ReplyHandshakeAuth reply(seq8_t(reply_mac.as_seq()));
 
@@ -96,18 +97,18 @@ namespace ssp21
 
         if (res.is_error())
         {
-            return HandshakeIdle::get();
+            return ResponderHandshake::Idle::get();
         }
 
         ctx.handshake.mix_ck(res.written);
 
-        ctx.handshake.initialize_session(ctx.session, ctx.executor->get_time());
+        ctx.handshake.initialize_session(ctx.session, now);
 
-        ctx.lower->transmit(res.frame);
+        ctx.lower->start_tx_from_upper(res.frame);
 
-        ctx.upper->on_open();
+        ctx.upper->on_lower_open();
 
-        return HandshakeIdle::get();
+        return ResponderHandshake::Idle::get();
     }
 
 }

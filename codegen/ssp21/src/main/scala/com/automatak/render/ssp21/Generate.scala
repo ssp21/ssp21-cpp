@@ -11,7 +11,7 @@ object Generate {
 
   val ssp21GenHeaderPath = Paths.get(basePath, "/include/ssp21/crypto/gen")
   val ssp21GenImplPath = Paths.get(basePath, "/src/ssp21/crypto/gen")
-  val testPath = Paths.get("../cpp/tests/ssp21/gen");
+  val testPath = Paths.get("../cpp/tests/ssp21/gen")
 
   val paths = List(ssp21GenHeaderPath, ssp21GenImplPath, testPath)
 
@@ -19,8 +19,12 @@ object Generate {
 
     paths.foreach(p => Files.createDirectories(p))
 
-    GeneratedFiles.list.foreach { f =>
+    GeneratedFiles.api.foreach { f =>
       f.write(ssp21GenHeaderPath, ssp21GenImplPath)
+    }
+
+    GeneratedFiles.impl.foreach { f =>
+      f.write(ssp21GenImplPath, ssp21GenImplPath)
     }
 
     TestFiles.list.foreach { f =>

@@ -7,7 +7,7 @@ object ReplyHandshakeAuth extends Message {
 
   override def name: String = "ReplyHandshakeAuth"
 
-  def function = CryptoFunction.requestHandshakeAuth
+  def function = CryptoFunction.replyHandshakeAuth
 
   override def fields: List[Field] = RequestHandshakeAuth.fields
 

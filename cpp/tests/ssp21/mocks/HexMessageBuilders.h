@@ -31,6 +31,8 @@ namespace ssp21
             HandshakeKDF handshake_kdf,
             HandshakeMAC handshake_mac,
             SessionMode session_mode,
+            uint16_t max_nonce,
+            uint32_t max_session_time,
             CertificateMode certificate_mode,
             const std::string& hex_ephem_pub_key,
             std::initializer_list<std::string> certificates = {}
@@ -48,6 +50,8 @@ namespace ssp21
         std::string reply_handshake_error(HandshakeError err);
 
         std::string session_data(uint16_t nonce, uint32_t valid_until, bool fir, bool fin, const std::string& user_data, const std::string& auth_tag);
+
+        std::string link_frame(uint16_t src, uint16_t dest, const std::string& payload);
     }
 }
 

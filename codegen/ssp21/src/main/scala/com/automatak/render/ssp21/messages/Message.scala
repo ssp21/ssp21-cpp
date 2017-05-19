@@ -1,6 +1,5 @@
 package com.automatak.render.ssp21.messages
 
-import com.automatak.render.ssp21.WriteCppFiles
 import com.automatak.render.ssp21.messages.generators._
 import com.automatak.render.{EnumModel, EnumValue}
 
@@ -18,10 +17,11 @@ case class Bit(name: String, default: Boolean)
 
 trait Bitfield {
   def name: String
+
   def bits: List[Bit]
 }
 
-case class BitfieldField(name: String, bf: Bitfield) extends  Field {
+case class BitfieldField(name: String, bf: Bitfield) extends Field {
 
   def cpp = BitfieldGenerator(bf)
 
@@ -80,7 +80,7 @@ sealed case class Seq16(name: String) extends Field {
   def fixedSize: Option[Int] = None
 }
 
-sealed case class Seq8Seq16(name: String, capacity : Int) extends Field {
+sealed case class Seq8Seq16(name: String, capacity: Int) extends Field {
 
   def cpp = Seq8Seq16FieldGenerator(capacity)
 

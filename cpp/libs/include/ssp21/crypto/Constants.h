@@ -4,6 +4,7 @@
 #include <cstdint>
 
 #include "ssp21/link/LinkConstants.h"
+#include "openpal/executor/TimeDuration.h"
 
 namespace ssp21
 {
@@ -28,12 +29,21 @@ namespace ssp21
             // maximum length_ required buffer_ length_ across algorithm types
             const uint8_t max_primitive_buffer_length = x25519_key_length;
 
-
-			// defaults for the Session
+            // defaults for the Session
             const uint32_t default_ttl_pad_ms = 10000;
-            const uint16_t default_max_nonce = 32768;
-			const uint32_t default_max_session_time_ms = 60 * 60 * 1000; // 1 hour in milliseconds
 
+            // defaults for the initiator
+            namespace initiator
+            {
+                const openpal::TimeDuration default_response_timeout = openpal::TimeDuration::seconds(2);
+                const openpal::TimeDuration default_retry_timeout = openpal::TimeDuration::seconds(5);
+
+                const uint16_t default_max_nonce = 32768;
+                const uint16_t default_nonce_renegotiation_trigger = default_max_nonce - 128;
+
+                const uint32_t default_max_session_time_ms = 1 * 60 * 60 * 1000; // 1 hour in milliseconds
+                const uint32_t default_session_time_renegotiation_trigger_ms = default_max_session_time_ms - (1 * 60 * 1000); // minus 1 minute in milliseconds
+            }
         }
     }
 }

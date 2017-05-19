@@ -20,8 +20,12 @@ namespace ssp21
 
             virtual void hash_sha256(std::initializer_list<seq32_t> data, SecureBuffer& output) override;
 
-            virtual void hmac_sha256(const seq8_t& key, std::initializer_list<seq32_t> data,
-                                     SecureBuffer& output) override;
+            virtual void hmac_sha256(const seq8_t& key, std::initializer_list<seq32_t> data, SecureBuffer& output) override
+            {
+                hmac_sha256_impl(key, data, output);
+            }
+
+            virtual void hkdf_sha256(const seq8_t& chaining_key, std::initializer_list<seq32_t> input_key_material, SymmetricKey& key1, SymmetricKey& key2) override;
 
             virtual void gen_keypair_x25519(KeyPair& pair) override;
 
@@ -33,6 +37,8 @@ namespace ssp21
             }
 
         private:
+
+            static void hmac_sha256_impl(const seq8_t& key, std::initializer_list<seq32_t> data, SecureBuffer& output);
 
             static SodiumBackend backend_;
         };

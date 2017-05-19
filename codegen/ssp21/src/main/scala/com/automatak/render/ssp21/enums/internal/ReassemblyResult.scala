@@ -5,11 +5,17 @@ package com.automatak.render.ssp21.enums.internal
 
 import com.automatak.render._
 
-object ReassemblyResult {
+object ReassemblyResult extends EnumModel {
 
-  private val comments = List("The result of a message reassembly operation")
+  override def name: String = "ReassemblyResult"
 
-  def apply(): EnumModel = EnumModel("ReassemblyResult", "reassembly_result", comments, EnumType.UInt8, codes, None, None, Hex, None)
+  override def underscoredName: String = "reassembly_result"
+
+  override def comments: List[String] = List("The result of a message reassembly operation")
+
+  override def nonDefaultValues: List[EnumValue] = codes
+
+  override def defaultValue: Option[EnumValue] = None
 
   private val codes = List(
     EnumValue("complete", 0, "reassembly complete"),

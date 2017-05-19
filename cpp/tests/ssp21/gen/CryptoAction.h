@@ -33,9 +33,11 @@ enum class CryptoAction : uint8_t
     /// 
     hmac_sha256 = 0x2,
     /// 
-    gen_keypair_x25519 = 0x3,
+    hkdf_sha256 = 0x3,
     /// 
-    dh_x25519 = 0x4
+    gen_keypair_x25519 = 0x4,
+    /// 
+    dh_x25519 = 0x5
 };
 
 struct CryptoActionSpec : private openpal::StaticOnly

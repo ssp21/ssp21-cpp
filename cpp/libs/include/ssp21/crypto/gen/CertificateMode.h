@@ -28,8 +28,6 @@ enum class CertificateMode : uint8_t
 {
     /// both parties know each others public DH keys
     preshared_keys = 0x0,
-    /// machine-to-machine certificate format
-    m2m = 0x1,
     /// value not defined
     undefined = 0xFF
 };

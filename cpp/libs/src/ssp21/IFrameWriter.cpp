@@ -2,7 +2,7 @@
 
 #include "openpal/logging/LogMacros.h"
 
-#include "ssp21/LogLevels.h"
+#include "ssp21/stack/LogLevels.h"
 #include "ssp21/crypto/LogMessagePrinter.h"
 
 namespace ssp21
@@ -22,6 +22,8 @@ namespace ssp21
             FORMAT_LOG_BLOCK(this->logger, levels::error, "Error writing message: %s", FormatErrorSpec::to_string(res.err));
             return res;
         }
+
+        FORMAT_LOG_BLOCK(this->logger, levels::tx_crypto_msg, "%s (length = %u)", FunctionSpec::to_string(payload.get_function()), res.written.length());
 
         if (this->logger.is_enabled(levels::tx_crypto_msg_fields))
         {

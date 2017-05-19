@@ -5,20 +5,17 @@ package com.automatak.render.ssp21.enums.ssp21
 
 import com.automatak.render._
 
-object CryptoFunction {
+object CryptoFunction extends EnumModel {
 
-  private val comments = List("Crypto layer function code")
+  override def name: String = "Function"
 
-  def apply(): EnumModel = EnumModel(
-    "Function",
-    "function",
-    comments,
-    EnumType.UInt8,
-    codes,
-    Some(EnumValue.undefined(255)),
-    None,
-    Hex
-  )
+  override def underscoredName: String = "function"
+
+  override def comments: List[String] = List("Crypto layer function code")
+
+  override def nonDefaultValues: List[EnumValue] = codes
+
+  override def defaultValue: Option[EnumValue] = Some(EnumValue.undefined(255))
 
   val requestHandshakeBegin = EnumValue("request_handshake_begin", 0, "Master sends this initiate a handshake")
   val replyHandshakeBegin = EnumValue("reply_handshake_begin", 1, "Outstation replies to the handshake begin from the master")

@@ -12,9 +12,9 @@
 #include "ssp21/crypto/gen/ReplyHandshakeError.h"
 #include "ssp21/crypto/gen/SessionData.h"
 
-#include "HexSequences.h"
+#include "ssp21/link/LinkFrameWriter.h"
 
-#include "MakeUnique.h"
+#include "HexSequences.h"
 
 #include <vector>
 #include <assert.h>
@@ -55,6 +55,8 @@ namespace ssp21
             HandshakeKDF handshake_kdf,
             HandshakeMAC handshake_mac,
             SessionMode session_mode,
+            uint16_t max_nonce,
+            uint32_t max_session_time,
             CertificateMode certificate_mode,
             const std::string& hex_ephem_pub_key,
             std::initializer_list<std::string> certificates
@@ -71,6 +73,10 @@ namespace ssp21
                     handshake_kdf,
                     handshake_mac,
                     session_mode
+                ),
+                SessionConstraints(
+                    max_nonce,
+                    max_session_time
                 ),
                 certificate_mode,
                 pub_key
@@ -145,6 +151,47 @@ namespace ssp21
             );
 
             return write_message(msg);
+        }
+
+        class SeqWritable : public IWritable
+        {
+
+            seq32_t payload;
+
+        public:
+
+            SeqWritable(seq32_t payload) : payload(payload)
+            {}
+
+            virtual FormatResult write(wseq32_t& output) const
+            {
+                const auto result = output.copy_from(payload);
+                return result.empty() ? FormatResult::error(FormatError::insufficient_space) : FormatResult::success(result);
+            }
+
+            virtual void print(IMessagePrinter& printer) const {}
+
+            virtual Function get_function() const
+            {
+                return Function::undefined;
+            }
+        };
+
+        std::string link_frame(uint16_t src, uint16_t dest, const std::string& payload)
+        {
+            const auto max = consts::link::max_config_payload_size;
+
+            Hex data(payload);
+            if (data.as_rslice().length() > max) throw std::logic_error("payload length exceeds maximum");
+            const auto payload_u16 = data.as_rslice().take<uint16_t>(max);
+
+            LinkFrameWriter writer(openpal::Logger::empty(), Addresses(dest, src), max);
+
+            const auto result = writer.write(SeqWritable(payload_u16));
+
+            if (result.is_error()) throw std::logic_error("error writing frame");
+
+            return to_hex(result.frame);
         }
 
     }

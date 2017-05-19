@@ -23,6 +23,8 @@ const char* CryptoErrorSpec::to_string(CryptoError arg)
 {
     switch(arg)
     {
+        case(CryptoError::ok):
+            return "ok";
         case(CryptoError::bad_key_type):
             return "bad_key_type";
         case(CryptoError::dh_x25519_fail):
@@ -45,6 +47,8 @@ const char* CryptoErrorSpec::to_string(CryptoError arg)
             return "max_session_time_exceeded";
         case(CryptoError::empty_user_data):
             return "empty_user_data";
+        case(CryptoError::clock_rollback):
+            return "clock_rollback";
         default:
             return "undefined";
     }

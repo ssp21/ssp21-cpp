@@ -18,7 +18,7 @@
 
 #include <cstdint>
 #include "openpal/util/Uncopyable.h"
-#include "ssp21/ErrorCategory.h"
+#include "ssp21/util/ErrorCategory.h"
 
 namespace ssp21 {
 
@@ -27,28 +27,32 @@ namespace ssp21 {
 */
 enum class CryptoError : uint8_t
 {
+    /// no error
+    ok = 0x0,
     /// attempted operation with bad key type
-    bad_key_type = 0x0,
+    bad_key_type = 0x1,
     /// X25519 DH operation failed. Bad public key?
-    dh_x25519_fail = 0x1,
+    dh_x25519_fail = 0x2,
     /// a procedure cannot be executed b/c of an undefined algorithm
-    undefined_algorithm = 0x2,
+    undefined_algorithm = 0x3,
     /// A calculated MAC did not match the specified MAC
-    mac_auth_fail = 0x3,
+    mac_auth_fail = 0x4,
     /// A buffer had an insufficient or incorrect size
-    bad_buffer_size = 0x4,
+    bad_buffer_size = 0x5,
     /// No validate session for authenticating user data
-    no_valid_session = 0x5,
+    no_valid_session = 0x6,
     /// The TTL on a message is expired
-    expired_ttl = 0x6,
+    expired_ttl = 0x7,
     /// The nonce on a received message has been replayed
-    nonce_replay = 0x7,
+    nonce_replay = 0x8,
     /// A nonce has reached a configured maximum value
-    max_nonce_exceeded = 0x8,
+    max_nonce_exceeded = 0x9,
     /// The session time has reached a configured maximum value
-    max_session_time_exceeded = 0x9,
+    max_session_time_exceeded = 0xA,
     /// Received a session message with no user data
-    empty_user_data = 0xA
+    empty_user_data = 0xB,
+    /// A rollback of the monotonic clock was detected
+    clock_rollback = 0xC
 };
 
 struct CryptoErrorSpec : private openpal::StaticOnly

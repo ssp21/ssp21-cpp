@@ -1,7 +1,7 @@
 
 #include "catch.hpp"
 
-#include "fixtures/ResponderFixture.h"
+#include "fixtures/CryptoLayerFixture.h"
 
 #define SUITE(name) "ResponderTestSuite - " name
 
@@ -9,9 +9,9 @@ using namespace ssp21;
 using namespace openpal;
 
 // helper methods
-void test_begin_handshake_success(ResponderFixture& fix);
+void test_begin_handshake_success(ResponderFixture& fix, uint16_t max_nonce = consts::crypto::initiator::default_max_nonce, uint32_t max_session_time = consts::crypto::initiator::default_max_session_time_ms);
 void test_auth_handshake_success(ResponderFixture& fix);
-void test_init_session_success(ResponderFixture& fix);
+void test_init_session_success(ResponderFixture& fix, uint16_t max_nonce = consts::crypto::initiator::default_max_nonce, uint32_t max_session_time = consts::crypto::initiator::default_max_session_time_ms);
 void test_handshake_error(ResponderFixture& fix, const std::string& request, HandshakeError expected_error, std::initializer_list<CryptoAction> actions);
 
 // ---------- tests for handshake state idle -----------
@@ -19,14 +19,14 @@ void test_handshake_error(ResponderFixture& fix, const std::string& request, Han
 TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_BEGIN with REPLY_HANDSHAKE_BEGIN"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_lower_open();
     test_begin_handshake_success(fix);
 }
 
 TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_AUTH with no_prior_handshake error"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_lower_open();
 
     const auto request = hex::request_handshake_auth(hex::repeat(0xFF, consts::crypto::sha256_hash_output_length));
     test_handshake_error(fix, request, HandshakeError::no_prior_handshake_begin, {});
@@ -35,34 +35,14 @@ TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_AUTH with no_prior_handshake erro
 TEST_CASE(SUITE("responds to malformed handshake begin with bad_message_format"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_lower_open();
     test_handshake_error(fix, "00", HandshakeError::bad_message_format, {});
-}
-
-TEST_CASE(SUITE("responds to m2m certificate mode with unsupported_certificate_mode error"))
-{
-    ResponderFixture fix;
-    fix.responder.on_open();
-
-    const auto request = hex::request_handshake_begin(
-                             0,
-                             NonceMode::increment_last_rx,
-                             DHMode::x25519,
-                             HandshakeHash::sha256,
-                             HandshakeKDF::hkdf_sha256,
-                             HandshakeMAC::hmac_sha256,
-                             SessionMode::hmac_sha256_16,
-                             CertificateMode::m2m,
-                             hex::repeat(0xFF, consts::crypto::x25519_key_length)
-                         );
-
-    test_handshake_error(fix, request, HandshakeError::unsupported_certificate_mode, {});
 }
 
 TEST_CASE(SUITE("responds to invalid key length with bad_message_format"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_lower_open();
 
     const auto request = hex::request_handshake_begin(
                              0,
@@ -72,6 +52,8 @@ TEST_CASE(SUITE("responds to invalid key length with bad_message_format"))
                              HandshakeKDF::hkdf_sha256,
                              HandshakeMAC::hmac_sha256,
                              SessionMode::hmac_sha256_16,
+                             consts::crypto::initiator::default_max_nonce,
+                             consts::crypto::initiator::default_max_session_time_ms,
                              CertificateMode::preshared_keys,
                              hex::repeat(0xFF, (consts::crypto::x25519_key_length - 1))
                          );
@@ -82,7 +64,7 @@ TEST_CASE(SUITE("responds to invalid key length with bad_message_format"))
 TEST_CASE(SUITE("ignores user data without a session"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_lower_open();
 
     const auto request = hex::session_data(1, 0, true, true, "CA FE", hex::repeat(0xFF, 16));
     fix.lower.enqueue_message(request);
@@ -97,7 +79,7 @@ TEST_CASE(SUITE("ignores user data without a session"))
 TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_AUTH with REPLY_HANDSHAKE_AUTH"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_lower_open();
 
     REQUIRE_FALSE(fix.upper.get_is_open());
     test_init_session_success(fix);
@@ -107,7 +89,7 @@ TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_AUTH with REPLY_HANDSHAKE_AUTH"))
 TEST_CASE(SUITE("responds to auth request w/ invalid HMAC"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_lower_open();
 
     test_begin_handshake_success(fix);
 
@@ -118,7 +100,7 @@ TEST_CASE(SUITE("responds to auth request w/ invalid HMAC"))
 TEST_CASE(SUITE("responds to auth request with insufficient hmac size with authentication error"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_lower_open();
 
     test_begin_handshake_success(fix);
 
@@ -129,7 +111,7 @@ TEST_CASE(SUITE("responds to auth request with insufficient hmac size with authe
 TEST_CASE(SUITE("handshake process can be repeated"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_lower_open();
 
     for (int i = 0; i < 3; ++i)
     {
@@ -141,7 +123,7 @@ TEST_CASE(SUITE("handshake process can be repeated"))
 TEST_CASE(SUITE("begin handshake can be repeated prior to auth handshake"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_lower_open();
 
     test_begin_handshake_success(fix);
     test_begin_handshake_success(fix);
@@ -151,10 +133,21 @@ TEST_CASE(SUITE("begin handshake can be repeated prior to auth handshake"))
 
 // ---------- rx tests for initialized session -----------
 
+TEST_CASE(SUITE("closing the responder closes the upper layer"))
+{
+    ResponderFixture fix;
+    fix.responder.on_lower_open();
+
+    test_init_session_success(fix);
+    REQUIRE(fix.upper.get_is_open());
+    fix.responder.on_lower_close();
+    REQUIRE_FALSE(fix.upper.get_is_open());
+}
+
 TEST_CASE(SUITE("auth fails if insufficient data for tag"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_lower_open();
 
     test_init_session_success(fix);
 
@@ -170,7 +163,7 @@ TEST_CASE(SUITE("auth fails if insufficient data for tag"))
 TEST_CASE(SUITE("auth fails if TTL expired"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_lower_open();
 
     test_init_session_success(fix);
 
@@ -188,7 +181,7 @@ TEST_CASE(SUITE("auth fails if TTL expired"))
 TEST_CASE(SUITE("auth fails on nonce of zero"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_lower_open();
 
     test_init_session_success(fix);
 
@@ -204,7 +197,7 @@ TEST_CASE(SUITE("auth fails on nonce of zero"))
 TEST_CASE(SUITE("fails on empty user data"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_lower_open();
 
     test_init_session_success(fix);
 
@@ -221,7 +214,7 @@ TEST_CASE(SUITE("fails on empty user data"))
 TEST_CASE(SUITE("can authenticate session data"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_lower_open();
 
     test_init_session_success(fix);
 
@@ -239,7 +232,7 @@ TEST_CASE(SUITE("can authenticate session data"))
 TEST_CASE(SUITE("can authenticate multiple messages"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_lower_open();
 
     test_init_session_success(fix);
 
@@ -264,22 +257,22 @@ TEST_CASE(SUITE("won't transmit if offline"))
     ResponderFixture fix;
     Hex msg("");
 
-    REQUIRE_FALSE(fix.responder.transmit(msg));
+    REQUIRE_FALSE(fix.responder.start_tx_from_upper(msg));
 }
 
 TEST_CASE(SUITE("won't transmit if no session"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_lower_open();
     Hex msg("");
 
-    REQUIRE_FALSE(fix.responder.transmit(msg));
+    REQUIRE_FALSE(fix.responder.start_tx_from_upper(msg));
 }
 
 TEST_CASE(SUITE("can transmit multiple messages if session is initialized"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_lower_open();
     test_init_session_success(fix);
 
     const auto payload = "CA FE";
@@ -287,14 +280,14 @@ TEST_CASE(SUITE("can transmit multiple messages if session is initialized"))
     for (uint16_t i = 0; i < 3; ++i)
     {
         Hex msg(payload);
-        REQUIRE(fix.responder.transmit(msg));
+        REQUIRE(fix.responder.start_tx_from_upper(msg));
 
         const auto expected = hex::session_data(i + 1, consts::crypto::default_ttl_pad_ms, true, true, payload, hex::repeat(0xFF, 16));
         REQUIRE(fix.lower.pop_tx_message() == expected);
         REQUIRE(fix.upper.num_tx_ready == i);
 
         // tell the responder that we're done transmitting
-        fix.responder.on_tx_ready();
+        fix.responder.on_lower_tx_ready();
         REQUIRE(fix.upper.num_tx_ready == i + 1);
         REQUIRE(fix.lower.num_tx_messages() == 0);
     }
@@ -302,26 +295,22 @@ TEST_CASE(SUITE("can transmit multiple messages if session is initialized"))
 
 TEST_CASE(SUITE("closes upper layer if nonce exceeds configured maximum"))
 {
-    Responder::Config config;
-    config.session.max_nonce = 0;
-
-    ResponderFixture fix(config);
-    fix.responder.on_open();
-    test_init_session_success(fix);
+    ResponderFixture fix;
+    fix.responder.on_lower_open();
+    test_init_session_success(fix, 0); //set max nonce to zero
 
     const auto payload = "CA FE";
 
     Hex msg(payload);
-    REQUIRE(fix.responder.transmit(msg));
+    REQUIRE(fix.responder.start_tx_from_upper(msg));
     REQUIRE(fix.upper.is_empty());
     REQUIRE_FALSE(fix.upper.get_is_open());
-
 }
 
 TEST_CASE(SUITE("defers transmission if lower layer is not tx_ready"))
 {
     ResponderFixture fix;
-    fix.responder.on_open();
+    fix.responder.on_lower_open();
     test_init_session_success(fix);
 
     const auto payload = "CA FE";
@@ -329,26 +318,26 @@ TEST_CASE(SUITE("defers transmission if lower layer is not tx_ready"))
     fix.lower.set_tx_ready(false);
 
     Hex msg(payload);
-    REQUIRE(fix.responder.transmit(msg));
+    REQUIRE(fix.responder.start_tx_from_upper(msg));
     REQUIRE(fix.lower.num_tx_messages() == 0);
     REQUIRE(fix.upper.num_tx_ready == 0);
 
     fix.lower.set_tx_ready(true);
-    fix.responder.on_tx_ready();
+    fix.responder.on_lower_tx_ready();
 
 
     const auto expected = hex::session_data(1, consts::crypto::default_ttl_pad_ms, true, true, payload, hex::repeat(0xFF, 16));
     REQUIRE(fix.lower.pop_tx_message() == expected);
     REQUIRE(fix.upper.num_tx_ready == 0);
 
-    fix.responder.on_tx_ready();
+    fix.responder.on_lower_tx_ready();
     REQUIRE(fix.upper.num_tx_ready == 1);
     REQUIRE(fix.lower.num_tx_messages() == 0);
 }
 
 // ---------- helper method implementations -----------
 
-void test_begin_handshake_success(ResponderFixture& fix)
+void test_begin_handshake_success(ResponderFixture& fix, uint16_t max_nonce, uint32_t max_session_time)
 {
     const auto request = hex::request_handshake_begin(
                              0,
@@ -358,6 +347,8 @@ void test_begin_handshake_success(ResponderFixture& fix)
                              HandshakeKDF::hkdf_sha256,
                              HandshakeMAC::hmac_sha256,
                              SessionMode::hmac_sha256_16,
+                             max_nonce,
+                             max_session_time,
                              CertificateMode::preshared_keys,
                              hex::repeat(0xFF, consts::crypto::x25519_key_length)
                          );
@@ -371,16 +362,16 @@ void test_begin_handshake_success(ResponderFixture& fix)
         CryptoAction::hash_sha256,			// mix ck of received message
         CryptoAction::hash_sha256,          // mix ck of transmitted message
         CryptoAction::dh_x25519,		    // 3 DH operations to calculate ak and ck
-        CryptoAction::dh_x25519,			//
-        CryptoAction::dh_x25519,			//
-        CryptoAction::hmac_sha256,			// 3 HMACs for the initial HKDF
-        CryptoAction::hmac_sha256,			//
-        CryptoAction::hmac_sha256			//
+        CryptoAction::dh_x25519,
+        CryptoAction::dh_x25519,
+        CryptoAction::hkdf_sha256
     });
 
     const auto reply = hex::reply_handshake_begin(hex::repeat(0xFF, consts::crypto::x25519_key_length));
     REQUIRE(fix.lower.pop_tx_message() == reply);
     fix.set_tx_ready();
+
+    REQUIRE(fix.responder.get_state_enum() == Responder::IHandshakeState::Enum::wait_for_auth);
 }
 
 void test_auth_handshake_success(ResponderFixture& fix)
@@ -389,7 +380,7 @@ void test_auth_handshake_success(ResponderFixture& fix)
 
     fix.lower.enqueue_message(hex::request_handshake_auth(mac_hex));
 
-    REQUIRE(fix.lower.pop_tx_message() == hex::request_handshake_auth(mac_hex));
+    REQUIRE(fix.lower.pop_tx_message() == hex::reply_handshake_auth(mac_hex));
 
     // expected order of crypto operations
     MockCryptoBackend::instance.expect(
@@ -399,17 +390,17 @@ void test_auth_handshake_success(ResponderFixture& fix)
         CryptoAction::hash_sha256,		// mix the received message
         CryptoAction::hmac_sha256,		// calculate reply value
         CryptoAction::hash_sha256,		// mix the reply
-        CryptoAction::hmac_sha256,		// 3 HMACs for the final HKDF to calculate session keys
-        CryptoAction::hmac_sha256,		//
-        CryptoAction::hmac_sha256		//
+        CryptoAction::hkdf_sha256
     });
 
     fix.set_tx_ready();
+
+    REQUIRE(fix.responder.get_state_enum() == Responder::IHandshakeState::Enum::idle);
 }
 
-void test_init_session_success(ResponderFixture& fix)
+void test_init_session_success(ResponderFixture& fix, uint16_t max_nonce, uint32_t max_session_time)
 {
-    test_begin_handshake_success(fix);
+    test_begin_handshake_success(fix, max_nonce, max_session_time);
     test_auth_handshake_success(fix);
 
     REQUIRE(fix.upper.get_is_open());
@@ -418,7 +409,6 @@ void test_init_session_success(ResponderFixture& fix)
 void test_handshake_error(ResponderFixture& fix, const std::string& request, HandshakeError expected_error, std::initializer_list<CryptoAction> actions)
 {
     fix.lower.enqueue_message(request);
-    REQUIRE(fix.lower.num_rx_messages() == 0);
 
     MockCryptoBackend::instance.expect(actions);
 

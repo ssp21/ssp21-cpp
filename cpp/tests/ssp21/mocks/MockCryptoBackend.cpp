@@ -2,6 +2,7 @@
 #include "MockCryptoBackend.h"
 
 #include "testlib/HexConversions.h"
+#include "ssp21/crypto/gen/CryptoError.h"
 
 #include <cstring>
 
@@ -39,6 +40,20 @@ namespace ssp21
         output.set_type(BufferType::sha256);
     }
 
+    void MockCryptoBackend::hkdf_sha256(const seq8_t& chaining_key, std::initializer_list<seq32_t> input_key_material, SymmetricKey& key1, SymmetricKey& key2)
+    {
+        actions.push_back(CryptoAction::hkdf_sha256);
+
+        for (auto key :
+                {
+                    &key1, &key2
+                })
+        {
+            key->as_wseq().take(consts::crypto::sha256_hash_output_length).set_all_to(fill_byte);
+            key->set_type(BufferType::symmetric_key);
+        }
+    }
+
     void MockCryptoBackend::gen_keypair_x25519(KeyPair& pair)
     {
         actions.push_back(CryptoAction::gen_keypair_x25519);
@@ -53,6 +68,12 @@ namespace ssp21
     void MockCryptoBackend::dh_x25519(const PrivateKey& priv_key, const seq8_t& pub_key, DHOutput& output, std::error_code& ec)
     {
         actions.push_back(CryptoAction::dh_x25519);
+
+        if (this->fail_dh_x25519)
+        {
+            ec = CryptoError::dh_x25519_fail;
+            return;
+        }
 
         output.as_wseq().take(consts::crypto::x25519_key_length).set_all_to(fill_byte);
         output.set_type(BufferType::x25519_key);

@@ -1,10 +1,13 @@
 cmake_minimum_required (VERSION 2.8)
-project (ssp21cpp)
+project (ssp21-cpp)
 set(SSP21CPP_VERSION 0.0.1)
 
 include(${PROJECT_SOURCE_DIR}/cmake/settings.cmake)
 
+option(SSP21_PROXY "Build the proxy" ON)
+
 include_directories(./cpp/libs/include)
+include_directories(./cpp/libs/src)
 include_directories(./deps/openpal/cpp/libs/include)
 
 # ---- openpal library ----
@@ -20,6 +23,7 @@ target_link_libraries(ssp21 openpal)
 install(TARGETS ssp21 DESTINATION lib)
 set_target_properties(ssp21 PROPERTIES FOLDER libs)
 
+
 # ---- sodiumbackend library ----
 file(GLOB_RECURSE sodiumbackend_SRC ./cpp/libs/src/sodium/*.cpp ./cpp/libs/src/sodium/*.h ./cpp/libs/include/sodium/*.h)
 add_library(sodiumbackend ${LIB_TYPE} ${sodiumbackend_SRC})
@@ -27,20 +31,45 @@ target_link_libraries(sodiumbackend ssp21 ${SODIUM_LIB_NAME})
 install(TARGETS sodiumbackend DESTINATION lib)
 set_target_properties(sodiumbackend PROPERTIES FOLDER libs)
 
-# ---- crc table generator ----
-# add_executable (crctable ./cpp/tests/crc_table/main.cpp)
-# set_target_properties(crctable PROPERTIES FOLDER tests)
+# ---- keygen executable ----
+add_executable (keygen ./cpp/exe/keygen/main.cpp)
+target_link_libraries(keygen sodiumbackend)
+set_target_properties(keygen PROPERTIES FOLDER exe)
+
+# ---- proxy executable ----
+if(SSP21_PROXY)   
+   
+   SET(ASIO_SUBMODULE_DIR "${PROJECT_SOURCE_DIR}/deps/asio/asio/include")
+   if (NOT EXISTS "${ASIO_SUBMODULE_DIR}/asio.hpp")    
+       message(FATAL_ERROR "ASIO has not been checked out as a submodule!")       
+   endif()
+
+   file(GLOB_RECURSE proxy_SRC ./cpp/exe/proxy/*.cpp ./cpp/exe/proxy/*.h)
+   add_executable (ssp21-proxy ${proxy_SRC} ./deps/inih/ini.c)
+   target_link_libraries(ssp21-proxy sodiumbackend ${PTHREAD})
+   
+   include_directories(./deps ${ASIO_SUBMODULE_DIR})
+   add_definitions(-DASIO_STANDALONE)
+   #set_target_properties(ssp21-proxy PROPERTIES FOLDER exe)
+
+endif()
 
 enable_testing()
 
 include_directories(./cpp/tests/catch)
 include_directories(./deps/openpal/cpp/tests)
 
-# ---- openpal ----
+# ----- install -----
+
+# common pattern and exludes for all installed headers
+set(INSTALL_ARGS FILES_MATCHING PATTERN "*.h" PATTERN ".deps" EXCLUDE PATTERN ".libs" EXCLUDE)
+install(DIRECTORY ./cpp/libs/include/ DESTINATION include ${INSTALL_ARGS})
+install(DIRECTORY ./deps/openpal/cpp/libs/include/ DESTINATION include ${INSTALL_ARGS})
+
+# ---- testlib ----
 file(GLOB_RECURSE testlib_SRC ./deps/openpal/cpp/tests/testlib/*.cpp ./deps/openpal/cpp/tests/testlib/*.h)
 add_library(testlib ${LIB_TYPE} ${testlib_SRC})
 target_link_libraries(testlib openpal)
-install(TARGETS testlib DESTINATION lib)
 set_target_properties(testlib PROPERTIES FOLDER tests)
 
 # ---- testopenpal ----
@@ -56,6 +85,13 @@ add_executable (testcryptobackend ${cryptobackend_SRC})
 target_link_libraries (testcryptobackend sodiumbackend testlib)
 set_target_properties(testcryptobackend PROPERTIES FOLDER tests)
 add_test(testcryptobackend-sodium testcryptobackend --sodium)
+
+# ----integration tests ----
+file(GLOB_RECURSE integration_SRC ./cpp/tests/integration/*.cpp ./cpp/tests/integration/*.h)
+add_executable (testintegration ${integration_SRC})
+target_link_libraries (testintegration ssp21 sodiumbackend testlib)
+set_target_properties(testintegration PROPERTIES FOLDER tests)
+add_test(testintegration-sodium testintegration --sodium)
 
 # ---- ssp21 tests ----
 file(GLOB_RECURSE testssp21_SRC ./cpp/tests/ssp21/*.cpp ./cpp/tests/ssp21/*.h)

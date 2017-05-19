@@ -9,7 +9,7 @@ object ReplyHandshakeError extends Message {
   def function = CryptoFunction.replyHandshakeError
 
   override def fields: List[Field] = List(
-    Enum(HandshakeError())
+    Enum(HandshakeError)
   )
 
 }

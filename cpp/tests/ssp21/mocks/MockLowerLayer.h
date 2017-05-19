@@ -3,69 +3,56 @@
 
 #include "openpal/util/Uncopyable.h"
 
-#include "ssp21/LayerInterfaces.h"
+#include "ssp21/stack/ILowerLayer.h"
+#include "ssp21/stack/IUpperLayer.h"
 
 #include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
 
-#include "MakeUnique.h"
+#include <deque>
 
 namespace ssp21
 {
     class MockLowerLayer : public ILowerLayer, private openpal::Uncopyable
     {
-
         typedef openpal::Buffer message_t;
-
 
     public:
 
-        void set_upper_layer(IUpperLayer& upper)
+        void bind_upper(IUpperLayer& upper)
         {
             this->upper = &upper;
         }
 
-        void set_tx_ready(bool value)
+        virtual bool is_tx_ready() const override
         {
-            this->is_tx_ready = value;
+            return this->is_tx_ready_flag;
         }
 
-        virtual bool transmit(const seq32_t& message) override
+        virtual bool start_tx_from_upper(const seq32_t& message) override
         {
-            if (!this->is_tx_ready)
+            if (!this->is_tx_ready())
             {
-                throw std::logic_error("transmit called when tx_ready == false");
+                throw std::logic_error("start_tx called when not tx ready");
             }
 
             this->tx_messages.push_back(std::make_unique<message_t>(message));
+
             return true;
         }
 
-        virtual void receive() override
+        virtual seq32_t start_rx_from_upper_impl() override
         {
-            if (!this->rx_messages.empty())
-            {
-                auto& front = this->rx_messages.front();
-
-                if (upper->on_rx_ready(front->as_rslice()))
-                {
-                    this->rx_messages.pop_front();
-                    if (this->rx_messages.empty())
-                    {
-                        this->is_rx_ready = false;
-                    }
-                }
-            }
+            return this->rx_messages.empty() ? seq32_t::empty() : this->rx_messages.front()->as_rslice();
         }
 
         void enqueue_message(const std::string& hex)
         {
             openpal::Hex hexdata(hex);
-
-            if (!upper->on_rx_ready(hexdata))
+            this->rx_messages.push_back(std::make_unique<message_t>(hexdata.as_rslice()));
+            if (!this->is_upper_processing_rx())
             {
-                this->rx_messages.push_back(std::make_unique<message_t>(hexdata.as_rslice()));
-                this->is_rx_ready = true;
+                this->upper->on_lower_rx_ready();
             }
         }
 
@@ -91,11 +78,27 @@ namespace ssp21
             return tx_messages.size();
         }
 
+        void set_tx_ready(bool value)
+        {
+            this->is_tx_ready_flag = value;
+        }
+
     private:
 
-        typedef std::deque<std::unique_ptr<message_t>> message_queue_t;
+        virtual void discard_rx_data() override
+        {
+            if (rx_messages.empty()) throw std::logic_error("expected a frame to discard but rx_messages is empty");
+            else
+            {
+                this->rx_messages.pop_front();
+            }
+        }
 
         IUpperLayer* upper = nullptr;
+
+        bool is_tx_ready_flag = true;
+
+        typedef std::deque<std::unique_ptr<message_t>> message_queue_t;
 
         message_queue_t tx_messages;
 

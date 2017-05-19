@@ -13,6 +13,7 @@ namespace ssp21
 {
     class MockCryptoBackend : public ICryptoBackend, private openpal::Uncopyable
     {
+        friend struct CryptoTest;
 
     public:
 
@@ -26,20 +27,15 @@ namespace ssp21
 
         virtual void hmac_sha256(const seq8_t& key, std::initializer_list<seq32_t> data, SecureBuffer& output) override;
 
+        virtual void hkdf_sha256(const seq8_t& chaining_key, std::initializer_list<seq32_t> input_key_material, SymmetricKey& key1, SymmetricKey& key2) override;
+
         virtual void gen_keypair_x25519(KeyPair& pair) override;
 
         virtual void dh_x25519(const PrivateKey& priv_key, const seq8_t& pub_key, DHOutput& output, std::error_code& ec) override;
 
-        uint8_t fill_byte = 0xFF;
-
         bool empty_actions() const
         {
             return actions.empty();
-        }
-
-        void clear_actions()
-        {
-            actions.clear();
         }
 
         void expect(const std::initializer_list<CryptoAction>& expected)
@@ -85,6 +81,16 @@ namespace ssp21
             this->expect({});
         }
 
+        void reset()
+        {
+            this->actions.clear();
+            this->fail_dh_x25519 = false;
+            this->fill_byte = 0xFF;
+        }
+
+        bool fail_dh_x25519 = false;
+        uint8_t fill_byte = 0xFF;
+
     private:
 
         std::deque<CryptoAction> actions;
@@ -96,7 +102,7 @@ namespace ssp21
     {
         CryptoTest()
         {
-            MockCryptoBackend::instance.clear_actions();
+            MockCryptoBackend::instance.reset();
         }
 
         MockCryptoBackend* operator->()
@@ -106,7 +112,7 @@ namespace ssp21
 
         ~CryptoTest()
         {
-            MockCryptoBackend::instance.clear_actions();
+            MockCryptoBackend::instance.reset();
         }
     };
 

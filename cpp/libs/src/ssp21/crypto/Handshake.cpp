@@ -17,9 +17,11 @@ namespace ssp21
         return this->local_ephemeral_keys.public_key.as_seq();
     }
 
-    void Handshake::set_ck(const seq32_t& input)
+    void Handshake::begin_handshake(const RequestHandshakeBegin& msg, const seq32_t& raw_msg)
     {
-        this->algorithms.handshake.hash({ input }, this->chaining_key);
+        this->constraints = msg.constraints;
+
+        this->algorithms.handshake.hash({ raw_msg }, this->chaining_key);
     }
 
     void Handshake::mix_ck(const seq32_t& input)
@@ -37,17 +39,17 @@ namespace ssp21
         return HandshakeAuthentication::auth_handshake_with_mac(
                    this->algorithms.handshake.session_auth_mac,
                    this->authentication_key,
-                   this->id,
+                   this->mode,
                    mac
                );
     }
 
-    void Handshake::calc_auth_handshake_reply_mac(HashOutput& output) const
+    void Handshake::calc_auth_handshake_mac(HashOutput& output) const
     {
         HandshakeAuthentication::calc_handshake_mac_with_macfunc(
             this->algorithms.handshake.session_auth_mac,
             this->authentication_key,
-            this->id,
+            this->mode,
             output
         );
     }
@@ -65,12 +67,14 @@ namespace ssp21
         this->algorithms.handshake.dh(this->local_ephemeral_keys.private_key, pub_e_dh_key, dh1, ec);
         if (ec) return;
 
+        // dh2 and dh3 are flipped for the initiator and the responder
         DHOutput dh2;
-        this->algorithms.handshake.dh(this->local_ephemeral_keys.private_key, pub_s_dh_key, dh2, ec);
+        DHOutput dh3;
+
+        this->algorithms.handshake.dh(this->local_ephemeral_keys.private_key, pub_s_dh_key, (this->mode == HandshakeMode::Responder) ? dh2 : dh3, ec);
         if (ec) return;
 
-        DHOutput dh3;
-        this->algorithms.handshake.dh(priv_s_dh_key, pub_e_dh_key, dh3, ec);
+        this->algorithms.handshake.dh(priv_s_dh_key, pub_e_dh_key, (this->mode == HandshakeMode::Responder) ? dh3 : dh2, ec);
         if (ec) return;
 
         this->algorithms.handshake.kdf(
@@ -83,12 +87,12 @@ namespace ssp21
         );
     }
 
-    void Handshake::initialize_session(Session& session, const openpal::Timestamp& session_init_time) const
+    void Handshake::initialize_session(Session& session, const openpal::Timestamp& session_start) const
     {
         SessionKeys keys;
 
         // keys are swapped for initiator vs responder
-        if (this->id == EntityId::Initiator)
+        if (this->mode == HandshakeMode::Initiator)
         {
             this->algorithms.handshake.kdf(this->chaining_key.as_seq(), {}, keys.tx_key, keys.rx_key);
         }
@@ -97,7 +101,15 @@ namespace ssp21
             this->algorithms.handshake.kdf(this->chaining_key.as_seq(), {}, keys.rx_key, keys.tx_key);
         }
 
-        session.initialize(this->algorithms.session, session_init_time, keys);
+        session.initialize(
+            this->algorithms.session,
+            Session::Param(
+                session_start,
+                this->constraints.max_nonce,
+                this->constraints.max_session_duration
+            ),
+            keys
+        );
     }
 
 }

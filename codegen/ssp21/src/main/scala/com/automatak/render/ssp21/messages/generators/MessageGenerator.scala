@@ -20,7 +20,8 @@ final case class MessageGenerator(msg: Message) extends StructGenerator(msg) {
   override def extraHeaderSignatures: Iterator[String] = Iterator(
     "virtual ParseError read(seq32_t input) override;",
     "virtual FormatResult write(wseq32_t& output) const override;",
-    "virtual void print(IMessagePrinter& printer) const override;"
+    "virtual void print(IMessagePrinter& printer) const override;",
+    "virtual Function get_function() const override { return Function::%s; }".format(msg.function.name)
   ) ++ space
 
   override def extraImplFunctions(implicit indent: Indentation): Iterator[String] = {
@@ -30,7 +31,7 @@ final case class MessageGenerator(msg: Message) extends StructGenerator(msg) {
         "auto read_fields = [this](seq32_t& input) -> ParseError ".iter ++ bracketSemiColon {
           readInternals
         } ++ space ++
-        "return MessageParser::read_message(input, Function::%s, read_fields);".format(msg.function.name).iter
+          "return MessageParser::read_message(input, Function::%s, read_fields);".format(msg.function.name).iter
       }
     }
 

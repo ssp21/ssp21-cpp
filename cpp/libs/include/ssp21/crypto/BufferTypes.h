@@ -2,9 +2,9 @@
 #ifndef SSP21_BUFFER_TYPES_H
 #define SSP21_BUFFER_TYPES_H
 
-#include "Constants.h"
+#include "ssp21/crypto/Constants.h"
 
-#include "ssp21/SequenceTypes.h"
+#include "ssp21/util/SequenceTypes.h"
 
 #include <openpal/util/Uncopyable.h>
 #include <openpal/container/StaticBuffer.h>
@@ -36,13 +36,13 @@ namespace ssp21
 
         void copy(const BufferBase& other);
 
+        static uint8_t get_buffer_length(BufferType);
+
     protected:
 
         BufferBase() = default;
 
     private:
-
-        static uint8_t get_buffer_length(BufferType);
 
         uint8_t length = 0;
         BufferType buffer_type = BufferType::empty;
@@ -67,9 +67,29 @@ namespace ssp21
 
     // specialized types that actually get used
 
-    class PublicKey final : public BufferBase {};
+    class PublicKey final : public BufferBase
+    {
+    public:
 
-    class PrivateKey final : public SecureBuffer {};
+        PublicKey() {}
+
+        PublicKey(const PublicKey& other)
+        {
+            this->copy(other);
+        }
+    };
+
+    class PrivateKey final : public SecureBuffer
+    {
+    public:
+
+        PrivateKey() {}
+
+        PrivateKey(const PrivateKey& other)
+        {
+            this->copy(other);
+        }
+    };
 
     class DHOutput final : public SecureBuffer {};
 
@@ -91,7 +111,7 @@ namespace ssp21
         inline void copy(const SessionKeys& other)
         {
             this->rx_key.copy(other.rx_key);
-            this->rx_key.copy(other.tx_key);
+            this->tx_key.copy(other.tx_key);
         }
 
         bool valid() const

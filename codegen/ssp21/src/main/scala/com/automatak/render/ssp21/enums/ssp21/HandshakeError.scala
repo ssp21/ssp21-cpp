@@ -5,11 +5,19 @@ package com.automatak.render.ssp21.enums.ssp21
 
 import com.automatak.render._
 
-object HandshakeError {
+object HandshakeError extends EnumModel {
 
-  private val comments = List("Denotes an error condition that occurred during the handshake process")
+  override def name: String = "HandshakeError"
 
-  def apply(): EnumModel = EnumModel("HandshakeError", "handshake_error", comments, EnumType.UInt8, codes, Some(EnumValue.undefined(254)), Some(noneValue), Hex)
+  override def underscoredName: String = "handshake_error"
+
+  override def comments: List[String] = List("Denotes an error condition that occurred during the handshake process")
+
+  override def nonDefaultValues: List[EnumValue] = codes
+
+  override def defaultValue: Option[EnumValue] = Some(EnumValue.undefined(254))
+
+  override def boolCastValue: Option[EnumValue] = Some(noneValue)
 
   private val noneValue = EnumValue("none", 253, "This value gets used internally in ssp21-cpp only")
 

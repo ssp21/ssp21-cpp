@@ -2,13 +2,24 @@
 
 #include "catch.hpp"
 
-#include "ssp21/crypto/Base64.h"
+#include "ssp21/util/Base64.h"
 #include "testlib/Hex.h"
 
 #define SUITE(name) "Base64TestSuite - " name
 
 using namespace ssp21;
 using namespace openpal;
+
+const auto long_base64 = "TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGl"
+                         "zIHNpbmd1bGFyIHBhc3Npb24gZnJvbSBvdGhlciBhbmltYWxzLCB3aGljaCBpcyBhIGx1c3Qgb2Yg"
+                         "dGhlIG1pbmQsIHRoYXQgYnkgYSBwZXJzZXZlcmFuY2Ugb2YgZGVsaWdodCBpbiB0aGUgY29udGlud"
+                         "WVkIGFuZCBpbmRlZmF0aWdhYmxlIGdlbmVyYXRpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRoZS"
+                         "BzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=";
+
+const auto long_result = "Man is distinguished, not only by his reason, but by this singular passion from "
+                         "other animals, which is a lust of the mind, that by a perseverance of delight in the "
+                         "continued and indefatigable generation of knowledge, exceeds the short vehemence of "
+                         "any carnal pleasure.";
 
 void test_encoding(const std::string& input, const std::string& expected_output)
 {
@@ -82,6 +93,11 @@ TEST_CASE(SUITE("correctly encodes module 2"))
     test_encoding("ManMa", "TWFuTWE=");
 }
 
+TEST_CASE(SUITE("correctly encodes long input"))
+{
+    test_encoding(long_result, long_base64);
+}
+
 /// -------- decoding --------
 
 TEST_CASE(SUITE("rejects bad input size"))
@@ -131,16 +147,5 @@ TEST_CASE(SUITE("correctly decodes six bytes"))
 
 TEST_CASE(SUITE("correctly decodes long input"))
 {
-    auto input = "TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGl"
-                 "zIHNpbmd1bGFyIHBhc3Npb24gZnJvbSBvdGhlciBhbmltYWxzLCB3aGljaCBpcyBhIGx1c3Qgb2Yg"
-                 "dGhlIG1pbmQsIHRoYXQgYnkgYSBwZXJzZXZlcmFuY2Ugb2YgZGVsaWdodCBpbiB0aGUgY29udGlud"
-                 "WVkIGFuZCBpbmRlZmF0aWdhYmxlIGdlbmVyYXRpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRoZS"
-                 "BzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=";
-
-    auto result = "Man is distinguished, not only by his reason, but by this singular passion from "
-                  "other animals, which is a lust of the mind, that by a perseverance of delight in the "
-                  "continued and indefatigable generation of knowledge, exceeds the short vehemence of "
-                  "any carnal pleasure.";
-
-    test_decoding_success(input, result);
+    test_decoding_success(long_base64, long_result);
 }

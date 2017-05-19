@@ -5,11 +5,19 @@ package com.automatak.render.ssp21.enums.internal
 
 import com.automatak.render._
 
-object ParseError {
+object ParseError extends EnumModel {
 
-  private val comments = List("The result of a message parse operation")
+  override def name: String = "ParseError"
 
-  def apply(): EnumModel = EnumModel("ParseError", "parse_error", comments, EnumType.UInt8, codes, None, Some(falseValue), Hex)
+  override def underscoredName: String = "parse_error"
+
+  override def comments: List[String] = List("The result of a message parse operation")
+
+  override def nonDefaultValues: List[EnumValue] = codes
+
+  override def defaultValue: Option[EnumValue] = None
+
+  override def boolCastValue: Option[EnumValue] = Some(falseValue)
 
   private val falseValue = EnumValue("ok", 0, "message was parsed successfully")
 

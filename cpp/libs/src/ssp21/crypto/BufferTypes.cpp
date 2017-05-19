@@ -30,7 +30,8 @@ namespace ssp21
 
     void BufferBase::copy(const BufferBase& other)
     {
-        memcpy(this->buffer.as_wseq(), other.buffer.as_seq(), consts::crypto::max_primitive_buffer_length);
+        this->buffer_type = other.buffer_type;
+        memcpy(this->buffer.as_wseq(), other.buffer.as_seq(), get_buffer_length(other.buffer_type));
     }
 
     uint8_t BufferBase::get_buffer_length(BufferType key_type)

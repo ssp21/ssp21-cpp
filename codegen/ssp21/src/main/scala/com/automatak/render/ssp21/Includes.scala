@@ -27,8 +27,8 @@ object Includes {
   val formatError = enum("FormatError")
   val function = enum("Function")
 
-  val errorCategory = ssp21("ErrorCategory")
-  val seqTypes = ssp21("SequenceTypes")
+  val errorCategory = ssp21("util/ErrorCategory")
+  val seqTypes = ssp21("util/SequenceTypes")
 
   val imessage = crypto("IMessage")
   val enumField = crypto("EnumField")
@@ -46,11 +46,16 @@ object Includes {
   val messageField = List(parseError, formatError, msgPrinter, seqTypes)
 
   def ssp21(className: String) = Include(quoted("ssp21/%s.h".format(className)), Ordering.ssp21)
+
   def crypto(className: String) = Include(quoted("ssp21/crypto/%s.h".format(className)), Ordering.crypto)
-  def enum(className: String, path: String) : Include = Include(quoted("%s%s.h".format(path, className)), Ordering.enum)
-  def enum(className: String) : Include = enum(className, "ssp21/crypto/gen/")
+
+  def enum(className: String, path: String): Include = Include(quoted("%s%s.h".format(path, className)), Ordering.enum)
+
+  def enum(className: String): Include = enum(className, "ssp21/crypto/gen/")
+
   def message(className: String) = Include(quoted("ssp21/crypto/gen/%s.h".format(className)), Ordering.msg)
-  def openpal(classPath: String)= Include(quoted("openpal/%s.h".format(classPath)), Ordering.openpal)
+
+  def openpal(classPath: String) = Include(quoted("openpal/%s.h".format(classPath)), Ordering.openpal)
 
   def lines(lines: Seq[Include]): Iterator[String] = {
 

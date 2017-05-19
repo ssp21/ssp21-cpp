@@ -3,11 +3,12 @@
 
 #include "openpal/util/Uncopyable.h"
 
-#include "ssp21/LayerInterfaces.h"
+#include "ssp21/stack/IUpperLayer.h"
 
 #include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
 
+#include <deque>
 
 namespace ssp21
 {
@@ -16,8 +17,10 @@ namespace ssp21
 
     public:
 
-        MockUpperLayer(ILowerLayer& lower) : lower(&lower)
-        {}
+        void bind_lower(ILowerLayer& lower)
+        {
+            this->lower = &lower;
+        }
 
         std::string pop_rx_message()
         {
@@ -51,27 +54,32 @@ namespace ssp21
 
         message_queue_t rx_messages;
 
-        ILowerLayer* const lower;
+        ILowerLayer* lower = nullptr;
 
-        virtual void on_open_impl() override
+        virtual void on_lower_open_impl() override
         {
             this->is_open = true;
         }
 
-        virtual void on_close_impl() override
+        virtual void on_lower_close_impl() override
         {
             this->is_open = false;
         }
 
-        virtual void on_tx_ready_impl() override
+        virtual void on_lower_tx_ready_impl() override
         {
             ++num_tx_ready;
         }
 
-        virtual bool on_rx_ready_impl(const seq32_t& data) override
+        virtual void on_lower_rx_ready_impl() override
         {
-            this->rx_messages.push_back(to_hex(data));
-            return true;
+            // read all available data
+            const auto data = this->lower->start_rx_from_upper();
+            if (data.is_not_empty())
+            {
+                this->rx_messages.push_back(to_hex(data));
+                this->on_lower_rx_ready_impl();
+            }
         }
 
     };
