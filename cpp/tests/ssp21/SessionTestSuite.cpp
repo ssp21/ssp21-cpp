@@ -31,7 +31,7 @@ const auto test_auth_tag = repeat_hex(0xFF, consts::crypto::trunc16);
 
 TEST_CASE(SUITE("won't validate user data when not initialized"))
 {
-    CryptoTest crypto;
+	CryptoFixture crypto;
 
     Session session(std::make_shared<MessageOnlyFrameWriter>());
 
@@ -40,7 +40,7 @@ TEST_CASE(SUITE("won't validate user data when not initialized"))
     REQUIRE(ec == CryptoError::no_valid_session);
     REQUIRE(user_data.empty());
 
-    crypto->expect_empty();
+    crypto.expect_empty();
 }
 
 TEST_CASE(SUITE("authenticates data"))
@@ -172,7 +172,7 @@ TEST_CASE(SUITE("forwards the formatting error if the session::write function ca
 
 TEST_CASE(SUITE("successfully formats and increments nonce"))
 {
-    CryptoTest test;
+	CryptoFixture crypto;
 
     Session s(std::make_shared<MessageOnlyFrameWriter>());
     init(s);
@@ -190,7 +190,7 @@ TEST_CASE(SUITE("successfully formats and increments nonce"))
         REQUIRE_FALSE(ec);
         REQUIRE(input.is_empty());
         REQUIRE(data.is_not_empty());
-        test->expect({ CryptoAction::hmac_sha256 });
+        crypto.expect({ CryptoAction::hmac_sha256 });
     }
 
 }
@@ -226,7 +226,7 @@ std::string validate(Session& session, uint16_t nonce, uint32_t ttl, int64_t now
 
 std::string test_validation_success(const SessionConfig& config, const Session::Param& parameters, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex)
 {
-    CryptoTest crypto;
+	CryptoFixture crypto;
 
     Session session(std::make_shared<MessageOnlyFrameWriter>(), config);
 
@@ -236,14 +236,14 @@ std::string test_validation_success(const SessionConfig& config, const Session::
     const auto user_data = validate(session, nonce, ttl, now, user_data_hex, auth_tag_hex, ec);
     REQUIRE_FALSE(ec);
 
-    crypto->expect({ CryptoAction::hmac_sha256, CryptoAction::secure_equals });
+    crypto.expect({ CryptoAction::hmac_sha256, CryptoAction::secure_equals });
 
     return user_data;
 }
 
 void test_validation_failure(const SessionConfig& config, const Session::Param& parameters, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex, std::initializer_list<CryptoAction> actions, CryptoError error)
 {
-    CryptoTest crypto;
+	CryptoFixture crypto;
 
     Session session(std::make_shared<MessageOnlyFrameWriter>(), config);
 
@@ -254,7 +254,7 @@ void test_validation_failure(const SessionConfig& config, const Session::Param& 
     REQUIRE(ec == error);
     REQUIRE(user_data.empty());
 
-    crypto->expect(actions);
+    crypto.expect(actions);
 
 }
 

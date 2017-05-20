@@ -1,121 +1,90 @@
 #ifndef SSP21_MOCKCRYPTOBACKEND_H
 #define SSP21_MOCKCRYPTOBACKEND_H
 
-#include "ssp21/crypto/ICryptoBackend.h"
-
 #include "openpal/util/Uncopyable.h"
 #include "../gen/CryptoAction.h"
 
 #include <deque>
 #include <sstream>
+#include <assert.h>
 
 namespace ssp21
-{
-    class MockCryptoBackend : public ICryptoBackend, private openpal::Uncopyable
-    {
-        friend struct CryptoTest;
+{		
+    class CryptoFixture
+    {				
 
-    public:
+	public:
 
-        static MockCryptoBackend instance;
+		static CryptoFixture* instance;
 
-        virtual void zero_memory(const wseq32_t& data) override;
+		uint8_t fill_byte = 0xFF;
+		bool fail_dh_x25519 = false;
+		std::deque<CryptoAction> actions;			
 
-        virtual bool secure_equals(const seq8_t& lhs, const seq8_t& rhs)  override;
-
-        virtual void hash_sha256(std::initializer_list<seq32_t> data, SecureBuffer& output) override;
-
-        virtual void hmac_sha256(const seq8_t& key, std::initializer_list<seq32_t> data, SecureBuffer& output) override;
-
-        virtual void hkdf_sha256(const seq8_t& chaining_key, std::initializer_list<seq32_t> input_key_material, SymmetricKey& key1, SymmetricKey& key2) override;
-
-        virtual void gen_keypair_x25519(KeyPair& pair) override;
-
-        virtual void dh_x25519(const PrivateKey& priv_key, const seq8_t& pub_key, DHOutput& output, std::error_code& ec) override;
-
-		virtual void gen_keypair_Ed25519(KeyPair& pair) override;
-
-        bool empty_actions() const
+		CryptoFixture()
         {
-            return actions.empty();
+			assert(instance == nullptr);
+			instance = this;
         }
 
-        void expect(const std::initializer_list<CryptoAction>& expected)
+        ~CryptoFixture()
         {
-            int count = 0;
-
-            for (auto& action : expected)
-            {
-                if (actions.empty())
-                {
-                    std::ostringstream oss;
-                    oss << "no more crypto actions while waiting for: " << CryptoActionSpec::to_string(action) << " after " << count << " actions";
-                    throw std::logic_error(oss.str());
-                }
-
-                if (actions.front() != action)
-                {
-                    std::ostringstream oss;
-                    oss << "expected " << CryptoActionSpec::to_string(action) << " but next action was " << CryptoActionSpec::to_string(actions.front());
-                    oss << " after " << count << " actions";
-                    throw std::logic_error(oss.str());
-                }
-
-                actions.pop_front();
-
-                ++count;
-            }
-
-            if (!actions.empty())
-            {
-                std::ostringstream oss;
-                oss << "unexpected additional actions: " << actions.size() << std::endl;
-                for (auto& action : actions)
-                {
-                    oss << CryptoActionSpec::to_string(action) << std::endl;
-                }
-                throw std::logic_error(oss.str());
-            }
+			assert(instance != nullptr);
+			instance = nullptr;
         }
 
-        void expect_empty()
-        {
-            this->expect({});
-        }
+		void set_fail_dh_x25519(bool fail)
+		{
+			fail_dh_x25519 = fail;
+		}
 
-        void reset()
-        {
-            this->actions.clear();
-            this->fail_dh_x25519 = false;
-            this->fill_byte = 0xFF;
-        }
+		bool empty_actions() const
+		{
+			return actions.empty();
+		}
 
-        bool fail_dh_x25519 = false;
-        uint8_t fill_byte = 0xFF;
+		void expect(const std::initializer_list<CryptoAction>& expected)
+		{
+			int count = 0;
 
-    private:
+			for (auto& action : expected)
+			{
+				if (actions.empty())
+				{
+					std::ostringstream oss;
+					oss << "no more crypto actions while waiting for: " << CryptoActionSpec::to_string(action) << " after " << count << " actions";
+					throw std::logic_error(oss.str());
+				}
 
-        std::deque<CryptoAction> actions;
+				if(actions.front() != action)
+				{
+					std::ostringstream oss;
+					oss << "expected " << CryptoActionSpec::to_string(action) << " but next action was " << CryptoActionSpec::to_string(actions.front());
+					oss << " after " << count << " actions";
+					throw std::logic_error(oss.str());
+				}
 
-        MockCryptoBackend() {}
-    };
+				actions.pop_front();
 
-    struct CryptoTest
-    {
-        CryptoTest()
-        {
-            MockCryptoBackend::instance.reset();
-        }
+				++count;
+			}
 
-        MockCryptoBackend* operator->()
-        {
-            return &MockCryptoBackend::instance;
-        }
+			if (!actions.empty())
+			{
+				std::ostringstream oss;
+				oss << "unexpected additional actions: " << actions.size() << std::endl;
+				for (auto& action : actions)
+				{
+					oss << CryptoActionSpec::to_string(action) << std::endl;
+				}
+				throw std::logic_error(oss.str());
+			}
+		}
 
-        ~CryptoTest()
-        {
-            MockCryptoBackend::instance.reset();
-        }
+		void expect_empty()
+		{
+			this->expect({});
+		}
     };
 
 }

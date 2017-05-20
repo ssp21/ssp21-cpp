@@ -1,4 +1,3 @@
-#include "sodium/Initialize.h"
 
 #include "ssp21/crypto/Crypto.h"
 #include "ssp21/util/Base64.h"
@@ -9,7 +8,7 @@ using namespace ssp21;
 
 int main(int argc, char*  argv[])
 {
-    if (!sodium::initialize()) return -1;
+    if (!ssp21::Crypto::initialize()) return -1;
 
     KeyPair kp;
     Crypto::gen_keypair_x25519(kp);

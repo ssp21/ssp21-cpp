@@ -84,14 +84,14 @@ file(GLOB_RECURSE cryptobackend_SRC ./cpp/tests/cryptobackend/*.cpp ./cpp/tests/
 add_executable (testcryptobackend ${cryptobackend_SRC})
 target_link_libraries (testcryptobackend sodiumbackend testlib)
 set_target_properties(testcryptobackend PROPERTIES FOLDER tests)
-add_test(testcryptobackend-sodium testcryptobackend --sodium)
+add_test(testcryptobackend-sodium testcryptobackend)
 
 # ----integration tests ----
 file(GLOB_RECURSE integration_SRC ./cpp/tests/integration/*.cpp ./cpp/tests/integration/*.h)
 add_executable (testintegration ${integration_SRC})
 target_link_libraries (testintegration ssp21 sodiumbackend testlib)
 set_target_properties(testintegration PROPERTIES FOLDER tests)
-add_test(testintegration-sodium testintegration --sodium)
+add_test(testintegration-sodium testintegration)
 
 # ---- ssp21 tests ----
 file(GLOB_RECURSE testssp21_SRC ./cpp/tests/ssp21/*.cpp ./cpp/tests/ssp21/*.h)

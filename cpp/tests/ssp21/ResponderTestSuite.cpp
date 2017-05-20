@@ -356,7 +356,7 @@ void test_begin_handshake_success(ResponderFixture& fix, uint16_t max_nonce, uin
     fix.lower.enqueue_message(request);
 
     // expected order of crypto operations
-    MockCryptoBackend::instance.expect(
+    fix.expect(
     {
         CryptoAction::gen_keypair_x25519,	// generate local ephemeral key pair
         CryptoAction::hash_sha256,			// mix ck of received message
@@ -383,7 +383,7 @@ void test_auth_handshake_success(ResponderFixture& fix)
     REQUIRE(fix.lower.pop_tx_message() == hex::reply_handshake_auth(mac_hex));
 
     // expected order of crypto operations
-    MockCryptoBackend::instance.expect(
+    fix.expect(
     {
         CryptoAction::hmac_sha256,		// calculate expected value
         CryptoAction::secure_equals,	// compare MAC values
@@ -410,7 +410,7 @@ void test_handshake_error(ResponderFixture& fix, const std::string& request, Han
 {
     fix.lower.enqueue_message(request);
 
-    MockCryptoBackend::instance.expect(actions);
+    fix.expect(actions);
 
     REQUIRE(fix.lower.pop_tx_message() == hex::reply_handshake_error(expected_error));
     fix.set_tx_ready();

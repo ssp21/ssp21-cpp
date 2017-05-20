@@ -24,7 +24,7 @@ object CryptoAction extends EnumModel {
   )
 
   override def defaultValue: Option[EnumValue] = None
-  
+
 }
 
 

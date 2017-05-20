@@ -22,6 +22,7 @@ void test_open_and_full_handshake(InitiatorFixture& fix);
 TEST_CASE(SUITE("construction"))
 {
     InitiatorFixture fix;
+	REQUIRE(CryptoFixture::instance != nullptr);
 }
 
 TEST_CASE(SUITE("transmits REQUEST_HANDSHAKE_BEGIN when opened"))
@@ -115,8 +116,8 @@ TEST_CASE(SUITE("goes to retry state when DH fails"))
 {
     InitiatorFixture fix;
     test_open(fix);
-
-    MockCryptoBackend::instance.fail_dh_x25519 = true;
+	
+	fix.set_fail_dh_x25519(true);    
     fix.lower.enqueue_message(hex::reply_handshake_begin(hex::repeat(0xFF, consts::crypto::x25519_key_length)));
     REQUIRE(fix.initiator.get_state_enum() == HandshakeState::wait_for_retry);
 }
@@ -165,7 +166,7 @@ TEST_CASE(SUITE("goes to retry state if auth reply doesn't authenticate"))
     REQUIRE(end_stats.session.num_init == start_stats.session.num_init);
 
     // causes the master to go through key derivation
-    MockCryptoBackend::instance.expect(
+    fix.expect(
     {
         CryptoAction::hmac_sha256,  // authenticate
         CryptoAction::secure_equals // last action since it fails
@@ -179,7 +180,7 @@ void test_open(InitiatorFixture& fix)
 {
     REQUIRE(fix.initiator.get_state_enum() == HandshakeState::idle);
     REQUIRE(fix.lower.num_tx_messages() == 0);
-    MockCryptoBackend::instance.expect_empty();
+    fix.expect_empty();
 
     fix.initiator.on_lower_open();
 
@@ -208,7 +209,7 @@ void test_request_handshake_begin(InitiatorFixture& fix)
     REQUIRE(fix.lower.pop_tx_message() == expected);
     REQUIRE(fix.exe->num_pending_timers() == 1);
 
-    MockCryptoBackend::instance.expect({ CryptoAction::gen_keypair_x25519, CryptoAction::hash_sha256 });
+    fix.expect({ CryptoAction::gen_keypair_x25519, CryptoAction::hash_sha256 });
 }
 
 void test_response_timeout(InitiatorFixture& fix, HandshakeState new_state)
@@ -224,7 +225,7 @@ void test_response_timeout(InitiatorFixture& fix, HandshakeState new_state)
 
     REQUIRE(fix.initiator.get_state_enum() == HandshakeState::wait_for_retry);
 
-    MockCryptoBackend::instance.expect_empty();
+    fix.expect_empty();
 }
 
 void test_reply_handshake_begin(InitiatorFixture& fix)
@@ -233,7 +234,7 @@ void test_reply_handshake_begin(InitiatorFixture& fix)
 
     const auto num_timer_cancel = fix.exe->num_timer_cancel();
 
-    MockCryptoBackend::instance.expect_empty();
+    fix.expect_empty();
     fix.lower.enqueue_message(hex::reply_handshake_begin(hex::repeat(0xFF, consts::crypto::x25519_key_length)));
 
     const auto expected = hex::request_handshake_auth(hex::repeat(0xFF, consts::crypto::sha256_hash_output_length));
@@ -242,7 +243,7 @@ void test_reply_handshake_begin(InitiatorFixture& fix)
     REQUIRE(fix.initiator.get_state_enum() == HandshakeState::wait_for_auth_reply);
 
     // causes the master to go through key derivation
-    MockCryptoBackend::instance.expect(
+    fix.expect(
     {
         CryptoAction::hash_sha256, // mix ck
         CryptoAction::dh_x25519,   // triple DH
@@ -278,7 +279,7 @@ void test_reply_handshake_auth(InitiatorFixture& fix)
     REQUIRE(fix.exe->num_pending_timers() == 1); // the session timeout timer should be the only timer active
 
     // causes the master to go through key derivation
-    MockCryptoBackend::instance.expect(
+    fix.expect(
     {
         CryptoAction::hmac_sha256, // authenticate
         CryptoAction::secure_equals,

@@ -16,7 +16,8 @@ namespace ssp21
     {
         empty,
         x25519_key,
-		ed25519_key,
+		ed25519_public_key,
+		ed25519_private_key,
         sha256,
         symmetric_key
     };

@@ -2,7 +2,9 @@
 #ifndef SSP21_CRYTPTO_TYPEDEFS_H
 #define SSP21_CRYTPTO_TYPEDEFS_H
 
-#include "ICryptoBackend.h"
+#include "ssp21/crypto/BufferTypes.h"
+
+#include <system_error>
 
 namespace ssp21
 {

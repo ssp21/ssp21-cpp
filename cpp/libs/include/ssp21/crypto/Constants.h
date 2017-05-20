@@ -21,14 +21,15 @@ namespace ssp21
             // cryptographic constants
             const uint8_t sha256_hash_output_length = 32;
             const uint8_t x25519_key_length = 32;
-			const uint8_t ed25519_key_length = 32;
+			const uint8_t ed25519_public_key_length = 32;
+			const uint8_t ed25519_private_key_length = 64;
             const uint8_t symmetric_ley_length = 32;
 
             // HMAC truncation lengths
             const uint8_t trunc16 = 16;
 
             // maximum length_ required buffer_ length_ across algorithm types
-            const uint8_t max_primitive_buffer_length = x25519_key_length;
+            const uint8_t max_primitive_buffer_length = ed25519_private_key_length;
 
             // defaults for the Session
             const uint32_t default_ttl_pad_ms = 10000;

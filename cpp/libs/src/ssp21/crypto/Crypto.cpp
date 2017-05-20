@@ -7,26 +7,26 @@
 
 namespace ssp21
 {
-    ICryptoBackend* Crypto::backend_(nullptr);
+	bool Crypto::initialized(false);
 
     void Crypto::zero_memory(const wseq32_t& data)
     {
-        assert(backend_);
-        backend_->zero_memory(data);
+		assert(initialized);
+		zero_memory_impl(data);
     }
 
     bool Crypto::secure_equals(const seq8_t& lhs, const seq8_t& rhs)
     {
-        assert(backend_);
-        return backend_->secure_equals(lhs, rhs);
+		assert(initialized);
+		return secure_equals_impl(lhs, rhs);
     }
 
     void Crypto::hash_sha256(
         std::initializer_list<seq32_t> data,
         SecureBuffer& output)
     {
-        assert(backend_);
-        backend_->hash_sha256(data, output);
+		assert(initialized);
+		hash_sha256_impl(data, output);
     }
 
     void Crypto::hmac_sha256(
@@ -34,27 +34,27 @@ namespace ssp21
         std::initializer_list<seq32_t> data,
         SecureBuffer& output)
     {
-        assert(backend_);
-        backend_->hmac_sha256(key, data, output);
+		assert(initialized);
+		hmac_sha256_impl(key, data, output);
     }
 
     void Crypto::gen_keypair_x25519(KeyPair& pair)
     {
-        assert(backend_);
-        backend_->gen_keypair_x25519(pair);
+		assert(initialized);
+		gen_keypair_x25519_impl(pair);
     }
 
     void Crypto::dh_x25519(const PrivateKey& priv_key, const seq8_t& pub_key, DHOutput& output, std::error_code& ec)
     {
-        assert(backend_);
-
+		assert(initialized);
+        
         if ((priv_key.get_type() != BufferType::x25519_key) || (pub_key.length() != consts::crypto::x25519_key_length))
         {
             ec = CryptoError::bad_key_type;
             return;
         }
 
-        backend_->dh_x25519(priv_key, pub_key, output, ec);
+		dh_x25519_impl(priv_key, pub_key, output, ec);
     }
 
     void Crypto::hkdf_sha256(
@@ -63,19 +63,21 @@ namespace ssp21
         SymmetricKey& output1,
         SymmetricKey& output2)
     {
-        assert(backend_);
-        backend_->hkdf_sha256(salt, input_key_material, output1, output2);
+		assert(initialized);
+		hkdf_sha256_impl(salt, input_key_material, output1, output2);
     }
 
-	void Crypto::gen_keypair_Ed25519(KeyPair& pair)
+	void Crypto::gen_keypair_ed25519(KeyPair& pair)
 	{
-		assert(backend_);
-		backend_->gen_keypair_Ed25519(pair);
+		assert(initialized);
+		gen_keypair_ed25519_impl(pair);
 	}
 
-    void Crypto::inititalize(ICryptoBackend& backend)
-    {
-        backend_ = &backend;
+    bool Crypto::initialize()
+    {		
+		assert(!initialized);
+		initialized = initialize_impl();
+		return initialized;
     }
 
 

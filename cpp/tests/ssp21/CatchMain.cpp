@@ -8,7 +8,7 @@
 int main(int argc, char*  argv[])
 {
     // global setup...
-    ssp21::Crypto::inititalize(ssp21::MockCryptoBackend::instance);
+	assert(ssp21::Crypto::initialize());
 
     return Catch::Session().run(argc, argv);
 }

@@ -2,7 +2,9 @@
 #ifndef SSP21_CRYTPTO_H
 #define SSP21_CRYTPTO_H
 
-#include "ICryptoBackend.h"
+#include "ssp21/crypto/BufferTypes.h"
+
+#include <system_error>
 
 #include <openpal/util/Uncopyable.h>
 
@@ -14,6 +16,8 @@ namespace ssp21
     */
     class Crypto final : openpal::StaticOnly
     {
+
+		static bool initialized;
 
     public:
 
@@ -51,19 +55,47 @@ namespace ssp21
             SymmetricKey& key2
         );
 
-		static void gen_keypair_Ed25519(KeyPair& pair);
-
-        /**
-        * Called once by a concrete backend during program initialization
-        */
-        static void inititalize(ICryptoBackend& backend);
+		static void gen_keypair_ed25519(KeyPair& pair);
+        
+        static bool initialize();
 
 
     private:
 
-        /// Function typedefs all initialized to nullptr. Concrete backends will initialize these.
+		static void zero_memory_impl(const wseq32_t& data);
 
-        static ICryptoBackend* backend_;
+		static bool secure_equals_impl(const seq8_t& lhs, const seq8_t& rhs);
+
+		static void hash_sha256_impl(
+			std::initializer_list<seq32_t> data,
+			SecureBuffer& output
+		);
+
+		static void hmac_sha256_impl(
+			const seq8_t& key,
+			std::initializer_list<seq32_t> data,
+			SecureBuffer& output
+		);
+
+		static void gen_keypair_x25519_impl(KeyPair& pair);
+
+		static void dh_x25519_impl(
+			const PrivateKey& priv_key,
+			const seq8_t& pub_key,
+			DHOutput& output,
+			std::error_code& ec
+		);
+
+		static void hkdf_sha256_impl(
+			const seq8_t& salt,
+			std::initializer_list<seq32_t> input_key_material,
+			SymmetricKey& key1,
+			SymmetricKey& key2
+		);
+
+		static void gen_keypair_ed25519_impl(KeyPair& pair);
+		
+		static bool initialize_impl();
 
     };
 }
