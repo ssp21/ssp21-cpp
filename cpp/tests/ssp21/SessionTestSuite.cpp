@@ -31,7 +31,7 @@ const auto test_auth_tag = repeat_hex(0xFF, consts::crypto::trunc16);
 
 TEST_CASE(SUITE("won't validate user data when not initialized"))
 {
-	CryptoFixture crypto;
+    CryptoFixture crypto;
 
     Session session(std::make_shared<MessageOnlyFrameWriter>());
 
@@ -172,7 +172,7 @@ TEST_CASE(SUITE("forwards the formatting error if the session::write function ca
 
 TEST_CASE(SUITE("successfully formats and increments nonce"))
 {
-	CryptoFixture crypto;
+    CryptoFixture crypto;
 
     Session s(std::make_shared<MessageOnlyFrameWriter>());
     init(s);
@@ -226,7 +226,7 @@ std::string validate(Session& session, uint16_t nonce, uint32_t ttl, int64_t now
 
 std::string test_validation_success(const SessionConfig& config, const Session::Param& parameters, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex)
 {
-	CryptoFixture crypto;
+    CryptoFixture crypto;
 
     Session session(std::make_shared<MessageOnlyFrameWriter>(), config);
 
@@ -243,7 +243,7 @@ std::string test_validation_success(const SessionConfig& config, const Session::
 
 void test_validation_failure(const SessionConfig& config, const Session::Param& parameters, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex, std::initializer_list<CryptoAction> actions, CryptoError error)
 {
-	CryptoFixture crypto;
+    CryptoFixture crypto;
 
     Session session(std::make_shared<MessageOnlyFrameWriter>(), config);
 

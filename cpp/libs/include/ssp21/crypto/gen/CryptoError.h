@@ -31,28 +31,32 @@ enum class CryptoError : uint8_t
     ok = 0x0,
     /// attempted operation with bad key type
     bad_key_type = 0x1,
+    /// attempted operation with a buffer with the wrong length
+    bad_length = 0x2,
     /// X25519 DH operation failed. Bad public key?
-    dh_x25519_fail = 0x2,
+    dh_x25519_fail = 0x3,
     /// a procedure cannot be executed b/c of an undefined algorithm
-    undefined_algorithm = 0x3,
+    undefined_algorithm = 0x4,
     /// A calculated MAC did not match the specified MAC
-    mac_auth_fail = 0x4,
+    mac_auth_fail = 0x5,
+    /// A calculated digital signature did not authenticate
+    signature_auth_fail = 0x6,
     /// A buffer had an insufficient or incorrect size
-    bad_buffer_size = 0x5,
+    bad_buffer_size = 0x7,
     /// No validate session for authenticating user data
-    no_valid_session = 0x6,
+    no_valid_session = 0x8,
     /// The TTL on a message is expired
-    expired_ttl = 0x7,
+    expired_ttl = 0x9,
     /// The nonce on a received message has been replayed
-    nonce_replay = 0x8,
+    nonce_replay = 0xA,
     /// A nonce has reached a configured maximum value
-    max_nonce_exceeded = 0x9,
+    max_nonce_exceeded = 0xB,
     /// The session time has reached a configured maximum value
-    max_session_time_exceeded = 0xA,
+    max_session_time_exceeded = 0xC,
     /// Received a session message with no user data
-    empty_user_data = 0xB,
+    empty_user_data = 0xD,
     /// A rollback of the monotonic clock was detected
-    clock_rollback = 0xC
+    clock_rollback = 0xE
 };
 
 struct CryptoErrorSpec : private openpal::StaticOnly

@@ -81,7 +81,7 @@ namespace ssp21
                 pub_key
             );
 
-			/*
+            /*
             std::vector<std::unique_ptr<ssp21::HexSeq16>> certificate_slices;
 
             for (auto& cert : certificates)
@@ -90,7 +90,7 @@ namespace ssp21
                 msg.certificates.push(hex->to_seq());
                 certificate_slices.push_back(std::move(hex));
             }
-			*/
+            */
 
             return write_message(msg);
         }
@@ -118,7 +118,7 @@ namespace ssp21
 
             ReplyHandshakeBegin msg(pub_key);
 
-			/*
+            /*
             std::vector<std::unique_ptr<HexSeq16>> certificate_slices;
 
             for (auto& cert : certificates)
@@ -127,7 +127,7 @@ namespace ssp21
                 msg.certificates.push(*hex);
                 certificate_slices.push_back(std::move(hex));
             }
-			*/
+            */
 
             return write_message(msg);
         }

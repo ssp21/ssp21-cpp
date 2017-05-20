@@ -22,9 +22,9 @@ namespace ssp21
 
         typedef openpal::RSeq<typename CountType::type_t> seq_t;
 
-		SeqByteField() {}
+        SeqByteField() {}
 
-		SeqByteField& operator=(const seq_t& other)
+        SeqByteField& operator=(const seq_t& other)
         {
             seq_t::operator=(other);
             return *this;

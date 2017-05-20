@@ -22,7 +22,7 @@ void test_open_and_full_handshake(InitiatorFixture& fix);
 TEST_CASE(SUITE("construction"))
 {
     InitiatorFixture fix;
-	REQUIRE(CryptoFixture::instance != nullptr);
+    REQUIRE(CryptoFixture::instance != nullptr);
 }
 
 TEST_CASE(SUITE("transmits REQUEST_HANDSHAKE_BEGIN when opened"))
@@ -116,8 +116,8 @@ TEST_CASE(SUITE("goes to retry state when DH fails"))
 {
     InitiatorFixture fix;
     test_open(fix);
-	
-	fix.set_fail_dh_x25519(true);    
+
+    fix.set_fail_dh_x25519(true);
     fix.lower.enqueue_message(hex::reply_handshake_begin(hex::repeat(0xFF, consts::crypto::x25519_key_length)));
     REQUIRE(fix.initiator.get_state_enum() == HandshakeState::wait_for_retry);
 }

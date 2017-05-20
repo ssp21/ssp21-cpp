@@ -88,16 +88,16 @@ TEST_CASE(SUITE("pretty prints message"))
 
     HexSeq8 public_key("CA FE");
 
-	HexSeq8 issuer_id(openpal::repeat_hex(0xAA, 16));
-	HexSeq8 signature(openpal::repeat_hex(0xBB, 32));
-	HexSeq16 body(openpal::repeat_hex(0xCC, 7));
-    
+    HexSeq8 issuer_id(openpal::repeat_hex(0xAA, 16));
+    HexSeq8 signature(openpal::repeat_hex(0xBB, 32));
+    HexSeq16 body(openpal::repeat_hex(0xCC, 7));
 
-	CertificateEnvelope envelope(
-		issuer_id.to_seq(),
-		signature.to_seq(),
-		body.to_seq()
-	);
+
+    CertificateEnvelope envelope(
+        issuer_id.to_seq(),
+        signature.to_seq(),
+        body.to_seq()
+    );
 
     RequestHandshakeBegin msg(
         7,
@@ -114,10 +114,10 @@ TEST_CASE(SUITE("pretty prints message"))
             0xCAFEBABE
         ),
         CertificateMode::preshared_keys,
-		public_key
+        public_key
     );
 
-    REQUIRE(msg.certificates.push(envelope));    
+    REQUIRE(msg.certificates.push(envelope));
 
 
     MockLogHandler log("log");
@@ -140,13 +140,13 @@ TEST_CASE(SUITE("pretty prints message"))
         "CA:FE",
         "certificates (count = 1)",
         "field #1",
-		"issuer_id (length = 16)",
-		"AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA",
-		"signature (length = 32)",
-		"BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB",
-		"BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB",
-		"certificate_body (length = 7)",
-		"CC:CC:CC:CC:CC:CC:CC"
+        "issuer_id (length = 16)",
+        "AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA",
+        "signature (length = 32)",
+        "BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB",
+        "BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB",
+        "certificate_body (length = 7)",
+        "CC:CC:CC:CC:CC:CC:CC"
     );
 
 }
@@ -167,7 +167,7 @@ TEST_CASE(SUITE("rejects trailing data"))
 {
     RequestHandshakeBegin msg;
 
-	// ------------------------------------------------------------------VV VV ------ zero certificates
+    // ------------------------------------------------------------------VV VV ------ zero certificates
     Hex hex("00 D1 D2 00 00 00 00 00 00 FF FF CA FE BA BE 00 03 AA AA AA 00 00 02");
 
     auto input = hex.as_rslice();

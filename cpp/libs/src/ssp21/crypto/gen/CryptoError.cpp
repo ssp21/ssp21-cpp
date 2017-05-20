@@ -27,12 +27,16 @@ const char* CryptoErrorSpec::to_string(CryptoError arg)
             return "ok";
         case(CryptoError::bad_key_type):
             return "bad_key_type";
+        case(CryptoError::bad_length):
+            return "bad_length";
         case(CryptoError::dh_x25519_fail):
             return "dh_x25519_fail";
         case(CryptoError::undefined_algorithm):
             return "undefined_algorithm";
         case(CryptoError::mac_auth_fail):
             return "mac_auth_fail";
+        case(CryptoError::signature_auth_fail):
+            return "signature_auth_fail";
         case(CryptoError::bad_buffer_size):
             return "bad_buffer_size";
         case(CryptoError::no_valid_session):

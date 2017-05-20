@@ -27,7 +27,7 @@ namespace ssp21
 
             while (count > 0)
             {
-				StructType item;                ;
+                StructType item;                ;
                 auto serr = item.read(input);
                 if (any(serr)) return serr;
 
@@ -50,7 +50,7 @@ namespace ssp21
             if (any(err)) return err;
 
             for (count_t i = 0; i < this->count_; ++i)
-            {                
+            {
                 auto serr = this->items_[i].write(output);
                 if (any(serr)) return serr;
             }
@@ -66,10 +66,10 @@ namespace ssp21
 
             for (uint32_t i = 0; i < this->count_; ++i)
             {
-				SAFE_STRING_FORMAT(message, openpal::max_log_entry_size, "field #%u", i+1);
-				printer.print(message);
-			
-				this->items_[i].print("test", printer); // TODO
+                SAFE_STRING_FORMAT(message, openpal::max_log_entry_size, "field #%u", i + 1);
+                printer.print(message);
+
+                this->items_[i].print("test", printer); // TODO
             }
         }
 
@@ -109,7 +109,7 @@ namespace ssp21
     private:
 
         count_t count_ = 0;
-		StructType items_[MAX_COUNT];
+        StructType items_[MAX_COUNT];
     };
 
 }

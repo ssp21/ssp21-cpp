@@ -40,14 +40,14 @@ namespace ssp21
         {
         case(BufferType::x25519_key) :
             return consts::crypto::x25519_key_length;
-		case(BufferType::ed25519_public_key) :
-			return consts::crypto::ed25519_public_key_length;
-		case(BufferType::ed25519_private_key):
-			return consts::crypto::ed25519_private_key_length;
+        case(BufferType::ed25519_public_key) :
+            return consts::crypto::ed25519_public_key_length;
+        case(BufferType::ed25519_private_key):
+            return consts::crypto::ed25519_private_key_length;
         case(BufferType::sha256) :
             return consts::crypto::sha256_hash_output_length;
-		case(BufferType::ed25519_signature) :
-			return consts::crypto::ed25519_signature_length;
+        case(BufferType::ed25519_signature) :
+            return consts::crypto::ed25519_signature_length;
         case(BufferType::symmetric_key) :
             return consts::crypto::symmetric_ley_length;
         default:

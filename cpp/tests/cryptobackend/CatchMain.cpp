@@ -7,11 +7,11 @@
 int main(int argc, char*  argv[])
 {
     // global setup...
-	if (!ssp21::Crypto::initialize())
-	{
-		std::cerr << "Error initializing crypto backend" << std::endl;
-		return -1;
-	}
+    if (!ssp21::Crypto::initialize())
+    {
+        std::cerr << "Error initializing crypto backend" << std::endl;
+        return -1;
+    }
 
     int result = Catch::Session().run(argc, argv);
 
