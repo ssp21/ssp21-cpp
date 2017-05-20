@@ -33,6 +33,8 @@ const char* CryptoActionSpec::to_string(CryptoAction arg)
             return "gen_keypair_x25519";
         case(CryptoAction::dh_x25519):
             return "dh_x25519";
+        case(CryptoAction::gen_keypair_ed25519):
+            return "gen_keypair_ed25519";
         default:
             return "undefined";
     }

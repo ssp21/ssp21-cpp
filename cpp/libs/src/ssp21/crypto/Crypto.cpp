@@ -67,6 +67,12 @@ namespace ssp21
         backend_->hkdf_sha256(salt, input_key_material, output1, output2);
     }
 
+	void Crypto::gen_keypair_Ed25519(KeyPair& pair)
+	{
+		assert(backend_);
+		backend_->gen_keypair_Ed25519(pair);
+	}
+
     void Crypto::inititalize(ICryptoBackend& backend)
     {
         backend_ = &backend;

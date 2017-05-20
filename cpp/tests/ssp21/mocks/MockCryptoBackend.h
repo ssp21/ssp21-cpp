@@ -33,6 +33,8 @@ namespace ssp21
 
         virtual void dh_x25519(const PrivateKey& priv_key, const seq8_t& pub_key, DHOutput& output, std::error_code& ec) override;
 
+		virtual void gen_keypair_Ed25519(KeyPair& pair) override;
+
         bool empty_actions() const
         {
             return actions.empty();

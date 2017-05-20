@@ -21,6 +21,7 @@ namespace ssp21
             // cryptographic constants
             const uint8_t sha256_hash_output_length = 32;
             const uint8_t x25519_key_length = 32;
+			const uint8_t ed25519_key_length = 32;
             const uint8_t symmetric_ley_length = 32;
 
             // HMAC truncation lengths

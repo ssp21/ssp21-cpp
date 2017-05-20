@@ -5,7 +5,12 @@ package com.automatak.render
 
 
 object EnumValue {
+
   def undefined(value: Int) = EnumValue("undefined", value, "value not defined")
+
+  def list(names: String*) : List[EnumValue] = {
+    names.zipWithIndex.map(x => EnumValue(x._1, x._2,"")).toList
+  }
 }
 
 case class EnumValue(name: String, value: Int, comment: String)

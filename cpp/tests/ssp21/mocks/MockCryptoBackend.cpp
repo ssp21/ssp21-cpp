@@ -79,6 +79,17 @@ namespace ssp21
         output.set_type(BufferType::x25519_key);
     }
 
+	void MockCryptoBackend::gen_keypair_Ed25519(KeyPair& pair)
+	{
+		actions.push_back(CryptoAction::gen_keypair_ed25519);
+
+		pair.private_key.as_wseq().take(consts::crypto::x25519_key_length).set_all_to(fill_byte);
+		pair.private_key.set_type(BufferType::ed25519_key);
+
+		pair.public_key.as_wseq().take(consts::crypto::x25519_key_length).set_all_to(fill_byte);
+		pair.public_key.set_type(BufferType::ed25519_key);
+	}
+
 }
 
 

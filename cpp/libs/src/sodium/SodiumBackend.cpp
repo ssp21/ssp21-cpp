@@ -75,6 +75,8 @@ namespace ssp21
         {
             auto dest = pair.private_key.as_wseq();
             randombytes_buf(dest, crypto_scalarmult_BYTES);
+
+			// TODO - libsodium, undocumented error code?
             crypto_scalarmult_base(pair.public_key.as_wseq(), dest);
 
             pair.public_key.set_type(BufferType::x25519_key);
@@ -91,5 +93,17 @@ namespace ssp21
 
             output.set_type(BufferType::x25519_key);
         }
+
+		void SodiumBackend::gen_keypair_Ed25519(KeyPair& pair)
+		{
+			auto publicDest = pair.public_key.as_wseq();
+			auto privateDest = pair.private_key.as_wseq();
+
+			// TODO - libsodium, undocumented error code?
+			crypto_sign_keypair(publicDest, privateDest);
+
+			pair.public_key.set_type(BufferType::ed25519_key);
+			pair.private_key.set_type(BufferType::ed25519_key);
+		}
     }
 }

@@ -51,6 +51,8 @@ namespace ssp21
             SymmetricKey& key2
         );
 
+		static void gen_keypair_Ed25519(KeyPair& pair);
+
         /**
         * Called once by a concrete backend during program initialization
         */
