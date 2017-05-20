@@ -17,15 +17,6 @@ namespace ssp21
 
         virtual T const* get(uint32_t i) const = 0;
 
-        template <class Lambda>
-        void foreach(const Lambda& action)
-        {
-            for (uint32_t i = 0; i < this->count(); ++i)
-            {
-                action(*read(i));
-            }
-        }
-
     };
 
 
