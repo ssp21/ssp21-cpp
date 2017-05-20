@@ -20,6 +20,17 @@ namespace ssp21
     public:
 
         /**
+        * Verify a certificate chain
+        *
+        * @param anchor certificate to verify against
+        * @param certificates Chain of unparsed certificate envelopes
+        * @param result verified terminal certificate if return value is HandshakeError::none
+        * @return Verification error or HandshakeError::none for success
+        *
+        */
+        static HandshakeError verify(const CertificateBody& anchor, const ICollection<CertificateEnvelope>& certificates, CertificateBody& result);
+
+        /**
         *
         * Using the previously verified parent certifivate, verify the next untrusted child certificate
         *
@@ -40,6 +51,8 @@ namespace ssp21
         };
 
         static DSAInfo try_get_dsa_info(PublicKeyType type);
+
+        static bool is_dh_key(PublicKeyType type);
     };
 }
 

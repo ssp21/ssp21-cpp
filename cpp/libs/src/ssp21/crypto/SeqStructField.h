@@ -7,14 +7,33 @@
 
 namespace ssp21
 {
-
-    template <class CountType, class StructType, uint8_t MAX_COUNT>
-    class SeqStructField
+    template <class T>
+    class ICollection
     {
 
     public:
 
-        typedef typename CountType::type_t count_t;
+        virtual uint32_t count() const = 0;
+
+        virtual T const* get(uint32_t i) const = 0;
+
+        template <class Lambda>
+        void foreach(const Lambda& action)
+        {
+            for (uint32_t i = 0; i < this->count(); ++i)
+            {
+                action(*read(i));
+            }
+        }
+
+    };
+
+
+    template <class CountType, class StructType, uint32_t MAX_COUNT>
+    class SeqStructField : public ICollection<StructType>
+    {
+
+    public:
 
         ParseError read(seq32_t& input)
         {
@@ -49,7 +68,7 @@ namespace ssp21
             auto err = count_field.write(output);
             if (any(err)) return err;
 
-            for (count_t i = 0; i < this->count_; ++i)
+            for (uint32_t i = 0; i < this->count_; ++i)
             {
                 auto serr = this->items_[i].write(output);
                 if (any(serr)) return serr;
@@ -90,25 +109,24 @@ namespace ssp21
             return true;
         }
 
-        bool read(count_t i, StructType& item) const
+        StructType const* get(uint32_t i) const
         {
             if (i >= this->count_)
             {
-                return false;
+                return nullptr;
             }
 
-            item = this->items_[i];
-            return true;
+            return &this->items_[i];
         }
 
-        count_t count() const
+        uint32_t count() const
         {
             return this->count_;
         }
 
     private:
 
-        count_t count_ = 0;
+        uint32_t count_ = 0;
         StructType items_[MAX_COUNT];
     };
 

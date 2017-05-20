@@ -8,6 +8,31 @@
 namespace ssp21
 {
 
+    HandshakeError Chain::verify(const CertificateBody& anchor, const ICollection<CertificateEnvelope>& certificates, CertificateBody& result)
+    {
+        if (certificates.count() == 0) return HandshakeError::bad_certificate_chain;
+
+        const CertificateBody* parent = &anchor;
+
+        for (uint32_t i = 0; i < certificates.count(); ++i)
+        {
+            const CertificateEnvelope* const child_env = certificates.get(i);
+
+            const auto err = verify_pair(*parent, *child_env, result);
+            if (any(err)) return err;
+
+            parent = &result; // prepare for next iteration
+        }
+
+		// terminal certificate have have signing level of 0
+		if (result.signing_level != 0) return HandshakeError::bad_certificate_chain;
+
+		// terminal certificate have a DH key
+		if (!is_dh_key(result.public_key_type)) return HandshakeError::bad_certificate_chain;
+
+		return HandshakeError::none;
+    }
+
     HandshakeError Chain::verify_pair(const CertificateBody& parent, const CertificateEnvelope& child_envelope, CertificateBody& child)
     {
         HashOutput issuer_hash;
@@ -43,6 +68,17 @@ namespace ssp21
             return DSAInfo { Crypto::verify_ed25519, consts::crypto::ed25519_signature_length };
         default:
             return DSAInfo { nullptr, 0 };
+        }
+    }
+
+    bool Chain::is_dh_key(PublicKeyType type)
+    {
+        switch (type)
+        {
+        case(PublicKeyType::X25519):
+            return true;
+        default:
+            return false;
         }
     }
 
