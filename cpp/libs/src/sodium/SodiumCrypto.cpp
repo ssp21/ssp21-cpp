@@ -122,7 +122,7 @@ namespace ssp21
 
     bool Crypto::verify_ed25519_impl(const seq32_t& message, const seq32_t& signature, const seq32_t& public_key)
     {
-		return crypto_sign_verify_detached(signature, message, message.length(), public_key) == 0;
+        return crypto_sign_verify_detached(signature, message, message.length(), public_key) == 0;
     }
 
 }

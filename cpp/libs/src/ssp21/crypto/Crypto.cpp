@@ -96,13 +96,13 @@ namespace ssp21
     {
         assert(initialized);
         if (public_key.length() != consts::crypto::ed25519_public_key_length)
-        {            
+        {
             return false;
         }
 
         if (signature.length() != consts::crypto::ed25519_signature_length)
-        {            
-			return false;
+        {
+            return false;
         }
 
         return verify_ed25519_impl(message, signature, public_key);

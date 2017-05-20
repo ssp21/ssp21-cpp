@@ -116,7 +116,7 @@ namespace ssp21
     {
         assert(CryptoFixture::instance);
         CryptoFixture::instance->actions.push_back(CryptoAction::verify_ed25519);
-		return true;
+        return true;
     }
 }
 
