@@ -9,6 +9,13 @@ namespace ssp21
 {
 	bool Crypto::initialized(false);
 
+	bool Crypto::initialize()
+	{
+		assert(!initialized);
+		initialized = initialize_impl();
+		return initialized;
+	}
+
     void Crypto::zero_memory(const wseq32_t& data)
     {
 		assert(initialized);
@@ -73,13 +80,18 @@ namespace ssp21
 		gen_keypair_ed25519_impl(pair);
 	}
 
-    bool Crypto::initialize()
-    {		
-		assert(!initialized);
-		initialized = initialize_impl();
-		return initialized;
-    }
+	void Crypto::sign_ed25519(const seq32_t& input, const PrivateKey& key, DSAOutput& output, std::error_code& ec)
+	{
+		assert(initialized);
+		if (key.get_type() != BufferType::ed25519_private_key)
+		{
+			ec = CryptoError::bad_key_type;
+			return;
+		}
 
+		sign_ed25519_impl(input, key, output, ec);
+	}
+  
 
 }
 

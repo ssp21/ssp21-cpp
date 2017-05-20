@@ -20,7 +20,9 @@ object CryptoAction extends EnumModel {
     "hkdf_sha256",
     "gen_keypair_x25519",
     "dh_x25519",
-    "gen_keypair_ed25519"
+    "gen_keypair_ed25519",
+    "sign_ed25519",
+    "verify_ed25519"
   )
 
   override def defaultValue: Option[EnumValue] = None

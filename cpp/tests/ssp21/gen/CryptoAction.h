@@ -39,7 +39,11 @@ enum class CryptoAction : uint8_t
     /// 
     dh_x25519 = 0x5,
     /// 
-    gen_keypair_ed25519 = 0x6
+    gen_keypair_ed25519 = 0x6,
+    /// 
+    sign_ed25519 = 0x7,
+    /// 
+    verify_ed25519 = 0x8
 };
 
 struct CryptoActionSpec : private openpal::StaticOnly

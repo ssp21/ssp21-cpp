@@ -21,8 +21,9 @@ namespace ssp21
 
     public:
 
-
         // --- These are the static proxy functions that SSP21 calls at runtime ---
+
+		static bool initialize();
 
         static void zero_memory(const wseq32_t& data);
 
@@ -56,11 +57,14 @@ namespace ssp21
         );
 
 		static void gen_keypair_ed25519(KeyPair& pair);
-        
-        static bool initialize();
 
+		static void sign_ed25519(const seq32_t& input, const PrivateKey& key, DSAOutput& output, std::error_code& ec);
 
     private:
+
+		// The implementation is linked into the final program
+
+		static bool initialize_impl();
 
 		static void zero_memory_impl(const wseq32_t& data);
 
@@ -94,8 +98,8 @@ namespace ssp21
 		);
 
 		static void gen_keypair_ed25519_impl(KeyPair& pair);
-		
-		static bool initialize_impl();
+
+		static void sign_ed25519_impl(const seq32_t& input, const PrivateKey& key, DSAOutput& output, std::error_code& ec);
 
     };
 }

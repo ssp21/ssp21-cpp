@@ -103,6 +103,15 @@ namespace ssp21
 		pair.public_key.set_type(BufferType::ed25519_public_key);
 	}
 
+	void Crypto::sign_ed25519_impl(const seq32_t& input, const PrivateKey& key, DSAOutput& output, std::error_code& ec)
+	{
+		assert(CryptoFixture::instance);
+		CryptoFixture::instance->actions.push_back(CryptoAction::gen_keypair_ed25519);
+
+		output.as_wseq().take(consts::crypto::ed25519_signature_length).set_all_to(CryptoFixture::instance->fill_byte);
+		output.set_type(BufferType::ed25519_signature);
+	}
+
 }
 
 

@@ -19,6 +19,7 @@ namespace ssp21
 		ed25519_public_key,
 		ed25519_private_key,
         sha256,
+		ed25519_signature,
         symmetric_key
     };
 
@@ -96,6 +97,8 @@ namespace ssp21
     class DHOutput final : public SecureBuffer {};
 
     class HashOutput : public SecureBuffer {};
+
+	class DSAOutput final : public SecureBuffer {};
 
     class SymmetricKey final : public SecureBuffer {};
 
