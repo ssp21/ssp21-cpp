@@ -53,6 +53,14 @@ ParseError CryptoSpec::read(seq32_t& input)
     );
 }
 
+ParseError CryptoSpec::read_all(const seq32_t& input)
+{
+    auto remainder = input;
+    auto err = read(remainder);
+    if(any(err)) return err;
+    return remainder.is_empty() ? ParseError::ok : ParseError::too_many_bytes;
+}
+
 FormatError CryptoSpec::write(wseq32_t& output) const
 {
     return MessageFormatter::write_fields(

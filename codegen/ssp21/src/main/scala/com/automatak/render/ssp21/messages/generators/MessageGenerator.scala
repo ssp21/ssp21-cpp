@@ -29,7 +29,7 @@ final case class MessageGenerator(msg: Message) extends StructGenerator(msg) {
     def read = {
       "ParseError %s::read(seq32_t input)".format(msg.name).iter ++ bracket {
         "auto read_fields = [this](seq32_t& input) -> ParseError ".iter ++ bracketSemiColon {
-          readInternals
+          readSomeInternals
         } ++ space ++
           "return MessageParser::read_message(input, Function::%s, read_fields);".format(msg.function.name).iter
       }

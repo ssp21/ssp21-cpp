@@ -38,12 +38,13 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
 
     def defaultConstructorSig = "%s();".format(sf.name).iter
 
-    def readSig = "ParseError read(seq32_t& input);".iter
+    def readSomeSig = "ParseError read(seq32_t& input);".iter
+    def readAllSig = "ParseError read_all(const seq32_t& input);".iter
     def writeSig = "FormatError write(wseq32_t& output) const;".iter
     def printSig = "void print(const char* name, IMessagePrinter& printer) const;".iter
 
     def readWritePrint = {
-      if (outputReadWritePrint) readSig ++ writeSig ++ printSig else Iterator.empty
+      if (outputReadWritePrint) readSomeSig ++ readAllSig ++ writeSig ++ printSig else Iterator.empty
     }
 
     def getMinRepresentation(num: Int): String = num match {
@@ -101,7 +102,7 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
 
   }
 
-  protected def readInternals(implicit indent: Indentation): Iterator[String] = {
+  protected def readSomeInternals(implicit indent: Indentation): Iterator[String] = {
 
     def args = commas(sf.fields.map(_.name))
 
@@ -127,9 +128,20 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
 
 
 
-    def readFunc(implicit indent: Indentation): Iterator[String] = {
+    def readSomeFunc(implicit indent: Indentation): Iterator[String] = {
       "ParseError %s::read(seq32_t& input)".format(sf.name).iter ++ bracket {
-        readInternals
+        readSomeInternals
+      }
+    }
+
+    def readAllFunc(implicit indent: Indentation): Iterator[String] = {
+      "ParseError %s::read_all(const seq32_t& input)".format(sf.name).iter ++ bracket {
+        Iterator(
+          "auto remainder = input;",
+          "auto err = read(remainder);",
+          "if(any(err)) return err;",
+          "return remainder.is_empty() ? ParseError::ok : ParseError::too_many_bytes;"
+        )
       }
     }
 
@@ -172,7 +184,7 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
 
     def readWritePrint: Iterator[String] = {
       if (outputReadWritePrint) {
-        readFunc ++ space ++ writeFunc ++ space ++ printFunc
+        readSomeFunc ++ space ++ readAllFunc ++ space ++ writeFunc ++ space ++ printFunc
       }
       else {
         Iterator.empty

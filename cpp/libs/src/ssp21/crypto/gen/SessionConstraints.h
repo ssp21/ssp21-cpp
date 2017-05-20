@@ -41,6 +41,7 @@ struct SessionConstraints final
     IntegerField<openpal::UInt32> max_session_duration;
 
     ParseError read(seq32_t& input);
+    ParseError read_all(const seq32_t& input);
     FormatError write(wseq32_t& output) const;
     void print(const char* name, IMessagePrinter& printer) const;
 };

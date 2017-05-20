@@ -44,6 +44,7 @@ struct AuthMetadata final
     SessionFlags flags;
 
     ParseError read(seq32_t& input);
+    ParseError read_all(const seq32_t& input);
     FormatError write(wseq32_t& output) const;
     void print(const char* name, IMessagePrinter& printer) const;
 };
