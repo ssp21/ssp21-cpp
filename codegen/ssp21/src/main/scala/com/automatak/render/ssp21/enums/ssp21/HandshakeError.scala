@@ -32,9 +32,10 @@ object HandshakeError extends EnumModel {
     EnumValue("unsupported_nonce_mode", 7, "The requested nonce verification mode is not supported"),
     EnumValue("unsupported_certificate_mode", 8, "The requested certificate mode is not supported"),
     EnumValue("bad_certificate_format", 9, "One of the received certificates was improperly encoded"),
-    EnumValue("unsupported_certificate_feature", 10, "One of the received certificates utilizes an unsupported feature"),
-    EnumValue("authentication_error", 11, "The outstation was unable to authenticate the master"),
-    EnumValue("no_prior_handshake_begin", 12, "The master requested handshake auth, but no prior handshake begin was received"),
+    EnumValue("bad_certificate_chain", 10, "One of the received certificates was improperly encoded"),
+    EnumValue("unsupported_certificate_feature", 11, "One of the received certificates utilizes an unsupported feature"),
+    EnumValue("authentication_error", 12, "The outstation was unable to authenticate the master"),
+    EnumValue("no_prior_handshake_begin", 13, "The master requested handshake auth, but no prior handshake begin was received"),
     EnumValue("internal", 255, "internal error"),
     noneValue
   )

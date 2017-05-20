@@ -112,10 +112,11 @@ namespace ssp21
         output.set_type(BufferType::ed25519_signature);
     }
 
-    void Crypto::verify_ed25519_impl(const seq32_t& message, const seq32_t& signature, const PublicKey& key, std::error_code& ec)
+    bool Crypto::verify_ed25519_impl(const seq32_t& message, const seq32_t& signature, const seq32_t& public_key)
     {
         assert(CryptoFixture::instance);
         CryptoFixture::instance->actions.push_back(CryptoAction::verify_ed25519);
+		return true;
     }
 }
 

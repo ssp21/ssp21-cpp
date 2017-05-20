@@ -46,10 +46,12 @@ HandshakeError HandshakeErrorSpec::from_type(uint8_t arg)
         case(0x9):
             return HandshakeError::bad_certificate_format;
         case(0xA):
-            return HandshakeError::unsupported_certificate_feature;
+            return HandshakeError::bad_certificate_chain;
         case(0xB):
-            return HandshakeError::authentication_error;
+            return HandshakeError::unsupported_certificate_feature;
         case(0xC):
+            return HandshakeError::authentication_error;
+        case(0xD):
             return HandshakeError::no_prior_handshake_begin;
         case(0xFF):
             return HandshakeError::internal;
@@ -83,6 +85,8 @@ const char* HandshakeErrorSpec::to_string(HandshakeError arg)
             return "unsupported_certificate_mode";
         case(HandshakeError::bad_certificate_format):
             return "bad_certificate_format";
+        case(HandshakeError::bad_certificate_chain):
+            return "bad_certificate_chain";
         case(HandshakeError::unsupported_certificate_feature):
             return "unsupported_certificate_feature";
         case(HandshakeError::authentication_error):

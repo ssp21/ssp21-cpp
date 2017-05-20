@@ -92,22 +92,20 @@ namespace ssp21
         sign_ed25519_impl(input, key, output, ec);
     }
 
-    void Crypto::verify_ed25519(const seq32_t& message, const seq32_t& signature, const PublicKey& key, std::error_code& ec)
+    bool Crypto::verify_ed25519(const seq32_t& message, const seq32_t& signature, const seq32_t& public_key)
     {
         assert(initialized);
-        if (key.get_type() != BufferType::ed25519_public_key)
-        {
-            ec = CryptoError::bad_key_type;
-            return;
+        if (public_key.length() != consts::crypto::ed25519_public_key_length)
+        {            
+            return false;
         }
 
         if (signature.length() != consts::crypto::ed25519_signature_length)
-        {
-            ec = CryptoError::bad_length;
-            return;
+        {            
+			return false;
         }
 
-        verify_ed25519_impl(message, signature, key, ec);
+        return verify_ed25519_impl(message, signature, public_key);
     }
 
 

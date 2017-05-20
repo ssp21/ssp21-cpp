@@ -34,6 +34,12 @@ namespace ssp21
         SymmetricKey& key1,
         SymmetricKey& key2
     );
+
+	typedef bool(*verify_dsa_t)(
+		const seq32_t& message,
+		const seq32_t& signature,
+		const seq32_t& public_key
+	);
 }
 
 #endif

@@ -60,11 +60,11 @@ namespace ssp21
 
         static void sign_ed25519(const seq32_t& input, const PrivateKey& key, DSAOutput& output, std::error_code& ec);
 
-        static void verify_ed25519(const seq32_t& message, const seq32_t& signature, const PublicKey& key, std::error_code& ec);
+        static bool verify_ed25519(const seq32_t& message, const seq32_t& signature, const seq32_t& public_key);
 
     private:
 
-        // The implementation is linked into the final program
+        // The implementation is linked into the final program via some concrete backend
 
         static bool initialize_impl();
 
@@ -103,7 +103,7 @@ namespace ssp21
 
         static void sign_ed25519_impl(const seq32_t& input, const PrivateKey& key, DSAOutput& output, std::error_code& ec);
 
-        static void verify_ed25519_impl(const seq32_t& message, const seq32_t& signature, const PublicKey& key, std::error_code& ec);
+        static bool verify_ed25519_impl(const seq32_t& message, const seq32_t& signature, const seq32_t& public_key);
 
     };
 }

@@ -120,13 +120,9 @@ namespace ssp21
         output.set_type(BufferType::ed25519_signature);
     }
 
-    void Crypto::verify_ed25519_impl(const seq32_t& message, const seq32_t& signature, const PublicKey& key, std::error_code& ec)
+    bool Crypto::verify_ed25519_impl(const seq32_t& message, const seq32_t& signature, const seq32_t& public_key)
     {
-        const auto result = crypto_sign_verify_detached(signature, message, message.length(), key.as_seq());
-        if (result != 0)
-        {
-            ec = CryptoError::signature_auth_fail;
-        }
+		return crypto_sign_verify_detached(signature, message, message.length(), public_key) == 0;
     }
 
 }

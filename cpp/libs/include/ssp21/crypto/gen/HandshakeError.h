@@ -46,12 +46,14 @@ enum class HandshakeError : uint8_t
     unsupported_certificate_mode = 0x8,
     /// One of the received certificates was improperly encoded
     bad_certificate_format = 0x9,
+    /// One of the received certificates was improperly encoded
+    bad_certificate_chain = 0xA,
     /// One of the received certificates utilizes an unsupported feature
-    unsupported_certificate_feature = 0xA,
+    unsupported_certificate_feature = 0xB,
     /// The outstation was unable to authenticate the master
-    authentication_error = 0xB,
+    authentication_error = 0xC,
     /// The master requested handshake auth, but no prior handshake begin was received
-    no_prior_handshake_begin = 0xC,
+    no_prior_handshake_begin = 0xD,
     /// This value gets used internally in ssp21-cpp only
     none = 0xFD,
     /// value not defined
