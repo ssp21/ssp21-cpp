@@ -5,7 +5,7 @@
 
 #include "inih/ini.h"
 
-#include "ssp21/util/Base64.h"
+// #include "ssp21/util/Base64.h"
 #include "ssp21/stack/LogLevels.h"
 
 #include <iostream>
@@ -169,6 +169,8 @@ std::shared_ptr<const T> ConfigReader::read_key(const std::string& section, cons
     static_assert(sizeof(char) == sizeof(uint8_t), "bad char size");
     const ssp21::seq32_t characters(reinterpret_cast<const uint8_t*>(value.c_str()), value.length());
 
+	/** TODO!
+
     const auto result = ssp21::Base64::decode(characters, byte_writer);
 
     if (any(result))
@@ -182,6 +184,7 @@ std::shared_ptr<const T> ConfigReader::read_key(const std::string& section, cons
     }
 
     key->set_type(ssp21::BufferType::x25519_key);
+	*/
 
     return key;
 }

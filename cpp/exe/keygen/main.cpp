@@ -1,6 +1,5 @@
 
 #include "ssp21/crypto/Crypto.h"
-#include "ssp21/util/Base64.h"
 
 #include <iostream>
 
@@ -13,19 +12,9 @@ int main(int argc, char*  argv[])
     KeyPair kp;
     Crypto::gen_keypair_x25519(kp);
 
-    std::cout << "public key:" << std::endl;
-    Base64::encode(kp.public_key.as_seq(), [](char c)
-    {
-        std::cout << c;
-    });
-    std::cout << std::endl;
-
-    std::cout << "private key:" << std::endl;
-    Base64::encode(kp.private_key.as_seq(), [](char c)
-    {
-        std::cout << c;
-    });
-    std::cout << std::endl;
+	/*
+	TODO - update key writing
+	*/
 
     return 0;
 }
