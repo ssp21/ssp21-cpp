@@ -29,9 +29,13 @@ enum class FileEntryType : uint8_t
     /// Industrial certificate format (ICF)
     certificate = 0x0,
     /// X25519 private key
-    x25519_private_key = 0x1,
+    x25519_public_key = 0x1,
+    /// X25519 private key
+    x25519_private_key = 0x2,
     /// Ed25519 private key
-    ed25519_private_key = 0x2,
+    ed25519_public_key = 0x3,
+    /// Ed25519 private key
+    ed25519_private_key = 0x4,
     /// value not defined
     undefined = 0xFF
 };

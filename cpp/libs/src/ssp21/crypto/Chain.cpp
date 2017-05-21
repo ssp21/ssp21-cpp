@@ -24,13 +24,13 @@ namespace ssp21
             parent = &result; // prepare for next iteration
         }
 
-		// terminal certificate must have signing level == 0
-		if (result.signing_level != 0) return HandshakeError::bad_certificate_chain;
+        // terminal certificate must have signing level == 0
+        if (result.signing_level != 0) return HandshakeError::bad_certificate_chain;
 
-		// terminal certificate must have a DH key
-		if (!is_dh_key(result.public_key_type)) return HandshakeError::bad_certificate_chain;
+        // terminal certificate must have a DH key
+        if (!is_dh_key(result.public_key_type)) return HandshakeError::bad_certificate_chain;
 
-		return HandshakeError::none;
+        return HandshakeError::none;
     }
 
     HandshakeError Chain::verify_pair(const CertificateBody& parent, const CertificateEnvelope& child_envelope, CertificateBody& child)

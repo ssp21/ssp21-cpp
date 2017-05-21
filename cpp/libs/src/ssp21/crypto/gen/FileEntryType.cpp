@@ -28,8 +28,12 @@ FileEntryType FileEntryTypeSpec::from_type(uint8_t arg)
         case(0x0):
             return FileEntryType::certificate;
         case(0x1):
-            return FileEntryType::x25519_private_key;
+            return FileEntryType::x25519_public_key;
         case(0x2):
+            return FileEntryType::x25519_private_key;
+        case(0x3):
+            return FileEntryType::ed25519_public_key;
+        case(0x4):
             return FileEntryType::ed25519_private_key;
         default:
             return FileEntryType::undefined;
@@ -41,8 +45,12 @@ const char* FileEntryTypeSpec::to_string(FileEntryType arg)
     {
         case(FileEntryType::certificate):
             return "certificate";
+        case(FileEntryType::x25519_public_key):
+            return "x25519_public_key";
         case(FileEntryType::x25519_private_key):
             return "x25519_private_key";
+        case(FileEntryType::ed25519_public_key):
+            return "ed25519_public_key";
         case(FileEntryType::ed25519_private_key):
             return "ed25519_private_key";
         default:
