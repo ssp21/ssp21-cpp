@@ -8,8 +8,8 @@
 #include <string>
 #include <fstream>
 
-#define MACRO_PEM_BEGIN_DELIM_START "-----BEGIN "
-#define MACRO_PEM_DELIM_END "-----"
+#define PEM_BEGIN_DELIM_START "-----BEGIN "
+#define PEM_DELIM_END "-----"
 
 namespace ssp21
 {
@@ -19,7 +19,7 @@ namespace ssp21
     }
 
     class PEMFormat : private openpal::StaticOnly
-    {
+    {		
 
     public:
 
@@ -27,11 +27,19 @@ namespace ssp21
         {
             virtual ~IHandler() {}
 
-            /// return false to halt decoding
-            virtual bool on_section(const std::string& id, const std::string& base64) = 0;
+            // return false to halt decoding
+            virtual bool on_section(const std::string& id, const char* line) = 0;
         };
 
-        static PEMDecodeError decode(std::ifstream& input, IHandler& handler, std::error_code& ec);
+		struct IReader
+		{
+			virtual ~IReader() {}
+
+			// return false to halt decoding
+			virtual size_t read_line(char* dest, size_t max_characters) = 0;
+		};
+
+        static PEMDecodeError decode(IReader& reader, IHandler& handler, std::error_code& ec);
 
         static bool get_section(const std::string& line, std::string& id);
 
@@ -39,8 +47,8 @@ namespace ssp21
 
         static const std::string begin_delim;
 
-        static const int begin_delim_length = length(MACRO_PEM_BEGIN_DELIM_START);
-        static const int trailer_delim_length = length(MACRO_PEM_DELIM_END);
+        static const int begin_delim_length = length(PEM_BEGIN_DELIM_START);
+        static const int trailer_delim_length = length(PEM_DELIM_END);
         static const int total_begin_line_delim_length = begin_delim_length + trailer_delim_length;
 
     };

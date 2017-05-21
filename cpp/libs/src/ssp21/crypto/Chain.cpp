@@ -12,11 +12,11 @@ namespace ssp21
     {
         if (certificates.count() == 0) return HandshakeError::bad_certificate_chain;
 
-        const CertificateBody* parent = &anchor;
+        auto parent = &anchor;
 
         for (uint32_t i = 0; i < certificates.count(); ++i)
         {
-            const CertificateEnvelope* const child_env = certificates.get(i);
+            const auto child_env = certificates.get(i);
 
             const auto err = verify_pair(*parent, *child_env, result);
             if (any(err)) return err;
@@ -24,10 +24,10 @@ namespace ssp21
             parent = &result; // prepare for next iteration
         }
 
-		// terminal certificate have have signing level of 0
+		// terminal certificate must have signing level == 0
 		if (result.signing_level != 0) return HandshakeError::bad_certificate_chain;
 
-		// terminal certificate have a DH key
+		// terminal certificate must have a DH key
 		if (!is_dh_key(result.public_key_type)) return HandshakeError::bad_certificate_chain;
 
 		return HandshakeError::none;

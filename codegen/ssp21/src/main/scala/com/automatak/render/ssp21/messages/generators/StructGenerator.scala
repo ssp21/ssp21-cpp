@@ -174,7 +174,10 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
 
     def fullConstructorImpl(implicit indent: Indentation): Iterator[String] = {
 
-      def constructedFields = sf.fields.filter(_.cpp.initializeInFullConstructor)
+      val constructedFields = sf.fields.filter(_.cpp.initializeInFullConstructor)
+
+      if(constructedFields.isEmpty) return Iterator.empty
+
       def names: List[String] = constructedFields.map(f => "%s(%s)".format(f.name, f.name))
 
       fullConstructorSig(true) ++ indent {
@@ -192,7 +195,7 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
     }
 
     def funcs = {
-      defaultConstructorImpl ++
+        defaultConstructorImpl ++
         space ++
         fullConstructorImpl ++
         space ++
@@ -213,6 +216,8 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
   private def fullConstructorSig(impl: Boolean)(implicit indent: Indentation): Iterator[String] = {
 
     val fields = sf.fields.filter(_.cpp.initializeInFullConstructor)
+
+    if(fields.isEmpty) return Iterator.empty
 
     val firstArgs: Iterator[String] = fields.dropRight(1).map(f => f.cpp.asArgument(f.name) + ",").toIterator
 
