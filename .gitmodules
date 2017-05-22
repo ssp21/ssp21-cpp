@@ -7,3 +7,6 @@
 [submodule "deps/inih"]
 	path = deps/inih
 	url = https://github.com/benhoyt/inih.git
+[submodule "deps/argagg"]
+	path = deps/argagg
+	url = https://github.com/vietjtnguyen/argagg.git

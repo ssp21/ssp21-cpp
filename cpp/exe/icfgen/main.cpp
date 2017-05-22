@@ -1,24 +1,30 @@
 
-#include "ssp21/crypto/Crypto.h"
-
-#include "ssp21/crypto/gen/CertificateFile.h"
-#include "ssp21/util/SecureFile.h"
+#include "Program.h"
 
 #include <iostream>
-#include <fstream>
 
-using namespace ssp21;
-
-bool write(const std::string& path, FileEntryType type, const seq16_t& data);
 
 int main(int argc, char*  argv[])
 {
+	try 
+	{
+		Program program;
+		program.run(argc, argv);
+	}
+	catch (const std::exception& ex)
+	{
+		std::cerr << ex.what() << std::endl;
+	}
+
+
+	/*
     if (!ssp21::Crypto::initialize())
     {
         std::cerr << "Unable to initialize crypto backend" << std::endl;
         return -1;
     }
 
+	
     KeyPair kp;
     Crypto::gen_keypair_x25519(kp);
 
@@ -33,10 +39,12 @@ int main(int argc, char*  argv[])
         std::cerr << "Unable to write private key" << std::endl;
         return -1;
     }
+	*/
 
     return 0;
 }
 
+/*
 bool write(const std::string& path, FileEntryType type, const seq16_t& data)
 {
     CertificateFile file;
@@ -55,3 +63,4 @@ bool write(const std::string& path, FileEntryType type, const seq16_t& data)
         return file.write(buffer);
     });
 }
+*/

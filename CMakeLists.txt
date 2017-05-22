@@ -9,6 +9,7 @@ option(SSP21_PROXY "Build the proxy" ON)
 include_directories(./cpp/libs/include)
 include_directories(./cpp/libs/src)
 include_directories(./deps/openpal/cpp/libs/include)
+include_directories(./deps/argagg/include)
 
 # ---- openpal library ----
 file(GLOB_RECURSE openpal_SRC ./deps/openpal/cpp/libs/src/openpal/*.cpp ./deps/openpal/cpp/libs/src/openpal/*.h ./deps/openpal/cpp/libs/include/openpal/*.h)
@@ -32,7 +33,7 @@ install(TARGETS sodiumbackend DESTINATION lib)
 set_target_properties(sodiumbackend PROPERTIES FOLDER libs)
 
 # ---- icfgen executable ----
-add_executable (icfgen ./cpp/exe/icfgen/main.cpp)
+add_executable (icfgen ./cpp/exe/icfgen/main.cpp ./cpp/exe/icfgen/Program.h ./cpp/exe/icfgen/Program.cpp)
 target_link_libraries(icfgen sodiumbackend)
 set_target_properties(icfgen PROPERTIES FOLDER exe)
 
