@@ -31,10 +31,10 @@ target_link_libraries(sodiumbackend ssp21 ${SODIUM_LIB_NAME})
 install(TARGETS sodiumbackend DESTINATION lib)
 set_target_properties(sodiumbackend PROPERTIES FOLDER libs)
 
-# ---- keygen executable ----
-add_executable (keygen ./cpp/exe/keygen/main.cpp)
-target_link_libraries(keygen sodiumbackend)
-set_target_properties(keygen PROPERTIES FOLDER exe)
+# ---- icfgen executable ----
+add_executable (icfgen ./cpp/exe/icfgen/main.cpp)
+target_link_libraries(icfgen sodiumbackend)
+set_target_properties(icfgen PROPERTIES FOLDER exe)
 
 # ---- proxy executable ----
 if(SSP21_PROXY)   
