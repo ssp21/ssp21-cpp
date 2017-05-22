@@ -5,8 +5,9 @@
 
 #include "inih/ini.h"
 
-// #include "ssp21/util/Base64.h"
+#include "ssp21/util/SecureFile.h"
 #include "ssp21/stack/LogLevels.h"
+#include "ssp21/crypto/gen/CertificateFile.h"
 
 #include <iostream>
 #include <sstream>
@@ -66,19 +67,19 @@ ConfigReader::ConfigReader()
         section.mode.set(read_mode(section.id, value), section.id);
     };
 
-    this->key_handler_map[keys::local_public_key] = [](ConfigSection & section, const std::string & value)
+    this->key_handler_map[keys::local_public_key_path] = [](ConfigSection & section, const std::string & path)
     {
-        section.local_public_key.set(read_key<ssp21::PublicKey>(section.id, value), section.id);
+        section.local_public_key.set(read_key_from_file<ssp21::PublicKey>(section.id, path, FileEntryType::x25519_public_key), section.id);
     };
 
-    this->key_handler_map[keys::local_private_key] = [](ConfigSection & section, const std::string & value)
+    this->key_handler_map[keys::local_private_key_path] = [](ConfigSection & section, const std::string & path)
     {
-        section.local_private_key.set(read_key<ssp21::PrivateKey>(section.id, value), section.id);
+        section.local_private_key.set(read_key_from_file<ssp21::PrivateKey>(section.id, path, FileEntryType::x25519_private_key), section.id);
     };
 
-    this->key_handler_map[keys::remote_public_key] = [](ConfigSection & section, const std::string & value)
+    this->key_handler_map[keys::remote_public_key_path] = [](ConfigSection & section, const std::string & path)
     {
-        section.remote_public_key.set(read_key<ssp21::PublicKey>(section.id, value), section.id);
+        section.remote_public_key.set(read_key_from_file<ssp21::PublicKey>(section.id, path, FileEntryType::x25519_public_key), section.id);
     };
 
     this->key_handler_map[keys::local_address] = [](ConfigSection & section, const std::string & value)
@@ -149,44 +150,46 @@ ProxyConfig::Mode ConfigReader::read_mode(const std::string& section, const std:
 }
 
 template <class T>
-std::shared_ptr<const T> ConfigReader::read_key(const std::string& section, const std::string& value)
+std::shared_ptr<const T> ConfigReader::read_key_from_file(const std::string& section, const std::string& path, FileEntryType expectedType)
 {
-    const auto expected_size = ssp21::BufferBase::get_buffer_length(ssp21::BufferType::x25519_key);
-    size_t num_bytes = 0;
-    auto key = std::make_shared<T>();
-    auto wseq = key->as_wseq();
+	SecureFile input;
+	const seq32_t file_data = input.read(path);
+	if (file_data.is_empty())
+	{
+		THROW_LOGIC_ERR("unable to read file: " << path, section);
+	}
 
-    const auto byte_writer = [&](uint8_t byte)
-    {
-        if (!wseq.put(byte))
-        {
-            THROW_LOGIC_ERR("too many key bytes: " << num_bytes, section);
-        }
+	CertificateFile file;
+	const auto err = file.read_all(file_data);
+	if (any(err))
+	{
+		THROW_LOGIC_ERR("Error (" << ParseErrorSpec::to_string(err) << ")  reading certificate file: " << path, section);
+	}
 
-        ++num_bytes;
-    };
+	if (file.entries.count() != 1)
+	{
+		THROW_LOGIC_ERR("Unexpected count of entries in certificate file: " << file.entries.count(), section);
+	}
 
-    static_assert(sizeof(char) == sizeof(uint8_t), "bad char size");
-    const ssp21::seq32_t characters(reinterpret_cast<const uint8_t*>(value.c_str()), value.length());
+	const auto entry = file.entries.get(0);
 
-    /** TODO!
+	if(entry->file_entry_type != expectedType)
+	{
+		THROW_LOGIC_ERR("Unexpected key type (" << FileEntryTypeSpec::to_string(entry->file_entry_type) << ") in file: " << path, section);
+	}
+	
+    const auto expected_length = ssp21::BufferBase::get_buffer_length(ssp21::BufferType::x25519_key);
+	if (entry->data.length() != expected_length)
+	{
+		THROW_LOGIC_ERR("Unexpected key length: " << entry->data.length(), section);
+	}
 
-    const auto result = ssp21::Base64::decode(characters, byte_writer);
+	const auto key = std::make_shared<T>();
+	key->as_wseq().copy_from(entry->data);
+	key->set_type(BufferType::x25519_key);
+	
 
-    if (any(result))
-    {
-        THROW_LOGIC_ERR("base64 decode error: " << ssp21::Base64DecodeErrorSpec::to_string(result), section);
-    }
-
-    if (num_bytes != expected_size)
-    {
-        THROW_LOGIC_ERR("bad key length: " << num_bytes, section);
-    }
-
-    key->set_type(ssp21::BufferType::x25519_key);
-    */
-
-    return key;
+	return key;
 }
 
 template <class T>

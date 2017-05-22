@@ -2,6 +2,7 @@
 #define SSP21PROXY_CONFIGREADER_H
 
 #include "ConfigSection.h"
+#include "ssp21/crypto/gen/FileEntryType.h"
 
 #include <map>
 #include <vector>
@@ -34,7 +35,7 @@ private:
     static ProxyConfig::Mode read_mode(const std::string& section, const std::string& value);
 
     template <class T>
-    static std::shared_ptr<const T> read_key(const std::string& section, const std::string& value);
+    static std::shared_ptr<const T> read_key_from_file(const std::string& section, const std::string& path, ssp21::FileEntryType expectedTyp);
 
     template <class T>
     static T read_integer(const std::string& section, const std::string& value);
