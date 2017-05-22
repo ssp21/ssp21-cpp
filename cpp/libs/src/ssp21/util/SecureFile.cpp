@@ -30,8 +30,9 @@ namespace ssp21
 
         stream.seekg(0, std::ios::beg);
         this->buffer = std::make_unique<openpal::Buffer>(static_cast<uint32_t>(size));
+		uint8_t* bytes = this->buffer->as_wslice();
 
-        char* dest = reinterpret_cast<char*>(*this->buffer->as_wslice());
+        char* dest = reinterpret_cast<char*>(bytes);
 
         if (stream.read(dest, size))
         {
