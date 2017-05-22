@@ -152,7 +152,12 @@ void print_certificate(IMessagePrinter& printer, const seq32_t& data)
 	CertificateEnvelope envelope;
 
 	const auto err = envelope.read_all(data);
+	if (any(err)) {
+		std::ostringstream oss;
+		oss << "Error parsing certificate envelope: " << ParseErrorSpec::to_string(err);
+		throw std::logic_error(oss.str());
+	}
 
 
-
+	envelope.print("envelope", printer);
 }
