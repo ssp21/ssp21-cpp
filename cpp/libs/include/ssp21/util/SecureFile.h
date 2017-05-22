@@ -33,6 +33,14 @@ namespace ssp21
 
         bool write(const std::string& path, const std::function<FormatError (wseq32_t&)>& writer);
 
+		template <class T>
+		static bool write_item(const std::string& path, const T& item)
+		{
+			SecureFile file;
+			auto writer = [&](wseq32_t& dest) -> FormatError { return item.write(dest); };
+			return file.write(path, writer);
+		}
+
     private:
 
         void release();

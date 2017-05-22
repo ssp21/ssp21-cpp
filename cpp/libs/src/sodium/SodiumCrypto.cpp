@@ -82,7 +82,7 @@ namespace ssp21
         auto dest = pair.private_key.as_wseq();
         randombytes_buf(dest, crypto_scalarmult_BYTES);
 
-        // TODO - libsodium, undocumented error code?
+		// can't fail despite error code - NACL ABI relic
         crypto_scalarmult_base(pair.public_key.as_wseq(), dest);
 
         pair.public_key.set_type(BufferType::x25519_key);
@@ -105,17 +105,17 @@ namespace ssp21
         auto publicDest = pair.public_key.as_wseq();
         auto privateDest = pair.private_key.as_wseq();
 
-        // TODO - libsodium, undocumented error code?
+		// can't fail despite error code - NACL ABI relic
         crypto_sign_keypair(publicDest, privateDest);
 
         pair.public_key.set_type(BufferType::ed25519_public_key);
         pair.private_key.set_type(BufferType::ed25519_private_key);
     }
 
-    void Crypto::sign_ed25519_impl(const seq32_t& input, const PrivateKey& key, DSAOutput& output, std::error_code& ec)
+    void Crypto::sign_ed25519_impl(const seq32_t& input, const seq32_t& key, DSAOutput& output, std::error_code& ec)
     {
-        // TODO - libsodium, undocumented error code?
-        crypto_sign_detached(output.as_wseq(), nullptr, input, input.length(), key.as_seq());
+        // can't fail despite error code - NACL ABI relic
+        crypto_sign_detached(output.as_wseq(), nullptr, input, input.length(), key);
 
         output.set_type(BufferType::ed25519_signature);
     }

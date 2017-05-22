@@ -39,7 +39,7 @@ struct CertificateBody final
         uint32_t serial_number,
         uint32_t valid_after,
         uint32_t valid_before,
-        const seq8_t& signing_level,
+        uint8_t signing_level,
         PublicKeyType public_key_type,
         const seq8_t& public_key
     );
@@ -49,7 +49,7 @@ struct CertificateBody final
     IntegerField<openpal::UInt32> serial_number;
     IntegerField<openpal::UInt32> valid_after;
     IntegerField<openpal::UInt32> valid_before;
-    SeqByteField<openpal::UInt8> signing_level;
+    IntegerField<openpal::UInt8> signing_level;
     EnumField<PublicKeyTypeSpec> public_key_type;
     SeqByteField<openpal::UInt8> public_key;
     SeqStructField<openpal::UInt8, ExtensionEnvelope, 5> extensions;

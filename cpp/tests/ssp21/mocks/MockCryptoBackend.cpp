@@ -103,7 +103,7 @@ namespace ssp21
         pair.public_key.set_type(BufferType::ed25519_public_key);
     }
 
-    void Crypto::sign_ed25519_impl(const seq32_t& input, const PrivateKey& key, DSAOutput& output, std::error_code& ec)
+    void Crypto::sign_ed25519_impl(const seq32_t& input, const seq32_t& private_key, DSAOutput& output, std::error_code& ec)
     {
         assert(CryptoFixture::instance);
         CryptoFixture::instance->actions.push_back(CryptoAction::sign_ed25519);

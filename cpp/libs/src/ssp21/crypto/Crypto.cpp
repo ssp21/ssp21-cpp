@@ -80,16 +80,16 @@ namespace ssp21
         gen_keypair_ed25519_impl(pair);
     }
 
-    void Crypto::sign_ed25519(const seq32_t& input, const PrivateKey& key, DSAOutput& output, std::error_code& ec)
+    void Crypto::sign_ed25519(const seq32_t& input, const seq32_t& private_key, DSAOutput& output, std::error_code& ec)
     {
         assert(initialized);
-        if (key.get_type() != BufferType::ed25519_private_key)
+        if (private_key.length() != consts::crypto::ed25519_private_key_length)
         {
-            ec = CryptoError::bad_key_type;
+            ec = CryptoError::bad_length;
             return;
         }
 
-        sign_ed25519_impl(input, key, output, ec);
+        sign_ed25519_impl(input, private_key, output, ec);
     }
 
     bool Crypto::verify_ed25519(const seq32_t& message, const seq32_t& signature, const seq32_t& public_key)

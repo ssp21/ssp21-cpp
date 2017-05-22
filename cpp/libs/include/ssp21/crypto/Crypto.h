@@ -58,7 +58,7 @@ namespace ssp21
 
         static void gen_keypair_ed25519(KeyPair& pair);
 
-        static void sign_ed25519(const seq32_t& input, const PrivateKey& key, DSAOutput& output, std::error_code& ec);
+        static void sign_ed25519(const seq32_t& input, const seq32_t& private_key, DSAOutput& output, std::error_code& ec);
 
         static bool verify_ed25519(const seq32_t& message, const seq32_t& signature, const seq32_t& public_key);
 
@@ -101,7 +101,7 @@ namespace ssp21
 
         static void gen_keypair_ed25519_impl(KeyPair& pair);
 
-        static void sign_ed25519_impl(const seq32_t& input, const PrivateKey& key, DSAOutput& output, std::error_code& ec);
+        static void sign_ed25519_impl(const seq32_t& input, const seq32_t& private_key, DSAOutput& output, std::error_code& ec);
 
         static bool verify_ed25519_impl(const seq32_t& message, const seq32_t& signature, const seq32_t& public_key);
 

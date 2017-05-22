@@ -28,7 +28,7 @@ CertificateBody::CertificateBody(
     uint32_t serial_number,
     uint32_t valid_after,
     uint32_t valid_before,
-    const seq8_t& signing_level,
+    uint8_t signing_level,
     PublicKeyType public_key_type,
     const seq8_t& public_key
 ) :

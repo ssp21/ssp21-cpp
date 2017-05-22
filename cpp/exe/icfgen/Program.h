@@ -9,6 +9,7 @@ namespace flags {
 	static const char* const show = "show";
 	static const char* const x25519 = "x25519";	
 	static const char* const ed25519 = "ed25519";
+	static const char* const cert = "cert";
 }
 
 class Program
