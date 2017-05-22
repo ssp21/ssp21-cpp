@@ -72,6 +72,8 @@ public:
 			std::cout << std::endl;
 		}
 		this->pop_indent();
+
+		std::cout << std::dec;
 	}
 	
 };
