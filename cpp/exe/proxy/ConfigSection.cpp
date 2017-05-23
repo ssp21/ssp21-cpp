@@ -73,7 +73,7 @@ LogLevels ConfigSection::get_levels_for_char(char value) const
     case('f'):
         return LogLevels(ssp21::levels::rx_crypto_msg_fields.value | ssp21::levels::tx_crypto_msg_fields.value);
     default:
-        THROW_LOGIC_ERR("unknown log level: " << value, this->id);
+        throw SectionException(this->id, "unknown log level: ", value);
     }
 }
 

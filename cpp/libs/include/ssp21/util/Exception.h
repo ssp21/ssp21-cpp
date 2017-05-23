@@ -7,28 +7,28 @@
 
 namespace ssp21
 {
-	/**
-	* Super class of std::runtime_error that allows
-	* message to be built dynamically
-	*/
-	class Exception : public std::runtime_error
-	{
+    /**
+    * Super class of std::runtime_error that allows
+    * message to be built dynamically
+    */
+    class Exception : public std::runtime_error
+    {
 
-	public:
+    public:
 
-		Exception(const char* message) : std::runtime_error(message)
-		{
-		
-		}
+        Exception(const char* message) : std::runtime_error(message)
+        {
 
-		template <class T, class... Args>
-		Exception(T t, Args... args) :
-			std::runtime_error(ssp21::strings::join(t, args...))
-		{
+        }
 
-		}
+        template <class T, class... Args>
+        Exception(T t, Args... args) :
+            std::runtime_error(ssp21::strings::join(t, args...))
+        {
 
-	};
+        }
+
+    };
 }
 
 

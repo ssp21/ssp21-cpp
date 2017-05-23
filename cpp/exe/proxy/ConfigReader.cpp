@@ -125,7 +125,7 @@ void ConfigReader::handle(const std::string& section_name, const std::string& ke
     auto iter = this->key_handler_map.find(key);
     if(iter == this->key_handler_map.end())
     {
-        THROW_LOGIC_ERR("unknown key: " << key, section_name);
+        throw SectionException(section_name, "unknown key: ", key);
     }
     else
     {
@@ -133,7 +133,7 @@ void ConfigReader::handle(const std::string& section_name, const std::string& ke
     }
 }
 
-ProxyConfig::Mode ConfigReader::read_mode(const std::string& section, const std::string& value)
+ProxyConfig::Mode ConfigReader::read_mode(const std::string& section_name, const std::string& value)
 {
     if (value == "initiator")
     {
@@ -145,12 +145,12 @@ ProxyConfig::Mode ConfigReader::read_mode(const std::string& section, const std:
     }
     else
     {
-        THROW_LOGIC_ERR("Unknown mode: " << value, section);
+        throw SectionException(section_name, "Unknown mode: ", value);
     }
 }
 
 template <class T>
-std::shared_ptr<const T> ConfigReader::read_key_from_file(const std::string& section, const std::string& path, FileEntryType expectedType)
+std::shared_ptr<const T> ConfigReader::read_key_from_file(const std::string& section_name, const std::string& path, FileEntryType expectedType)
 {
     const auto file_data = SecureFile::read(path);
 
@@ -158,25 +158,25 @@ std::shared_ptr<const T> ConfigReader::read_key_from_file(const std::string& sec
     const auto err = file.read_all(file_data->as_rslice());
     if (any(err))
     {
-        THROW_LOGIC_ERR("Error (" << ParseErrorSpec::to_string(err) << ")  reading certificate file: " << path, section);
+        throw SectionException(section_name, "Error (", ParseErrorSpec::to_string(err), ")  reading certificate file: ", path);
     }
 
     if (file.entries.count() != 1)
     {
-        THROW_LOGIC_ERR("Unexpected count of entries in certificate file: " << file.entries.count(), section);
+        throw SectionException(section_name, "Unexpected count of entries in certificate file: ", file.entries.count());
     }
 
     const auto entry = file.entries.get(0);
 
     if(entry->file_entry_type != expectedType)
     {
-        THROW_LOGIC_ERR("Unexpected key type (" << FileEntryTypeSpec::to_string(entry->file_entry_type) << ") in file: " << path, section);
+        throw SectionException(section_name, "Unexpected key type (", FileEntryTypeSpec::to_string(entry->file_entry_type), ") in file: ", path);
     }
 
     const auto expected_length = ssp21::BufferBase::get_buffer_length(ssp21::BufferType::x25519_key);
     if (entry->data.length() != expected_length)
     {
-        THROW_LOGIC_ERR("Unexpected key length: " << entry->data.length(), section);
+        throw SectionException(section_name, "Unexpected key length: ", entry->data.length());
     }
 
     const auto key = std::make_shared<T>();
@@ -188,13 +188,13 @@ std::shared_ptr<const T> ConfigReader::read_key_from_file(const std::string& sec
 }
 
 template <class T>
-T ConfigReader::read_integer(const std::string& section, const std::string& value)
+T ConfigReader::read_integer(const std::string& section_name, const std::string& value)
 {
     std::istringstream reader(value);
     T val = 0;
     if (!(reader >> val))
     {
-        THROW_LOGIC_ERR("bad integer value: " << value, section);
+        throw SectionException(section_name, "bad integer value: ", value);
     }
     return val;
 }

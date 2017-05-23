@@ -1,9 +1,9 @@
 #ifndef SSP21PROXY_CONFIGFIELD_H
 #define SSP21PROXY_CONFIGFIELD_H
 
-#include "ExceptionMacros.h"
-
 #include "openpal/util/Uncopyable.h"
+
+#include "SectionException.h"
 
 template <class T>
 class ConfigField : openpal::Uncopyable
@@ -22,7 +22,7 @@ public:
     {
         if (!defined)
         {
-            THROW_LOGIC_ERR("value not defined: " << key_name, section);
+            throw SectionException(section, "value not defined: ", key_name);
         }
         return value;
     }
@@ -31,7 +31,7 @@ public:
     {
         if (defined)
         {
-            THROW_LOGIC_ERR("value already defined: " << key_name, section);
+            throw SectionException(section, "value already defined: ", key_name);
         }
         defined = true;
         this->value = value;
