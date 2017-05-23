@@ -6,14 +6,14 @@
 #include "ssp21/crypto/gen/CertificateFile.h"
 #include "ssp21/crypto/gen/CertificateEnvelope.h"
 #include "ssp21/crypto/gen/CertificateBody.h"
+#include "ssp21/crypto/LogMessagePrinter.h"
+
 #include "ssp21/util/SecureFile.h"
 #include "ssp21/util/SerializationUtils.h"
+#include "ssp21/util/Exception.h"
 
 #include <iostream>
 
-#include "ssp21/crypto/LogMessagePrinter.h"
-
-#include "Exception.h"
 #include "ConsolePrinter.h"
 
 using namespace ssp21;
