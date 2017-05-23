@@ -131,23 +131,11 @@ void gen_ed25519_key_pair(const std::string& private_key_path, const std::string
 
 void create_certificate(const std::string& certificate_file_path, const std::string& public_key_path, const std::string& private_key_path)
 {
-    SecureFile private_key_file;
-    const auto private_key_data = private_key_file.read(private_key_path);
-    if (private_key_data.is_empty())
-    {
-        throw Exception("Unable to read file: ", private_key_path);
-    }
+    const auto private_key_data = SecureFile::read(private_key_path);
+    const auto private_key_entry = get_only_entry(private_key_data->as_rslice());
 
-    const auto private_key_entry = get_only_entry(private_key_data);
-
-    SecureFile public_key_file;
-    const auto public_key_data = public_key_file.read(public_key_path);
-    if (public_key_data.is_empty())
-    {
-        throw Exception("Unable to read file: ", public_key_path);
-    }
-
-    const auto public_key_entry = get_only_entry(public_key_data);
+    const auto public_key_data = SecureFile::read(public_key_path);
+    const auto public_key_entry = get_only_entry(public_key_data->as_rslice());
 
     if (public_key_entry.file_entry_type != FileEntryType::x25519_public_key)
     {
@@ -189,10 +177,7 @@ void create_certificate(const std::string& certificate_file_path, const std::str
         )
     );
 
-    if (!SecureFile::write_item(certificate_file_path, file))
-    {
-        throw std::exception("Unable to write certificate file!");
-    }
+    SecureFile::write(certificate_file_path, file);
 }
 
 void calc_signature(const seq32_t& data, const CertificateFileEntry& private_key_entry, DSAOutput& signature)
@@ -231,33 +216,16 @@ CertificateFileEntry get_only_entry(const seq32_t& file_data)
 void write(const std::string& path, FileEntryType type, const seq16_t& data)
 {
     CertificateFile file;
-
     file.entries.push(CertificateFileEntry(type, data));
-
-    SecureFile output;
-
-    auto handler = [&](wseq32_t& buffer)
-    {
-        return file.write(buffer);
-    };
-
-    if (!output.write(path, handler))
-    {
-        throw Exception("Unable to write file: ", path);
-    }
+    SecureFile::write(path, file);
 }
 
 void print_contents(const std::string& path)
 {
-    SecureFile output;
-    const auto data = output.read(path);
-    if (data.is_empty())
-    {
-        throw Exception("Unable to read file: ", path);
-    }
+    const auto data = SecureFile::read(path);
 
     CertificateFile file;
-    const auto err = file.read_all(data);
+    const auto err = file.read_all(data->as_rslice());
     if (any(err))
     {
         throw Exception("Error parsing certificate file: ", ParseErrorSpec::to_string(err));

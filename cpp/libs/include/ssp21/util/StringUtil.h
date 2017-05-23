@@ -23,7 +23,7 @@ namespace ssp21
             return oss.str();
         }
 
-        void add_to_stream(std::ostream& stream) {}
+        static void add_to_stream(std::ostream& stream) {}
     }
 }
 

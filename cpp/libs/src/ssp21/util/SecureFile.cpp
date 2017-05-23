@@ -1,84 +1,40 @@
 
 #include "ssp21/util/SecureFile.h"
 
-#include "ssp21/crypto/Crypto.h"
-
-#include <fstream>
+#include "ssp21/util/StringUtil.h"
 
 namespace ssp21
 {
 
-    SecureFile::~SecureFile()
+    std::unique_ptr<SecureDynamicBuffer> SecureFile::read(const std::string& path, uint32_t max_file_size)
     {
-        this->release();
-    }
-
-    seq32_t SecureFile::read(const std::string& path)
-    {
-        this->release();
-
         std::ifstream stream(path, std::ios::binary | std::ios::ate);
 
-        if (!stream.is_open()) return seq32_t::empty();
+        if (!stream.is_open()) throw std::runtime_error(strings::join("Unable to open file: ", path));
 
         const std::streamsize size = stream.tellg();
 
-        if (size < 0 || size > maximum_file_size)
+        if (size <= 0)
         {
-            return seq32_t::empty();
+            throw std::runtime_error("file size must be > 0");
+        }
+
+        if (size > max_file_size)
+        {
+            throw std::runtime_error(strings::join("file size of ", size, " exceeds maximum of ", max_file_size));
         }
 
         stream.seekg(0, std::ios::beg);
-        this->buffer = std::make_unique<openpal::Buffer>(static_cast<uint32_t>(size));
-        uint8_t* bytes = this->buffer->as_wslice();
+        auto buffer = std::make_unique<SecureDynamicBuffer>(static_cast<uint32_t>(size));
 
-        char* dest = reinterpret_cast<char*>(bytes);
+        uint8_t* bytes = buffer->as_wslice();
 
-        if (stream.read(dest, size))
+        if (!stream.read(reinterpret_cast<char*>(bytes), size))
         {
-            return this->buffer->as_rslice();
+            throw std::runtime_error("Error reading file");
         }
-        else
-        {
-            return seq32_t::empty();
-        }
-    }
 
-    bool SecureFile::write(const std::string& path, const std::function<FormatError(wseq32_t&)>& writer)
-    {
-        this->release();
-        this->buffer = std::make_unique<openpal::Buffer>(static_cast<uint32_t>(maximum_file_size));
-
-        auto dest = this->buffer->as_wslice();
-        const auto err = writer(dest);
-
-        if (any(err)) return false;
-
-        const auto length = this->buffer->length() - dest.length();
-        const uint8_t* written = this->buffer->as_rslice().take(length);
-        const char* data = reinterpret_cast<const char*>(written);
-
-        std::ofstream stream(path, std::ios::binary);
-
-        if (!stream.is_open()) return false;
-
-        if (stream.write(data, length))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    void SecureFile::release()
-    {
-        if (this->buffer)
-        {
-            Crypto::zero_memory(this->buffer->as_wslice());
-            this->buffer.reset();
-        }
+        return std::move(buffer);
     }
 
 }

@@ -152,15 +152,10 @@ ProxyConfig::Mode ConfigReader::read_mode(const std::string& section, const std:
 template <class T>
 std::shared_ptr<const T> ConfigReader::read_key_from_file(const std::string& section, const std::string& path, FileEntryType expectedType)
 {
-    SecureFile input;
-    const seq32_t file_data = input.read(path);
-    if (file_data.is_empty())
-    {
-        THROW_LOGIC_ERR("unable to read file: " << path, section);
-    }
+    const auto file_data = SecureFile::read(path);
 
     CertificateFile file;
-    const auto err = file.read_all(file_data);
+    const auto err = file.read_all(file_data->as_rslice());
     if (any(err))
     {
         THROW_LOGIC_ERR("Error (" << ParseErrorSpec::to_string(err) << ")  reading certificate file: " << path, section);
