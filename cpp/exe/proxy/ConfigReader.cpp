@@ -152,44 +152,44 @@ ProxyConfig::Mode ConfigReader::read_mode(const std::string& section, const std:
 template <class T>
 std::shared_ptr<const T> ConfigReader::read_key_from_file(const std::string& section, const std::string& path, FileEntryType expectedType)
 {
-	SecureFile input;
-	const seq32_t file_data = input.read(path);
-	if (file_data.is_empty())
-	{
-		THROW_LOGIC_ERR("unable to read file: " << path, section);
-	}
+    SecureFile input;
+    const seq32_t file_data = input.read(path);
+    if (file_data.is_empty())
+    {
+        THROW_LOGIC_ERR("unable to read file: " << path, section);
+    }
 
-	CertificateFile file;
-	const auto err = file.read_all(file_data);
-	if (any(err))
-	{
-		THROW_LOGIC_ERR("Error (" << ParseErrorSpec::to_string(err) << ")  reading certificate file: " << path, section);
-	}
+    CertificateFile file;
+    const auto err = file.read_all(file_data);
+    if (any(err))
+    {
+        THROW_LOGIC_ERR("Error (" << ParseErrorSpec::to_string(err) << ")  reading certificate file: " << path, section);
+    }
 
-	if (file.entries.count() != 1)
-	{
-		THROW_LOGIC_ERR("Unexpected count of entries in certificate file: " << file.entries.count(), section);
-	}
+    if (file.entries.count() != 1)
+    {
+        THROW_LOGIC_ERR("Unexpected count of entries in certificate file: " << file.entries.count(), section);
+    }
 
-	const auto entry = file.entries.get(0);
+    const auto entry = file.entries.get(0);
 
-	if(entry->file_entry_type != expectedType)
-	{
-		THROW_LOGIC_ERR("Unexpected key type (" << FileEntryTypeSpec::to_string(entry->file_entry_type) << ") in file: " << path, section);
-	}
-	
+    if(entry->file_entry_type != expectedType)
+    {
+        THROW_LOGIC_ERR("Unexpected key type (" << FileEntryTypeSpec::to_string(entry->file_entry_type) << ") in file: " << path, section);
+    }
+
     const auto expected_length = ssp21::BufferBase::get_buffer_length(ssp21::BufferType::x25519_key);
-	if (entry->data.length() != expected_length)
-	{
-		THROW_LOGIC_ERR("Unexpected key length: " << entry->data.length(), section);
-	}
+    if (entry->data.length() != expected_length)
+    {
+        THROW_LOGIC_ERR("Unexpected key length: " << entry->data.length(), section);
+    }
 
-	const auto key = std::make_shared<T>();
-	key->as_wseq().copy_from(entry->data);
-	key->set_type(BufferType::x25519_key);
-	
+    const auto key = std::make_shared<T>();
+    key->as_wseq().copy_from(entry->data);
+    key->set_type(BufferType::x25519_key);
 
-	return key;
+
+    return key;
 }
 
 template <class T>

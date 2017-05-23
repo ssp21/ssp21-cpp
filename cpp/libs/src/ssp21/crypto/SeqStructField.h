@@ -26,17 +26,17 @@ namespace ssp21
 
     public:
 
-		size_t size() const
-		{
-			size_t sum = 0;
+        size_t size() const
+        {
+            size_t sum = 0;
 
-			for (uint32_t i = 0; i < this->count(); ++i)
-			{
-				sum += this->get(i)->size();
-			}
+            for (uint32_t i = 0; i < this->count(); ++i)
+            {
+                sum += this->get(i)->size();
+            }
 
-			return CountType::size + sum;
-		}
+            return CountType::size + sum;
+        }
 
         ParseError read(seq32_t& input)
         {

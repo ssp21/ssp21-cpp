@@ -82,7 +82,7 @@ namespace ssp21
         auto dest = pair.private_key.as_wseq();
         randombytes_buf(dest, crypto_scalarmult_BYTES);
 
-		// can't fail despite error code - NACL ABI relic
+        // can't fail despite error code - NACL ABI relic
         crypto_scalarmult_base(pair.public_key.as_wseq(), dest);
 
         pair.public_key.set_type(BufferType::x25519_key);
@@ -105,7 +105,7 @@ namespace ssp21
         auto publicDest = pair.public_key.as_wseq();
         auto privateDest = pair.private_key.as_wseq();
 
-		// can't fail despite error code - NACL ABI relic
+        // can't fail despite error code - NACL ABI relic
         crypto_sign_keypair(publicDest, privateDest);
 
         pair.public_key.set_type(BufferType::ed25519_public_key);

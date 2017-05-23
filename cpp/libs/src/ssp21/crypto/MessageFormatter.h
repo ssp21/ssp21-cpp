@@ -40,18 +40,18 @@ namespace ssp21
             return write_fields(dest, args...);
         }
 
-		template <typename T, typename... Args>
-		static size_t sum_sizes(size_t sum, const T& value, Args& ... args)
-		{
-			return sum_sizes(sum + value.size(), args...);
-		}
+        template <typename T, typename... Args>
+        static size_t sum_sizes(size_t sum, const T& value, Args& ... args)
+        {
+            return sum_sizes(sum + value.size(), args...);
+        }
 
-	private:
-		
-		static size_t sum_sizes(size_t sum)
-		{
-			return sum;
-		}
+    private:
+
+        static size_t sum_sizes(size_t sum)
+        {
+            return sum;
+        }
 
         static FormatError write_fields(wseq32_t& output)
         {

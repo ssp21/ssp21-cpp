@@ -17,10 +17,10 @@ namespace ssp21
 
     public:
 
-		size_t size() const
-		{
-			return 1;
-		}
+        size_t size() const
+        {
+            return 1;
+        }
 
         operator enum_t () const
         {

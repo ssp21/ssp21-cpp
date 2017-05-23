@@ -8,11 +8,11 @@
 using namespace openpal;
 
 ConfigSection::ConfigSection(const std::string& id) :
-	id(id),
-	log_levels(keys::log_levels),
-	mode(keys::mode),
-	local_public_key(keys::local_public_key_path),
-	local_private_key(keys::local_private_key_path),
+    id(id),
+    log_levels(keys::log_levels),
+    mode(keys::mode),
+    local_public_key(keys::local_public_key_path),
+    local_private_key(keys::local_private_key_path),
     remote_public_key(keys::remote_public_key_path),
     local_address(keys::local_address),
     remote_address(keys::remote_address),
