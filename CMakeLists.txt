@@ -32,10 +32,10 @@ target_link_libraries(sodiumbackend ssp21 ${SODIUM_LIB_NAME})
 install(TARGETS sodiumbackend DESTINATION lib)
 set_target_properties(sodiumbackend PROPERTIES FOLDER libs)
 
-# ---- icfgen executable ----
-add_executable (icfgen ./cpp/exe/icfgen/main.cpp ./cpp/exe/icfgen/ConsolePrinter.h ./cpp/exe/icfgen/Program.h ./cpp/exe/icfgen/Program.cpp)
-target_link_libraries(icfgen sodiumbackend)
-set_target_properties(icfgen PROPERTIES FOLDER exe)
+# ---- icf-tool executable ----
+add_executable (icftool ./cpp/exe/icftool/main.cpp ./cpp/exe/icftool/ConsolePrinter.h ./cpp/exe/icftool/Program.h ./cpp/exe/icftool/Program.cpp)
+target_link_libraries(icftool sodiumbackend)
+set_target_properties(icftool PROPERTIES FOLDER exe)
 
 # ---- proxy executable ----
 if(SSP21_PROXY)   
