@@ -191,7 +191,6 @@ void create_certificate(const std::string& certificate_file_path, const std::str
 		)
 	);
 
-
 	if (!SecureFile::write_item(certificate_file_path, file))
 	{
 		throw std::exception("Unable to write certificate file!");
@@ -313,4 +312,12 @@ void print_certificate(IMessagePrinter& printer, const seq32_t& data)
 
 
 	envelope.print("envelope", printer);
+
+	CertificateBody body;
+	const auto body_err = body.read_all(envelope.certificate_body);
+	if (any(body_err)) {
+		throw ProgramException("Error parsing certificate body: ", ParseErrorSpec::to_string(body_err));
+	}
+
+	body.print("body", printer);
 }
