@@ -33,7 +33,7 @@ install(TARGETS sodiumbackend DESTINATION lib)
 set_target_properties(sodiumbackend PROPERTIES FOLDER libs)
 
 # ---- icfgen executable ----
-add_executable (icfgen ./cpp/exe/icfgen/main.cpp ./cpp/exe/icfgen/ProgramException.h ./cpp/exe/icfgen/ConsolePrinter.h ./cpp/exe/icfgen/Program.h ./cpp/exe/icfgen/Program.cpp)
+add_executable (icfgen ./cpp/exe/icfgen/main.cpp ./cpp/exe/icfgen/Exception.h ./cpp/exe/icfgen/ConsolePrinter.h ./cpp/exe/icfgen/Program.h ./cpp/exe/icfgen/Program.cpp)
 target_link_libraries(icfgen sodiumbackend)
 set_target_properties(icfgen PROPERTIES FOLDER exe)
 

@@ -7,6 +7,7 @@
 #include "ssp21/crypto/gen/CertificateEnvelope.h"
 #include "ssp21/crypto/gen/CertificateBody.h"
 #include "ssp21/util/SecureFile.h"
+#include "ssp21/util/SerializationUtils.h"
 
 #include <iostream>
 
@@ -22,7 +23,6 @@ void print_certificate(IMessagePrinter& printer, const seq32_t& data);
 void gen_x25519_key_pair(const std::string& private_key_path, const std::string& public_key_path);
 void gen_ed25519_key_pair(const std::string& private_key_path, const std::string& public_key_path);
 void create_certificate(const std::string& certificate_file, const std::string& private_key_path, const std::string& public_key_path);
-template <class T> seq32_t write_any(const T& item, wseq32_t dest);
 void calc_signature(const seq32_t& data, const CertificateFileEntry& private_key_entry, DSAOutput& signature);
 CertificateFileEntry get_only_entry(const seq32_t& data);
 void write(const std::string& path, FileEntryType type, const seq16_t& data);
@@ -168,26 +168,24 @@ void create_certificate(const std::string& certificate_file_path, const std::str
         public_key_entry.data.take<uint8_t>(consts::crypto::x25519_key_length)
     );
 
-    openpal::StaticBuffer<uint32_t, 4096> body_buffer;
-    const auto body_bytes = write_any(body, body_buffer.as_wseq());
+    const auto body_bytes = serialize::to_buffer(body);
 
     DSAOutput signature;
-    calc_signature(body_bytes, private_key_entry, signature);
+    calc_signature(body_bytes->as_rslice(), private_key_entry, signature);
 
-    CertificateEnvelope envelope(
-        seq8_t::empty(),
-        signature.as_seq(),
-        body_bytes.take(static_cast<uint16_t>(body_bytes.length()))
-    );
-
-    openpal::StaticBuffer<uint32_t, 4096> envelope_buffer;
-    const auto envelope_bytes = write_any(envelope, envelope_buffer.as_wseq());
+    const auto envelope_bytes = serialize::to_buffer(
+                                    CertificateEnvelope(
+                                        seq8_t::empty(),
+                                        signature.as_seq(),
+                                        body_bytes->as_rslice().take(static_cast<uint16_t>(body_bytes->length()))
+                                    )
+                                );
 
     CertificateFile file;
     file.entries.push(
         CertificateFileEntry(
             FileEntryType::certificate,
-            envelope_bytes.take<uint16_t>(static_cast<uint16_t>(envelope_bytes.length()))
+            envelope_bytes->as_rslice().take<uint16_t>(static_cast<uint16_t>(envelope_bytes->length()))
         )
     );
 
@@ -195,18 +193,6 @@ void create_certificate(const std::string& certificate_file_path, const std::str
     {
         throw std::exception("Unable to write certificate file!");
     }
-}
-
-template <class T>
-seq32_t write_any(const T& item, wseq32_t dest)
-{
-    auto start = dest.readonly();
-    const auto err = item.write(dest);
-    if (any(err))
-    {
-        throw Exception("Error writing: ", FormatErrorSpec::to_string(err));
-    }
-    return start.take(start.length() - dest.length());
 }
 
 void calc_signature(const seq32_t& data, const CertificateFileEntry& private_key_entry, DSAOutput& signature)
