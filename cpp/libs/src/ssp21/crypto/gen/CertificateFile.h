@@ -30,6 +30,8 @@ struct CertificateFile final
     CertificateFile();
 
 
+    size_t size() const;
+
     static const uint8_t min_size_bytes = 1;
 
     SeqStructField<openpal::UInt8, CertificateFileEntry, 10> entries;

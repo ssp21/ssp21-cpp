@@ -40,6 +40,20 @@ CertificateBody::CertificateBody(
     public_key(public_key)
 {}
 
+size_t CertificateBody::size() const
+{
+    return MessageFormatter::sum_sizes(
+        0,
+        serial_number,
+        valid_after,
+        valid_before,
+        signing_level,
+        public_key_type,
+        public_key,
+        extensions
+    );
+}
+
 ParseError CertificateBody::read(seq32_t& input)
 {
     return MessageParser::read_fields(

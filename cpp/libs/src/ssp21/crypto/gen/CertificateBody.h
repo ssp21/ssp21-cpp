@@ -44,6 +44,8 @@ struct CertificateBody final
         const seq8_t& public_key
     );
 
+    size_t size() const;
+
     static const uint8_t min_size_bytes = 16;
 
     IntegerField<openpal::UInt32> serial_number;

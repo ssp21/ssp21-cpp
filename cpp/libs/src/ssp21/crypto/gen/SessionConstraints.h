@@ -35,6 +35,8 @@ struct SessionConstraints final
         uint32_t max_session_duration
     );
 
+    size_t size() const;
+
     static const uint8_t fixed_size_bytes = 6;
 
     IntegerField<openpal::UInt16> max_nonce;

@@ -32,6 +32,15 @@ SessionConstraints::SessionConstraints(
     max_session_duration(max_session_duration)
 {}
 
+size_t SessionConstraints::size() const
+{
+    return MessageFormatter::sum_sizes(
+        0,
+        max_nonce,
+        max_session_duration
+    );
+}
+
 ParseError SessionConstraints::read(seq32_t& input)
 {
     return MessageParser::read_fields(

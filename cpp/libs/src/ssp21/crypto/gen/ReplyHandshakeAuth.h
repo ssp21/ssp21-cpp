@@ -30,6 +30,8 @@ struct ReplyHandshakeAuth final : public IMessage, private openpal::Uncopyable
         const seq8_t& mac
     );
 
+    size_t size() const;
+
     virtual ParseError read(seq32_t input) override;
     virtual FormatResult write(wseq32_t& output) const override;
     virtual void print(IMessagePrinter& printer) const override;

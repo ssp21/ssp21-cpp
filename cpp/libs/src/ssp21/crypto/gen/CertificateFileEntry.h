@@ -35,6 +35,8 @@ struct CertificateFileEntry final
         const seq16_t& data
     );
 
+    size_t size() const;
+
     static const uint8_t min_size_bytes = 3;
 
     EnumField<FileEntryTypeSpec> file_entry_type;

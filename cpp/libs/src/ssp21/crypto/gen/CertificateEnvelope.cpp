@@ -34,6 +34,16 @@ CertificateEnvelope::CertificateEnvelope(
     certificate_body(certificate_body)
 {}
 
+size_t CertificateEnvelope::size() const
+{
+    return MessageFormatter::sum_sizes(
+        0,
+        issuer_id,
+        signature,
+        certificate_body
+    );
+}
+
 ParseError CertificateEnvelope::read(seq32_t& input)
 {
     return MessageParser::read_fields(

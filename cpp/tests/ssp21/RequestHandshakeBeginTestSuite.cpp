@@ -183,6 +183,7 @@ TEST_CASE(SUITE("formats default value"))
     auto res = msg.write(dest);
 
     REQUIRE(!res.is_error());
+	REQUIRE(res.written.length() == msg.size());
     REQUIRE(to_hex(res.written) == "00 00 00 FF FF FF FF FF FF 00 00 00 00 00 00 FF 00 00");
 }
 

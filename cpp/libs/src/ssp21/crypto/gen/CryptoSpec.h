@@ -43,6 +43,8 @@ struct CryptoSpec final
         SessionMode session_mode
     );
 
+    size_t size() const;
+
     static const uint8_t fixed_size_bytes = 6;
 
     EnumField<NonceModeSpec> nonce_mode;

@@ -34,6 +34,16 @@ AuthMetadata::AuthMetadata(
     flags(flags)
 {}
 
+size_t AuthMetadata::size() const
+{
+    return MessageFormatter::sum_sizes(
+        0,
+        nonce,
+        valid_until_ms,
+        flags
+    );
+}
+
 ParseError AuthMetadata::read(seq32_t& input)
 {
     return MessageParser::read_fields(

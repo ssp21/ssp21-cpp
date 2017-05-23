@@ -28,6 +28,8 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
 
     }
 
+    def sizeFunc: Iterator[String] = "size_t size() const { return 1; }".iter
+
     def readFunc: Iterator[String] = {
       "ParseError read(seq32_t& input);".iter
     }
@@ -44,6 +46,8 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
       defaultConstructor ++
         space ++
         fullConstructor ++
+        space ++
+        sizeFunc ++
         space ++
         readFunc ++
         writeFunc ++

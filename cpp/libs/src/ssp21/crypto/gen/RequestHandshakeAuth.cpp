@@ -30,6 +30,14 @@ RequestHandshakeAuth::RequestHandshakeAuth(
     mac(mac)
 {}
 
+size_t RequestHandshakeAuth::size() const
+{
+    return MessageFormatter::sum_sizes(
+        1,
+        mac
+    );
+}
+
 
 ParseError RequestHandshakeAuth::read(seq32_t input)
 {

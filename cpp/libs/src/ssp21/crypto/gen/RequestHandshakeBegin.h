@@ -43,6 +43,8 @@ struct RequestHandshakeBegin final : public IMessage, private openpal::Uncopyabl
         const seq8_t& ephemeral_public_key
     );
 
+    size_t size() const;
+
     virtual ParseError read(seq32_t input) override;
     virtual FormatResult write(wseq32_t& output) const override;
     virtual void print(IMessagePrinter& printer) const override;

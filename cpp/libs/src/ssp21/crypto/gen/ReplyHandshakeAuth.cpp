@@ -30,6 +30,14 @@ ReplyHandshakeAuth::ReplyHandshakeAuth(
     mac(mac)
 {}
 
+size_t ReplyHandshakeAuth::size() const
+{
+    return MessageFormatter::sum_sizes(
+        1,
+        mac
+    );
+}
+
 
 ParseError ReplyHandshakeAuth::read(seq32_t input)
 {

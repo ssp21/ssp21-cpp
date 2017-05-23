@@ -20,6 +20,11 @@ namespace ssp21
     {
     public:
 
+		size_t size() const
+		{
+			return CountType::size + this->length();
+		}
+
         typedef openpal::RSeq<typename CountType::type_t> seq_t;
 
         SeqByteField() {}

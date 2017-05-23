@@ -30,6 +30,14 @@ ReplyHandshakeError::ReplyHandshakeError(
     handshake_error(handshake_error)
 {}
 
+size_t ReplyHandshakeError::size() const
+{
+    return MessageFormatter::sum_sizes(
+        1,
+        handshake_error
+    );
+}
+
 
 ParseError ReplyHandshakeError::read(seq32_t input)
 {

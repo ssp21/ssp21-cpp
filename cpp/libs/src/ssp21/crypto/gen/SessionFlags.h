@@ -32,6 +32,8 @@ struct SessionFlags final
         fin(fin)
     {}
 
+    size_t size() const { return 1; }
+
     ParseError read(seq32_t& input);
     FormatError write(wseq32_t& output) const;
     void print(const char* name, IMessagePrinter& printer) const;

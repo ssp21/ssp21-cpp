@@ -30,6 +30,15 @@ ReplyHandshakeBegin::ReplyHandshakeBegin(
     ephemeral_public_key(ephemeral_public_key)
 {}
 
+size_t ReplyHandshakeBegin::size() const
+{
+    return MessageFormatter::sum_sizes(
+        1,
+        ephemeral_public_key,
+        certificates
+    );
+}
+
 
 ParseError ReplyHandshakeBegin::read(seq32_t input)
 {

@@ -34,6 +34,16 @@ SessionData::SessionData(
     auth_tag(auth_tag)
 {}
 
+size_t SessionData::size() const
+{
+    return MessageFormatter::sum_sizes(
+        1,
+        metadata,
+        user_data,
+        auth_tag
+    );
+}
+
 
 ParseError SessionData::read(seq32_t input)
 {

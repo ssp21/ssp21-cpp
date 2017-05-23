@@ -32,6 +32,15 @@ ExtensionEnvelope::ExtensionEnvelope(
     extension_body(extension_body)
 {}
 
+size_t ExtensionEnvelope::size() const
+{
+    return MessageFormatter::sum_sizes(
+        0,
+        identifier,
+        extension_body
+    );
+}
+
 ParseError ExtensionEnvelope::read(seq32_t& input)
 {
     return MessageParser::read_fields(

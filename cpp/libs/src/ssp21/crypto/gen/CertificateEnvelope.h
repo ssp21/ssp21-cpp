@@ -34,6 +34,8 @@ struct CertificateEnvelope final
         const seq16_t& certificate_body
     );
 
+    size_t size() const;
+
     static const uint8_t min_size_bytes = 4;
 
     SeqByteField<openpal::UInt8> issuer_id;

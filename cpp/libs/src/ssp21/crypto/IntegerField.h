@@ -15,6 +15,11 @@ namespace ssp21
 
     public:
 
+		size_t size() const
+		{
+			return IntegerType::size;
+		}
+
         operator integer_t& ()
         {
             return value;

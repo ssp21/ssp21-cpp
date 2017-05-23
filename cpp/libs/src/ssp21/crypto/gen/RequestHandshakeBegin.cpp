@@ -38,6 +38,19 @@ RequestHandshakeBegin::RequestHandshakeBegin(
     ephemeral_public_key(ephemeral_public_key)
 {}
 
+size_t RequestHandshakeBegin::size() const
+{
+    return MessageFormatter::sum_sizes(
+        1,
+        version,
+        spec,
+        constraints,
+        certificate_mode,
+        ephemeral_public_key,
+        certificates
+    );
+}
+
 
 ParseError RequestHandshakeBegin::read(seq32_t input)
 {

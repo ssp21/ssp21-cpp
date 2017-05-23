@@ -40,6 +40,19 @@ CryptoSpec::CryptoSpec(
     session_mode(session_mode)
 {}
 
+size_t CryptoSpec::size() const
+{
+    return MessageFormatter::sum_sizes(
+        0,
+        nonce_mode,
+        dh_mode,
+        handshake_hash,
+        handshake_kdf,
+        handshake_mac,
+        session_mode
+    );
+}
+
 ParseError CryptoSpec::read(seq32_t& input)
 {
     return MessageParser::read_fields(

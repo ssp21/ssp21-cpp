@@ -25,6 +25,14 @@ CertificateFile::CertificateFile()
 {}
 
 
+size_t CertificateFile::size() const
+{
+    return MessageFormatter::sum_sizes(
+        0,
+        entries
+    );
+}
+
 ParseError CertificateFile::read(seq32_t& input)
 {
     return MessageParser::read_fields(

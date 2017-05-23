@@ -11,6 +11,8 @@ object StructGenerator {
 
 class StructGenerator(sf: Struct) extends WriteCppFiles {
 
+  protected def prefixSize : Int = 0
+
   private def cppNamespace = "ssp21"
 
   private def headerName = sf.name + ".h"
@@ -42,6 +44,7 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
     def readAllSig = "ParseError read_all(const seq32_t& input);".iter
     def writeSig = "FormatError write(wseq32_t& output) const;".iter
     def printSig = "void print(const char* name, IMessagePrinter& printer) const;".iter
+    def sizeSig = "size_t size() const;".iter
 
     def readWritePrint = {
       if (outputReadWritePrint) readSomeSig ++ readAllSig ++ writeSig ++ printSig else Iterator.empty
@@ -72,6 +75,8 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
           defaultConstructorSig ++
           space ++
           fullConstructorSig(false) ++
+          space ++
+          sizeSig ++
           space ++
           extraHeaderSignatures ++
           constants ++
@@ -126,7 +131,14 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
 
     def args = commas(sf.fields.map(_.name))
 
-
+    def sizeFunc : Iterator[String] = {
+      "size_t %s::size() const".format(sf.name).iter ++ bracket {
+        "return MessageFormatter::sum_sizes(".iter ++ indent {
+          "%s,".format(prefixSize).iter ++
+          commas(sf.fields.map(f => f.name))
+        } ++  ");".iter
+      }
+    }
 
     def readSomeFunc(implicit indent: Indentation): Iterator[String] = {
       "ParseError %s::read(seq32_t& input)".format(sf.name).iter ++ bracket {
@@ -198,6 +210,8 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
         defaultConstructorImpl ++
         space ++
         fullConstructorImpl ++
+        space ++
+        sizeFunc ++
         space ++
         readWritePrint ++
         extraImplFunctions

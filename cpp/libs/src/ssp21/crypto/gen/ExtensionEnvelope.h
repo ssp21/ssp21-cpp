@@ -36,6 +36,8 @@ struct ExtensionEnvelope final
         const seq16_t& extension_body
     );
 
+    size_t size() const;
+
     static const uint8_t min_size_bytes = 6;
 
     IntegerField<openpal::UInt32> identifier;
