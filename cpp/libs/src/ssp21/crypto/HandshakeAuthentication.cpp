@@ -5,7 +5,7 @@
 namespace ssp21
 {
 
-    bool HandshakeAuthentication::auth_handshake_with_mac(mac_func_t mac_func, const SymmetricKey& key, HandshakeMode mode, const seq8_t& mac_value)
+    bool HandshakeAuthentication::auth_handshake_with_mac(mac_func_t mac_func, const SymmetricKey& key, HandshakeMode mode, const seq32_t& mac_value)
     {
         auto byte = get_auth_byte(mode);
         const seq32_t pattern(&byte, 1);

@@ -12,53 +12,50 @@
 #include "ssp21/crypto/IMessagePrinter.h"
 #include "ssp21/crypto/IntegerField.h"
 
+#include "ssp21/crypto/VLength.h"
+
 
 namespace ssp21
-{
-    template <class CountType>
-    class SeqByteField final : public openpal::RSeq<typename CountType::type_t>
+{    
+    class SeqByteField final : public seq32_t
     {
     public:
 
         size_t size() const
         {
-            return CountType::size + this->length();
-        }
-
-        typedef openpal::RSeq<typename CountType::type_t> seq_t;
+            return VLength::size_in_bytes(this->length()) + this->length();
+        }        
 
         SeqByteField() {}
 
-        SeqByteField& operator=(const seq_t& other)
+        SeqByteField& operator=(const seq32_t& other)
         {
-            seq_t::operator=(other);
+			seq32_t::operator=(other);
             return *this;
         }
 
-        explicit SeqByteField(const seq_t& value) : seq_t(value)
+        explicit SeqByteField(const seq32_t& value) : seq32_t(value)
         {}
 
         ParseError read(seq32_t& input)
         {
-            IntegerField<CountType> count;
-            auto err = count.read(input);
+			uint32_t length;
+            const auto err = VLength::read(length, input);
             if (any(err)) return err;
 
-            if (input.length() < count)
+            if (input.length() < length)
             {
                 return ParseError::insufficient_bytes;
             }
 
-            *this = input.take(count.value);
-            input.advance(count);
+            *this = input.take(length);
+            input.advance(length);
             return ParseError::ok;
         }
 
         FormatError write(wseq32_t& dest) const
-        {
-            IntegerField<CountType> count(this->length());
-
-            auto err = count.write(dest);
+        {            
+            const auto err = VLength::write(this->length(), dest);
             if (any(err)) return err;
 
             if (dest.length() < this->length()) return FormatError::insufficient_space;

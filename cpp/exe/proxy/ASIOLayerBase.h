@@ -68,7 +68,7 @@ protected:
             }
             else
             {
-                const auto rx_data = this->rx_buffer.as_rslice().take<uint32_t>(num_rx);
+                const auto rx_data = this->rx_buffer.as_rslice().take(num_rx);
                 FORMAT_LOG_BLOCK(this->logger, ssp21::levels::debug, "complete socket rx: %u, tx: %s", rx_data.length(), bool_str(this->is_tx_active));
                 if (this->logger.is_enabled(ssp21::levels::debug))
                 {

@@ -34,7 +34,7 @@ struct CertificateFile final
 
     static const uint8_t min_size_bytes = 1;
 
-    SeqStructField<openpal::UInt8, CertificateFileEntry, 10> entries;
+    SeqStructField<CertificateFileEntry, 10> entries;
 
     ParseError read(seq32_t& input);
     ParseError read_all(const seq32_t& input);

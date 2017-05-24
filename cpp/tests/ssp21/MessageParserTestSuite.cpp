@@ -81,9 +81,9 @@ TEST_CASE(SUITE("ignores extra data after fields"))
     REQUIRE(err == ParseError::ok);
 }
 
-TEST_CASE(SUITE("reads Seq8 correctly"))
+TEST_CASE(SUITE("reads SeqOfByte correctly"))
 {
-    SeqByteField<openpal::UInt8> field;
+    SeqByteField field;
     Hex hex("04 00 01 02 03 FF");
 
     auto input = hex.as_rslice();
@@ -94,17 +94,17 @@ TEST_CASE(SUITE("reads Seq8 correctly"))
     REQUIRE(to_hex(field) == "00 01 02 03");
 }
 
-TEST_CASE(SUITE("returns error if Seq8 empty"))
+TEST_CASE(SUITE("returns error if SeqOfByte empty"))
 {
-    SeqByteField<openpal::UInt8> field;
+    SeqByteField field;
     auto input = seq32_t::empty();
     auto err = MessageParser::read_fields(input, field);
     REQUIRE(err == ParseError::insufficient_bytes);
 }
 
-TEST_CASE(SUITE("returns error if Seq8 incomplete"))
+TEST_CASE(SUITE("returns error if SeqOfByte incomplete"))
 {
-    SeqByteField<openpal::UInt8> field;
+    SeqByteField field;
     Hex hex("04 00 01 02");
     auto input = hex.as_rslice();
     auto err = MessageParser::read_fields(input, field);

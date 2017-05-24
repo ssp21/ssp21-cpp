@@ -8,7 +8,7 @@ object ExtensionEnvelope extends Struct {
 
   override def fields: List[Field] = List(
     U32("identifier"),
-    Seq16OfByte("extension_body")
+    SeqOfByte("extension_body")
   )
 
 }

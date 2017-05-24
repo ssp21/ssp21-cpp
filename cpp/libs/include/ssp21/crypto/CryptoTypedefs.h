@@ -16,20 +16,20 @@ namespace ssp21
     );
 
     typedef void (*mac_func_t)(
-        const seq8_t& key,
+        const seq32_t& key,
         std::initializer_list<seq32_t> data,
         SecureBuffer& output
     );
 
     typedef void (*dh_func_t)(
         const PrivateKey& priv_key,
-        const seq8_t& pub_key,
+        const seq32_t& pub_key,
         DHOutput& output,
         std::error_code& ec
     );
 
     typedef void (*kdf_func_t)(
-        const seq8_t& chaining_key,
+        const seq32_t& chaining_key,
         std::initializer_list<seq32_t> input_key_material,
         SymmetricKey& key1,
         SymmetricKey& key2

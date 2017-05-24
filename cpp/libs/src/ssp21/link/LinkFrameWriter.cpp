@@ -41,14 +41,14 @@ namespace ssp21
             return WriteResult::error(FormatError::insufficient_space);
         }
 
-        const auto crc_h = CastagnoliCRC32::calc(this->frame_buffer.as_rslice().take<uint32_t>(consts::link::header_fields_size));
+        const auto crc_h = CastagnoliCRC32::calc(this->frame_buffer.as_rslice().take(consts::link::header_fields_size));
 
         if (!openpal::UInt32::write_to(dest, crc_h))
         {
             return WriteResult::error(FormatError::insufficient_space);
         }
 
-        return WriteResult::success(res, this->frame_buffer.as_rslice().take<uint32_t>(res.written.length() + consts::link::min_frame_size));
+        return WriteResult::success(res, this->frame_buffer.as_rslice().take(res.written.length() + consts::link::min_frame_size));
     }
 
     FormatResult LinkFrameWriter::write_body_and_crc(const IWritable& payload)

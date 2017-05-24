@@ -41,7 +41,7 @@ struct CertificateBody final
         uint32_t valid_before,
         uint8_t signing_level,
         PublicKeyType public_key_type,
-        const seq8_t& public_key
+        const seq32_t& public_key
     );
 
     size_t size() const;
@@ -53,8 +53,8 @@ struct CertificateBody final
     IntegerField<openpal::UInt32> valid_before;
     IntegerField<openpal::UInt8> signing_level;
     EnumField<PublicKeyTypeSpec> public_key_type;
-    SeqByteField<openpal::UInt8> public_key;
-    SeqStructField<openpal::UInt8, ExtensionEnvelope, 5> extensions;
+    SeqByteField public_key;
+    SeqStructField<ExtensionEnvelope, 5> extensions;
 
     ParseError read(seq32_t& input);
     ParseError read_all(const seq32_t& input);

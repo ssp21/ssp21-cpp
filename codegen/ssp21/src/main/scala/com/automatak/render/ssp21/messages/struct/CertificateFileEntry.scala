@@ -9,7 +9,7 @@ object CertificateFileEntry extends Struct {
 
   override def fields: List[Field] = List(
     Enum(FileEntryType),
-    Seq16OfByte("data")
+    SeqOfByte("data")
   )
 
 }

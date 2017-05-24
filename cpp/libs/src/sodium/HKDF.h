@@ -13,7 +13,7 @@ namespace ssp21
     */
     template <mac_func_t mac_func>
     void hkdf(
-        const seq8_t& salt,
+        const seq32_t& salt,
         std::initializer_list<seq32_t> input_key_material,
         SymmetricKey& output1,
         SymmetricKey& output2)

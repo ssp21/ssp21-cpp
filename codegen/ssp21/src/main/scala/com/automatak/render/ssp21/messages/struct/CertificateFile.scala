@@ -7,7 +7,7 @@ object CertificateFile extends Struct {
   override def name: String = "CertificateFile"
 
   override def fields: List[Field] = List(
-    Seq8OfStruct("entries", CertificateFileEntry, 10)
+    SeqOfStruct("entries", CertificateFileEntry, 10)
   )
 
 }

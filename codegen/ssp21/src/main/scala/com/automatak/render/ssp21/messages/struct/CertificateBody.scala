@@ -13,8 +13,8 @@ object CertificateBody extends Struct {
     U32("valid_before"),
     U8("signing_level"),
     Enum(PublicKeyType),
-    Seq8OfByte("public_key"),
-    Seq8OfStruct("extensions", ExtensionEnvelope, 5)
+    SeqOfByte("public_key"),
+    SeqOfStruct("extensions", ExtensionEnvelope, 5)
   )
 
 }

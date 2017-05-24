@@ -4,8 +4,8 @@ import com.automatak.render.ssp21.messages.struct.CertificateEnvelope
 
 object CommonFields {
 
-  val ephemeralPublicKey = Seq8OfByte("ephemeral_public_key")
-  val certificates = Seq8OfStruct("certificates", CertificateEnvelope, 6)
+  val ephemeralPublicKey = SeqOfByte("ephemeral_public_key")
+  val certificates = SeqOfStruct("certificates", CertificateEnvelope, 6)
 
 
 }

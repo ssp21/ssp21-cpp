@@ -26,7 +26,7 @@ ExtensionEnvelope::ExtensionEnvelope()
 
 ExtensionEnvelope::ExtensionEnvelope(
     uint32_t identifier,
-    const seq16_t& extension_body
+    const seq32_t& extension_body
 ) :
     identifier(identifier),
     extension_body(extension_body)

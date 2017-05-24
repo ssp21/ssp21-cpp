@@ -34,7 +34,7 @@ namespace ssp21
         sodium_memzero(data, data.length());
     }
 
-    bool Crypto::secure_equals_impl(const seq8_t& lhs, const seq8_t& rhs)
+    bool Crypto::secure_equals_impl(const seq32_t& lhs, const seq32_t& rhs)
     {
         if (lhs.length() != rhs.length()) return false;
 
@@ -56,7 +56,7 @@ namespace ssp21
         output.set_type(BufferType::sha256);
     }
 
-    void Crypto::hmac_sha256_impl(const seq8_t& key, std::initializer_list<seq32_t> data, SecureBuffer& output)
+    void Crypto::hmac_sha256_impl(const seq32_t& key, std::initializer_list<seq32_t> data, SecureBuffer& output)
     {
         crypto_auth_hmacsha256_state state;
         crypto_auth_hmacsha256_init(&state, key, key.length());
@@ -72,7 +72,7 @@ namespace ssp21
         output.set_type(BufferType::sha256);
     }
 
-    void Crypto::hkdf_sha256_impl(const seq8_t& salt, std::initializer_list<seq32_t> input_key_material, SymmetricKey& key1, SymmetricKey& key2)
+    void Crypto::hkdf_sha256_impl(const seq32_t& salt, std::initializer_list<seq32_t> input_key_material, SymmetricKey& key1, SymmetricKey& key2)
     {
         ssp21::hkdf<hmac_sha256_impl>(salt, input_key_material, key1, key2);
     }
@@ -89,7 +89,7 @@ namespace ssp21
         pair.private_key.set_type(BufferType::x25519_key);
     }
 
-    void Crypto::dh_x25519_impl(const PrivateKey& priv_key, const seq8_t& pub_key, DHOutput& output, std::error_code& ec)
+    void Crypto::dh_x25519_impl(const PrivateKey& priv_key, const seq32_t& pub_key, DHOutput& output, std::error_code& ec)
     {
         if (crypto_scalarmult(output.as_wseq(), priv_key.as_seq(), pub_key) != 0)
         {

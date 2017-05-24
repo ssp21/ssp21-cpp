@@ -24,7 +24,7 @@ namespace ssp21
             return this;
         }
 
-        seq8_t public_ephem_dh_key(ctx.handshake.initialize());	// generate our local ephemeral keys
+        seq32_t public_ephem_dh_key(ctx.handshake.initialize());	// generate our local ephemeral keys
 
         ctx.handshake.begin_handshake(msg, msg_bytes);
 
@@ -91,7 +91,7 @@ namespace ssp21
         HashOutput reply_mac;
         ctx.handshake.calc_auth_handshake_mac(reply_mac);
 
-        ReplyHandshakeAuth reply(seq8_t(reply_mac.as_seq()));
+        ReplyHandshakeAuth reply(reply_mac.as_seq());
 
         const auto res = ctx.frame_writer->write(reply);
 

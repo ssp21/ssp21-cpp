@@ -21,7 +21,7 @@ namespace ssp21
         memset(data, 0, data.length());
     }
 
-    bool Crypto::secure_equals_impl(const seq8_t& lhs, const seq8_t& rhs)
+    bool Crypto::secure_equals_impl(const seq32_t& lhs, const seq32_t& rhs)
     {
         assert(CryptoFixture::instance);
         CryptoFixture::instance->actions.push_back(CryptoAction::secure_equals);
@@ -40,7 +40,7 @@ namespace ssp21
         output.set_type(BufferType::sha256);
     }
 
-    void Crypto::hmac_sha256_impl(const seq8_t& key, std::initializer_list<seq32_t> data, SecureBuffer& output)
+    void Crypto::hmac_sha256_impl(const seq32_t& key, std::initializer_list<seq32_t> data, SecureBuffer& output)
     {
         assert(CryptoFixture::instance);
         CryptoFixture::instance->actions.push_back(CryptoAction::hmac_sha256);
@@ -49,7 +49,7 @@ namespace ssp21
         output.set_type(BufferType::sha256);
     }
 
-    void Crypto::hkdf_sha256_impl(const seq8_t& chaining_key, std::initializer_list<seq32_t> input_key_material, SymmetricKey& key1, SymmetricKey& key2)
+    void Crypto::hkdf_sha256_impl(const seq32_t& chaining_key, std::initializer_list<seq32_t> input_key_material, SymmetricKey& key1, SymmetricKey& key2)
     {
         assert(CryptoFixture::instance);
         CryptoFixture::instance->actions.push_back(CryptoAction::hkdf_sha256);
@@ -76,7 +76,7 @@ namespace ssp21
         pair.public_key.set_type(BufferType::x25519_key);
     }
 
-    void Crypto::dh_x25519_impl(const PrivateKey& priv_key, const seq8_t& pub_key, DHOutput& output, std::error_code& ec)
+    void Crypto::dh_x25519_impl(const PrivateKey& priv_key, const seq32_t& pub_key, DHOutput& output, std::error_code& ec)
     {
         assert(CryptoFixture::instance);
         CryptoFixture::instance->actions.push_back(CryptoAction::dh_x25519);

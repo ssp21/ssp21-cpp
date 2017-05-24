@@ -29,7 +29,7 @@ namespace ssp21
 
         /// generates new ephemeral keys, resets all state, and returns a slice pointing
         /// to the ephemeral public DH key
-        seq8_t initialize();
+        seq32_t initialize();
 
         /// reads session constraints from the message
         /// sets ck = hash(raw_msg)
@@ -42,15 +42,15 @@ namespace ssp21
         void derive_authentication_key(
             const seq32_t& message,
             const PrivateKey& priv_s_dh_key,
-            const seq8_t& pub_e_dh_key,
-            const seq8_t& pub_s_dh_key,
+            const seq32_t& pub_e_dh_key,
+            const seq32_t& pub_s_dh_key,
             std::error_code& ec
         );
 
         /// derive the session keys and initialize the session
         void initialize_session(Session& session, const openpal::Timestamp& session_start) const;
 
-        bool auth_handshake(const seq8_t& mac) const;
+        bool auth_handshake(const seq32_t& mac) const;
 
         void calc_auth_handshake_mac(HashOutput& output) const;
 

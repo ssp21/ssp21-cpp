@@ -86,31 +86,21 @@ case class EnumFieldGenerator(enum: EnumModel) extends FieldGenerator with PassB
   def defaultValue: Option[String] = None
 }
 
-object Seq8FieldGenerator extends FieldGenerator with PassByConstRef {
+object SeqOfByteFieldGenerator extends FieldGenerator with PassByConstRef {
   override def includes = Set(Includes.seqField)
 
-  override def paramType: String = "seq8_t"
+  override def paramType: String = "seq32_t"
 
-  override def cppType: String = "SeqByteField<openpal::UInt8>"
+  override def cppType: String = "SeqByteField"
 
   def defaultValue: Option[String] = None
 }
 
-object Seq16FieldGenerator extends FieldGenerator with PassByConstRef {
-  override def includes = Set(Includes.seqField)
-
-  override def paramType: String = "seq16_t"
-
-  override def cppType: String = "SeqByteField<openpal::UInt16>"
-
-  def defaultValue: Option[String] = None
-}
-
-case class Seq8OfStructGenerator(struct: Struct, capacity: Int) extends FieldGenerator with PassByConstRef {
+case class SeqOfStructGenerator(struct: Struct, capacity: Int) extends FieldGenerator with PassByConstRef {
 
   override def includes = Set(Includes.seqStructField, Includes.message(struct.name))
 
-  override def cppType: String = "SeqStructField<openpal::UInt8, %s, %d>".format(struct.name, capacity)
+  override def cppType: String = "SeqStructField<%s, %d>".format(struct.name, capacity)
 
   def defaultValue: Option[String] = None
 

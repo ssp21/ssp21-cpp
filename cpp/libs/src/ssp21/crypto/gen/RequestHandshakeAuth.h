@@ -27,7 +27,7 @@ struct RequestHandshakeAuth final : public IMessage, private openpal::Uncopyable
     RequestHandshakeAuth();
 
     explicit RequestHandshakeAuth(
-        const seq8_t& mac
+        const seq32_t& mac
     );
 
     size_t size() const;
@@ -40,7 +40,7 @@ struct RequestHandshakeAuth final : public IMessage, private openpal::Uncopyable
     static const uint8_t min_size_bytes = 2;
     static const Function function = Function::request_handshake_auth;
 
-    SeqByteField<openpal::UInt8> mac;
+    SeqByteField mac;
 
 };
 

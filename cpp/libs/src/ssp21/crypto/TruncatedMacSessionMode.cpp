@@ -8,7 +8,7 @@ using namespace openpal;
 
 namespace ssp21
 {
-    seq16_t TruncatedMacSessionMode::read_impl(
+    seq32_t TruncatedMacSessionMode::read_impl(
         const SymmetricKey& key,
         const SessionData& msg,
         wseq32_t, // ignored in MAC mode
@@ -29,7 +29,7 @@ namespace ssp21
         if (!Crypto::secure_equals(msg.auth_tag, truncated_mac)) // authentication failure
         {
             ec = CryptoError::mac_auth_fail;
-            return seq16_t::empty();
+            return seq32_t::empty();
         }
 
         // we're authenticated, so return the user_data slice

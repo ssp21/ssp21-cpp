@@ -61,7 +61,7 @@ namespace ssp21
             const std::string& hex_ephem_pub_key
         )
         {
-            HexSeq8 pub_key(hex_ephem_pub_key);
+            HexSeq pub_key(hex_ephem_pub_key);
 
             RequestHandshakeBegin msg(
                 version,
@@ -97,37 +97,25 @@ namespace ssp21
 
         std::string request_handshake_auth(const std::string& mac)
         {
-            HexSeq8 mac_bytes(mac);
+            HexSeq mac_bytes(mac);
             RequestHandshakeAuth request(mac_bytes);
             return write_message(request);
         }
 
         std::string reply_handshake_auth(const std::string& mac)
         {
-            HexSeq8 mac_bytes(mac);
+            HexSeq mac_bytes(mac);
             ReplyHandshakeAuth reply(mac_bytes);
             return write_message(reply);
         }
 
         std::string reply_handshake_begin(
-            const std::string& hex_ephem_pub_key//,
-            //std::initializer_list<std::string> certificates
+            const std::string& hex_ephem_pub_key
         )
         {
-            HexSeq8 pub_key(hex_ephem_pub_key);
+            HexSeq pub_key(hex_ephem_pub_key);
 
-            ReplyHandshakeBegin msg(pub_key);
-
-            /*
-            std::vector<std::unique_ptr<HexSeq16>> certificate_slices;
-
-            for (auto& cert : certificates)
-            {
-                auto hex = std::make_unique<HexSeq16>(cert);
-                msg.certificates.push(*hex);
-                certificate_slices.push_back(std::move(hex));
-            }
-            */
+            ReplyHandshakeBegin msg(pub_key);          
 
             return write_message(msg);
         }
@@ -140,8 +128,8 @@ namespace ssp21
 
         std::string session_data(uint16_t nonce, uint32_t valid_until, bool fir, bool fin, const std::string& user_data, const std::string& auth_tag)
         {
-            HexSeq16 user_data_hex(user_data);
-            HexSeq8 auth_tag_hex(auth_tag);
+            HexSeq user_data_hex(user_data);
+            HexSeq auth_tag_hex(auth_tag);
 
             SessionData msg(
                 AuthMetadata(
@@ -186,7 +174,7 @@ namespace ssp21
 
             Hex data(payload);
             if (data.as_rslice().length() > max) throw std::logic_error("payload length exceeds maximum");
-            const auto payload_u16 = data.as_rslice().take<uint16_t>(max);
+            const auto payload_u16 = data.as_rslice().take(max);
 
             LinkFrameWriter writer(openpal::Logger::empty(), Addresses(dest, src), max);
 

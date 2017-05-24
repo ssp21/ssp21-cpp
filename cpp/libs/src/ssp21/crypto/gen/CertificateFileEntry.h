@@ -32,15 +32,15 @@ struct CertificateFileEntry final
 
     CertificateFileEntry(
         FileEntryType file_entry_type,
-        const seq16_t& data
+        const seq32_t& data
     );
 
     size_t size() const;
 
-    static const uint8_t min_size_bytes = 3;
+    static const uint8_t min_size_bytes = 2;
 
     EnumField<FileEntryTypeSpec> file_entry_type;
-    SeqByteField<openpal::UInt16> data;
+    SeqByteField data;
 
     ParseError read(seq32_t& input);
     ParseError read_all(const seq32_t& input);

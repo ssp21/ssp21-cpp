@@ -26,8 +26,8 @@ SessionData::SessionData()
 
 SessionData::SessionData(
     const AuthMetadata& metadata,
-    const seq16_t& user_data,
-    const seq8_t& auth_tag
+    const seq32_t& user_data,
+    const seq32_t& auth_tag
 ) :
     metadata(metadata),
     user_data(user_data),

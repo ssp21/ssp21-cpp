@@ -21,7 +21,7 @@ namespace ssp21
 
     private:
 
-        virtual seq16_t read_impl(
+        virtual seq32_t read_impl(
             const SymmetricKey& key,
             const SessionData& msg,
             wseq32_t dest,

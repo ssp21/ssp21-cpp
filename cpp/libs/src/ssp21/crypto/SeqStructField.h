@@ -5,6 +5,8 @@
 #include "openpal/logging/Logger.h"
 #include "openpal/logging/LogMacros.h"
 
+#include "ssp21/crypto/VLength.h"
+
 namespace ssp21
 {
     template <class T>
@@ -20,7 +22,7 @@ namespace ssp21
     };
 
 
-    template <class CountType, class StructType, uint32_t MAX_COUNT>
+    template <class StructType, uint32_t MAX_COUNT>
     class SeqStructField : public ICollection<StructType>
     {
 
@@ -35,16 +37,15 @@ namespace ssp21
                 sum += this->get(i)->size();
             }
 
-            return CountType::size + sum;
+            return VLength::size_in_bytes(this->count()) + sum;
         }
 
         ParseError read(seq32_t& input)
         {
             this->clear();
-
-            IntegerField<CountType> count;
-
-            auto cerr = count.read(input);
+            
+			uint32_t count;
+            auto cerr = VLength::read(count, input);
             if (any(cerr)) return cerr;
 
             while (count > 0)
@@ -65,10 +66,8 @@ namespace ssp21
         }
 
         FormatError write(wseq32_t& output) const
-        {
-            IntegerField<CountType> count_field(this->count_);
-
-            auto err = count_field.write(output);
+        {           
+			const auto err = VLength::write(this->count(), output);
             if (any(err)) return err;
 
             for (uint32_t i = 0; i < this->count_; ++i)

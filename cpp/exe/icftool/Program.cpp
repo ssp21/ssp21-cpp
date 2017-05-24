@@ -26,7 +26,7 @@ void create_certificate(const std::string& certificate_file, const std::string& 
 void calc_signature(const seq32_t& data, const CertificateFileEntry& private_key_entry, DSAOutput& signature);
 PublicKeyType get_public_key_type(const CertificateFileEntry& entry);
 CertificateFileEntry get_only_entry(const seq32_t& data);
-void write(const std::string& path, FileEntryType type, const seq16_t& data);
+void write(const std::string& path, FileEntryType type, const seq32_t& data);
 
 Program::Program() :
     parser{{
@@ -113,9 +113,9 @@ void gen_x25519_key_pair(const std::string& private_key_path, const std::string&
     KeyPair kp;
     Crypto::gen_keypair_x25519(kp);
 
-    write(private_key_path, FileEntryType::x25519_private_key, kp.private_key.as_seq().widen<uint16_t>());
+    write(private_key_path, FileEntryType::x25519_private_key, kp.private_key.as_seq());
 
-    write(public_key_path, FileEntryType::x25519_public_key, kp.public_key.as_seq().widen<uint16_t>());
+    write(public_key_path, FileEntryType::x25519_public_key, kp.public_key.as_seq());
 }
 
 void gen_ed25519_key_pair(const std::string& private_key_path, const std::string& public_key_path)
@@ -125,9 +125,9 @@ void gen_ed25519_key_pair(const std::string& private_key_path, const std::string
     KeyPair kp;
     Crypto::gen_keypair_ed25519(kp);
 
-    write(private_key_path, FileEntryType::ed25519_private_key, kp.private_key.as_seq().widen<uint16_t>());
+    write(private_key_path, FileEntryType::ed25519_private_key, kp.private_key.as_seq());
 
-    write(public_key_path, FileEntryType::ed25519_public_key, kp.public_key.as_seq().widen<uint16_t>());
+    write(public_key_path, FileEntryType::ed25519_public_key, kp.public_key.as_seq());
 }
 
 void create_certificate(const std::string& certificate_file_path, const std::string& public_key_path, const std::string& private_key_path)
@@ -154,7 +154,7 @@ void create_certificate(const std::string& certificate_file_path, const std::str
 
     const auto envelope_bytes = serialize::to_buffer(
                                     CertificateEnvelope(
-                                        seq8_t::empty(),
+                                        seq32_t::empty(),
                                         signature.as_seq(),
                                         body_bytes->as_rslice().take(static_cast<uint16_t>(body_bytes->length()))
                                     )
@@ -164,7 +164,7 @@ void create_certificate(const std::string& certificate_file_path, const std::str
     file.entries.push(
         CertificateFileEntry(
             FileEntryType::certificate,
-            envelope_bytes->as_rslice().take<uint16_t>(static_cast<uint16_t>(envelope_bytes->length()))
+            envelope_bytes->as_rslice()
         )
     );
 
@@ -219,7 +219,7 @@ CertificateFileEntry get_only_entry(const seq32_t& file_data)
     return *file.entries.get(0);
 }
 
-void write(const std::string& path, FileEntryType type, const seq16_t& data)
+void write(const std::string& path, FileEntryType type, const seq32_t& data)
 {
     CertificateFile file;
     file.entries.push(CertificateFileEntry(type, data));

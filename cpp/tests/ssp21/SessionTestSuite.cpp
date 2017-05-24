@@ -208,8 +208,8 @@ void init(Session& session, const Session::Param& parameters)
 
 std::string validate(Session& session, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex, std::error_code& ec)
 {
-    HexSeq16 user_data(user_data_hex);
-    HexSeq8 auth_tag(auth_tag_hex);
+    HexSeq user_data(user_data_hex);
+    HexSeq auth_tag(auth_tag_hex);
 
     SessionData msg(
         AuthMetadata(

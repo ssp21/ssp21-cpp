@@ -25,7 +25,7 @@ RequestHandshakeAuth::RequestHandshakeAuth()
 {}
 
 RequestHandshakeAuth::RequestHandshakeAuth(
-    const seq8_t& mac
+    const seq32_t& mac
 ) :
     mac(mac)
 {}

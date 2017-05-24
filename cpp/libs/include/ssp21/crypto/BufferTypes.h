@@ -29,7 +29,7 @@ namespace ssp21
 
         virtual ~BufferBase() {}
 
-        seq8_t as_seq() const;
+        seq32_t as_seq() const;
 
         wseq32_t as_wseq();
 
@@ -52,7 +52,7 @@ namespace ssp21
 
     protected:
 
-        openpal::StaticBuffer<uint8_t, consts::crypto::max_primitive_buffer_length> buffer;
+        openpal::StaticBuffer<uint32_t, consts::crypto::max_primitive_buffer_length> buffer;
     };
 
     /**

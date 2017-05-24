@@ -86,11 +86,11 @@ TEST_CASE(SUITE("successfully parses message"))
 TEST_CASE(SUITE("pretty prints message"))
 {
 
-    HexSeq8 public_key("CA FE");
+    HexSeq public_key("CA FE");
 
-    HexSeq8 issuer_id(openpal::repeat_hex(0xAA, 16));
-    HexSeq8 signature(openpal::repeat_hex(0xBB, 32));
-    HexSeq16 body(openpal::repeat_hex(0xCC, 7));
+    HexSeq issuer_id(openpal::repeat_hex(0xAA, 16));
+    HexSeq signature(openpal::repeat_hex(0xBB, 32));
+    HexSeq body(openpal::repeat_hex(0xCC, 7));
 
 
     CertificateEnvelope envelope(

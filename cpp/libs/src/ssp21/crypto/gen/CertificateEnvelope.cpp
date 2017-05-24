@@ -25,9 +25,9 @@ CertificateEnvelope::CertificateEnvelope()
 {}
 
 CertificateEnvelope::CertificateEnvelope(
-    const seq8_t& issuer_id,
-    const seq8_t& signature,
-    const seq16_t& certificate_body
+    const seq32_t& issuer_id,
+    const seq32_t& signature,
+    const seq32_t& certificate_body
 ) :
     issuer_id(issuer_id),
     signature(signature),

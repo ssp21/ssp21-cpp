@@ -26,7 +26,7 @@ CertificateFileEntry::CertificateFileEntry()
 
 CertificateFileEntry::CertificateFileEntry(
     FileEntryType file_entry_type,
-    const seq16_t& data
+    const seq32_t& data
 ) :
     file_entry_type(file_entry_type),
     data(data)

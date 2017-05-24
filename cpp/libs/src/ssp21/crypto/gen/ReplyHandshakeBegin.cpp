@@ -25,7 +25,7 @@ ReplyHandshakeBegin::ReplyHandshakeBegin()
 {}
 
 ReplyHandshakeBegin::ReplyHandshakeBegin(
-    const seq8_t& ephemeral_public_key
+    const seq32_t& ephemeral_public_key
 ) :
     ephemeral_public_key(ephemeral_public_key)
 {}

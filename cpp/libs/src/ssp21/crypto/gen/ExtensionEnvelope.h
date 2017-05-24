@@ -33,15 +33,15 @@ struct ExtensionEnvelope final
 
     ExtensionEnvelope(
         uint32_t identifier,
-        const seq16_t& extension_body
+        const seq32_t& extension_body
     );
 
     size_t size() const;
 
-    static const uint8_t min_size_bytes = 6;
+    static const uint8_t min_size_bytes = 5;
 
     IntegerField<openpal::UInt32> identifier;
-    SeqByteField<openpal::UInt16> extension_body;
+    SeqByteField extension_body;
 
     ParseError read(seq32_t& input);
     ParseError read_all(const seq32_t& input);

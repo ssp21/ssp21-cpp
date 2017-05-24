@@ -23,12 +23,12 @@ namespace ssp21
         virtual ~ISessionMode() {}
 
         // checks preconditions and invokes the read implementation
-        seq16_t read(const SymmetricKey& key, const SessionData& msg, wseq32_t dest, std::error_code& ec) const
+        seq32_t read(const SymmetricKey& key, const SessionData& msg, wseq32_t dest, std::error_code& ec) const
         {
             if (key.get_type() != BufferType::symmetric_key)
             {
                 ec = CryptoError::bad_buffer_size;
-                return seq16_t::empty();
+                return seq32_t::empty();
             }
 
             return this->read_impl(key, msg, dest, ec);
@@ -40,7 +40,7 @@ namespace ssp21
             if (key.get_type() != BufferType::symmetric_key)
             {
                 ec = CryptoError::bad_buffer_size;
-                return seq16_t::empty();
+                return seq32_t::empty();
             }
 
             return this->write_impl(writer, key, metadata, user_data, encrypt_scratch_space, ec);
@@ -58,7 +58,7 @@ namespace ssp21
         *
         * @return A slice pointing to the cleartext. This slice will be empty if an error occured.
         */
-        virtual seq16_t read_impl(
+        virtual seq32_t read_impl(
             const SymmetricKey& key,
             const SessionData& msg,
             wseq32_t dest,

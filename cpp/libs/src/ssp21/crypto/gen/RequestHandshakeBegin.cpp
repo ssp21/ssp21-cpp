@@ -29,7 +29,7 @@ RequestHandshakeBegin::RequestHandshakeBegin(
     const CryptoSpec& spec,
     const SessionConstraints& constraints,
     CertificateMode certificate_mode,
-    const seq8_t& ephemeral_public_key
+    const seq32_t& ephemeral_public_key
 ) :
     version(version),
     spec(spec),

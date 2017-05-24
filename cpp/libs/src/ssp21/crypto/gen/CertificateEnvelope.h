@@ -29,18 +29,18 @@ struct CertificateEnvelope final
     CertificateEnvelope();
 
     CertificateEnvelope(
-        const seq8_t& issuer_id,
-        const seq8_t& signature,
-        const seq16_t& certificate_body
+        const seq32_t& issuer_id,
+        const seq32_t& signature,
+        const seq32_t& certificate_body
     );
 
     size_t size() const;
 
-    static const uint8_t min_size_bytes = 4;
+    static const uint8_t min_size_bytes = 3;
 
-    SeqByteField<openpal::UInt8> issuer_id;
-    SeqByteField<openpal::UInt8> signature;
-    SeqByteField<openpal::UInt16> certificate_body;
+    SeqByteField issuer_id;
+    SeqByteField signature;
+    SeqByteField certificate_body;
 
     ParseError read(seq32_t& input);
     ParseError read_all(const seq32_t& input);

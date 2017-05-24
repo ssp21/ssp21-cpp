@@ -30,7 +30,7 @@ CertificateBody::CertificateBody(
     uint32_t valid_before,
     uint8_t signing_level,
     PublicKeyType public_key_type,
-    const seq8_t& public_key
+    const seq32_t& public_key
 ) :
     serial_number(serial_number),
     valid_after(valid_after),

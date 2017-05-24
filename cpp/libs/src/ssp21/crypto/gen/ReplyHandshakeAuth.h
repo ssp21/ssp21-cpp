@@ -27,7 +27,7 @@ struct ReplyHandshakeAuth final : public IMessage, private openpal::Uncopyable
     ReplyHandshakeAuth();
 
     explicit ReplyHandshakeAuth(
-        const seq8_t& mac
+        const seq32_t& mac
     );
 
     size_t size() const;
@@ -40,7 +40,7 @@ struct ReplyHandshakeAuth final : public IMessage, private openpal::Uncopyable
     static const uint8_t min_size_bytes = 2;
     static const Function function = Function::reply_handshake_auth;
 
-    SeqByteField<openpal::UInt8> mac;
+    SeqByteField mac;
 
 };
 

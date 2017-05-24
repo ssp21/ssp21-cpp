@@ -40,7 +40,7 @@ struct RequestHandshakeBegin final : public IMessage, private openpal::Uncopyabl
         const CryptoSpec& spec,
         const SessionConstraints& constraints,
         CertificateMode certificate_mode,
-        const seq8_t& ephemeral_public_key
+        const seq32_t& ephemeral_public_key
     );
 
     size_t size() const;
@@ -57,8 +57,8 @@ struct RequestHandshakeBegin final : public IMessage, private openpal::Uncopyabl
     CryptoSpec spec;
     SessionConstraints constraints;
     EnumField<CertificateModeSpec> certificate_mode;
-    SeqByteField<openpal::UInt8> ephemeral_public_key;
-    SeqStructField<openpal::UInt8, CertificateEnvelope, 6> certificates;
+    SeqByteField ephemeral_public_key;
+    SeqStructField<CertificateEnvelope, 6> certificates;
 
 };
 
