@@ -37,7 +37,7 @@ namespace ssp21
     {
         HashOutput issuer_hash;
         Crypto::hash_sha256({ parent.public_key }, issuer_hash);
-        auto calculated_issuer_id = issuer_hash.as_seq().take<uint8_t>(16); // TODO - make this a constant
+        auto calculated_issuer_id = issuer_hash.as_seq().take<uint8_t>(consts::crypto::issuer_id_length);
 
         if (!child_envelope.issuer_id.equals(calculated_issuer_id)) return HandshakeError::bad_certificate_chain;
 

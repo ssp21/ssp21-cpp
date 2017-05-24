@@ -24,6 +24,7 @@ void gen_x25519_key_pair(const std::string& private_key_path, const std::string&
 void gen_ed25519_key_pair(const std::string& private_key_path, const std::string& public_key_path);
 void create_certificate(const std::string& certificate_file, const std::string& private_key_path, const std::string& public_key_path);
 void calc_signature(const seq32_t& data, const CertificateFileEntry& private_key_entry, DSAOutput& signature);
+PublicKeyType get_public_key_type(const CertificateFileEntry& entry);
 CertificateFileEntry get_only_entry(const seq32_t& data);
 void write(const std::string& path, FileEntryType type, const seq16_t& data);
 
@@ -137,23 +138,13 @@ void create_certificate(const std::string& certificate_file_path, const std::str
     const auto public_key_data = SecureFile::read(public_key_path);
     const auto public_key_entry = get_only_entry(public_key_data->as_rslice());
 
-    if (public_key_entry.file_entry_type != FileEntryType::x25519_public_key)
-    {
-        throw Exception("Bad public key type: ", FileEntryTypeSpec::to_string(public_key_entry.file_entry_type));
-    }
-
-    if (public_key_entry.data.length() != consts::crypto::x25519_key_length)
-    {
-        throw Exception("Bad public key length: ", public_key_entry.data.length());
-    }
-
     CertificateBody body( // TODO - interactively read these fields
         0,
         0,
         0xFFFFFFFF,
         0,
-        PublicKeyType::X25519,
-        public_key_entry.data.take<uint8_t>(consts::crypto::x25519_key_length)
+        get_public_key_type(public_key_entry),
+        public_key_entry.data.take(consts::crypto::x25519_key_length)
     );
 
     const auto body_bytes = serialize::to_buffer(body);
@@ -193,6 +184,21 @@ void calc_signature(const seq32_t& data, const CertificateFileEntry& private_key
     default:
         throw Exception("Can't produce a signature from: ", FileEntryTypeSpec::to_string(private_key_entry.file_entry_type));
         break;
+    }
+}
+
+PublicKeyType get_public_key_type(const CertificateFileEntry& entry)
+{
+    switch (entry.file_entry_type)
+    {
+    case(FileEntryType::ed25519_public_key):
+        if (entry.data.length() != consts::crypto::ed25519_public_key_length) throw Exception("Bad Ed25519 public key length");
+        return PublicKeyType::Ed25519;
+    case(FileEntryType::x25519_public_key):
+        if (entry.data.length() != consts::crypto::x25519_key_length) throw Exception("Bad x25519 public key length");
+        return PublicKeyType::X25519;
+    default:
+        throw Exception(FileEntryTypeSpec::to_string(entry.file_entry_type), " is not a public key");
     }
 }
 
