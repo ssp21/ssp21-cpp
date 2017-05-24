@@ -27,6 +27,7 @@ namespace ssp21
 
     ParseError VLength::read(uint32_t& value, seq32_t& src)
     {
+        value = 0;
         uint8_t byte = 0;
 
         while (true)
@@ -34,19 +35,24 @@ namespace ssp21
             uint8_t current;
             if (!UInt8::read_from(src, current)) return ParseError::insufficient_bytes;
 
-            if (byte == 4 && (current > 0x0F)) return ParseError::impl_capacity_limit; // TODO
+            if (byte == 4 && (current > 0x0F)) return ParseError::bad_vlength;
 
-            const bool more = (current & top_bit) != 0;
+            const bool more = (current & top_bit_mask) != 0;
+            const auto bottom_bits = current & bottom_bits_mask;
 
-            value |= (current & bottom_bits);
+            value |= static_cast<uint32_t>(bottom_bits) << (7 * byte);
 
             if (!more)
             {
+                // the last byte can't be zero if it's not the first byte
+                // this would indicate that the value could have been encoded
+                // in fewer bytes
+                if (byte != 0 && bottom_bits == 0) return ParseError::bad_vlength;
+
                 return ParseError::ok;
             }
 
             // prepare for next iteration
-            value <<= 7;
             ++byte;
         }
     }

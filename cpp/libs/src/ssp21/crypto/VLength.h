@@ -11,22 +11,24 @@ namespace ssp21
     *
     *	Variable-length unsigned 32-bit integer encoding/decoding
     *
-    *   num bytes | max value   |  encoding
+    *   num bytes | # bits | max value   |  encoding
     *   ______________________________________________________
-    *		1	  |  127        |  { 0x7F }
-    *		2	  |	 16383      |  { 0xFF, 0x7F }
-    *       3	  |  2097151    |  { 0xFF, 0xFF, 0x7F }
-    *       4	  |  268435455  |  { 0xFF, 0xFF, 0xFF, 0x7F }
+    *		1	  |    7    |  127        |  { 0x7F }
+    *		2	  |	   14   |  16383      |  { 0xFF, 0x7F }
+    *       3	  |    21   |  2097151    |  { 0xFF, 0xFF, 0x7F }
+    *       4	  |    28   |  268435455  |  { 0xFF, 0xFF, 0xFF, 0x7F }
     *
-    *  2^32 - 1 (0xFF:FF:FF:FF) encodes to { 0xFF, 0xFF, 0xFF, 0xFF, 0x0F }
+    *  We can only use the bottom 4 bits of the 5th byte.
+    *
+    *  2^32 - 1 encodes to { 0xFF, 0xFF, 0xFF, 0xFF, 0x0F }
     *
     *  Therefore, the 5th byte can NEVER be > than 0x0F
     *
     */
     class VLength : private openpal::StaticOnly
     {
-        static const uint8_t top_bit = 0x80;
-        static const uint8_t bottom_bits = 0x7F;
+        static const uint8_t top_bit_mask = 0x80;
+        static const uint8_t bottom_bits_mask = 0x7F;
 
         static const uint32_t max_1_byte_value = 127;
         static const uint32_t max_2_byte_value = 16383;

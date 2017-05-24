@@ -28,7 +28,8 @@ object ParseError extends EnumModel {
     EnumValue("unexpected_function", 3, "the message function was not the expected value"),
     EnumValue("too_many_bytes", 4, "parser completed with bytes still remaining"),
     EnumValue("impl_capacity_limit", 5, "reached an implementation specific capacity limit"),
-    EnumValue("reserved_bit", 6, "the bitfield contains a reserved bit(s) that is set")
+    EnumValue("reserved_bit", 6, "the bit-field contains a reserved bit(s) that is set"),
+    EnumValue("bad_vlength", 7, "a variable length (vlength) was not encoded correctly")
   )
 
 }

@@ -35,6 +35,8 @@ const char* ParseErrorSpec::to_string(ParseError arg)
             return "impl_capacity_limit";
         case(ParseError::reserved_bit):
             return "reserved_bit";
+        case(ParseError::bad_vlength):
+            return "bad_vlength";
         default:
             return "undefined";
     }
