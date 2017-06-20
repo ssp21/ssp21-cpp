@@ -16,7 +16,7 @@
 
 
 namespace ssp21
-{    
+{
     class SeqByteField final : public seq32_t
     {
     public:
@@ -24,13 +24,13 @@ namespace ssp21
         size_t size() const
         {
             return VLength::size_in_bytes(this->length()) + this->length();
-        }        
+        }
 
         SeqByteField() {}
 
         SeqByteField& operator=(const seq32_t& other)
         {
-			seq32_t::operator=(other);
+            seq32_t::operator=(other);
             return *this;
         }
 
@@ -39,7 +39,7 @@ namespace ssp21
 
         ParseError read(seq32_t& input)
         {
-			uint32_t length;
+            uint32_t length;
             const auto err = VLength::read(length, input);
             if (any(err)) return err;
 
@@ -54,7 +54,7 @@ namespace ssp21
         }
 
         FormatError write(wseq32_t& dest) const
-        {            
+        {
             const auto err = VLength::write(this->length(), dest);
             if (any(err)) return err;
 

@@ -6,7 +6,7 @@
 #include "ssp21/util/SequenceTypes.h"
 
 namespace ssp21
-{    
+{
     struct HexSeq : private openpal::Hex
     {
         HexSeq(const std::string& hex) : openpal::Hex(hex)
@@ -19,9 +19,9 @@ namespace ssp21
 
         inline seq32_t to_seq() const
         {
-			return this->buffer_.as_rslice();
+            return this->buffer_.as_rslice();
         }
-    };    
+    };
 }
 
 #endif

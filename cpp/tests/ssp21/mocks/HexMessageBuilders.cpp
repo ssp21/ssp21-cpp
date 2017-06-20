@@ -115,7 +115,7 @@ namespace ssp21
         {
             HexSeq pub_key(hex_ephem_pub_key);
 
-            ReplyHandshakeBegin msg(pub_key);          
+            ReplyHandshakeBegin msg(pub_key);
 
             return write_message(msg);
         }

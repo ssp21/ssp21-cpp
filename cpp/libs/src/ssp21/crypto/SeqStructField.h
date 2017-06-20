@@ -19,14 +19,14 @@ namespace ssp21
 
         virtual T const* get(uint32_t i) const = 0;
 
-		template <class Action>
-		void foreach(const Action& action) const
-		{
-			for (uint32_t i = 0; i < count(); ++i)
-			{
-				action(*this->get(i));
-			}
-		}
+        template <class Action>
+        void foreach(const Action& action) const
+        {
+            for (uint32_t i = 0; i < count(); ++i)
+            {
+                action(*this->get(i));
+            }
+        }
     };
 
 
@@ -36,10 +36,10 @@ namespace ssp21
 
     public:
 
-		uint32_t capacity() const 
-		{
-			return MAX_COUNT;
-		}
+        uint32_t capacity() const
+        {
+            return MAX_COUNT;
+        }
 
         size_t size() const
         {
@@ -56,8 +56,8 @@ namespace ssp21
         ParseError read(seq32_t& input)
         {
             this->clear();
-            
-			uint32_t count;
+
+            uint32_t count;
             auto cerr = VLength::read(count, input);
             if (any(cerr)) return cerr;
 
@@ -79,8 +79,8 @@ namespace ssp21
         }
 
         FormatError write(wseq32_t& output) const
-        {           
-			const auto err = VLength::write(this->count(), output);
+        {
+            const auto err = VLength::write(this->count(), output);
             if (any(err)) return err;
 
             for (uint32_t i = 0; i < this->count_; ++i)
