@@ -1,6 +1,6 @@
 
-#ifndef ICFGEN_PROGRAM_H
-#define ICFGEN_PROGRAM_H
+#ifndef ICFTOOL_PROGRAM_H
+#define ICFTOOL_PROGRAM_H
 
 #include <argagg/argagg.hpp>
 

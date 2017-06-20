@@ -7,13 +7,12 @@ import java.nio.file.{Files, Paths}
 
 object Generate {
 
-  val basePath = "../cpp/libs";
+  private val basePath = "../cpp/libs"
+  private val ssp21GenHeaderPath = Paths.get(basePath, "/include/ssp21/crypto/gen")
+  private val ssp21GenImplPath = Paths.get(basePath, "/src/ssp21/crypto/gen")
+  private val testPath = Paths.get("../cpp/tests/ssp21/gen")
 
-  val ssp21GenHeaderPath = Paths.get(basePath, "/include/ssp21/crypto/gen")
-  val ssp21GenImplPath = Paths.get(basePath, "/src/ssp21/crypto/gen")
-  val testPath = Paths.get("../cpp/tests/ssp21/gen")
-
-  val paths = List(ssp21GenHeaderPath, ssp21GenImplPath, testPath)
+  private val paths = List(ssp21GenHeaderPath, ssp21GenImplPath, testPath)
 
   def main(args: Array[String]): Unit = {
 
