@@ -13,6 +13,44 @@
 
 using namespace ssp21;
 
+void Actions::print_contents(const std::string& path)
+{
+	const auto data = SecureFile::read(path);
+
+	CertificateFile file;
+	const auto err = file.read_all(data->as_rslice());
+	if (any(err))
+	{
+		throw Exception("Error parsing certificate file: ", ParseErrorSpec::to_string(err));
+	}
+
+	std::cout << path << " contains " << file.entries.count() << " item(s):" << std::endl << std::endl;
+
+	ConsolePrinter printer;
+
+	for (auto i = 0; i < file.entries.count(); ++i)
+	{
+		const auto entry = file.entries.get(i);
+		const auto type_name = FileEntryTypeSpec::to_string(entry->file_entry_type);
+
+		std::cout << "item #" << i << " is a " << type_name << std::endl;
+
+		printer.push_indent();
+
+		if (entry->file_entry_type == FileEntryType::certificate)
+		{
+			print_certificate(printer, entry->data);
+		}
+		else
+		{
+			// all other types are raw keys
+			printer.print("key-data", entry->data);
+		}
+
+		std::cout << std::endl;
+	}
+}
+
 void Actions::gen_x25519_key_pair(const std::string& private_key_path, const std::string& public_key_path)
 {
 	std::cout << "generating x25519 key pair" << std::endl;
@@ -35,6 +73,31 @@ void Actions::gen_ed25519_key_pair(const std::string& private_key_path, const st
 	write(private_key_path, FileEntryType::ed25519_private_key, kp.private_key.as_seq());
 
 	write(public_key_path, FileEntryType::ed25519_public_key, kp.public_key.as_seq());
+}
+
+void Actions::append(const std::string& file_path_1, const std::string& file_path_2, const std::string& output_file_path)
+{
+	const auto file_data_1 = SecureFile::read(file_path_1);
+	CertificateFile file_1;
+	read_or_throw(file_1, file_data_1->as_rslice(), file_path_1);
+
+	const auto file_data_2 = SecureFile::read(file_path_2);
+	CertificateFile file_2;
+	read_or_throw(file_2, file_data_2->as_rslice(), file_path_2);
+
+	CertificateFile output;
+	auto add_entry = [&output](const CertificateFileEntry& entry)
+	{
+		if (!output.entries.push(entry))
+		{
+			throw Exception("Number of total file entries exceeds capacity limit of ", output.entries.capacity());
+		}
+	};
+
+	file_1.entries.foreach(add_entry);
+	file_2.entries.foreach(add_entry);
+
+	SecureFile::write(output_file_path, output);
 }
 
 void Actions::create_certificate(const std::string& certificate_file_path, const std::string& public_key_path, const std::string& private_key_path)
@@ -75,31 +138,6 @@ void Actions::create_certificate(const std::string& certificate_file_path, const
 	);
 
 	SecureFile::write(certificate_file_path, file);
-}
-
-void Actions::append(const std::string& file_path_1, const std::string& file_path_2, const std::string& output_file_path)
-{
-	const auto file_data_1 = SecureFile::read(file_path_1);
-	CertificateFile file_1;
-	read_or_throw(file_1, file_data_1->as_rslice(), file_path_1);
-
-	const auto file_data_2 = SecureFile::read(file_path_2);
-	CertificateFile file_2;
-	read_or_throw(file_2, file_data_2->as_rslice(), file_path_2);
-
-	CertificateFile output;
-	auto add_entry = [&output](const CertificateFileEntry& entry)
-	{
-		if (!output.entries.push(entry))
-		{
-			throw Exception("Number of total file entries exceeds capacity limit of ", output.entries.capacity());
-		}
-	};
-
-	file_1.entries.foreach(add_entry);
-	file_2.entries.foreach(add_entry);
-
-	SecureFile::write(output_file_path, output);
 }
 
 void Actions::calc_signature(const seq32_t& data, const CertificateFileEntry& private_key_entry, DSAOutput& signature)
@@ -156,44 +194,6 @@ void Actions::write(const std::string& path, FileEntryType type, const seq32_t& 
 	SecureFile::write(path, file);
 }
 
-void Actions::print_contents(const std::string& path)
-{
-	const auto data = SecureFile::read(path);
-
-	CertificateFile file;
-	const auto err = file.read_all(data->as_rslice());
-	if (any(err))
-	{
-		throw Exception("Error parsing certificate file: ", ParseErrorSpec::to_string(err));
-	}
-
-	std::cout << path << " contains " << file.entries.count() << " item(s):" << std::endl << std::endl;
-
-	ConsolePrinter printer;
-
-	for (auto i = 0; i < file.entries.count(); ++i)
-	{
-		const auto entry = file.entries.get(i);
-		const auto type_name = FileEntryTypeSpec::to_string(entry->file_entry_type);
-
-		std::cout << "item #" << i << " is a " << type_name << std::endl;
-
-		printer.push_indent();
-
-		if (entry->file_entry_type == FileEntryType::certificate)
-		{
-			print_certificate(printer, entry->data);
-		}
-		else
-		{
-			// all other types are raw keys
-			printer.print("key-data", entry->data);
-		}
-
-		std::cout << std::endl;
-	}
-}
-
 void Actions::print_certificate(IMessagePrinter& printer, const seq32_t& data)
 {
 	CertificateEnvelope envelope;
@@ -215,4 +215,14 @@ void Actions::print_certificate(IMessagePrinter& printer, const seq32_t& data)
 	}
 
 	body.print("body", printer);
+}
+
+template <class T>
+static void Actions::read_or_throw(T& item, const ssp21::seq32_t& data, const std::string& path)
+{
+	const auto err = item.read_all(data);
+	if (any(err))
+	{
+		throw ssp21::Exception("Encountered error: ", ssp21::ParseErrorSpec::to_string(err), " parsing input file: ", path);
+	}
 }

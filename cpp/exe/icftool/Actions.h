@@ -33,14 +33,7 @@ private:
 	static void write(const std::string& path, ssp21::FileEntryType type, const ssp21::seq32_t& data);
 
 	template <class T>
-	static void read_or_throw(T& item, const ssp21::seq32_t& data, const std::string& path)
-	{
-		const auto err = item.read_all(data);
-		if (any(err))
-		{
-			throw ssp21::Exception("Encountered error: ", ssp21::ParseErrorSpec::to_string(err), " parsing input file: ", path);
-		}
-	}
+	static void read_or_throw(T& item, const ssp21::seq32_t& data, const std::string& path);
 };
 
 #endif
