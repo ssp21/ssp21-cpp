@@ -36,7 +36,6 @@ struct CertificateBody final
     CertificateBody();
 
     CertificateBody(
-        uint32_t serial_number,
         uint32_t valid_after,
         uint32_t valid_before,
         uint8_t signing_level,
@@ -46,9 +45,8 @@ struct CertificateBody final
 
     size_t size() const;
 
-    static const uint8_t min_size_bytes = 16;
+    static const uint8_t min_size_bytes = 12;
 
-    IntegerField<openpal::UInt32> serial_number;
     IntegerField<openpal::UInt32> valid_after;
     IntegerField<openpal::UInt32> valid_before;
     IntegerField<openpal::UInt8> signing_level;

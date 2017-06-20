@@ -25,14 +25,12 @@ CertificateBody::CertificateBody()
 {}
 
 CertificateBody::CertificateBody(
-    uint32_t serial_number,
     uint32_t valid_after,
     uint32_t valid_before,
     uint8_t signing_level,
     PublicKeyType public_key_type,
     const seq32_t& public_key
 ) :
-    serial_number(serial_number),
     valid_after(valid_after),
     valid_before(valid_before),
     signing_level(signing_level),
@@ -44,7 +42,6 @@ size_t CertificateBody::size() const
 {
     return MessageFormatter::sum_sizes(
         0,
-        serial_number,
         valid_after,
         valid_before,
         signing_level,
@@ -58,7 +55,6 @@ ParseError CertificateBody::read(seq32_t& input)
 {
     return MessageParser::read_fields(
         input,
-        serial_number,
         valid_after,
         valid_before,
         signing_level,
@@ -80,7 +76,6 @@ FormatError CertificateBody::write(wseq32_t& output) const
 {
     return MessageFormatter::write_fields(
         output,
-        serial_number,
         valid_after,
         valid_before,
         signing_level,
@@ -94,8 +89,6 @@ void CertificateBody::print(const char* name, IMessagePrinter& printer) const
 {
     MessagePrinting::print_fields(
         printer,
-        "serial_number",
-        serial_number,
         "valid_after",
         valid_after,
         "valid_before",

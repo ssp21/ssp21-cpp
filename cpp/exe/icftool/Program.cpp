@@ -32,6 +32,9 @@ void write(const std::string& path, FileEntryType type, const seq32_t& data);
 template <class T>
 void read_or_throw(T& item, const seq32_t& data, const std::string& path);
 
+// function related to collecting user input
+// uint32_t get_serial_number()
+
 Program::Program() :
     parser{{
         { flags::help, { "-h", "--help" }, "shows this help message", 0 },
@@ -154,8 +157,7 @@ void create_certificate(const std::string& certificate_file_path, const std::str
     const auto public_key_data = SecureFile::read(public_key_path);
     const auto public_key_entry = get_only_entry(public_key_data->as_rslice());
 
-    CertificateBody body( // TODO - interactively read these fields
-        0,
+    CertificateBody body( // TODO - interactively read these fields        
         0,
         0xFFFFFFFF,
         0,

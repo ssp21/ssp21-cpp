@@ -8,7 +8,6 @@ object CertificateBody extends Struct {
   override def name: String = "CertificateBody"
 
   override def fields: List[Field] = List(
-    U32("serial_number"),
     U32("valid_after"),
     U32("valid_before"),
     U8("signing_level"),
