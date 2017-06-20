@@ -182,8 +182,7 @@ void calc_signature(const seq32_t& data, const CertificateFileEntry& private_key
         if (ec) throw Exception("Unable to calculate certificate siganture", ec.message());
         break;
     default:
-        throw Exception("Can't produce a signature from: ", FileEntryTypeSpec::to_string(private_key_entry.file_entry_type));
-        break;
+        throw Exception("Can't produce a signature from: ", FileEntryTypeSpec::to_string(private_key_entry.file_entry_type));        
     }
 }
 
