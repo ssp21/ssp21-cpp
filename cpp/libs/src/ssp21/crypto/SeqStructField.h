@@ -19,6 +19,14 @@ namespace ssp21
 
         virtual T const* get(uint32_t i) const = 0;
 
+		template <class Action>
+		void foreach(const Action& action) const
+		{
+			for (uint32_t i = 0; i < count(); ++i)
+			{
+				action(*this->get(i));
+			}
+		}
     };
 
 
@@ -27,6 +35,11 @@ namespace ssp21
     {
 
     public:
+
+		uint32_t capacity() const 
+		{
+			return MAX_COUNT;
+		}
 
         size_t size() const
         {

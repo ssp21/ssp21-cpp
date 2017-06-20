@@ -23,10 +23,14 @@ void print_certificate(IMessagePrinter& printer, const seq32_t& data);
 void gen_x25519_key_pair(const std::string& private_key_path, const std::string& public_key_path);
 void gen_ed25519_key_pair(const std::string& private_key_path, const std::string& public_key_path);
 void create_certificate(const std::string& certificate_file, const std::string& private_key_path, const std::string& public_key_path);
+void append(const std::string& file1, const std::string& file2, const std::string& output_file);
 void calc_signature(const seq32_t& data, const CertificateFileEntry& private_key_entry, DSAOutput& signature);
 PublicKeyType get_public_key_type(const CertificateFileEntry& entry);
 CertificateFileEntry get_only_entry(const seq32_t& data);
 void write(const std::string& path, FileEntryType type, const seq32_t& data);
+
+template <class T>
+void read_or_throw(T& item, const seq32_t& data, const std::string& path);
 
 Program::Program() :
     parser{{
@@ -34,7 +38,8 @@ Program::Program() :
         { flags::show, { "-s", "--show" }, "show contents of one or more <icf files ....>", 0 },
         { flags::x25519, { "-x", "--x25519" }, "generate a x25519 key pair <private key file> <public key file>", 0 },
         { flags::ed25519, { "-d", "--ed25519" }, "generate a Ed25519 key pair <private key file> <public key file>", 0 },
-        { flags::cert, { "-c", "--cert" }, "interactively generate a <certificate file> for a <public key file> signed by a <private key file>", 0 }
+        { flags::cert, { "-c", "--cert" }, "interactively generate a <certificate file> for a <public key file> signed by a <private key file>", 0 },
+		{ flags::cert,{ "-a", "--append" }, "append all entries from one <icf file> and another <icf file> and write them to a destination <icf file>", 0 }
     }}
 {
     if (!ssp21::Crypto::initialize())
@@ -95,6 +100,17 @@ void Program::run(int argc, char*  argv[])
         create_certificate(args.pos[0], args.pos[1], args.pos[2]);
         return;
     }
+
+	if (args.has_option(flags::append))
+	{
+		if (args.pos.size() != 3)
+		{
+			throw std::exception("Required positional arguments: <input icf file> <input icf file> <output icf file>");
+		}
+
+		create_certificate(args.pos[0], args.pos[1], args.pos[2]);
+		return;
+	}
 
     std::cerr << "You must specify an option" << std::endl << std::endl;
     this->print_help();
@@ -169,6 +185,41 @@ void create_certificate(const std::string& certificate_file_path, const std::str
     );
 
     SecureFile::write(certificate_file_path, file);
+}
+
+void append(const std::string& file_path_1, const std::string& file_path_2, const std::string& output_file_path)
+{
+	const auto file_data_1 = SecureFile::read(file_path_1);
+	CertificateFile file_1;
+	read_or_throw(file_1, file_data_1->as_rslice(), file_path_1);
+
+	const auto file_data_2 = SecureFile::read(file_path_2);
+	CertificateFile file_2;
+	read_or_throw(file_2, file_data_2->as_rslice(), file_path_2);
+	
+	CertificateFile output;
+	auto add_entry = [&output](const CertificateFileEntry& entry) 
+	{
+		if (!output.entries.push(entry))
+		{
+			throw Exception("Number of total file entries exceeds capacity limit of ", output.entries.capacity());
+		}
+	};
+	
+	file_1.entries.foreach(add_entry);
+	file_2.entries.foreach(add_entry);
+	
+	SecureFile::write(output_file_path, output);
+}
+
+template <class T>
+void read_or_throw(T& item, const seq32_t& data, const std::string& path)
+{
+	const auto err = item.read_all(data);
+	if (any(err))
+	{
+		throw Exception("Encountered error: ", ParseErrorSpec::to_string(err), " parsing input file: ", path);
+	}
 }
 
 void calc_signature(const seq32_t& data, const CertificateFileEntry& private_key_entry, DSAOutput& signature)
