@@ -25,15 +25,22 @@ public:
 	static void create_certificate(const std::string& certificate_file, const std::string& private_key_path, const std::string& public_key_path);
 	
 private:
-
+	
 	static void print_certificate(ssp21::IMessagePrinter& printer, const ssp21::seq32_t& data);	
 	static void calc_signature(const ssp21::seq32_t& data, const ssp21::CertificateFileEntry& private_key_entry, ssp21::DSAOutput& signature);
 	static ssp21::PublicKeyType get_public_key_type(const ssp21::CertificateFileEntry& entry);
 	static ssp21::CertificateFileEntry get_only_entry(const ssp21::seq32_t& data);
-	static void write(const std::string& path, ssp21::FileEntryType type, const ssp21::seq32_t& data);
+	static void write(const std::string& path, ssp21::FileEntryType type, const ssp21::seq32_t& data);	
+	
+	// ----- getting inputs from the user -----
 
-	template <class T>
-	static void read_or_throw(T& item, const ssp21::seq32_t& data, const std::string& path);
+	struct Times
+	{
+		uint32_t valid_before;
+		uint32_t valid_after;
+	};
+
+	static Times get_validity_times_from_user();
 };
 
 #endif

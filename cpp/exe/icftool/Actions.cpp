@@ -11,7 +11,20 @@
 
 #include "ConsolePrinter.h"
 
+#include <chrono>
+
+using namespace std::chrono;
 using namespace ssp21;
+
+template <class T>
+void read_or_throw(T& item, const ssp21::seq32_t& data, const std::string& path)
+{
+	const auto err = item.read_all(data);
+	if (any(err))
+	{
+		throw ssp21::Exception("Encountered error: ", ssp21::ParseErrorSpec::to_string(err), " parsing input file: ", path);
+	}
+}
 
 void Actions::print_contents(const std::string& path)
 {
@@ -217,12 +230,15 @@ void Actions::print_certificate(IMessagePrinter& printer, const seq32_t& data)
 	body.print("body", printer);
 }
 
-template <class T>
-static void Actions::read_or_throw(T& item, const ssp21::seq32_t& data, const std::string& path)
+Actions::Times Actions::get_validity_times_from_user()
 {
-	const auto err = item.read_all(data);
-	if (any(err))
-	{
-		throw ssp21::Exception("Encountered error: ", ssp21::ParseErrorSpec::to_string(err), " parsing input file: ", path);
-	}
+	std::cout << "How many days (from now) should the certificate remain valid?" << std::endl;
+	uint32_t days = 0;
+	std::cin >> days;
+
+	const auto now_ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
+
+	
+	
+	return Times{ 0, 0 };
 }
