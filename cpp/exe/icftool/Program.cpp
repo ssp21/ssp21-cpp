@@ -21,7 +21,7 @@ Program::Program() :
 {
     if (!ssp21::SodiumBackend::initialize())
     {
-        throw std::exception("unable to initialize crypto backend");
+        throw ssp21::Exception("unable to initialize crypto backend");
     }
 }
 
@@ -49,7 +49,7 @@ void Program::run(int argc, char*  argv[])
     {
         if (args.pos.size() != 2)
         {
-            throw std::exception("Required positional arguments: <private key file> <public key file>");
+            throw ssp21::Exception("Required positional arguments: <private key file> <public key file>");
         }
 
         Actions::gen_x25519_key_pair(args.pos[0], args.pos[1]);
@@ -60,7 +60,7 @@ void Program::run(int argc, char*  argv[])
     {
         if (args.pos.size() != 2)
         {
-            throw std::exception("Required positional arguments: <private key file> <public key file>");
+            throw ssp21::Exception("Required positional arguments: <private key file> <public key file>");
         }
 
         Actions::gen_ed25519_key_pair(args.pos[0], args.pos[1]);
@@ -71,7 +71,7 @@ void Program::run(int argc, char*  argv[])
     {
         if (args.pos.size() != 3)
         {
-            throw std::exception("Required positional arguments: <certificate file> <public key file> <private key file>");
+            throw ssp21::Exception("Required positional arguments: <certificate file> <public key file> <private key file>");
         }
 
         Actions::create_certificate(args.pos[0], args.pos[1], args.pos[2]);
@@ -82,7 +82,7 @@ void Program::run(int argc, char*  argv[])
     {
         if (args.pos.size() != 3)
         {
-            throw std::exception("Required positional arguments: <input icf file> <input icf file> <output icf file>");
+            throw ssp21::Exception("Required positional arguments: <input icf file> <input icf file> <output icf file>");
         }
 
         Actions::append(args.pos[0], args.pos[1], args.pos[2]);
