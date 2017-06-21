@@ -36,11 +36,13 @@ private:
 
     struct Times
     {
-        uint32_t valid_before;
-        uint32_t valid_after;
+        uint64_t valid_before;
+        uint64_t valid_after;
     };
 
     static Times get_validity_times_from_user();
+
+	static uint8_t get_signing_level_from_user();
 };
 
 #endif
