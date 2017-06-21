@@ -8,6 +8,9 @@ namespace ssp21
 {
     namespace strings
     {
+
+        static void add_to_stream(std::ostream& stream) {}
+
         template <class T, class... Args>
         void add_to_stream(std::ostream& stream, const T& t, Args... args)
         {
@@ -22,8 +25,6 @@ namespace ssp21
             add_to_stream(oss, t, args...);
             return oss.str();
         }
-
-        static void add_to_stream(std::ostream& stream) {}
     }
 }
 
