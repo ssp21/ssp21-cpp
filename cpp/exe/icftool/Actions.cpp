@@ -247,10 +247,10 @@ Actions::Times Actions::get_validity_times_from_user()
 
 uint8_t Actions::get_signing_level_from_user()
 {
-	std::cout << "Enter the certificate signing level (0 == endpoint certificate):" << std::endl;
+	std::cout << "Enter the certificate signing level (0 == endpoint certificate, max == 6):" << std::endl;
 	uint32_t signing_level = 256;
 	
-	while (signing_level > 255)
+	while (signing_level > 6)
 	{
 		std::cin >> signing_level;		
 	}
