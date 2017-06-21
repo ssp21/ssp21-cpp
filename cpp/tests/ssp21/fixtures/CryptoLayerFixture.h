@@ -12,7 +12,7 @@
 #include "../mocks/MockLogHandler.h"
 #include "../mocks/MockLowerLayer.h"
 #include "../mocks/MockUpperLayer.h"
-#include "../mocks/MockCryptoBackend.h"
+#include "../mocks/CryptoFixture.h"
 #include "../mocks/HexMessageBuilders.h"
 
 namespace ssp21

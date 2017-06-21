@@ -3,7 +3,7 @@
 
 #include "Actions.h"
 
-#include "ssp21/crypto/Crypto.h"
+#include "sodium/SodiumBackend.h"
 
 #include <iostream>
 
@@ -19,7 +19,7 @@ Program::Program() :
         { flags::cert, { "-a", "--append" }, "append all entries from one <icf file> and another <icf file> and write them to a destination <icf file>", 0 }
     }}
 {
-    if (!ssp21::Crypto::initialize())
+    if (!ssp21::SodiumBackend::initialize())
     {
         throw std::exception("unable to initialize crypto backend");
     }

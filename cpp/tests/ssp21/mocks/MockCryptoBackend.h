@@ -1,90 +1,63 @@
 #ifndef SSP21_MOCKCRYPTOBACKEND_H
 #define SSP21_MOCKCRYPTOBACKEND_H
 
-#include "openpal/util/Uncopyable.h"
-#include "../gen/CryptoAction.h"
+#include "ssp21/crypto/ICryptoBackend.h"
 
-#include <deque>
-#include <sstream>
-#include <assert.h>
+#include <memory>
 
 namespace ssp21
 {
-    class CryptoFixture
+    class CryptoFixture;
+
+    class MockCryptoBackend final : public ICryptoBackend
     {
+        static CryptoFixture* fixture;
+
+        static std::shared_ptr<MockCryptoBackend> instance;
+
+        friend class CryptoFixture;
 
     public:
 
-        static CryptoFixture* instance;
+        static bool initialize();
 
-        uint8_t fill_byte = 0xFF;
-        bool fail_dh_x25519 = false;
-        std::deque<CryptoAction> actions;
+        virtual void zero_memory(const wseq32_t& data) override;
 
-        CryptoFixture()
-        {
-            assert(instance == nullptr);
-            instance = this;
-        }
+        virtual bool secure_equals(const seq32_t& lhs, const seq32_t& rhs) override;
 
-        ~CryptoFixture()
-        {
-            assert(instance != nullptr);
-            instance = nullptr;
-        }
+        virtual void hash_sha256(
+            std::initializer_list<seq32_t> data,
+            SecureBuffer& output
+        ) override;
 
-        void set_fail_dh_x25519(bool fail)
-        {
-            fail_dh_x25519 = fail;
-        }
+        virtual void hmac_sha256(
+            const seq32_t& key,
+            std::initializer_list<seq32_t> data,
+            SecureBuffer& output
+        ) override;
 
-        bool empty_actions() const
-        {
-            return actions.empty();
-        }
+        virtual void gen_keypair_x25519(KeyPair& pair) override;
 
-        void expect(const std::initializer_list<CryptoAction>& expected)
-        {
-            int count = 0;
+        virtual void dh_x25519(
+            const PrivateKey& priv_key,
+            const seq32_t& pub_key,
+            DHOutput& output,
+            std::error_code& ec
+        ) override;
 
-            for (auto& action : expected)
-            {
-                if (actions.empty())
-                {
-                    std::ostringstream oss;
-                    oss << "no more crypto actions while waiting for: " << CryptoActionSpec::to_string(action) << " after " << count << " actions";
-                    throw std::logic_error(oss.str());
-                }
+        virtual void hkdf_sha256(
+            const seq32_t& salt,
+            std::initializer_list<seq32_t> input_key_material,
+            SymmetricKey& key1,
+            SymmetricKey& key2
+        ) override;
 
-                if(actions.front() != action)
-                {
-                    std::ostringstream oss;
-                    oss << "expected " << CryptoActionSpec::to_string(action) << " but next action was " << CryptoActionSpec::to_string(actions.front());
-                    oss << " after " << count << " actions";
-                    throw std::logic_error(oss.str());
-                }
+        virtual void gen_keypair_ed25519(KeyPair& pair) override;
 
-                actions.pop_front();
+        virtual void sign_ed25519(const seq32_t& input, const seq32_t& private_key, DSAOutput& output, std::error_code& ec) override;
 
-                ++count;
-            }
+        virtual bool verify_ed25519(const seq32_t& message, const seq32_t& signature, const seq32_t& public_key) override;
 
-            if (!actions.empty())
-            {
-                std::ostringstream oss;
-                oss << "unexpected additional actions: " << actions.size() << std::endl;
-                for (auto& action : actions)
-                {
-                    oss << CryptoActionSpec::to_string(action) << std::endl;
-                }
-                throw std::logic_error(oss.str());
-            }
-        }
-
-        void expect_empty()
-        {
-            this->expect({});
-        }
     };
 
 }

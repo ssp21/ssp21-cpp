@@ -2,12 +2,13 @@
 #define CATCH_CONFIG_RUNNER
 #include "catch.hpp"
 
-#include "ssp21/crypto/Crypto.h"
+#include "sodium\SodiumBackend.h"
+
 
 int main(int argc, char*  argv[])
 {
     // global setup...
-    if (!ssp21::Crypto::initialize())
+    if (!ssp21::SodiumBackend::initialize())
     {
         std::cerr << "Error initializing crypto backend" << std::endl;
         return -1;

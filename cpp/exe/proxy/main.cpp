@@ -5,8 +5,7 @@
 
 #include <ssp21/util/ConsolePrettyPrinter.h>
 #include <ssp21/stack/LogLevels.h>
-#include <ssp21/crypto/Crypto.h>
-
+#include <sodium/SodiumBackend.h>
 #include <openpal/logging/LogMacros.h>
 
 #include "ConfigReader.h"
@@ -21,7 +20,7 @@ void run(const vector<unique_ptr<ProxyConfig>>& config);
 
 int main(int argc, char*  argv[])
 {
-    if (!ssp21::Crypto::initialize())
+    if (!ssp21::SodiumBackend::initialize())
     {
         cerr << "Unable to initialze the crypto backend" << endl;
         return -1;

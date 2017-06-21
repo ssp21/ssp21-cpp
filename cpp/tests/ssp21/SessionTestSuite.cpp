@@ -7,7 +7,7 @@
 
 #include "testlib/HexConversions.h"
 
-#include "mocks/MockCryptoBackend.h"
+#include "mocks/CryptoFixture.h"
 
 #include "mocks/HexMessageBuilders.h"
 #include "mocks/HexSequences.h"

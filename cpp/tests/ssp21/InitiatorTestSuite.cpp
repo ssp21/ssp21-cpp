@@ -22,7 +22,6 @@ void test_open_and_full_handshake(InitiatorFixture& fix);
 TEST_CASE(SUITE("construction"))
 {
     InitiatorFixture fix;
-    REQUIRE(CryptoFixture::instance != nullptr);
 }
 
 TEST_CASE(SUITE("transmits REQUEST_HANDSHAKE_BEGIN when opened"))

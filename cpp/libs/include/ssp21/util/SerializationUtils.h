@@ -12,7 +12,7 @@ namespace ssp21
 {
     namespace serialize
     {
-	template <class BufferType, class T>
+        template <class BufferType, class T>
         std::unique_ptr<BufferType> to_any_buffer(const T& value)
         {
             auto buffer = std::make_unique<BufferType>(value.size());
@@ -36,7 +36,7 @@ namespace ssp21
         std::unique_ptr<SecureDynamicBuffer> to_secure_buffer(const T& value)
         {
             return to_any_buffer<SecureDynamicBuffer>(value);
-        }        
+        }
     }
 }
 
