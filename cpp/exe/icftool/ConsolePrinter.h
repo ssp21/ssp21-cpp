@@ -38,7 +38,7 @@ public:
         std::cout << message << std::endl;
     }
 
-    virtual void print(const char* name, uint32_t value) override
+    virtual void print(const char* name, uint64_t value) override
     {
         this->write_line_prefix();
         std::cout << name << ": " << value << std::endl;

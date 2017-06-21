@@ -75,6 +75,16 @@ object U32FieldGenerator extends FieldGenerator with PassByValue {
   def defaultValue: Option[String] = None
 }
 
+object U64FieldGenerator extends FieldGenerator with PassByValue {
+  override def includes = Set(Includes.cstdint, Includes.integerField, Includes.bigEndian)
+
+  override def cppType: String = "IntegerField<openpal::UInt64>"
+
+  override def paramType: String = "uint64_t"
+
+  def defaultValue: Option[String] = None
+}
+
 case class EnumFieldGenerator(enum: EnumModel) extends FieldGenerator with PassByValue {
 
   override def includes = Set(Includes.enum(enum.name), Includes.enumField)

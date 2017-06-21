@@ -22,7 +22,7 @@ namespace ssp21
         LogMessagePrinter(const openpal::Logger& logger, openpal::LogLevel level, uint32_t max_hex_bytes_per_line = 20);
 
         virtual void print(const char* message) override;
-        virtual void print(const char* name, uint32_t value) override;
+        virtual void print(const char* name, uint64_t value) override;
         virtual void print(const char* name, const char* value) override;
         virtual void print(const char* name, const seq32_t& data) override;
 

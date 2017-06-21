@@ -17,7 +17,7 @@ namespace ssp21
     public:
 
         virtual void print(const char* message) = 0;
-        virtual void print(const char* name, uint32_t value) = 0;
+        virtual void print(const char* name, uint64_t value) = 0;
         virtual void print(const char* name, const char* value) = 0;
         virtual void print(const char* name, const seq32_t& data) = 0;
     };

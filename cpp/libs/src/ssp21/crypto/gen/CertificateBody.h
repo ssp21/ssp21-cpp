@@ -36,8 +36,8 @@ struct CertificateBody final
     CertificateBody();
 
     CertificateBody(
-        uint32_t valid_after,
-        uint32_t valid_before,
+        uint64_t valid_after,
+        uint64_t valid_before,
         uint8_t signing_level,
         PublicKeyType public_key_type,
         const seq32_t& public_key
@@ -45,10 +45,10 @@ struct CertificateBody final
 
     size_t size() const;
 
-    static const uint8_t min_size_bytes = 12;
+    static const uint8_t min_size_bytes = 20;
 
-    IntegerField<openpal::UInt32> valid_after;
-    IntegerField<openpal::UInt32> valid_before;
+    IntegerField<openpal::UInt64> valid_after;
+    IntegerField<openpal::UInt64> valid_before;
     IntegerField<openpal::UInt8> signing_level;
     EnumField<PublicKeyTypeSpec> public_key_type;
     SeqByteField public_key;

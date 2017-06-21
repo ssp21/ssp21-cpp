@@ -54,6 +54,14 @@ sealed case class U32(name: String) extends Field {
   def fixedSize: Option[Int] = Some(4)
 }
 
+sealed case class U64(name: String) extends Field {
+  def cpp = U64FieldGenerator
+
+  def minSizeBytes: Int = 8
+
+  def fixedSize: Option[Int] = Some(8)
+}
+
 sealed case class Enum(model: EnumModel) extends Field {
   def name: String = model.underscoredName
 

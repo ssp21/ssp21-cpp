@@ -25,8 +25,8 @@ CertificateBody::CertificateBody()
 {}
 
 CertificateBody::CertificateBody(
-    uint32_t valid_after,
-    uint32_t valid_before,
+    uint64_t valid_after,
+    uint64_t valid_before,
     uint8_t signing_level,
     PublicKeyType public_key_type,
     const seq32_t& public_key

@@ -4,6 +4,8 @@
 #include "openpal/logging/LogMacros.h"
 #include "openpal/logging/HexLogging.h"
 
+#include <inttypes.h>
+
 using namespace openpal;
 
 namespace ssp21
@@ -22,10 +24,10 @@ namespace ssp21
         logger_.log(level_, LOCATION, message);
     }
 
-    void LogMessagePrinter::print(const char* name, uint32_t value)
+    void LogMessagePrinter::print(const char* name, uint64_t value)
     {
         char message[max_log_entry_size];
-        SAFE_STRING_FORMAT(message, max_log_entry_size, "%s: %u", name, value);
+        SAFE_STRING_FORMAT(message, max_log_entry_size, "%s: %" PRIu64, name, value);
         logger_.log(level_, LOCATION, message);
     }
 
