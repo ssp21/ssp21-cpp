@@ -7,29 +7,10 @@
 
 #include "ssp21/crypto/VLength.h"
 
+#include "ssp21/util/ICollection.h"
+
 namespace ssp21
-{
-    template <class T>
-    class ICollection
-    {
-
-    public:
-
-        virtual uint32_t count() const = 0;
-
-        virtual T const* get(uint32_t i) const = 0;
-
-        template <class Action>
-        void foreach(const Action& action) const
-        {
-            for (uint32_t i = 0; i < count(); ++i)
-            {
-                action(*this->get(i));
-            }
-        }
-    };
-
-
+{   
     template <class StructType, uint32_t MAX_COUNT>
     class SeqStructField : public ICollection<StructType>
     {
