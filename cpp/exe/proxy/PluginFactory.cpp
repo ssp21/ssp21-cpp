@@ -13,8 +13,7 @@ plugin_factory_t PluginFactory::get(const ProxyConfig& config)
                    const Logger & logger,
                    const std::shared_ptr<Executor>& exe) -> std::shared_ptr<IStack>
         {
-            InitiatorConfig config; // TODO - configure based on optional settings
-            SessionConfig session_config;
+            InitiatorConfig config; // TODO - configure based on optional settings            
 
             return Factory::initiator(
                 Addresses(cfg.remote_address, cfg.local_address),
@@ -35,8 +34,7 @@ plugin_factory_t PluginFactory::get(const ProxyConfig& config)
                    const Logger & logger,
                    const std::shared_ptr<Executor>& exe) -> std::shared_ptr<IStack>
         {
-            ResponderConfig config; // TODO - configure based on optional settings
-            SessionConfig session_config;
+            ResponderConfig config; // TODO - configure based on optional settings            
 
             return Factory::responder(
                 Addresses(cfg.remote_address, cfg.local_address),
