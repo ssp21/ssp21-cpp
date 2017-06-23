@@ -20,9 +20,11 @@ namespace ssp21
     {
     public:
 
-        PresharedPublicKeyCertificateMode(
-            const std::shared_ptr<const PublicKey>& remote_static_public_key
-        );
+		PresharedPublicKeyCertificateMode(
+			const std::shared_ptr<const PublicKey>& remote_static_public_key
+		) :
+			remote_static_public_key(remote_static_public_key)
+		{}
 
         virtual CertificateMode mode() const override
         {
