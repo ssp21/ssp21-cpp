@@ -26,7 +26,7 @@ namespace ssp21
     {
     public:
 
-        virtual ~ICertificateMode() = 0;
+		virtual ~ICertificateMode() {}
 
         /**
         * The required mode
