@@ -6,7 +6,8 @@
 #include "ssp21/crypto/Handshake.h"
 #include "ssp21/crypto/Reassembler.h"
 #include "ssp21/crypto/TxState.h"
-#include "ssp21/crypto/Keys.h"
+#include "ssp21/crypto/LocalKeys.h"
+#include "ssp21/crypto/ICertificateMode.h"
 #include "ssp21/crypto/CryptoLayerConfig.h"
 
 #include "ssp21/crypto/gen/RequestHandshakeBegin.h"
@@ -39,7 +40,8 @@ namespace ssp21
             const openpal::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
             const std::shared_ptr<openpal::IExecutor>& executor,
-            const Keys& keys
+            const LocalKeys& keys,
+            const std::shared_ptr<ICertificateMode>& certificate_mode
         );
 
         void bind(ILowerLayer& lower, IUpperLayer& upper)
@@ -106,8 +108,9 @@ namespace ssp21
 
         const std::shared_ptr<IFrameWriter> frame_writer;
         const std::shared_ptr<openpal::IExecutor> executor;
+        const std::shared_ptr<ICertificateMode> certificate_mode;
 
-        const Keys keys;
+        const LocalKeys keys;
 
         Handshake handshake;
         Session session;

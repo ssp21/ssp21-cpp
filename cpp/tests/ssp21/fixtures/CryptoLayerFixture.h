@@ -39,17 +39,24 @@ namespace ssp21
 
     protected:
 
-        static Keys get_keys()
+        static LocalKeys get_keys()
         {
             const auto local_pub = std::make_shared<PublicKey>();
-            const auto remote_pub = std::make_shared<PublicKey>();
             const auto local_priv = std::make_shared<PrivateKey>();
 
             init_key(*local_pub);
-            init_key(*remote_pub);
             init_key(*local_priv);
 
-            return Keys(local_pub, remote_pub, local_priv);
+            return LocalKeys(local_pub, local_priv);
+        }
+
+        static std::shared_ptr<ICertificateMode> get_certificate_handler()
+        {
+            const auto local_pub = std::make_shared<PublicKey>();
+
+            init_key(*local_pub);
+
+            return ICertificateMode::preshared_key(local_pub);
         }
 
         static void init_key(BufferBase& buffer)
@@ -74,7 +81,7 @@ namespace ssp21
             uint16_t max_message_size = consts::link::max_config_payload_size
         ) :
             CryptoLayerFixture(config.session, max_message_size),
-            responder(config, this->log.logger, get_frame_writer(this->log.logger, max_message_size), this->exe, get_keys())
+            responder(config, this->log.logger, get_frame_writer(this->log.logger, max_message_size), this->exe, get_keys(), get_certificate_handler())
         {
             lower.bind_upper(responder);
             upper.bind_lower(responder);
@@ -97,7 +104,7 @@ namespace ssp21
             uint16_t max_message_size = consts::link::max_config_payload_size
         ) :
             CryptoLayerFixture(config.session, max_message_size),
-            initiator(config, this->log.logger, get_frame_writer(this->log.logger, max_message_size), this->exe, get_keys())
+            initiator(config, this->log.logger, get_frame_writer(this->log.logger, max_message_size), this->exe, get_keys(), get_certificate_handler())
         {
             lower.bind_upper(initiator);
             upper.bind_lower(initiator);

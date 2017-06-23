@@ -11,9 +11,10 @@ namespace ssp21
         const ResponderConfig& config,
         openpal::Logger logger,
         const std::shared_ptr<openpal::IExecutor>& executor,
-        const Keys& keys)
+        const LocalKeys& keys,
+        const std::shared_ptr<ICertificateMode>& certificate_mode)
     {
-        return std::make_shared<ResponderStack>(addresses, config, logger, executor, keys);
+        return std::make_shared<ResponderStack>(addresses, config, logger, executor, keys, certificate_mode);
     }
 
     std::shared_ptr<IStack> Factory::initiator(
@@ -21,9 +22,10 @@ namespace ssp21
         const InitiatorConfig& config,
         openpal::Logger logger,
         const std::shared_ptr<openpal::IExecutor>& executor,
-        const Keys& keys)
+        const LocalKeys& keys,
+        const std::shared_ptr<ICertificateMode>& certificate_mode)
     {
-        return std::make_shared<InitiatorStack>(addresses, config, logger, executor, keys);
+        return std::make_shared<InitiatorStack>(addresses, config, logger, executor, keys, certificate_mode);
     }
 
 }

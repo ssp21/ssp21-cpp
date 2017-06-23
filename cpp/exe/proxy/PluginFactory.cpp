@@ -21,11 +21,11 @@ plugin_factory_t PluginFactory::get(const ProxyConfig& config)
                 config,
                 logger,
                 exe,
-                Keys(
+                LocalKeys(
                     cfg.local_public_key,
-                    cfg.remote_public_key,
                     cfg.local_private_key
-                )
+                ),
+                ICertificateMode::preshared_key(cfg.remote_public_key)
             );
         };
     }
@@ -43,11 +43,11 @@ plugin_factory_t PluginFactory::get(const ProxyConfig& config)
                 config,
                 logger,
                 exe,
-                Keys(
+                LocalKeys(
                     cfg.local_public_key,
-                    cfg.remote_public_key,
                     cfg.local_private_key
-                )
+                ),
+                ICertificateMode::preshared_key(cfg.remote_public_key)
             );
         };
     }

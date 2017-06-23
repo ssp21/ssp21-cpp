@@ -10,7 +10,7 @@
 #include "ssp21/util/ICollection.h"
 
 namespace ssp21
-{   
+{
     template <class StructType, uint32_t MAX_COUNT>
     class SeqStructField : public ICollection<StructType>
     {

@@ -85,7 +85,8 @@ namespace ssp21
                             InitiatorConfig(),
                             ilog.logger,
                             exe,
-                            Keys(initiator_pub, responder_pub, initiator_priv)
+                            LocalKeys(initiator_pub, initiator_priv),
+                            ICertificateMode::preshared_key(responder_pub)
                         );
 
             responder = Factory::responder(
@@ -93,7 +94,8 @@ namespace ssp21
                             ResponderConfig(),
                             rlog.logger,
                             exe,
-                            Keys(responder_pub, initiator_pub, responder_priv)
+                            LocalKeys(responder_pub, responder_priv),
+                            ICertificateMode::preshared_key(initiator_pub)
                         );
 
             // wire the lower layers together

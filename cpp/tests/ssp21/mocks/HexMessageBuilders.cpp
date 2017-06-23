@@ -79,7 +79,7 @@ namespace ssp21
                 ),
                 certificate_mode,
                 pub_key,
-				seq32_t::empty()
+                seq32_t::empty()
             );
 
             return write_message(msg);

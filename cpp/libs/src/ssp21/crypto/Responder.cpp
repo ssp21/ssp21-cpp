@@ -17,7 +17,8 @@ namespace ssp21
         const openpal::Logger& logger,
         const std::shared_ptr<IFrameWriter>& frame_writer,
         const std::shared_ptr<openpal::IExecutor>& executor,
-        const Keys& keys) :
+        const LocalKeys& keys,
+        const std::shared_ptr<ICertificateMode>& certificate_mode) :
         CryptoLayer(
             HandshakeMode::Responder,
             config.config,
@@ -25,7 +26,8 @@ namespace ssp21
             logger,
             frame_writer,
             executor,
-            keys
+            keys,
+            certificate_mode
         ),
         handshake_state(ResponderHandshake::Idle::get())
     {}
@@ -40,8 +42,10 @@ namespace ssp21
         }
     }
 
-    HandshakeError Responder::configure_feature_support(const RequestHandshakeBegin& msg)
+    HandshakeError Responder::verify_handshake_begin(const RequestHandshakeBegin& msg, seq32_t& public_key_out)
     {
+        // TODO - carefully consider the order of operations here and add it to the spec.
+
         if (msg.version != consts::crypto::protocol_version)
         {
             return HandshakeError::unsupported_version;
@@ -53,17 +57,13 @@ namespace ssp21
             return HandshakeError::bad_message_format;
         }
 
-        if (msg.certificate_mode != CertificateMode::preshared_keys)
+        const auto err = this->certificate_mode->validate(msg.certificate_mode, msg.certificate_data, public_key_out);
+        if (any(err))
         {
-            return HandshakeError::unsupported_certificate_mode;
+            return err;
         }
 
-        if (msg.certificate_data.is_not_empty())
-        {
-            return HandshakeError::bad_message_format;
-        }
-
-        // last thing we should do is configure the requested algorithms
+        // last thing we should do is try configure the requested algorithms
         return handshake.set_algorithms(msg.spec);
     }
 

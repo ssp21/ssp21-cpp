@@ -15,7 +15,8 @@ namespace ssp21
 
     Responder::IHandshakeState* ResponderHandshake::Idle::on_message(Responder& ctx, const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
     {
-        auto err = ctx.configure_feature_support(msg);
+        seq32_t remote_public_static_key;
+        const auto err = ctx.verify_handshake_begin(msg, remote_public_static_key);
 
         if (any(err))
         {
@@ -44,7 +45,7 @@ namespace ssp21
             res.written,
             *ctx.keys.local_static_private_key,
             msg.ephemeral_public_key,
-            ctx.keys.remote_static_public_key->as_seq(),
+            remote_public_static_key,
             ec
         );
 

@@ -26,12 +26,7 @@ namespace ssp21
     {
     public:
 
-		virtual ~ICertificateMode() {}
-
-        /**
-        * The required mode
-        */
-        virtual CertificateMode mode() const = 0;
+        virtual ~ICertificateMode() {}
 
         /**
         * The certificate data to present to the other party during the handshake
@@ -39,10 +34,22 @@ namespace ssp21
         virtual seq32_t certificate_data() const = 0;
 
         /**
+        * Initiator side mode query
+        */
+        virtual CertificateMode mode() const = 0;
+
+        /**
         *  Given a particular certificate mode, validate the certificate data payload, and return a seq_t pointing to the validated public key
         */
-        virtual HandshakeError validate(const seq32_t& certificate_data, seq32_t& public_key_output) = 0;
+        virtual HandshakeError validate(CertificateMode mode, const seq32_t& certificate_data, seq32_t& public_key_output) = 0;
 
+        /**
+        *  Given a particular certificate mode, validate the certificate data payload, and return a seq_t pointing to the validated public key
+        */
+        HandshakeError validate(const seq32_t& certificate_data, seq32_t& public_key_output)
+        {
+            return this->validate(this->mode(), certificate_data, public_key_output);
+        }
 
         // ---- factory functions for various implementations ----
 

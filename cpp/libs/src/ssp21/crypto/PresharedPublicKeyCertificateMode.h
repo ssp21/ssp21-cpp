@@ -20,30 +20,31 @@ namespace ssp21
     {
     public:
 
-		PresharedPublicKeyCertificateMode(
-			const std::shared_ptr<const PublicKey>& remote_static_public_key
-		) :
-			remote_static_public_key(remote_static_public_key)
-		{}
-
-        virtual CertificateMode mode() const override
-        {
-            return CertificateMode::preshared_keys;
-        }
+        PresharedPublicKeyCertificateMode(
+            const std::shared_ptr<const PublicKey>& remote_static_public_key
+        ) :
+            remote_static_public_key(remote_static_public_key)
+        {}
 
         virtual seq32_t certificate_data() const override
         {
             return seq32_t::empty();
         }
 
-		virtual HandshakeError validate(const seq32_t& certificate_data, seq32_t& public_key_output) override
-		{
-			if (certificate_data.is_not_empty()) return HandshakeError::bad_certificate_format;
+        virtual CertificateMode mode() const override
+        {
+            return CertificateMode::preshared_keys;
+        }
 
-			public_key_output = this->remote_static_public_key->as_seq();
+        virtual HandshakeError validate(CertificateMode mode, const seq32_t& certificate_data, seq32_t& public_key_output) override
+        {
+            if (mode != CertificateMode::preshared_keys) return HandshakeError::unsupported_certificate_mode;
+            if (certificate_data.is_not_empty()) return HandshakeError::bad_message_format;
 
-			return HandshakeError::none;
-		}
+            public_key_output = this->remote_static_public_key->as_seq();
+
+            return HandshakeError::none;
+        }
 
 
     private:

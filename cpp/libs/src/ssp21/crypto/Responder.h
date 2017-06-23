@@ -39,7 +39,8 @@ namespace ssp21
             const openpal::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
             const std::shared_ptr<openpal::IExecutor>& executor,
-            const Keys& keys
+            const LocalKeys& keys,
+            const std::shared_ptr<ICertificateMode>& certificate_mode
         );
 
         inline ResponderStatistics get_statistics() const
@@ -62,7 +63,7 @@ namespace ssp21
 
         void reply_with_handshake_error(HandshakeError err);
 
-        HandshakeError configure_feature_support(const RequestHandshakeBegin& msg);
+        HandshakeError verify_handshake_begin(const RequestHandshakeBegin& msg, seq32_t& public_key_out);
 
 
         // ---- implement CryptoLayer -----

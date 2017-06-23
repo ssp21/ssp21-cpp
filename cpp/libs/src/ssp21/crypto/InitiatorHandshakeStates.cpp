@@ -48,7 +48,7 @@ namespace ssp21
             ),
             CertificateMode::preshared_keys,
             public_key,
-			seq32_t::empty()
+            seq32_t::empty()
         );
 
         const auto result = ctx.frame_writer->write(request);
@@ -76,13 +76,22 @@ namespace ssp21
     {
         ctx.response_and_retry_timer.cancel();
 
+        seq32_t remote_public_key;
+        const auto err = ctx.certificate_mode->validate(msg.certificate_data, remote_public_key);
+        if (any(err))
+        {
+            FORMAT_LOG_BLOCK(ctx.logger, levels::error, "error validating certificate data: %s", HandshakeErrorSpec::to_string(err));
+            ctx.start_retry_timer();
+            return WaitForRetry::get();
+        }
+
         std::error_code ec;
 
         ctx.handshake.derive_authentication_key(
             msg_bytes,
             *ctx.keys.local_static_private_key,
             msg.ephemeral_public_key,
-            ctx.keys.remote_static_public_key->as_seq(),
+            remote_public_key,
             ec
         );
 

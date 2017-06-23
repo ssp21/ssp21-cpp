@@ -86,7 +86,7 @@ TEST_CASE(SUITE("successfully parses message"))
 TEST_CASE(SUITE("pretty prints message"))
 {
 
-    HexSeq public_key("CA FE");   
+    HexSeq public_key("CA FE");
 
     RequestHandshakeBegin msg(
         7,
@@ -104,8 +104,8 @@ TEST_CASE(SUITE("pretty prints message"))
         ),
         CertificateMode::preshared_keys,
         public_key,
-		seq32_t::empty()
-    );    
+        seq32_t::empty()
+    );
 
 
     MockLogHandler log("log");
@@ -126,7 +126,7 @@ TEST_CASE(SUITE("pretty prints message"))
         "certificate_mode: preshared_keys",
         "ephemeral_public_key (length = 2)",
         "CA:FE",
-		"certificate_data (length = 0)"       
+        "certificate_data (length = 0)"
     );
 
 }
