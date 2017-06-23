@@ -17,13 +17,13 @@ namespace ssp21
         const std::shared_ptr<IFrameWriter>& frame_writer,
         const std::shared_ptr<openpal::IExecutor>& executor,
         const LocalKeys& keys,
-        const std::shared_ptr<ICertificateMode>& certificate_mode
+        const std::shared_ptr<ICertificateHandler>& certificate_handler
     ) :
         logger(logger),
         frame_writer(frame_writer),
         executor(executor),
         keys(keys),
-        certificate_mode(certificate_mode),
+        certificate_handler(certificate_handler),
         handshake(type),
         session(frame_writer, session_config),
         reassembler(context_config.max_reassembly_size)

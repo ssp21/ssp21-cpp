@@ -1,12 +1,10 @@
 
-#ifndef SSP21_PRESHAREDPUBLICKEYCERTIFICATEMODE_H
-#define SSP21_PRESHAREDPUBLICKEYCERTIFICATEMODE_H
+#ifndef SSP21_PRESHAREDKEYCERTIFICATEHANDLER_H
+#define SSP21_PRESHAREDKEYCERTIFICATEHANDLER_H
 
-#include "ssp21/crypto/ICertificateMode.h"
+#include "ssp21/crypto/ICertificateHandler.h"
 
 #include "ssp21/crypto/BufferTypes.h"
-
-
 
 #include <memory>
 
@@ -16,11 +14,11 @@ namespace ssp21
     /**
     * A public key validator that is configured with a pre-shared public key for other party
     */
-    class PresharedPublicKeyCertificateMode final : public ICertificateMode
+    class PresharedKeyCertificateHandler final : public ICertificateHandler
     {
     public:
 
-        PresharedPublicKeyCertificateMode(
+        PresharedKeyCertificateHandler(
             const std::shared_ptr<const PublicKey>& remote_static_public_key
         ) :
             remote_static_public_key(remote_static_public_key)

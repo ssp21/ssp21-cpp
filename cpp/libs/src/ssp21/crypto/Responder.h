@@ -40,7 +40,7 @@ namespace ssp21
             const std::shared_ptr<IFrameWriter>& frame_writer,
             const std::shared_ptr<openpal::IExecutor>& executor,
             const LocalKeys& keys,
-            const std::shared_ptr<ICertificateMode>& certificate_mode
+            const std::shared_ptr<ICertificateHandler>& certificate_handler
         );
 
         inline ResponderStatistics get_statistics() const

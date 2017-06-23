@@ -7,7 +7,7 @@
 #include "ssp21/crypto/CryptoLayerConfig.h"
 #include "ssp21/link/Addresses.h"
 #include "ssp21/crypto/LocalKeys.h"
-#include "ssp21/crypto/ICertificateMode.h"
+#include "ssp21/crypto/ICertificateHandler.h"
 
 #include "openpal/logging/Logger.h"
 #include "openpal/executor/IExecutor.h"
@@ -26,7 +26,7 @@ namespace ssp21
             openpal::Logger logger,
             const std::shared_ptr<openpal::IExecutor>& executor,
             const LocalKeys& keys,
-            const std::shared_ptr<ICertificateMode>& certificate_mode);
+            const std::shared_ptr<ICertificateHandler>& certificate_handler);
 
         static std::shared_ptr<IStack> initiator(
             Addresses addresses,
@@ -34,7 +34,7 @@ namespace ssp21
             openpal::Logger logger,
             const std::shared_ptr<openpal::IExecutor>& executor,
             const LocalKeys& keys,
-            const std::shared_ptr<ICertificateMode>& certificate_mode);
+            const std::shared_ptr<ICertificateHandler>& certificate_handler);
 
     };
 }

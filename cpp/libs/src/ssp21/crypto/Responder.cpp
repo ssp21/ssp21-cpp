@@ -18,7 +18,7 @@ namespace ssp21
         const std::shared_ptr<IFrameWriter>& frame_writer,
         const std::shared_ptr<openpal::IExecutor>& executor,
         const LocalKeys& keys,
-        const std::shared_ptr<ICertificateMode>& certificate_mode) :
+        const std::shared_ptr<ICertificateHandler>& certificate_handler) :
         CryptoLayer(
             HandshakeMode::Responder,
             config.config,
@@ -27,7 +27,7 @@ namespace ssp21
             frame_writer,
             executor,
             keys,
-            certificate_mode
+            certificate_handler
         ),
         handshake_state(ResponderHandshake::Idle::get())
     {}
@@ -57,7 +57,7 @@ namespace ssp21
             return HandshakeError::bad_message_format;
         }
 
-        const auto err = this->certificate_mode->validate(msg.certificate_mode, msg.certificate_data, public_key_out);
+        const auto err = this->certificate_handler->validate(msg.certificate_mode, msg.certificate_data, public_key_out);
         if (any(err))
         {
             return err;

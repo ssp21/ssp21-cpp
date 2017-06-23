@@ -77,7 +77,7 @@ namespace ssp21
         ctx.response_and_retry_timer.cancel();
 
         seq32_t remote_public_key;
-        const auto err = ctx.certificate_mode->validate(msg.certificate_data, remote_public_key);
+        const auto err = ctx.certificate_handler->validate(msg.certificate_data, remote_public_key);
         if (any(err))
         {
             FORMAT_LOG_BLOCK(ctx.logger, levels::error, "error validating certificate data: %s", HandshakeErrorSpec::to_string(err));

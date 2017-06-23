@@ -50,13 +50,13 @@ namespace ssp21
             return LocalKeys(local_pub, local_priv);
         }
 
-        static std::shared_ptr<ICertificateMode> get_certificate_handler()
+        static std::shared_ptr<ICertificateHandler> get_certificate_handler()
         {
             const auto local_pub = std::make_shared<PublicKey>();
 
             init_key(*local_pub);
 
-            return ICertificateMode::preshared_key(local_pub);
+            return ICertificateHandler::preshared_key(local_pub);
         }
 
         static void init_key(BufferBase& buffer)

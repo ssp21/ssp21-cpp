@@ -17,7 +17,7 @@ namespace ssp21
         const std::shared_ptr<IFrameWriter>& frame_writer,
         const std::shared_ptr<IExecutor>& executor,
         const LocalKeys& keys,
-        const std::shared_ptr<ICertificateMode>& certificate_mode
+        const std::shared_ptr<ICertificateHandler>& certificate_handler
     ) :
         CryptoLayer(
             HandshakeMode::Initiator,
@@ -27,7 +27,7 @@ namespace ssp21
             frame_writer,
             executor,
             keys,
-            certificate_mode
+            certificate_handler
         ),
         handshake_state(InitiatorHandshake::Idle::get()),
         suite(config.suite),

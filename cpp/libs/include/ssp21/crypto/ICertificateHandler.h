@@ -1,6 +1,6 @@
 
-#ifndef SSP21_ICERTIFICATEMODE_H
-#define SSP21_ICERTIFICATEMODE_H
+#ifndef SSP21_ICERTIFICATEHANDLER_H
+#define SSP21_ICERTIFICATEHANDLER_H
 
 #include <openpal/util/Uncopyable.h>
 
@@ -17,16 +17,16 @@ namespace ssp21
 {
 
     /**
-    * Interface used to verify the certificate mode.
+    * Interface used to verify certificate data.
     *
     * Implementations could be for preshared public keys or retrieved from a certificate chain
     * authenticated by a trust anchor.
     */
-    class ICertificateMode : private openpal::Uncopyable
+    class ICertificateHandler : private openpal::Uncopyable
     {
     public:
 
-        virtual ~ICertificateMode() {}
+        virtual ~ICertificateHandler() {}
 
         /**
         * The certificate data to present to the other party during the handshake
@@ -53,7 +53,7 @@ namespace ssp21
 
         // ---- factory functions for various implementations ----
 
-        static std::shared_ptr<ICertificateMode> preshared_key(const std::shared_ptr<const PublicKey>& remote_static_public_key);
+        static std::shared_ptr<ICertificateHandler> preshared_key(const std::shared_ptr<const PublicKey>& remote_static_public_key);
     };
 
 
