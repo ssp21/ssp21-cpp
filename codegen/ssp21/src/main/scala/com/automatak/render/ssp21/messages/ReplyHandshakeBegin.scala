@@ -10,7 +10,7 @@ object ReplyHandshakeBegin extends Message {
 
   override def fields: List[Field] = List(
     CommonFields.ephemeralPublicKey,
-    CommonFields.certificates
+    CommonFields.certificate_data
   )
 
 }

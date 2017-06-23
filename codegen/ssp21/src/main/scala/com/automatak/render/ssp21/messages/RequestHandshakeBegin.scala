@@ -40,7 +40,7 @@ object RequestHandshakeBegin extends Message {
     StructField("constraints", SessionConstraints),
     Enum(CertificateMode),
     CommonFields.ephemeralPublicKey,
-    CommonFields.certificates
+    CommonFields.certificate_data
   )
 
 }
