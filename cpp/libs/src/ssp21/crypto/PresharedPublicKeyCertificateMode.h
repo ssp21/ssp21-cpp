@@ -34,9 +34,9 @@ namespace ssp21
             return seq32_t::empty();
         }
 
-		virtual HandshakeError validate(const ICollection<seq32_t>& certificates, seq32_t& public_key_output) override
+		virtual HandshakeError validate(const seq32_t& certificate_data, seq32_t& public_key_output) override
 		{
-			if (certificates.is_not_empty()) return HandshakeError::bad_certificate_format;
+			if (certificate_data.is_not_empty()) return HandshakeError::bad_certificate_format;
 
 			public_key_output = this->remote_static_public_key->as_seq();
 

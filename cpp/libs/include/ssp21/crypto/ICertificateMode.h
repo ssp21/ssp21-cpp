@@ -39,9 +39,9 @@ namespace ssp21
         virtual seq32_t certificate_data() const = 0;
 
         /**
-        *  Given a particular certificate mode, validate the certificate content payload, and return a seq_t pointing to the validated public key
+        *  Given a particular certificate mode, validate the certificate data payload, and return a seq_t pointing to the validated public key
         */
-        virtual HandshakeError validate(const ICollection<seq32_t>& certificates, seq32_t& public_key_output) = 0;
+        virtual HandshakeError validate(const seq32_t& certificate_data, seq32_t& public_key_output) = 0;
 
 
         // ---- factory functions for various implementations ----
