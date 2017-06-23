@@ -28,6 +28,8 @@ enum class CertificateMode : uint8_t
 {
     /// both parties know each others public DH keys
     preshared_keys = 0x0,
+    /// Industrial certificate format
+    icf = 0x1,
     /// value not defined
     undefined = 0xFF
 };

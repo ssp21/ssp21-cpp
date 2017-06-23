@@ -18,7 +18,8 @@ object CertificateMode extends EnumModel {
   override def defaultValue: Option[EnumValue] = Some(EnumValue.undefined(255))
 
   private val codes = List(
-    EnumValue("preshared_keys", 0, "both parties know each others public DH keys")
+    EnumValue("preshared_keys", 0, "both parties know each others public DH keys"),
+    EnumValue("icf", 1, "Industrial certificate format")
   )
 
 }
