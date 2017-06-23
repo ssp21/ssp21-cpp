@@ -78,19 +78,9 @@ namespace ssp21
                     max_session_time
                 ),
                 certificate_mode,
-                pub_key
+                pub_key,
+				seq32_t::empty()
             );
-
-            /*
-            std::vector<std::unique_ptr<ssp21::HexSeq16>> certificate_slices;
-
-            for (auto& cert : certificates)
-            {
-                auto hex = std::make_unique<ssp21::HexSeq16>(cert);
-                msg.certificates.push(hex->to_seq());
-                certificate_slices.push_back(std::move(hex));
-            }
-            */
 
             return write_message(msg);
         }
@@ -115,7 +105,7 @@ namespace ssp21
         {
             HexSeq pub_key(hex_ephem_pub_key);
 
-            ReplyHandshakeBegin msg(pub_key);
+            ReplyHandshakeBegin msg(pub_key, seq32_t::empty());
 
             return write_message(msg);
         }

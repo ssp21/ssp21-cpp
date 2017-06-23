@@ -5,6 +5,8 @@
 
 #include "ssp21/stack/LogLevels.h"
 
+#include "openpal/logging/LogMacros.h"
+
 using namespace openpal;
 
 namespace ssp21

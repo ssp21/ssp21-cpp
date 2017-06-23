@@ -25,9 +25,11 @@ ReplyHandshakeBegin::ReplyHandshakeBegin()
 {}
 
 ReplyHandshakeBegin::ReplyHandshakeBegin(
-    const seq32_t& ephemeral_public_key
+    const seq32_t& ephemeral_public_key,
+    const seq32_t& certificate_data
 ) :
-    ephemeral_public_key(ephemeral_public_key)
+    ephemeral_public_key(ephemeral_public_key),
+    certificate_data(certificate_data)
 {}
 
 size_t ReplyHandshakeBegin::size() const
@@ -35,7 +37,7 @@ size_t ReplyHandshakeBegin::size() const
     return MessageFormatter::sum_sizes(
         1,
         ephemeral_public_key,
-        certificates
+        certificate_data
     );
 }
 
@@ -47,7 +49,7 @@ ParseError ReplyHandshakeBegin::read(seq32_t input)
         return MessageParser::read_fields(
             input,
             ephemeral_public_key,
-            certificates
+            certificate_data
         );
     };
 
@@ -61,7 +63,7 @@ FormatResult ReplyHandshakeBegin::write(wseq32_t& output) const
         return MessageFormatter::write_fields(
             output,
             ephemeral_public_key,
-            certificates
+            certificate_data
         );
     };
 
@@ -73,8 +75,8 @@ void ReplyHandshakeBegin::print(IMessagePrinter& printer) const
         printer,
         "ephemeral_public_key",
         ephemeral_public_key,
-        "certificates",
-        certificates
+        "certificate_data",
+        certificate_data
     );
 }
 

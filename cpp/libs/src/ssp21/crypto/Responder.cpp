@@ -58,7 +58,7 @@ namespace ssp21
             return HandshakeError::unsupported_certificate_mode;
         }
 
-        if (msg.certificates.count() != 0)
+        if (msg.certificate_data.is_not_empty())
         {
             return HandshakeError::bad_message_format;
         }

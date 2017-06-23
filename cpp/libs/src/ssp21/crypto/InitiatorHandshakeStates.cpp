@@ -47,7 +47,8 @@ namespace ssp21
                 ctx.params.max_session_time_ms
             ),
             CertificateMode::preshared_keys,
-            public_key
+            public_key,
+			seq32_t::empty()
         );
 
         const auto result = ctx.frame_writer->write(request);

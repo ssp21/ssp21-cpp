@@ -80,24 +80,13 @@ TEST_CASE(SUITE("successfully parses message"))
     REQUIRE(msg.certificate_mode == CertificateMode::preshared_keys);
     REQUIRE(to_hex(msg.ephemeral_public_key) == "AA AA AA");
 
-    REQUIRE(msg.certificates.count() == 0);
+    REQUIRE(msg.certificate_data.is_empty());
 }
 
 TEST_CASE(SUITE("pretty prints message"))
 {
 
-    HexSeq public_key("CA FE");
-
-    HexSeq issuer_id(openpal::repeat_hex(0xAA, 16));
-    HexSeq signature(openpal::repeat_hex(0xBB, 32));
-    HexSeq body(openpal::repeat_hex(0xCC, 7));
-
-
-    CertificateEnvelope envelope(
-        issuer_id.to_seq(),
-        signature.to_seq(),
-        body.to_seq()
-    );
+    HexSeq public_key("CA FE");   
 
     RequestHandshakeBegin msg(
         7,
@@ -114,10 +103,9 @@ TEST_CASE(SUITE("pretty prints message"))
             0xCAFEBABE
         ),
         CertificateMode::preshared_keys,
-        public_key
-    );
-
-    REQUIRE(msg.certificates.push(envelope));
+        public_key,
+		seq32_t::empty()
+    );    
 
 
     MockLogHandler log("log");
@@ -138,15 +126,7 @@ TEST_CASE(SUITE("pretty prints message"))
         "certificate_mode: preshared_keys",
         "ephemeral_public_key (length = 2)",
         "CA:FE",
-        "certificates (count = 1)",
-        "field #1",
-        "issuer_id (length = 16)",
-        "AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA",
-        "signature (length = 32)",
-        "BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB",
-        "BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB:BB",
-        "certificate_body (length = 7)",
-        "CC:CC:CC:CC:CC:CC:CC"
+		"certificate_data (length = 0)"       
     );
 
 }

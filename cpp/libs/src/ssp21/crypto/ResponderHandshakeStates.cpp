@@ -29,7 +29,7 @@ namespace ssp21
         ctx.handshake.begin_handshake(msg, msg_bytes);
 
         // now format our response - in the future, this we'll add certificates after this call if applicable
-        ReplyHandshakeBegin reply(public_ephem_dh_key);
+        ReplyHandshakeBegin reply(public_ephem_dh_key, seq32_t::empty());
 
         const auto res = ctx.frame_writer->write(reply);
 
