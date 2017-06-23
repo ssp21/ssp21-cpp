@@ -46,9 +46,9 @@ namespace ssp21
                 ctx.params.max_nonce_value,
                 ctx.params.max_session_time_ms
             ),
-            CertificateMode::preshared_keys,
+            ctx.certificate_handler->mode(),
             public_key,
-            seq32_t::empty()
+            ctx.certificate_handler->certificate_data()
         );
 
         const auto result = ctx.frame_writer->write(request);
