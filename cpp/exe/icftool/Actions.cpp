@@ -202,24 +202,23 @@ void Actions::write(const std::string& path, ContainerEntryType type, const seq3
 
 void Actions::print_certificate_chain(IMessagePrinter& printer, const seq32_t& data)
 {
-    CertificateEnvelope envelope;
+	const auto chain = parse_or_throw<CertificateChain>(data);
+    
+	auto print = [&printer](const CertificateEnvelope& envelope) 
+	{
+		envelope.print("envelope", printer);
 
-    const auto err = envelope.read_all(data);
-    if (any(err))
-    {
-        throw Exception("Error parsing certificate envelope: ", ParseErrorSpec::to_string(err));
-    }
+		CertificateBody body;
+		const auto body_err = body.read_all(envelope.certificate_body);
+		if (any(body_err))
+		{
+			throw Exception("Error parsing certificate body: ", ParseErrorSpec::to_string(body_err));
+		}
 
-    envelope.print("envelope", printer);
+		body.print("body", printer);
+	};
 
-    CertificateBody body;
-    const auto body_err = body.read_all(envelope.certificate_body);
-    if (any(body_err))
-    {
-        throw Exception("Error parsing certificate body: ", ParseErrorSpec::to_string(body_err));
-    }
-
-    body.print("body", printer);
+	chain.certificates.foreach(print);
 }
 
 Actions::Times Actions::get_validity_times_from_user()
