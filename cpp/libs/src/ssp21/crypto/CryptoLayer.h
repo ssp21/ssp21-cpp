@@ -108,9 +108,9 @@ namespace ssp21
 
         const std::shared_ptr<IFrameWriter> frame_writer;
         const std::shared_ptr<openpal::IExecutor> executor;
-        const std::shared_ptr<ICertificateHandler> certificate_handler;
 
         const LocalKeys keys;
+        const std::shared_ptr<ICertificateHandler> certificate_handler;
 
         Handshake handshake;
         Session session;
