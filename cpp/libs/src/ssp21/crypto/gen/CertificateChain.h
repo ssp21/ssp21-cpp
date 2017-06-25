@@ -13,34 +13,28 @@
 // Licensed under the terms of the BSDv3 license
 //
 
-#ifndef SSP21_CERTIFICATEFILEENTRY_H
-#define SSP21_CERTIFICATEFILEENTRY_H
+#ifndef SSP21_CERTIFICATECHAIN_H
+#define SSP21_CERTIFICATECHAIN_H
 
 #include "ssp21/crypto/gen/ParseError.h"
 #include "ssp21/crypto/gen/FormatError.h"
-#include "ssp21/crypto/gen/FileEntryType.h"
+#include "ssp21/crypto/gen/CertificateEnvelope.h"
 #include "ssp21/util/SequenceTypes.h"
-#include "ssp21/crypto/EnumField.h"
-#include "ssp21/crypto/SeqByteField.h"
+#include "ssp21/crypto/SeqStructField.h"
 #include "ssp21/crypto/IMessagePrinter.h"
 
 namespace ssp21 {
 
-struct CertificateFileEntry final 
+struct CertificateChain final 
 {
-    CertificateFileEntry();
+    CertificateChain();
 
-    CertificateFileEntry(
-        FileEntryType file_entry_type,
-        const seq32_t& data
-    );
 
     size_t size() const;
 
-    static const uint8_t min_size_bytes = 2;
+    static const uint8_t min_size_bytes = 1;
 
-    EnumField<FileEntryTypeSpec> file_entry_type;
-    SeqByteField data;
+    SeqStructField<CertificateEnvelope, 6> certificates;
 
     ParseError read(seq32_t& input);
     ParseError read_all(const seq32_t& input);

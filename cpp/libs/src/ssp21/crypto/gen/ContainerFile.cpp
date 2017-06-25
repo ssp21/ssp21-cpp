@@ -24,12 +24,20 @@ namespace ssp21 {
 ContainerFile::ContainerFile()
 {}
 
+ContainerFile::ContainerFile(
+    ContainerEntryType container_entry_type,
+    const seq32_t& payload
+) :
+    container_entry_type(container_entry_type),
+    payload(payload)
+{}
 
 size_t ContainerFile::size() const
 {
     return MessageFormatter::sum_sizes(
         0,
-        entries
+        container_entry_type,
+        payload
     );
 }
 
@@ -37,7 +45,8 @@ ParseError ContainerFile::read(seq32_t& input)
 {
     return MessageParser::read_fields(
         input,
-        entries
+        container_entry_type,
+        payload
     );
 }
 
@@ -53,7 +62,8 @@ FormatError ContainerFile::write(wseq32_t& output) const
 {
     return MessageFormatter::write_fields(
         output,
-        entries
+        container_entry_type,
+        payload
     );
 }
 
@@ -61,8 +71,10 @@ void ContainerFile::print(const char* name, IMessagePrinter& printer) const
 {
     MessagePrinting::print_fields(
         printer,
-        "entries",
-        entries
+        "container_entry_type",
+        container_entry_type,
+        "payload",
+        payload
     );
 }
 

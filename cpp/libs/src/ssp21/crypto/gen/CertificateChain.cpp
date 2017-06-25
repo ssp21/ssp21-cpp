@@ -13,7 +13,7 @@
 // Licensed under the terms of the BSDv3 license
 //
 
-#include "ssp21/crypto/gen/CertificateFileEntry.h"
+#include "ssp21/crypto/gen/CertificateChain.h"
 
 #include "ssp21/crypto/MessageParser.h"
 #include "ssp21/crypto/MessagePrinting.h"
@@ -21,36 +21,27 @@
 
 namespace ssp21 {
 
-CertificateFileEntry::CertificateFileEntry()
+CertificateChain::CertificateChain()
 {}
 
-CertificateFileEntry::CertificateFileEntry(
-    FileEntryType file_entry_type,
-    const seq32_t& data
-) :
-    file_entry_type(file_entry_type),
-    data(data)
-{}
 
-size_t CertificateFileEntry::size() const
+size_t CertificateChain::size() const
 {
     return MessageFormatter::sum_sizes(
         0,
-        file_entry_type,
-        data
+        certificates
     );
 }
 
-ParseError CertificateFileEntry::read(seq32_t& input)
+ParseError CertificateChain::read(seq32_t& input)
 {
     return MessageParser::read_fields(
         input,
-        file_entry_type,
-        data
+        certificates
     );
 }
 
-ParseError CertificateFileEntry::read_all(const seq32_t& input)
+ParseError CertificateChain::read_all(const seq32_t& input)
 {
     auto remainder = input;
     auto err = read(remainder);
@@ -58,23 +49,20 @@ ParseError CertificateFileEntry::read_all(const seq32_t& input)
     return remainder.is_empty() ? ParseError::ok : ParseError::too_many_bytes;
 }
 
-FormatError CertificateFileEntry::write(wseq32_t& output) const
+FormatError CertificateChain::write(wseq32_t& output) const
 {
     return MessageFormatter::write_fields(
         output,
-        file_entry_type,
-        data
+        certificates
     );
 }
 
-void CertificateFileEntry::print(const char* name, IMessagePrinter& printer) const
+void CertificateChain::print(const char* name, IMessagePrinter& printer) const
 {
     MessagePrinting::print_fields(
         printer,
-        "file_entry_type",
-        file_entry_type,
-        "data",
-        data
+        "certificates",
+        certificates
     );
 }
 

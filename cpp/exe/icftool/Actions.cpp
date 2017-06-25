@@ -16,14 +16,17 @@
 using namespace std::chrono;
 using namespace ssp21;
 
+
 template <class T>
-void read_or_throw(T& item, const ssp21::seq32_t& data, const std::string& path)
+static T parse_or_throw(const ssp21::seq32_t& data)
 {
+    T item;
     const auto err = item.read_all(data);
     if (any(err))
     {
-        throw ssp21::Exception("Encountered error: ", ssp21::ParseErrorSpec::to_string(err), " parsing input file: ", path);
+        throw ssp21::Exception("Parsing error: ", ssp21::ParseErrorSpec::to_string(err));
     }
+    return item;
 }
 
 void Actions::print_contents(const std::string& path)
@@ -37,43 +40,35 @@ void Actions::print_contents(const std::string& path)
         throw Exception("Error parsing container file: ", ParseErrorSpec::to_string(err));
     }
 
-    std::cout << path << " contains " << file.entries.count() << " item(s):" << std::endl << std::endl;
-
     ConsolePrinter printer;
+    file.print("container file", printer);
 
-    for (auto i = 0; i < file.entries.count(); ++i)
+
+    printer.push_indent();
+
+    if (file.container_entry_type == ContainerEntryType::certificate_chain)
     {
-        const auto entry = file.entries.get(i);
-        const auto type_name = FileEntryTypeSpec::to_string(entry->file_entry_type);
-
-        std::cout << "item #" << i << " is a " << type_name << std::endl;
-
-        printer.push_indent();
-
-        if (entry->file_entry_type == FileEntryType::certificate)
-        {
-            print_certificate(printer, entry->data);
-        }
-        else
-        {
-            // all other types are raw keys
-            printer.print("key-data", entry->data);
-        }
-
-        std::cout << std::endl;
+        print_certificate_chain(printer, file.payload);
     }
+    else
+    {
+        // all other types are raw keys
+        printer.print("key-data", file.payload);
+    }
+
+    std::cout << std::endl;
 }
 
 void Actions::gen_x25519_key_pair(const std::string& private_key_path, const std::string& public_key_path)
 {
-    std::cout << "generating x25519 key pair" << std::endl;
+    std::cout << "generating x25519 key pair..." << std::endl;
 
     KeyPair kp;
     Crypto::gen_keypair_x25519(kp);
 
-    write(private_key_path, FileEntryType::x25519_private_key, kp.private_key.as_seq());
+    write(private_key_path, ContainerEntryType::x25519_private_key, kp.private_key.as_seq());
 
-    write(public_key_path, FileEntryType::x25519_public_key, kp.public_key.as_seq());
+    write(public_key_path, ContainerEntryType::x25519_public_key, kp.public_key.as_seq());
 }
 
 void Actions::gen_ed25519_key_pair(const std::string& private_key_path, const std::string& public_key_path)
@@ -83,54 +78,59 @@ void Actions::gen_ed25519_key_pair(const std::string& private_key_path, const st
     KeyPair kp;
     Crypto::gen_keypair_ed25519(kp);
 
-    write(private_key_path, FileEntryType::ed25519_private_key, kp.private_key.as_seq());
+    write(private_key_path, ContainerEntryType::ed25519_private_key, kp.private_key.as_seq());
 
-    write(public_key_path, FileEntryType::ed25519_public_key, kp.public_key.as_seq());
+    write(public_key_path, ContainerEntryType::ed25519_public_key, kp.public_key.as_seq());
 }
 
-void Actions::append(const std::string& file_path_1, const std::string& file_path_2, const std::string& output_file_path)
+void Actions::append_certificate_chains(const std::string& file_path_1, const std::string& file_path_2, const std::string& output_file_path)
 {
+
     const auto file_data_1 = SecureFile::read(file_path_1);
-    ContainerFile file_1;
-    read_or_throw(file_1, file_data_1->as_rslice(), file_path_1);
+    const auto chain_1 = expect_certificate_chain(parse_or_throw<ContainerFile>(file_data_1->as_rslice()));
 
     const auto file_data_2 = SecureFile::read(file_path_2);
-    ContainerFile file_2;
-    read_or_throw(file_2, file_data_2->as_rslice(), file_path_2);
+    const auto chain_2 = expect_certificate_chain(parse_or_throw<ContainerFile>(file_data_2->as_rslice()));
 
-    ContainerFile output;
-    auto add_entry = [&output](const CertificateFileEntry & entry)
+    CertificateChain chain;
+
+    auto add_cert = [&chain](const CertificateEnvelope & envelope)
     {
-        if (!output.entries.push(entry))
+        if (!chain.certificates.push(envelope))
         {
-            throw Exception("Number of total file entries exceeds capacity limit of ", output.entries.capacity());
+            throw Exception("Number of total certificates entries exceeds capacity limit of ", chain.certificates.capacity());
         }
     };
 
-    file_1.entries.foreach(add_entry);
-    file_2.entries.foreach(add_entry);
+    chain_1.certificates.foreach(add_cert);
+    chain_2.certificates.foreach(add_cert);
 
-    SecureFile::write(output_file_path, output);
+    const auto chain_bytes = serialize::to_buffer(chain);
+
+    SecureFile::write(
+        output_file_path,
+        ContainerFile(ContainerEntryType::certificate_chain, chain_bytes->as_rslice())
+    );
 }
 
 void Actions::create_certificate(const std::string& certificate_file_path, const std::string& public_key_path, const std::string& private_key_path)
 {
     const auto private_key_data = SecureFile::read(private_key_path);
-    const auto private_key_entry = get_only_entry(private_key_data->as_rslice());
+    const auto private_key_entry = parse_or_throw<ContainerFile>(private_key_data->as_rslice());
 
     const auto public_key_data = SecureFile::read(public_key_path);
-    const auto public_key_entry = get_only_entry(public_key_data->as_rslice());
+    const auto public_key_entry = parse_or_throw<ContainerFile>(public_key_data->as_rslice());
 
     // interactively read stuff from the user
     const auto validity = get_validity_times_from_user();
     const auto signing_level = get_signing_level_from_user();
 
-    CertificateBody body(
+    const CertificateBody body(
         validity.valid_after,
         validity.valid_before,
         signing_level,
         get_public_key_type(public_key_entry),
-        public_key_entry.data.take(consts::crypto::x25519_key_length)
+        public_key_entry.payload
     );
 
     const auto body_bytes = serialize::to_buffer(body);
@@ -138,80 +138,69 @@ void Actions::create_certificate(const std::string& certificate_file_path, const
     DSAOutput signature;
     calc_signature(body_bytes->as_rslice(), private_key_entry, signature);
 
-    const auto envelope_bytes = serialize::to_buffer(
-                                    CertificateEnvelope(
-                                        seq32_t::empty(),
-                                        signature.as_seq(),
-                                        body_bytes->as_rslice().take(static_cast<uint16_t>(body_bytes->length()))
-                                    )
-                                );
-
-    ContainerFile file;
-    file.entries.push(
-        CertificateFileEntry(
-            FileEntryType::certificate,
-            envelope_bytes->as_rslice()
-        )
+    const CertificateEnvelope envelope(
+        seq32_t::empty(),
+        signature.as_seq(),
+        body_bytes->as_rslice().take(static_cast<uint16_t>(body_bytes->length()))
     );
+
+    CertificateChain chain;
+    chain.certificates.push(envelope);
+
+    const auto chain_bytes = serialize::to_buffer(chain);
+
+    const ContainerFile file(ContainerEntryType::certificate_chain, chain_bytes->as_rslice());
 
     SecureFile::write(certificate_file_path, file);
 }
 
-void Actions::calc_signature(const seq32_t& data, const CertificateFileEntry& private_key_entry, DSAOutput& signature)
+void Actions::calc_signature(const seq32_t& data, const ContainerFile& private_key_entry, DSAOutput& signature)
 {
     std::error_code ec;
 
-    switch (private_key_entry.file_entry_type)
+    switch (private_key_entry.container_entry_type)
     {
-    case(FileEntryType::ed25519_private_key):
-        Crypto::sign_ed25519(data, private_key_entry.data, signature, ec);
+    case(ContainerEntryType::ed25519_private_key):
+        Crypto::sign_ed25519(data, private_key_entry.payload, signature, ec);
         if (ec) throw Exception("Unable to calculate certificate siganture", ec.message());
         break;
     default:
-        throw Exception("Can't produce a signature from: ", FileEntryTypeSpec::to_string(private_key_entry.file_entry_type));
+        throw Exception(ContainerEntryTypeSpec::to_string(private_key_entry.container_entry_type), " is not a private signing key");
     }
 }
 
-PublicKeyType Actions::get_public_key_type(const CertificateFileEntry& entry)
+PublicKeyType Actions::get_public_key_type(const ContainerFile& file)
 {
-    switch (entry.file_entry_type)
+    switch (file.container_entry_type)
     {
-    case(FileEntryType::ed25519_public_key):
-        if (entry.data.length() != consts::crypto::ed25519_public_key_length) throw Exception("Bad Ed25519 public key length");
+    case(ContainerEntryType::ed25519_public_key):
+        if (file.payload.length() != consts::crypto::ed25519_public_key_length) throw Exception("Bad Ed25519 public key length");
         return PublicKeyType::Ed25519;
-    case(FileEntryType::x25519_public_key):
-        if (entry.data.length() != consts::crypto::x25519_key_length) throw Exception("Bad x25519 public key length");
+    case(ContainerEntryType::x25519_public_key):
+        if (file.payload.length() != consts::crypto::x25519_key_length) throw Exception("Bad x25519 public key length");
         return PublicKeyType::X25519;
     default:
-        throw Exception(FileEntryTypeSpec::to_string(entry.file_entry_type), " is not a public key");
+        throw Exception(ContainerEntryTypeSpec::to_string(file.container_entry_type), " is not a public key");
     }
 }
 
-CertificateFileEntry Actions::get_only_entry(const seq32_t& file_data)
+ssp21::CertificateChain Actions::expect_certificate_chain(const ssp21::ContainerFile& file)
 {
-    ContainerFile file;
-    const auto err = file.read_all(file_data);
-    if (any(err))
+    if (file.container_entry_type != ContainerEntryType::certificate_chain)
     {
-        throw Exception("Encountered error: ", ParseErrorSpec::to_string(err), " parsing key file");
+        throw Exception(ContainerEntryTypeSpec::to_string(file.container_entry_type), " is not a certificate chain");
     }
 
-    if (file.entries.count() != 1)
-    {
-        throw Exception("Key file contains doesn't contains a single entry, contains: ", file.entries.count());
-    }
-
-    return *file.entries.get(0);
+    return parse_or_throw<ssp21::CertificateChain>(file.payload);
 }
 
-void Actions::write(const std::string& path, FileEntryType type, const seq32_t& data)
+void Actions::write(const std::string& path, ContainerEntryType type, const seq32_t& data)
 {
-    ContainerFile file;
-    file.entries.push(CertificateFileEntry(type, data));
+    ContainerFile file(type, data);
     SecureFile::write(path, file);
 }
 
-void Actions::print_certificate(IMessagePrinter& printer, const seq32_t& data)
+void Actions::print_certificate_chain(IMessagePrinter& printer, const seq32_t& data)
 {
     CertificateEnvelope envelope;
 

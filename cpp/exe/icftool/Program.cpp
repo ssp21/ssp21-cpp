@@ -85,7 +85,7 @@ void Program::run(int argc, char*  argv[])
             throw ssp21::Exception("Required positional arguments: <input icf file> <input icf file> <output icf file>");
         }
 
-        Actions::append(args.pos[0], args.pos[1], args.pos[2]);
+        Actions::append_certificate_chains(args.pos[0], args.pos[1], args.pos[2]);
         return;
     }
 

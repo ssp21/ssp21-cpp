@@ -29,7 +29,7 @@ object GeneratedFiles {
     HandshakeKDF,
     HandshakeMAC,
     PublicKeyType,
-    FileEntryType
+    ContainerEntryType
   ).map(x => EnumConfig(x, true, true)).map(e => EnumGenerator(e, Some(basePath)))
 
   private def ssp21EnumsImpl = List(
@@ -57,10 +57,10 @@ object GeneratedFiles {
     CryptoSpec,
     CertificateEnvelope,
     CertificateBody,
+    CertificateChain,
     ExtensionEnvelope,
     SessionConstraints,
-    ContainerFile,
-    CertificateFileEntry
+    ContainerFile
   ).map(x => StructGenerator(x))
 
   private def messsages: List[WriteCppFiles] = List(

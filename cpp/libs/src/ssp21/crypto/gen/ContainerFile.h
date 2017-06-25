@@ -18,9 +18,10 @@
 
 #include "ssp21/crypto/gen/ParseError.h"
 #include "ssp21/crypto/gen/FormatError.h"
-#include "ssp21/crypto/gen/CertificateFileEntry.h"
+#include "ssp21/crypto/gen/ContainerEntryType.h"
 #include "ssp21/util/SequenceTypes.h"
-#include "ssp21/crypto/SeqStructField.h"
+#include "ssp21/crypto/EnumField.h"
+#include "ssp21/crypto/SeqByteField.h"
 #include "ssp21/crypto/IMessagePrinter.h"
 
 namespace ssp21 {
@@ -29,12 +30,17 @@ struct ContainerFile final
 {
     ContainerFile();
 
+    ContainerFile(
+        ContainerEntryType container_entry_type,
+        const seq32_t& payload
+    );
 
     size_t size() const;
 
-    static const uint8_t min_size_bytes = 1;
+    static const uint8_t min_size_bytes = 2;
 
-    SeqStructField<CertificateFileEntry, 10> entries;
+    EnumField<ContainerEntryTypeSpec> container_entry_type;
+    SeqByteField payload;
 
     ParseError read(seq32_t& input);
     ParseError read_all(const seq32_t& input);
