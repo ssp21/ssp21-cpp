@@ -16,7 +16,7 @@ Program::Program() :
         { flags::x25519, { "-x", "--x25519" }, "generate a x25519 key pair <private key file> <public key file>", 0 },
         { flags::ed25519, { "-d", "--ed25519" }, "generate a Ed25519 key pair <private key file> <public key file>", 0 },
         { flags::cert, { "-c", "--cert" }, "interactively generate a <certificate file> for a <public key file> signed by a <private key file>", 0 },
-        { flags::cert, { "-a", "--append" }, "append all entries from one <icf file> and another <icf file> and write them to a destination <icf file>", 0 }
+        { flags::append, { "-a", "--append" }, "append all entries from one <icf file> and another <icf file> and write them to a destination <icf file>", 0 }
     }}
 {
     if (!ssp21::SodiumBackend::initialize())

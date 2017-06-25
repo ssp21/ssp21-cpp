@@ -41,8 +41,7 @@ void Actions::print_contents(const std::string& path)
 	std::cout << "File: " << path << std::endl;
 	std::cout << "Type: " << ContainerEntryTypeSpec::to_string(file.container_entry_type) << std::endl;
 
-	ConsolePrinter printer;
-    printer.push_indent();
+	ConsolePrinter printer;    
 
     if (file.container_entry_type == ContainerEntryType::certificate_chain)
     {
@@ -51,6 +50,7 @@ void Actions::print_contents(const std::string& path)
     else
     {
         // all other types are raw keys
+		printer.push_indent();
         printer.print("key-data", file.payload);
     }
 
@@ -202,8 +202,13 @@ void Actions::print_certificate_chain(ConsolePrinter& printer, const seq32_t& da
 {
 	const auto chain = parse_or_throw<CertificateChain>(data);
     
-	auto print = [&printer](const CertificateEnvelope& envelope) 
+	int i = 1;
+
+	auto print = [&](const CertificateEnvelope& envelope) 
 	{
+		std::cout << std::endl;
+		std::cout << "certificate #" << i << std::endl;
+		printer.push_indent();
 		envelope.print("envelope", printer);		
 
 		CertificateBody body;
@@ -218,6 +223,7 @@ void Actions::print_certificate_chain(ConsolePrinter& printer, const seq32_t& da
 		body.print("body", printer);
 		printer.pop_indent();
 		printer.pop_indent();
+		++i;
 	};
 
 	chain.certificates.foreach(print);
