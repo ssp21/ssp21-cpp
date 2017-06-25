@@ -30,7 +30,7 @@ static T parse_or_throw(const ssp21::seq32_t& data)
 }
 
 void Actions::print_contents(const std::string& path)
-{
+{	
     const auto data = SecureFile::read(path);
 
     ContainerFile file;
@@ -40,10 +40,10 @@ void Actions::print_contents(const std::string& path)
         throw Exception("Error parsing container file: ", ParseErrorSpec::to_string(err));
     }
 
-    ConsolePrinter printer;
-    file.print("container file", printer);
+	std::cout << "File: " << path << std::endl;
+	std::cout << "Type: " << ContainerEntryTypeSpec::to_string(file.container_entry_type) << std::endl;
 
-
+	ConsolePrinter printer;
     printer.push_indent();
 
     if (file.container_entry_type == ContainerEntryType::certificate_chain)
@@ -195,9 +195,9 @@ ssp21::CertificateChain Actions::expect_certificate_chain(const ssp21::Container
 }
 
 void Actions::write(const std::string& path, ContainerEntryType type, const seq32_t& data)
-{
-    ContainerFile file(type, data);
-    SecureFile::write(path, file);
+{    
+    SecureFile::write(path, ContainerFile(type, data));	
+	std::cout << "wrote: " << path << std::endl;
 }
 
 void Actions::print_certificate_chain(IMessagePrinter& printer, const seq32_t& data)
