@@ -5,7 +5,7 @@
 
 #include "ssp21/crypto/gen/CertificateBody.h"
 #include "ssp21/crypto/gen/CertificateEnvelope.h"
-#include "ssp21/crypto/gen/CertificateFile.h"
+#include "ssp21/crypto/gen/ContainerFile.h"
 
 #include "ssp21/util/SecureFile.h"
 
@@ -30,11 +30,11 @@ void Actions::print_contents(const std::string& path)
 {
     const auto data = SecureFile::read(path);
 
-    CertificateFile file;
+    ContainerFile file;
     const auto err = file.read_all(data->as_rslice());
     if (any(err))
     {
-        throw Exception("Error parsing certificate file: ", ParseErrorSpec::to_string(err));
+        throw Exception("Error parsing container file: ", ParseErrorSpec::to_string(err));
     }
 
     std::cout << path << " contains " << file.entries.count() << " item(s):" << std::endl << std::endl;
@@ -91,14 +91,14 @@ void Actions::gen_ed25519_key_pair(const std::string& private_key_path, const st
 void Actions::append(const std::string& file_path_1, const std::string& file_path_2, const std::string& output_file_path)
 {
     const auto file_data_1 = SecureFile::read(file_path_1);
-    CertificateFile file_1;
+    ContainerFile file_1;
     read_or_throw(file_1, file_data_1->as_rslice(), file_path_1);
 
     const auto file_data_2 = SecureFile::read(file_path_2);
-    CertificateFile file_2;
+    ContainerFile file_2;
     read_or_throw(file_2, file_data_2->as_rslice(), file_path_2);
 
-    CertificateFile output;
+    ContainerFile output;
     auto add_entry = [&output](const CertificateFileEntry & entry)
     {
         if (!output.entries.push(entry))
@@ -146,7 +146,7 @@ void Actions::create_certificate(const std::string& certificate_file_path, const
                                     )
                                 );
 
-    CertificateFile file;
+    ContainerFile file;
     file.entries.push(
         CertificateFileEntry(
             FileEntryType::certificate,
@@ -189,7 +189,7 @@ PublicKeyType Actions::get_public_key_type(const CertificateFileEntry& entry)
 
 CertificateFileEntry Actions::get_only_entry(const seq32_t& file_data)
 {
-    CertificateFile file;
+    ContainerFile file;
     const auto err = file.read_all(file_data);
     if (any(err))
     {
@@ -206,7 +206,7 @@ CertificateFileEntry Actions::get_only_entry(const seq32_t& file_data)
 
 void Actions::write(const std::string& path, FileEntryType type, const seq32_t& data)
 {
-    CertificateFile file;
+    ContainerFile file;
     file.entries.push(CertificateFileEntry(type, data));
     SecureFile::write(path, file);
 }

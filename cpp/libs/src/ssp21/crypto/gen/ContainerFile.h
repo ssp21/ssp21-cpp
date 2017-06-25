@@ -13,8 +13,8 @@
 // Licensed under the terms of the BSDv3 license
 //
 
-#ifndef SSP21_CERTIFICATEFILE_H
-#define SSP21_CERTIFICATEFILE_H
+#ifndef SSP21_CONTAINERFILE_H
+#define SSP21_CONTAINERFILE_H
 
 #include "ssp21/crypto/gen/ParseError.h"
 #include "ssp21/crypto/gen/FormatError.h"
@@ -25,9 +25,9 @@
 
 namespace ssp21 {
 
-struct CertificateFile final 
+struct ContainerFile final 
 {
-    CertificateFile();
+    ContainerFile();
 
 
     size_t size() const;

@@ -7,7 +7,7 @@
 
 #include "ssp21/util/SecureFile.h"
 #include "ssp21/stack/LogLevels.h"
-#include "ssp21/crypto/gen/CertificateFile.h"
+#include "ssp21/crypto/gen/ContainerFile.h"
 
 #include <iostream>
 #include <sstream>
@@ -154,7 +154,7 @@ std::shared_ptr<const T> ConfigReader::read_key_from_file(const std::string& sec
 {
     const auto file_data = SecureFile::read(path);
 
-    CertificateFile file;
+    ContainerFile file;
     const auto err = file.read_all(file_data->as_rslice());
     if (any(err))
     {

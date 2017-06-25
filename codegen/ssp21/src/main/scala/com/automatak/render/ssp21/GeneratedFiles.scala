@@ -59,7 +59,7 @@ object GeneratedFiles {
     CertificateBody,
     ExtensionEnvelope,
     SessionConstraints,
-    CertificateFile,
+    ContainerFile,
     CertificateFileEntry
   ).map(x => StructGenerator(x))
 

@@ -5,6 +5,8 @@ package com.automatak.render.ssp21
 
 import java.nio.file.{Files, Paths}
 
+import org.apache.commons.io.FileUtils
+
 object Generate {
 
   private val basePath = "../cpp/libs"
@@ -15,6 +17,8 @@ object Generate {
   private val paths = List(ssp21GenHeaderPath, ssp21GenImplPath, testPath)
 
   def main(args: Array[String]): Unit = {
+
+    paths.foreach(path => FileUtils.deleteDirectory(path.toFile))
 
     paths.foreach(p => Files.createDirectories(p))
 
