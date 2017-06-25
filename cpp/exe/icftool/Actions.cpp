@@ -28,7 +28,7 @@ static T parse_or_throw(const ssp21::seq32_t& data)
 }
 
 void Actions::print_contents(const std::string& path)
-{	
+{
     const auto data = SecureFile::read(path);
 
     ContainerFile file;
@@ -38,10 +38,10 @@ void Actions::print_contents(const std::string& path)
         throw Exception("Error parsing container file: ", ParseErrorSpec::to_string(err));
     }
 
-	std::cout << "File: " << path << std::endl;
-	std::cout << "Type: " << ContainerEntryTypeSpec::to_string(file.container_entry_type) << std::endl;
+    std::cout << "File: " << path << std::endl;
+    std::cout << "Type: " << ContainerEntryTypeSpec::to_string(file.container_entry_type) << std::endl;
 
-	ConsolePrinter printer;    
+    ConsolePrinter printer;
 
     if (file.container_entry_type == ContainerEntryType::certificate_chain)
     {
@@ -50,7 +50,7 @@ void Actions::print_contents(const std::string& path)
     else
     {
         // all other types are raw keys
-		printer.push_indent();
+        printer.push_indent();
         printer.print("key-data", file.payload);
     }
 
@@ -193,40 +193,40 @@ ssp21::CertificateChain Actions::expect_certificate_chain(const ssp21::Container
 }
 
 void Actions::write(const std::string& path, ContainerEntryType type, const seq32_t& data)
-{    
-    SecureFile::write(path, ContainerFile(type, data));	
-	std::cout << "wrote: " << path << std::endl;
+{
+    SecureFile::write(path, ContainerFile(type, data));
+    std::cout << "wrote: " << path << std::endl;
 }
 
 void Actions::print_certificate_chain(ConsolePrinter& printer, const seq32_t& data)
 {
-	const auto chain = parse_or_throw<CertificateChain>(data);
-    
-	int i = 1;
+    const auto chain = parse_or_throw<CertificateChain>(data);
 
-	auto print = [&](const CertificateEnvelope& envelope) 
-	{
-		std::cout << std::endl;
-		std::cout << "certificate #" << i << std::endl;
-		printer.push_indent();
-		envelope.print("envelope", printer);		
+    int i = 1;
 
-		CertificateBody body;
-		const auto body_err = body.read_all(envelope.certificate_body);
-		if (any(body_err))
-		{
-			throw Exception("Error parsing certificate body: ", ParseErrorSpec::to_string(body_err));
-		}
+    auto print = [&](const CertificateEnvelope & envelope)
+    {
+        std::cout << std::endl;
+        std::cout << "certificate #" << i << std::endl;
+        printer.push_indent();
+        envelope.print("envelope", printer);
 
-		printer.push_indent();
-		printer.push_indent();
-		body.print("body", printer);
-		printer.pop_indent();
-		printer.pop_indent();
-		++i;
-	};
+        CertificateBody body;
+        const auto body_err = body.read_all(envelope.certificate_body);
+        if (any(body_err))
+        {
+            throw Exception("Error parsing certificate body: ", ParseErrorSpec::to_string(body_err));
+        }
 
-	chain.certificates.foreach(print);
+        printer.push_indent();
+        printer.push_indent();
+        body.print("body", printer);
+        printer.pop_indent();
+        printer.pop_indent();
+        ++i;
+    };
+
+    chain.certificates.foreach(print);
 }
 
 Actions::Times Actions::get_validity_times_from_user()
