@@ -9,8 +9,6 @@
 
 #include "ssp21/util/SecureFile.h"
 
-#include "ConsolePrinter.h"
-
 #include <chrono>
 
 using namespace std::chrono;
@@ -200,13 +198,13 @@ void Actions::write(const std::string& path, ContainerEntryType type, const seq3
 	std::cout << "wrote: " << path << std::endl;
 }
 
-void Actions::print_certificate_chain(IMessagePrinter& printer, const seq32_t& data)
+void Actions::print_certificate_chain(ConsolePrinter& printer, const seq32_t& data)
 {
 	const auto chain = parse_or_throw<CertificateChain>(data);
     
 	auto print = [&printer](const CertificateEnvelope& envelope) 
 	{
-		envelope.print("envelope", printer);
+		envelope.print("envelope", printer);		
 
 		CertificateBody body;
 		const auto body_err = body.read_all(envelope.certificate_body);
@@ -215,7 +213,11 @@ void Actions::print_certificate_chain(IMessagePrinter& printer, const seq32_t& d
 			throw Exception("Error parsing certificate body: ", ParseErrorSpec::to_string(body_err));
 		}
 
+		printer.push_indent();
+		printer.push_indent();
 		body.print("body", printer);
+		printer.pop_indent();
+		printer.pop_indent();
 	};
 
 	chain.certificates.foreach(print);

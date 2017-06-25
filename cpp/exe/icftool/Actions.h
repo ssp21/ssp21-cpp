@@ -14,6 +14,8 @@
 
 #include <string>
 
+#include "ConsolePrinter.h"
+
 class Actions
 {
 
@@ -27,7 +29,7 @@ public:
 
 private:
 
-    static void print_certificate_chain(ssp21::IMessagePrinter& printer, const ssp21::seq32_t& data);
+    static void print_certificate_chain(ConsolePrinter& printer, const ssp21::seq32_t& data);
     static void calc_signature(const ssp21::seq32_t& data, const ssp21::ContainerFile& private_key_entry, ssp21::DSAOutput& signature);
 
     static ssp21::PublicKeyType get_public_key_type(const ssp21::ContainerFile& file);
