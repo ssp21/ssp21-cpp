@@ -13,9 +13,9 @@ namespace ssp21
 {
 
     IndustrialCertificateHandler::IndustrialCertificateHandler(
-		const std::shared_ptr<ssp21::SecureDynamicBuffer>& anchor_cert_file_data,
-		const std::shared_ptr<ssp21::SecureDynamicBuffer>& presented_chain_file_data
-	) :
+        const std::shared_ptr<ssp21::SecureDynamicBuffer>& anchor_cert_file_data,
+        const std::shared_ptr<ssp21::SecureDynamicBuffer>& presented_chain_file_data
+    ) :
         anchor_certificate_file_data(anchor_cert_file_data),
         presented_chain_file_data(presented_chain_file_data),
         anchor_certificate_body(read_anchor_cert(anchor_certificate_file_data->as_rslice())),
@@ -45,10 +45,10 @@ namespace ssp21
 
         if (chain.certificates.count() != 1) throw Exception("Unexpected number of certificates: ", chain.certificates.count());
 
-        CertificateBody body;        
+        CertificateBody body;
         const auto err = body.read_all(chain.certificates.get(0)->certificate_body);
         if (any(err)) throw Exception("Unable to read certificate body: ", ParseErrorSpec::to_string(err));
-        
+
         return body;
     }
 
@@ -70,14 +70,14 @@ namespace ssp21
             const auto err = chain.read_all(file.payload);
             if (any(err)) throw Exception("Unable to read certificate chain: ", ParseErrorSpec::to_string(err));
         }
-				
-		{
-			// verify the chain
-			CertificateBody endpoint;
-			const auto err = Chain::verify(anchor, chain.certificates, endpoint);
-			if (any(err)) throw Exception("Error verifying certificate chain: ", HandshakeErrorSpec::to_string(err));
-		}		
-        
+
+        {
+            // verify the chain
+            CertificateBody endpoint;
+            const auto err = Chain::verify(anchor, chain.certificates, endpoint);
+            if (any(err)) throw Exception("Error verifying certificate chain: ", HandshakeErrorSpec::to_string(err));
+        }
+
         return file.payload;
     }
 

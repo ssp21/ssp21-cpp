@@ -12,33 +12,34 @@
 
 namespace ssp21
 {
-	/*
-		An envelope and certificate body backed by an owned buffer
-	*/
-	class MockCertificateData : private openpal::Uncopyable
-	{
-		const std::unique_ptr<openpal::Buffer> public_key_data;
+    /*
+    	An envelope and certificate body backed by an owned buffer
+    */
+    class MockCertificateData : private openpal::Uncopyable
+    {
+        const std::unique_ptr<openpal::Buffer> public_key_data;
+        const std::unique_ptr<openpal::Buffer> signature_data;
 
-	public:
-		const CertificateBody body;
-	
-	private:
+    public:
+        const CertificateBody body;
 
-		const std::unique_ptr<openpal::Buffer> body_data;
+    private:
 
-	public:
+        const std::unique_ptr<openpal::Buffer> body_data;
 
-		const CertificateEnvelope envelope;
+    public:
 
-		MockCertificateData(uint8_t signing_level, PublicKeyType public_key_type);		
+        const CertificateEnvelope envelope;
 
-	private:
+        MockCertificateData(uint8_t signing_level, PublicKeyType public_key_type);
 
-		static std::unique_ptr<openpal::Buffer> allocate(PublicKeyType type);
-		static std::unique_ptr<openpal::Buffer> initialize(std::unique_ptr<openpal::Buffer> buffer);
+    private:
 
-		MockCertificateData() = delete;
-	};
+        static uint8_t get_size(PublicKeyType type);
+        static std::unique_ptr<openpal::Buffer> allocate(uint8_t size);
+
+        MockCertificateData() = delete;
+    };
 
 }
 

@@ -35,17 +35,11 @@ namespace ssp21
 
     HandshakeError Chain::verify_pair(const CertificateBody& parent, const CertificateEnvelope& child_envelope, CertificateBody& child)
     {
-        HashOutput issuer_hash;
-        Crypto::hash_sha256({ parent.public_key }, issuer_hash);
-        auto calculated_issuer_id = issuer_hash.as_seq().take(consts::crypto::issuer_id_length);
-
-        if (!child_envelope.issuer_id.equals(calculated_issuer_id)) return HandshakeError::bad_certificate_chain;
-
         const auto dsa_info = try_get_dsa_info(parent.public_key_type);
 
         if (dsa_info.verify == nullptr) return HandshakeError::bad_certificate_chain;
 
-        if (dsa_info.signature_length != parent.public_key.length()) return HandshakeError::bad_certificate_chain;
+        if (dsa_info.signature_length != child_envelope.signature.length()) return HandshakeError::bad_certificate_chain;
 
         if (!dsa_info.verify(child_envelope.certificate_body, child_envelope.signature, parent.public_key)) return HandshakeError::authentication_error;
 

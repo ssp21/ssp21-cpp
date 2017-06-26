@@ -29,16 +29,14 @@ struct CertificateEnvelope final
     CertificateEnvelope();
 
     CertificateEnvelope(
-        const seq32_t& issuer_id,
         const seq32_t& signature,
         const seq32_t& certificate_body
     );
 
     size_t size() const;
 
-    static const uint8_t min_size_bytes = 3;
+    static const uint8_t min_size_bytes = 2;
 
-    SeqByteField issuer_id;
     SeqByteField signature;
     SeqByteField certificate_body;
 

@@ -25,9 +25,9 @@ namespace ssp21
     public:
 
         IndustrialCertificateHandler(
-			const std::shared_ptr<ssp21::SecureDynamicBuffer>& anchor_cert_file_data, 
-			const std::shared_ptr<ssp21::SecureDynamicBuffer>& presented_chain_file_data
-		);
+            const std::shared_ptr<ssp21::SecureDynamicBuffer>& anchor_cert_file_data,
+            const std::shared_ptr<ssp21::SecureDynamicBuffer>& presented_chain_file_data
+        );
 
         virtual seq32_t certificate_data() const override;
 

@@ -7,7 +7,6 @@ object CertificateEnvelope extends Struct {
   override def name: String = "CertificateEnvelope"
 
   override def fields: List[Field] = List(
-    SeqOfByte("issuer_id"),
     SeqOfByte("signature"),
     SeqOfByte("certificate_body")
   )

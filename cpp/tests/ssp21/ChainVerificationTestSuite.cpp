@@ -5,6 +5,7 @@
 #include "ssp21/crypto/gen/CertificateChain.h"
 
 #include "mocks/CryptoFixture.h"
+#include "mocks/MockCertificateData.h"
 
 #include "testlib/Hex.h"
 #include "testlib/HexConversions.h"
@@ -16,21 +17,18 @@ using namespace openpal;
 
 TEST_CASE(SUITE("successfully verifies single certificate"))
 {
-	CryptoFixture fix;
+    CryptoFixture fix;
 
-	const Hex anchor_public_key(repeat_hex(0xFF, consts::crypto::x25519_key_length));
+    const Hex anchor_public_key(repeat_hex(0xFF, consts::crypto::x25519_key_length));
 
-	const CertificateBody anchor_cert(
-		0,
-		0xFFFFFFFF,
-		0,
-		PublicKeyType::X25519,
-		anchor_public_key.as_rslice()
-	);
+    const MockCertificateData anchor(1, PublicKeyType::Ed25519);
+    const MockCertificateData endpoint(0, PublicKeyType::X25519);
 
-	CertificateChain chain;
-	//chain.certificates.push()
+    CertificateChain chain;
+    REQUIRE(chain.certificates.push(endpoint.envelope));
 
-	//Chain::verify(anchor, )
+    CertificateBody body;
+    const auto err = Chain::verify(anchor.body, chain.certificates, body);
+    REQUIRE(err == HandshakeError::none);
 }
 

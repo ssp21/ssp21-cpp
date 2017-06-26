@@ -137,7 +137,6 @@ void Actions::create_certificate(const std::string& certificate_file_path, const
     calc_signature(body_bytes->as_rslice(), private_key_entry, signature);
 
     const CertificateEnvelope envelope(
-        seq32_t::empty(),
         signature.as_seq(),
         body_bytes->as_rslice().take(static_cast<uint16_t>(body_bytes->length()))
     );
