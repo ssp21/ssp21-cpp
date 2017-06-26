@@ -43,7 +43,7 @@ namespace ssp21
 
         ctx.handshake.derive_authentication_key(
             res.written,
-            *ctx.keys.local_static_private_key,
+            *ctx.keys.private_key,
             msg.ephemeral_public_key,
             remote_public_static_key,
             ec

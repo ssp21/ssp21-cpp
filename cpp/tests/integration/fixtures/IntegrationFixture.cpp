@@ -18,16 +18,16 @@ namespace ssp21
     }
 
     IntegrationFixture::Stacks IntegrationFixture::preshared_key_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe)
-    {        
-		const auto keys = generate_random_keys();
+    {
+        const auto keys = generate_random_keys();
 
         const auto initiator = Factory::initiator(
                                    Addresses(1, 10),
                                    InitiatorConfig(),
                                    rlogger,
                                    exe,
-								   keys.initiator,                                   
-                                   ICertificateHandler::preshared_key(keys.responder.local_static_public_key)
+                                   keys.initiator,
+                                   ICertificateHandler::preshared_key(keys.responder.public_key)
                                );
 
         const auto responder = Factory::responder(
@@ -36,36 +36,37 @@ namespace ssp21
                                    ilogger,
                                    exe,
                                    keys.responder,
-                                   ICertificateHandler::preshared_key(keys.initiator.local_static_public_key)
+                                   ICertificateHandler::preshared_key(keys.initiator.public_key)
                                );
 
         return Stacks{ initiator, responder };
     }
 
-	IntegrationFixture::Keys IntegrationFixture::generate_random_keys()
-	{
-		// we need to first perform some key derivation
-		KeyPair kp_responder;
-		KeyPair kp_initiator;
+    IntegrationFixture::Keys IntegrationFixture::generate_random_keys()
+    {
+        // we need to first perform some key derivation
+        KeyPair kp_responder;
+        KeyPair kp_initiator;
 
-		Crypto::gen_keypair_x25519(kp_responder);
-		Crypto::gen_keypair_x25519(kp_initiator);
-			
-		// make copies of the all the keys on the heap
+        Crypto::gen_keypair_x25519(kp_responder);
+        Crypto::gen_keypair_x25519(kp_initiator);
 
-		return Keys {
-			// initiator
-			LocalKeys(
-				std::make_shared<const PublicKey>(kp_initiator.public_key), 
-				std::make_shared<const PrivateKey>(kp_initiator.private_key)
-			),
-			// responder
-			LocalKeys(
-				std::make_shared<const PublicKey>(kp_responder.public_key),
-				std::make_shared<const PrivateKey>(kp_responder.private_key)
-			),
-		};
-	}
+        // make copies of the all the keys on the heap
+
+        return Keys
+        {
+            // initiator
+            LocalKeys(
+                std::make_shared<const PublicKey>(kp_initiator.public_key),
+                std::make_shared<const PrivateKey>(kp_initiator.private_key)
+            ),
+            // responder
+            LocalKeys(
+                std::make_shared<const PublicKey>(kp_responder.public_key),
+                std::make_shared<const PrivateKey>(kp_responder.private_key)
+            ),
+        };
+    }
 
     void IntegrationFixture::wire()
     {
