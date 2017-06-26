@@ -9,6 +9,7 @@
 
 #include "ssp21/stack/IStack.h"
 #include "ssp21/crypto/StaticKeys.h"
+#include "ssp21/util/SecureDynamicBuffer.h"
 
 namespace ssp21
 {
@@ -21,11 +22,18 @@ namespace ssp21
             const std::shared_ptr<IStack> responder;
         };
 
-        struct Keys
+        struct EndpointKeys
         {
             StaticKeys initiator;
             StaticKeys responder;
         };
+		
+		struct AuthorityData
+		{
+			const std::shared_ptr<PrivateKey> private_key;
+			const std::shared_ptr<PublicKey> public_key;
+			const std::shared_ptr<SecureDynamicBuffer> certificate_file_data;			
+		};		
 
     public:
 
@@ -52,8 +60,9 @@ namespace ssp21
 
         static Stacks certificate_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe);
 
+        static EndpointKeys generate_random_keys();
 
-        static Keys generate_random_keys();
+		static AuthorityData generate_authority_data();
 
         void wire();
     };

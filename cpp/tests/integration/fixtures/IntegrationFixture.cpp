@@ -3,6 +3,14 @@
 #include "ssp21/crypto/Crypto.h"
 #include "ssp21/stack/Factory.h"
 
+#include "ssp21/crypto/gen/CertificateBody.h"
+#include "ssp21/crypto/gen/CertificateEnvelope.h"
+#include "ssp21/crypto/gen/CertificateChain.h"
+#include "ssp21/crypto/gen/ContainerFile.h"
+
+#include "ssp21/util/SerializationUtils.h"
+#include "ssp21/util/Exception.h"
+
 namespace ssp21
 {
 
@@ -54,7 +62,7 @@ namespace ssp21
                                    rlogger,
                                    exe,
                                    keys.initiator,
-                                   ICertificateHandler::preshared_key(keys.responder.public_key)
+                                   ICertificateHandler::certificates(nullptr, nullptr)
                                );
 
         const auto responder = Factory::responder(
@@ -63,13 +71,13 @@ namespace ssp21
                                    ilogger,
                                    exe,
                                    keys.responder,
-                                   ICertificateHandler::preshared_key(keys.initiator.public_key)
+                                   ICertificateHandler::certificates(nullptr, nullptr)
                                );
 
         return Stacks{ initiator, responder };
     }
 
-    IntegrationFixture::Keys IntegrationFixture::generate_random_keys()
+    IntegrationFixture::EndpointKeys IntegrationFixture::generate_random_keys()
     {
         // we need to first perform some key derivation
         KeyPair kp_responder;
@@ -80,7 +88,7 @@ namespace ssp21
 
         // make copies of the all the keys on the heap
 
-        return Keys
+        return EndpointKeys
         {
             // initiator
             StaticKeys(
@@ -94,6 +102,46 @@ namespace ssp21
             ),
         };
     }
+
+	IntegrationFixture::AuthorityData IntegrationFixture::generate_authority_data()
+	{		
+		KeyPair kp_authority;
+		Crypto::gen_keypair_ed25519(kp_authority);
+		
+		// now generate a self-signed authority certificate
+		const CertificateBody body(
+			0x00000000,
+			0xFFFFFFFF,
+			1,
+			PublicKeyType::Ed25519,
+			kp_authority.public_key.as_seq()
+		);
+
+		const auto body_data = serialize::to_buffer(body);
+
+		DSAOutput signature;
+		std::error_code ec;
+		Crypto::sign_ed25519(body_data->as_rslice(), kp_authority.private_key.as_seq(), signature, ec);
+		if (ec)
+		{
+			throw Exception("Error signing authority certificate: ", ec.message());
+		}
+		
+		CertificateChain chain;
+		chain.certificates.push(
+			CertificateEnvelope(
+				signature.as_seq(),
+				body_data->as_rslice()
+			)
+		);
+		const auto chain_data = serialize::to_buffer(chain);
+
+		return AuthorityData {
+			std::make_shared<PrivateKey>(kp_authority.private_key),
+			std::make_shared<PublicKey>(kp_authority.public_key),
+			serialize::to_secure_buffer(ContainerFile(ContainerEntryType::certificate_chain, chain_data->as_rslice()))
+		};
+	}
 
     void IntegrationFixture::wire()
     {
