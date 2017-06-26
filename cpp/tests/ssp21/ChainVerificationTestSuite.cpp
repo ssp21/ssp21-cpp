@@ -19,8 +19,6 @@ TEST_CASE(SUITE("successfully verifies single certificate"))
 {
     CryptoFixture fix;
 
-    const Hex anchor_public_key(repeat_hex(0xFF, consts::crypto::x25519_key_length));
-
     const MockCertificateData anchor(1, PublicKeyType::Ed25519);
     const MockCertificateData endpoint(0, PublicKeyType::X25519);
 

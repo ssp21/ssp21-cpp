@@ -19,6 +19,8 @@ namespace ssp21
 
     public:
 
+        void assert_fixture();
+
         static bool initialize();
 
         virtual void zero_memory(const wseq32_t& data) override;

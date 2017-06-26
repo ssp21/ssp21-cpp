@@ -39,17 +39,35 @@ namespace ssp21
 
         if (dsa_info.verify == nullptr) return HandshakeError::bad_certificate_chain;
 
-        if (dsa_info.signature_length != child_envelope.signature.length()) return HandshakeError::bad_certificate_chain;
+        if (dsa_info.signature_length != child_envelope.signature.length())
+        {
+            return HandshakeError::bad_certificate_chain;
+        }
 
-        if (!dsa_info.verify(child_envelope.certificate_body, child_envelope.signature, parent.public_key)) return HandshakeError::authentication_error;
+        if (!dsa_info.verify(child_envelope.certificate_body, child_envelope.signature, parent.public_key))
+        {
+            return HandshakeError::authentication_error;
+        }
 
-        if (any(child.read_all(child_envelope.certificate_body))) return HandshakeError::bad_certificate_format;
+        if (any(child.read_all(child_envelope.certificate_body)))
+        {
+            return HandshakeError::bad_certificate_format;
+        }
 
-        if (child.valid_after < parent.valid_after) return HandshakeError::bad_certificate_chain;
+        if (child.valid_after < parent.valid_after)
+        {
+            return HandshakeError::bad_certificate_chain;
+        }
 
-        if (child.valid_before > parent.valid_before) return HandshakeError::bad_certificate_chain;
+        if (child.valid_before > parent.valid_before)
+        {
+            return HandshakeError::bad_certificate_chain;
+        }
 
-        if(child.signing_level >= parent.signing_level) return HandshakeError::bad_certificate_chain;
+        if (child.signing_level >= parent.signing_level)
+        {
+            return HandshakeError::bad_certificate_chain;
+        }
 
         return HandshakeError::none;
     }
