@@ -45,12 +45,10 @@ namespace ssp21
 
         if (chain.certificates.count() != 1) throw Exception("Unexpected number of certificates: ", chain.certificates.count());
 
-        CertificateBody body;
-        {
-            const auto err = body.read_all(chain.certificates.get(0)->certificate_body);
-            if (any(err)) throw Exception("Unable to read certificate body: ", ParseErrorSpec::to_string(err));
-        }
-
+        CertificateBody body;        
+        const auto err = body.read_all(chain.certificates.get(0)->certificate_body);
+        if (any(err)) throw Exception("Unable to read certificate body: ", ParseErrorSpec::to_string(err));
+        
         return body;
     }
 
