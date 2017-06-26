@@ -17,7 +17,7 @@ namespace ssp21
         const openpal::Logger& logger,
         const std::shared_ptr<IFrameWriter>& frame_writer,
         const std::shared_ptr<openpal::IExecutor>& executor,
-        const LocalKeys& keys,
+        const StaticKeys& static_keys,
         const std::shared_ptr<ICertificateHandler>& certificate_handler) :
         CryptoLayer(
             HandshakeMode::Responder,
@@ -26,7 +26,7 @@ namespace ssp21
             logger,
             frame_writer,
             executor,
-            keys,
+			static_keys,
             certificate_handler
         ),
         handshake_state(ResponderHandshake::Idle::get())

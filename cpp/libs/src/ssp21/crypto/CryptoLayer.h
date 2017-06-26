@@ -6,7 +6,7 @@
 #include "ssp21/crypto/Handshake.h"
 #include "ssp21/crypto/Reassembler.h"
 #include "ssp21/crypto/TxState.h"
-#include "ssp21/crypto/LocalKeys.h"
+#include "ssp21/crypto/StaticKeys.h"
 #include "ssp21/crypto/ICertificateHandler.h"
 #include "ssp21/crypto/CryptoLayerConfig.h"
 
@@ -40,7 +40,7 @@ namespace ssp21
             const openpal::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
             const std::shared_ptr<openpal::IExecutor>& executor,
-            const LocalKeys& keys,
+            const StaticKeys& static_keys,
             const std::shared_ptr<ICertificateHandler>& certificate_handler
         );
 
@@ -109,7 +109,7 @@ namespace ssp21
         const std::shared_ptr<IFrameWriter> frame_writer;
         const std::shared_ptr<openpal::IExecutor> executor;
 
-        const LocalKeys keys;
+        const StaticKeys static_keys;
         const std::shared_ptr<ICertificateHandler> certificate_handler;
 
         Handshake handshake;

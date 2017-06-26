@@ -1,6 +1,6 @@
 
-#ifndef SSP21_LOCALKEYS_H
-#define SSP21_LOCALKEYS_H
+#ifndef SSP21_STATICKEYS_H
+#define SSP21_STATICKEYS_H
 
 #include "ssp21/crypto/BufferTypes.h"
 
@@ -8,9 +8,9 @@
 
 namespace ssp21
 {
-    struct LocalKeys
+    struct StaticKeys
     {
-        LocalKeys(
+		StaticKeys(
             const std::shared_ptr<const PublicKey>& public_key,
             const std::shared_ptr<const PrivateKey>& private_key
         ) :

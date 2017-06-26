@@ -56,12 +56,12 @@ namespace ssp21
         return Keys
         {
             // initiator
-            LocalKeys(
+			StaticKeys(
                 std::make_shared<const PublicKey>(kp_initiator.public_key),
                 std::make_shared<const PrivateKey>(kp_initiator.private_key)
             ),
             // responder
-            LocalKeys(
+			StaticKeys(
                 std::make_shared<const PublicKey>(kp_responder.public_key),
                 std::make_shared<const PrivateKey>(kp_responder.private_key)
             ),

@@ -8,7 +8,7 @@
 #include "testlib/MockLogHandler.h"
 
 #include "ssp21/stack/IStack.h"
-#include "ssp21/crypto/LocalKeys.h"
+#include "ssp21/crypto/StaticKeys.h"
 
 namespace ssp21
 {
@@ -23,8 +23,8 @@ namespace ssp21
 
         struct Keys
         {
-            LocalKeys initiator;
-            LocalKeys responder;
+			StaticKeys initiator;
+			StaticKeys responder;
         };
 
     public:

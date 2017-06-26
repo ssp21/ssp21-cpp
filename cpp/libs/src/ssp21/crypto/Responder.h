@@ -39,7 +39,7 @@ namespace ssp21
             const openpal::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
             const std::shared_ptr<openpal::IExecutor>& executor,
-            const LocalKeys& keys,
+            const StaticKeys& static_keys,
             const std::shared_ptr<ICertificateHandler>& certificate_handler
         );
 

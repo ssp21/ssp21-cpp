@@ -19,10 +19,10 @@ namespace ssp21
             const ResponderConfig& config,
             openpal::Logger logger,
             const std::shared_ptr<openpal::IExecutor>& executor,
-            const LocalKeys& keys,
+            const StaticKeys& static_keys,
             const std::shared_ptr<ICertificateHandler>& certificate_handler) :
             link(addresses.source, addresses.destination),
-            responder(config, logger, get_frame_writer(logger, addresses, consts::link::max_config_payload_size), executor,  keys, certificate_handler)
+            responder(config, logger, get_frame_writer(logger, addresses, consts::link::max_config_payload_size), executor, static_keys, certificate_handler)
         {
 
         }
@@ -63,10 +63,10 @@ namespace ssp21
             const InitiatorConfig& config,
             openpal::Logger logger,
             const std::shared_ptr<openpal::IExecutor>& executor,
-            const LocalKeys& keys,
+            const StaticKeys& static_keys,
             const std::shared_ptr<ICertificateHandler>& certificate_handler) :
             link(addresses.source, addresses.destination),
-            initiator(config, logger, get_frame_writer(logger, addresses, consts::link::max_config_payload_size), executor, keys, certificate_handler)
+            initiator(config, logger, get_frame_writer(logger, addresses, consts::link::max_config_payload_size), executor, static_keys, certificate_handler)
         {
 
         }

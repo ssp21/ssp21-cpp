@@ -39,7 +39,7 @@ namespace ssp21
 
     protected:
 
-        static LocalKeys get_keys()
+        static StaticKeys get_keys()
         {
             const auto local_pub = std::make_shared<PublicKey>();
             const auto local_priv = std::make_shared<PrivateKey>();
@@ -47,7 +47,7 @@ namespace ssp21
             init_key(*local_pub);
             init_key(*local_priv);
 
-            return LocalKeys(local_pub, local_priv);
+            return StaticKeys(local_pub, local_priv);
         }
 
         static std::shared_ptr<ICertificateHandler> get_certificate_handler()
