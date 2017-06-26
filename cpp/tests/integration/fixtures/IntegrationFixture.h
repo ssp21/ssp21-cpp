@@ -65,7 +65,7 @@ namespace ssp21
 
         static AuthorityData generate_authority_data();
 
-        static std::shared_ptr<SecureDynamicBuffer> make_cert_file_data(const seq32_t& public_key, PublicKeyType type, uint8_t signing_level, const PrivateKey& signing_key);
+        static std::shared_ptr<SecureDynamicBuffer> make_cert_file_data(const PublicKey& public_key, PublicKeyType public_key_type, uint8_t signing_level, const PrivateKey& signing_key);
 
         void wire();
     };

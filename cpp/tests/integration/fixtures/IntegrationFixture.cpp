@@ -57,8 +57,8 @@ namespace ssp21
         const auto authority_data = generate_authority_data();
 
         // produce certifivate data for each endpoint, signing it with the authority private key
-        const auto initiator_cert_data = make_cert_file_data(keys.initiator.public_key->as_seq(), PublicKeyType::X25519, 0, *authority_data.private_key);
-        const auto responder_cert_data = make_cert_file_data(keys.responder.public_key->as_seq(), PublicKeyType::X25519, 0, *authority_data.private_key);
+        const auto initiator_cert_data = make_cert_file_data(*keys.initiator.public_key, PublicKeyType::X25519, 0, *authority_data.private_key);
+        const auto responder_cert_data = make_cert_file_data(*keys.responder.public_key, PublicKeyType::X25519, 0, *authority_data.private_key);
 
 
         const auto initiator = Factory::initiator(
@@ -118,7 +118,7 @@ namespace ssp21
     {
         KeyPair kp_authority;
         Crypto::gen_keypair_ed25519(kp_authority);
-        const auto cert_file_data = make_cert_file_data(kp_authority.public_key.as_seq(), PublicKeyType::Ed25519, 1, kp_authority.private_key);
+        const auto cert_file_data = make_cert_file_data(kp_authority.public_key, PublicKeyType::Ed25519, 1, kp_authority.private_key);
 
         return AuthorityData
         {
@@ -128,14 +128,14 @@ namespace ssp21
         };
     }
 
-    std::shared_ptr<SecureDynamicBuffer> IntegrationFixture::make_cert_file_data(const seq32_t& public_key, PublicKeyType type, uint8_t signing_level, const PrivateKey& signing_key)
+    std::shared_ptr<SecureDynamicBuffer> IntegrationFixture::make_cert_file_data(const PublicKey& public_key, PublicKeyType public_key_type, uint8_t signing_level, const PrivateKey& signing_key)
     {
         const CertificateBody body(
             0x00000000,
             0xFFFFFFFF,
-            1,
-            PublicKeyType::Ed25519,
-            public_key
+			signing_level,
+			public_key_type,
+            public_key.as_seq()
         );
 
         const auto body_data = serialize::to_buffer(body);
