@@ -14,6 +14,11 @@ namespace ssp21
 
     class IntegrationFixture
     {
+        struct Stacks
+        {
+            const std::shared_ptr<IStack> initiator;
+            const std::shared_ptr<IStack> responder;
+        };
 
     public:
 
@@ -29,11 +34,16 @@ namespace ssp21
         UpperLayer initiator_upper;
         UpperLayer responder_upper;
 
-        std::shared_ptr<IStack> initiator;
-        std::shared_ptr<IStack> responder;
-
         const std::shared_ptr<SeqValidator> initiator_validator = SeqValidator::create();
         const std::shared_ptr<SeqValidator> responder_validator = SeqValidator::create();
+
+        Stacks stacks;
+
+    private:
+
+        static Stacks preshared_key_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe);
+
+        void wire();
     };
 
 }
