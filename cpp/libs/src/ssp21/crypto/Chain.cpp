@@ -10,7 +10,10 @@ namespace ssp21
 
     HandshakeError Chain::verify(const CertificateBody& anchor, const ICollection<CertificateEnvelope>& certificates, CertificateBody& result)
     {
-        if (certificates.count() == 0) return HandshakeError::bad_certificate_chain;
+        if (certificates.count() == 0)
+        {
+            return HandshakeError::bad_certificate_chain;
+        }
 
         auto parent = &anchor;
 
@@ -25,10 +28,16 @@ namespace ssp21
         }
 
         // terminal certificate must have signing level == 0
-        if (result.signing_level != 0) return HandshakeError::bad_certificate_chain;
+        if (result.signing_level != 0)
+        {
+            return HandshakeError::bad_certificate_chain;
+        }
 
         // terminal certificate must have a DH key
-        if (!is_dh_key(result.public_key_type)) return HandshakeError::bad_certificate_chain;
+        if (!is_dh_key(result.public_key_type))
+        {
+            return HandshakeError::bad_certificate_chain;
+        }
 
         return HandshakeError::none;
     }
