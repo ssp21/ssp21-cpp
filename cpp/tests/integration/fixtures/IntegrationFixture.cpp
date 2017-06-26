@@ -54,7 +54,12 @@ namespace ssp21
     {
         const auto keys = generate_random_keys();
 
-        // TODO - we need to generate certificates here
+        const auto authority_data = generate_authority_data();
+
+        // produce certifivate data for each endpoint, signing it with the authority private key
+        const auto initiator_cert_data = make_cert_file_data(keys.initiator.public_key->as_seq(), PublicKeyType::X25519, 0, *authority_data.private_key);
+        const auto responder_cert_data = make_cert_file_data(keys.responder.public_key->as_seq(), PublicKeyType::X25519, 0, *authority_data.private_key);
+
 
         const auto initiator = Factory::initiator(
                                    Addresses(1, 10),
@@ -62,7 +67,10 @@ namespace ssp21
                                    rlogger,
                                    exe,
                                    keys.initiator,
-                                   ICertificateHandler::certificates(nullptr, nullptr)
+                                   ICertificateHandler::certificates(
+                                       authority_data.certificate_file_data,
+                                       initiator_cert_data
+                                   )
                                );
 
         const auto responder = Factory::responder(
@@ -71,7 +79,10 @@ namespace ssp21
                                    ilogger,
                                    exe,
                                    keys.responder,
-                                   ICertificateHandler::certificates(nullptr, nullptr)
+                                   ICertificateHandler::certificates(
+                                       authority_data.certificate_file_data,
+                                       responder_cert_data
+                                   )
                                );
 
         return Stacks{ initiator, responder };
@@ -103,45 +114,52 @@ namespace ssp21
         };
     }
 
-	IntegrationFixture::AuthorityData IntegrationFixture::generate_authority_data()
-	{		
-		KeyPair kp_authority;
-		Crypto::gen_keypair_ed25519(kp_authority);
-		
-		// now generate a self-signed authority certificate
-		const CertificateBody body(
-			0x00000000,
-			0xFFFFFFFF,
-			1,
-			PublicKeyType::Ed25519,
-			kp_authority.public_key.as_seq()
-		);
+    IntegrationFixture::AuthorityData IntegrationFixture::generate_authority_data()
+    {
+        KeyPair kp_authority;
+        Crypto::gen_keypair_ed25519(kp_authority);
+        const auto cert_file_data = make_cert_file_data(kp_authority.public_key.as_seq(), PublicKeyType::Ed25519, 1, kp_authority.private_key);
 
-		const auto body_data = serialize::to_buffer(body);
+        return AuthorityData
+        {
+            std::make_shared<PrivateKey>(kp_authority.private_key),
+            std::make_shared<PublicKey>(kp_authority.public_key),
+            cert_file_data
+        };
+    }
 
-		DSAOutput signature;
-		std::error_code ec;
-		Crypto::sign_ed25519(body_data->as_rslice(), kp_authority.private_key.as_seq(), signature, ec);
-		if (ec)
-		{
-			throw Exception("Error signing authority certificate: ", ec.message());
-		}
-		
-		CertificateChain chain;
-		chain.certificates.push(
-			CertificateEnvelope(
-				signature.as_seq(),
-				body_data->as_rslice()
-			)
-		);
-		const auto chain_data = serialize::to_buffer(chain);
+    std::shared_ptr<SecureDynamicBuffer> IntegrationFixture::make_cert_file_data(const seq32_t& public_key, PublicKeyType type, uint8_t signing_level, const PrivateKey& signing_key)
+    {
+        const CertificateBody body(
+            0x00000000,
+            0xFFFFFFFF,
+            1,
+            PublicKeyType::Ed25519,
+            public_key
+        );
 
-		return AuthorityData {
-			std::make_shared<PrivateKey>(kp_authority.private_key),
-			std::make_shared<PublicKey>(kp_authority.public_key),
-			serialize::to_secure_buffer(ContainerFile(ContainerEntryType::certificate_chain, chain_data->as_rslice()))
-		};
-	}
+        const auto body_data = serialize::to_buffer(body);
+
+        DSAOutput signature;
+        std::error_code ec;
+        Crypto::sign_ed25519(body_data->as_rslice(), signing_key.as_seq(), signature, ec);
+        if (ec)
+        {
+            throw Exception("Error signing certificate: ", ec.message());
+        }
+
+        CertificateChain chain;
+        chain.certificates.push(
+            CertificateEnvelope(
+                signature.as_seq(),
+                body_data->as_rslice()
+            )
+        );
+
+        const auto chain_data = serialize::to_buffer(chain);
+
+        return serialize::to_secure_buffer(ContainerFile(ContainerEntryType::certificate_chain, chain_data->as_rslice()));
+    }
 
     void IntegrationFixture::wire()
     {

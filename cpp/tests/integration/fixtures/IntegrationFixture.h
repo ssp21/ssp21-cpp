@@ -9,6 +9,7 @@
 
 #include "ssp21/stack/IStack.h"
 #include "ssp21/crypto/StaticKeys.h"
+#include "ssp21/crypto/gen/PublicKeyType.h"
 #include "ssp21/util/SecureDynamicBuffer.h"
 
 namespace ssp21
@@ -27,13 +28,13 @@ namespace ssp21
             StaticKeys initiator;
             StaticKeys responder;
         };
-		
-		struct AuthorityData
-		{
-			const std::shared_ptr<PrivateKey> private_key;
-			const std::shared_ptr<PublicKey> public_key;
-			const std::shared_ptr<SecureDynamicBuffer> certificate_file_data;			
-		};		
+
+        struct AuthorityData
+        {
+            const std::shared_ptr<PrivateKey> private_key;
+            const std::shared_ptr<PublicKey> public_key;
+            const std::shared_ptr<SecureDynamicBuffer> certificate_file_data;
+        };
 
     public:
 
@@ -62,7 +63,9 @@ namespace ssp21
 
         static EndpointKeys generate_random_keys();
 
-		static AuthorityData generate_authority_data();
+        static AuthorityData generate_authority_data();
+
+        static std::shared_ptr<SecureDynamicBuffer> make_cert_file_data(const seq32_t& public_key, PublicKeyType type, uint8_t signing_level, const PrivateKey& signing_key);
 
         void wire();
     };
