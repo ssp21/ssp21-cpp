@@ -129,16 +129,16 @@ namespace ssp21
     }
 
     std::shared_ptr<SecureDynamicBuffer> IntegrationFixture::make_cert_file_data(const PublicKey& public_key, PublicKeyType public_key_type, uint8_t signing_level, const PrivateKey& signing_key)
-    {
-        const CertificateBody body(
-            0x00000000,
-            0xFFFFFFFF,
-			signing_level,
-			public_key_type,
-            public_key.as_seq()
-        );
-
-        const auto body_data = serialize::to_buffer(body);
+    {        
+        const auto body_data = serialize::to_buffer(
+			CertificateBody(
+				0x00000000,
+				0xFFFFFFFF,
+				signing_level,
+				public_key_type,
+				public_key.as_seq()
+			)
+		);
 
         DSAOutput signature;
         std::error_code ec;
