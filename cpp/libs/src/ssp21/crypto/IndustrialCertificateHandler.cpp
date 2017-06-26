@@ -8,16 +8,18 @@
 #include "ssp21/crypto/Chain.h"
 
 #include "ssp21/util/Exception.h"
-#include "ssp21/util/SecureFile.h"
 
 namespace ssp21
 {
 
-    IndustrialCertificateHandler::IndustrialCertificateHandler(const std::string& anchor_certificate_path, const std::string& presented_chain_path) :
-        anchor_certificate_file_data(SecureFile::read(anchor_certificate_path)),
-        presented_chain_file_data(SecureFile::read(presented_chain_path)),
+    IndustrialCertificateHandler::IndustrialCertificateHandler(
+		const std::shared_ptr<ssp21::SecureDynamicBuffer>& anchor_cert_file_data,
+		const std::shared_ptr<ssp21::SecureDynamicBuffer>& presented_chain_file_data
+	) :
+        anchor_certificate_file_data(anchor_cert_file_data),
+        presented_chain_file_data(presented_chain_file_data),
         anchor_certificate_body(read_anchor_cert(anchor_certificate_file_data->as_rslice())),
-        presented_certificate_data(verify_presented_chain(presented_chain_file_data->as_rslice()))
+        presented_certificate_data(verify_presented_chain(anchor_certificate_body, presented_chain_file_data->as_rslice()))
     {
 
     }
@@ -52,7 +54,7 @@ namespace ssp21
         return body;
     }
 
-    seq32_t IndustrialCertificateHandler::verify_presented_chain(const seq32_t& file_data)
+    seq32_t IndustrialCertificateHandler::verify_presented_chain(const CertificateBody& anchor, const seq32_t& file_data)
     {
         ContainerFile file;
         {
@@ -67,11 +69,17 @@ namespace ssp21
 
         CertificateChain chain;
         {
-            const auto err = file.read_all(file_data);
+            const auto err = chain.read_all(file.payload);
             if (any(err)) throw Exception("Unable to read certificate chain: ", ParseErrorSpec::to_string(err));
         }
-
-        // TODO - go deeper?
+				
+		{
+			// verify the chain
+			CertificateBody endpoint;
+			const auto err = Chain::verify(anchor, chain.certificates, endpoint);
+			if (any(err)) throw Exception("Error verifying certificate chain: ", HandshakeErrorSpec::to_string(err));
+		}		
+        
         return file.payload;
     }
 
@@ -90,7 +98,6 @@ namespace ssp21
             const auto err = chain.read_all(certificate_data);
             if (any(err)) return HandshakeError::bad_certificate_format;
         }
-
 
         CertificateBody endpoint_cert;
         const auto err = Chain::verify(this->anchor_certificate_body, chain.certificates, endpoint_cert);

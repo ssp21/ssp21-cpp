@@ -24,7 +24,10 @@ namespace ssp21
     {
     public:
 
-        IndustrialCertificateHandler(const std::string& anchor_certificate_path, const std::string& presented_chain_path);
+        IndustrialCertificateHandler(
+			const std::shared_ptr<ssp21::SecureDynamicBuffer>& anchor_cert_file_data, 
+			const std::shared_ptr<ssp21::SecureDynamicBuffer>& presented_chain_file_data
+		);
 
         virtual seq32_t certificate_data() const override;
 
@@ -45,7 +48,7 @@ namespace ssp21
 
 
         static CertificateBody read_anchor_cert(const seq32_t& envelope_data);
-        static seq32_t verify_presented_chain(const seq32_t& chain_data);
+        static seq32_t verify_presented_chain(const CertificateBody& anchor, const seq32_t& chain_data);
     };
 
 
