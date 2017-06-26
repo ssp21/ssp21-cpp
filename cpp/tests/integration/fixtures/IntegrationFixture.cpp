@@ -42,6 +42,33 @@ namespace ssp21
         return Stacks{ initiator, responder };
     }
 
+    IntegrationFixture::Stacks IntegrationFixture::certificate_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe)
+    {
+        const auto keys = generate_random_keys();
+
+        // TODO - we need to generate certificates here
+
+        const auto initiator = Factory::initiator(
+                                   Addresses(1, 10),
+                                   InitiatorConfig(),
+                                   rlogger,
+                                   exe,
+                                   keys.initiator,
+                                   ICertificateHandler::preshared_key(keys.responder.public_key)
+                               );
+
+        const auto responder = Factory::responder(
+                                   Addresses(10, 1),
+                                   ResponderConfig(),
+                                   ilogger,
+                                   exe,
+                                   keys.responder,
+                                   ICertificateHandler::preshared_key(keys.initiator.public_key)
+                               );
+
+        return Stacks{ initiator, responder };
+    }
+
     IntegrationFixture::Keys IntegrationFixture::generate_random_keys()
     {
         // we need to first perform some key derivation
@@ -56,12 +83,12 @@ namespace ssp21
         return Keys
         {
             // initiator
-			StaticKeys(
+            StaticKeys(
                 std::make_shared<const PublicKey>(kp_initiator.public_key),
                 std::make_shared<const PrivateKey>(kp_initiator.private_key)
             ),
             // responder
-			StaticKeys(
+            StaticKeys(
                 std::make_shared<const PublicKey>(kp_responder.public_key),
                 std::make_shared<const PrivateKey>(kp_responder.private_key)
             ),

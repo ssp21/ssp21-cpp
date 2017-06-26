@@ -10,6 +10,7 @@
 
 #include "ssp21/util/SequenceTypes.h"
 #include "ssp21/util/ICollection.h"
+#include "ssp21/util/SecureDynamicBuffer.h"
 
 #include <memory>
 
@@ -54,6 +55,12 @@ namespace ssp21
         // ---- factory functions for various implementations ----
 
         static std::shared_ptr<ICertificateHandler> preshared_key(const std::shared_ptr<const PublicKey>& remote_static_public_key);
+
+        static std::shared_ptr<ICertificateHandler> certificates(
+            const std::shared_ptr<ssp21::SecureDynamicBuffer>& anchor_cert_file_data,
+            const std::shared_ptr<ssp21::SecureDynamicBuffer>& presented_chain_file_data
+        );
+
     };
 
 

@@ -26,7 +26,7 @@ namespace ssp21
             logger,
             frame_writer,
             executor,
-			static_keys,
+            static_keys,
             certificate_handler
         ),
         handshake_state(ResponderHandshake::Idle::get())

@@ -23,8 +23,8 @@ namespace ssp21
 
         struct Keys
         {
-			StaticKeys initiator;
-			StaticKeys responder;
+            StaticKeys initiator;
+            StaticKeys responder;
         };
 
     public:
@@ -49,6 +49,10 @@ namespace ssp21
     private:
 
         static Stacks preshared_key_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe);
+
+        static Stacks certificate_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe);
+
+
         static Keys generate_random_keys();
 
         void wire();

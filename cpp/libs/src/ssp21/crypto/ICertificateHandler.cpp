@@ -2,6 +2,7 @@
 #include "ssp21/crypto/ICertificateHandler.h"
 
 #include "ssp21/crypto/PresharedKeyCertificateHandler.h"
+#include "ssp21/crypto/IndustrialCertificateHandler.h"
 
 namespace ssp21
 {
@@ -11,6 +12,13 @@ namespace ssp21
         return std::make_shared<PresharedKeyCertificateHandler>(remote_static_public_key);
     }
 
+    std::shared_ptr<ICertificateHandler> ICertificateHandler::certificates(
+        const std::shared_ptr<ssp21::SecureDynamicBuffer>& anchor_cert_file_data,
+        const std::shared_ptr<ssp21::SecureDynamicBuffer>& presented_chain_file_data
+    )
+    {
+        return std::make_shared<IndustrialCertificateHandler>(anchor_cert_file_data, presented_chain_file_data);
+    }
 }
 
 

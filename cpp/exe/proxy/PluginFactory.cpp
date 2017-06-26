@@ -41,7 +41,7 @@ plugin_factory_t PluginFactory::get(const ProxyConfig& config)
                 config,
                 logger,
                 exe,
-				StaticKeys(
+                StaticKeys(
                     cfg.local_public_key,
                     cfg.local_private_key
                 ),

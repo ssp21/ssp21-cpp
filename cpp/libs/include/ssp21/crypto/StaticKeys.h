@@ -10,7 +10,7 @@ namespace ssp21
 {
     struct StaticKeys
     {
-		StaticKeys(
+        StaticKeys(
             const std::shared_ptr<const PublicKey>& public_key,
             const std::shared_ptr<const PrivateKey>& private_key
         ) :

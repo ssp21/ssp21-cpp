@@ -22,7 +22,7 @@ namespace ssp21
         logger(logger),
         frame_writer(frame_writer),
         executor(executor),
-		static_keys(static_keys),
+        static_keys(static_keys),
         certificate_handler(certificate_handler),
         handshake(type),
         session(frame_writer, session_config),
