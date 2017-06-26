@@ -29,7 +29,7 @@ namespace ssp21
         }
 
         // terminal certificate must have signing level == 0
-        if (result.signing_level != 0)
+        if (parent.signing_level != 0)
         {
             return HandshakeError::bad_certificate_chain;
         }
