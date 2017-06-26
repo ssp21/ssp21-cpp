@@ -18,27 +18,16 @@ namespace ssp21
     }
 
     IntegrationFixture::Stacks IntegrationFixture::preshared_key_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe)
-    {
-        // we need to first perform some key derivation so we can inject private keys, and share public keys
-        KeyPair kp_responder;
-        KeyPair kp_initiator;
-
-        Crypto::gen_keypair_x25519(kp_responder);
-        Crypto::gen_keypair_x25519(kp_initiator);
-
-        // make copies of the all the keys on the heap
-        const auto responder_pub = std::make_shared<const PublicKey>(kp_responder.public_key);
-        const auto initiator_pub = std::make_shared<const PublicKey>(kp_initiator.public_key);
-        const auto responder_priv = std::make_shared<const PrivateKey>(kp_responder.private_key);
-        const auto initiator_priv = std::make_shared<const PrivateKey>(kp_initiator.private_key);
+    {        
+		const auto keys = generate_random_keys();
 
         const auto initiator = Factory::initiator(
                                    Addresses(1, 10),
                                    InitiatorConfig(),
                                    rlogger,
                                    exe,
-                                   LocalKeys(initiator_pub, initiator_priv),
-                                   ICertificateHandler::preshared_key(responder_pub)
+								   keys.initiator,                                   
+                                   ICertificateHandler::preshared_key(keys.responder.local_static_public_key)
                                );
 
         const auto responder = Factory::responder(
@@ -46,12 +35,37 @@ namespace ssp21
                                    ResponderConfig(),
                                    ilogger,
                                    exe,
-                                   LocalKeys(responder_pub, responder_priv),
-                                   ICertificateHandler::preshared_key(initiator_pub)
+                                   keys.responder,
+                                   ICertificateHandler::preshared_key(keys.initiator.local_static_public_key)
                                );
 
         return Stacks{ initiator, responder };
     }
+
+	IntegrationFixture::Keys IntegrationFixture::generate_random_keys()
+	{
+		// we need to first perform some key derivation
+		KeyPair kp_responder;
+		KeyPair kp_initiator;
+
+		Crypto::gen_keypair_x25519(kp_responder);
+		Crypto::gen_keypair_x25519(kp_initiator);
+			
+		// make copies of the all the keys on the heap
+
+		return Keys {
+			// initiator
+			LocalKeys(
+				std::make_shared<const PublicKey>(kp_initiator.public_key), 
+				std::make_shared<const PrivateKey>(kp_initiator.private_key)
+			),
+			// responder
+			LocalKeys(
+				std::make_shared<const PublicKey>(kp_responder.public_key),
+				std::make_shared<const PrivateKey>(kp_responder.private_key)
+			),
+		};
+	}
 
     void IntegrationFixture::wire()
     {

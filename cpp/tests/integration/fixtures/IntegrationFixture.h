@@ -8,6 +8,7 @@
 #include "testlib/MockLogHandler.h"
 
 #include "ssp21/stack/IStack.h"
+#include "ssp21/crypto/LocalKeys.h"
 
 namespace ssp21
 {
@@ -19,6 +20,12 @@ namespace ssp21
             const std::shared_ptr<IStack> initiator;
             const std::shared_ptr<IStack> responder;
         };
+
+		struct Keys
+		{
+			LocalKeys initiator;
+			LocalKeys responder;
+		};
 
     public:
 
@@ -42,6 +49,7 @@ namespace ssp21
     private:
 
         static Stacks preshared_key_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe);
+		static Keys generate_random_keys();
 
         void wire();
     };
