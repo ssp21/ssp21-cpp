@@ -24,6 +24,10 @@ TEST_CASE(SUITE("fixture construction"))
 TEST_CASE(SUITE("completes handshake"))
 {
     IntegrationFixture fix;
+    fix.ilog.log_everything();
+    fix.rlog.log_everything();
+    fix.ilog.write_to_stdio();
+    fix.rlog.write_to_stdio();
     open_and_test_handshake(fix);
 }
 

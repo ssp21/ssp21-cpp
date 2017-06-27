@@ -83,7 +83,7 @@ namespace ssp21
 
     seq32_t IndustrialCertificateHandler::certificate_data() const
     {
-        return this->presented_chain_file_data->as_rslice();
+        return this->presented_certificate_data;
     }
 
     HandshakeError IndustrialCertificateHandler::validate(CertificateMode mode, const seq32_t& certificate_data, seq32_t& public_key_output)
