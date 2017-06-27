@@ -14,6 +14,12 @@
 
 namespace ssp21
 {
+	enum class Mode : uint8_t
+	{
+		preshared_key,
+		certificates
+	};
+
 
     class IntegrationFixture
     {
@@ -38,7 +44,7 @@ namespace ssp21
 
     public:
 
-        IntegrationFixture();
+        IntegrationFixture(Mode mode);
 
         const std::shared_ptr<openpal::MockExecutor> exe;
         openpal::MockLogHandler ilog;

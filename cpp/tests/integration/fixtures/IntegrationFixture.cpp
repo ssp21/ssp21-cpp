@@ -17,13 +17,15 @@
 namespace ssp21
 {
 
-    IntegrationFixture::IntegrationFixture() :
+    IntegrationFixture::IntegrationFixture(Mode mode) :
         exe(std::make_shared<openpal::MockExecutor>()),
         ilog("initiator"),
         rlog("responder"),
         initiator_lower(exe),
         responder_lower(exe),
-        stacks(preshared_key_stacks(rlog.logger, ilog.logger, exe))
+        stacks(
+			(mode == Mode::preshared_key) ? preshared_key_stacks(rlog.logger, ilog.logger, exe) : certificate_stacks(rlog.logger, ilog.logger, exe)
+		)
     {
         this->wire();
     }
