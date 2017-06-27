@@ -10,6 +10,9 @@
 
 #include "ssp21/util/SerializationUtils.h"
 #include "ssp21/util/Exception.h"
+#include "ssp21/util/ConsolePrettyPrinter.h"
+
+#include "openpal/logging/HexLogging.h"
 
 namespace ssp21
 {
@@ -20,7 +23,8 @@ namespace ssp21
         rlog("responder"),
         initiator_lower(exe),
         responder_lower(exe),
-        stacks(preshared_key_stacks(rlog.logger, ilog.logger, exe))
+        //stacks(preshared_key_stacks(rlog.logger, ilog.logger, exe))
+        stacks(certificate_stacks(rlog.logger, ilog.logger, exe))
     {
         this->wire();
     }
@@ -54,12 +58,12 @@ namespace ssp21
     {
         const auto keys = generate_random_keys();
 
+        //
         const auto authority_data = generate_authority_data();
 
         // produce certifivate data for each endpoint, signing it with the authority private key
         const auto initiator_cert_data = make_cert_file_data(*keys.initiator.public_key, PublicKeyType::X25519, 0, *authority_data.private_key);
         const auto responder_cert_data = make_cert_file_data(*keys.responder.public_key, PublicKeyType::X25519, 0, *authority_data.private_key);
-
 
         const auto initiator = Factory::initiator(
                                    Addresses(1, 10),
@@ -129,16 +133,16 @@ namespace ssp21
     }
 
     std::shared_ptr<SecureDynamicBuffer> IntegrationFixture::make_cert_file_data(const PublicKey& public_key, PublicKeyType public_key_type, uint8_t signing_level, const PrivateKey& signing_key)
-    {        
+    {
         const auto body_data = serialize::to_buffer(
-			CertificateBody(
-				0x00000000,
-				0xFFFFFFFF,
-				signing_level,
-				public_key_type,
-				public_key.as_seq()
-			)
-		);
+                                   CertificateBody(
+                                       0x00000000,
+                                       0xFFFFFFFF,
+                                       signing_level,
+                                       public_key_type,
+                                       public_key.as_seq()
+                                   )
+                               );
 
         DSAOutput signature;
         std::error_code ec;
@@ -158,7 +162,9 @@ namespace ssp21
 
         const auto chain_data = serialize::to_buffer(chain);
 
-        return serialize::to_secure_buffer(ContainerFile(ContainerEntryType::certificate_chain, chain_data->as_rslice()));
+        const ContainerFile container(ContainerEntryType::certificate_chain, chain_data->as_rslice());
+
+        return serialize::to_secure_buffer(container);
     }
 
     void IntegrationFixture::wire()

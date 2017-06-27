@@ -39,7 +39,7 @@ namespace ssp21
 
         CertificateChain chain;
         {
-            const auto err = file.read_all(file_data);
+            const auto err = chain.read_all(file.payload);
             if (any(err)) throw Exception("Unable to read certificate chain: ", ParseErrorSpec::to_string(err));
         }
 
