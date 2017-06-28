@@ -90,6 +90,10 @@ void Actions::append_certificate_chains(const std::string& file_path_1, const st
     const auto file_data_2 = SecureFile::read(file_path_2);
     const auto chain_2 = expect_certificate_chain(parse_or_throw<ContainerFile>(file_data_2->as_rslice()));
 
+
+	// TODO - validate that the last certificate in chain #1 contains a public key that authenticates the first certificate in chain #2
+
+
     CertificateChain chain;
 
     auto add_cert = [&chain](const CertificateEnvelope & envelope)
