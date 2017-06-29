@@ -2,6 +2,7 @@
 #include "Actions.h"
 
 #include "ssp21/crypto/Crypto.h"
+#include "ssp21/crypto/Chain.h"
 
 #include "ssp21/crypto/gen/CertificateBody.h"
 #include "ssp21/crypto/gen/CertificateEnvelope.h"
@@ -90,9 +91,31 @@ void Actions::append_certificate_chains(const std::string& file_path_1, const st
     const auto file_data_2 = SecureFile::read(file_path_2);
     const auto chain_2 = expect_certificate_chain(parse_or_throw<ContainerFile>(file_data_2->as_rslice()));
 
+	if (chain_1.certificates.is_empty())
+	{
+		throw Exception("The initial chain is empty. Must contain 1 or more certificates.");
+	}
+	
+	
+	if (chain_2.certificates.count() != 1)
+	{
+		throw Exception("The certificate chain being appended doesn't contain a single entry, it contains: ", chain_2.certificates.count());
+	}
 
-	// TODO - validate that the last certificate in chain #1 contains a public key that authenticates the first certificate in chain #2
-
+	// extract the body of the last certificate in the initial chain
+	CertificateBody last_body = parse_or_throw<CertificateBody>(chain_1.certificates.last()->certificate_body);
+	
+	
+	
+	{
+		// Verify that the certificated being appended can be verified using the last certificate in the existing chain
+		CertificateBody final_body;
+		const auto err = Chain::verify(last_body, chain_2.certificates, final_body);
+		if (any(err))
+		{
+			throw Exception("Error verifying certificate chain: ", HandshakeErrorSpec::to_string(err));
+		}			
+	}
 
     CertificateChain chain;
 
