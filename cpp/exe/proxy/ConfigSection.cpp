@@ -5,6 +5,8 @@
 
 #include "ConfigKeys.h"
 
+#include "ssp21/crypto/ICertificateHandler.h"
+
 using namespace openpal;
 
 ConfigSection::ConfigSection(const std::string& id) :
@@ -32,9 +34,11 @@ std::unique_ptr<ProxyConfig> ConfigSection::get_config() const
                ProxyConfig::SSP21(
                    this->local_address.get(this->id),
                    this->remote_address.get(this->id),
-                   this->local_public_key.get(this->id),
-                   this->local_private_key.get(this->id),
-                   this->remote_public_key.get(this->id)
+				   ssp21::StaticKeys(
+					   this->local_public_key.get(this->id),
+					   this->local_private_key.get(this->id)
+				   ),
+				   ssp21::ICertificateHandler::preshared_key(this->remote_public_key.get(this->id))                   
                ),
                this->max_sessions.get(this->id),
                this->listen_port.get(this->id),

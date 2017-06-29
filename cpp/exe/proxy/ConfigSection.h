@@ -32,7 +32,7 @@ public:
     ConfigField<uint16_t> connect_port;
     ConfigField<std::string> connect_endpoint;
 
-private:
+private:	
 
     openpal::LogLevels get_levels() const;
 

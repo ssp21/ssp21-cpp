@@ -1,13 +1,15 @@
 #ifndef SSP21PROXY_PROXYCONFIG_H
 #define SSP21PROXY_PROXYCONFIG_H
 
-#include <string>
-#include <memory>
-
 #include "openpal/util/Uncopyable.h"
 #include "openpal/logging/LogLevels.h"
 
 #include "ssp21/crypto/BufferTypes.h"
+#include "ssp21/crypto/ICertificateHandler.h"
+#include "ssp21/crypto/StaticKeys.h"
+
+#include <string>
+#include <memory>
 
 struct ProxyConfig : public openpal::Uncopyable
 {
@@ -22,25 +24,22 @@ struct ProxyConfig : public openpal::Uncopyable
         SSP21(
             uint16_t local_address,
             uint16_t remote_address,
-            const std::shared_ptr<const ssp21::PublicKey>& local_public_key,
-            const std::shared_ptr<const ssp21::PrivateKey>& local_private_key,
-            const std::shared_ptr<const ssp21::PublicKey>& remote_public_key
+            const ssp21::StaticKeys& local_keys,            
+			const std::shared_ptr<ssp21::ICertificateHandler>& certificate_handler
         ) :
             local_address(local_address),
             remote_address(remote_address),
-            local_public_key(local_public_key),
-            local_private_key(local_private_key),
-            remote_public_key(remote_public_key)
+			local_keys(local_keys),
+			certificate_handler(certificate_handler)
         {}
 
         SSP21() = delete;
 
         const uint16_t local_address;
         const uint16_t remote_address;
-
-        const std::shared_ptr<const ssp21::PublicKey> local_public_key;
-        const std::shared_ptr<const ssp21::PrivateKey> local_private_key;
-        const std::shared_ptr<const ssp21::PublicKey> remote_public_key;
+               
+		const ssp21::StaticKeys local_keys;
+		const std::shared_ptr<ssp21::ICertificateHandler> certificate_handler;        
     };
 
     ProxyConfig(

@@ -20,11 +20,8 @@ plugin_factory_t PluginFactory::get(const ProxyConfig& config)
                 config,
                 logger,
                 exe,
-                StaticKeys(
-                    cfg.local_public_key,
-                    cfg.local_private_key
-                ),
-                ICertificateHandler::preshared_key(cfg.remote_public_key)
+				cfg.local_keys,
+                cfg.certificate_handler
             );
         };
     }
@@ -41,11 +38,8 @@ plugin_factory_t PluginFactory::get(const ProxyConfig& config)
                 config,
                 logger,
                 exe,
-                StaticKeys(
-                    cfg.local_public_key,
-                    cfg.local_private_key
-                ),
-                ICertificateHandler::preshared_key(cfg.remote_public_key)
+                cfg.local_keys,
+                cfg.certificate_handler
             );
         };
     }
