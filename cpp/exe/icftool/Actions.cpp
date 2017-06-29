@@ -82,7 +82,7 @@ void Actions::gen_ed25519_key_pair(const std::string& private_key_path, const st
     write(public_key_path, ContainerEntryType::ed25519_public_key, kp.public_key.as_seq());
 }
 
-void Actions::append_certificate_chains(const std::string& file_path_1, const std::string& file_path_2, const std::string& output_file_path)
+void Actions::append_certificate_chains(const std::string& file_path_1, const std::string&file_path_2, const std::string& output_file_path)
 {
 
     const auto file_data_1 = SecureFile::read(file_path_1);
@@ -138,21 +138,22 @@ void Actions::append_certificate_chains(const std::string& file_path_1, const st
     );
 }
 
-void Actions::create_certificate(const std::string& certificate_file_path, const std::string& public_key_path, const std::string& private_key_path)
+void Actions::create_certificate(
+	const std::string& certificate_file_path,
+	const std::string& public_key_path,
+	const std::string& private_key_path,	
+	const Times& validity_times,
+	const uint8_t signing_level)
 {
     const auto private_key_data = SecureFile::read(private_key_path);
     const auto private_key_entry = parse_or_throw<ContainerFile>(private_key_data->as_rslice());
 
     const auto public_key_data = SecureFile::read(public_key_path);
     const auto public_key_entry = parse_or_throw<ContainerFile>(public_key_data->as_rslice());
-
-    // interactively read stuff from the user
-    const auto validity = get_validity_times_from_user();
-    const auto signing_level = get_signing_level_from_user();
-
+  
     const CertificateBody body(
-        validity.valid_after,
-        validity.valid_before,
+		validity_times.valid_after,
+		validity_times.valid_before,
         signing_level,
         get_public_key_type(public_key_entry),
         public_key_entry.payload
@@ -176,6 +177,8 @@ void Actions::create_certificate(const std::string& certificate_file_path, const
     const ContainerFile file(ContainerEntryType::certificate_chain, chain_bytes->as_rslice());
 
     SecureFile::write(certificate_file_path, file);
+
+	print_contents(certificate_file_path);
 }
 
 void Actions::calc_signature(const seq32_t& data, const ContainerFile& private_key_entry, DSAOutput& signature)
@@ -255,27 +258,3 @@ void Actions::print_certificate_chain(ConsolePrinter& printer, const seq32_t& da
     chain.certificates.foreach(print);
 }
 
-Actions::Times Actions::get_validity_times_from_user()
-{
-    std::cout << "How many days (from now) should the certificate remain valid?" << std::endl;
-    uint16_t days = 0;
-    std::cin >> days;
-
-    const uint64_t valid_after_ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    const auto valid_before_ms = valid_after_ms + (days * 86400 * 1000);
-
-    return Times{ valid_after_ms, valid_before_ms };
-}
-
-uint8_t Actions::get_signing_level_from_user()
-{
-    std::cout << "Enter the certificate signing level (0 == endpoint certificate, max == 6):" << std::endl;
-    uint32_t signing_level = 256;
-
-    while (signing_level > 6)
-    {
-        std::cin >> signing_level;
-    }
-
-    return static_cast<uint8_t>(signing_level);
-}

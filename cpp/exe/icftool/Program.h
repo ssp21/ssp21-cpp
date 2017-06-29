@@ -12,6 +12,8 @@ namespace flags
     static const char* const ed25519 = "ed25519";
     static const char* const cert = "cert";
     static const char* const append = "append";
+	static const char* const days = "days";
+	static const char* const level = "level";
 }
 
 class Program

@@ -33,7 +33,7 @@ install(TARGETS sodiumbackend DESTINATION lib)
 set_target_properties(sodiumbackend PROPERTIES FOLDER libs)
 
 # ---- icf-tool executable ----
-add_executable (icftool ./cpp/exe/icftool/main.cpp ./cpp/exe/icftool/ConsolePrinter.h ./cpp/exe/icftool/Program.h ./cpp/exe/icftool/Program.cpp ./cpp/exe/icftool/Actions.h ./cpp/exe/icftool/Actions.cpp)
+add_executable (icftool ./cpp/exe/icftool/main.cpp ./cpp/exe/icftool/ConsolePrinter.h ./cpp/exe/icftool/Program.h ./cpp/exe/icftool/Program.cpp ./cpp/exe/icftool/Types.h ./cpp/exe/icftool/Types.cpp ./cpp/exe/icftool/Actions.h ./cpp/exe/icftool/Actions.cpp)
 target_link_libraries(icftool sodiumbackend)
 set_target_properties(icftool PROPERTIES FOLDER exe)
 
