@@ -74,17 +74,17 @@ ConfigReader::ConfigReader()
 
     this->key_handler_map[keys::local_public_key_path] = [](ConfigSection & section, const std::string & path)
     {
-        section.local_public_key.set(read_key_from_file<ssp21::PublicKey>(section.id, path, ContainerEntryType::x25519_public_key), section.id);
+		section.local_public_key_path.set(path, section.id);// read_key_from_file<ssp21::PublicKey>(section.id, path, ContainerEntryType::x25519_public_key), section.id);
     };
 
     this->key_handler_map[keys::local_private_key_path] = [](ConfigSection & section, const std::string & path)
     {
-        section.local_private_key.set(read_key_from_file<ssp21::PrivateKey>(section.id, path, ContainerEntryType::x25519_private_key), section.id);
+		section.local_private_key_path.set(path, section.id); // read_key_from_file<ssp21::PrivateKey>(section.id, path, ContainerEntryType::x25519_private_key), section.id);
     };
 
     this->key_handler_map[keys::remote_public_key_path] = [](ConfigSection & section, const std::string & path)
     {
-        section.remote_public_key.set(read_key_from_file<ssp21::PublicKey>(section.id, path, ContainerEntryType::x25519_public_key), section.id);
+		section.remote_public_key_path.set(path, section.id); // read_key_from_file<ssp21::PublicKey>(section.id, path, ContainerEntryType::x25519_public_key), section.id);
     };
 
 	this->key_handler_map[keys::authority_cert_path] = [](ConfigSection & section, const std::string & path)
@@ -178,36 +178,6 @@ ProxyConfig::CertificateMode ConfigReader::read_cert_mode(const std::string& sec
 	{
 		throw SectionException(section, "Unknown certificate mode: ", value);
 	}
-}
-
-template <class T>
-std::shared_ptr<const T> ConfigReader::read_key_from_file(const std::string& section_name, const std::string& path, ContainerEntryType expectedType)
-{
-    const auto file_data = SecureFile::read(path);
-
-    ContainerFile file;
-    const auto err = file.read_all(file_data->as_rslice());
-    if (any(err))
-    {
-        throw SectionException(section_name, "Error (", ParseErrorSpec::to_string(err), ")  reading container file: ", path);
-    }
-
-    if(file.container_entry_type != expectedType)
-    {
-        throw SectionException(section_name, "Unexpected file type (", ContainerEntryTypeSpec::to_string(file.container_entry_type), ") in file: ", path);
-    }
-
-    const auto expected_length = ssp21::BufferBase::get_buffer_length(ssp21::BufferType::x25519_key);
-    if (file.payload.length() != expected_length)
-    {
-        throw SectionException(section_name, "Unexpected key length: ", file.payload.length());
-    }
-
-    const auto key = std::make_shared<T>();
-    key->as_wseq().copy_from(file.payload);
-    key->set_type(BufferType::x25519_key);
-
-    return key;
 }
 
 template <class T>

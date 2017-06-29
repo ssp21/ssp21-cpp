@@ -19,11 +19,11 @@ public:
     ConfigField<ProxyConfig::Mode> mode;
 	ConfigField<ProxyConfig::CertificateMode> certificate_mode;
 
-    ConfigField<std::shared_ptr<const ssp21::PublicKey>> local_public_key;
-    ConfigField<std::shared_ptr<const ssp21::PrivateKey>> local_private_key;
+    ConfigField<std::string> local_public_key_path;
+    ConfigField<std::string> local_private_key_path;
 
 	// optional, only needed for preshared key mode
-    ConfigField<std::shared_ptr<const ssp21::PublicKey>> remote_public_key;
+    ConfigField<std::string> remote_public_key_path;
 
 	// both optional, use only for certificate mode
 	ConfigField<std::string> local_cert_path;

@@ -38,9 +38,6 @@ private:
 	static ProxyConfig::CertificateMode read_cert_mode(const std::string& section, const std::string& value);
 
     template <class T>
-    static std::shared_ptr<const T> read_key_from_file(const std::string& section, const std::string& path, ssp21::ContainerEntryType expectedTyp);	
-
-    template <class T>
     static T read_integer(const std::string& section, const std::string& value);
 
 
