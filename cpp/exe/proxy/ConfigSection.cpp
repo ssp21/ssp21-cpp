@@ -6,6 +6,7 @@
 #include "ConfigKeys.h"
 
 #include "ssp21/crypto/ICertificateHandler.h"
+#include "ssp21/util/SecureFile.h"
 
 using namespace openpal;
 
@@ -13,9 +14,12 @@ ConfigSection::ConfigSection(const std::string& id) :
     id(id),
     log_levels(keys::log_levels),
     mode(keys::mode),
+	certificate_mode(keys::certificate_mode),
     local_public_key(keys::local_public_key_path),
     local_private_key(keys::local_private_key_path),
     remote_public_key(keys::remote_public_key_path),
+	local_cert_path(keys::local_cert_path),
+	authority_cert_path(keys::authority_cert_path),
     local_address(keys::local_address),
     remote_address(keys::remote_address),
     max_sessions(keys::max_sessions),
@@ -38,7 +42,7 @@ std::unique_ptr<ProxyConfig> ConfigSection::get_config() const
 					   this->local_public_key.get(this->id),
 					   this->local_private_key.get(this->id)
 				   ),
-				   ssp21::ICertificateHandler::preshared_key(this->remote_public_key.get(this->id))                   
+				   this->get_certificate_handler()
                ),
                this->max_sessions.get(this->id),
                this->listen_port.get(this->id),
@@ -46,6 +50,21 @@ std::unique_ptr<ProxyConfig> ConfigSection::get_config() const
                this->connect_port.get(this->id),
                this->connect_endpoint.get(this->id)
            );
+}
+
+std::shared_ptr<ssp21::ICertificateHandler> ConfigSection::get_certificate_handler() const
+{
+	if (this->certificate_mode.get(this->id) == ProxyConfig::CertificateMode::preshared_keys)
+	{
+		return ssp21::ICertificateHandler::preshared_key(this->remote_public_key.get(this->id));
+	}
+	else
+	{
+		return ssp21::ICertificateHandler::certificates(
+			ssp21::SecureFile::read(this->authority_cert_path.get(id)),
+			ssp21::SecureFile::read(this->local_cert_path.get(id))
+		);
+	}	
 }
 
 LogLevels ConfigSection::get_levels() const

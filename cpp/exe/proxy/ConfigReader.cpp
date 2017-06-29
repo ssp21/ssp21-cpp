@@ -67,6 +67,11 @@ ConfigReader::ConfigReader()
         section.mode.set(read_mode(section.id, value), section.id);
     };
 
+	this->key_handler_map[keys::mode] = [](ConfigSection & section, const std::string & value)
+	{
+		section.certificate_mode.set(read_cert_mode(section.id, value), section.id);
+	};
+
     this->key_handler_map[keys::local_public_key_path] = [](ConfigSection & section, const std::string & path)
     {
         section.local_public_key.set(read_key_from_file<ssp21::PublicKey>(section.id, path, ContainerEntryType::x25519_public_key), section.id);
@@ -81,6 +86,16 @@ ConfigReader::ConfigReader()
     {
         section.remote_public_key.set(read_key_from_file<ssp21::PublicKey>(section.id, path, ContainerEntryType::x25519_public_key), section.id);
     };
+
+	this->key_handler_map[keys::authority_cert_path] = [](ConfigSection & section, const std::string & path)
+	{
+		section.authority_cert_path.set(path, section.id);
+	};
+
+	this->key_handler_map[keys::local_cert_path] = [](ConfigSection & section, const std::string & path)
+	{
+		section.local_cert_path.set(path, section.id);
+	};
 
     this->key_handler_map[keys::local_address] = [](ConfigSection & section, const std::string & value)
     {
@@ -147,6 +162,22 @@ ProxyConfig::Mode ConfigReader::read_mode(const std::string& section_name, const
     {
         throw SectionException(section_name, "Unknown mode: ", value);
     }
+}
+
+ProxyConfig::CertificateMode ConfigReader::read_cert_mode(const std::string& section, const std::string& value)
+{
+	if (value == "preshared")
+	{
+		return ProxyConfig::CertificateMode::preshared_keys;
+	}
+	else if (value == "certificate")
+	{
+		return ProxyConfig::CertificateMode::certificates;
+	}
+	else
+	{
+		throw SectionException(section, "Unknown certificate mode: ", value);
+	}
 }
 
 template <class T>

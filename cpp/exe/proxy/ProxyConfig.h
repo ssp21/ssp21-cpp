@@ -19,6 +19,12 @@ struct ProxyConfig : public openpal::Uncopyable
         responder
     };
 
+	enum class CertificateMode
+	{
+		preshared_keys,
+		certificates
+	};
+
     struct SSP21
     {
         SSP21(

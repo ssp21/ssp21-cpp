@@ -17,10 +17,18 @@ public:
 
     ConfigField<std::string> log_levels;
     ConfigField<ProxyConfig::Mode> mode;
+	ConfigField<ProxyConfig::CertificateMode> certificate_mode;
 
     ConfigField<std::shared_ptr<const ssp21::PublicKey>> local_public_key;
     ConfigField<std::shared_ptr<const ssp21::PrivateKey>> local_private_key;
+
+	// optional, only needed for preshared key mode
     ConfigField<std::shared_ptr<const ssp21::PublicKey>> remote_public_key;
+
+	// both optional, use only for certificate mode
+	ConfigField<std::string> local_cert_path;
+	ConfigField<std::string> authority_cert_path;
+
 
     ConfigField<uint16_t> local_address;
     ConfigField<uint16_t> remote_address;
@@ -33,6 +41,8 @@ public:
     ConfigField<std::string> connect_endpoint;
 
 private:	
+
+	std::shared_ptr<ssp21::ICertificateHandler> get_certificate_handler() const;
 
     openpal::LogLevels get_levels() const;
 
