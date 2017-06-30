@@ -13,7 +13,7 @@ public:
 
 	void add(const std::string& key, const std::string& value);
 
-    std::unique_ptr<ProxyConfig> get_config(const std::string& id);
+        std::unique_ptr<ProxyConfig> get_config(const std::string& id);
 	
 
 private:
@@ -38,7 +38,7 @@ private:
 	template <class T>
 	std::shared_ptr<const T> get_crypto_key(const std::string& key, ssp21::ContainerEntryType expectedType);
 
-	static openpal::LogLevels ConfigSection::get_levels_for_char(char value);
+	static openpal::LogLevels get_levels_for_char(char value);
 
 
 };
