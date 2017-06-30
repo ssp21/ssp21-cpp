@@ -9,39 +9,34 @@
 class ConfigSection : openpal::Uncopyable
 {
 
-public:
-
-    ConfigSection(const std::string& id);
+public:    
 
 	void add(const std::string& key, const std::string& value);
 
-    std::unique_ptr<ProxyConfig> get_config() const;
+    std::unique_ptr<ProxyConfig> get_config(const std::string& id);
 	
 
 private:
-
-	const std::string id;
+	
 	std::map<std::string, std::string> values;
 
+	std::shared_ptr<ssp21::ICertificateHandler> get_certificate_handler();
 
+	openpal::LogLevels get_levels();
 
-	std::shared_ptr<ssp21::ICertificateHandler> get_certificate_handler() const;
-
-	openpal::LogLevels get_levels() const;
-
-	std::string get_value(const std::string& key) const;
+	std::string consume_value(const std::string& key);
 
 	template <class T>
-	T get_integer_value(const std::string& key) const;
+	T get_integer_value(const std::string& key);
 
-	ProxyConfig::Mode get_mode() const;
+	ProxyConfig::Mode get_mode();
 
-	ProxyConfig::CertificateMode get_cert_mode() const;	
+	ProxyConfig::CertificateMode get_cert_mode();	
 
-	std::shared_ptr<ssp21::SecureDynamicBuffer> get_file_data(const std::string& key) const;
+	std::shared_ptr<ssp21::SecureDynamicBuffer> get_file_data(const std::string& key);
 
 	template <class T>
-	std::shared_ptr<const T> get_crypto_key(const std::string& key, ssp21::ContainerEntryType expectedType) const;
+	std::shared_ptr<const T> get_crypto_key(const std::string& key, ssp21::ContainerEntryType expectedType);
 
 	static openpal::LogLevels ConfigSection::get_levels_for_char(char value);
 

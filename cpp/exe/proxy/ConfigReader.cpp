@@ -43,7 +43,7 @@ std::vector<std::unique_ptr<ProxyConfig>> ConfigReader::read(const std::string& 
     for (auto& pair : c.sections)
     {
 		try {			
-			ret.push_back(pair.second->get_config());
+			ret.push_back(pair.second->get_config(pair.first));
 		}
 		catch (const ssp21::Exception& ex)
 		{
@@ -66,7 +66,7 @@ ConfigSection& ConfigReader::get_or_create_section(const std::string& section)
 
 	if (iter == this->sections.end())
 	{
-		auto ptr = std::make_unique<ConfigSection>(section);
+		auto ptr = std::make_unique<ConfigSection>();
 		auto& ret = *ptr;
 		this->sections[section] = std::move(ptr);
 		return ret;
