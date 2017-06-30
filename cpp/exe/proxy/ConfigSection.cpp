@@ -1,114 +1,103 @@
 
 #include "ConfigSection.h"
 
-#include "ssp21/stack/LogLevels.h"
-
 #include "ConfigKeys.h"
 
 #include "ssp21/crypto/ICertificateHandler.h"
 #include "ssp21/util/SecureFile.h"
+#include "ssp21/util/Exception.h"
+#include "ssp21/stack/LogLevels.h"
+#include "ssp21/crypto/gen/ContainerFile.h"
+
+#include "ssp21/util/Exception.h"
+#include "ssp21/stack/LogLevels.h"
 #include "ssp21/crypto/gen/ContainerFile.h"
 
 using namespace openpal;
 using namespace ssp21;
 
-template <class T>
-std::shared_ptr<const T> read_key_from_file(const std::string& section, const std::string& path,ContainerEntryType expectedType)
-{
-	const auto file_data = SecureFile::read(path);
-
-	ContainerFile file;
-	const auto err = file.read_all(file_data->as_rslice());
-	if (any(err))
-	{
-		throw SectionException(section, "Error (", ParseErrorSpec::to_string(err), ")  reading container file: ", path);
-	}
-
-	if (file.container_entry_type != expectedType)
-	{
-		throw SectionException(section, "Unexpected file type (", ContainerEntryTypeSpec::to_string(file.container_entry_type), ") in file: ", path);
-	}
-
-	const auto expected_length = ssp21::BufferBase::get_buffer_length(ssp21::BufferType::x25519_key);
-	if (file.payload.length() != expected_length)
-	{
-		throw SectionException(section, "Unexpected key length: ", file.payload.length());
-	}
-
-	const auto key = std::make_shared<T>();
-	key->as_wseq().copy_from(file.payload);
-	key->set_type(BufferType::x25519_key);
-
-	return key;
-}
-
-ConfigSection::ConfigSection(const std::string& id) :
-    id(id),
-    log_levels(keys::log_levels),
-    mode(keys::mode),
-	certificate_mode(keys::certificate_mode),
-    local_public_key_path(keys::local_public_key_path),
-    local_private_key_path(keys::local_private_key_path),
-    remote_public_key_path(keys::remote_public_key_path),
-	local_cert_path(keys::local_cert_path),
-	authority_cert_path(keys::authority_cert_path),
-    local_address(keys::local_address),
-    remote_address(keys::remote_address),
-    max_sessions(keys::max_sessions),
-    listen_port(keys::listen_port),
-    listen_endpoint(keys::listen_endpoint),
-    connect_port(keys::connect_port),
-    connect_endpoint(keys::connect_endpoint)
+ConfigSection::ConfigSection(const std::string& id) : id(id)	
 {}
+
+void ConfigSection::add(const std::string& key, const std::string& value)
+{
+	this->values[key] = value;
+}
 
 std::unique_ptr<ProxyConfig> ConfigSection::get_config() const
 {
     return std::make_unique<ProxyConfig>(
                this->id,
                this->get_levels(),
-               this->mode.get(this->id),
+               this->get_mode(),
                ProxyConfig::SSP21(
-                   this->local_address.get(this->id),
-                   this->remote_address.get(this->id),
+                   this->get_integer_value<uint16_t>(keys::local_address),
+                   this->get_integer_value<uint16_t>(keys::remote_address),
 				   ssp21::StaticKeys(
-					   read_key_from_file<ssp21::PublicKey>(this->id, this->local_public_key_path.get(this->id), ssp21::ContainerEntryType::x25519_public_key),
-					   read_key_from_file<ssp21::PrivateKey>(this->id, this->local_private_key_path.get(this->id), ssp21::ContainerEntryType::x25519_private_key)
+					   this->get_crypto_key<PublicKey>(keys::local_public_key_path, ContainerEntryType::x25519_public_key),
+					   this->get_crypto_key<PrivateKey>(keys::local_private_key_path, ContainerEntryType::x25519_private_key)
 				   ),
 				   this->get_certificate_handler()
                ),
-               this->max_sessions.get(this->id),
-               this->listen_port.get(this->id),
-               this->listen_endpoint.get(this->id),
-               this->connect_port.get(this->id),
-               this->connect_endpoint.get(this->id)
+               this->get_integer_value<uint16_t>(keys::max_sessions),
+			   this->get_integer_value<uint16_t>(keys::listen_port),
+               this->get_value(keys::listen_endpoint),
+			   this->get_integer_value<uint16_t>(keys::connect_port),
+               this->get_value(keys::connect_endpoint)               
            );
 }
 
 std::shared_ptr<ssp21::ICertificateHandler> ConfigSection::get_certificate_handler() const
-{
-	if (this->certificate_mode.get(this->id) == ProxyConfig::CertificateMode::preshared_keys)
+{	
+	if (this->get_cert_mode() == ProxyConfig::CertificateMode::preshared_keys)
 	{
 		return ssp21::ICertificateHandler::preshared_key(
-			read_key_from_file<ssp21::PublicKey>(this->id, this->remote_public_key_path.get(this->id), ssp21::ContainerEntryType::x25519_public_key)
+			this->get_crypto_key<ssp21::PublicKey>(
+				keys::remote_public_key_path, 
+				ContainerEntryType::x25519_public_key			
+			)
 		);
 	}
 	else
 	{
 		return ssp21::ICertificateHandler::certificates(
-			ssp21::SecureFile::read(this->authority_cert_path.get(id)),
-			ssp21::SecureFile::read(this->local_cert_path.get(id))
+			this->get_file_data(keys::authority_cert_path),
+			this->get_file_data(keys::local_cert_path)
 		);
-	}	
+	}		
 }
 
 LogLevels ConfigSection::get_levels() const
-{
-    LogLevels levels;
-    for (auto flag : this->log_levels.get(this->id))
+{	
+    LogLevels levels;	
+    for (auto flag : this->get_value(keys::log_levels))
     {
         levels |= this->get_levels_for_char(flag);
-    }
+    }	
     return levels;
+}
+
+std::string ConfigSection::get_value(const std::string& key) const
+{
+	const auto iter = this->values.find(key);
+	if (iter == values.end())
+	{
+		throw Exception("Required key (", key, ") not present in configuration in section: ", this->id);
+	}
+	return iter->second;
+}
+
+template <class T>
+T ConfigSection::get_integer_value(const std::string& key) const
+{
+	const auto value = this->get_value(key);
+	std::istringstream reader(value);
+	T val = 0;
+	if (!(reader >> val))
+	{
+		throw Exception("bad integer value: ", value);
+	}
+	return val;
 }
 
 LogLevels ConfigSection::get_levels_for_char(char value) const
@@ -130,8 +119,80 @@ LogLevels ConfigSection::get_levels_for_char(char value) const
     case('f'):
         return LogLevels(ssp21::levels::rx_crypto_msg_fields.value | ssp21::levels::tx_crypto_msg_fields.value);
     default:
-        throw SectionException(this->id, "unknown log level: ", value);
+        throw ssp21::Exception("unknown log level: ", value);
     }
+}
+
+ProxyConfig::Mode ConfigSection::get_mode() const
+{
+	const auto value = this->get_value(keys::mode);
+
+	if (value == "initiator")
+	{
+		return ProxyConfig::Mode::initiator;
+	}
+	else if (value == "responder")
+	{
+		return ProxyConfig::Mode::responder;
+	}
+	else
+	{
+		throw Exception("Unknown mode: ", value);
+	}
+}
+
+ProxyConfig::CertificateMode ConfigSection::get_cert_mode() const
+{
+	const auto value = this->get_value(keys::certificate_mode);
+
+	if (value == "preshared")
+	{
+		return ProxyConfig::CertificateMode::preshared_keys;
+	}
+	else if (value == "certificate")
+	{
+		return ProxyConfig::CertificateMode::certificates;
+	}
+	else
+	{
+		throw Exception("Unknown certificate mode: ", value);
+	}
+}
+
+std::shared_ptr<ssp21::SecureDynamicBuffer> ConfigSection::get_file_data(const std::string& key) const
+{
+	return ssp21::SecureFile::read(this->get_value(key));
+}
+
+template <class T>
+std::shared_ptr<const T> ConfigSection::get_crypto_key(const std::string& key, ssp21::ContainerEntryType expectedType) const
+{
+	const auto path = this->get_value(key);
+	const auto file_data = SecureFile::read(path);
+
+	ContainerFile file;
+	const auto err = file.read_all(file_data->as_rslice());
+	if (any(err))
+	{
+		throw Exception("Error (", ParseErrorSpec::to_string(err), ")  reading container file: ", path);
+	}
+
+	if (file.container_entry_type != expectedType)
+	{
+		throw Exception("Unexpected file type (", ContainerEntryTypeSpec::to_string(file.container_entry_type), ") in file: ", path);
+	}
+
+	const auto expected_length = ssp21::BufferBase::get_buffer_length(ssp21::BufferType::x25519_key);
+	if (file.payload.length() != expected_length)
+	{
+		throw Exception("Unexpected key length: ", file.payload.length());
+	}
+
+	const auto ret = std::make_shared<T>();
+	ret->as_wseq().copy_from(file.payload);
+	ret->set_type(BufferType::x25519_key);
+
+	return ret;
 }
 
 

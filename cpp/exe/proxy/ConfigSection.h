@@ -1,8 +1,10 @@
 #ifndef SSP21PROXY_CONFIGSECTION_H
 #define SSP21PROXY_CONFIGSECTION_H
 
-#include "ConfigField.h"
 #include "ProxyConfig.h"
+#include "ssp21/crypto/gen/ContainerEntryType.h"
+
+#include <map>
 
 class ConfigSection : openpal::Uncopyable
 {
@@ -11,42 +13,38 @@ public:
 
     ConfigSection(const std::string& id);
 
+	void add(const std::string& key, const std::string& value);
+
     std::unique_ptr<ProxyConfig> get_config() const;
+	
 
-    const std::string id;
+private:
 
-    ConfigField<std::string> log_levels;
-    ConfigField<ProxyConfig::Mode> mode;
-	ConfigField<ProxyConfig::CertificateMode> certificate_mode;
+	const std::string id;
 
-    ConfigField<std::string> local_public_key_path;
-    ConfigField<std::string> local_private_key_path;
-
-	// optional, only needed for preshared key mode
-    ConfigField<std::string> remote_public_key_path;
-
-	// both optional, use only for certificate mode
-	ConfigField<std::string> local_cert_path;
-	ConfigField<std::string> authority_cert_path;
-
-
-    ConfigField<uint16_t> local_address;
-    ConfigField<uint16_t> remote_address;
-
-    ConfigField<uint16_t> max_sessions;
-    ConfigField<uint16_t> listen_port;
-    ConfigField<std::string> listen_endpoint;
-
-    ConfigField<uint16_t> connect_port;
-    ConfigField<std::string> connect_endpoint;
-
-private:	
+	std::map<std::string, std::string> values;
 
 	std::shared_ptr<ssp21::ICertificateHandler> get_certificate_handler() const;
 
-    openpal::LogLevels get_levels() const;
+	openpal::LogLevels get_levels() const;
 
-    openpal::LogLevels get_levels_for_char(char value) const;
+	std::string get_value(const std::string& key) const;
+
+	template <class T>
+	T get_integer_value(const std::string& key) const;
+
+	ProxyConfig::Mode get_mode() const;
+
+	ProxyConfig::CertificateMode get_cert_mode() const;	
+
+	std::shared_ptr<ssp21::SecureDynamicBuffer> get_file_data(const std::string& key) const;
+
+	template <class T>
+	std::shared_ptr<const T> get_crypto_key(const std::string& key, ssp21::ContainerEntryType expectedType) const;
+
+	openpal::LogLevels ConfigSection::get_levels_for_char(char value) const;
+
+
 };
 
 #endif
