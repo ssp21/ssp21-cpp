@@ -8,6 +8,7 @@
 #include "ssp21/util/SecureFile.h"
 #include "ssp21/stack/LogLevels.h"
 #include "ssp21/crypto/gen/ContainerFile.h"
+#include "ssp21/util/Exception.h"
 
 #include <iostream>
 #include <sstream>
@@ -41,7 +42,14 @@ std::vector<std::unique_ptr<ProxyConfig>> ConfigReader::read(const std::string& 
 
     for (auto& pair : c.sections)
     {
-        ret.push_back(pair.second->get_config());
+		try {			
+			ret.push_back(pair.second->get_config());
+		}
+		catch (const ssp21::Exception& ex)
+		{
+			std::cerr << "Error in section: " << pair.first << std::endl;
+			throw ex;
+		}        
     }
 
     return ret;

@@ -21,8 +21,9 @@ public:
 private:
 
 	const std::string id;
-
 	std::map<std::string, std::string> values;
+
+
 
 	std::shared_ptr<ssp21::ICertificateHandler> get_certificate_handler() const;
 
@@ -42,7 +43,7 @@ private:
 	template <class T>
 	std::shared_ptr<const T> get_crypto_key(const std::string& key, ssp21::ContainerEntryType expectedType) const;
 
-	openpal::LogLevels ConfigSection::get_levels_for_char(char value) const;
+	static openpal::LogLevels ConfigSection::get_levels_for_char(char value);
 
 
 };

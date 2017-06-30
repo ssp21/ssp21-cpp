@@ -82,7 +82,7 @@ std::string ConfigSection::get_value(const std::string& key) const
 	const auto iter = this->values.find(key);
 	if (iter == values.end())
 	{
-		throw Exception("Required key (", key, ") not present in configuration in section: ", this->id);
+		throw Exception("Required key not found: ", key);
 	}
 	return iter->second;
 }
@@ -98,29 +98,6 @@ T ConfigSection::get_integer_value(const std::string& key) const
 		throw Exception("bad integer value: ", value);
 	}
 	return val;
-}
-
-LogLevels ConfigSection::get_levels_for_char(char value) const
-{
-    switch (value)
-    {
-    case('v'):
-        return LogLevels(ssp21::levels::event.value);
-    case('e'):
-        return LogLevels(ssp21::levels::error.value);
-    case('w'):
-        return LogLevels(ssp21::levels::warn.value);
-    case('i'):
-        return LogLevels(ssp21::levels::info.value);
-    case('d'):
-        return LogLevels(ssp21::levels::debug.value);
-    case('m'):
-        return LogLevels(ssp21::levels::rx_crypto_msg.value | ssp21::levels::tx_crypto_msg.value);
-    case('f'):
-        return LogLevels(ssp21::levels::rx_crypto_msg_fields.value | ssp21::levels::tx_crypto_msg_fields.value);
-    default:
-        throw ssp21::Exception("unknown log level: ", value);
-    }
 }
 
 ProxyConfig::Mode ConfigSection::get_mode() const
@@ -193,6 +170,29 @@ std::shared_ptr<const T> ConfigSection::get_crypto_key(const std::string& key, s
 	ret->set_type(BufferType::x25519_key);
 
 	return ret;
+}
+
+LogLevels ConfigSection::get_levels_for_char(char value)
+{
+	switch (value)
+	{
+	case('v'):
+		return LogLevels(ssp21::levels::event.value);
+	case('e'):
+		return LogLevels(ssp21::levels::error.value);
+	case('w'):
+		return LogLevels(ssp21::levels::warn.value);
+	case('i'):
+		return LogLevels(ssp21::levels::info.value);
+	case('d'):
+		return LogLevels(ssp21::levels::debug.value);
+	case('m'):
+		return LogLevels(ssp21::levels::rx_crypto_msg.value | ssp21::levels::tx_crypto_msg.value);
+	case('f'):
+		return LogLevels(ssp21::levels::rx_crypto_msg_fields.value | ssp21::levels::tx_crypto_msg_fields.value);
+	default:
+		throw ssp21::Exception("unknown log level: ", value);
+	}
 }
 
 
