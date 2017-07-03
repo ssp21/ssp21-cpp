@@ -76,9 +76,7 @@ void Program::run(int argc, char*  argv[])
         if (args.pos.size() != 3)
         {
             throw ssp21::Exception("Required positional arguments: <certificate file> <public key file> <private key file>");
-        }
-
-		
+        }		
 
 		Actions::Times times = { 0, 0 };
 		uint8_t signing_level = 0;

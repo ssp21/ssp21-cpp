@@ -23,8 +23,8 @@ public:
 
 	struct Times
 	{
-		uint64_t valid_before;
 		uint64_t valid_after;
+		uint64_t valid_before;		
 	};
 
     static void print_contents(const std::string& path);
