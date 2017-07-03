@@ -1,7 +1,7 @@
-#ifndef SSP21PROXY_CONFIGKEYS_H
-#define SSP21PROXY_CONFIGKEYS_H
+#ifndef SSP21PROXY_CONFIGPROPERTIES_H
+#define SSP21PROXY_CONFIGPROPERTIES_H
 
-namespace keys
+namespace props
 {
     static const char* log_levels = "log_levels";
     static const char* mode = "mode";

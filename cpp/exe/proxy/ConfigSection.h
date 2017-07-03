@@ -11,9 +11,9 @@ class ConfigSection : openpal::Uncopyable
 
 public:    
 
-	void add(const std::string& key, const std::string& value);
+	void add(const std::string& propertyId, const std::string& value);
 
-        std::unique_ptr<ProxyConfig> get_config(const std::string& id);
+	std::unique_ptr<ProxyConfig> get_config(const std::string& id);
 	
 
 private:
@@ -24,16 +24,16 @@ private:
 
 	openpal::LogLevels get_levels();
 
-	std::string consume_value(const std::string& key);
+	std::string consume_value(const std::string& propertyId);
 
 	template <class T>
-	T get_integer_value(const std::string& key);
+	T get_integer_value(const std::string& propertyId);
 
 	ProxyConfig::Mode get_mode();
 
 	ProxyConfig::CertificateMode get_cert_mode();	
 
-	std::shared_ptr<ssp21::SecureDynamicBuffer> get_file_data(const std::string& key);
+	std::shared_ptr<ssp21::SecureDynamicBuffer> get_file_data(const std::string& property);
 
 	template <class T>
 	std::shared_ptr<const T> get_crypto_key(const std::string& key, ssp21::ContainerEntryType expectedType);

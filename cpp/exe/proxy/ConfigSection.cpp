@@ -1,7 +1,7 @@
 
 #include "ConfigSection.h"
 
-#include "ConfigKeys.h"
+#include "ConfigProperties.h"
 
 #include "ssp21/crypto/ICertificateHandler.h"
 #include "ssp21/util/SecureFile.h"
@@ -18,9 +18,9 @@
 using namespace openpal;
 using namespace ssp21;
 
-void ConfigSection::add(const std::string& key, const std::string& value)
+void ConfigSection::add(const std::string& propertyId, const std::string& value)
 {
-	this->values[key] = value;
+	this->values[propertyId] = value;
 }
 
 std::unique_ptr<ProxyConfig> ConfigSection::get_config(const std::string& id)
@@ -30,19 +30,19 @@ std::unique_ptr<ProxyConfig> ConfigSection::get_config(const std::string& id)
                this->get_levels(),
                this->get_mode(),
                ProxyConfig::SSP21(
-                   this->get_integer_value<uint16_t>(keys::local_address),
-                   this->get_integer_value<uint16_t>(keys::remote_address),
+                   this->get_integer_value<uint16_t>(props::local_address),
+                   this->get_integer_value<uint16_t>(props::remote_address),
 				   ssp21::StaticKeys(
-					   this->get_crypto_key<PublicKey>(keys::local_public_key_path, ContainerEntryType::x25519_public_key),
-					   this->get_crypto_key<PrivateKey>(keys::local_private_key_path, ContainerEntryType::x25519_private_key)
+					   this->get_crypto_key<PublicKey>(props::local_public_key_path, ContainerEntryType::x25519_public_key),
+					   this->get_crypto_key<PrivateKey>(props::local_private_key_path, ContainerEntryType::x25519_private_key)
 				   ),
 				   this->get_certificate_handler()
                ),
-               this->get_integer_value<uint16_t>(keys::max_sessions),
-			   this->get_integer_value<uint16_t>(keys::listen_port),
-               this->consume_value(keys::listen_endpoint),
-			   this->get_integer_value<uint16_t>(keys::connect_port),
-               this->consume_value(keys::connect_endpoint)
+               this->get_integer_value<uint16_t>(props::max_sessions),
+			   this->get_integer_value<uint16_t>(props::listen_port),
+               this->consume_value(props::listen_endpoint),
+			   this->get_integer_value<uint16_t>(props::connect_port),
+               this->consume_value(props::connect_endpoint)
            );
 
 	for (auto& value : this->values)
@@ -59,7 +59,7 @@ std::shared_ptr<ssp21::ICertificateHandler> ConfigSection::get_certificate_handl
 	{
 		return ssp21::ICertificateHandler::preshared_key(
 			this->get_crypto_key<ssp21::PublicKey>(
-				keys::remote_public_key_path, 
+				props::remote_public_key_path,
 				ContainerEntryType::x25519_public_key			
 			)
 		);
@@ -67,8 +67,8 @@ std::shared_ptr<ssp21::ICertificateHandler> ConfigSection::get_certificate_handl
 	else
 	{
 		return ssp21::ICertificateHandler::certificates(
-			this->get_file_data(keys::authority_cert_path),
-			this->get_file_data(keys::local_cert_path)
+			this->get_file_data(props::authority_cert_path),
+			this->get_file_data(props::local_cert_path)
 		);
 	}		
 }
@@ -76,19 +76,19 @@ std::shared_ptr<ssp21::ICertificateHandler> ConfigSection::get_certificate_handl
 LogLevels ConfigSection::get_levels()
 {	
     LogLevels levels;	
-    for (auto flag : this->consume_value(keys::log_levels))
+    for (auto flag : this->consume_value(props::log_levels))
     {
         levels |= this->get_levels_for_char(flag);
     }	
     return levels;
 }
 
-std::string ConfigSection::consume_value(const std::string& key)
+std::string ConfigSection::consume_value(const std::string& propertyId)
 {
-	const auto iter = this->values.find(key);
+	const auto iter = this->values.find(propertyId);
 	if (iter == values.end())
 	{
-		throw Exception("Required key not found: ", key);
+		throw Exception("Required property not found: ", propertyId);
 	}
 	const auto ret = iter->second;
 	this->values.erase(iter);
@@ -96,9 +96,9 @@ std::string ConfigSection::consume_value(const std::string& key)
 }
 
 template <class T>
-T ConfigSection::get_integer_value(const std::string& key)
+T ConfigSection::get_integer_value(const std::string& propertyId)
 {
-	const auto value = this->consume_value(key);
+	const auto value = this->consume_value(propertyId);
 	std::istringstream reader(value);
 	T val = 0;
 	if (!(reader >> val))
@@ -110,7 +110,7 @@ T ConfigSection::get_integer_value(const std::string& key)
 
 ProxyConfig::Mode ConfigSection::get_mode()
 {
-	const auto value = this->consume_value(keys::mode);
+	const auto value = this->consume_value(props::mode);
 
 	if (value == "initiator")
 	{
@@ -128,7 +128,7 @@ ProxyConfig::Mode ConfigSection::get_mode()
 
 ProxyConfig::CertificateMode ConfigSection::get_cert_mode()
 {
-	const auto value = this->consume_value(keys::certificate_mode);
+	const auto value = this->consume_value(props::certificate_mode);
 
 	if (value == "preshared")
 	{
