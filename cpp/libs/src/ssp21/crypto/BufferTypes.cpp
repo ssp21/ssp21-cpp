@@ -57,8 +57,14 @@ namespace ssp21
 
     SecureBuffer::~SecureBuffer()
     {
-        Crypto::zero_memory(this->buffer.as_wseq());
+		Crypto::zero_memory(this->buffer.as_wseq());
     }
+
+	void SecureBuffer::zero()
+	{	
+		this->set_type(BufferType::empty);
+		Crypto::zero_memory(this->buffer.as_wseq());
+	}
 
 }
 

@@ -44,8 +44,9 @@ namespace ssp21
 
     void Session::reset()
     {
-        this->statistics.num_reset.increment();
-        this->valid = false;
+		this->valid = false;
+		this->keys.zero();
+        this->statistics.num_reset.increment();        
     }
 
 	seq32_t Session::validate_session_auth(const SessionData& message, const openpal::Timestamp& now, std::error_code& ec)

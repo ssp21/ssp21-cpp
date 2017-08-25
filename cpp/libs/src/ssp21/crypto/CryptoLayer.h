@@ -84,16 +84,12 @@ namespace ssp21
         // Called when either the rx or tx nonces change
         virtual void on_session_nonce_change(uint16_t rx_nonce, uint16_t tx_nonce) {}
 
-        // optional overrides for each type of message
+        // optional overrides for optional messages
         virtual void on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}        
-
-        virtual void on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}        
-
+        virtual void on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}
         virtual void on_message(const ReplyHandshakeError& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}
-
 		
         // non-virtual b/c both sides implement it the same way
-
         void on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now);
 		void on_session_data(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now);
 
