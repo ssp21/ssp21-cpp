@@ -7,7 +7,7 @@ import java.nio.file.{Files, Paths}
 
 import org.apache.commons.io.FileUtils
 
-object Generate {
+object Main {
 
   private val basePath = "../cpp/libs"
   private val ssp21GenHeaderPath = Paths.get(basePath, "/include/ssp21/crypto/gen")
