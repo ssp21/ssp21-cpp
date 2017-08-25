@@ -25,13 +25,12 @@ namespace ssp21
         static_keys(static_keys),
         certificate_handler(certificate_handler),
         handshake(type),
-        session(frame_writer, session_config),
-        reassembler(context_config.max_reassembly_size)
+        session(frame_writer, session_config)        
     {}
 
     void CryptoLayer::discard_rx_data()
     {
-        this->reassembler.reset();
+		// TODO        
     }
 
     bool CryptoLayer::start_tx_from_upper(const seq32_t& data)
@@ -50,12 +49,18 @@ namespace ssp21
 
     seq32_t CryptoLayer::start_rx_from_upper_impl()
     {
-        if (this->reassembler.has_data()) return this->reassembler.get_data();
+		/*
+		if (this->reassembler.has_data())
+		{
+			return this->reassembler.get_data();
+		}
         else
         {
             this->try_read_from_lower();
             return seq32_t::empty();
         }
+		*/
+		return seq32_t::empty();
     }
 
     bool CryptoLayer::is_tx_ready() const
@@ -102,7 +107,7 @@ namespace ssp21
         this->reset_state_on_close_from_lower();
 
         this->session.reset();
-        this->reassembler.reset();
+        // TODO: this->reassembler.reset();
         this->upper->on_lower_close();
         this->tx_state.reset();
         this->reset_this_lower_layer();
@@ -149,7 +154,7 @@ namespace ssp21
         * 2) There isn't unread session data buffered for the upper layer
         *
         */
-        if (!this->lower->is_tx_ready() || this->reassembler.has_data()) return false;
+        // TODO - if (!this->lower->is_tx_ready() || this->reassembler.has_data()) return false;
 
         const seq32_t message = this->lower->start_rx_from_upper();
         if (message.is_empty()) return false;
@@ -253,7 +258,9 @@ namespace ssp21
 
 		this->on_session_nonce_change(this->session.get_rx_nonce(), this->session.get_tx_nonce());
 
-		// process the message using the reassembler
+		// TODO 
+
+		/*
 		const auto result = this->reassembler.process(msg.metadata.flags.fir, msg.metadata.flags.fin, msg.metadata.nonce, payload);
 
 		switch (result)
@@ -269,6 +276,7 @@ namespace ssp21
 			FORMAT_LOG_BLOCK(this->logger, levels::warn, "reassembly error: %s", ReassemblyResultSpec::to_string(result));
 			break;
 		}
+		*/
 	}
 	
 }

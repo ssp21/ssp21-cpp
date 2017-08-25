@@ -195,7 +195,7 @@ TEST_CASE(SUITE("successfully formats and increments nonce"))
 
 }
 
-/// ------- helpers methods impls -------------
+// ------- helpers methods impls -------------
 
 void init(Session& session, const Session::Param& parameters)
 {
@@ -214,8 +214,7 @@ std::string validate(Session& session, uint16_t nonce, uint32_t ttl, int64_t now
     SessionData msg(
         AuthMetadata(
             nonce,
-            ttl,
-            SessionFlags(true, true)
+            ttl
         ),
         user_data,
         auth_tag

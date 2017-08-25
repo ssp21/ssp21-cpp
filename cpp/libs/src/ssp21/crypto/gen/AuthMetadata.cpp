@@ -26,12 +26,10 @@ AuthMetadata::AuthMetadata()
 
 AuthMetadata::AuthMetadata(
     uint16_t nonce,
-    uint32_t valid_until_ms,
-    const SessionFlags& flags
+    uint32_t valid_until_ms
 ) :
     nonce(nonce),
-    valid_until_ms(valid_until_ms),
-    flags(flags)
+    valid_until_ms(valid_until_ms)
 {}
 
 size_t AuthMetadata::size() const
@@ -39,8 +37,7 @@ size_t AuthMetadata::size() const
     return MessageFormatter::sum_sizes(
         0,
         nonce,
-        valid_until_ms,
-        flags
+        valid_until_ms
     );
 }
 
@@ -49,8 +46,7 @@ ParseError AuthMetadata::read(seq32_t& input)
     return MessageParser::read_fields(
         input,
         nonce,
-        valid_until_ms,
-        flags
+        valid_until_ms
     );
 }
 
@@ -67,8 +63,7 @@ FormatError AuthMetadata::write(wseq32_t& output) const
     return MessageFormatter::write_fields(
         output,
         nonce,
-        valid_until_ms,
-        flags
+        valid_until_ms
     );
 }
 
@@ -79,9 +74,7 @@ void AuthMetadata::print(const char* name, IMessagePrinter& printer) const
         "nonce",
         nonce,
         "valid_until_ms",
-        valid_until_ms,
-        "flags",
-        flags
+        valid_until_ms
     );
 }
 

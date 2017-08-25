@@ -98,7 +98,7 @@ namespace ssp21
             return write_message(msg);
         }
 
-        std::string session_data(uint16_t nonce, uint32_t valid_until, bool fir, bool fin, const std::string& user_data, const std::string& auth_tag)
+        std::string session_data(uint16_t nonce, uint32_t valid_until, const std::string& user_data, const std::string& auth_tag)
         {
             HexSeq user_data_hex(user_data);
             HexSeq auth_tag_hex(auth_tag);
@@ -106,8 +106,7 @@ namespace ssp21
             SessionData msg(
                 AuthMetadata(
                     nonce,
-                    valid_until,
-                    SessionFlags(fir, fin)
+                    valid_until
                 ),
                 user_data_hex,
                 auth_tag_hex

@@ -97,8 +97,7 @@ namespace ssp21
         // the metadata we're encoding
         AuthMetadata metadata(
             this->tx_nonce.get() + 1,
-            session_time + config.ttl_pad_ms,
-            SessionFlags(fir, true) // doesn't matter what FIN is as the write function will determine how much it can transmit
+            session_time + config.ttl_pad_ms
         );
 
         const auto frame = this->algorithms.mode->write(*this->frame_writer, this->keys.tx_key, metadata, user_data, this->encrypt_scratch_buffer.as_wslice(), ec);

@@ -70,7 +70,7 @@ TEST_CASE(SUITE("ignores user data without a session"))
     ResponderFixture fix;
     fix.responder.on_lower_open();
 
-    const auto request = hex::session_data(1, 0, true, true, "CA FE", hex::repeat(0xFF, 16));
+    const auto request = hex::session_data(1, 0, "CA FE", hex::repeat(0xFF, 16));
     fix.lower.enqueue_message(request);
 
     const auto stats = fix.responder.get_statistics();

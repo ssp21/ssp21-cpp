@@ -41,7 +41,7 @@ namespace ssp21
 
         std::string reply_handshake_error(HandshakeError err);
 
-        std::string session_data(uint16_t nonce, uint32_t valid_until, bool fir, bool fin, const std::string& user_data, const std::string& auth_tag);
+        std::string session_data(uint16_t nonce, uint32_t valid_until, const std::string& user_data, const std::string& auth_tag);
 
         std::string link_frame(uint16_t src, uint16_t dest, const std::string& payload);
     }

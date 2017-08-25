@@ -4,7 +4,6 @@
 
 #include "ssp21/crypto/Session.h"
 #include "ssp21/crypto/Handshake.h"
-#include "ssp21/crypto/Reassembler.h"
 #include "ssp21/crypto/TxState.h"
 #include "ssp21/crypto/StaticKeys.h"
 #include "ssp21/crypto/ICertificateHandler.h"
@@ -112,8 +111,7 @@ namespace ssp21
         const std::shared_ptr<ICertificateHandler> certificate_handler;
 
         Handshake handshake;
-        Session session;
-        Reassembler reassembler;
+        Session session;        
         TxState tx_state;
 
         ILowerLayer* lower = nullptr;

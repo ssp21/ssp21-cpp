@@ -40,7 +40,7 @@ struct SessionData final : public IMessage, private openpal::Uncopyable
     virtual void print(IMessagePrinter& printer) const override;
     virtual Function get_function() const override { return Function::session_data; }
 
-    static const uint8_t min_size_bytes = 10;
+    static const uint8_t min_size_bytes = 9;
     static const Function function = Function::session_data;
 
     AuthMetadata metadata;

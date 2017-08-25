@@ -57,13 +57,10 @@ namespace ssp21
         }
 
         // the maximum amount of user data we could conceivably transmit
-        const uint16_t max_tx_user_data_length = max_message_size - min_message_size;
+        const uint16_t max_tx_user_data_length = max_message_size - min_message_size;        
 
-        // can we transmit all of the data?
-        metadata.flags.fin = user_data.length() < max_tx_user_data_length;
-
-        // the actuall amount we're going to try to transmit
-        const uint16_t tx_user_data_length = metadata.flags.fin ? static_cast<uint16_t>(user_data.length()) : max_tx_user_data_length;
+        // the actual amount we're going to try to transmit
+        const uint16_t tx_user_data_length = user_data.length() < max_tx_user_data_length ? static_cast<uint16_t>(user_data.length()) : max_tx_user_data_length;
 
         metadata_buffer_t buffer;
         auto ad_bytes = get_metadata_bytes(metadata, buffer);

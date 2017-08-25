@@ -47,9 +47,7 @@ object GeneratedFiles {
     ReassemblyResult
   ).map(x => EnumConfig(x, false, true)).map(e => EnumGenerator(e, Some(basePath)))
 
-  private def bitfields: List[WriteCppFiles] = List(
-    SessionFlags
-  ).map(x => BitfieldStructGenerator(x))
+  private def bitfields: List[WriteCppFiles] = Nil
 
   private def structs: List[WriteCppFiles] = List(
     AuthMetadata,
