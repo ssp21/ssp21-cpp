@@ -30,12 +30,8 @@ Function FunctionSpec::from_type(uint8_t arg)
         case(0x1):
             return Function::reply_handshake_begin;
         case(0x2):
-            return Function::request_handshake_auth;
-        case(0x3):
-            return Function::reply_handshake_auth;
-        case(0x4):
             return Function::reply_handshake_error;
-        case(0x5):
+        case(0x3):
             return Function::session_data;
         default:
             return Function::undefined;
@@ -49,10 +45,6 @@ const char* FunctionSpec::to_string(Function arg)
             return "request_handshake_begin";
         case(Function::reply_handshake_begin):
             return "reply_handshake_begin";
-        case(Function::request_handshake_auth):
-            return "request_handshake_auth";
-        case(Function::reply_handshake_auth):
-            return "reply_handshake_auth";
         case(Function::reply_handshake_error):
             return "reply_handshake_error";
         case(Function::session_data):

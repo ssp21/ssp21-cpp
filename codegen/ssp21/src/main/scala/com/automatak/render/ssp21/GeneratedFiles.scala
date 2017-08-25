@@ -66,8 +66,6 @@ object GeneratedFiles {
   private def messsages: List[WriteCppFiles] = List(
     RequestHandshakeBegin,
     ReplyHandshakeBegin,
-    RequestHandshakeAuth,
-    ReplyHandshakeAuth,
     ReplyHandshakeError,
     SessionData
   ).map(m => MessageGenerator(m))

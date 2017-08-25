@@ -26,18 +26,14 @@ namespace ssp21 {
 */
 enum class Function : uint8_t
 {
-    /// Master sends this initiate a handshake
+    /// Initiator sends this to start a handshake
     request_handshake_begin = 0x0,
-    /// Outstation replies to the handshake begin from the master
+    /// Responder replies to the handshake begin from the initiator
     reply_handshake_begin = 0x1,
-    /// Master authenticates to the outstation
-    request_handshake_auth = 0x2,
-    /// Outstation authenticates to the master
-    reply_handshake_auth = 0x3,
-    /// Outstation returns an error code to the master
-    reply_handshake_error = 0x4,
+    /// Responder returns an error code to the master
+    reply_handshake_error = 0x2,
     /// Both parties transmit session data messages
-    session_data = 0x5,
+    session_data = 0x3,
     /// value not defined
     undefined = 0xFF
 };
