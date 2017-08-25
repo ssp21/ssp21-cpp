@@ -51,7 +51,6 @@ namespace ssp21
             DHMode dh_mode,
             HandshakeHash handshake_hash,
             HandshakeKDF handshake_kdf,
-            HandshakeMAC handshake_mac,
             SessionMode session_mode,
             uint16_t max_nonce,
             uint32_t max_session_time,
@@ -67,8 +66,7 @@ namespace ssp21
                     nonce_mode,
                     dh_mode,
                     handshake_hash,
-                    handshake_kdf,
-                    handshake_mac,
+                    handshake_kdf,                    
                     session_mode
                 ),
                 SessionConstraints(

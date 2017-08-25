@@ -62,7 +62,7 @@ TEST_CASE(SUITE("successfully parses message"))
 {
     RequestHandshakeBegin msg;
 
-    Hex hex("00 D1 D2 00 00 00 00 00 00 FF FF CA FE BA BE 00 03 AA AA AA 00");
+    Hex hex("00 D1 D2 00 00 00 00 00 FF FF CA FE BA BE 00 03 AA AA AA 00");
 
     auto input = hex.as_rslice();
     auto err = msg.read(input);
@@ -72,7 +72,6 @@ TEST_CASE(SUITE("successfully parses message"))
     REQUIRE(msg.spec.dh_mode == DHMode::x25519);
     REQUIRE(msg.spec.handshake_hash == HandshakeHash::sha256);
     REQUIRE(msg.spec.handshake_kdf == HandshakeKDF::hkdf_sha256);
-    REQUIRE(msg.spec.handshake_mac == HandshakeMAC::hmac_sha256);
     REQUIRE(msg.spec.session_mode == SessionMode::hmac_sha256_16);
 
     REQUIRE(msg.constraints.max_nonce == 0xFFFF);
@@ -95,7 +94,6 @@ TEST_CASE(SUITE("pretty prints message"))
             DHMode::x25519,
             HandshakeHash::sha256,
             HandshakeKDF::hkdf_sha256,
-            HandshakeMAC::hmac_sha256,
             SessionMode::hmac_sha256_16
         ),
         SessionConstraints(
@@ -118,8 +116,7 @@ TEST_CASE(SUITE("pretty prints message"))
         "nonce_mode: greater_than_last_rx",
         "dh_mode: x25519",
         "handshake_hash: sha256",
-        "handshake_kdf: hkdf_sha256",
-        "handshake_mac: hmac_sha256",
+        "handshake_kdf: hkdf_sha256",        
         "session_mode: hmac_sha256_16",
         "max_nonce: 32768",
         "max_session_duration: 3405691582",
@@ -147,8 +144,8 @@ TEST_CASE(SUITE("rejects trailing data"))
 {
     RequestHandshakeBegin msg;
 
-    // ------------------------------------------------------------------VV VV ------ zero certificates
-    Hex hex("00 D1 D2 00 00 00 00 00 00 FF FF CA FE BA BE 00 03 AA AA AA 00 00 02");
+    // ---------------------------------------------------------------VV VV------ zero certificate data
+    Hex hex("00 D1 D2 00 00 00 00 00 FF FF CA FE BA BE 00 03 AA AA AA 00 00 02");
 
     auto input = hex.as_rslice();
     auto err = msg.read(input);
@@ -164,7 +161,7 @@ TEST_CASE(SUITE("formats default value"))
 
     REQUIRE(!res.is_error());
     REQUIRE(res.written.length() == msg.size());
-    REQUIRE(to_hex(res.written) == "00 00 00 FF FF FF FF FF FF 00 00 00 00 00 00 FF 00 00");
+    REQUIRE(to_hex(res.written) == "00 00 00 FF FF FF FF FF 00 00 00 00 00 00 FF 00 00");
 }
 
 TEST_CASE(SUITE("returns error if insufficient buffer space"))

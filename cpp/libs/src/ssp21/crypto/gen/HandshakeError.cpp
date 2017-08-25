@@ -35,8 +35,6 @@ HandshakeError HandshakeErrorSpec::from_type(uint8_t arg)
             return HandshakeError::unsupported_handshake_hash;
         case(0x4):
             return HandshakeError::unsupported_handshake_kdf;
-        case(0x5):
-            return HandshakeError::unsupported_handshake_mac;
         case(0x6):
             return HandshakeError::unsupported_session_mode;
         case(0x7):
@@ -75,8 +73,6 @@ const char* HandshakeErrorSpec::to_string(HandshakeError arg)
             return "unsupported_handshake_hash";
         case(HandshakeError::unsupported_handshake_kdf):
             return "unsupported_handshake_kdf";
-        case(HandshakeError::unsupported_handshake_mac):
-            return "unsupported_handshake_mac";
         case(HandshakeError::unsupported_session_mode):
             return "unsupported_session_mode";
         case(HandshakeError::unsupported_nonce_mode):

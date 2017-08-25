@@ -22,7 +22,6 @@
 #include "ssp21/crypto/gen/FormatError.h"
 #include "ssp21/crypto/gen/SessionMode.h"
 #include "ssp21/crypto/gen/HandshakeKDF.h"
-#include "ssp21/crypto/gen/HandshakeMAC.h"
 #include "ssp21/crypto/gen/HandshakeHash.h"
 #include "ssp21/util/SequenceTypes.h"
 #include "ssp21/crypto/EnumField.h"
@@ -39,19 +38,17 @@ struct CryptoSpec final
         DHMode dh_mode,
         HandshakeHash handshake_hash,
         HandshakeKDF handshake_kdf,
-        HandshakeMAC handshake_mac,
         SessionMode session_mode
     );
 
     size_t size() const;
 
-    static const uint8_t fixed_size_bytes = 6;
+    static const uint8_t fixed_size_bytes = 5;
 
     EnumField<NonceModeSpec> nonce_mode;
     EnumField<DHModeSpec> dh_mode;
     EnumField<HandshakeHashSpec> handshake_hash;
     EnumField<HandshakeKDFSpec> handshake_kdf;
-    EnumField<HandshakeMACSpec> handshake_mac;
     EnumField<SessionModeSpec> session_mode;
 
     ParseError read(seq32_t& input);

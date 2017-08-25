@@ -12,7 +12,6 @@ object CryptoSpec extends Struct {
     Enum(DHMode),
     Enum(HandshakeHash),
     Enum(HandshakeKDF),
-    Enum(HandshakeMAC),
     Enum(SessionMode)
   )
 

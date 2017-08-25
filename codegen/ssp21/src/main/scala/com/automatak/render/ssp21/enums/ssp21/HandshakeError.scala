@@ -27,7 +27,6 @@ object HandshakeError extends EnumModel {
     EnumValue("unsupported_dh_mode", 2, "The requested DH mode is not supported"),
     EnumValue("unsupported_handshake_hash", 3, "The requested handshake hash is not supported"),
     EnumValue("unsupported_handshake_kdf", 4, "The requested handshake KDF is not supported"),
-    EnumValue("unsupported_handshake_mac", 5, "The requested handshake MAC is not supported"),
     EnumValue("unsupported_session_mode", 6, "The requested session mode is not supported"),
     EnumValue("unsupported_nonce_mode", 7, "The requested nonce verification mode is not supported"),
     EnumValue("unsupported_certificate_mode", 8, "The requested certificate mode is not supported"),

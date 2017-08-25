@@ -25,7 +25,6 @@ namespace ssp21
             ctx.suite.dh_mode,
             ctx.suite.handshake_hash,
             ctx.suite.handshake_kdf,
-            ctx.suite.handshake_mac,
             ctx.suite.session_mode
         );
 

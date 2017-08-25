@@ -36,22 +36,13 @@ namespace ssp21
 
     bool Handshake::auth_handshake(const seq32_t& mac) const
     {
-        return HandshakeAuthentication::auth_handshake_with_mac(
-                   this->algorithms.handshake.session_auth_mac,
-                   this->authentication_key,
-                   this->mode,
-                   mac
-               );
+		// TODO
+		return false;
     }
 
     void Handshake::calc_auth_handshake_mac(HashOutput& output) const
     {
-        HandshakeAuthentication::calc_handshake_mac_with_macfunc(
-            this->algorithms.handshake.session_auth_mac,
-            this->authentication_key,
-            this->mode,
-            output
-        );
+        // TODO
     }
 
     void Handshake::derive_authentication_key(

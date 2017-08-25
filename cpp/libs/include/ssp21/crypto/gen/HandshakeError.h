@@ -36,8 +36,6 @@ enum class HandshakeError : uint8_t
     unsupported_handshake_hash = 0x3,
     /// The requested handshake KDF is not supported
     unsupported_handshake_kdf = 0x4,
-    /// The requested handshake MAC is not supported
-    unsupported_handshake_mac = 0x5,
     /// The requested session mode is not supported
     unsupported_session_mode = 0x6,
     /// The requested nonce verification mode is not supported

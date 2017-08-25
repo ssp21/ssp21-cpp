@@ -34,16 +34,7 @@ namespace ssp21
             break;
         default:
             return HandshakeError::unsupported_handshake_kdf;
-        }
-
-        switch (spec.handshake_mac)
-        {
-        case(HandshakeMAC::hmac_sha256):
-            algorithms.handshake.session_auth_mac = &Crypto::hmac_sha256;
-            break;
-        default:
-            return HandshakeError::unsupported_handshake_mac;
-        }
+        }       
 
         switch (spec.nonce_mode)
         {

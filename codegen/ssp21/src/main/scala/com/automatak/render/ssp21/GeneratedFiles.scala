@@ -27,7 +27,6 @@ object GeneratedFiles {
     CertificateMode,
     HandshakeError,
     HandshakeKDF,
-    HandshakeMAC,
     PublicKeyType,
     ContainerEntryType
   ).map(x => EnumConfig(x, true, true)).map(e => EnumGenerator(e, Some(basePath)))
