@@ -229,36 +229,48 @@ namespace ssp21
 
     void CryptoLayer::on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
-        std::error_code ec;
-        const auto payload = this->session.validate_message(msg, now, ec);
+		// differentiate 
+		if (msg.metadata.nonce == 0)
+		{
+			this->on_auth_session(msg, raw_data, now);
+		}
+		else
+		{
+			this->on_session_data(msg, raw_data, now);
+		}
+    }	
 
-        if (ec)
-        {
-            FORMAT_LOG_BLOCK(this->logger, levels::warn, "validation error: %s", ec.message().c_str());
-            return;
-        }
+	void CryptoLayer::on_session_data(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+	{
+		std::error_code ec;
+		const auto payload = this->session.validate_message(msg, now, ec);
 
-        this->on_session_nonce_change(this->session.get_rx_nonce(), this->session.get_tx_nonce());
+		if (ec)
+		{
+			FORMAT_LOG_BLOCK(this->logger, levels::warn, "validation error: %s", ec.message().c_str());
+			return;
+		}
 
-        // process the message using the reassembler
-        const auto result = this->reassembler.process(msg.metadata.flags.fir, msg.metadata.flags.fin, msg.metadata.nonce, payload);
+		this->on_session_nonce_change(this->session.get_rx_nonce(), this->session.get_tx_nonce());
 
-        switch (result)
-        {
-        case(ReassemblyResult::partial):
-            break; // do nothing
+		// process the message using the reassembler
+		const auto result = this->reassembler.process(msg.metadata.flags.fir, msg.metadata.flags.fin, msg.metadata.nonce, payload);
 
-        case(ReassemblyResult::complete):
-            this->upper->on_lower_rx_ready();
-            break;
+		switch (result)
+		{
+		case(ReassemblyResult::partial):
+			break; // do nothing
 
-        default: // error
-            FORMAT_LOG_BLOCK(this->logger, levels::warn, "reassembly error: %s", ReassemblyResultSpec::to_string(result));
-            break;
-        }
-    }
+		case(ReassemblyResult::complete):
+			this->upper->on_lower_rx_ready();
+			break;
 
-
+		default: // error
+			FORMAT_LOG_BLOCK(this->logger, levels::warn, "reassembly error: %s", ReassemblyResultSpec::to_string(result));
+			break;
+		}
+	}
+	
 }
 
 

@@ -92,10 +92,16 @@ namespace ssp21
 
         virtual void on_message(const ReplyHandshakeError& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}
 
+		
         // non-virtual b/c both sides implement it the same way
-        void on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now);
 
-        /// ------ member variables ------
+        void on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now);
+		void on_session_data(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now);
+
+		// both parties implement this in different ways
+		virtual void on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now) = 0;
+
+        // ------ member variables ------
 
         openpal::Logger logger;
 

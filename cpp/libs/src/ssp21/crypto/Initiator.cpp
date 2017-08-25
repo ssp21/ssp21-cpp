@@ -151,20 +151,15 @@ namespace ssp21
         this->handshake_state = this->handshake_state->on_message(*this, msg, raw_data, now);
     }
 
-	/*
-
-	TODO
-
-    void Initiator::on_message(const ReplyHandshakeAuth& msg, const seq32_t& raw_data, const Timestamp& now)
-    {
-        this->handshake_state = this->handshake_state->on_message(*this, msg, raw_data, now);
-    }
-	*/
-
     void Initiator::on_message(const ReplyHandshakeError& msg, const seq32_t& raw_data, const Timestamp& now)
     {
         this->handshake_state = this->handshake_state->on_message(*this, msg, raw_data, now);
     }
+
+	void Initiator::on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+	{
+	
+	}
 
 }
 
