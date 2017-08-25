@@ -23,7 +23,7 @@
         <maven-source-plugin.version>2.1.2</maven-source-plugin.version>
         <maven-bundle.version>2.1.0</maven-bundle.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <scala.version>2.11.8</scala.version>
+        <scala.version>2.12.3</scala.version>
         <surefire-plugin.version>2.12.4</surefire-plugin.version>
     </properties>
 
@@ -123,7 +123,6 @@
                         <arg>-feature</arg>
                         <arg>-language:implicitConversions</arg>
                         <arg>-deprecation</arg>
-                        <arg>-target:jvm-1.6</arg>
                         <arg>-Ywarn-adapted-args</arg>
                     </args>
                     <jvmArgs>
