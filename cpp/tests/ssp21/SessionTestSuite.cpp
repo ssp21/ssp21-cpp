@@ -220,7 +220,10 @@ std::string validate(Session& session, uint16_t nonce, uint32_t ttl, int64_t now
         auth_tag
     );
 
-    return to_hex(session.validate_session_data(msg, Timestamp(now), wseq32_t::empty(), ec));
+	openpal::StaticBuffer<uint32_t, 1024> buffer;
+	const auto result = session.validate_session_data(msg, Timestamp(now), buffer.as_wseq(), ec);
+
+    return to_hex(result);
 }
 
 std::string test_validation_success(const SessionConfig& config, const Session::Param& parameters, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex)

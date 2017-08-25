@@ -11,7 +11,7 @@ namespace ssp21
     seq32_t TruncatedMacSessionMode::read_impl(
         const SymmetricKey& key,
         const SessionData& msg,
-        wseq32_t, // ignored in MAC mode
+        wseq32_t dest,
         std::error_code& ec
     ) const
     {
@@ -32,8 +32,14 @@ namespace ssp21
             return seq32_t::empty();
         }
 
-        // we're authenticated, so return the user_data slice
-        return msg.user_data;
+		// we're authenticated, copy the user data to the destination buffer
+		if (dest.length() < msg.user_data.length())
+		{
+			ec = CryptoError::bad_buffer_size;
+			return seq32_t::empty();
+		}
+
+		return dest.copy_from(msg.user_data);                
     }
 
     seq32_t TruncatedMacSessionMode::write_impl(
@@ -70,14 +76,12 @@ namespace ssp21
         HashOutput tag;
 
         // Now calculate the mac
-        mac_func(key.as_seq(), { ad_bytes, user_data_length_bytes, user_data }, tag);
+        mac_func(key.as_seq(), { ad_bytes, user_data_length_bytes, user_data }, tag);        
 
-        const auto trunacted_mac = tag.as_seq().take(this->auth_tag_length);
-
-        SessionData message(
+        const SessionData message(
             metadata,
             user_data.take(tx_user_data_length),
-            trunacted_mac // truncate the MAC
+			tag.as_seq().take(this->auth_tag_length) // truncate the MAC
         );
 
         const auto res = writer.write(message);
