@@ -20,7 +20,7 @@ namespace ssp21
         encrypt_scratch_buffer(decrypt_scratch_buffer.length())
     {}
 
-    uint32_t Session::calc_max_crypto_payload_length(uint32_t max_link_payload_size)
+    constexpr uint32_t Session::calc_max_crypto_payload_length(uint32_t max_link_payload_size)
     {
         return (max_link_payload_size > SessionData::min_size_bytes) ? max_link_payload_size - SessionData::min_size_bytes : 0;
     }
@@ -48,7 +48,17 @@ namespace ssp21
         this->valid = false;
     }
 
-    seq32_t Session::validate_message(const SessionData& message, const openpal::Timestamp& now, std::error_code& ec)
+	seq32_t Session::validate_session_auth(const SessionData& message, const openpal::Timestamp& now, std::error_code& ec)
+	{
+		return this->validate_session_data_with_nonce_func(message, now, NonceFunctions::equal_to_zero, ec);
+	}
+
+	seq32_t Session::validate_session_data(const SessionData& message, const openpal::Timestamp& now, std::error_code& ec)
+	{
+		return this->validate_session_data_with_nonce_func(message, now, this->algorithms.verify_nonce, ec);
+	}
+
+    seq32_t Session::validate_session_data_with_nonce_func(const SessionData& message, const openpal::Timestamp& now, verify_nonce_func_t verify_nonce, std::error_code& ec)
     {
         if (!this->valid)
         {
@@ -103,7 +113,7 @@ namespace ssp21
         }
 
         // check the nonce via the verification function
-        if (!this->algorithms.verify_nonce(this->rx_nonce.get(), message.metadata.nonce))
+        if (!verify_nonce(this->rx_nonce.get(), message.metadata.nonce))
         {
             this->statistics.num_nonce_fail.increment();
             ec = CryptoError::nonce_replay;
@@ -144,7 +154,7 @@ namespace ssp21
             return seq32_t::empty();
         }
 
-        const auto session_time = static_cast<uint32_t>(session_time_long); // safe downcast since session_time_long <= the uin32_t above
+        const auto session_time = static_cast<uint32_t>(session_time_long);				// safe downcast since session_time_long <= the uin32_t above
         const auto remainder = this->parameters.max_session_time - session_time;	    // safe substract since session_time > config.max_session_time
         if (remainder < config.ttl_pad_ms)
         {

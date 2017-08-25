@@ -56,9 +56,13 @@ namespace ssp21
             return statistics;
         }
 
-        seq32_t validate_message(const SessionData& message, const openpal::Timestamp& now, std::error_code& ec);
+		seq32_t validate_session_auth(const SessionData& message, const openpal::Timestamp& now, std::error_code& ec);
+
+        seq32_t validate_session_data(const SessionData& message, const openpal::Timestamp& now, std::error_code& ec);
 
         seq32_t format_session_message(bool fir, const openpal::Timestamp& now, seq32_t& cleartext, std::error_code& ec);
+
+		// -------- getters -------------
 
         bool is_valid() const
         {
@@ -77,6 +81,8 @@ namespace ssp21
 
     private:
 
+		seq32_t validate_session_data_with_nonce_func(const SessionData& message, const openpal::Timestamp& now, verify_nonce_func_t verify, std::error_code& ec);
+
         bool valid = false;
 
         const std::shared_ptr<IFrameWriter> frame_writer;
@@ -85,7 +91,7 @@ namespace ssp21
         /**
         * Given a maximum link layer payload, how big could the crypto payload be?
         */
-        static uint32_t calc_max_crypto_payload_length(uint32_t max_link_payload_size);
+        static constexpr uint32_t calc_max_crypto_payload_length(uint32_t max_link_payload_size);
 
         SessionStatistics statistics;
 

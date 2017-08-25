@@ -243,7 +243,7 @@ namespace ssp21
 	void CryptoLayer::on_session_data(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
 	{
 		std::error_code ec;
-		const auto payload = this->session.validate_message(msg, now, ec);
+		const auto payload = this->session.validate_session_data(msg, now, ec);
 
 		if (ec)
 		{

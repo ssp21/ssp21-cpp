@@ -221,7 +221,7 @@ std::string validate(Session& session, uint16_t nonce, uint32_t ttl, int64_t now
         auth_tag
     );
 
-    return to_hex(session.validate_message(msg, Timestamp(now), ec));
+    return to_hex(session.validate_session_data(msg, Timestamp(now), ec));
 }
 
 std::string test_validation_success(const SessionConfig& config, const Session::Param& parameters, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex)

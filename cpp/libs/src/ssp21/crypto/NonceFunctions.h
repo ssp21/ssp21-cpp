@@ -10,7 +10,7 @@
 #include <cstdint>
 
 namespace ssp21
-{
+{	
     typedef bool(*verify_nonce_func_t)(uint16_t last_nonce, uint16_t new_nonce);
 
     struct NonceFunctions : private openpal::StaticOnly
@@ -34,6 +34,11 @@ namespace ssp21
         {
             return new_nonce > last_nonce;
         }
+
+		inline static bool equal_to_zero(uint16_t last_nonce, uint16_t new_nonce)
+		{
+			return (last_nonce == 0) && (new_nonce == 0);
+		}
 
     };
 
