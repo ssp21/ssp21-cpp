@@ -28,8 +28,7 @@ namespace ssp21
             explicit IHandshakeState(Enum enum_value) : enum_value(enum_value)
             {}
 
-            virtual IHandshakeState* on_message(Responder& ctx, const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) = 0;
-            virtual IHandshakeState* on_message(Responder& ctx, const RequestHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) = 0;
+            virtual IHandshakeState* on_message(Responder& ctx, const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) = 0;            
 
             const Enum enum_value;
         };
@@ -74,9 +73,7 @@ namespace ssp21
 
         virtual void on_parse_error(Function function, ParseError error) override;
 
-        virtual void on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
-
-        virtual void on_message(const RequestHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
+        virtual void on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;        
 
 
         // ---- private members -----

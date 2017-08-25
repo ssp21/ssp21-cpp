@@ -13,8 +13,6 @@
 #include "ssp21/crypto/gen/RequestHandshakeBegin.h"
 #include "ssp21/crypto/gen/ReplyHandshakeBegin.h"
 #include "ssp21/crypto/gen/ReplyHandshakeError.h"
-#include "ssp21/crypto/gen/RequestHandshakeAuth.h"
-#include "ssp21/crypto/gen/ReplyHandshakeAuth.h"
 #include "ssp21/crypto/gen/SessionData.h"
 
 #include "ssp21/stack/ILowerLayer.h"
@@ -88,16 +86,11 @@ namespace ssp21
         virtual void on_session_nonce_change(uint16_t rx_nonce, uint16_t tx_nonce) {}
 
         // optional overrides for each type of message
-        virtual void on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}
+        virtual void on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}        
 
-        virtual void on_message(const RequestHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}
-
-        virtual void on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}
-
-        virtual void on_message(const ReplyHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}
+        virtual void on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}        
 
         virtual void on_message(const ReplyHandshakeError& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}
-
 
         // non-virtual b/c both sides implement it the same way
         void on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now);

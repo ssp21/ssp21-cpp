@@ -105,6 +105,10 @@ namespace ssp21
         HashOutput hash;
         ctx.handshake.calc_auth_handshake_mac(hash);
 
+		/*
+
+		TODO
+
         const RequestHandshakeAuth request(hash.as_seq());
 
         const auto result = ctx.frame_writer->write(request);
@@ -119,6 +123,7 @@ namespace ssp21
         ctx.lower->start_tx_from_upper(result.frame);
 
         ctx.start_response_timer();
+		*/
 
         return WaitForAuthReply::get();
     }
@@ -139,6 +144,10 @@ namespace ssp21
     }
 
     // -------- WaitForAuthReply --------
+
+	/*
+	
+	TODO
 
     Initiator::IHandshakeState* InitiatorHandshake::WaitForAuthReply::on_message(Initiator& ctx, const ReplyHandshakeAuth& msg, const seq32_t& msg_bytes, const Timestamp& now)
     {
@@ -179,6 +188,8 @@ namespace ssp21
 
         return Idle::get();
     }
+
+	*/
 
     Initiator::IHandshakeState* InitiatorHandshake::WaitForAuthReply::on_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const Timestamp& now)
     {

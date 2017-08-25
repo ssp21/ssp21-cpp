@@ -42,11 +42,17 @@ namespace ssp21
         return this;
     }
 
+	/*
+
+	TODO
+
     Initiator::IHandshakeState* Initiator::IHandshakeState::on_message(Initiator& ctx, const ReplyHandshakeAuth& msg, const seq32_t& msg_bytes, const Timestamp& now)
     {
         this->log_unexpected_message(ctx.logger, msg.function);
         return this;
     }
+
+	*/
 
     Initiator::IHandshakeState* Initiator::IHandshakeState::on_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const Timestamp& now)
     {
@@ -114,8 +120,7 @@ namespace ssp21
     {
         switch (function)
         {
-        case(Function::reply_handshake_begin):
-        case(Function::reply_handshake_auth):
+        case(Function::reply_handshake_begin):        
         case(Function::reply_handshake_error):
         case(Function::session_data):
             return true;
@@ -146,10 +151,15 @@ namespace ssp21
         this->handshake_state = this->handshake_state->on_message(*this, msg, raw_data, now);
     }
 
+	/*
+
+	TODO
+
     void Initiator::on_message(const ReplyHandshakeAuth& msg, const seq32_t& raw_data, const Timestamp& now)
     {
         this->handshake_state = this->handshake_state->on_message(*this, msg, raw_data, now);
     }
+	*/
 
     void Initiator::on_message(const ReplyHandshakeError& msg, const seq32_t& raw_data, const Timestamp& now)
     {

@@ -35,11 +35,7 @@ namespace ssp21
             uint32_t max_session_time,
             CertificateMode certificate_mode,
             const std::string& hex_ephem_pub_key
-        );
-
-        std::string request_handshake_auth(const std::string& mac);
-
-        std::string reply_handshake_auth(const std::string& mac);
+        );        
 
         std::string reply_handshake_begin(
             const std::string& hex_ephem_pub_key

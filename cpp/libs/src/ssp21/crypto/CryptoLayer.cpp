@@ -181,16 +181,10 @@ namespace ssp21
         {
         case(Function::request_handshake_begin):
             handle_message<RequestHandshakeBegin>(message, now);
-            break;
-        case(Function::request_handshake_auth):
-            handle_message<RequestHandshakeAuth>(message, now);
-            break;
+            break;        
         case(Function::reply_handshake_begin):
             handle_message<ReplyHandshakeBegin>(message, now);
-            break;
-        case(Function::reply_handshake_auth):
-            handle_message<ReplyHandshakeAuth>(message, now);
-            break;
+            break;        
         case(Function::reply_handshake_error):
             handle_message<ReplyHandshakeError>(message, now);
             break;

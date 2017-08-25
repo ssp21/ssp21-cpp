@@ -76,8 +76,7 @@ namespace ssp21
     {
         switch (function)
         {
-        case(Function::request_handshake_begin):
-        case(Function::request_handshake_auth):
+        case(Function::request_handshake_begin):        
         case(Function::session_data):
             return true;
         default:
@@ -89,8 +88,7 @@ namespace ssp21
     {
         switch (function)
         {
-        case(Function::request_handshake_begin):
-        case(Function::request_handshake_auth):
+        case(Function::request_handshake_begin):        
             this->reply_with_handshake_error(HandshakeError::bad_message_format);
             break;
         default:
@@ -103,9 +101,14 @@ namespace ssp21
         this->handshake_state = this->handshake_state->on_message(*this, msg, raw_data, now);
     }
 
+	/*
+
+	TODO
+
     void Responder::on_message(const RequestHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
         this->handshake_state = this->handshake_state->on_message(*this, msg, raw_data, now);
     }
+	*/
 
 }

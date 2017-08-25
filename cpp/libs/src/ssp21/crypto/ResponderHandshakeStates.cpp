@@ -2,7 +2,6 @@
 #include "ssp21/crypto/ResponderHandshakeStates.h"
 
 #include "ssp21/crypto/gen/ReplyHandshakeBegin.h"
-#include "ssp21/crypto/gen/ReplyHandshakeAuth.h"
 
 #include "openpal/logging/LogMacros.h"
 #include "ssp21/stack/LogLevels.h"
@@ -64,6 +63,10 @@ namespace ssp21
         return ResponderHandshake::WaitForAuth::get();
     }
 
+	/* 
+
+	TODO
+
     Responder::IHandshakeState* ResponderHandshake::Idle::on_message(Responder& ctx, const RequestHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
     {
         SIMPLE_LOG_BLOCK(ctx.logger, levels::info, "no prior request_handshake_begin");
@@ -72,6 +75,7 @@ namespace ssp21
 
         return this;
     }
+	*/
 
     // -------------------------- HandshakeWaitForAuth -----------------------------
 
@@ -80,6 +84,10 @@ namespace ssp21
         // process via HandshakeIdle
         return ResponderHandshake::Idle::get()->on_message(ctx, msg, msg_bytes, now);
     }
+
+	/*
+
+	TODO
 
     Responder::IHandshakeState* ResponderHandshake::WaitForAuth::on_message(Responder& ctx, const RequestHandshakeAuth& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
     {
@@ -115,6 +123,7 @@ namespace ssp21
         return ResponderHandshake::Idle::get();
     }
 
+	*/
 }
 
 
