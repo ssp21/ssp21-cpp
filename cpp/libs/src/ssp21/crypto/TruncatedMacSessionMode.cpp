@@ -40,8 +40,7 @@ namespace ssp21
         IFrameWriter& writer,
         const SymmetricKey& key,
         AuthMetadata& metadata,
-        seq32_t& user_data,
-        const wseq32_t& encrypt_scratch_space,
+        seq32_t& user_data,        
         std::error_code& ec
     ) const
     {

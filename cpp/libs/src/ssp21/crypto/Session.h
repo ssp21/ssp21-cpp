@@ -56,11 +56,11 @@ namespace ssp21
             return statistics;
         }
 
-		seq32_t validate_session_auth(const SessionData& message, const openpal::Timestamp& now, std::error_code& ec);
+		seq32_t validate_session_auth(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, std::error_code& ec);
 
-        seq32_t validate_session_data(const SessionData& message, const openpal::Timestamp& now, std::error_code& ec);
+        seq32_t validate_session_data(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, std::error_code& ec);
 
-        seq32_t format_session_message(bool fir, const openpal::Timestamp& now, seq32_t& cleartext, std::error_code& ec);
+        seq32_t format_session_data(const openpal::Timestamp& now, seq32_t& cleartext, wseq32_t dest, std::error_code& ec);
 
 		// -------- getters -------------
 
@@ -81,7 +81,7 @@ namespace ssp21
 
     private:
 
-		seq32_t validate_session_data_with_nonce_func(const SessionData& message, const openpal::Timestamp& now, verify_nonce_func_t verify, std::error_code& ec);
+		seq32_t validate_session_data_with_nonce_func(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, verify_nonce_func_t verify, std::error_code& ec);
 
         bool valid = false;
 
@@ -96,8 +96,8 @@ namespace ssp21
         SessionStatistics statistics;
 
         // buffers used as scratch space for encryption/decyption operations
-        openpal::Buffer decrypt_scratch_buffer;
-        openpal::Buffer encrypt_scratch_buffer;
+        // openpal::Buffer decrypt_scratch_buffer;
+        // openpal::Buffer encrypt_scratch_buffer;
 
         Nonce rx_nonce;
         Nonce tx_nonce;

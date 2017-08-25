@@ -120,14 +120,14 @@ TEST_CASE(SUITE("rejects minimum ttl + 1"))
 
 TEST_CASE(SUITE("can't format a message without a valid session"))
 {
-    Session s(std::make_shared<MessageOnlyFrameWriter>());
+    Session session(std::make_shared<MessageOnlyFrameWriter>());
     Hex hex("CAFE");
 
     auto input = hex.as_rslice();
 
 
     std::error_code ec;
-    const auto data = s.format_session_message(true, Timestamp(0), input, ec);
+    const auto data = session.format_session_data(Timestamp(0), input, wseq32_t::empty(), ec);
     REQUIRE(ec == CryptoError::no_valid_session);
     REQUIRE(input.length() == 2);
     REQUIRE(data.is_empty());
@@ -149,7 +149,7 @@ TEST_CASE(SUITE("can't format a message if the session time exceeds the configur
     test_format_failure(SessionConfig(), param, std::make_shared<MessageOnlyFrameWriter>(), Timestamp(param.max_session_time + 1), "CA FE", CryptoError::max_session_time_exceeded);
 }
 
-TEST_CASE(SUITE("won't format a maximum if the clock has rolled back since initialization"))
+TEST_CASE(SUITE("won't format a message if the clock has rolled back since initialization"))
 {
     Session::Param param;
     param.session_start = Timestamp(1);
@@ -157,7 +157,7 @@ TEST_CASE(SUITE("won't format a maximum if the clock has rolled back since initi
     test_format_failure(SessionConfig(), param, std::make_shared<MessageOnlyFrameWriter>(), Timestamp(0), "CA FE", CryptoError::clock_rollback);
 }
 
-TEST_CASE(SUITE("won't format a maximum if adding the TTL would exceed the maximum session time"))
+TEST_CASE(SUITE("won't format a message if adding the TTL would exceed the maximum session time"))
 {
     Session::Param param;
     param.max_session_time = consts::crypto::default_ttl_pad_ms - 1;
@@ -186,7 +186,7 @@ TEST_CASE(SUITE("successfully formats and increments nonce"))
         auto input = hex.as_rslice();
         std::error_code ec;
 
-        const auto data = s.format_session_message(true, Timestamp(0), input, ec);
+        const auto data = s.format_session_data(Timestamp(0), input, wseq32_t::empty(), ec);
         REQUIRE_FALSE(ec);
         REQUIRE(input.is_empty());
         REQUIRE(data.is_not_empty());
@@ -220,7 +220,7 @@ std::string validate(Session& session, uint16_t nonce, uint32_t ttl, int64_t now
         auth_tag
     );
 
-    return to_hex(session.validate_session_data(msg, Timestamp(now), ec));
+    return to_hex(session.validate_session_data(msg, Timestamp(now), wseq32_t::empty(), ec));
 }
 
 std::string test_validation_success(const SessionConfig& config, const Session::Param& parameters, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex)
@@ -267,7 +267,7 @@ void test_format_failure(const SessionConfig& config, const Session::Param& para
     const auto start_length = input.length();
 
     std::error_code ec;
-    const auto data = s.format_session_message(true, now, input, ec);
+    const auto data = s.format_session_data(now, input, wseq32_t::empty(), ec);
     REQUIRE(ec == expected);
     REQUIRE(input.length() == start_length);
     REQUIRE(data.is_empty());

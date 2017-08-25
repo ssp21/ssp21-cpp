@@ -15,9 +15,11 @@ namespace ssp21
 
     Session::Session(const std::shared_ptr<IFrameWriter>& frame_writer, const SessionConfig& config) :
         frame_writer(frame_writer),
-        config(config),
+        config(config)
+		/*
         decrypt_scratch_buffer(calc_max_crypto_payload_length(frame_writer->get_max_payload_size())),
         encrypt_scratch_buffer(decrypt_scratch_buffer.length())
+		*/
     {}
 
     constexpr uint32_t Session::calc_max_crypto_payload_length(uint32_t max_link_payload_size)
@@ -49,17 +51,17 @@ namespace ssp21
         this->statistics.num_reset.increment();        
     }
 
-	seq32_t Session::validate_session_auth(const SessionData& message, const openpal::Timestamp& now, std::error_code& ec)
+	seq32_t Session::validate_session_auth(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, std::error_code& ec)
 	{
-		return this->validate_session_data_with_nonce_func(message, now, NonceFunctions::equal_to_zero, ec);
+		return this->validate_session_data_with_nonce_func(message, now, dest, NonceFunctions::equal_to_zero, ec);
 	}
 
-	seq32_t Session::validate_session_data(const SessionData& message, const openpal::Timestamp& now, std::error_code& ec)
+	seq32_t Session::validate_session_data(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, std::error_code& ec)
 	{
-		return this->validate_session_data_with_nonce_func(message, now, this->algorithms.verify_nonce, ec);
+		return this->validate_session_data_with_nonce_func(message, now, dest, this->algorithms.verify_nonce, ec);
 	}    
 
-    seq32_t Session::format_session_message(bool fir, const openpal::Timestamp& now, seq32_t& user_data, std::error_code& ec)
+    seq32_t Session::format_session_data(const openpal::Timestamp& now, seq32_t& clear_text, wseq32_t dest, std::error_code& ec)
     {
         if (!this->valid)
         {
@@ -101,7 +103,7 @@ namespace ssp21
             session_time + config.ttl_pad_ms
         );
 
-        const auto frame = this->algorithms.mode->write(*this->frame_writer, this->keys.tx_key, metadata, user_data, this->encrypt_scratch_buffer.as_wslice(), ec);
+        const auto frame = this->algorithms.mode->write(*this->frame_writer, this->keys.tx_key, metadata, clear_text, ec);
         if (ec)
         {
             return seq32_t::empty();
@@ -113,7 +115,7 @@ namespace ssp21
         return frame;
     }
 
-	seq32_t Session::validate_session_data_with_nonce_func(const SessionData& message, const openpal::Timestamp& now, verify_nonce_func_t verify_nonce, std::error_code& ec)
+	seq32_t Session::validate_session_data_with_nonce_func(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, verify_nonce_func_t verify_nonce, std::error_code& ec)
 	{
 		if (!this->valid)
 		{
@@ -122,7 +124,7 @@ namespace ssp21
 			return seq32_t::empty();
 		}
 
-		const auto payload = this->algorithms.mode->read(this->keys.rx_key, message, this->decrypt_scratch_buffer.as_wslice(), ec);
+		const auto payload = this->algorithms.mode->read(this->keys.rx_key, message, dest, ec);
 
 		if (ec)
 		{

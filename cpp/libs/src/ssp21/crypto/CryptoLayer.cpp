@@ -208,12 +208,12 @@ namespace ssp21
             return;
         }
 
-        auto remainder = this->tx_state.get_remainder();
-        const auto fir = this->tx_state.get_fir();
+        auto remainder = this->tx_state.get_remainder();        
         const auto now = this->executor->get_time();
 
         std::error_code err;
-        const auto data = this->session.format_session_message(fir, now, remainder, err);
+		// TODO - set the destination
+        const auto data = this->session.format_session_data(now, remainder, wseq32_t::empty(), err);
         if (err)
         {
             FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error formatting session message: %s", err.message().c_str());
@@ -248,7 +248,7 @@ namespace ssp21
 	void CryptoLayer::on_session_data(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
 	{
 		std::error_code ec;
-		const auto payload = this->session.validate_session_data(msg, now, ec);
+		const auto payload = this->session.validate_session_data(msg, now, wseq32_t::empty(), ec);
 
 		if (ec)
 		{
