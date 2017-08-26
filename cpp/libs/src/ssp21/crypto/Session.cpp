@@ -59,61 +59,29 @@ namespace ssp21
 	seq32_t Session::validate_session_data(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, std::error_code& ec)
 	{
 		return this->validate_session_data_with_nonce_func(message, now, dest, this->algorithms.verify_nonce, ec);
-	}    
+	}    	
 
-    seq32_t Session::format_session_data(const openpal::Timestamp& now, seq32_t& clear_text, wseq32_t dest, std::error_code& ec)
-    {
-        if (!this->valid)
-        {
-            ec = CryptoError::no_valid_session;
-            return seq32_t::empty();
-        }
+	seq32_t Session::format_session_auth(const openpal::Timestamp& now, seq32_t& cleartext, wseq32_t dest, std::error_code& ec)
+	{
+		if (!this->tx_nonce.is_zero())
+		{
+			ec = CryptoError::max_nonce_exceeded;
+			return seq32_t::empty();
+		}
 
-        if (this->tx_nonce.get() >= this->parameters.max_nonce)
-        {
-            ec = CryptoError::max_nonce_exceeded;
-            return seq32_t::empty();
-        }
+		return this->format_session_data(now, cleartext, dest, 0, ec);
+	}
 
-        if (now.milliseconds < this->parameters.session_start.milliseconds)
-        {
-            ec = CryptoError::clock_rollback;
-            return seq32_t::empty();
-        }
+	seq32_t Session::format_session_data(const openpal::Timestamp& now, seq32_t& cleartext, wseq32_t dest, std::error_code& ec)
+	{
+		if (this->tx_nonce.get() >= this->parameters.max_nonce)
+		{
+			ec = CryptoError::max_nonce_exceeded;
+			return seq32_t::empty();
+		}
 
-        const auto session_time_long = now.milliseconds - this->parameters.session_start.milliseconds;
-
-        if (session_time_long > this->parameters.max_session_time)
-        {
-            ec = CryptoError::max_session_time_exceeded;
-            return seq32_t::empty();
-        }
-
-        const auto session_time = static_cast<uint32_t>(session_time_long);				// safe downcast since session_time_long <= the uin32_t above
-        const auto remainder = this->parameters.max_session_time - session_time;	    // safe substract since session_time > config.max_session_time
-        if (remainder < config.ttl_pad_ms)
-        {
-            ec = CryptoError::max_session_time_exceeded;
-            return seq32_t::empty();
-        }
-
-        // the metadata we're encoding
-        AuthMetadata metadata(
-            this->tx_nonce.get() + 1,
-            session_time + config.ttl_pad_ms
-        );
-
-        const auto frame = this->algorithms.mode->write(*this->frame_writer, this->keys.tx_key, metadata, clear_text, ec);
-        if (ec)
-        {
-            return seq32_t::empty();
-        }
-
-        // everything succeeded, so increment the nonce and advance the input buffer
-        this->tx_nonce.increment();
-
-        return frame;
-    }
+		return this->format_session_data(now, cleartext, dest, this->tx_nonce.get() + 1, ec);
+	}
 
 	seq32_t Session::validate_session_data_with_nonce_func(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, verify_nonce_func_t verify_nonce, std::error_code& ec)
 	{
@@ -181,6 +149,54 @@ namespace ssp21
 		this->statistics.num_success.increment();
 
 		return payload;
+	}
+
+	seq32_t Session::format_session_data(const openpal::Timestamp& now, seq32_t& clear_text, wseq32_t dest, uint16_t nonce, std::error_code& ec)
+	{
+		if (!this->valid)
+		{
+			ec = CryptoError::no_valid_session;
+			return seq32_t::empty();
+		}
+
+		if (now.milliseconds < this->parameters.session_start.milliseconds)
+		{
+			ec = CryptoError::clock_rollback;
+			return seq32_t::empty();
+		}
+
+		const auto session_time_long = now.milliseconds - this->parameters.session_start.milliseconds;
+
+		if (session_time_long > this->parameters.max_session_time)
+		{
+			ec = CryptoError::max_session_time_exceeded;
+			return seq32_t::empty();
+		}
+
+		const auto session_time = static_cast<uint32_t>(session_time_long);				// safe downcast since session_time_long <= the uin32_t above
+		const auto remainder = this->parameters.max_session_time - session_time;	    // safe substract since session_time > config.max_session_time
+		if (remainder < config.ttl_pad_ms)
+		{
+			ec = CryptoError::max_session_time_exceeded;
+			return seq32_t::empty();
+		}
+
+		// the metadata we're encoding
+		AuthMetadata metadata(
+			nonce,
+			session_time + config.ttl_pad_ms
+		);
+
+		const auto frame = this->algorithms.mode->write(*this->frame_writer, this->keys.tx_key, metadata, clear_text, ec);
+		if (ec)
+		{
+			return seq32_t::empty();
+		}
+
+		// everything succeeded, so increment the nonce
+		this->tx_nonce.increment();
+
+		return frame;
 	}
 
 }

@@ -28,6 +28,11 @@ namespace ssp21
             return value;
         }
 
+		bool is_zero() const
+		{
+			return this->value == 0;
+		}
+
     private:
 
         uint16_t value = 0;

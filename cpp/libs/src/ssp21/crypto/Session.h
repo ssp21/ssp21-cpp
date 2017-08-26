@@ -5,7 +5,6 @@
 #include "openpal/util/Uncopyable.h"
 #include "openpal/logging/Logger.h"
 #include "openpal/executor/Timestamp.h"
-#include "openpal/container/Buffer.h"
 
 #include "ssp21/crypto/Nonce.h"
 #include "ssp21/crypto/Constants.h"
@@ -51,16 +50,13 @@ namespace ssp21
 
         void reset();
 
-        SessionStatistics get_statistics() const
-        {
-            return statistics;
-        }
-
 		seq32_t validate_session_auth(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, std::error_code& ec);
 
         seq32_t validate_session_data(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, std::error_code& ec);
 
         seq32_t format_session_data(const openpal::Timestamp& now, seq32_t& cleartext, wseq32_t dest, std::error_code& ec);
+
+		seq32_t format_session_auth(const openpal::Timestamp& now, seq32_t& cleartext, wseq32_t dest, std::error_code& ec);
 
 		// -------- getters -------------
 
@@ -79,7 +75,14 @@ namespace ssp21
             return tx_nonce.get();
         }
 
+		inline SessionStatistics get_statistics() const
+		{
+			return statistics;
+		}
+
     private:
+
+		seq32_t Session::format_session_data(const openpal::Timestamp& now, seq32_t& clear_text, wseq32_t dest, uint16_t nonce, std::error_code& ec);
 
 		seq32_t validate_session_data_with_nonce_func(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, verify_nonce_func_t verify, std::error_code& ec);
 
@@ -93,11 +96,7 @@ namespace ssp21
         */
         static constexpr uint32_t calc_max_crypto_payload_length(uint32_t max_link_payload_size);
 
-        SessionStatistics statistics;
-
-        // buffers used as scratch space for encryption/decyption operations
-        // openpal::Buffer decrypt_scratch_buffer;
-        // openpal::Buffer encrypt_scratch_buffer;
+        SessionStatistics statistics;       
 
         Nonce rx_nonce;
         Nonce tx_nonce;
