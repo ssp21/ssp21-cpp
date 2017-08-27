@@ -5,6 +5,11 @@ using namespace openpal;
 
 namespace ssp21
 {
+	Handshake::Handshake(HandshakeMode mode, std::unique_ptr<Session> session) :
+		mode(mode),
+		pending_session(std::move(session))
+	{}
+
     HandshakeError Handshake::set_algorithms(const CryptoSpec& spec)
     {
         return this->algorithms.configure(spec);
@@ -21,38 +26,27 @@ namespace ssp21
     {
         this->constraints = msg.constraints;
 
-        this->algorithms.handshake.hash({ raw_msg }, this->chaining_key);
+        this->algorithms.handshake.hash({ raw_msg }, this->handshake_hash);
     }
 
-    void Handshake::mix_ck(const seq32_t& input)
+    void Handshake::mix_handshake_hash(const seq32_t& input)
     {
-        // ck = hash(ck || input)
+        // h = hash(h || input)
 
         this->algorithms.handshake.hash(
-        { this->chaining_key.as_seq(), input },
-        this->chaining_key
+          { this->handshake_hash.as_seq(), input },
+          this->handshake_hash
         );
-    }
+    }	
 
-    bool Handshake::auth_handshake(const seq32_t& mac) const
-    {
-		// TODO
-		return false;
-    }
-
-    void Handshake::calc_auth_handshake_mac(HashOutput& output) const
-    {
-        // TODO
-    }
-
-    void Handshake::derive_authentication_key(
+    void Handshake::initialize_pending_session(
         const seq32_t& message,
         const PrivateKey& priv_s_dh_key,
         const seq32_t& pub_e_dh_key,
         const seq32_t& pub_s_dh_key,
         std::error_code& ec)
     {
-        this->mix_ck(message);
+        this->mix_handshake_hash(message);
 
         DHOutput dh1;
         this->algorithms.handshake.dh(this->local_ephemeral_keys.private_key, pub_e_dh_key, dh1, ec);
@@ -62,24 +56,29 @@ namespace ssp21
         DHOutput dh2;
         DHOutput dh3;
 
-        this->algorithms.handshake.dh(this->local_ephemeral_keys.private_key, pub_s_dh_key, (this->mode == HandshakeMode::Responder) ? dh2 : dh3, ec);
+        this->algorithms.handshake.dh(this->local_ephemeral_keys.private_key, pub_s_dh_key, this->is_responder() ? dh2 : dh3, ec);
         if (ec) return;
 
-        this->algorithms.handshake.dh(priv_s_dh_key, pub_e_dh_key, (this->mode == HandshakeMode::Responder) ? dh3 : dh2, ec);
+        this->algorithms.handshake.dh(priv_s_dh_key, pub_e_dh_key, this->is_responder() ? dh3 : dh2, ec);
         if (ec) return;
+
+		SessionKeys keys;
 
         this->algorithms.handshake.kdf(
-            this->chaining_key.as_seq(),
-        {
-            dh1.as_seq(), dh2.as_seq(), dh3.as_seq()
-        },
-        this->chaining_key,
-        this->authentication_key
-        );
+            this->handshake_hash.as_seq(),
+			{
+				dh1.as_seq(), dh2.as_seq(), dh3.as_seq()
+			},
+			this->is_responder() ? keys.rx_key : keys.tx_key,
+			this->is_responder() ? keys.tx_key : keys.rx_key
+        );		
     }
 
     void Handshake::initialize_session(Session& session, const openpal::Timestamp& session_start) const
     {
+		/*
+		TODO
+
         SessionKeys keys;
 
         // keys are swapped for initiator vs responder
@@ -101,6 +100,7 @@ namespace ssp21
             ),
             keys
         );
+		*/
     }
 
 }

@@ -86,7 +86,7 @@ namespace ssp21
 
         std::error_code ec;
 
-        ctx.handshake.derive_authentication_key(
+        ctx.handshake.initialize_pending_session(
             msg_bytes,
             *ctx.static_keys.private_key,
             msg.ephemeral_public_key,
@@ -96,17 +96,18 @@ namespace ssp21
 
         if (ec)
         {
-            FORMAT_LOG_BLOCK(ctx.logger, levels::error, "error deriving authentication key: %s", ec.message().c_str());
+            FORMAT_LOG_BLOCK(ctx.logger, levels::error, "error initializing pending session: %s", ec.message().c_str());
             ctx.start_retry_timer();
             return WaitForRetry::get();
         }
 
-        HashOutput hash;
-        ctx.handshake.calc_auth_handshake_mac(hash);
 
 		/*
 
 		TODO
+
+        HashOutput hash;
+        ctx.handshake.calc_auth_handshake_mac(hash);		
 
         const RequestHandshakeAuth request(hash.as_seq());
 

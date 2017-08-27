@@ -107,7 +107,7 @@ namespace ssp21
         const std::shared_ptr<ICertificateHandler> certificate_handler;
 
         Handshake handshake;
-        Session session;        
+		std::unique_ptr<Session> session;
         TxState tx_state;
 
         ILowerLayer* lower = nullptr;
@@ -131,7 +131,7 @@ namespace ssp21
             * 3) transmission state must have some data to send
             */
 
-            return this->session.is_valid() && this->lower->is_tx_ready() && this->tx_state.is_ready_tx();
+            return this->session->is_valid() && this->lower->is_tx_ready() && this->tx_state.is_ready_tx();
         }
 
         void check_transmit();

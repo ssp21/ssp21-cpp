@@ -24,8 +24,8 @@ namespace ssp21
         executor(executor),
         static_keys(static_keys),
         certificate_handler(certificate_handler),
-        handshake(type),
-        session(frame_writer, session_config)        
+        handshake(type, std::make_unique<Session>(frame_writer, session_config)),
+		session(std::make_unique<Session>(frame_writer, session_config))
     {}
 
     void CryptoLayer::discard_rx_data()
@@ -213,7 +213,7 @@ namespace ssp21
 
         std::error_code err;
 		// TODO - set the destination
-        const auto data = this->session.format_session_data(now, remainder, wseq32_t::empty(), err);
+        const auto data = this->session->format_session_data(now, remainder, wseq32_t::empty(), err);
         if (err)
         {
             FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error formatting session message: %s", err.message().c_str());
@@ -229,7 +229,7 @@ namespace ssp21
 
         this->lower->start_tx_from_upper(data);
 
-        this->on_session_nonce_change(this->session.get_rx_nonce(), this->session.get_tx_nonce());
+        this->on_session_nonce_change(this->session->get_rx_nonce(), this->session->get_tx_nonce());
     }
 
     void CryptoLayer::on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
@@ -248,7 +248,7 @@ namespace ssp21
 	void CryptoLayer::on_session_data(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
 	{
 		std::error_code ec;
-		const auto payload = this->session.validate_session_data(msg, now, wseq32_t::empty(), ec);
+		const auto payload = this->session->validate_session_data(msg, now, wseq32_t::empty(), ec);
 
 		if (ec)
 		{
@@ -256,7 +256,7 @@ namespace ssp21
 			return;
 		}
 
-		this->on_session_nonce_change(this->session.get_rx_nonce(), this->session.get_tx_nonce());
+		this->on_session_nonce_change(this->session->get_rx_nonce(), this->session->get_tx_nonce());
 
 		// TODO 
 

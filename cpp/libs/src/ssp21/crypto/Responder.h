@@ -44,7 +44,7 @@ namespace ssp21
 
         inline ResponderStatistics get_statistics() const
         {
-            return ResponderStatistics(this->session.get_statistics());
+            return ResponderStatistics(this->session->get_statistics());
         }
 
         inline IHandshakeState::Enum get_state_enum() const
