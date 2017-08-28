@@ -21,7 +21,7 @@ namespace ssp21
     public:
 
         Initiator(
-            const InitiatorConfig& config,
+            const InitiatorConfig& config,			
             const openpal::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
             const std::shared_ptr<openpal::IExecutor>& executor,
@@ -118,12 +118,14 @@ namespace ssp21
 
 		virtual void on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
 
-        // ---- private members -----
+        // ---- private members -----        
 
-        IHandshakeState* handshake_state;
-
-        const InitiatorConfig::Suite suite;
+		const Algorithms algorithms;
+        const InitiatorConfig::CryptoSuite suite;
         const InitiatorConfig::Params params;
+
+		IHandshakeState* handshake_state;
+		Handshake handshake;
 
         openpal::TimerRef response_and_retry_timer;
         openpal::TimerRef session_timeout_timer;

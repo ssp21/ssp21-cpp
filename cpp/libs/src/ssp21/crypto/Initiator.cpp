@@ -16,7 +16,7 @@ namespace ssp21
         const Logger& logger,
         const std::shared_ptr<IFrameWriter>& frame_writer,
         const std::shared_ptr<IExecutor>& executor,
-        const StaticKeys& static_keys,
+        const StaticKeys& static_keys,		
         const std::shared_ptr<ICertificateHandler>& certificate_handler
     ) :
         CryptoLayer(
@@ -29,9 +29,11 @@ namespace ssp21
             static_keys,
             certificate_handler
         ),
-        handshake_state(InitiatorHandshake::Idle::get()),
-        suite(config.suite),
-        params(config.params),
+		algorithms(config.suite),
+		suite(config.suite),
+		params(config.params),
+        handshake_state(InitiatorHandshake::Idle::get()),		
+        handshake(algorithms.handshake),        
         response_and_retry_timer(executor),
         session_timeout_timer(executor)
     {}

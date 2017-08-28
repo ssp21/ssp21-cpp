@@ -88,7 +88,7 @@ namespace ssp21
 			return seq32_t::empty();
 		}
 
-		const auto payload = this->algorithms.mode->read(this->keys.rx_key, message, dest, ec);
+		const auto payload = this->algorithms.session_mode->read(this->keys.rx_key, message, dest, ec);
 
 		if (ec)
 		{
@@ -183,7 +183,7 @@ namespace ssp21
 			session_time + config.ttl_pad_ms
 		);
 
-		const auto frame = this->algorithms.mode->write(*this->frame_writer, this->keys.tx_key, metadata, clear_text, ec);
+		const auto frame = this->algorithms.session_mode->write(*this->frame_writer, this->keys.tx_key, metadata, clear_text, ec);
 		if (ec)
 		{
 			return seq32_t::empty();

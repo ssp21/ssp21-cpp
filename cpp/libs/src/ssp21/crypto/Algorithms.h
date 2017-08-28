@@ -6,6 +6,7 @@
 #include "ssp21/crypto/NonceFunctions.h"
 #include "ssp21/crypto/SessionModes.h"
 #include "ssp21/crypto/HandshakeAuthentication.h"
+#include "ssp21/crypto/CryptoLayerConfig.h"
 
 #include "ssp21/crypto/gen/CryptoSpec.h"
 #include "ssp21/crypto/gen/HandshakeError.h"
@@ -26,13 +27,24 @@ namespace ssp21
         {
             Session() = default;
 
+			HandshakeError configure(
+				NonceMode nonce_mode,
+				SessionMode session_mode
+			);
+
             verify_nonce_func_t verify_nonce = NonceFunctions::default_verify();
-            ISessionMode* mode = &SessionModes::default_mode();
+            ISessionMode* session_mode = &SessionModes::default_mode();			
         };
 
         struct Handshake
         {
             Handshake() = default;
+
+			HandshakeError configure(
+				DHMode dh_mode,
+				HandshakeKDF handshake_kdf,
+				HandshakeHash handshake_hash				
+			);
 
             dh_func_t dh = &Crypto::dh_x25519;
             kdf_func_t kdf = &Crypto::hkdf_sha256;
@@ -43,7 +55,11 @@ namespace ssp21
         // default constructor initializes with default algorithms
         Algorithms() = default;
 
-        HandshakeError configure(const CryptoSpec& spec);
+		// construct the algorithms
+		Algorithms(const InitiatorConfig::CryptoSuite& suite);
+
+		// configure the algorithms from a received CryptoSpec
+        HandshakeError configure(const CryptoSpec& spec);		
 
         // handshake algorithms
         Handshake handshake;

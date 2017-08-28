@@ -39,8 +39,8 @@ namespace ssp21
 
     struct InitiatorConfig
     {
-        /// The cyrptographic modes that the initiator will request from the responder
-        struct Suite
+        // The cyrptographic modes that the initiator will request from the responder
+        struct CryptoSuite
         {
             NonceMode nonce_mode = NonceMode::increment_last_rx;
             DHMode dh_mode = DHMode::x25519;
@@ -71,7 +71,7 @@ namespace ssp21
             uint16_t nonce_renegotiation_trigger_value = consts::crypto::initiator::default_nonce_renegotiation_trigger;
         };
 
-        Suite suite;
+        CryptoSuite suite;
         Params params;
         CryptoLayerConfig config;
         SessionConfig session;
