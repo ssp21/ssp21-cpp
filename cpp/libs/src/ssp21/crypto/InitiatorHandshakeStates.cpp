@@ -14,6 +14,11 @@ namespace ssp21
 
     Initiator::IHandshakeState* InitiatorHandshake::Idle::on_handshake_required(Initiator& ctx, const Timestamp& now)
     {
+		/*
+
+		TODO
+
+
         if (!ctx.lower->is_tx_ready())
         {
             ctx.handshake_required = true;
@@ -65,6 +70,7 @@ namespace ssp21
         ctx.request_handshake_begin_time_tx = ctx.executor->get_time();
 
         ctx.start_response_timer();
+		*/
 
         return InitiatorHandshake::WaitForBeginReply::get();
     }
@@ -73,6 +79,10 @@ namespace ssp21
 
     Initiator::IHandshakeState* InitiatorHandshake::WaitForBeginReply::on_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const Timestamp& now)
     {
+		/*
+
+		TODO
+
         ctx.response_and_retry_timer.cancel();
 
         seq32_t remote_public_key;
@@ -100,11 +110,7 @@ namespace ssp21
             ctx.start_retry_timer();
             return WaitForRetry::get();
         }
-
-
-		/*
-
-		TODO
+		
 
         HashOutput hash;
         ctx.handshake.calc_auth_handshake_mac(hash);		

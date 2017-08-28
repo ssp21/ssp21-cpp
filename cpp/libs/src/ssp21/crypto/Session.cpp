@@ -15,11 +15,7 @@ namespace ssp21
 
     Session::Session(const std::shared_ptr<IFrameWriter>& frame_writer, const SessionConfig& config) :
         frame_writer(frame_writer),
-        config(config)
-		/*
-        decrypt_scratch_buffer(calc_max_crypto_payload_length(frame_writer->get_max_payload_size())),
-        encrypt_scratch_buffer(decrypt_scratch_buffer.length())
-		*/
+        config(config)		
     {}
 
     constexpr uint32_t Session::calc_max_crypto_payload_length(uint32_t max_link_payload_size)

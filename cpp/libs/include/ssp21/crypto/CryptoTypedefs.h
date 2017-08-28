@@ -29,7 +29,7 @@ namespace ssp21
     );
 
     typedef void (*kdf_func_t)(
-        const seq32_t& chaining_key,
+        const seq32_t& salt,
         std::initializer_list<seq32_t> input_key_material,
         SymmetricKey& key1,
         SymmetricKey& key2

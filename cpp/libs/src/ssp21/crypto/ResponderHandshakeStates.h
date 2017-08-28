@@ -8,6 +8,10 @@ namespace ssp21
 {
     struct ResponderHandshake
     {
+		/*
+
+		TODO
+
         class Idle final : public Responder::IHandshakeState
         {
             Idle() : Responder::IHandshakeState(Responder::IHandshakeState::Enum::idle) {}
@@ -39,6 +43,8 @@ namespace ssp21
             }
 
         };
+
+		*/
     };
 
 }

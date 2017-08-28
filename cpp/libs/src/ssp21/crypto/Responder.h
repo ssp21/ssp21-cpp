@@ -13,26 +13,9 @@ namespace ssp21
     */
     class Responder final : public CryptoLayer
     {
-        friend struct ResponderHandshake;
-
+        
     public:
-
-        struct IHandshakeState : private openpal::Uncopyable
-        {
-            enum Enum
-            {
-                idle,
-                wait_for_auth
-            };
-
-            explicit IHandshakeState(Enum enum_value) : enum_value(enum_value)
-            {}
-
-            virtual IHandshakeState* on_message(Responder& ctx, const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) = 0;            
-
-            const Enum enum_value;
-        };
-
+        
         Responder(
             const ResponderConfig& config,
             const openpal::Logger& logger,
@@ -45,12 +28,7 @@ namespace ssp21
         inline ResponderStatistics get_statistics() const
         {
             return ResponderStatistics(this->session->get_statistics());
-        }
-
-        inline IHandshakeState::Enum get_state_enum() const
-        {
-            return this->handshake_state->enum_value;
-        }
+        }        
 
     private:
 
@@ -62,7 +40,7 @@ namespace ssp21
 
         void reply_with_handshake_error(HandshakeError err);
 
-        HandshakeError verify_handshake_begin(const RequestHandshakeBegin& msg, seq32_t& public_key_out);
+        HandshakeError verify_handshake_begin(const RequestHandshakeBegin& msg, Algorithms& algorithms, seq32_t& public_key_out);
 
 
         // ---- implement CryptoLayer -----
@@ -80,8 +58,8 @@ namespace ssp21
 
         // ---- private members -----
 
-        // state instance for the handshake
-        IHandshakeState* handshake_state;
+		std::unique_ptr<Session> pending_session;
+		std::unique_ptr<Session> active_session;
     };
 
 }

@@ -105,8 +105,7 @@ namespace ssp21
 
         const StaticKeys static_keys;
         const std::shared_ptr<ICertificateHandler> certificate_handler;
-
-        Handshake handshake;
+        
 		std::unique_ptr<Session> session;
         TxState tx_state;
 

@@ -130,7 +130,7 @@ namespace ssp21
         inline bool valid() const
         {
             return (rx_key.get_type() == BufferType::symmetric_key) && (tx_key.get_type() == BufferType::symmetric_key);
-        }
+        }	
     };
 
 

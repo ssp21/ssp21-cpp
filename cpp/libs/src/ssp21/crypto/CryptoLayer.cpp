@@ -23,8 +23,7 @@ namespace ssp21
         frame_writer(frame_writer),
         executor(executor),
         static_keys(static_keys),
-        certificate_handler(certificate_handler),
-        handshake(type, std::make_unique<Session>(frame_writer, session_config)),
+        certificate_handler(certificate_handler),        
 		session(std::make_unique<Session>(frame_writer, session_config))
     {}
 
@@ -50,6 +49,8 @@ namespace ssp21
     seq32_t CryptoLayer::start_rx_from_upper_impl()
     {
 		/*
+		TODO
+
 		if (this->reassembler.has_data())
 		{
 			return this->reassembler.get_data();

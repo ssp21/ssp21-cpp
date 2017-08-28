@@ -49,17 +49,16 @@ namespace ssp21
         this->mix_handshake_hash(message);
 
         DHOutput dh1;
+		DHOutput dh2;
+		DHOutput dh3;
+
         this->algorithms.handshake.dh(this->local_ephemeral_keys.private_key, pub_e_dh_key, dh1, ec);
+        if (ec) return;               
+
+        this->algorithms.handshake.dh(this->local_ephemeral_keys.private_key, pub_s_dh_key, dh2, ec);
         if (ec) return;
 
-        // dh2 and dh3 are flipped for the initiator and the responder
-        DHOutput dh2;
-        DHOutput dh3;
-
-        this->algorithms.handshake.dh(this->local_ephemeral_keys.private_key, pub_s_dh_key, this->is_responder() ? dh2 : dh3, ec);
-        if (ec) return;
-
-        this->algorithms.handshake.dh(priv_s_dh_key, pub_e_dh_key, this->is_responder() ? dh3 : dh2, ec);
+        this->algorithms.handshake.dh(priv_s_dh_key, pub_e_dh_key, dh3, ec);
         if (ec) return;
 
 		SessionKeys keys;
@@ -67,11 +66,15 @@ namespace ssp21
         this->algorithms.handshake.kdf(
             this->handshake_hash.as_seq(),
 			{
-				dh1.as_seq(), dh2.as_seq(), dh3.as_seq()
+				dh1.as_seq(),
+				// dh2 and dh3 are flipped for the initiator and the responder
+				this->is_responder() ? dh2.as_seq() : dh3.as_seq(),
+				this->is_responder() ? dh3.as_seq() : dh2.as_seq()
 			},
 			this->is_responder() ? keys.rx_key : keys.tx_key,
 			this->is_responder() ? keys.tx_key : keys.rx_key
-        );		
+        );
+		
     }
 
     void Handshake::initialize_session(Session& session, const openpal::Timestamp& session_start) const
