@@ -79,8 +79,7 @@ namespace ssp21
 		if (any(result.error))
 		{
 			FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error processing handshake request: %s", HandshakeErrorSpec::to_string(result.error));
-			this->reply_with_handshake_error(result.error);
-			return;
+			this->reply_with_handshake_error(result.error);			
 		}
 		else
 		{
@@ -92,7 +91,13 @@ namespace ssp21
 
     void Responder::on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
+		std::error_code ec;
+		const auto data = this->sessions.pending->validate_session_auth(msg, now, wseq32_t::empty(), ec); // TODO specify a real buffer
 
+		if (ec)
+		{
+
+		}
     }
 
 }

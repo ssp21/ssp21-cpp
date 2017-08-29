@@ -54,7 +54,19 @@ namespace ssp21
 
     seq32_t Session::validate_session_data(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, std::error_code& ec)
     {
-        return this->validate_session_data_with_nonce_func(message, now, dest, this->algorithms.verify_nonce, ec);
+        const auto payload = this->validate_session_data_with_nonce_func(message, now, dest, this->algorithms.verify_nonce, ec);
+		
+		if (ec) {
+			return payload;
+		}
+
+		if (payload.is_empty())
+		{
+			ec = CryptoError::empty_user_data;
+			this->statistics.num_auth_fail.increment();			
+		}
+
+		return payload;
     }
 
     seq32_t Session::format_session_auth(const openpal::Timestamp& now, seq32_t& cleartext, wseq32_t dest, std::error_code& ec)
@@ -94,14 +106,7 @@ namespace ssp21
         {
             this->statistics.num_auth_fail.increment();
             return seq32_t::empty();
-        }
-
-        if (payload.is_empty())
-        {
-            ec = CryptoError::empty_user_data;
-            this->statistics.num_auth_fail.increment();
-            return seq32_t::empty();
-        }
+        }        
 
         if (now.milliseconds < this->parameters.session_start.milliseconds)
         {
