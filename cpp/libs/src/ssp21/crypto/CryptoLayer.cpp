@@ -9,8 +9,7 @@
 namespace ssp21
 {
 
-    CryptoLayer::CryptoLayer(
-        HandshakeMode type,
+    CryptoLayer::CryptoLayer(        
         const CryptoLayerConfig& context_config,
         const SessionConfig& session_config,
         const openpal::Logger& logger,

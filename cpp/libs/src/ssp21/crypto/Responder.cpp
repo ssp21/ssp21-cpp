@@ -17,7 +17,6 @@ namespace ssp21
         const StaticKeys& static_keys,
         const std::shared_ptr<ICertificateHandler>& certificate_handler) :
         CryptoLayer(
-            HandshakeMode::Responder,
             config.config,
             config.session,
             logger,
