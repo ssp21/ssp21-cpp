@@ -101,11 +101,12 @@ namespace ssp21
                
         TxState tx_state;
 		SecureDynamicBuffer decrypt_buffer;
+		seq32_t received_data;
 
         ILowerLayer* lower = nullptr;
         IUpperLayer* upper = nullptr;
 
-    private:
+	private:
 
         void try_read_from_lower();
 

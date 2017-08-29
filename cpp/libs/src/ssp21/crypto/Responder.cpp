@@ -100,7 +100,12 @@ namespace ssp21
 			return;
 		}
 
-		// process any received data
+		if (data.is_not_empty())
+		{
+			// TODO - process any received data
+		}
+		
+
     }
 
 }

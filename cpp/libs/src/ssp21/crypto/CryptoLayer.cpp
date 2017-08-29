@@ -25,7 +25,7 @@ namespace ssp21
 
     void CryptoLayer::discard_rx_data()
     {
-        // TODO
+		this->received_data.make_empty();
     }
 
     bool CryptoLayer::start_tx_from_upper(const seq32_t& data)
@@ -43,21 +43,16 @@ namespace ssp21
     }
 
     seq32_t CryptoLayer::start_rx_from_upper_impl()
-    {
-        /*
-        TODO
-
-        if (this->reassembler.has_data())
+    {      
+        if (this->received_data.is_empty())
         {
-        	return this->reassembler.get_data();
+			this->try_read_from_lower();
+			return seq32_t::empty();
         }
         else
         {
-            this->try_read_from_lower();
-            return seq32_t::empty();
-        }
-        */
-        return seq32_t::empty();
+			return this->received_data;
+        }                
     }
 
     bool CryptoLayer::is_tx_ready() const
@@ -104,7 +99,7 @@ namespace ssp21
         this->reset_state_on_close_from_lower();
 
         this->sessions.reset_both();
-        // TODO: this->reassembler.reset();
+		this->received_data.make_empty();        
         this->upper->on_lower_close();
         this->tx_state.reset();
         this->reset_this_lower_layer();
@@ -151,7 +146,8 @@ namespace ssp21
         * 2) There isn't unread session data buffered for the upper layer
         *
         */
-        // TODO - if (!this->lower->is_tx_ready() || this->reassembler.has_data()) return false;
+        
+		if (!this->lower->is_tx_ready() || this->received_data.is_not_empty()) return false;
 
         const seq32_t message = this->lower->start_rx_from_upper();
         if (message.is_empty()) return false;
@@ -244,35 +240,19 @@ namespace ssp21
     void CryptoLayer::on_session_data(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
         std::error_code ec;
-        const auto payload = this->sessions.active->validate_session_data(msg, now, wseq32_t::empty(), ec);
+        const auto payload = this->sessions.active->validate_session_data(msg, now, this->decrypt_buffer.as_wslice(), ec);
 
         if (ec)
         {
-            FORMAT_LOG_BLOCK(this->logger, levels::warn, "validation error: %s", ec.message().c_str());
+            FORMAT_LOG_BLOCK(this->logger, levels::warn, "error reading session data: %s", ec.message().c_str());
             return;
         }
 
-        this->on_session_nonce_change(this->sessions.active->get_rx_nonce(), this->sessions.active->get_tx_nonce());
+		this->received_data = payload;
 
-        // TODO
+        this->on_session_nonce_change(this->sessions.active->get_rx_nonce(), this->sessions.active->get_tx_nonce());        
 
-        /*
-        const auto result = this->reassembler.process(msg.metadata.flags.fir, msg.metadata.flags.fin, msg.metadata.nonce, payload);
-
-        switch (result)
-        {
-        case(ReassemblyResult::partial):
-        	break; // do nothing
-
-        case(ReassemblyResult::complete):
-        	this->upper->on_lower_rx_ready();
-        	break;
-
-        default: // error
-        	FORMAT_LOG_BLOCK(this->logger, levels::warn, "reassembly error: %s", ReassemblyResultSpec::to_string(result));
-        	break;
-        }
-        */
+		this->upper->on_lower_rx_ready();        
     }
 
 }
