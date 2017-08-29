@@ -92,7 +92,7 @@ namespace ssp21
     void Responder::on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
 		std::error_code ec;
-		const auto data = this->sessions.pending->validate_session_auth(msg, now, decrypt_buffer.as_wslice(), ec);
+		const auto payload = this->sessions.pending->validate_session_auth(msg, now, decrypt_buffer.as_wslice(), ec);
 
 		if (ec)
 		{
@@ -100,12 +100,16 @@ namespace ssp21
 			return;
 		}
 
-		if (data.is_not_empty())
+		// notify the upper layer there is data ready
+		if (payload.is_not_empty())
 		{
-			// TODO - process any received data
+			this->received_data = payload;
+			this->upper->on_lower_rx_ready();
 		}
 		
-
+		// TODO - transmit a response, before activating the pending session		
+		
+		this->sessions.activate_pending();
     }
 
 }
