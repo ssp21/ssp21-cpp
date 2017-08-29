@@ -16,6 +16,7 @@
 #include "ssp21/IFrameWriter.h"
 
 #include "openpal/executor/IExecutor.h"
+#include "ssp21/util/SecureDynamicBuffer.h"
 
 namespace ssp21
 {
@@ -97,10 +98,9 @@ namespace ssp21
         const std::shared_ptr<IFrameWriter> frame_writer;
         const std::shared_ptr<openpal::IExecutor> executor;
         Sessions sessions;
-        
-        //const std::shared_ptr<ICertificateHandler> certificate_handler;
-
+               
         TxState tx_state;
+		SecureDynamicBuffer decrypt_buffer;
 
         ILowerLayer* lower = nullptr;
         IUpperLayer* upper = nullptr;

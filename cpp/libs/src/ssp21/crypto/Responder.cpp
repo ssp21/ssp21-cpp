@@ -92,12 +92,15 @@ namespace ssp21
     void Responder::on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
 		std::error_code ec;
-		const auto data = this->sessions.pending->validate_session_auth(msg, now, wseq32_t::empty(), ec); // TODO specify a real buffer
+		const auto data = this->sessions.pending->validate_session_auth(msg, now, decrypt_buffer.as_wslice(), ec);
 
 		if (ec)
 		{
-
+			FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error processing session auth request: %s", ec.message().c_str());
+			return;
 		}
+
+		// process any received data
     }
 
 }

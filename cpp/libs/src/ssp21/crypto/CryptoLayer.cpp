@@ -19,7 +19,8 @@ namespace ssp21
         logger(logger),
         frame_writer(frame_writer),
         executor(executor),
-        sessions(frame_writer, session_config)        
+        sessions(frame_writer, session_config),
+		decrypt_buffer(context_config.max_payload_size)
     {}
 
     void CryptoLayer::discard_rx_data()

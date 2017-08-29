@@ -27,8 +27,8 @@ namespace ssp21
 
     struct CryptoLayerConfig
     {
-        /// The maximum size of a reassembled message
-        uint16_t max_reassembly_size = consts::link::max_config_payload_size;
+        // The maximum size of the payload data
+        uint16_t max_payload_size = consts::link::max_config_payload_size;
     };
 
     struct ResponderConfig
