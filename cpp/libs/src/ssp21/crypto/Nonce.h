@@ -28,10 +28,10 @@ namespace ssp21
             return value;
         }
 
-		bool is_zero() const
-		{
-			return this->value == 0;
-		}
+        bool is_zero() const
+        {
+            return this->value == 0;
+        }
 
     private:
 

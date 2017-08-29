@@ -15,9 +15,9 @@ using namespace openpal;
 using namespace ssp21;
 
 int ConfigReader::config_ini_handler(void* user, const char* section, const char* key, const char* value)
-{    
+{
     reinterpret_cast<ConfigReader*>(user)->handle(section, key, value);
-    return 1;    
+    return 1;
 }
 
 std::vector<std::unique_ptr<ProxyConfig>> ConfigReader::read(const std::string& file_path)
@@ -40,14 +40,15 @@ std::vector<std::unique_ptr<ProxyConfig>> ConfigReader::read(const std::string& 
 
     for (auto& pair : c.sections)
     {
-		try {			
-			ret.push_back(pair.second->get_config(pair.first));
-		}
-		catch (const ssp21::Exception& ex)
-		{
-			std::cerr << "Error in section: " << pair.first << std::endl;
-			throw ex;
-		}        
+        try
+        {
+            ret.push_back(pair.second->get_config(pair.first));
+        }
+        catch (const ssp21::Exception& ex)
+        {
+            std::cerr << "Error in section: " << pair.first << std::endl;
+            throw ex;
+        }
     }
 
     return ret;
@@ -60,19 +61,19 @@ void ConfigReader::handle(const std::string& section_name, const std::string& ke
 
 ConfigSection& ConfigReader::get_or_create_section(const std::string& section)
 {
-	const auto iter = this->sections.find(section);
+    const auto iter = this->sections.find(section);
 
-	if (iter == this->sections.end())
-	{
-		auto ptr = std::make_unique<ConfigSection>();
-		auto& ret = *ptr;
-		this->sections[section] = std::move(ptr);
-		return ret;
-	}
-	else
-	{
-		return *iter->second;
-	}
+    if (iter == this->sections.end())
+    {
+        auto ptr = std::make_unique<ConfigSection>();
+        auto& ret = *ptr;
+        this->sections[section] = std::move(ptr);
+        return ret;
+    }
+    else
+    {
+        return *iter->second;
+    }
 }
 
 

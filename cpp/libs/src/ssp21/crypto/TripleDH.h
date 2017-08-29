@@ -8,32 +8,33 @@
 #include "openpal/util/Uncopyable.h"
 
 
-namespace ssp21 {
-
-/**
-* Computes a "triple DH" usign the supplied hash function and keys
-*/
-class TripleDH : public openpal::Uncopyable
+namespace ssp21
 {
 
-public:
+    /**
+    * Computes a "triple DH" usign the supplied hash function and keys
+    */
+    class TripleDH : public openpal::Uncopyable
+    {
 
-	std::initializer_list<seq32_t> compute(
-		dh_func_t dh, 
-		const StaticKeys& static_keys, 
-		const KeyPair& ephemeral_keys, 
-		const seq32_t& remote_public_static, 
-		const seq32_t& remote_public_ephemeral,		
-		std::error_code& ec
-	);
+    public:
 
-private:
+        std::initializer_list<seq32_t> compute(
+            dh_func_t dh,
+            const StaticKeys& static_keys,
+            const KeyPair& ephemeral_keys,
+            const seq32_t& remote_public_static,
+            const seq32_t& remote_public_ephemeral,
+            std::error_code& ec
+        );
 
-	DHOutput dh1;
-	DHOutput dh2;
-	DHOutput dh3;
+    private:
 
-};
+        DHOutput dh1;
+        DHOutput dh2;
+        DHOutput dh3;
+
+    };
 
 
 

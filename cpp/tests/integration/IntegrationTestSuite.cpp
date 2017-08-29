@@ -19,50 +19,50 @@ void perform_data_transfer_test(Mode mode);
 
 TEST_CASE(SUITE("fixture construction - preshared key mode"))
 {
-	IntegrationFixture fix(Mode::preshared_key);	
+    IntegrationFixture fix(Mode::preshared_key);
 }
 
 TEST_CASE(SUITE("fixture construction - certificate mode"))
 {
-	IntegrationFixture fix(Mode::certificates);
+    IntegrationFixture fix(Mode::certificates);
 }
 
 TEST_CASE(SUITE("completes handshake - preshared key mode"))
 {
-	IntegrationFixture fix(Mode::preshared_key);
+    IntegrationFixture fix(Mode::preshared_key);
     open_and_test_handshake(fix);
 }
 
 TEST_CASE(SUITE("completes handshake - certificate mode"))
 {
-	IntegrationFixture fix(Mode::certificates);
-	open_and_test_handshake(fix);
+    IntegrationFixture fix(Mode::certificates);
+    open_and_test_handshake(fix);
 }
 
 TEST_CASE(SUITE("can transfer data bidirectionally multiple times - preshared key mode"))
 {
-	perform_data_transfer_test(Mode::preshared_key);
+    perform_data_transfer_test(Mode::preshared_key);
 }
 
 TEST_CASE(SUITE("can transfer data bidirectionally multiple times - certificate mode"))
 {
-	perform_data_transfer_test(Mode::certificates);
+    perform_data_transfer_test(Mode::certificates);
 }
 
 void perform_data_transfer_test(Mode mode)
 {
-	IntegrationFixture fix(mode);
-	open_and_test_handshake(fix);
+    IntegrationFixture fix(mode);
+    open_and_test_handshake(fix);
 
-	const auto num_bytes_tx = 64;
-	uint8_t payload[num_bytes_tx] = { 0x00 };
-	for (int i = 0; i < num_bytes_tx; ++i) payload[i] = i % 256;
-	const auto slice = seq32_t(payload, num_bytes_tx);
+    const auto num_bytes_tx = 64;
+    uint8_t payload[num_bytes_tx] = { 0x00 };
+    for (int i = 0; i < num_bytes_tx; ++i) payload[i] = i % 256;
+    const auto slice = seq32_t(payload, num_bytes_tx);
 
-	for (int i = 0; i < 5; ++i)
-	{
-		test_bidirectional_data_transfer(fix, slice);
-	}
+    for (int i = 0; i < 5; ++i)
+    {
+        test_bidirectional_data_transfer(fix, slice);
+    }
 }
 
 void open_and_test_handshake(IntegrationFixture& fix)

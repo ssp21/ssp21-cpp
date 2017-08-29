@@ -6,20 +6,21 @@
 #include "ssp21/crypto/CryptoTypedefs.h"
 #include "openpal/util/Uncopyable.h"
 
-namespace ssp21 {
-
-class HandshakeHasher : public openpal::Uncopyable
+namespace ssp21
 {
 
-public:
+    class HandshakeHasher : public openpal::Uncopyable
+    {
 
-	seq32_t compute(hash_func_t hash, const seq32_t first, const seq32_t second);
+    public:
 
-private:
+        seq32_t compute(hash_func_t hash, const seq32_t first, const seq32_t second);
 
-	HashOutput value;
+    private:
 
-};
+        HashOutput value;
+
+    };
 
 
 

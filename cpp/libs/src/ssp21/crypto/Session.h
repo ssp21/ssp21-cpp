@@ -50,15 +50,15 @@ namespace ssp21
 
         void reset();
 
-		seq32_t validate_session_auth(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, std::error_code& ec);
+        seq32_t validate_session_auth(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, std::error_code& ec);
 
         seq32_t validate_session_data(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, std::error_code& ec);
 
         seq32_t format_session_data(const openpal::Timestamp& now, seq32_t& cleartext, wseq32_t dest, std::error_code& ec);
 
-		seq32_t format_session_auth(const openpal::Timestamp& now, seq32_t& cleartext, wseq32_t dest, std::error_code& ec);
+        seq32_t format_session_auth(const openpal::Timestamp& now, seq32_t& cleartext, wseq32_t dest, std::error_code& ec);
 
-		// -------- getters -------------
+        // -------- getters -------------
 
         bool is_valid() const
         {
@@ -75,16 +75,16 @@ namespace ssp21
             return tx_nonce.get();
         }
 
-		inline SessionStatistics get_statistics() const
-		{
-			return statistics;
-		}
+        inline SessionStatistics get_statistics() const
+        {
+            return statistics;
+        }
 
     private:
 
-		seq32_t Session::format_session_data(const openpal::Timestamp& now, seq32_t& clear_text, wseq32_t dest, uint16_t nonce, std::error_code& ec);
+        seq32_t Session::format_session_data(const openpal::Timestamp& now, seq32_t& clear_text, wseq32_t dest, uint16_t nonce, std::error_code& ec);
 
-		seq32_t validate_session_data_with_nonce_func(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, verify_nonce_func_t verify, std::error_code& ec);
+        seq32_t validate_session_data_with_nonce_func(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, verify_nonce_func_t verify, std::error_code& ec);
 
         bool valid = false;
 
@@ -96,7 +96,7 @@ namespace ssp21
         */
         static constexpr uint32_t calc_max_crypto_payload_length(uint32_t max_link_payload_size);
 
-        SessionStatistics statistics;       
+        SessionStatistics statistics;
 
         Nonce rx_nonce;
         Nonce tx_nonce;

@@ -45,7 +45,7 @@ namespace ssp21
             NonceMode nonce_mode = NonceMode::increment_last_rx;
             DHMode dh_mode = DHMode::x25519;
             HandshakeHash handshake_hash = HandshakeHash::sha256;
-            HandshakeKDF handshake_kdf = HandshakeKDF::hkdf_sha256;            
+            HandshakeKDF handshake_kdf = HandshakeKDF::hkdf_sha256;
             SessionMode session_mode = SessionMode::hmac_sha256_16;
         };
 

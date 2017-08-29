@@ -30,16 +30,14 @@ TEST_CASE(SUITE("transmits REQUEST_HANDSHAKE_BEGIN when opened"))
     test_open(fix);
 }
 
-TEST_CASE(SUITE("goes to bad_configuration state if algorithms aren't supported"))
+TEST_CASE(SUITE("throws exception during construction if algorithms aren't supported"))
 {
     InitiatorConfig config;
     config.suite.dh_mode = DHMode::undefined;
 
-    InitiatorFixture fix(config);
-    fix.initiator.on_lower_open();
-    REQUIRE(fix.initiator.get_state_enum() == HandshakeState::bad_configuration);
-    REQUIRE(fix.exe->num_pending_timers() == 0);
-    REQUIRE(fix.lower.num_tx_messages() == 0);
+	REQUIRE_THROWS(
+		InitiatorFixture fix(config);
+	);    
 }
 
 /*

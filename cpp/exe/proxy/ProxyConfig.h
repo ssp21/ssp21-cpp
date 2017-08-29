@@ -19,33 +19,33 @@ struct ProxyConfig : public openpal::Uncopyable
         responder
     };
 
-	enum class CertificateMode
-	{
-		preshared_keys,
-		certificates
-	};
+    enum class CertificateMode
+    {
+        preshared_keys,
+        certificates
+    };
 
     struct SSP21
     {
         SSP21(
             uint16_t local_address,
             uint16_t remote_address,
-            const ssp21::StaticKeys& local_keys,            
-			const std::shared_ptr<ssp21::ICertificateHandler>& certificate_handler
+            const ssp21::StaticKeys& local_keys,
+            const std::shared_ptr<ssp21::ICertificateHandler>& certificate_handler
         ) :
             local_address(local_address),
             remote_address(remote_address),
-			local_keys(local_keys),
-			certificate_handler(certificate_handler)
+            local_keys(local_keys),
+            certificate_handler(certificate_handler)
         {}
 
         SSP21() = delete;
 
         const uint16_t local_address;
         const uint16_t remote_address;
-               
-		const ssp21::StaticKeys local_keys;
-		const std::shared_ptr<ssp21::ICertificateHandler> certificate_handler;        
+
+        const ssp21::StaticKeys local_keys;
+        const std::shared_ptr<ssp21::ICertificateHandler> certificate_handler;
     };
 
     ProxyConfig(

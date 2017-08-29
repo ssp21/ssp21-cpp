@@ -14,11 +14,11 @@
 
 namespace ssp21
 {
-	enum class Mode : uint8_t
-	{
-		preshared_key,
-		certificates
-	};
+    enum class Mode : uint8_t
+    {
+        preshared_key,
+        certificates
+    };
 
 
     class IntegrationFixture

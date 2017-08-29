@@ -22,14 +22,14 @@ namespace ssp21
         logger(logger),
         frame_writer(frame_writer),
         executor(executor),
-		sessions(frame_writer, session_config),
+        sessions(frame_writer, session_config),
         static_keys(static_keys),
-        certificate_handler(certificate_handler)		
+        certificate_handler(certificate_handler)
     {}
 
     void CryptoLayer::discard_rx_data()
     {
-		// TODO        
+        // TODO
     }
 
     bool CryptoLayer::start_tx_from_upper(const seq32_t& data)
@@ -48,20 +48,20 @@ namespace ssp21
 
     seq32_t CryptoLayer::start_rx_from_upper_impl()
     {
-		/*
-		TODO
+        /*
+        TODO
 
-		if (this->reassembler.has_data())
-		{
-			return this->reassembler.get_data();
-		}
+        if (this->reassembler.has_data())
+        {
+        	return this->reassembler.get_data();
+        }
         else
         {
             this->try_read_from_lower();
             return seq32_t::empty();
         }
-		*/
-		return seq32_t::empty();
+        */
+        return seq32_t::empty();
     }
 
     bool CryptoLayer::is_tx_ready() const
@@ -107,7 +107,7 @@ namespace ssp21
         // let the super class reset
         this->reset_state_on_close_from_lower();
 
-		this->sessions.reset_both();
+        this->sessions.reset_both();
         // TODO: this->reassembler.reset();
         this->upper->on_lower_close();
         this->tx_state.reset();
@@ -187,10 +187,10 @@ namespace ssp21
         {
         case(Function::request_handshake_begin):
             handle_message<RequestHandshakeBegin>(message, now);
-            break;        
+            break;
         case(Function::reply_handshake_begin):
             handle_message<ReplyHandshakeBegin>(message, now);
-            break;        
+            break;
         case(Function::reply_handshake_error):
             handle_message<ReplyHandshakeError>(message, now);
             break;
@@ -209,10 +209,10 @@ namespace ssp21
             return;
         }
 
-        auto remainder = this->tx_state.get_remainder();        
+        auto remainder = this->tx_state.get_remainder();
         const auto now = this->executor->get_time();
 
-        std::error_code err;		
+        std::error_code err;
         const auto data = this->sessions.active->format_session_data(now, remainder, wseq32_t::empty(), err);
         if (err)
         {
@@ -234,51 +234,51 @@ namespace ssp21
 
     void CryptoLayer::on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
-		// differentiate 
-		if (msg.metadata.nonce == 0)
-		{
-			this->on_auth_session(msg, raw_data, now);
-		}
-		else
-		{
-			this->on_session_data(msg, raw_data, now);
-		}
-    }	
+        // differentiate
+        if (msg.metadata.nonce == 0)
+        {
+            this->on_auth_session(msg, raw_data, now);
+        }
+        else
+        {
+            this->on_session_data(msg, raw_data, now);
+        }
+    }
 
-	void CryptoLayer::on_session_data(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
-	{
-		std::error_code ec;
-		const auto payload = this->sessions.active->validate_session_data(msg, now, wseq32_t::empty(), ec);
+    void CryptoLayer::on_session_data(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+    {
+        std::error_code ec;
+        const auto payload = this->sessions.active->validate_session_data(msg, now, wseq32_t::empty(), ec);
 
-		if (ec)
-		{
-			FORMAT_LOG_BLOCK(this->logger, levels::warn, "validation error: %s", ec.message().c_str());
-			return;
-		}
+        if (ec)
+        {
+            FORMAT_LOG_BLOCK(this->logger, levels::warn, "validation error: %s", ec.message().c_str());
+            return;
+        }
 
-		this->on_session_nonce_change(this->sessions.active->get_rx_nonce(), this->sessions.active->get_tx_nonce());
+        this->on_session_nonce_change(this->sessions.active->get_rx_nonce(), this->sessions.active->get_tx_nonce());
 
-		// TODO 
+        // TODO
 
-		/*
-		const auto result = this->reassembler.process(msg.metadata.flags.fir, msg.metadata.flags.fin, msg.metadata.nonce, payload);
+        /*
+        const auto result = this->reassembler.process(msg.metadata.flags.fir, msg.metadata.flags.fin, msg.metadata.nonce, payload);
 
-		switch (result)
-		{
-		case(ReassemblyResult::partial):
-			break; // do nothing
+        switch (result)
+        {
+        case(ReassemblyResult::partial):
+        	break; // do nothing
 
-		case(ReassemblyResult::complete):
-			this->upper->on_lower_rx_ready();
-			break;
+        case(ReassemblyResult::complete):
+        	this->upper->on_lower_rx_ready();
+        	break;
 
-		default: // error
-			FORMAT_LOG_BLOCK(this->logger, levels::warn, "reassembly error: %s", ReassemblyResultSpec::to_string(result));
-			break;
-		}
-		*/
-	}
-	
+        default: // error
+        	FORMAT_LOG_BLOCK(this->logger, levels::warn, "reassembly error: %s", ReassemblyResultSpec::to_string(result));
+        	break;
+        }
+        */
+    }
+
 }
 
 

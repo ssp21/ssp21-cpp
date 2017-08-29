@@ -24,8 +24,8 @@ namespace ssp21
         initiator_lower(exe),
         responder_lower(exe),
         stacks(
-			(mode == Mode::preshared_key) ? preshared_key_stacks(rlog.logger, ilog.logger, exe) : certificate_stacks(rlog.logger, ilog.logger, exe)
-		)
+            (mode == Mode::preshared_key) ? preshared_key_stacks(rlog.logger, ilog.logger, exe) : certificate_stacks(rlog.logger, ilog.logger, exe)
+        )
     {
         this->wire();
     }

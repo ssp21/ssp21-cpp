@@ -3,7 +3,6 @@
 #define SSP21_CRYPTOLAYER_H
 
 #include "ssp21/crypto/Sessions.h"
-#include "ssp21/crypto/Handshake.h"
 #include "ssp21/crypto/TxState.h"
 #include "ssp21/crypto/StaticKeys.h"
 #include "ssp21/crypto/ICertificateHandler.h"
@@ -85,16 +84,16 @@ namespace ssp21
         virtual void on_session_nonce_change(uint16_t rx_nonce, uint16_t tx_nonce) {}
 
         // optional overrides for optional messages
-        virtual void on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}        
+        virtual void on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}
         virtual void on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}
         virtual void on_message(const ReplyHandshakeError& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}
-		
+
         // non-virtual b/c both sides implement it the same way
         void on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now);
-		void on_session_data(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now);
+        void on_session_data(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now);
 
-		// both parties implement this in different ways
-		virtual void on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now) = 0;
+        // both parties implement this in different ways
+        virtual void on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now) = 0;
 
         // ------ member variables ------
 
@@ -102,11 +101,11 @@ namespace ssp21
 
         const std::shared_ptr<IFrameWriter> frame_writer;
         const std::shared_ptr<openpal::IExecutor> executor;
-		Sessions sessions;
+        Sessions sessions;
 
         const StaticKeys static_keys;
         const std::shared_ptr<ICertificateHandler> certificate_handler;
-       		
+
         TxState tx_state;
 
         ILowerLayer* lower = nullptr;

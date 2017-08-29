@@ -12,18 +12,18 @@ namespace ssp21
     */
     class Sessions final : private openpal::Uncopyable
     {
-        
+
     public:
 
-		Sessions() = delete;
+        Sessions() = delete;
 
-		Sessions(const std::shared_ptr<IFrameWriter>& frame_writer, const SessionConfig& config);				
+        Sessions(const std::shared_ptr<IFrameWriter>& frame_writer, const SessionConfig& config);
 
-		void reset_both();
-		void activate_pending();
-		
-		std::unique_ptr<Session> active;
-		std::unique_ptr<Session> pending;
+        void reset_both();
+        void activate_pending();
+
+        std::unique_ptr<Session> active;
+        std::unique_ptr<Session> pending;
     };
 
 }

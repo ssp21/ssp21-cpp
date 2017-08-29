@@ -18,27 +18,27 @@
 
 class Actions
 {
-	
-public:	
 
-	struct Times
-	{
-		uint64_t valid_after;
-		uint64_t valid_before;		
-	};
+public:
+
+    struct Times
+    {
+        uint64_t valid_after;
+        uint64_t valid_before;
+    };
 
     static void print_contents(const std::string& path);
     static void gen_x25519_key_pair(const std::string& private_key_path, const std::string& public_key_path);
     static void gen_ed25519_key_pair(const std::string& private_key_path, const std::string& public_key_path);
     static void append_certificate_chains(const std::string& file1, const std::string& file2, const std::string& output_file);
-    
-	static void create_certificate(
-		const std::string& certificate_file,
-		const std::string& private_key_path, 
-		const std::string& public_key_path,
-		const Times& validity_times,
-		const uint8_t signing_level
-	);
+
+    static void create_certificate(
+        const std::string& certificate_file,
+        const std::string& private_key_path,
+        const std::string& public_key_path,
+        const Times& validity_times,
+        const uint8_t signing_level
+    );
 
 private:
 
@@ -48,7 +48,7 @@ private:
     static ssp21::PublicKeyType get_public_key_type(const ssp21::ContainerFile& file);
     static ssp21::CertificateChain expect_certificate_chain(const ssp21::ContainerFile& data);
     static void write(const std::string& path, ssp21::ContainerEntryType type, const ssp21::seq32_t& data);
-    
+
 };
 
 #endif

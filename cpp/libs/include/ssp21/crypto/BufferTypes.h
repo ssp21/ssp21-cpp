@@ -64,7 +64,7 @@ namespace ssp21
     public:
         virtual ~SecureBuffer();
 
-		void zero();
+        void zero();
 
     protected:
         SecureBuffer() {}
@@ -115,11 +115,11 @@ namespace ssp21
         SymmetricKey rx_key;
         SymmetricKey tx_key;
 
-		inline void zero()
-		{
-			this->rx_key.zero();
-			this->tx_key.zero();
-		}
+        inline void zero()
+        {
+            this->rx_key.zero();
+            this->tx_key.zero();
+        }
 
         inline void copy(const SessionKeys& other)
         {
@@ -130,7 +130,7 @@ namespace ssp21
         inline bool valid() const
         {
             return (rx_key.get_type() == BufferType::symmetric_key) && (tx_key.get_type() == BufferType::symmetric_key);
-        }	
+        }
     };
 
 

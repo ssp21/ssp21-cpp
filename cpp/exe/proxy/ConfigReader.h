@@ -8,16 +8,16 @@
 
 class ConfigReader
 {
-    
+
 public:
 
     static std::vector<std::unique_ptr<ProxyConfig>> read(const std::string& file_path);
 
-private:    
+private:
 
     std::map<std::string, std::unique_ptr<ConfigSection>> sections;
 
-	ConfigReader() {}
+    ConfigReader() {}
 
     static int config_ini_handler(void* user, const char* section, const char* key, const char* value);
 

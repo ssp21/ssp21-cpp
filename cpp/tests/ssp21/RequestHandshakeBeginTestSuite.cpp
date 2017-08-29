@@ -116,7 +116,7 @@ TEST_CASE(SUITE("pretty prints message"))
         "nonce_mode: greater_than_last_rx",
         "dh_mode: x25519",
         "handshake_hash: sha256",
-        "handshake_kdf: hkdf_sha256",        
+        "handshake_kdf: hkdf_sha256",
         "session_mode: hmac_sha256_16",
         "max_nonce: 32768",
         "max_session_duration: 3405691582",

@@ -20,7 +20,7 @@ plugin_factory_t PluginFactory::get(const ProxyConfig& config)
                 config,
                 logger,
                 exe,
-				cfg.local_keys,
+                cfg.local_keys,
                 cfg.certificate_handler
             );
         };

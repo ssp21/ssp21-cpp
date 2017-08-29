@@ -16,7 +16,7 @@ namespace ssp21
         const Logger& logger,
         const std::shared_ptr<IFrameWriter>& frame_writer,
         const std::shared_ptr<IExecutor>& executor,
-        const StaticKeys& static_keys,		
+        const StaticKeys& static_keys,
         const std::shared_ptr<ICertificateHandler>& certificate_handler
     ) :
         CryptoLayer(
@@ -29,11 +29,11 @@ namespace ssp21
             static_keys,
             certificate_handler
         ),
-		algorithms(config.suite),
-		suite(config.suite),
-		params(config.params),
-        handshake_state(InitiatorHandshake::Idle::get()),		
-        handshake(logger, algorithms, certificate_handler),        
+        algorithms(config.suite),
+        suite(config.suite),
+        params(config.params),
+        handshake_state(InitiatorHandshakeStates::Idle::get()),
+        handshake(logger, algorithms, certificate_handler),
         response_and_retry_timer(executor),
         session_timeout_timer(executor)
     {}
@@ -50,11 +50,11 @@ namespace ssp21
         return this;
     }
 
-	Initiator::IHandshakeState* Initiator::IHandshakeState::on_auth_message(Initiator& ctx, const SessionData& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
-	{
-		this->log_unexpected_message(ctx.logger, msg.function);
-		return this;
-	}
+    Initiator::IHandshakeState* Initiator::IHandshakeState::on_auth_message(Initiator& ctx, const SessionData& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
+    {
+        this->log_unexpected_message(ctx.logger, msg.function);
+        return this;
+    }
 
     Initiator::IHandshakeState* Initiator::IHandshakeState::on_response_timeout(Initiator& ctx)
     {
@@ -106,7 +106,7 @@ namespace ssp21
 
     void Initiator::reset_state_on_close_from_lower()
     {
-        this->handshake_state = InitiatorHandshake::Idle::get();
+        this->handshake_state = InitiatorHandshakeStates::Idle::get();
         this->response_and_retry_timer.cancel();
         this->session_timeout_timer.cancel();
         this->handshake_required = false;
@@ -116,7 +116,7 @@ namespace ssp21
     {
         switch (function)
         {
-        case(Function::reply_handshake_begin):        
+        case(Function::reply_handshake_begin):
         case(Function::reply_handshake_error):
         case(Function::session_data):
             return true;
@@ -152,10 +152,10 @@ namespace ssp21
         this->handshake_state = this->handshake_state->on_error_message(*this, msg, raw_data, now);
     }
 
-	void Initiator::on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
-	{
-		this->handshake_state = this->handshake_state->on_auth_message(*this, msg, raw_data, now);
-	}
+    void Initiator::on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+    {
+        this->handshake_state = this->handshake_state->on_auth_message(*this, msg, raw_data, now);
+    }
 
 }
 

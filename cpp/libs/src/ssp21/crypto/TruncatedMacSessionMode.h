@@ -32,7 +32,7 @@ namespace ssp21
             IFrameWriter& writer,
             const SymmetricKey& key,
             AuthMetadata& metadata,
-            seq32_t& user_data,            
+            seq32_t& user_data,
             std::error_code& ec
         ) const override;
 

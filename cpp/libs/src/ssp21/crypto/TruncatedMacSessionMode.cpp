@@ -32,21 +32,21 @@ namespace ssp21
             return seq32_t::empty();
         }
 
-		// we're authenticated, copy the user data to the destination buffer
-		if (dest.length() < msg.user_data.length())
-		{
-			ec = CryptoError::bad_buffer_size;
-			return seq32_t::empty();
-		}
+        // we're authenticated, copy the user data to the destination buffer
+        if (dest.length() < msg.user_data.length())
+        {
+            ec = CryptoError::bad_buffer_size;
+            return seq32_t::empty();
+        }
 
-		return dest.copy_from(msg.user_data);                
+        return dest.copy_from(msg.user_data);
     }
 
     seq32_t TruncatedMacSessionMode::write_impl(
         IFrameWriter& writer,
         const SymmetricKey& key,
         AuthMetadata& metadata,
-        seq32_t& user_data,        
+        seq32_t& user_data,
         std::error_code& ec
     ) const
     {
@@ -62,7 +62,7 @@ namespace ssp21
         }
 
         // the maximum amount of user data we could conceivably transmit
-        const uint16_t max_tx_user_data_length = max_message_size - min_message_size;        
+        const uint16_t max_tx_user_data_length = max_message_size - min_message_size;
 
         // the actual amount we're going to try to transmit
         const uint16_t tx_user_data_length = user_data.length() < max_tx_user_data_length ? static_cast<uint16_t>(user_data.length()) : max_tx_user_data_length;
@@ -76,12 +76,12 @@ namespace ssp21
         HashOutput tag;
 
         // Now calculate the mac
-        mac_func(key.as_seq(), { ad_bytes, user_data_length_bytes, user_data }, tag);        
+        mac_func(key.as_seq(), { ad_bytes, user_data_length_bytes, user_data }, tag);
 
         const SessionData message(
             metadata,
             user_data.take(tx_user_data_length),
-			tag.as_seq().take(this->auth_tag_length) // truncate the MAC
+            tag.as_seq().take(this->auth_tag_length) // truncate the MAC
         );
 
         const auto res = writer.write(message);

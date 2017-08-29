@@ -27,13 +27,13 @@ namespace ssp21
             NonceMode nonce_mode,
             DHMode dh_mode,
             HandshakeHash handshake_hash,
-            HandshakeKDF handshake_kdf,            
+            HandshakeKDF handshake_kdf,
             SessionMode session_mode,
             uint16_t max_nonce,
             uint32_t max_session_time,
             CertificateMode certificate_mode,
             const std::string& hex_ephem_pub_key
-        );        
+        );
 
         std::string reply_handshake_begin(
             const std::string& hex_ephem_pub_key
