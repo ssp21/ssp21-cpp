@@ -4,7 +4,7 @@
 
 #include "ssp21/crypto/CryptoLayer.h"
 
-#include "ssp21/crypto/StaticKeys.h"
+#include "ssp21/crypto/ResponderHandshake.h"
 
 namespace ssp21
 {
@@ -34,7 +34,7 @@ namespace ssp21
 
     private:
 
-		StaticKeys static_keys;
+		ResponderHandshake handshake;
 
         // ---- final implementations from IUpperLayer ----
 

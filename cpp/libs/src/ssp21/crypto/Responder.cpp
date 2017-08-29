@@ -5,10 +5,6 @@
 
 #include "ssp21/stack/LogLevels.h"
 
-#include "ssp21/crypto/Crypto.h"
-#include "ssp21/crypto/HandshakeHasher.h"
-#include "ssp21/crypto/TripleDH.h"
-
 using namespace openpal;
 
 namespace ssp21
@@ -29,7 +25,7 @@ namespace ssp21
             executor,            
             certificate_handler
         ),
-		static_keys(static_keys)
+		handshake(logger, static_keys, certificate_handler)
     {}
 
     void Responder::reply_with_handshake_error(HandshakeError err)
@@ -91,90 +87,29 @@ namespace ssp21
         }
     }
 
-    void Responder::on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+    void Responder::on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_msg, const openpal::Timestamp& now)
     {
 		if (msg.version != consts::crypto::protocol_version)
 		{
+			FORMAT_LOG_BLOCK(this->logger, levels::warn, "Handshake request with unsupported version: %u", msg.version.value);
 			this->reply_with_handshake_error(HandshakeError::unsupported_version);
 			return;
 		}
 
-        Algorithms algorithms;
-        seq32_t remote_public_dh_key;
+		const auto result = this->handshake.process(msg, raw_msg, now, *this->frame_writer, *this->sessions.pending);
 
-        {
-            const auto err = this->verify_handshake_begin(msg, algorithms, remote_public_dh_key);
-            if (any(err))
-            {
-                this->reply_with_handshake_error(err);
-                return;
-            }
-        }
-
-        // --- now, with the algorithms and public key determined, start formatting a response ---
-
-        // generate an ephemeral key pair
-        KeyPair ephemeralKeys;
-        algorithms.handshake.gen_keypair(ephemeralKeys);
-
-        // prepare the response
-        const ReplyHandshakeBegin reply(
-            ephemeralKeys.public_key.as_seq(),
-            this->certificate_handler->certificate_data()
-        );
-
-        const auto result = this->frame_writer->write(reply);
-        if (any(result.err))
-        {
-            FORMAT_LOG_BLOCK(this->logger, levels::error, "Error writing handshake reply: %s", FormatErrorSpec::to_string(result.err));
-            return;
-        }
-
-        // compute the handshake hash
-        HandshakeHasher hasher;
-        const auto handshake_hash = hasher.compute(algorithms.handshake.hash, raw_data, result.written);
-
-        // compute the input_key_material
-        TripleDH triple_dh;
-        std::error_code ec;
-        const auto input_key_material = triple_dh.compute(
-                                            algorithms.handshake.dh,
-                                            this->static_keys,
-                                            ephemeralKeys,
-                                            remote_public_dh_key,
-                                            msg.ephemeral_public_key,
-                                            ec
-                                        );
-
-        if (ec)
-        {
-            FORMAT_LOG_BLOCK(this->logger, levels::error, "Error calculating input key material: %s", ec.message().c_str());
-            return;
-        }
-
-        // temporary copy of session keys
-        // TODO directly dervice into Session's copy?
-        SessionKeys session_keys;
-
-        algorithms.handshake.kdf(
-            handshake_hash,
-            input_key_material,
-            session_keys.rx_key,
-            session_keys.tx_key
-        );
-
-        this->sessions.pending->initialize(
-            algorithms.session,
-            Session::Param(
-                now,
-                msg.constraints.max_nonce,
-                msg.constraints.max_session_duration
-            ),
-            session_keys
-        );
-
-        // start writing the reply
-        this->lower->start_tx_from_upper(result.frame);
+		if (any(result.error))
+		{
+			FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error processing handshake request: %s", HandshakeErrorSpec::to_string(result.error));
+			this->reply_with_handshake_error(result.error);
+			return;
+		}
+		else
+		{
+			// start writing the reply
+			this->lower->start_tx_from_upper(result.reply_data);
+		}
+              
     }
 
     void Responder::on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
