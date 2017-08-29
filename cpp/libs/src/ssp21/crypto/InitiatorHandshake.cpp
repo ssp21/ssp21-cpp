@@ -20,7 +20,7 @@ namespace ssp21
         this->algorithms.handshake.hash({ data }, this->handshake_hash);
     }
 
-    bool InitiatorHandshake::initialize_session(const StaticKeys& keys, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const Timestamp& now, Session& session)
+    bool InitiatorHandshake::initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const Timestamp& now, Session& session)
     {
         // extract the remote public key
         seq32_t remote_public_key;
@@ -40,7 +40,7 @@ namespace ssp21
         std::error_code ec;
         const auto input_key_material = triple_dh.compute(
                                             this->algorithms.handshake.dh,
-                                            keys,
+                                            this->static_keys,
                                             this->local_ephemeral_keys,
                                             remote_public_key,
                                             msg.ephemeral_public_key,
@@ -66,7 +66,7 @@ namespace ssp21
         return session.initialize(
                    this->algorithms.session,
                    Session::Param(
-
+					   // TODO - set the session parameters
                    ),
                    session_keys
                );

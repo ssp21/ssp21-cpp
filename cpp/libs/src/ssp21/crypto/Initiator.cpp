@@ -25,15 +25,14 @@ namespace ssp21
             config.session,
             logger,
             frame_writer,
-            executor,
-            static_keys,
+            executor,            
             certificate_handler
         ),
         algorithms(config.suite),
         suite(config.suite),
         params(config.params),
         handshake_state(InitiatorHandshakeStates::Idle::get()),
-        handshake(logger, algorithms, certificate_handler),
+        handshake(logger, static_keys, algorithms, certificate_handler),
         response_and_retry_timer(executor),
         session_timeout_timer(executor)
     {}

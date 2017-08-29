@@ -26,10 +26,10 @@ namespace ssp21
             config.session,
             logger,
             frame_writer,
-            executor,
-            static_keys,
+            executor,            
             certificate_handler
-        )
+        ),
+		static_keys(static_keys)
     {}
 
     void Responder::reply_with_handshake_error(HandshakeError err)

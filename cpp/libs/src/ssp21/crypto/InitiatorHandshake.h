@@ -24,8 +24,9 @@ namespace ssp21
     {
     public:
 
-        InitiatorHandshake(openpal::Logger logger, const Algorithms& algorithms, const std::shared_ptr<ICertificateHandler>& cert_handler) :
+        InitiatorHandshake(openpal::Logger logger, StaticKeys static_keys, const Algorithms& algorithms, const std::shared_ptr<ICertificateHandler>& cert_handler) :
             logger(logger),
+			static_keys(static_keys),
             algorithms(algorithms),
             cert_handler(cert_handler)
         {}
@@ -34,13 +35,15 @@ namespace ssp21
 
         void init_handshake_hash(const seq32_t& data);
 
-        bool initialize_session(const StaticKeys& keys, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now, Session& session);
+        bool initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now, Session& session);
 
     private:
 
         seq32_t mix_handshake_hash(const seq32_t& data);
 
         openpal::Logger logger;
+
+		const StaticKeys static_keys;
 
         // specific algorithms used to perform steps
         const Algorithms algorithms;

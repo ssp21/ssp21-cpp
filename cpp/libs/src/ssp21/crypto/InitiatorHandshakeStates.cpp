@@ -77,7 +77,7 @@ namespace ssp21
             return WaitForRetry::get();
         }
 
-        if (!ctx.handshake.initialize_session(ctx.static_keys, msg, msg_bytes, now, *ctx.sessions.pending))
+        if (!ctx.handshake.initialize_session(msg, msg_bytes, now, *ctx.sessions.pending))
         {
             ctx.start_retry_timer();
             return WaitForRetry::get();
