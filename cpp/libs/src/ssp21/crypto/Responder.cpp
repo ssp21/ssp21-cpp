@@ -22,8 +22,7 @@ namespace ssp21
             config.session,
             logger,
             frame_writer,
-            executor,            
-            certificate_handler
+            executor            
         ),
 		handshake(logger, static_keys, certificate_handler)
     {}

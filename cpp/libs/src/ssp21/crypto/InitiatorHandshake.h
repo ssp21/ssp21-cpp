@@ -37,6 +37,16 @@ namespace ssp21
 
         bool initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now, Session& session);
 
+		inline CertificateMode get_certificate_mode() const
+		{
+			return cert_handler->mode();
+		}
+
+		inline seq32_t get_mode_data() const
+		{
+			return cert_handler->certificate_data();
+		}
+
     private:
 
         seq32_t mix_handshake_hash(const seq32_t& data);

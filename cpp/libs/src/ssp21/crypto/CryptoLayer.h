@@ -4,7 +4,6 @@
 
 #include "ssp21/crypto/Sessions.h"
 #include "ssp21/crypto/TxState.h"
-#include "ssp21/crypto/ICertificateHandler.h"
 #include "ssp21/crypto/CryptoLayerConfig.h"
 
 #include "ssp21/crypto/gen/RequestHandshakeBegin.h"
@@ -34,8 +33,7 @@ namespace ssp21
             const SessionConfig& session_config,
             const openpal::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
-            const std::shared_ptr<openpal::IExecutor>& executor,            
-            const std::shared_ptr<ICertificateHandler>& certificate_handler
+            const std::shared_ptr<openpal::IExecutor>& executor            
         );
 
         void bind(ILowerLayer& lower, IUpperLayer& upper)
@@ -101,7 +99,7 @@ namespace ssp21
         const std::shared_ptr<openpal::IExecutor> executor;
         Sessions sessions;
         
-        const std::shared_ptr<ICertificateHandler> certificate_handler;
+        //const std::shared_ptr<ICertificateHandler> certificate_handler;
 
         TxState tx_state;
 

@@ -25,8 +25,7 @@ namespace ssp21
             config.session,
             logger,
             frame_writer,
-            executor,            
-            certificate_handler
+            executor            
         ),
         algorithms(config.suite),
         suite(config.suite),

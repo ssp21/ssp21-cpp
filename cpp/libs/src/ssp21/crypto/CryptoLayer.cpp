@@ -15,14 +15,12 @@ namespace ssp21
         const SessionConfig& session_config,
         const openpal::Logger& logger,
         const std::shared_ptr<IFrameWriter>& frame_writer,
-        const std::shared_ptr<openpal::IExecutor>& executor,        
-        const std::shared_ptr<ICertificateHandler>& certificate_handler
+        const std::shared_ptr<openpal::IExecutor>& executor        
     ) :
         logger(logger),
         frame_writer(frame_writer),
         executor(executor),
-        sessions(frame_writer, session_config),
-        certificate_handler(certificate_handler)
+        sessions(frame_writer, session_config)        
     {}
 
     void CryptoLayer::discard_rx_data()

@@ -29,7 +29,7 @@ namespace ssp21
             ctx.suite.session_mode
         );
 
-        const auto public_key = ctx.handshake.generate_ephemerals();
+        const auto ephemeral_data = ctx.handshake.generate_ephemerals();
 
         const RequestHandshakeBegin request(
             consts::crypto::protocol_version,
@@ -38,9 +38,9 @@ namespace ssp21
                 ctx.params.max_nonce_value,
                 ctx.params.max_session_time_ms
             ),
-            ctx.certificate_handler->mode(),
-            public_key,
-            ctx.certificate_handler->certificate_data()
+            ctx.handshake.get_certificate_mode(),
+			ephemeral_data,
+            ctx.handshake.get_mode_data()
         );
 
         const auto result = ctx.frame_writer->write(request);
@@ -66,8 +66,10 @@ namespace ssp21
 
     Initiator::IHandshakeState* InitiatorHandshakeStates::WaitForBeginReply::on_reply_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const Timestamp& now)
     {
+
         ctx.response_and_retry_timer.cancel();
 
+		/*
         seq32_t remote_public_key;
         const auto err = ctx.certificate_handler->validate(msg.certificate_data, remote_public_key);
         if (any(err))
@@ -82,11 +84,7 @@ namespace ssp21
             ctx.start_retry_timer();
             return WaitForRetry::get();
         }
-
-
-
-
-        /*
+        
 
         TODO - send the authentication request
 
