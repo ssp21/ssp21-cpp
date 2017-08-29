@@ -70,7 +70,7 @@ namespace ssp21
                 return &instance;
             }
         };
-
+		
         class BadConfiguration final : public Initiator::IHandshakeState
         {
             BadConfiguration() : Initiator::IHandshakeState(Initiator::IHandshakeState::Enum::bad_configuration) {}
@@ -83,6 +83,7 @@ namespace ssp21
                 return &instance;
             }
         };
+
     };
 
 

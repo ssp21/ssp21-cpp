@@ -33,7 +33,7 @@ namespace ssp21
 		suite(config.suite),
 		params(config.params),
         handshake_state(InitiatorHandshake::Idle::get()),		
-        handshake(algorithms.handshake),        
+        handshake(logger, algorithms, certificate_handler),        
         response_and_retry_timer(executor),
         session_timeout_timer(executor)
     {}

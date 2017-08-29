@@ -46,7 +46,6 @@ namespace ssp21
             explicit IHandshakeState(Enum enum_value) : enum_value(enum_value)
             {}
 
-
             // called when conditions are met that require we renegotiate the session
             virtual IHandshakeState* on_handshake_required(Initiator& ctx, const openpal::Timestamp& now)
             {
