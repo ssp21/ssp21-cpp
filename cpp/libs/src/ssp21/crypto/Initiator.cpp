@@ -38,29 +38,23 @@ namespace ssp21
         session_timeout_timer(executor)
     {}
 
-    Initiator::IHandshakeState* Initiator::IHandshakeState::on_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const Timestamp& now)
+    Initiator::IHandshakeState* Initiator::IHandshakeState::on_reply_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const Timestamp& now)
     {
         this->log_unexpected_message(ctx.logger, msg.function);
         return this;
     }
 
-	/*
-
-	TODO
-
-    Initiator::IHandshakeState* Initiator::IHandshakeState::on_message(Initiator& ctx, const ReplyHandshakeAuth& msg, const seq32_t& msg_bytes, const Timestamp& now)
+    Initiator::IHandshakeState* Initiator::IHandshakeState::on_error_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const Timestamp& now)
     {
         this->log_unexpected_message(ctx.logger, msg.function);
         return this;
     }
 
-	*/
-
-    Initiator::IHandshakeState* Initiator::IHandshakeState::on_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const Timestamp& now)
-    {
-        this->log_unexpected_message(ctx.logger, msg.function);
-        return this;
-    }
+	Initiator::IHandshakeState* Initiator::IHandshakeState::on_auth_message(Initiator& ctx, const SessionData& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
+	{
+		this->log_unexpected_message(ctx.logger, msg.function);
+		return this;
+	}
 
     Initiator::IHandshakeState* Initiator::IHandshakeState::on_response_timeout(Initiator& ctx)
     {
@@ -150,17 +144,17 @@ namespace ssp21
 
     void Initiator::on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const Timestamp& now)
     {
-        this->handshake_state = this->handshake_state->on_message(*this, msg, raw_data, now);
+        this->handshake_state = this->handshake_state->on_reply_message(*this, msg, raw_data, now);
     }
 
     void Initiator::on_message(const ReplyHandshakeError& msg, const seq32_t& raw_data, const Timestamp& now)
     {
-        this->handshake_state = this->handshake_state->on_message(*this, msg, raw_data, now);
+        this->handshake_state = this->handshake_state->on_error_message(*this, msg, raw_data, now);
     }
 
 	void Initiator::on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
 	{
-	
+		this->handshake_state = this->handshake_state->on_auth_message(*this, msg, raw_data, now);
 	}
 
 }

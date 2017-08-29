@@ -77,7 +77,7 @@ namespace ssp21
 
     // -------- WaitForBeginReply --------
 
-    Initiator::IHandshakeState* InitiatorHandshake::WaitForBeginReply::on_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const Timestamp& now)
+    Initiator::IHandshakeState* InitiatorHandshake::WaitForBeginReply::on_reply_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const Timestamp& now)
     {
 		/*
 
@@ -134,7 +134,7 @@ namespace ssp21
         return WaitForAuthReply::get();
     }
 
-    Initiator::IHandshakeState* InitiatorHandshake::WaitForBeginReply::on_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const Timestamp& now)
+    Initiator::IHandshakeState* InitiatorHandshake::WaitForBeginReply::on_error_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const Timestamp& now)
     {
         ctx.response_and_retry_timer.cancel();
         FORMAT_LOG_BLOCK(ctx.logger, levels::error, "responder handshake error: %s", HandshakeErrorSpec::to_string(msg.handshake_error));
@@ -197,7 +197,7 @@ namespace ssp21
 
 	*/
 
-    Initiator::IHandshakeState* InitiatorHandshake::WaitForAuthReply::on_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const Timestamp& now)
+    Initiator::IHandshakeState* InitiatorHandshake::WaitForAuthReply::on_error_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const Timestamp& now)
     {
         ctx.response_and_retry_timer.cancel();
         FORMAT_LOG_BLOCK(ctx.logger, levels::error, "responder handshake error: %s", HandshakeErrorSpec::to_string(msg.handshake_error));
