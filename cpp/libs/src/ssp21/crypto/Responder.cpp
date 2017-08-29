@@ -29,9 +29,7 @@ namespace ssp21
             executor,
             static_keys,
             certificate_handler
-        ),
-		pending_session(std::make_unique<Session>(frame_writer, config.session)),
-		active_session(std::make_unique<Session>(frame_writer, config.session))
+        )
     {}
 
     void Responder::reply_with_handshake_error(HandshakeError err)
@@ -70,8 +68,7 @@ namespace ssp21
 
     void Responder::reset_state_on_close_from_lower()
     {
-		this->pending_session->reset();
-		this->active_session->reset();
+		this->sessions.reset_both();		
     }
 
     bool Responder::supports(Function function) const
@@ -162,7 +159,7 @@ namespace ssp21
 			session_keys.tx_key
 		);
 		
-		this->pending_session->initialize(
+		this->sessions.pending->initialize(
 			algorithms.session,
 			Session::Param(
 				now,

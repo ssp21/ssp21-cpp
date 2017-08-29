@@ -27,7 +27,7 @@ namespace ssp21
 
         inline ResponderStatistics get_statistics() const
         {
-            return ResponderStatistics(this->session->get_statistics());
+            return ResponderStatistics(this->sessions.active->get_statistics());
         }        
 
     private:
@@ -55,11 +55,6 @@ namespace ssp21
 
 		virtual void on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
 
-
-        // ---- private members -----
-
-		std::unique_ptr<Session> pending_session;
-		std::unique_ptr<Session> active_session;
     };
 
 }

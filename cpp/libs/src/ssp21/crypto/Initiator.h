@@ -85,7 +85,7 @@ namespace ssp21
 
         Statistics get_statistics() const
         {
-            return Statistics(session->get_statistics());
+            return Statistics(sessions.active->get_statistics());
         }
 
     private:

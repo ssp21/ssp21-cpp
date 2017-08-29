@@ -2,7 +2,7 @@
 #ifndef SSP21_CRYPTOLAYER_H
 #define SSP21_CRYPTOLAYER_H
 
-#include "ssp21/crypto/Session.h"
+#include "ssp21/crypto/Sessions.h"
 #include "ssp21/crypto/Handshake.h"
 #include "ssp21/crypto/TxState.h"
 #include "ssp21/crypto/StaticKeys.h"
@@ -102,11 +102,11 @@ namespace ssp21
 
         const std::shared_ptr<IFrameWriter> frame_writer;
         const std::shared_ptr<openpal::IExecutor> executor;
+		Sessions sessions;
 
         const StaticKeys static_keys;
         const std::shared_ptr<ICertificateHandler> certificate_handler;
-        
-		std::unique_ptr<Session> session;
+       		
         TxState tx_state;
 
         ILowerLayer* lower = nullptr;
@@ -130,7 +130,7 @@ namespace ssp21
             * 3) transmission state must have some data to send
             */
 
-            return this->session->is_valid() && this->lower->is_tx_ready() && this->tx_state.is_ready_tx();
+            return this->sessions.active->is_valid() && this->lower->is_tx_ready() && this->tx_state.is_ready_tx();
         }
 
         void check_transmit();

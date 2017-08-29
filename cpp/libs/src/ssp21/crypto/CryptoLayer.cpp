@@ -22,9 +22,9 @@ namespace ssp21
         logger(logger),
         frame_writer(frame_writer),
         executor(executor),
+		sessions(frame_writer, session_config),
         static_keys(static_keys),
-        certificate_handler(certificate_handler),        
-		session(std::make_unique<Session>(frame_writer, session_config))
+        certificate_handler(certificate_handler)		
     {}
 
     void CryptoLayer::discard_rx_data()
@@ -107,7 +107,7 @@ namespace ssp21
         // let the super class reset
         this->reset_state_on_close_from_lower();
 
-        this->session.reset();
+		this->sessions.reset_both();
         // TODO: this->reassembler.reset();
         this->upper->on_lower_close();
         this->tx_state.reset();
@@ -212,15 +212,14 @@ namespace ssp21
         auto remainder = this->tx_state.get_remainder();        
         const auto now = this->executor->get_time();
 
-        std::error_code err;
-		// TODO - set the destination
-        const auto data = this->session->format_session_data(now, remainder, wseq32_t::empty(), err);
+        std::error_code err;		
+        const auto data = this->sessions.active->format_session_data(now, remainder, wseq32_t::empty(), err);
         if (err)
         {
             FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error formatting session message: %s", err.message().c_str());
 
             // if any error occurs with transmission, we reset the session and notify the upper layer
-            this->session.reset();
+            this->sessions.active.reset();
             this->upper->on_lower_close();
 
             return;
@@ -230,7 +229,7 @@ namespace ssp21
 
         this->lower->start_tx_from_upper(data);
 
-        this->on_session_nonce_change(this->session->get_rx_nonce(), this->session->get_tx_nonce());
+        this->on_session_nonce_change(this->sessions.active->get_rx_nonce(), this->sessions.active->get_tx_nonce());
     }
 
     void CryptoLayer::on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
@@ -249,7 +248,7 @@ namespace ssp21
 	void CryptoLayer::on_session_data(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
 	{
 		std::error_code ec;
-		const auto payload = this->session->validate_session_data(msg, now, wseq32_t::empty(), ec);
+		const auto payload = this->sessions.active->validate_session_data(msg, now, wseq32_t::empty(), ec);
 
 		if (ec)
 		{
@@ -257,7 +256,7 @@ namespace ssp21
 			return;
 		}
 
-		this->on_session_nonce_change(this->session->get_rx_nonce(), this->session->get_tx_nonce());
+		this->on_session_nonce_change(this->sessions.active->get_rx_nonce(), this->sessions.active->get_tx_nonce());
 
 		// TODO 
 
