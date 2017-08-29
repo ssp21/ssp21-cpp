@@ -131,7 +131,6 @@ namespace ssp21
         openpal::TimerRef response_and_retry_timer;
         openpal::TimerRef session_timeout_timer;
 
-        openpal::Timestamp request_handshake_begin_time_tx;
         bool handshake_required = false;
     };
 

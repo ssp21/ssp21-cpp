@@ -29,7 +29,7 @@ namespace ssp21
             ctx.suite.session_mode
         );
 
-        const auto ephemeral_data = ctx.handshake.generate_ephemerals();
+        const auto ephemeral_data = ctx.handshake.generate_ephemeral_data();
 
         const RequestHandshakeBegin request(
             consts::crypto::protocol_version,
@@ -50,12 +50,9 @@ namespace ssp21
             return InitiatorHandshakeStates::BadConfiguration::get();
         }
 
-        ctx.handshake.init_handshake_hash(result.written);
+        ctx.handshake.begin_request_transmit(result.written, now);
 
-        ctx.lower->start_tx_from_upper(result.frame);
-
-        // record when we transmited the request so we can estimate the time base later
-        ctx.request_handshake_begin_time_tx = ctx.executor->get_time();
+        ctx.lower->start_tx_from_upper(result.frame);        
 
         ctx.start_response_timer();
 

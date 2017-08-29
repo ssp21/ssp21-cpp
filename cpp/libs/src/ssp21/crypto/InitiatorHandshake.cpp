@@ -9,14 +9,15 @@ using namespace openpal;
 
 namespace ssp21
 {
-    seq32_t InitiatorHandshake::generate_ephemerals()
+    seq32_t InitiatorHandshake::generate_ephemeral_data()
     {
         this->algorithms.handshake.gen_keypair(this->local_ephemeral_keys);
         return this->local_ephemeral_keys.public_key.as_seq();
     }
 
-    void InitiatorHandshake::init_handshake_hash(const seq32_t& data)
+    void InitiatorHandshake::begin_request_transmit(const seq32_t& data, const openpal::Timestamp& now)
     {
+		this->time_request_tx = now;
         this->algorithms.handshake.hash({ data }, this->handshake_hash);
     }
 
@@ -63,11 +64,19 @@ namespace ssp21
             session_keys.rx_key
         );
 
+		if (now < this->time_request_tx)
+		{
+			SIMPLE_LOG_BLOCK(this->logger, levels::error, "clock rollback detected");
+			return false;
+		}
+
+		// estimate the session initialization time
+		const auto elapsed_ms = now.milliseconds - this->time_request_tx.milliseconds;
+		const auto session_start_time = now.milliseconds - (elapsed_ms / 2); // estimate
+
         return session.initialize(
                    this->algorithms.session,
-                   Session::Param(
-					   // TODO - set the session parameters
-                   ),
+                   Session::Param(), // TODO					   
                    session_keys
                );
     }

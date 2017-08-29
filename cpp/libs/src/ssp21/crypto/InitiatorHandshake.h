@@ -31,9 +31,9 @@ namespace ssp21
             cert_handler(cert_handler)
         {}
 
-        seq32_t generate_ephemerals();
+        seq32_t generate_ephemeral_data();
 
-        void init_handshake_hash(const seq32_t& data);
+        void begin_request_transmit(const seq32_t& data, const openpal::Timestamp& now);
 
         bool initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now, Session& session);
 
@@ -61,6 +61,9 @@ namespace ssp21
 
         // ephemeral keys
         KeyPair local_ephemeral_keys;
+
+		// time that the request was transmitted
+		openpal::Timestamp time_request_tx;
 
         // running hash value of first 2 handshake messages (h)
         HashOutput handshake_hash;
