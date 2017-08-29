@@ -21,7 +21,7 @@ namespace ssp21
         logger(logger),
         frame_writer(frame_writer),
         executor(executor),
-        sessions(frame_writer, session_config),        
+        sessions(frame_writer, session_config),
         certificate_handler(certificate_handler)
     {}
 

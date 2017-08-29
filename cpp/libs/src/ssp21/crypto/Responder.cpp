@@ -43,11 +43,7 @@ namespace ssp21
     }
 
     HandshakeError Responder::verify_handshake_begin(const RequestHandshakeBegin& msg, Algorithms& algorithms, seq32_t& public_key_out)
-    {
-        if (msg.version != consts::crypto::protocol_version)
-        {
-            return HandshakeError::unsupported_version;
-        }
+    {       
 
         // verify that the public key length matches the DH mode
         if (msg.ephemeral_public_key.length() != consts::crypto::x25519_key_length)
@@ -97,6 +93,12 @@ namespace ssp21
 
     void Responder::on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
+		if (msg.version != consts::crypto::protocol_version)
+		{
+			this->reply_with_handshake_error(HandshakeError::unsupported_version);
+			return;
+		}
+
         Algorithms algorithms;
         seq32_t remote_public_dh_key;
 
