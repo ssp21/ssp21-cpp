@@ -66,30 +66,17 @@ namespace ssp21
 
     Initiator::IHandshakeState* InitiatorHandshakeStates::WaitForBeginReply::on_reply_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const Timestamp& now)
     {
-
         ctx.response_and_retry_timer.cancel();
 
+		if (!ctx.handshake.initialize_session(msg, msg_bytes, now, *ctx.sessions.pending))
+		{
+			ctx.start_retry_timer();
+			return WaitForRetry::get();
+		}
+		
 		/*
-        seq32_t remote_public_key;
-        const auto err = ctx.certificate_handler->validate(msg.certificate_data, remote_public_key);
-        if (any(err))
-        {
-            FORMAT_LOG_BLOCK(ctx.logger, levels::error, "error validating certificate data: %s", HandshakeErrorSpec::to_string(err));
-            ctx.start_retry_timer();
-            return WaitForRetry::get();
-        }
 
-        if (!ctx.handshake.initialize_session(msg, msg_bytes, now, *ctx.sessions.pending))
-        {
-            ctx.start_retry_timer();
-            return WaitForRetry::get();
-        }
-        
-
-        TODO - send the authentication request
-
-        HashOutput hash;
-        ctx.handshake.calc_auth_handshake_mac(hash);
+		TODO
 
         const RequestHandshakeAuth request(hash.as_seq());
 
