@@ -36,27 +36,7 @@ namespace ssp21
         {
             this->lower->start_tx_from_upper(res.frame);
         }
-    }
-
-    HandshakeError Responder::verify_handshake_begin(const RequestHandshakeBegin& msg, Algorithms& algorithms, seq32_t& public_key_out)
-    {       
-
-        // verify that the public key length matches the DH mode
-        if (msg.ephemeral_public_key.length() != consts::crypto::x25519_key_length)
-        {
-            return HandshakeError::bad_message_format;
-        }
-
-        {
-            const auto err = this->certificate_handler->validate(msg.certificate_mode, msg.certificate_data, public_key_out);
-            if (any(err))
-            {
-                return err;
-            }
-        }
-
-        return algorithms.configure(msg.spec);
-    }
+    }    
 
     void Responder::reset_state_on_close_from_lower()
     {

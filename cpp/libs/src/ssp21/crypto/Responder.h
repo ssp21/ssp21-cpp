@@ -42,9 +42,7 @@ namespace ssp21
 
         // ---- private helper methods -----
 
-        void reply_with_handshake_error(HandshakeError err);
-
-        HandshakeError verify_handshake_begin(const RequestHandshakeBegin& msg, Algorithms& algorithms, seq32_t& public_key_out);
+        void reply_with_handshake_error(HandshakeError err);        
 
 
         // ---- implement CryptoLayer -----
