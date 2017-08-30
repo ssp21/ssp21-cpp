@@ -205,7 +205,7 @@ namespace ssp21
         const auto now = this->executor->get_time();
 
         std::error_code err;
-        const auto data = this->sessions.active->format_session_data(now, remainder, err);
+        const auto frame = this->sessions.active->format_session_data(now, remainder, err);
         if (err)
         {
             FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error formatting session message: %s", err.message().c_str());
@@ -219,7 +219,7 @@ namespace ssp21
 
         this->tx_state.begin_transmit(remainder);
 
-        this->lower->start_tx_from_upper(data);
+        this->lower->start_tx_from_upper(frame);
 
         this->on_session_nonce_change(this->sessions.active->get_rx_nonce(), this->sessions.active->get_tx_nonce());
     }

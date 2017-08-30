@@ -9,7 +9,7 @@
 namespace ssp21
 {
     /**
-    	Tracks the state of a multi-segment transmission for the crypto layer
+    	Tracks the state of a transmission from the crypto layer
     */
     class TxState final : openpal::Uncopyable
     {
