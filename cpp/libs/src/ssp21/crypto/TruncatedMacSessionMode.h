@@ -31,7 +31,7 @@ namespace ssp21
         virtual seq32_t write_impl(
             IFrameWriter& writer,
             const SymmetricKey& key,
-            AuthMetadata& metadata,
+            const AuthMetadata& metadata,
             seq32_t& user_data,
             std::error_code& ec
         ) const override;

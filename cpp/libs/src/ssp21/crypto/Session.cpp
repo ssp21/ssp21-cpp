@@ -183,7 +183,7 @@ namespace ssp21
         }
 
         // the metadata we're encoding
-        AuthMetadata metadata(
+        const AuthMetadata metadata(
             nonce,
             session_time + config.ttl_pad_ms
         );

@@ -45,7 +45,7 @@ namespace ssp21
     seq32_t TruncatedMacSessionMode::write_impl(
         IFrameWriter& writer,
         const SymmetricKey& key,
-        AuthMetadata& metadata,
+        const AuthMetadata& metadata,
         seq32_t& user_data,
         std::error_code& ec
     ) const
