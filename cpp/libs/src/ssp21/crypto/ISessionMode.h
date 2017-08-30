@@ -53,7 +53,7 @@ namespace ssp21
         *
         * @key the symmetric key used for authentication (and optionally decryption)
         * @msg the parsed session data message
-        * @dest The output buffer into which the cleartext may be written (encryption modes only) if no error occurs.
+        * @dest The output buffer into which the authenticated data is written if no error occurs.
         * @ec An error condition will be signaled if the output buffer is too small or if an authentication error occurs
         *
         * @return A slice pointing to the cleartext. This slice will be empty if an error occured.
