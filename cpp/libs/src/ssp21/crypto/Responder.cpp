@@ -107,7 +107,8 @@ namespace ssp21
 			this->upper->on_lower_rx_ready();
 		}
 		
-		// TODO - transmit a response, before activating the pending session		
+		// TODO - transmit a response, before activating the pending session
+		
 		
 		this->sessions.activate_pending();
     }

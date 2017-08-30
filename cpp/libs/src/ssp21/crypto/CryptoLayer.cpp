@@ -205,7 +205,7 @@ namespace ssp21
         const auto now = this->executor->get_time();
 
         std::error_code err;
-        const auto data = this->sessions.active->format_session_data(now, remainder, wseq32_t::empty(), err);
+        const auto data = this->sessions.active->format_session_data(now, remainder, err);
         if (err)
         {
             FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error formatting session message: %s", err.message().c_str());

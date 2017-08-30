@@ -127,7 +127,7 @@ TEST_CASE(SUITE("can't format a message without a valid session"))
 
 
     std::error_code ec;
-    const auto data = session.format_session_data(Timestamp(0), input, wseq32_t::empty(), ec);
+    const auto data = session.format_session_data(Timestamp(0), input, ec);
     REQUIRE(ec == CryptoError::no_valid_session);
     REQUIRE(input.length() == 2);
     REQUIRE(data.is_empty());
@@ -186,7 +186,7 @@ TEST_CASE(SUITE("successfully formats and increments nonce"))
         auto input = hex.as_rslice();
         std::error_code ec;
 
-        const auto data = s.format_session_data(Timestamp(0), input, wseq32_t::empty(), ec);
+        const auto data = s.format_session_data(Timestamp(0), input, ec);
         REQUIRE_FALSE(ec);
         REQUIRE(input.is_empty());
         REQUIRE(data.is_not_empty());
@@ -270,7 +270,7 @@ void test_format_failure(const SessionConfig& config, const Session::Param& para
     const auto start_length = input.length();
 
     std::error_code ec;
-    const auto data = s.format_session_data(now, input, wseq32_t::empty(), ec);
+    const auto data = s.format_session_data(now, input, ec);
     REQUIRE(ec == expected);
     REQUIRE(input.length() == start_length);
     REQUIRE(data.is_empty());
