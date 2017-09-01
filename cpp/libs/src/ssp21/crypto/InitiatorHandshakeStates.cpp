@@ -71,8 +71,7 @@ namespace ssp21
 			return WaitForRetry::get();
 		}
 		
-
-		if (!ctx.transmit_session_auth())
+		if (!ctx.transmit_session_auth(*ctx.sessions.pending))
 		{
 			ctx.start_retry_timer();
 			return WaitForRetry::get();

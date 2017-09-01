@@ -92,7 +92,7 @@ namespace ssp21
         virtual void on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now) = 0;
 
 		// both parties need to call this to complete the handshake at different times
-		bool transmit_session_auth();
+		bool transmit_session_auth(Session& session);
 
         // ------ member variables ------
 

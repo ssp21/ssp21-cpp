@@ -105,12 +105,14 @@ namespace ssp21
 			FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error processing session auth request: %s", ec.message().c_str());
 			return;
 		}		
+
+		this->sessions.activate_pending();
 		
-		if (!this->transmit_session_auth()) {
+		if (!this->transmit_session_auth(*this->sessions.active)) {
 			return;
 		}
-		
-		this->sessions.activate_pending();
+
+		this->upper->on_lower_open();
 			
 		// notify the upper layer there is data ready
 		if (payload.is_not_empty())

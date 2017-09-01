@@ -224,13 +224,13 @@ namespace ssp21
         this->on_session_nonce_change(this->sessions.active->get_rx_nonce(), this->sessions.active->get_tx_nonce());
     }
 
-	bool CryptoLayer::transmit_session_auth()
+	bool CryptoLayer::transmit_session_auth(Session& session)
 	{		
 		auto remainder = this->tx_state.get_remainder();
 		const bool has_payload = remainder.is_not_empty();
 
 		std::error_code ec;
-		const auto frame = this->sessions.pending->format_session_auth(this->executor->get_time(), remainder, ec);
+		const auto frame = session.format_session_auth(this->executor->get_time(), remainder, ec);
 		if (ec)
 		{
 			FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error formatting session auth message: %s", ec.message().c_str());
