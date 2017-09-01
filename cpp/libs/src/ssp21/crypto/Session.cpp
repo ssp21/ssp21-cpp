@@ -34,13 +34,15 @@ namespace ssp21
         this->parameters = parameters;
         this->keys.copy(keys);
 
+		this->statistics->num_init.increment();
+
         this->valid = true;
 
         return true;
     }
 
     void Session::reset()
-    {
+    {		
         this->valid = false;
         this->keys.zero();        
     }
@@ -60,6 +62,7 @@ namespace ssp21
 
 		if (payload.is_empty())
 		{
+			this->statistics->num_auth_fail.increment();
 			ec = CryptoError::empty_user_data;			
 		}
 
@@ -92,6 +95,7 @@ namespace ssp21
     {
         if (!this->valid)
         {            
+			this->statistics->num_user_data_without_session.increment();
             ec = CryptoError::no_valid_session;
             return seq32_t::empty();
         }
@@ -100,6 +104,7 @@ namespace ssp21
 
         if (ec)
         {            
+			this->statistics->num_auth_fail.increment();
             return seq32_t::empty();
         }        
 
@@ -120,6 +125,7 @@ namespace ssp21
         // the message is authentic, check the TTL
         if (current_session_time > message.metadata.valid_until_ms)
         {            
+			this->statistics->num_ttl_expiration.increment();
             ec = CryptoError::expired_ttl;
             return seq32_t::empty();
         }
@@ -127,6 +133,7 @@ namespace ssp21
         // check the nonce via the configured maximum
         if (message.metadata.nonce > this->parameters.max_nonce)
         {            
+			this->statistics->num_nonce_fail.increment();
             ec = CryptoError::max_nonce_exceeded;
             return seq32_t::empty();
         }
@@ -134,11 +141,14 @@ namespace ssp21
         // check the nonce via the verification function
         if (!verify_nonce(this->rx_nonce.get(), message.metadata.nonce))
         {            
+			this->statistics->num_nonce_fail.increment();
             ec = CryptoError::nonce_replay;
             return seq32_t::empty();
         }
 
         this->rx_nonce.set(message.metadata.nonce.value);        
+
+		this->statistics->num_success.increment();
 
         return payload;
     }
