@@ -13,9 +13,9 @@ using HandshakeState = Initiator::IHandshakeState::Enum;
 void test_open(InitiatorFixture& fix);
 void test_request_handshake_begin(InitiatorFixture& fix);
 void test_response_timeout(InitiatorFixture& fix, HandshakeState new_state);
-//void test_reply_handshake_begin(InitiatorFixture& fix);
-//void test_reply_handshake_auth(InitiatorFixture& fix);
-//void test_open_and_full_handshake(InitiatorFixture& fix);
+void test_reply_handshake_begin(InitiatorFixture& fix);
+void test_reply_handshake_auth(InitiatorFixture& fix);
+void test_open_and_full_handshake(InitiatorFixture& fix);
 
 // ---------- tests for initial state -----------
 
@@ -88,18 +88,14 @@ TEST_CASE(SUITE("starts retry timer when response timeout fires"))
 
 // ---------- tests for WaitBeginReply -----------
 
-/*
-
-TODO
-
-TEST_CASE(SUITE("send REQUEST_HANDSHAKE_AUTH after receving REPLY_HANDSHAKE_BEGIN"))
+TEST_CASE(SUITE("send session auth after receving REPLY_HANDSHAKE_BEGIN"))
 {
     InitiatorFixture fix;
     test_open(fix);
     test_reply_handshake_begin(fix);
 }
 
-TEST_CASE(SUITE("goes to retry state when response timeout occurs while waiting for REPLY_HANDSHAKE_AUTH"))
+TEST_CASE(SUITE("goes to retry state when response timeout occurs while waiting for session auth"))
 {
     InitiatorFixture fix;
     test_open(fix);
@@ -107,7 +103,7 @@ TEST_CASE(SUITE("goes to retry state when response timeout occurs while waiting 
     test_response_timeout(fix, HandshakeState::wait_for_retry);
 }
 
-TEST_CASE(SUITE("goes to retry state when handshake reply error received while waiting for REPLY_HANDSHAKE_AUTH"))
+TEST_CASE(SUITE("goes to retry state when handshake reply error received while waiting for session auth"))
 {
     InitiatorFixture fix;
     test_open(fix);
@@ -119,8 +115,6 @@ TEST_CASE(SUITE("goes to retry state when handshake reply error received while w
     REQUIRE(fix.exe->num_pending_timers() == 1);
 }
 
-*/
-
 TEST_CASE(SUITE("goes to retry state when DH fails"))
 {
     InitiatorFixture fix;
@@ -131,16 +125,15 @@ TEST_CASE(SUITE("goes to retry state when DH fails"))
     REQUIRE(fix.initiator.get_state_enum() == HandshakeState::wait_for_retry);
 }
 
-/*
-
-TODO
-
-
-TEST_CASE(SUITE("initializes session when a proper auth reply is received"))
+TEST_CASE(SUITE("initializes session when a proper session auth reply is received"))
 {
     InitiatorFixture fix;
     test_open_and_full_handshake(fix);
 }
+
+/*
+
+TODO
 
 TEST_CASE(SUITE("triggers session renegotiation after timeout"))
 {
@@ -159,12 +152,6 @@ TEST_CASE(SUITE("triggers session renegotiation after timeout"))
 
     test_request_handshake_begin(fix);
 }
-
-*/
-
-/*
-
-TODO
 
 TEST_CASE(SUITE("goes to retry state if auth reply doesn't authenticate"))
 {
@@ -249,20 +236,21 @@ void test_response_timeout(InitiatorFixture& fix, HandshakeState new_state)
     fix.expect_empty();
 }
 
-/*
-
-TODO
-
 void test_reply_handshake_begin(InitiatorFixture& fix)
 {
     REQUIRE(fix.initiator.get_state_enum() == HandshakeState::wait_for_begin_reply);
 
     const auto num_timer_cancel = fix.exe->num_timer_cancel();
+	const auto start_stats = fix.initiator.get_statistics();
 
     fix.expect_empty();
     fix.lower.enqueue_message(hex::reply_handshake_begin(hex::repeat(0xFF, consts::crypto::x25519_key_length)));
 
-    const auto expected = hex::request_handshake_auth(hex::repeat(0xFF, consts::crypto::sha256_hash_output_length));
+	const auto end_stats = fix.initiator.get_statistics();
+
+	REQUIRE(end_stats.num_init == (start_stats.num_init + 1));
+
+    const auto expected = hex::session_data(0, consts::crypto::default_ttl_pad_ms, "", hex::repeat(0xFF, consts::crypto::trunc16));
     REQUIRE(fix.lower.pop_tx_message() == expected);
 
     REQUIRE(fix.initiator.get_state_enum() == HandshakeState::wait_for_auth_reply);
@@ -275,31 +263,25 @@ void test_reply_handshake_begin(InitiatorFixture& fix)
         CryptoAction::dh_x25519,
         CryptoAction::dh_x25519,
 
-        CryptoAction::hkdf_sha256, // KDF        ,
-        CryptoAction::hmac_sha256,
-
-        CryptoAction::hash_sha256  // mix ck
+        CryptoAction::hkdf_sha256, // KDF
+        CryptoAction::hmac_sha256
     });
 
     REQUIRE(fix.exe->num_timer_cancel() == (num_timer_cancel + 1));
     REQUIRE(fix.exe->num_pending_timers() == 1);
     REQUIRE(fix.exe->next_timer_expiration_rel() == consts::crypto::initiator::default_response_timeout);
-
 }
 
 void test_reply_handshake_auth(InitiatorFixture& fix)
 {
-    const auto start_num_timer_cancel = fix.exe->num_timer_cancel();
-    const auto start_stats = fix.initiator.get_statistics();
+    const auto start_num_timer_cancel = fix.exe->num_timer_cancel();    
 
-    fix.lower.enqueue_message(hex::reply_handshake_auth(hex::repeat(0xFF, consts::crypto::sha256_hash_output_length)));
-
-    const auto end_stats = fix.initiator.get_statistics();
+    fix.lower.enqueue_message(hex::session_data(0, 0xFFFFFFFF, "", hex::repeat(0xFF, consts::crypto::trunc16)));
+    
     const auto end_num_timer_cancel = fix.exe->num_timer_cancel();
 
     REQUIRE(fix.initiator.get_state_enum() == HandshakeState::idle);
-    REQUIRE(end_num_timer_cancel == (start_num_timer_cancel + 1));
-    REQUIRE(end_stats.session.num_init == (start_stats.session.num_init + 1));
+    REQUIRE(end_num_timer_cancel == (start_num_timer_cancel + 1));    
 
     REQUIRE(fix.exe->num_pending_timers() == 1); // the session timeout timer should be the only timer active
 
@@ -322,4 +304,3 @@ void test_open_and_full_handshake(InitiatorFixture& fix)
     test_reply_handshake_auth(fix);
 }
 
-*/
