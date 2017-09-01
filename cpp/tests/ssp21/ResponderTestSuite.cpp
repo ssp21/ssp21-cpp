@@ -84,28 +84,30 @@ TEST_CASE(SUITE("responds to auth session with auth session"))
     REQUIRE(fix.upper.get_is_open());
 }
 
-
-/*
-TEST_CASE(SUITE("responds to auth request w/ invalid HMAC"))
+TEST_CASE(SUITE("ignores auth session w/ invalid HMAC value"))
 {
     ResponderFixture fix;
     fix.responder.on_lower_open();
 
     test_begin_handshake_success(fix);
 
-    const auto request = hex::request_handshake_auth(hex::repeat(0xEE, consts::crypto::sha256_hash_output_length));
-    test_handshake_error(fix, request, HandshakeError::authentication_error, {CryptoAction::hmac_sha256, CryptoAction::secure_equals });
+    const auto request = hex::session_data(0, 0xFFFFFF, "", hex::repeat(0xEE, consts::crypto::sha256_hash_output_length));
+	fix.lower.enqueue_message(request);
+	fix.expect({CryptoAction::hmac_sha256, CryptoAction::secure_equals});
+	REQUIRE(fix.lower.num_tx_messages() == 0);    
 }
 
-TEST_CASE(SUITE("responds to auth request with insufficient hmac size with authentication error"))
+TEST_CASE(SUITE("ignores auth session w/ invalid HMAC size"))
 {
-    ResponderFixture fix;
-    fix.responder.on_lower_open();
+	ResponderFixture fix;
+	fix.responder.on_lower_open();
 
-    test_begin_handshake_success(fix);
+	test_begin_handshake_success(fix);
 
-    const auto request = hex::request_handshake_auth(hex::repeat(0xFF, (consts::crypto::sha256_hash_output_length - 1)));
-    test_handshake_error(fix, request, HandshakeError::authentication_error, { CryptoAction::hmac_sha256, CryptoAction::secure_equals });
+	const auto request = hex::session_data(0, 0xFFFFFF, "", hex::repeat(0xFF, consts::crypto::sha256_hash_output_length - 1));
+	fix.lower.enqueue_message(request);
+	fix.expect({ CryptoAction::hmac_sha256, CryptoAction::secure_equals });
+	REQUIRE(fix.lower.num_tx_messages() == 0);
 }
 
 TEST_CASE(SUITE("handshake process can be repeated"))
@@ -116,7 +118,7 @@ TEST_CASE(SUITE("handshake process can be repeated"))
     for (int i = 0; i < 3; ++i)
     {
         test_begin_handshake_success(fix);
-        test_auth_handshake_success(fix);
+        test_auth_handshake_success(fix, "");
     }
 }
 
@@ -128,8 +130,9 @@ TEST_CASE(SUITE("begin handshake can be repeated prior to auth handshake"))
     test_begin_handshake_success(fix);
     test_begin_handshake_success(fix);
     test_begin_handshake_success(fix);
-    test_auth_handshake_success(fix);
+    test_auth_handshake_success(fix, "");
 }
+
 
 // ---------- rx tests for initialized session -----------
 
@@ -144,6 +147,7 @@ TEST_CASE(SUITE("closing the responder closes the upper layer"))
     REQUIRE_FALSE(fix.upper.get_is_open());
 }
 
+/*
 TEST_CASE(SUITE("auth fails if insufficient data for tag"))
 {
     ResponderFixture fix;

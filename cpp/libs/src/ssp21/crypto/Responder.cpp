@@ -59,7 +59,7 @@ namespace ssp21
         {
         case(Function::request_handshake_begin):
             this->reply_with_handshake_error(HandshakeError::bad_message_format);
-            break;
+            break;		
         default:
             break;
         }
@@ -102,11 +102,11 @@ namespace ssp21
 
 		if (ec)
 		{
-			FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error processing session auth request: %s", ec.message().c_str());
+			FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error processing session auth request: %s", ec.message().c_str());			
 			return;
-		}		
+		}
 
-		this->sessions.activate_pending();
+		this->sessions.activate_pending();		
 		
 		if (!this->transmit_session_auth(*this->sessions.active)) {
 			return;
