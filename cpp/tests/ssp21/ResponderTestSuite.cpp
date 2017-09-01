@@ -23,19 +23,15 @@ TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_BEGIN with REPLY_HANDSHAKE_BEGIN"
     test_begin_handshake_success(fix);
 }
 
-/*
 
-TODO
-
-TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_AUTH with no_prior_handshake error"))
+TEST_CASE(SUITE("responds to session auth with no_prior_handshake error"))
 {
     ResponderFixture fix;
     fix.responder.on_lower_open();
 
-    const auto request = hex::request_handshake_auth(hex::repeat(0xFF, consts::crypto::sha256_hash_output_length));
+    const auto request = hex::session_data(0, 0xFFFFFFFF, "", "");
     test_handshake_error(fix, request, HandshakeError::no_prior_handshake_begin, {});
 }
-*/
 
 TEST_CASE(SUITE("responds to malformed handshake begin with bad_message_format"))
 {
