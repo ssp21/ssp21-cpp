@@ -77,7 +77,7 @@ namespace ssp21
 
     private:
 
-        seq32_t Session::format_session_data(const openpal::Timestamp& now, seq32_t& clear_text, uint16_t nonce, std::error_code& ec);
+        seq32_t format_session_data_no_nonce_check(const openpal::Timestamp& now, seq32_t& cleartext, std::error_code& ec);
 
         seq32_t validate_session_data_with_nonce_func(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, verify_nonce_func_t verify, std::error_code& ec);        
 

@@ -227,8 +227,6 @@ TEST_CASE(SUITE("can authenticate multiple messages"))
     }
 }
 
-/*
-
 // ---------- tx tests for initialized session -----------
 
 TEST_CASE(SUITE("won't transmit if offline"))
@@ -248,10 +246,6 @@ TEST_CASE(SUITE("won't transmit if no session"))
     REQUIRE_FALSE(fix.responder.start_tx_from_upper(msg));
 }
 
-/*
-
-TODO
-
 TEST_CASE(SUITE("can transmit multiple messages if session is initialized"))
 {
     ResponderFixture fix;
@@ -265,7 +259,7 @@ TEST_CASE(SUITE("can transmit multiple messages if session is initialized"))
         Hex msg(payload);
         REQUIRE(fix.responder.start_tx_from_upper(msg));
 
-        const auto expected = hex::session_data(i + 1, consts::crypto::default_ttl_pad_ms, true, true, payload, hex::repeat(0xFF, 16));
+        const auto expected = hex::session_data(i + 1, consts::crypto::default_ttl_pad_ms, payload, hex::repeat(0xFF, 16));
         REQUIRE(fix.lower.pop_tx_message() == expected);
         REQUIRE(fix.upper.num_tx_ready == i);
 
@@ -309,7 +303,7 @@ TEST_CASE(SUITE("defers transmission if lower layer is not tx_ready"))
     fix.responder.on_lower_tx_ready();
 
 
-    const auto expected = hex::session_data(1, consts::crypto::default_ttl_pad_ms, true, true, payload, hex::repeat(0xFF, 16));
+    const auto expected = hex::session_data(1, consts::crypto::default_ttl_pad_ms, payload, hex::repeat(0xFF, 16));
     REQUIRE(fix.lower.pop_tx_message() == expected);
     REQUIRE(fix.upper.num_tx_ready == 0);
 
@@ -317,8 +311,6 @@ TEST_CASE(SUITE("defers transmission if lower layer is not tx_ready"))
     REQUIRE(fix.upper.num_tx_ready == 1);
     REQUIRE(fix.lower.num_tx_messages() == 0);
 }
-
-*/
 
 // ---------- helper method implementations -----------
 

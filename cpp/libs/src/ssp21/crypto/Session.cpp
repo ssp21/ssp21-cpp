@@ -77,7 +77,7 @@ namespace ssp21
             return seq32_t::empty();
         }
 
-        return this->format_session_data(now, cleartext, 0, ec);
+        return this->format_session_data_no_nonce_check(now, cleartext, ec);
     }
 
     seq32_t Session::format_session_data(const openpal::Timestamp& now, seq32_t& cleartext, std::error_code& ec)
@@ -88,7 +88,7 @@ namespace ssp21
             return seq32_t::empty();
         }
 
-        return this->format_session_data(now, cleartext, this->tx_nonce.get() + 1, ec);
+        return this->format_session_data_no_nonce_check(now, cleartext, ec);
     }
 
     seq32_t Session::validate_session_data_with_nonce_func(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, verify_nonce_func_t verify_nonce, std::error_code& ec)
@@ -153,7 +153,7 @@ namespace ssp21
         return payload;
     }
 
-    seq32_t Session::format_session_data(const openpal::Timestamp& now, seq32_t& clear_text, uint16_t nonce, std::error_code& ec)
+    seq32_t Session::format_session_data_no_nonce_check(const openpal::Timestamp& now, seq32_t& clear_text, std::error_code& ec)
     {
         if (!this->valid)
         {
@@ -185,7 +185,7 @@ namespace ssp21
 
         // the metadata we're encoding
         const AuthMetadata metadata(
-            nonce,
+            this->tx_nonce.get(),
             session_time + config.ttl_pad_ms
         );
 
