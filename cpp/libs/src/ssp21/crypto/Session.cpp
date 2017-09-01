@@ -27,8 +27,6 @@ namespace ssp21
     {
         if (!keys.valid()) return false;
 
-        this->statistics.num_init.increment();
-
         this->rx_nonce.set(0);
         this->tx_nonce.set(0);
         this->algorithms = algorithms;
@@ -43,8 +41,7 @@ namespace ssp21
     void Session::reset()
     {
         this->valid = false;
-        this->keys.zero();
-        this->statistics.num_reset.increment();
+        this->keys.zero();        
     }
 
     seq32_t Session::validate_session_auth(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, std::error_code& ec)
@@ -62,8 +59,7 @@ namespace ssp21
 
 		if (payload.is_empty())
 		{
-			ec = CryptoError::empty_user_data;
-			this->statistics.num_auth_fail.increment();			
+			ec = CryptoError::empty_user_data;			
 		}
 
 		return payload;
@@ -94,8 +90,7 @@ namespace ssp21
     seq32_t Session::validate_session_data_with_nonce_func(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, verify_nonce_func_t verify_nonce, std::error_code& ec)
     {
         if (!this->valid)
-        {
-            this->statistics.num_user_data_without_session.increment();
+        {            
             ec = CryptoError::no_valid_session;
             return seq32_t::empty();
         }
@@ -103,8 +98,7 @@ namespace ssp21
         const auto payload = this->algorithms.session_mode->read(this->keys.rx_key, message, dest, ec);
 
         if (ec)
-        {
-            this->statistics.num_auth_fail.increment();
+        {            
             return seq32_t::empty();
         }        
 
@@ -124,30 +118,26 @@ namespace ssp21
 
         // the message is authentic, check the TTL
         if (current_session_time > message.metadata.valid_until_ms)
-        {
-            this->statistics.num_ttl_expiration.increment();
+        {            
             ec = CryptoError::expired_ttl;
             return seq32_t::empty();
         }
 
         // check the nonce via the configured maximum
         if (message.metadata.nonce > this->parameters.max_nonce)
-        {
-            this->statistics.num_nonce_fail.increment();
+        {            
             ec = CryptoError::max_nonce_exceeded;
             return seq32_t::empty();
         }
 
         // check the nonce via the verification function
         if (!verify_nonce(this->rx_nonce.get(), message.metadata.nonce))
-        {
-            this->statistics.num_nonce_fail.increment();
+        {            
             ec = CryptoError::nonce_replay;
             return seq32_t::empty();
         }
 
-        this->rx_nonce.set(message.metadata.nonce.value);
-        this->statistics.num_success.increment();
+        this->rx_nonce.set(message.metadata.nonce.value);        
 
         return payload;
     }

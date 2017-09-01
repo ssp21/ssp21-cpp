@@ -83,12 +83,7 @@ namespace ssp21
 
             SessionStatistics session;
         };
-
-        Statistics get_statistics() const
-        {
-            return Statistics(sessions.active->get_statistics());
-        }
-
+      
     private:
 
         // ---- private helper methods -----

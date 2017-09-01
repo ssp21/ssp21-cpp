@@ -25,12 +25,7 @@ namespace ssp21
             const std::shared_ptr<openpal::IExecutor>& executor,
             const StaticKeys& static_keys,
             const std::shared_ptr<ICertificateHandler>& certificate_handler
-        );
-
-        inline ResponderStatistics get_statistics() const
-        {
-            return ResponderStatistics(this->sessions.active->get_statistics());
-        }
+        );       
 
     private:
 

@@ -73,12 +73,7 @@ namespace ssp21
         uint16_t get_tx_nonce() const
         {
             return tx_nonce.get();
-        }
-
-        inline SessionStatistics get_statistics() const
-        {
-            return statistics;
-        }
+        }        
 
     private:
 
@@ -94,9 +89,7 @@ namespace ssp21
         /**
         * Given a maximum link layer payload, how big could the crypto payload be?
         */
-        static constexpr uint32_t calc_max_crypto_payload_length(uint32_t max_link_payload_size);
-
-        SessionStatistics statistics;
+        static constexpr uint32_t calc_max_crypto_payload_length(uint32_t max_link_payload_size);        
 
         Nonce rx_nonce;
         Nonce tx_nonce;

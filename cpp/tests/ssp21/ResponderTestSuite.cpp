@@ -10,8 +10,8 @@ using namespace openpal;
 
 // helper methods
 void test_begin_handshake_success(ResponderFixture& fix, uint16_t max_nonce = consts::crypto::initiator::default_max_nonce, uint32_t max_session_time = consts::crypto::initiator::default_max_session_time_ms);
-// void test_auth_handshake_success(ResponderFixture& fix);
-// void test_init_session_success(ResponderFixture& fix, uint16_t max_nonce = consts::crypto::initiator::default_max_nonce, uint32_t max_session_time = consts::crypto::initiator::default_max_session_time_ms);
+void test_auth_handshake_success(ResponderFixture& fix, const std::string& payload);
+void test_init_session_success(ResponderFixture& fix, uint16_t max_nonce = consts::crypto::initiator::default_max_nonce, uint32_t max_session_time = consts::crypto::initiator::default_max_session_time_ms);
 void test_handshake_error(ResponderFixture& fix, const std::string& request, HandshakeError expected_error, std::initializer_list<CryptoAction> actions);
 
 // ---------- tests for handshake state idle -----------
@@ -29,7 +29,7 @@ TEST_CASE(SUITE("responds to session auth with no_prior_handshake error"))
     ResponderFixture fix;
     fix.responder.on_lower_open();
 
-    const auto request = hex::session_data(0, 0xFFFFFFFF, "", "");
+    const auto request = hex::session_data(0, 0xFFFFFFFF, "", hex::repeat(0xFF, 16));
     test_handshake_error(fix, request, HandshakeError::no_prior_handshake_begin, {});
 }
 
@@ -68,19 +68,13 @@ TEST_CASE(SUITE("ignores user data without a session"))
 
     const auto request = hex::session_data(1, 0, "CA FE", hex::repeat(0xFF, 16));
     fix.lower.enqueue_message(request);
-
-    const auto stats = fix.responder.get_statistics();
-    REQUIRE(stats.session.num_user_data_without_session == 1);
+    
     REQUIRE(fix.upper.is_empty());
 }
 
 // ---------- tests for handshake state wait for auth -----------
 
-/*
-
-TODO
-
-TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_AUTH with REPLY_HANDSHAKE_AUTH"))
+TEST_CASE(SUITE("responds to auth session with auth session"))
 {
     ResponderFixture fix;
     fix.responder.on_lower_open();
@@ -91,6 +85,7 @@ TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_AUTH with REPLY_HANDSHAKE_AUTH"))
 }
 
 
+/*
 TEST_CASE(SUITE("responds to auth request w/ invalid HMAC"))
 {
     ResponderFixture fix;
@@ -382,48 +377,39 @@ void test_begin_handshake_success(ResponderFixture& fix, uint16_t max_nonce, uin
     const auto reply = hex::reply_handshake_begin(hex::repeat(0xFF, consts::crypto::x25519_key_length));
     REQUIRE(fix.lower.pop_tx_message() == reply);
     fix.set_tx_ready();
-
-	// TODO
-    // REQUIRE(fix.responder.get_state_enum() == Responder::IHandshakeState::Enum::wait_for_auth);
+	
 }
 
-/*
-
-TODO
-
-void test_auth_handshake_success(ResponderFixture& fix)
+void test_auth_handshake_success(ResponderFixture& fix, const std::string& payload)
 {
     const auto mac_hex = hex::repeat(0xFF, consts::crypto::sha256_hash_output_length);
 
-    fix.lower.enqueue_message(hex::request_handshake_auth(mac_hex));
+	fix.lower.enqueue_message(hex::session_data(0, 0xFFFFFFFF, payload, hex::repeat(0xFF, 16)));
 
-    REQUIRE(fix.lower.pop_tx_message() == hex::reply_handshake_auth(mac_hex));
+	const auto reply = hex::session_data(0, 0x00002710, "", hex::repeat(0xFF, 16));
+
+	REQUIRE(fix.lower.pop_tx_message() == reply);
 
     // expected order of crypto operations
     fix.expect(
     {
         CryptoAction::hmac_sha256,		// calculate expected value
-        CryptoAction::secure_equals,	// compare MAC values
-        CryptoAction::hash_sha256,		// mix the received message
-        CryptoAction::hmac_sha256,		// calculate reply value
-        CryptoAction::hash_sha256,		// mix the reply
-        CryptoAction::hkdf_sha256
+        CryptoAction::secure_equals,	// compare MAC values        
+        CryptoAction::hmac_sha256,		// calculate reply value        
     });
 
     fix.set_tx_ready();
-
-    REQUIRE(fix.responder.get_state_enum() == Responder::IHandshakeState::Enum::idle);
+    
 }
+
 
 void test_init_session_success(ResponderFixture& fix, uint16_t max_nonce, uint32_t max_session_time)
 {
     test_begin_handshake_success(fix, max_nonce, max_session_time);
-    test_auth_handshake_success(fix);
+    test_auth_handshake_success(fix, "");
 
     REQUIRE(fix.upper.get_is_open());
 }
-
-*/
 
 void test_handshake_error(ResponderFixture& fix, const std::string& request, HandshakeError expected_error, std::initializer_list<CryptoAction> actions)
 {
