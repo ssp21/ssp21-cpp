@@ -147,7 +147,6 @@ TEST_CASE(SUITE("closing the responder closes the upper layer"))
     REQUIRE_FALSE(fix.upper.get_is_open());
 }
 
-/*
 TEST_CASE(SUITE("auth fails if insufficient data for tag"))
 {
     ResponderFixture fix;
@@ -156,14 +155,17 @@ TEST_CASE(SUITE("auth fails if insufficient data for tag"))
     test_init_session_success(fix);
 
     const auto short_tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16 - 1);
-    fix.lower.enqueue_message(hex::session_data(1, 0xFFFFFFFF, true, true, "AA", short_tag));
+    fix.lower.enqueue_message(hex::session_data(1, 0xFFFFFFFF, "AA", short_tag));
 
+	/*
     const auto stats = fix.responder.get_statistics();
 
     REQUIRE(stats.session.num_auth_fail == 1);
+	*/
     REQUIRE(fix.upper.is_empty());
 }
 
+/*
 TEST_CASE(SUITE("auth fails if TTL expired"))
 {
     ResponderFixture fix;

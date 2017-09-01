@@ -13,8 +13,9 @@ using namespace openpal;
 namespace ssp21
 {
 
-    Session::Session(const std::shared_ptr<IFrameWriter>& frame_writer, const SessionConfig& config) :
+    Session::Session(const std::shared_ptr<IFrameWriter>& frame_writer, const std::shared_ptr<SessionStatistics>& statistics, const SessionConfig& config) :
         frame_writer(frame_writer),
+		statistics(statistics),
         config(config)
     {}
 

@@ -19,7 +19,8 @@ namespace ssp21
         logger(logger),
         frame_writer(frame_writer),
         executor(executor),
-        sessions(frame_writer, session_config),
+		statistics(std::make_shared<SessionStatistics>()),
+        sessions(frame_writer, statistics, session_config),
 		payload_buffer(context_config.max_payload_size)
     {}
 

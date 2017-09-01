@@ -32,14 +32,7 @@ namespace ssp21
         Statistic num_success;
     };
 
-    struct ResponderStatistics
-    {
-        explicit ResponderStatistics(const SessionStatistics& session) :
-            session(session)
-        {}
-
-        SessionStatistics session;
-    };
+    
 }
 
 #endif

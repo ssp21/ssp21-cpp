@@ -44,7 +44,7 @@ namespace ssp21
             uint32_t max_session_time = consts::crypto::initiator::default_max_session_time_ms;
         };
 
-        Session(const std::shared_ptr<IFrameWriter>& frame_writer, const SessionConfig& config = SessionConfig());
+        Session(const std::shared_ptr<IFrameWriter>& frame_writer, const std::shared_ptr<SessionStatistics>& statistics, const SessionConfig& config = SessionConfig());
 
         bool initialize(const Algorithms::Session& algorithms, const Param& parameters, const SessionKeys& keys);
 
@@ -79,17 +79,18 @@ namespace ssp21
 
         seq32_t Session::format_session_data(const openpal::Timestamp& now, seq32_t& clear_text, uint16_t nonce, std::error_code& ec);
 
-        seq32_t validate_session_data_with_nonce_func(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, verify_nonce_func_t verify, std::error_code& ec);
+        seq32_t validate_session_data_with_nonce_func(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, verify_nonce_func_t verify, std::error_code& ec);        
 
-        bool valid = false;
+		/**
+		* Given a maximum link layer payload, how big could the crypto payload be?
+		*/
+		static constexpr uint32_t calc_max_crypto_payload_length(uint32_t max_link_payload_size);
+
+		bool valid = false;
 
         const std::shared_ptr<IFrameWriter> frame_writer;
-        const SessionConfig config;
-
-        /**
-        * Given a maximum link layer payload, how big could the crypto payload be?
-        */
-        static constexpr uint32_t calc_max_crypto_payload_length(uint32_t max_link_payload_size);        
+		const std::shared_ptr<SessionStatistics> statistics;
+        const SessionConfig config;		
 
         Nonce rx_nonce;
         Nonce tx_nonce;

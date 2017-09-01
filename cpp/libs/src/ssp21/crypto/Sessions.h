@@ -17,7 +17,11 @@ namespace ssp21
 
         Sessions() = delete;
 
-        Sessions(const std::shared_ptr<IFrameWriter>& frame_writer, const SessionConfig& config);
+        Sessions(
+			const std::shared_ptr<IFrameWriter>& frame_writer,
+			const std::shared_ptr<SessionStatistics>& stats,
+			const SessionConfig& config
+		);
 
         void reset_both();
         void activate_pending();

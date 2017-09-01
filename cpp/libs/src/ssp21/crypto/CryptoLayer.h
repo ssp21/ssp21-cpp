@@ -100,6 +100,7 @@ namespace ssp21
 
         const std::shared_ptr<IFrameWriter> frame_writer;
         const std::shared_ptr<openpal::IExecutor> executor;
+		const std::shared_ptr<SessionStatistics> statistics;
         Sessions sessions;
                
         TxState tx_state;
