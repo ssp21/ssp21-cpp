@@ -46,6 +46,11 @@ namespace ssp21
 
         virtual bool start_tx_from_upper(const seq32_t& data) override final;
 
+		inline const SessionStatistics& get_statistics() const
+		{
+			return *this->statistics;
+		}
+
     protected:
 
         virtual bool is_tx_ready() const override final;

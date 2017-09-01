@@ -23,7 +23,6 @@ TEST_CASE(SUITE("responds to REQUEST_HANDSHAKE_BEGIN with REPLY_HANDSHAKE_BEGIN"
     test_begin_handshake_success(fix);
 }
 
-
 TEST_CASE(SUITE("responds to session auth with no_prior_handshake error"))
 {
     ResponderFixture fix;
@@ -155,17 +154,13 @@ TEST_CASE(SUITE("auth fails if insufficient data for tag"))
     test_init_session_success(fix);
 
     const auto short_tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16 - 1);
-    fix.lower.enqueue_message(hex::session_data(1, 0xFFFFFFFF, "AA", short_tag));
+    fix.lower.enqueue_message(hex::session_data(1, 0xFFFFFFFF, "AA", short_tag));    
 
-	/*
-    const auto stats = fix.responder.get_statistics();
-
-    REQUIRE(stats.session.num_auth_fail == 1);
-	*/
+    REQUIRE(fix.responder.get_statistics().num_auth_fail == 1);	
     REQUIRE(fix.upper.is_empty());
 }
 
-/*
+
 TEST_CASE(SUITE("auth fails if TTL expired"))
 {
     ResponderFixture fix;
@@ -176,27 +171,9 @@ TEST_CASE(SUITE("auth fails if TTL expired"))
     fix.exe->advance_time(TimeDuration::milliseconds(3));
 
     const auto tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
-    fix.lower.enqueue_message(hex::session_data(1, 2, true, true, "AA", tag)); // session TTL of 2
+    fix.lower.enqueue_message(hex::session_data(1, 2, "AA", tag)); // session TTL of 2    
 
-    const auto stats = fix.responder.get_statistics();
-
-    REQUIRE(stats.session.num_ttl_expiration == 1);
-    REQUIRE(fix.upper.is_empty());
-}
-
-TEST_CASE(SUITE("auth fails on nonce of zero"))
-{
-    ResponderFixture fix;
-    fix.responder.on_lower_open();
-
-    test_init_session_success(fix);
-
-    const auto tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
-    fix.lower.enqueue_message(hex::session_data(0, 0, true, true, "AA", tag)); // nonce of zero
-
-    const auto stats = fix.responder.get_statistics();
-
-    REQUIRE(stats.session.num_nonce_fail == 1);
+    REQUIRE(fix.responder.get_statistics().num_ttl_expiration == 1);
     REQUIRE(fix.upper.is_empty());
 }
 
@@ -209,11 +186,9 @@ TEST_CASE(SUITE("fails on empty user data"))
 
     const auto tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
 
-    fix.lower.enqueue_message(hex::session_data(1, 0xFFFFFFFF, true, true, "", tag));
+    fix.lower.enqueue_message(hex::session_data(1, 0xFFFFFFFF, "", tag));    
 
-    const auto stats = fix.responder.get_statistics();
-
-    REQUIRE(stats.session.num_auth_fail == 1);
+    REQUIRE(fix.responder.get_statistics().num_auth_fail == 1);
     REQUIRE(fix.upper.is_empty());
 }
 
@@ -227,11 +202,9 @@ TEST_CASE(SUITE("can authenticate session data"))
     const auto data = "01";
     const auto tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
 
-    fix.lower.enqueue_message(hex::session_data(1, 0, true, true, data, tag));
-
-    const auto stats = fix.responder.get_statistics();
-
-    REQUIRE(stats.session.num_success == 1);
+    fix.lower.enqueue_message(hex::session_data(1, 0, data, tag));
+   
+    REQUIRE(fix.responder.get_statistics().num_success == 2);			// initial auth + this message
     REQUIRE(fix.upper.pop_rx_message() == data);
 }
 
@@ -240,23 +213,21 @@ TEST_CASE(SUITE("can authenticate multiple messages"))
     ResponderFixture fix;
     fix.responder.on_lower_open();
 
-    test_init_session_success(fix);
+    test_init_session_success(fix);	
 
     for (uint8_t i = 0; i < 3; ++i)
     {
         const auto data = to_hex(&i, 1);
         const auto tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
 
-        fix.lower.enqueue_message(hex::session_data(i + 1, 0, true, true, data, tag));
+        fix.lower.enqueue_message(hex::session_data(i + 1, 0, data, tag));
 
-        const auto stats = fix.responder.get_statistics();
-
-        REQUIRE(stats.session.num_success == (i + 1));
+        REQUIRE(fix.responder.get_statistics().num_success == (i + 2));
         REQUIRE(fix.upper.pop_rx_message() == data);
     }
 }
 
-*/
+/*
 
 // ---------- tx tests for initialized session -----------
 
