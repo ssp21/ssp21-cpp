@@ -71,25 +71,14 @@ namespace ssp21
 			return WaitForRetry::get();
 		}
 		
-		/*
 
-		TODO
-
-        const RequestHandshakeAuth request(hash.as_seq());
-
-        const auto result = ctx.frame_writer->write(request);
-
-        if (result.is_error())
-        {
-            return InitiatorHandshake::BadConfiguration::get();
-        }
-
-        ctx.handshake.mix_ck(result.written);
-
-        ctx.lower->start_tx_from_upper(result.frame);
-
-        ctx.start_response_timer();
-        */
+		if (!ctx.transmit_session_auth())
+		{
+			ctx.start_retry_timer();
+			return WaitForRetry::get();
+		}
+		
+		ctx.start_response_timer();		
 
         return WaitForAuthReply::get();
     }
@@ -111,51 +100,35 @@ namespace ssp21
 
     // -------- WaitForAuthReply --------
 
-    /*
-
-    TODO
-
-    Initiator::IHandshakeState* InitiatorHandshake::WaitForAuthReply::on_message(Initiator& ctx, const ReplyHandshakeAuth& msg, const seq32_t& msg_bytes, const Timestamp& now)
-    {
+	Initiator::IHandshakeState* InitiatorHandshakeStates::WaitForAuthReply::on_auth_message(Initiator& ctx, const SessionData& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
+	{		
         ctx.response_and_retry_timer.cancel();
 
-        if (!ctx.handshake.auth_handshake(msg.mac))
+		std::error_code ec;
+		const auto payload = ctx.sessions.pending->validate_session_auth(msg, now, ctx.payload_buffer.as_wslice(), ec);
+
+		if (ec)
+		{
+			FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "Error validating session auth: %s", ec.message().c_str());
+			ctx.start_retry_timer();
+			return WaitForRetry::get();
+		}
+
+		// go ahead and activate the session
+		ctx.sessions.activate_pending();
+
+		ctx.upper->on_lower_open();
+
+        if (payload.is_not_empty())
         {
-            SIMPLE_LOG_BLOCK(ctx.logger, levels::warn, "authentication failure");
-            ctx.start_retry_timer();
-            return WaitForRetry::get();
-        }
-
-        ctx.handshake.mix_ck(msg_bytes);
-
-        if (now.milliseconds < ctx.request_handshake_begin_time_tx.milliseconds)
-        {
-            SIMPLE_LOG_BLOCK(ctx.logger, levels::error, "clock rollback detected");
-            ctx.start_retry_timer();
-            return WaitForRetry::get();
-        }
-
-        const auto elapsed_ms = now.milliseconds - ctx.request_handshake_begin_time_tx.milliseconds;
-        const auto session_init_time = now.milliseconds - (elapsed_ms / 2); // estimate
-
-        ctx.handshake.initialize_session(ctx.session, Timestamp(session_init_time));
-
-        ctx.handshake_required = false;
-
-        // the absolute time at which a renegotation should be triggered
-        const Timestamp session_timeout_abs_time(session_init_time + ctx.params.session_time_renegotiation_trigger_ms);
-
-        ctx.session_timeout_timer.restart(session_timeout_abs_time, [&ctx]()
-        {
-            ctx.on_handshake_required();
-        });
-
-        ctx.upper->on_lower_open();
-
+            // process the payload 
+			ctx.payload_data = payload;
+			ctx.upper->on_lower_rx_ready();
+        }		       
+       
         return Idle::get();
     }
-
-    */
+    
 
     Initiator::IHandshakeState* InitiatorHandshakeStates::WaitForAuthReply::on_error_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const Timestamp& now)
     {

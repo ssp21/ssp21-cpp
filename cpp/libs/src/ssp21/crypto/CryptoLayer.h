@@ -91,6 +91,9 @@ namespace ssp21
         // both parties implement this in different ways
         virtual void on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now) = 0;
 
+		// both parties need to call this to complete the handshake at different times
+		bool transmit_session_auth();
+
         // ------ member variables ------
 
         openpal::Logger logger;
@@ -100,8 +103,8 @@ namespace ssp21
         Sessions sessions;
                
         TxState tx_state;
-		SecureDynamicBuffer decrypt_buffer;
-		seq32_t received_data;
+		SecureDynamicBuffer payload_buffer;
+		seq32_t payload_data;
 
         ILowerLayer* lower = nullptr;
         IUpperLayer* upper = nullptr;
@@ -127,7 +130,7 @@ namespace ssp21
             return this->sessions.active->is_valid() && this->lower->is_tx_ready() && this->tx_state.is_ready_tx();
         }
 
-        void check_transmit();
+        void check_transmit();		
 
         template <class MsgType>
         bool handle_message(const seq32_t& message, const openpal::Timestamp& now);

@@ -91,8 +91,14 @@ namespace ssp21
 
     void Responder::on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
+		if (!this->sessions.pending->is_valid())
+		{
+			this->reply_with_handshake_error(HandshakeError::no_prior_handshake_begin);
+			return;
+		}
+
 		std::error_code ec;
-		const auto payload = this->sessions.pending->validate_session_auth(msg, now, decrypt_buffer.as_wslice(), ec);
+		const auto payload = this->sessions.pending->validate_session_auth(msg, now, payload_buffer.as_wslice(), ec);
 
 		if (ec)
 		{
@@ -103,14 +109,15 @@ namespace ssp21
 		// notify the upper layer there is data ready
 		if (payload.is_not_empty())
 		{
-			this->received_data = payload;
+			this->payload_data = payload;
 			this->upper->on_lower_rx_ready();
 		}
 		
-		// TODO - transmit a response, before activating the pending session
-		
-		
-		this->sessions.activate_pending();
+		if (this->transmit_session_auth())
+		{
+			this->sessions.activate_pending();
+		}
+					
     }
 
 }

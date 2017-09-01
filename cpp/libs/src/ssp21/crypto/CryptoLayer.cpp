@@ -20,12 +20,12 @@ namespace ssp21
         frame_writer(frame_writer),
         executor(executor),
         sessions(frame_writer, session_config),
-		decrypt_buffer(context_config.max_payload_size)
+		payload_buffer(context_config.max_payload_size)
     {}
 
     void CryptoLayer::discard_rx_data()
     {
-		this->received_data.make_empty();
+		this->payload_data.make_empty();
     }
 
     bool CryptoLayer::start_tx_from_upper(const seq32_t& data)
@@ -44,14 +44,14 @@ namespace ssp21
 
     seq32_t CryptoLayer::start_rx_from_upper_impl()
     {      
-        if (this->received_data.is_empty())
+        if (this->payload_data.is_empty())
         {
 			this->try_read_from_lower();
 			return seq32_t::empty();
         }
         else
         {
-			return this->received_data;
+			return this->payload_data;
         }                
     }
 
@@ -99,7 +99,7 @@ namespace ssp21
         this->reset_state_on_close_from_lower();
 
         this->sessions.reset_both();
-		this->received_data.make_empty();        
+		this->payload_data.make_empty();        
         this->upper->on_lower_close();
         this->tx_state.reset();
         this->reset_this_lower_layer();
@@ -147,7 +147,7 @@ namespace ssp21
         *
         */
         
-		if (!this->lower->is_tx_ready() || this->received_data.is_not_empty()) return false;
+		if (!this->lower->is_tx_ready() || this->payload_data.is_not_empty()) return false;
 
         const seq32_t message = this->lower->start_rx_from_upper();
         if (message.is_empty()) return false;
@@ -204,11 +204,11 @@ namespace ssp21
         auto remainder = this->tx_state.get_remainder();
         const auto now = this->executor->get_time();
 
-        std::error_code err;
-        const auto frame = this->sessions.active->format_session_data(now, remainder, err);
-        if (err)
+        std::error_code ec;
+        const auto frame = this->sessions.active->format_session_data(now, remainder, ec);
+        if (ec)
         {
-            FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error formatting session message: %s", err.message().c_str());
+            FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error formatting session message: %s", ec.message().c_str());
 
             // if any error occurs with transmission, we reset the session and notify the upper layer
             this->sessions.active.reset();
@@ -223,6 +223,30 @@ namespace ssp21
 
         this->on_session_nonce_change(this->sessions.active->get_rx_nonce(), this->sessions.active->get_tx_nonce());
     }
+
+	bool CryptoLayer::transmit_session_auth()
+	{		
+		auto remainder = this->tx_state.get_remainder();
+		const bool has_payload = remainder.is_not_empty();
+
+		std::error_code ec;
+		const auto frame = this->sessions.pending->format_session_auth(this->executor->get_time(), remainder, ec);
+		if (ec)
+		{
+			FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error formatting session auth message: %s", ec.message().c_str());
+
+			// TODO any other actions?			
+
+			return false;
+		}
+
+		if (has_payload)
+		{
+			this->tx_state.begin_transmit(remainder);
+		}
+
+		return this->lower->start_tx_from_upper(frame);
+	}
 
     void CryptoLayer::on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
@@ -240,7 +264,7 @@ namespace ssp21
     void CryptoLayer::on_session_data(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
         std::error_code ec;
-        const auto payload = this->sessions.active->validate_session_data(msg, now, this->decrypt_buffer.as_wslice(), ec);
+        const auto payload = this->sessions.active->validate_session_data(msg, now, this->payload_buffer.as_wslice(), ec);
 
         if (ec)
         {
@@ -248,7 +272,7 @@ namespace ssp21
             return;
         }
 
-		this->received_data = payload;
+		this->payload_data = payload;
 
         this->on_session_nonce_change(this->sessions.active->get_rx_nonce(), this->sessions.active->get_tx_nonce());        
 
