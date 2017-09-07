@@ -53,16 +53,16 @@ namespace ssp21
             FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error generating input key material: %s", ec.message().c_str());
             return false;
         }
-
+		
         // perform session key derivation
         SessionKeys session_keys;
 
         this->algorithms.handshake.kdf(
             salt,
-			{ ikm.dh1, ikm.dh2, ikm.dh3 },
+			{ ikm.dh1, ikm.dh3, ikm.dh2 },
             session_keys.tx_key,
             session_keys.rx_key
-        );
+        );		
 
 		if (now < this->time_request_tx)
 		{

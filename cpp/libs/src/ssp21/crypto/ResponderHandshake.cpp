@@ -9,7 +9,6 @@
 
 #include "openpal/logging/LogMacros.h"
 
-
 namespace ssp21
 {
 
@@ -83,7 +82,7 @@ ResponderHandshake::Result ResponderHandshake::process(const RequestHandshakeBeg
 	{
 		FORMAT_LOG_BLOCK(this->logger, levels::error, "Error calculating input key material: %s", ec.message().c_str());
 		return Result::failure(HandshakeError::internal); // TODO
-	}
+	}	
 
 	SessionKeys session_keys;
 
@@ -92,7 +91,7 @@ ResponderHandshake::Result ResponderHandshake::process(const RequestHandshakeBeg
 		{ikm.dh1, ikm.dh2, ikm.dh3},
 		session_keys.rx_key,
 		session_keys.tx_key
-	);
+	);	
 
 	session.initialize(
 		algorithms.session,
