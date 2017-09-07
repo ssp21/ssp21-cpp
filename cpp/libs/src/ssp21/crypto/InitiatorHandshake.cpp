@@ -39,7 +39,7 @@ namespace ssp21
         TripleDH triple_dh;
 
         std::error_code ec;
-        const auto input_key_material = triple_dh.compute(
+        const auto ikm = triple_dh.compute(
                                             this->algorithms.handshake.dh,
                                             this->static_keys,
                                             this->local_ephemeral_keys,
@@ -59,7 +59,7 @@ namespace ssp21
 
         this->algorithms.handshake.kdf(
             salt,
-            input_key_material.as_list(),
+			{ ikm.dh1, ikm.dh2, ikm.dh3 },
             session_keys.tx_key,
             session_keys.rx_key
         );

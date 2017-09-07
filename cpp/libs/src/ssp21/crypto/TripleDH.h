@@ -18,7 +18,7 @@ namespace ssp21
     {
 
     public:
-
+				
 		class Result
 		{
 
@@ -30,20 +30,13 @@ namespace ssp21
 				dh3(dh3)
 			{}
 
-			Result() {}
-				
-
-			inline std::initializer_list<seq32_t> as_list() const
-			{
-				return { dh1, dh2, dh3 };
-			}
-
-		private:
+			Result() {}						
+		
 			const seq32_t dh1;
 			const seq32_t dh2;
 			const seq32_t dh3;
 		};
-
+		
 		Result compute(
             dh_func_t dh,
             const StaticKeys& static_keys,

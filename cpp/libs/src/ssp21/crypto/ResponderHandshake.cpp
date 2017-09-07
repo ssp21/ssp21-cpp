@@ -70,7 +70,7 @@ ResponderHandshake::Result ResponderHandshake::process(const RequestHandshakeBeg
 	// compute the input_key_material
 	TripleDH triple_dh;
 	std::error_code ec;
-	const auto input_key_material = triple_dh.compute(
+	const auto ikm = triple_dh.compute(
 		algorithms.handshake.dh,
 		this->static_keys,
 		ephemeralKeys,
@@ -89,7 +89,7 @@ ResponderHandshake::Result ResponderHandshake::process(const RequestHandshakeBeg
 
 	algorithms.handshake.kdf(
 		handshake_hash,
-		input_key_material.as_list(),
+		{ikm.dh1, ikm.dh2, ikm.dh3},
 		session_keys.rx_key,
 		session_keys.tx_key
 	);
