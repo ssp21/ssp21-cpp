@@ -21,7 +21,7 @@ namespace ssp21
         this->algorithms.handshake.hash({ data }, this->handshake_hash);
     }
 
-    bool InitiatorHandshake::initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const Timestamp& now, Session& session)
+    bool InitiatorHandshake::initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const InitiatorConfig::Params& params, const Timestamp& now, Session& session)
     {
         // extract the remote public key
         seq32_t remote_public_key;
@@ -72,11 +72,11 @@ namespace ssp21
 
 		// estimate the session initialization time
 		const auto elapsed_ms = now.milliseconds - this->time_request_tx.milliseconds;
-		const auto session_start_time = now.milliseconds - (elapsed_ms / 2); // estimate
+		const auto session_start_time = openpal::Timestamp(now.milliseconds - (elapsed_ms / 2)); // estimate
 
         return session.initialize(
                    this->algorithms.session,
-                   Session::Param(), // TODO					   
+                   Session::Param(session_start_time, params.max_nonce_value, params.max_session_time_ms),				   
                    session_keys
                );
     }

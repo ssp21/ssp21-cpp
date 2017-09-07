@@ -65,7 +65,7 @@ namespace ssp21
     {
         ctx.response_and_retry_timer.cancel();
 
-		if (!ctx.handshake.initialize_session(msg, msg_bytes, now, *ctx.sessions.pending))
+		if (!ctx.handshake.initialize_session(msg, msg_bytes, ctx.params, now, *ctx.sessions.pending))
 		{
 			ctx.start_retry_timer();
 			return WaitForRetry::get();

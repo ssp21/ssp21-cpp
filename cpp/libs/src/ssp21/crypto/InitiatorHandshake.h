@@ -35,7 +35,7 @@ namespace ssp21
 
         void begin_request_transmit(const seq32_t& data, const openpal::Timestamp& now);
 
-        bool initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now, Session& session);
+        bool initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const InitiatorConfig::Params& params, const openpal::Timestamp& now, Session& session);
 
 		inline CertificateMode get_certificate_mode() const
 		{
