@@ -58,7 +58,7 @@ namespace ssp21
         SessionKeys session_keys;
 
         this->algorithms.handshake.kdf(
-            this->handshake_hash.as_seq(),
+            salt,
             input_key_material.as_list(),
             session_keys.tx_key,
             session_keys.rx_key
