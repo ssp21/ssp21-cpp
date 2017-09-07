@@ -22,12 +22,14 @@ namespace ssp21
         HashOutput temp_key;
         mac_func(salt, input_key_material, temp_key);
 
-        const uint8_t ONE = 0x01;
-        const uint8_t TWO = 0x02;
+		const uint8_t values[] = { 0x01, 0x02 };
+
+		const seq32_t ONE(values, 1);
+		const seq32_t TWO(values + 1, 1);
 
         // expand
-        mac_func(temp_key.as_seq(), { seq32_t(&ONE, 1) }, output1);
-        mac_func(temp_key.as_seq(), { output1.as_seq(), seq32_t(&TWO, 1) }, output2);
+        mac_func(temp_key.as_seq(), { ONE }, output1);
+        mac_func(temp_key.as_seq(), { output1.as_seq(), TWO }, output2);
 
         // this will truncate the lengths in the event that the hmac-output length_ is > the symmetric key length_ we need
         // TODO: research how noise implementations handle this
