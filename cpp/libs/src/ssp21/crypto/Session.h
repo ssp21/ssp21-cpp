@@ -73,7 +73,12 @@ namespace ssp21
         uint16_t get_tx_nonce() const
         {
             return tx_nonce.get();
-        }        
+        }  
+
+		openpal::Timestamp get_session_start() const
+		{
+			return this->parameters.session_start;
+		}
 
     private:
 

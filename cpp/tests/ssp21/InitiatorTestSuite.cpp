@@ -285,9 +285,7 @@ void test_reply_handshake_auth(InitiatorFixture& fix)
     fix.expect(
     {
         CryptoAction::hmac_sha256, // authenticate
-        CryptoAction::secure_equals,
-        CryptoAction::hash_sha256, // mix ck
-        CryptoAction::hkdf_sha256
+        CryptoAction::secure_equals        
     });
 
     REQUIRE(fix.upper.get_is_open());

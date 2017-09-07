@@ -116,6 +116,17 @@ namespace ssp21
 		// go ahead and activate the session
 		ctx.sessions.activate_pending();
 
+		// we've completed the handshake
+		ctx.handshake_required = false;
+		
+		// the absolute time at which a renegotation should be triggered
+		const Timestamp session_timeout_abs_time(ctx.sessions.active->get_session_start().milliseconds + ctx.params.session_time_renegotiation_trigger_ms);
+
+		ctx.session_timeout_timer.restart(session_timeout_abs_time, [&ctx]()
+		{
+			ctx.on_handshake_required();
+		});
+
 		ctx.upper->on_lower_open();
 
         if (payload.is_not_empty())
