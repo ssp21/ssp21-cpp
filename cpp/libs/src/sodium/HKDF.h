@@ -24,12 +24,11 @@ namespace ssp21
 
 		const uint8_t values[] = { 0x01, 0x02 };
 
-		const seq32_t ONE(values, 1);
-		const seq32_t TWO(values + 1, 1);
-
-        // expand
-        mac_func(temp_key.as_seq(), { ONE }, output1);
-        mac_func(temp_key.as_seq(), { output1.as_seq(), TWO }, output2);
+		// expand
+		const std::initializer_list<seq32_t> input1 = { seq32_t(values, 1) };        
+        mac_func(temp_key.as_seq(), input1, output1);
+		const std::initializer_list<seq32_t> input2 = { output1.as_seq(), seq32_t(values + 1, 1) };
+        mac_func(temp_key.as_seq(), input2, output2);
 
         // this will truncate the lengths in the event that the hmac-output length_ is > the symmetric key length_ we need
         // TODO: research how noise implementations handle this
