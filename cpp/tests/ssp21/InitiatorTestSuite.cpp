@@ -40,22 +40,18 @@ TEST_CASE(SUITE("throws exception during construction if algorithms aren't suppo
 	);    
 }
 
-/*
-
-TODO
-
-TEST_CASE(SUITE("ignores reply handshake auth while waiting for reply handshake begin"))
+TEST_CASE(SUITE("ignores auth session while waiting for reply handshake begin"))
 {
     InitiatorFixture fix;
     test_open(fix);
 
     REQUIRE(fix.exe->num_timer_cancel() == 0);
-    fix.lower.enqueue_message(hex::reply_handshake_auth(hex::repeat(0xFF, consts::crypto::sha256_hash_output_length)));
+    fix.lower.enqueue_message(hex::session_auth(0xFFFFFFFF, "", hex::repeat(0xFF, consts::crypto::sha256_hash_output_length)));
+	REQUIRE(fix.initiator.get_state_enum() == Initiator::IHandshakeState::Enum::wait_for_begin_reply);
+
     REQUIRE(fix.exe->num_timer_cancel() == 0);
     REQUIRE(fix.lower.num_tx_messages() == 0);
 }
-
-*/
 
 TEST_CASE(SUITE("stops timer when closed"))
 {

@@ -115,6 +115,11 @@ namespace ssp21
             return write_message(msg);
         }
 
+		std::string session_auth(uint32_t valid_until, const std::string& user_data, const std::string& auth_tag)
+		{
+			return session_data(0, valid_until, user_data, auth_tag);
+		}
+
         class SeqWritable : public IWritable
         {
 
