@@ -127,10 +127,6 @@ TEST_CASE(SUITE("initializes session when a proper session auth reply is receive
     test_open_and_full_handshake(fix);
 }
 
-/*
-
-TODO
-
 TEST_CASE(SUITE("triggers session renegotiation after timeout"))
 {
     InitiatorFixture fix;
@@ -159,25 +155,21 @@ TEST_CASE(SUITE("goes to retry state if auth reply doesn't authenticate"))
     const auto start_stats = fix.initiator.get_statistics();
 
     // incorrect MAC
-    fix.lower.enqueue_message(hex::reply_handshake_auth(hex::repeat(0xEE, consts::crypto::sha256_hash_output_length)));
+    fix.lower.enqueue_message(hex::session_auth(0xFFFFFFFF, "", hex::repeat(0xEE, consts::crypto::sha256_hash_output_length)));
 
     const auto end_stats = fix.initiator.get_statistics();
     const auto end_num_timer_cancel = fix.exe->num_timer_cancel();
 
     REQUIRE(fix.initiator.get_state_enum() == HandshakeState::wait_for_retry);
     REQUIRE(end_num_timer_cancel == (start_num_timer_cancel + 1));
-    REQUIRE(end_stats.session.num_init == start_stats.session.num_init);
-
-    // causes the master to go through key derivation
+    REQUIRE(end_stats.num_init == start_stats.num_init);
+    
     fix.expect(
     {
         CryptoAction::hmac_sha256,  // authenticate
         CryptoAction::secure_equals // last action since it fails
     });
 }
-
-*/
-
 
 // ---------- helper implementations -----------
 
