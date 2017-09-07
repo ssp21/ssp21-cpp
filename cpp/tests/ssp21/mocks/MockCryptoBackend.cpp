@@ -44,7 +44,7 @@ namespace ssp21
         return lhs_string == rhs_string;
     }
 
-    void MockCryptoBackend::hash_sha256(std::initializer_list<seq32_t> data, SecureBuffer& output)
+    void MockCryptoBackend::hash_sha256(const std::initializer_list<seq32_t>& data, SecureBuffer& output)
     {
         this->assert_fixture();
         fixture->actions.push_back(CryptoAction::hash_sha256);
@@ -52,7 +52,7 @@ namespace ssp21
         output.set_type(BufferType::sha256);
     }
 
-    void MockCryptoBackend::hmac_sha256(const seq32_t& key, std::initializer_list<seq32_t> data, SecureBuffer& output)
+    void MockCryptoBackend::hmac_sha256(const seq32_t& key, const std::initializer_list<seq32_t>& data, SecureBuffer& output)
     {
         this->assert_fixture();
         fixture->actions.push_back(CryptoAction::hmac_sha256);
@@ -61,7 +61,7 @@ namespace ssp21
         output.set_type(BufferType::sha256);
     }
 
-    void MockCryptoBackend::hkdf_sha256(const seq32_t& chaining_key, std::initializer_list<seq32_t> input_key_material, SymmetricKey& key1, SymmetricKey& key2)
+    void MockCryptoBackend::hkdf_sha256(const seq32_t& chaining_key, const std::initializer_list<seq32_t>& input_key_material, SymmetricKey& key1, SymmetricKey& key2)
     {
         this->assert_fixture();
         fixture->actions.push_back(CryptoAction::hkdf_sha256);

@@ -30,13 +30,13 @@ namespace ssp21
         static bool secure_equals(const seq32_t& lhs, const seq32_t& rhs);
 
         static void hash_sha256(
-            std::initializer_list<seq32_t> data,
+            const std::initializer_list<seq32_t>& data,
             SecureBuffer& output
         );
 
         static void hmac_sha256(
             const seq32_t& key,
-            std::initializer_list<seq32_t> data,
+			const std::initializer_list<seq32_t>& data,
             SecureBuffer& output
         );
 
@@ -51,7 +51,7 @@ namespace ssp21
 
         static void hkdf_sha256(
             const seq32_t& salt,
-            std::initializer_list<seq32_t> input_key_material,
+            const std::initializer_list<seq32_t>& input_key_material,
             SymmetricKey& key1,
             SymmetricKey& key2
         );

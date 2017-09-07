@@ -43,7 +43,7 @@ namespace ssp21
         return sodium_memcmp(lhs, rhs, lhs.length()) == 0;
     }
 
-    void SodiumBackend::hash_sha256(std::initializer_list<seq32_t> data, SecureBuffer& output)
+    void SodiumBackend::hash_sha256(const std::initializer_list<seq32_t>& data, SecureBuffer& output)
     {
         crypto_hash_sha256_state state;
         crypto_hash_sha256_init(&state);
@@ -58,7 +58,7 @@ namespace ssp21
         output.set_type(BufferType::sha256);
     }
 
-    void SodiumBackend::hmac_sha256(const seq32_t& key, std::initializer_list<seq32_t> data, SecureBuffer& output)
+    void SodiumBackend::hmac_sha256(const seq32_t& key, const std::initializer_list<seq32_t>& data, SecureBuffer& output)
     {
         crypto_auth_hmacsha256_state state;
         crypto_auth_hmacsha256_init(&state, key, key.length());
@@ -73,7 +73,7 @@ namespace ssp21
         output.set_type(BufferType::sha256);
     }
 
-    void SodiumBackend::hkdf_sha256(const seq32_t& salt, std::initializer_list<seq32_t> input_key_material, SymmetricKey& key1, SymmetricKey& key2)
+    void SodiumBackend::hkdf_sha256(const seq32_t& salt, const std::initializer_list<seq32_t>& input_key_material, SymmetricKey& key1, SymmetricKey& key2)
     {
         ssp21::hkdf<Crypto::hmac_sha256>(salt, input_key_material, key1, key2);
     }
