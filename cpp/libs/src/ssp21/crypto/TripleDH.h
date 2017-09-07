@@ -19,7 +19,32 @@ namespace ssp21
 
     public:
 
-        std::initializer_list<seq32_t> compute(
+		class Result
+		{
+
+		public:
+			
+			Result(seq32_t dh1, seq32_t dh2, seq32_t dh3) :
+				dh1(dh1),
+				dh2(dh2),
+				dh3(dh3)
+			{}
+
+			Result() {}
+				
+
+			inline std::initializer_list<seq32_t> as_list() const
+			{
+				return { dh1, dh2, dh3 };
+			}
+
+		private:
+			const seq32_t dh1;
+			const seq32_t dh2;
+			const seq32_t dh3;
+		};
+
+		Result compute(
             dh_func_t dh,
             const StaticKeys& static_keys,
             const KeyPair& ephemeral_keys,

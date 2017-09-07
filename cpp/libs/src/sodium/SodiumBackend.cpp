@@ -68,7 +68,6 @@ namespace ssp21
             crypto_auth_hmacsha256_update(&state, item, item.length());
         }
 
-
         crypto_auth_hmacsha256_final(&state, output.as_wseq());
 
         output.set_type(BufferType::sha256);

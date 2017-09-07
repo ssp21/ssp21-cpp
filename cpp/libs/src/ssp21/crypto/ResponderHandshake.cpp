@@ -89,7 +89,7 @@ ResponderHandshake::Result ResponderHandshake::process(const RequestHandshakeBeg
 
 	algorithms.handshake.kdf(
 		handshake_hash,
-		input_key_material,
+		input_key_material.as_list(),
 		session_keys.rx_key,
 		session_keys.tx_key
 	);
