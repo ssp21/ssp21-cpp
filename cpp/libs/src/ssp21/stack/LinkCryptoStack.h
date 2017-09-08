@@ -77,7 +77,7 @@ namespace ssp21
 				logger,
 				get_frame_writer(logger, addresses, consts::link::max_config_payload_size),
 				executor,
-				std::make_shared<InitiatorHandshake>(logger, static_keys, Algorithms(config.suite), certificate_handler)
+				std::make_shared<InitiatorHandshake>(logger, static_keys, config.suite, certificate_handler)
 			)
         {
 

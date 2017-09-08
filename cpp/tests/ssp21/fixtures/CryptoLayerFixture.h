@@ -118,7 +118,7 @@ namespace ssp21
 				std::make_shared<InitiatorHandshake>(
 					this->log.logger,
 					get_keys(),
-					Algorithms(config.suite),
+					config.suite,
 					get_certificate_handler()
 				)								
 			)

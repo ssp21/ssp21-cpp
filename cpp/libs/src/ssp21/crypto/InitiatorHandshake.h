@@ -24,10 +24,11 @@ namespace ssp21
     {
     public:
 
-        InitiatorHandshake(openpal::Logger logger, StaticKeys static_keys, const Algorithms& algorithms, const std::shared_ptr<ICertificateHandler>& cert_handler) :
+        InitiatorHandshake(openpal::Logger logger, StaticKeys static_keys, const CryptoSuite& crypto_suite, const std::shared_ptr<ICertificateHandler>& cert_handler) :
             logger(logger),
 			static_keys(static_keys),
-            algorithms(algorithms),
+			crypto_suite(crypto_suite),
+            algorithms(crypto_suite),
             cert_handler(cert_handler)
         {}
 
@@ -47,6 +48,11 @@ namespace ssp21
 			return cert_handler->certificate_data();
 		}
 
+		inline CryptoSuite get_crypto_suite() const
+		{
+			return this->crypto_suite;
+		}
+
     private:
 
         seq32_t mix_handshake_hash(const seq32_t& data);
@@ -56,6 +62,7 @@ namespace ssp21
 		const StaticKeys static_keys;
 
         // specific algorithms used to perform steps
+		const CryptoSuite crypto_suite;
         const Algorithms algorithms;
         const std::shared_ptr<ICertificateHandler> cert_handler;
 
