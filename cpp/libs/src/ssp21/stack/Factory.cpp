@@ -14,7 +14,17 @@ namespace ssp21
         const StaticKeys& static_keys,
         const std::shared_ptr<ICertificateHandler>& certificate_handler)
     {
-        return std::make_shared<ResponderStack>(addresses, config, logger, executor, static_keys, certificate_handler);
+        return std::make_shared<ResponderStack>(
+			addresses,
+			config,
+			logger,
+			executor,
+			std::make_shared<ResponderHandshake>(
+				logger,
+				static_keys,
+				certificate_handler
+			)			
+		);
     }
 
     std::shared_ptr<IStack> Factory::initiator(
@@ -26,7 +36,18 @@ namespace ssp21
         const StaticKeys& static_keys,
         const std::shared_ptr<ICertificateHandler>& certificate_handler)
     {
-        return std::make_shared<InitiatorStack>(addresses, config, crypto_suite, logger, executor, static_keys, certificate_handler);
+        return std::make_shared<InitiatorStack>(
+			addresses,
+			config,
+			logger,
+			executor,
+			std::make_shared<InitiatorHandshake>(
+                logger,
+				static_keys,
+				crypto_suite,
+				certificate_handler
+			)
+		);
     }
 
 }
