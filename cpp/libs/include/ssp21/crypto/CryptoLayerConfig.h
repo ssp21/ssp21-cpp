@@ -6,8 +6,6 @@
 
 #include "ssp21/crypto/Constants.h"
 
-#include "ssp21/crypto/CryptoSuite.h"
-
 namespace ssp21
 {
 
@@ -56,8 +54,7 @@ namespace ssp21
             /// The initiator will begin renegotiating when either nonce value reaches this trigger level
             uint16_t nonce_renegotiation_trigger_value = consts::crypto::initiator::default_nonce_renegotiation_trigger;
         };
-
-        CryptoSuite suite;
+        
         Params params;
         CryptoLayerConfig config;
         SessionConfig session;

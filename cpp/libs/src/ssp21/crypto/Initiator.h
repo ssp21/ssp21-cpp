@@ -114,8 +114,7 @@ namespace ssp21
         virtual void on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
 
         // ---- private members -----
-        
-        const CryptoSuite suite;
+                
         const InitiatorConfig::Params params;
 
         IHandshakeState* handshake_state;

@@ -67,6 +67,7 @@ namespace ssp21
         InitiatorStack(
             Addresses addresses,
             const InitiatorConfig& config,
+			const CryptoSuite& crypto_suite,
             openpal::Logger logger,
             const std::shared_ptr<openpal::IExecutor>& executor,
             const StaticKeys& static_keys,
@@ -77,7 +78,7 @@ namespace ssp21
 				logger,
 				get_frame_writer(logger, addresses, consts::link::max_config_payload_size),
 				executor,
-				std::make_shared<InitiatorHandshake>(logger, static_keys, config.suite, certificate_handler)
+				std::make_shared<InitiatorHandshake>(logger, static_keys, crypto_suite, certificate_handler)
 			)
         {
 

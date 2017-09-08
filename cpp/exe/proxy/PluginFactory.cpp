@@ -13,11 +13,14 @@ plugin_factory_t PluginFactory::get(const ProxyConfig& config)
                    const Logger & logger,
                    const std::shared_ptr<Executor>& exe) -> std::shared_ptr<IStack>
         {
-            InitiatorConfig config; // TODO - configure based on optional settings
+			// TODO - configure based on optional settings
+            InitiatorConfig config; 
+			CryptoSuite suite;
 
             return Factory::initiator(
                 Addresses(cfg.remote_address, cfg.local_address),
                 config,
+				suite,
                 logger,
                 exe,
                 cfg.local_keys,

@@ -37,6 +37,7 @@ namespace ssp21
         const auto initiator = Factory::initiator(
                                    Addresses(1, 10),
                                    InitiatorConfig(),
+								   CryptoSuite(),
                                    rlogger,
                                    exe,
                                    keys.initiator,
@@ -69,6 +70,7 @@ namespace ssp21
         const auto initiator = Factory::initiator(
                                    Addresses(1, 10),
                                    InitiatorConfig(),
+                                   CryptoSuite(),
                                    rlogger,
                                    exe,
                                    keys.initiator,

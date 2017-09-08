@@ -6,12 +6,13 @@
 #include "ssp21/crypto/NonceFunctions.h"
 #include "ssp21/crypto/SessionModes.h"
 #include "ssp21/crypto/HandshakeAuthentication.h"
-#include "ssp21/crypto/CryptoLayerConfig.h"
+#include "ssp21/crypto/CryptoSuite.h"
 
 #include "ssp21/crypto/gen/CryptoSpec.h"
 #include "ssp21/crypto/gen/HandshakeError.h"
 
 #include "ssp21/crypto/Crypto.h"
+
 
 namespace ssp21
 {

@@ -24,8 +24,7 @@ namespace ssp21
             logger,
             frame_writer,
             executor            
-        ),        
-        suite(config.suite),
+        ),                
         params(config.params),
         handshake_state(InitiatorHandshakeStates::Idle::get()),
 		handshake(handshake),        

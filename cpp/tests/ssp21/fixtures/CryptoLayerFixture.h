@@ -107,6 +107,7 @@ namespace ssp21
     {
         InitiatorFixture(
             const InitiatorConfig& config = InitiatorConfig(),
+			const CryptoSuite& crypto_suite = CryptoSuite(),
             uint16_t max_message_size = consts::link::max_config_payload_size
         ) :
             CryptoLayerFixture(config.session, max_message_size),
@@ -118,7 +119,7 @@ namespace ssp21
 				std::make_shared<InitiatorHandshake>(
 					this->log.logger,
 					get_keys(),
-					config.suite,
+					crypto_suite,
 					get_certificate_handler()
 				)								
 			)

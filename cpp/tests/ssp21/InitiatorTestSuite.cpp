@@ -33,10 +33,11 @@ TEST_CASE(SUITE("transmits REQUEST_HANDSHAKE_BEGIN when opened"))
 TEST_CASE(SUITE("throws exception during construction if algorithms aren't supported"))
 {
     InitiatorConfig config;
-    config.suite.dh_mode = DHMode::undefined;
+	CryptoSuite suite;
+    suite.dh_mode = DHMode::undefined;
 
 	REQUIRE_THROWS(
-		InitiatorFixture fix(config);
+		InitiatorFixture fix(config, suite);
 	);    
 }
 

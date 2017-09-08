@@ -21,12 +21,14 @@ namespace ssp21
             return this;
         }
 
+		const auto suite = ctx.handshake->get_crypto_suite();
+
         const CryptoSpec crypto_spec(
-            ctx.suite.nonce_mode,
-            ctx.suite.dh_mode,
-            ctx.suite.handshake_hash,
-            ctx.suite.handshake_kdf,
-            ctx.suite.session_mode
+            suite.nonce_mode,
+            suite.dh_mode,
+            suite.handshake_hash,
+            suite.handshake_kdf,
+            suite.session_mode
         );
 
         const auto ephemeral_data = ctx.handshake->generate_ephemeral_data();
