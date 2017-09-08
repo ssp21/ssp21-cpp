@@ -30,7 +30,7 @@ namespace ssp21
 		const std::initializer_list<seq32_t> input2 = { output1.as_seq(), seq32_t(values + 1, 1) };
         mac_func(temp_key.as_seq(), input2, output2);
 
-        // this will truncate the lengths in the event that the hmac-output length_ is > the symmetric key length_ we need
+        // this will truncate the lengths in the event that the hmac-output length_ is > the symmetric key length
         // TODO: research how noise implementations handle this
         // Should we always have 256-bit keys?
         output1.set_type(BufferType::symmetric_key);

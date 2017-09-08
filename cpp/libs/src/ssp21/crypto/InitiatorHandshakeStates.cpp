@@ -29,7 +29,7 @@ namespace ssp21
             ctx.suite.session_mode
         );
 
-        const auto ephemeral_data = ctx.handshake.generate_ephemeral_data();
+        const auto ephemeral_data = ctx.handshake->generate_ephemeral_data();
 
         const RequestHandshakeBegin request(
             consts::crypto::protocol_version,
@@ -38,9 +38,9 @@ namespace ssp21
                 ctx.params.max_nonce_value,
                 ctx.params.max_session_time_ms
             ),
-            ctx.handshake.get_certificate_mode(),
+            ctx.handshake->get_certificate_mode(),
 			ephemeral_data,
-            ctx.handshake.get_mode_data()
+            ctx.handshake->get_mode_data()
         );
 
         const auto result = ctx.frame_writer->write(request);
@@ -50,7 +50,7 @@ namespace ssp21
             return InitiatorHandshakeStates::BadConfiguration::get();
         }
 
-        ctx.handshake.begin_request_transmit(result.written, now);
+        ctx.handshake->begin_request_transmit(result.written, now);
 
         ctx.lower->start_tx_from_upper(result.frame);        
 
@@ -65,7 +65,7 @@ namespace ssp21
     {
         ctx.response_and_retry_timer.cancel();
 
-		if (!ctx.handshake.initialize_session(msg, msg_bytes, ctx.params, now, *ctx.sessions.pending))
+		if (!ctx.handshake->initialize_session(msg, msg_bytes, ctx.params, now, *ctx.sessions.pending))
 		{
 			ctx.start_retry_timer();
 			return WaitForRetry::get();
