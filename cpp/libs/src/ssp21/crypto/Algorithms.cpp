@@ -5,7 +5,7 @@
 
 namespace ssp21
 {
-    Algorithms::Algorithms(const InitiatorConfig::CryptoSuite& suite)
+    Algorithms::Algorithms(const CryptoSuite& suite)
     {
         {
             const auto err = this->handshake.configure(suite.dh_mode, suite.handshake_kdf, suite.handshake_hash);

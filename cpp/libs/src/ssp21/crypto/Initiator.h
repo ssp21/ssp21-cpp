@@ -115,7 +115,7 @@ namespace ssp21
 
         // ---- private members -----
         
-        const InitiatorConfig::CryptoSuite suite;
+        const CryptoSuite suite;
         const InitiatorConfig::Params params;
 
         IHandshakeState* handshake_state;

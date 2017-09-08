@@ -56,7 +56,7 @@ namespace ssp21
         Algorithms() = default;
 
         // construct the algorithms
-        Algorithms(const InitiatorConfig::CryptoSuite& suite);
+        Algorithms(const CryptoSuite& suite);
 
         // configure the algorithms from a received CryptoSpec
         HandshakeError configure(const CryptoSpec& spec);
