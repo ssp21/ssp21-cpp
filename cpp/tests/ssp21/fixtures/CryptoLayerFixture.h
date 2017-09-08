@@ -81,7 +81,13 @@ namespace ssp21
             uint16_t max_message_size = consts::link::max_config_payload_size
         ) :
             CryptoLayerFixture(config.session, max_message_size),
-            responder(config, this->log.logger, get_frame_writer(this->log.logger, max_message_size), this->exe, get_keys(), get_certificate_handler())
+            responder(
+				config,
+				this->log.logger,
+				get_frame_writer(this->log.logger, max_message_size),
+				this->exe,
+				std::make_shared<ResponderHandshake>(this->log.logger, get_keys(), get_certificate_handler())				
+			)
         {
             lower.bind_upper(responder);
             upper.bind_lower(responder);

@@ -23,13 +23,12 @@ namespace ssp21
             const openpal::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
             const std::shared_ptr<openpal::IExecutor>& executor,
-            const StaticKeys& static_keys,
-            const std::shared_ptr<ICertificateHandler>& certificate_handler
+            const std::shared_ptr<ResponderHandshake>& handshake
         );       
 
     private:
 
-		ResponderHandshake handshake;
+		const std::shared_ptr<ResponderHandshake> handshake;
 
         // ---- final implementations from IUpperLayer ----
 

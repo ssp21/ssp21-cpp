@@ -14,8 +14,8 @@ namespace ssp21
         const openpal::Logger& logger,
         const std::shared_ptr<IFrameWriter>& frame_writer,
         const std::shared_ptr<openpal::IExecutor>& executor,
-        const StaticKeys& static_keys,
-        const std::shared_ptr<ICertificateHandler>& certificate_handler) :
+		const std::shared_ptr<ResponderHandshake>& handshake
+	) :
         CryptoLayer(
             config.config,
             config.session,
@@ -23,7 +23,7 @@ namespace ssp21
             frame_writer,
             executor            
         ),
-		handshake(logger, static_keys, certificate_handler)
+		handshake(handshake)
     {}
 
     void Responder::reply_with_handshake_error(HandshakeError err)
@@ -74,7 +74,7 @@ namespace ssp21
 			return;
 		}
 
-		const auto result = this->handshake.process(msg, raw_msg, now, *this->frame_writer, *this->sessions.pending);
+		const auto result = this->handshake->process(msg, raw_msg, now, *this->frame_writer, *this->sessions.pending);
 
 		if (any(result.error))
 		{

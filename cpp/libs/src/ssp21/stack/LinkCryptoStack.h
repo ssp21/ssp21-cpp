@@ -22,7 +22,13 @@ namespace ssp21
             const StaticKeys& static_keys,
             const std::shared_ptr<ICertificateHandler>& certificate_handler) :
             link(addresses.source, addresses.destination),
-            responder(config, logger, get_frame_writer(logger, addresses, consts::link::max_config_payload_size), executor, static_keys, certificate_handler)
+            responder(
+				config,
+				logger,
+				get_frame_writer(logger, addresses, consts::link::max_config_payload_size), 
+				executor,
+				std::make_shared<ResponderHandshake>(logger, static_keys, certificate_handler)
+			)
         {
 
         }
