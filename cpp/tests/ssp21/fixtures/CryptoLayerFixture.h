@@ -82,12 +82,12 @@ namespace ssp21
         ) :
             CryptoLayerFixture(config.session, max_message_size),
             responder(
-				config,
-				this->log.logger,
-				get_frame_writer(this->log.logger, max_message_size),
-				this->exe,
-				std::make_shared<ResponderHandshake>(this->log.logger, get_keys(), get_certificate_handler())				
-			)
+                config,
+                this->log.logger,
+                get_frame_writer(this->log.logger, max_message_size),
+                this->exe,
+                std::make_shared<ResponderHandshake>(this->log.logger, get_keys(), get_certificate_handler())
+            )
         {
             lower.bind_upper(responder);
             upper.bind_lower(responder);
@@ -107,22 +107,22 @@ namespace ssp21
     {
         InitiatorFixture(
             const InitiatorConfig& config = InitiatorConfig(),
-			const CryptoSuite& crypto_suite = CryptoSuite(),
+            const CryptoSuite& crypto_suite = CryptoSuite(),
             uint16_t max_message_size = consts::link::max_config_payload_size
         ) :
             CryptoLayerFixture(config.session, max_message_size),
             initiator(
-				config,
-				this->log.logger,
-				get_frame_writer(this->log.logger, max_message_size),
-				this->exe,
-				std::make_shared<InitiatorHandshake>(
-					this->log.logger,
-					get_keys(),
-					crypto_suite,
-					get_certificate_handler()
-				)								
-			)
+                config,
+                this->log.logger,
+                get_frame_writer(this->log.logger, max_message_size),
+                this->exe,
+                std::make_shared<InitiatorHandshake>(
+                    this->log.logger,
+                    get_keys(),
+                    crypto_suite,
+                    get_certificate_handler()
+                )
+            )
         {
             lower.bind_upper(initiator);
             upper.bind_lower(initiator);

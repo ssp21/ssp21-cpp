@@ -33,12 +33,12 @@ TEST_CASE(SUITE("transmits REQUEST_HANDSHAKE_BEGIN when opened"))
 TEST_CASE(SUITE("throws exception during construction if algorithms aren't supported"))
 {
     InitiatorConfig config;
-	CryptoSuite suite;
+    CryptoSuite suite;
     suite.dh_mode = DHMode::undefined;
 
-	REQUIRE_THROWS(
-		InitiatorFixture fix(config, suite);
-	);    
+    REQUIRE_THROWS(
+        InitiatorFixture fix(config, suite);
+    );
 }
 
 TEST_CASE(SUITE("ignores auth session while waiting for reply handshake begin"))
@@ -48,7 +48,7 @@ TEST_CASE(SUITE("ignores auth session while waiting for reply handshake begin"))
 
     REQUIRE(fix.exe->num_timer_cancel() == 0);
     fix.lower.enqueue_message(hex::session_auth(0xFFFFFFFF, "", hex::repeat(0xFF, consts::crypto::sha256_hash_output_length)));
-	REQUIRE(fix.initiator.get_state_enum() == Initiator::IHandshakeState::Enum::wait_for_begin_reply);
+    REQUIRE(fix.initiator.get_state_enum() == Initiator::IHandshakeState::Enum::wait_for_begin_reply);
 
     REQUIRE(fix.exe->num_timer_cancel() == 0);
     REQUIRE(fix.lower.num_tx_messages() == 0);
@@ -164,7 +164,7 @@ TEST_CASE(SUITE("goes to retry state if auth reply doesn't authenticate"))
     REQUIRE(fix.initiator.get_state_enum() == HandshakeState::wait_for_retry);
     REQUIRE(end_num_timer_cancel == (start_num_timer_cancel + 1));
     REQUIRE(end_stats.num_init == start_stats.num_init);
-    
+
     fix.expect(
     {
         CryptoAction::hmac_sha256,  // authenticate
@@ -230,14 +230,14 @@ void test_reply_handshake_begin(InitiatorFixture& fix)
     REQUIRE(fix.initiator.get_state_enum() == HandshakeState::wait_for_begin_reply);
 
     const auto num_timer_cancel = fix.exe->num_timer_cancel();
-	const auto start_stats = fix.initiator.get_statistics();
+    const auto start_stats = fix.initiator.get_statistics();
 
     fix.expect_empty();
     fix.lower.enqueue_message(hex::reply_handshake_begin(hex::repeat(0xFF, consts::crypto::x25519_key_length)));
 
-	const auto end_stats = fix.initiator.get_statistics();
+    const auto end_stats = fix.initiator.get_statistics();
 
-	REQUIRE(end_stats.num_init == (start_stats.num_init + 1));
+    REQUIRE(end_stats.num_init == (start_stats.num_init + 1));
 
     const auto expected = hex::session_data(0, consts::crypto::default_ttl_pad_ms, "", hex::repeat(0xFF, consts::crypto::trunc16));
     REQUIRE(fix.lower.pop_tx_message() == expected);
@@ -263,14 +263,14 @@ void test_reply_handshake_begin(InitiatorFixture& fix)
 
 void test_reply_handshake_auth(InitiatorFixture& fix)
 {
-    const auto start_num_timer_cancel = fix.exe->num_timer_cancel();    
+    const auto start_num_timer_cancel = fix.exe->num_timer_cancel();
 
     fix.lower.enqueue_message(hex::session_data(0, 0xFFFFFFFF, "", hex::repeat(0xFF, consts::crypto::trunc16)));
-    
+
     const auto end_num_timer_cancel = fix.exe->num_timer_cancel();
 
     REQUIRE(fix.initiator.get_state_enum() == HandshakeState::idle);
-    REQUIRE(end_num_timer_cancel == (start_num_timer_cancel + 1));    
+    REQUIRE(end_num_timer_cancel == (start_num_timer_cancel + 1));
 
     REQUIRE(fix.exe->num_pending_timers() == 1); // the session timeout timer should be the only timer active
 
@@ -278,7 +278,7 @@ void test_reply_handshake_auth(InitiatorFixture& fix)
     fix.expect(
     {
         CryptoAction::hmac_sha256, // authenticate
-        CryptoAction::secure_equals        
+        CryptoAction::secure_equals
     });
 
     REQUIRE(fix.upper.get_is_open());

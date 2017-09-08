@@ -7,10 +7,10 @@
 namespace ssp21
 {
     class Statistic
-    {		
+    {
         uint64_t value = 0;
 
-	public:
+    public:
 
         inline void increment()
         {
@@ -25,7 +25,7 @@ namespace ssp21
 
     struct SessionStatistics
     {
-        Statistic num_init;        
+        Statistic num_init;
         Statistic num_user_data_without_session;
         Statistic num_auth_fail;
         Statistic num_ttl_expiration;
@@ -33,7 +33,7 @@ namespace ssp21
         Statistic num_success;
     };
 
-    
+
 }
 
 #endif

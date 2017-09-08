@@ -28,12 +28,12 @@ namespace ssp21
 
     public:
 
-        CryptoLayer(            
+        CryptoLayer(
             const CryptoLayerConfig& context_config,
             const SessionConfig& session_config,
             const openpal::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
-            const std::shared_ptr<openpal::IExecutor>& executor            
+            const std::shared_ptr<openpal::IExecutor>& executor
         );
 
         void bind(ILowerLayer& lower, IUpperLayer& upper)
@@ -46,10 +46,10 @@ namespace ssp21
 
         virtual bool start_tx_from_upper(const seq32_t& data) override final;
 
-		inline const SessionStatistics& get_statistics() const
-		{
-			return *this->statistics;
-		}
+        inline const SessionStatistics& get_statistics() const
+        {
+            return *this->statistics;
+        }
 
     protected:
 
@@ -96,8 +96,8 @@ namespace ssp21
         // both parties implement this in different ways
         virtual void on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now) = 0;
 
-		// both parties need to call this to complete the handshake at different times
-		bool transmit_session_auth(Session& session);
+        // both parties need to call this to complete the handshake at different times
+        bool transmit_session_auth(Session& session);
 
         // ------ member variables ------
 
@@ -105,17 +105,17 @@ namespace ssp21
 
         const std::shared_ptr<IFrameWriter> frame_writer;
         const std::shared_ptr<openpal::IExecutor> executor;
-		const std::shared_ptr<SessionStatistics> statistics;
+        const std::shared_ptr<SessionStatistics> statistics;
         Sessions sessions;
-               
+
         TxState tx_state;
-		SecureDynamicBuffer payload_buffer;
-		seq32_t payload_data;
+        SecureDynamicBuffer payload_buffer;
+        seq32_t payload_data;
 
         ILowerLayer* lower = nullptr;
         IUpperLayer* upper = nullptr;
 
-	private:
+    private:
 
         void try_read_from_lower();
 
@@ -136,7 +136,7 @@ namespace ssp21
             return this->sessions.active->is_valid() && this->lower->is_tx_ready() && this->tx_state.is_ready_tx();
         }
 
-        void check_transmit();		
+        void check_transmit();
 
         template <class MsgType>
         bool handle_message(const seq32_t& message, const openpal::Timestamp& now);

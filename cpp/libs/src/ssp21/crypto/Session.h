@@ -73,29 +73,29 @@ namespace ssp21
         uint16_t get_tx_nonce() const
         {
             return tx_nonce.get();
-        }  
+        }
 
-		openpal::Timestamp get_session_start() const
-		{
-			return this->parameters.session_start;
-		}
+        openpal::Timestamp get_session_start() const
+        {
+            return this->parameters.session_start;
+        }
 
     private:
 
         seq32_t format_session_data_no_nonce_check(const openpal::Timestamp& now, seq32_t& cleartext, std::error_code& ec);
 
-        seq32_t validate_session_data_with_nonce_func(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, verify_nonce_func_t verify, std::error_code& ec);        
+        seq32_t validate_session_data_with_nonce_func(const SessionData& message, const openpal::Timestamp& now, wseq32_t dest, verify_nonce_func_t verify, std::error_code& ec);
 
-		/**
-		* Given a maximum link layer payload, how big could the crypto payload be?
-		*/
-		static constexpr uint32_t calc_max_crypto_payload_length(uint32_t max_link_payload_size);
+        /**
+        * Given a maximum link layer payload, how big could the crypto payload be?
+        */
+        static constexpr uint32_t calc_max_crypto_payload_length(uint32_t max_link_payload_size);
 
-		bool valid = false;
+        bool valid = false;
 
         const std::shared_ptr<IFrameWriter> frame_writer;
-		const std::shared_ptr<SessionStatistics> statistics;
-        const SessionConfig config;		
+        const std::shared_ptr<SessionStatistics> statistics;
+        const SessionConfig config;
 
         Nonce rx_nonce;
         Nonce tx_nonce;

@@ -22,12 +22,12 @@ namespace ssp21
         HashOutput temp_key;
         mac_func(salt, input_key_material, temp_key);
 
-		const uint8_t values[] = { 0x01, 0x02 };
+        const uint8_t values[] = { 0x01, 0x02 };
 
-		// expand
-		const std::initializer_list<seq32_t> input1 = { seq32_t(values, 1) };        
+        // expand
+        const std::initializer_list<seq32_t> input1 = { seq32_t(values, 1) };
         mac_func(temp_key.as_seq(), input1, output1);
-		const std::initializer_list<seq32_t> input2 = { output1.as_seq(), seq32_t(values + 1, 1) };
+        const std::initializer_list<seq32_t> input2 = { output1.as_seq(), seq32_t(values + 1, 1) };
         mac_func(temp_key.as_seq(), input2, output2);
 
         // this will truncate the lengths in the event that the hmac-output length_ is > the symmetric key length

@@ -21,43 +21,43 @@ namespace ssp21
     {
     public:
 
-		class Result
-		{
+        class Result
+        {
 
-		public:
+        public:
 
-			HandshakeError error;
-			seq32_t reply_data;
+            HandshakeError error;
+            seq32_t reply_data;
 
-			inline static Result success(const seq32_t& reply_data)
-			{
-				return Result(HandshakeError::none, reply_data);
-			}
+            inline static Result success(const seq32_t& reply_data)
+            {
+                return Result(HandshakeError::none, reply_data);
+            }
 
-			inline static Result failure(HandshakeError error)
-			{
-				return Result(error, seq32_t::empty());
-			}
+            inline static Result failure(HandshakeError error)
+            {
+                return Result(error, seq32_t::empty());
+            }
 
-		private:
+        private:
 
-			Result(HandshakeError error, const seq32_t& reply_data) :
-				error(error),
-				reply_data(reply_data)
-			{}
+            Result(HandshakeError error, const seq32_t& reply_data) :
+                error(error),
+                reply_data(reply_data)
+            {}
 
-		};
+        };
 
-		ResponderHandshake(openpal::Logger logger, StaticKeys static_keys, const std::shared_ptr<ICertificateHandler>& cert_handler);
-        
-		Result process(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now, IFrameWriter& writer, Session& session);
+        ResponderHandshake(openpal::Logger logger, StaticKeys static_keys, const std::shared_ptr<ICertificateHandler>& cert_handler);
 
-    private:        
+        Result process(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now, IFrameWriter& writer, Session& session);
+
+    private:
 
         openpal::Logger logger;
 
-		const StaticKeys static_keys;
-		const std::shared_ptr<ICertificateHandler> cert_handler;
+        const StaticKeys static_keys;
+        const std::shared_ptr<ICertificateHandler> cert_handler;
     };
 
 

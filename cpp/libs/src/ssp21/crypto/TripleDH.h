@@ -18,26 +18,26 @@ namespace ssp21
     {
 
     public:
-				
-		class Result
-		{
 
-		public:
-			
-			Result(seq32_t dh1, seq32_t dh2, seq32_t dh3) :
-				dh1(dh1),
-				dh2(dh2),
-				dh3(dh3)
-			{}
+        class Result
+        {
 
-			Result() {}						
-		
-			const seq32_t dh1;
-			const seq32_t dh2;
-			const seq32_t dh3;
-		};
-		
-		Result compute(
+        public:
+
+            Result(seq32_t dh1, seq32_t dh2, seq32_t dh3) :
+                dh1(dh1),
+                dh2(dh2),
+                dh3(dh3)
+            {}
+
+            Result() {}
+
+            const seq32_t dh1;
+            const seq32_t dh2;
+            const seq32_t dh3;
+        };
+
+        Result compute(
             dh_func_t dh,
             const StaticKeys& static_keys,
             const KeyPair& ephemeral_keys,

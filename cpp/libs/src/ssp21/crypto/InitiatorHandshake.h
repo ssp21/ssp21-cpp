@@ -26,8 +26,8 @@ namespace ssp21
 
         InitiatorHandshake(openpal::Logger logger, StaticKeys static_keys, const CryptoSuite& crypto_suite, const std::shared_ptr<ICertificateHandler>& cert_handler) :
             logger(logger),
-			static_keys(static_keys),
-			crypto_suite(crypto_suite),
+            static_keys(static_keys),
+            crypto_suite(crypto_suite),
             algorithms(crypto_suite),
             cert_handler(cert_handler)
         {}
@@ -38,20 +38,20 @@ namespace ssp21
 
         bool initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const InitiatorConfig::Params& params, const openpal::Timestamp& now, Session& session);
 
-		inline CertificateMode get_certificate_mode() const
-		{
-			return cert_handler->mode();
-		}
+        inline CertificateMode get_certificate_mode() const
+        {
+            return cert_handler->mode();
+        }
 
-		inline seq32_t get_mode_data() const
-		{
-			return cert_handler->certificate_data();
-		}
+        inline seq32_t get_mode_data() const
+        {
+            return cert_handler->certificate_data();
+        }
 
-		inline CryptoSuite get_crypto_suite() const
-		{
-			return this->crypto_suite;
-		}
+        inline CryptoSuite get_crypto_suite() const
+        {
+            return this->crypto_suite;
+        }
 
     private:
 
@@ -59,18 +59,18 @@ namespace ssp21
 
         openpal::Logger logger;
 
-		const StaticKeys static_keys;
+        const StaticKeys static_keys;
 
         // specific algorithms used to perform steps
-		const CryptoSuite crypto_suite;
+        const CryptoSuite crypto_suite;
         const Algorithms algorithms;
         const std::shared_ptr<ICertificateHandler> cert_handler;
 
         // ephemeral keys
         KeyPair local_ephemeral_keys;
 
-		// time that the request was transmitted
-		openpal::Timestamp time_request_tx;
+        // time that the request was transmitted
+        openpal::Timestamp time_request_tx;
 
         // running hash value of first 2 handshake messages (h)
         HashOutput handshake_hash;

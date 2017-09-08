@@ -17,7 +17,7 @@ namespace ssp21
 
     void InitiatorHandshake::begin_request_transmit(const seq32_t& data, const openpal::Timestamp& now)
     {
-		this->time_request_tx = now;
+        this->time_request_tx = now;
         this->algorithms.handshake.hash({ data }, this->handshake_hash);
     }
 
@@ -40,43 +40,43 @@ namespace ssp21
 
         std::error_code ec;
         const auto ikm = triple_dh.compute(
-                                            this->algorithms.handshake.dh,
-                                            this->static_keys,
-                                            this->local_ephemeral_keys,
-                                            remote_public_key,
-                                            msg.ephemeral_public_key,
-                                            ec
-                                        );
+                             this->algorithms.handshake.dh,
+                             this->static_keys,
+                             this->local_ephemeral_keys,
+                             remote_public_key,
+                             msg.ephemeral_public_key,
+                             ec
+                         );
 
         if (ec)
         {
             FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error generating input key material: %s", ec.message().c_str());
             return false;
         }
-		
+
         // perform session key derivation
         SessionKeys session_keys;
 
         this->algorithms.handshake.kdf(
             salt,
-			{ ikm.dh1, ikm.dh3, ikm.dh2 },
-            session_keys.tx_key,
-            session_keys.rx_key
-        );		
+        { ikm.dh1, ikm.dh3, ikm.dh2 },
+        session_keys.tx_key,
+        session_keys.rx_key
+        );
 
-		if (now < this->time_request_tx)
-		{
-			SIMPLE_LOG_BLOCK(this->logger, levels::error, "clock rollback detected");
-			return false;
-		}
+        if (now < this->time_request_tx)
+        {
+            SIMPLE_LOG_BLOCK(this->logger, levels::error, "clock rollback detected");
+            return false;
+        }
 
-		// estimate the session initialization time
-		const auto elapsed_ms = now.milliseconds - this->time_request_tx.milliseconds;
-		const auto session_start_time = openpal::Timestamp(now.milliseconds - (elapsed_ms / 2)); // estimate
+        // estimate the session initialization time
+        const auto elapsed_ms = now.milliseconds - this->time_request_tx.milliseconds;
+        const auto session_start_time = openpal::Timestamp(now.milliseconds - (elapsed_ms / 2)); // estimate
 
         return session.initialize(
                    this->algorithms.session,
-                   Session::Param(session_start_time, params.max_nonce_value, params.max_session_time_ms),				   
+                   Session::Param(session_start_time, params.max_nonce_value, params.max_session_time_ms),
                    session_keys
                );
     }

@@ -66,7 +66,7 @@ namespace ssp21
                     nonce_mode,
                     dh_mode,
                     handshake_hash,
-                    handshake_kdf,                    
+                    handshake_kdf,
                     session_mode
                 ),
                 SessionConstraints(
@@ -79,7 +79,7 @@ namespace ssp21
             );
 
             return write_message(msg);
-        }       
+        }
 
         std::string reply_handshake_begin(
             const std::string& hex_ephem_pub_key
@@ -115,10 +115,10 @@ namespace ssp21
             return write_message(msg);
         }
 
-		std::string session_auth(uint32_t valid_until, const std::string& user_data, const std::string& auth_tag)
-		{
-			return session_data(0, valid_until, user_data, auth_tag);
-		}
+        std::string session_auth(uint32_t valid_until, const std::string& user_data, const std::string& auth_tag)
+        {
+            return session_data(0, valid_until, user_data, auth_tag);
+        }
 
         class SeqWritable : public IWritable
         {

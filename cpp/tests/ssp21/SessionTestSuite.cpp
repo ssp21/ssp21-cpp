@@ -24,35 +24,35 @@ const auto test_auth_tag = repeat_hex(0xFF, consts::crypto::trunc16);
 
 struct SessionFixture
 {
-	const std::shared_ptr<MessageOnlyFrameWriter> frame_writer;
-	const std::shared_ptr<SessionStatistics> statistics;
-	CryptoFixture crypto;
-	Session session;
-	
-	SessionFixture(const SessionConfig& config = SessionConfig()) :
-		frame_writer(std::make_shared<MessageOnlyFrameWriter>()),
-		statistics(std::make_shared<SessionStatistics>()),
-		session(frame_writer, statistics, config)
-	{
-	
-	}
+    const std::shared_ptr<MessageOnlyFrameWriter> frame_writer;
+    const std::shared_ptr<SessionStatistics> statistics;
+    CryptoFixture crypto;
+    Session session;
 
-	SessionFixture(const std::shared_ptr<MessageOnlyFrameWriter>& frame_writer) :
-		frame_writer(frame_writer),
-		statistics(std::make_shared<SessionStatistics>()),
-		session(frame_writer, statistics, SessionConfig())
-	{}
+    SessionFixture(const SessionConfig& config = SessionConfig()) :
+        frame_writer(std::make_shared<MessageOnlyFrameWriter>()),
+        statistics(std::make_shared<SessionStatistics>()),
+        session(frame_writer, statistics, config)
+    {
 
-	void init(const Session::Param& parameters = Session::Param());
-	std::string validate(uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex, std::error_code& ec);
-	void test_validation_failure(const Session::Param& parameters, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex, std::initializer_list<CryptoAction> actions, CryptoError error);
-	std::string test_validation_success(const Session::Param& parameters, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex);
-	void test_format_failure(const Session::Param& parameters, const Timestamp& now, const std::string& clear_text, const std::error_code& expected);
+    }
+
+    SessionFixture(const std::shared_ptr<MessageOnlyFrameWriter>& frame_writer) :
+        frame_writer(frame_writer),
+        statistics(std::make_shared<SessionStatistics>()),
+        session(frame_writer, statistics, SessionConfig())
+    {}
+
+    void init(const Session::Param& parameters = Session::Param());
+    std::string validate(uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex, std::error_code& ec);
+    void test_validation_failure(const Session::Param& parameters, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex, std::initializer_list<CryptoAction> actions, CryptoError error);
+    std::string test_validation_success(const Session::Param& parameters, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex);
+    void test_format_failure(const Session::Param& parameters, const Timestamp& now, const std::string& clear_text, const std::error_code& expected);
 };
 
 TEST_CASE(SUITE("won't validate user data when not initialized"))
-{    
-	SessionFixture fixture;
+{
+    SessionFixture fixture;
 
     std::error_code ec;
     const auto user_data = fixture.validate(1, 0, 0, "", "", ec);
@@ -64,25 +64,25 @@ TEST_CASE(SUITE("won't validate user data when not initialized"))
 
 TEST_CASE(SUITE("authenticates data"))
 {
-	SessionFixture fixture;
+    SessionFixture fixture;
     REQUIRE(test_user_data == fixture.test_validation_success(Session::Param(), 1, 0, 0, test_user_data, test_auth_tag));
 }
 
 TEST_CASE(SUITE("won't intialize with invalid keys"))
 {
-	SessionFixture fixture;
+    SessionFixture fixture;
     REQUIRE_FALSE(fixture.session.initialize(Algorithms::Session(), Session::Param(), SessionKeys()));
 }
 
 TEST_CASE(SUITE("empty max results in mac_auth_fail"))
 {
-	SessionFixture fixture;
+    SessionFixture fixture;
     fixture.test_validation_failure(Session::Param(), 1, 0, 0, "", "", { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::mac_auth_fail);
 }
 
 TEST_CASE(SUITE("rejects empty user data"))
 {
-	SessionFixture fixture;
+    SessionFixture fixture;
     fixture.test_validation_failure(Session::Param(), 1, 0, 0, "", test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::empty_user_data);
 }
 
@@ -90,7 +90,7 @@ TEST_CASE(SUITE("rejects data if max session time exceeded"))
 {
     Session::Param parameters;
 
-	SessionFixture fixture;
+    SessionFixture fixture;
     fixture.test_validation_failure(parameters, 1, parameters.max_session_time, parameters.max_session_time + 1, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::max_session_time_exceeded);
 }
 
@@ -98,7 +98,7 @@ TEST_CASE(SUITE("rejects data if clock rollback detected"))
 {
     Session::Param param;
     param.session_start = openpal::Timestamp(1);
-	SessionFixture fixture;
+    SessionFixture fixture;
     fixture.test_validation_failure(param, 1, 1, 0, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::clock_rollback);
 }
 
@@ -106,7 +106,7 @@ TEST_CASE(SUITE("rejects data if clock rollback detected"))
 
 TEST_CASE(SUITE("rejects initial nonce of zero with nonce replay error"))
 {
-	SessionFixture fixture;
+    SessionFixture fixture;
     fixture.test_validation_failure(Session::Param(), 0, 0, 0, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::nonce_replay);
 }
 
@@ -115,7 +115,7 @@ TEST_CASE(SUITE("rejects nonce of 1 when initialized with maximum nonce of zero"
     Session::Param param;
     param.max_nonce = 0;
 
-	SessionFixture fixture;
+    SessionFixture fixture;
     fixture.test_validation_failure(param, 1, 0, 0, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::max_nonce_exceeded);
 }
 
@@ -127,7 +127,7 @@ TEST_CASE(SUITE("accepts minimum ttl"))
     param.session_start = Timestamp(4);
     const auto ttl = 3;
 
-	SessionFixture fixture;
+    SessionFixture fixture;
     REQUIRE(test_user_data == fixture.test_validation_success(param, 1, ttl, param.session_start.milliseconds + ttl, test_user_data, test_auth_tag));
 }
 
@@ -137,7 +137,7 @@ TEST_CASE(SUITE("rejects minimum ttl + 1"))
     param.session_start = Timestamp(4);
     const auto ttl = 3;
 
-	SessionFixture fixture;
+    SessionFixture fixture;
     fixture.test_validation_failure(param, 1, ttl, param.session_start.milliseconds + ttl + 1, test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::expired_ttl);
 }
 
@@ -145,10 +145,10 @@ TEST_CASE(SUITE("rejects minimum ttl + 1"))
 //// ---- formatting tests ----
 
 TEST_CASE(SUITE("can't format a message without a valid session"))
-{    
-	SessionFixture fixture;
-    
-	Hex hex("CAFE");
+{
+    SessionFixture fixture;
+
+    Hex hex("CAFE");
 
     auto input = hex.as_rslice();
 
@@ -164,7 +164,7 @@ TEST_CASE(SUITE("can't format a message with maximum nonce value already reached
     Session::Param param;
     param.max_nonce = 0;
 
-	SessionFixture fixture;
+    SessionFixture fixture;
     fixture.test_format_failure(param, Timestamp(0), "CA FE", CryptoError::max_nonce_exceeded);
 }
 
@@ -173,7 +173,7 @@ TEST_CASE(SUITE("can't format a message if the session time exceeds the configur
     Session::Param param;
     param.max_session_time = 60;
 
-	SessionFixture fixture;
+    SessionFixture fixture;
     fixture.test_format_failure(param, Timestamp(param.max_session_time + 1), "CA FE", CryptoError::max_session_time_exceeded);
 }
 
@@ -182,7 +182,7 @@ TEST_CASE(SUITE("won't format a message if the clock has rolled back since initi
     Session::Param param;
     param.session_start = Timestamp(1);
 
-	SessionFixture fixture;
+    SessionFixture fixture;
     fixture.test_format_failure(param, Timestamp(0), "CA FE", CryptoError::clock_rollback);
 }
 
@@ -191,24 +191,24 @@ TEST_CASE(SUITE("won't format a message if adding the TTL would exceed the maxim
     Session::Param param;
     param.max_session_time = consts::crypto::default_ttl_pad_ms - 1;
 
-	SessionFixture fixture;
+    SessionFixture fixture;
     fixture.test_format_failure(param, Timestamp(0), "CA FE", CryptoError::max_session_time_exceeded);
 }
 
 TEST_CASE(SUITE("forwards the formatting error if the session::write function can't write to the output buffer"))
 {
-	SessionFixture fixture(
-		std::make_shared<MessageOnlyFrameWriter>(openpal::Logger::empty(), 0)
-	);
+    SessionFixture fixture(
+        std::make_shared<MessageOnlyFrameWriter>(openpal::Logger::empty(), 0)
+    );
 
     fixture.test_format_failure(Session::Param(), Timestamp(0), "CA FE", CryptoError::bad_buffer_size);
 }
 
 TEST_CASE(SUITE("successfully formats and increments nonce"))
-{    
-	SessionFixture fixture;
-	fixture.init();
-    
+{
+    SessionFixture fixture;
+    fixture.init();
+
     Hex hex("CAFE");
 
     std::error_code ec;
@@ -242,7 +242,7 @@ void SessionFixture::init(const Session::Param& parameters)
 std::string SessionFixture::validate(uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex, std::error_code& ec)
 {
     const HexSeq user_data(user_data_hex);
-	const HexSeq auth_tag(auth_tag_hex);
+    const HexSeq auth_tag(auth_tag_hex);
 
     const SessionData msg(
         AuthMetadata(
@@ -253,15 +253,15 @@ std::string SessionFixture::validate(uint16_t nonce, uint32_t ttl, int64_t now, 
         auth_tag
     );
 
-	openpal::StaticBuffer<uint32_t, 1024> buffer;
-	const auto result = this->session.validate_session_data(msg, Timestamp(now), buffer.as_wseq(), ec);
+    openpal::StaticBuffer<uint32_t, 1024> buffer;
+    const auto result = this->session.validate_session_data(msg, Timestamp(now), buffer.as_wseq(), ec);
 
     return to_hex(result);
 }
 
 std::string SessionFixture::test_validation_success(const Session::Param& parameters, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex)
 {
-	this->init(parameters);    
+    this->init(parameters);
 
     std::error_code ec;
     const auto user_data = this->validate(nonce, ttl, now, user_data_hex, auth_tag_hex, ec);
@@ -273,7 +273,7 @@ std::string SessionFixture::test_validation_success(const Session::Param& parame
 }
 
 void SessionFixture::test_validation_failure(const Session::Param& parameters, uint16_t nonce, uint32_t ttl, int64_t now, const std::string& user_data_hex, const std::string& auth_tag_hex, std::initializer_list<CryptoAction> actions, CryptoError error)
-{    
+{
     this->init(parameters);
 
     std::error_code ec;
@@ -286,7 +286,7 @@ void SessionFixture::test_validation_failure(const Session::Param& parameters, u
 }
 
 void SessionFixture::test_format_failure(const Session::Param& parameters, const Timestamp& now, const std::string& clear_text, const std::error_code& expected)
-{    	
+{
     this->init(parameters);
 
     Hex hex(clear_text);

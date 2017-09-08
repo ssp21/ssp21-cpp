@@ -16,18 +16,18 @@ namespace ssp21
         const Logger& logger,
         const std::shared_ptr<IFrameWriter>& frame_writer,
         const std::shared_ptr<IExecutor>& executor,
-		const std::shared_ptr<InitiatorHandshake>& handshake
+        const std::shared_ptr<InitiatorHandshake>& handshake
     ) :
-        CryptoLayer(            
+        CryptoLayer(
             config.config,
             config.session,
             logger,
             frame_writer,
-            executor            
-        ),                
+            executor
+        ),
         params(config.params),
         handshake_state(InitiatorHandshakeStates::Idle::get()),
-		handshake(handshake),        
+        handshake(handshake),
         response_and_retry_timer(executor),
         session_timeout_timer(executor)
     {}

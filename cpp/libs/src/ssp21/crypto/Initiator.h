@@ -26,7 +26,7 @@ namespace ssp21
             const openpal::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
             const std::shared_ptr<openpal::IExecutor>& executor,
-			const std::shared_ptr<InitiatorHandshake>& handshake
+            const std::shared_ptr<InitiatorHandshake>& handshake
         );
 
         class IHandshakeState : private openpal::Uncopyable
@@ -82,7 +82,7 @@ namespace ssp21
 
             SessionStatistics session;
         };
-      
+
     private:
 
         // ---- private helper methods -----
@@ -114,11 +114,11 @@ namespace ssp21
         virtual void on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
 
         // ---- private members -----
-                
+
         const InitiatorConfig::Params params;
 
         IHandshakeState* handshake_state;
-		const std::shared_ptr<InitiatorHandshake> handshake;
+        const std::shared_ptr<InitiatorHandshake> handshake;
 
         openpal::TimerRef response_and_retry_timer;
         openpal::TimerRef session_timeout_timer;

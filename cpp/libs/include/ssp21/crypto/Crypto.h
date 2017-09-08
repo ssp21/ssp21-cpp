@@ -36,7 +36,7 @@ namespace ssp21
 
         static void hmac_sha256(
             const seq32_t& key,
-			const std::initializer_list<seq32_t>& data,
+            const std::initializer_list<seq32_t>& data,
             SecureBuffer& output
         );
 

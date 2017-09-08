@@ -7,7 +7,7 @@
 namespace ssp21
 {
     typedef openpal::RSeq<uint32_t> seq32_t;
-    typedef openpal::WSeq<uint32_t> wseq32_t;	
+    typedef openpal::WSeq<uint32_t> wseq32_t;
 }
 
 #endif

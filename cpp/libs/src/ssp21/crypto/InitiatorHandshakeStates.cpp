@@ -21,7 +21,7 @@ namespace ssp21
             return this;
         }
 
-		const auto suite = ctx.handshake->get_crypto_suite();
+        const auto suite = ctx.handshake->get_crypto_suite();
 
         const CryptoSpec crypto_spec(
             suite.nonce_mode,
@@ -41,7 +41,7 @@ namespace ssp21
                 ctx.params.max_session_time_ms
             ),
             ctx.handshake->get_certificate_mode(),
-			ephemeral_data,
+            ephemeral_data,
             ctx.handshake->get_mode_data()
         );
 
@@ -54,7 +54,7 @@ namespace ssp21
 
         ctx.handshake->begin_request_transmit(result.written, now);
 
-        ctx.lower->start_tx_from_upper(result.frame);        
+        ctx.lower->start_tx_from_upper(result.frame);
 
         ctx.start_response_timer();
 
@@ -67,19 +67,19 @@ namespace ssp21
     {
         ctx.response_and_retry_timer.cancel();
 
-		if (!ctx.handshake->initialize_session(msg, msg_bytes, ctx.params, now, *ctx.sessions.pending))
-		{
-			ctx.start_retry_timer();
-			return WaitForRetry::get();
-		}
-		
-		if (!ctx.transmit_session_auth(*ctx.sessions.pending))
-		{
-			ctx.start_retry_timer();
-			return WaitForRetry::get();
-		}
-		
-		ctx.start_response_timer();		
+        if (!ctx.handshake->initialize_session(msg, msg_bytes, ctx.params, now, *ctx.sessions.pending))
+        {
+            ctx.start_retry_timer();
+            return WaitForRetry::get();
+        }
+
+        if (!ctx.transmit_session_auth(*ctx.sessions.pending))
+        {
+            ctx.start_retry_timer();
+            return WaitForRetry::get();
+        }
+
+        ctx.start_response_timer();
 
         return WaitForAuthReply::get();
     }
@@ -101,46 +101,46 @@ namespace ssp21
 
     // -------- WaitForAuthReply --------
 
-	Initiator::IHandshakeState* InitiatorHandshakeStates::WaitForAuthReply::on_auth_message(Initiator& ctx, const SessionData& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
-	{		
+    Initiator::IHandshakeState* InitiatorHandshakeStates::WaitForAuthReply::on_auth_message(Initiator& ctx, const SessionData& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
+    {
         ctx.response_and_retry_timer.cancel();
 
-		std::error_code ec;
-		const auto payload = ctx.sessions.pending->validate_session_auth(msg, now, ctx.payload_buffer.as_wslice(), ec);
+        std::error_code ec;
+        const auto payload = ctx.sessions.pending->validate_session_auth(msg, now, ctx.payload_buffer.as_wslice(), ec);
 
-		if (ec)
-		{
-			FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "Error validating session auth: %s", ec.message().c_str());
-			ctx.start_retry_timer();
-			return WaitForRetry::get();
-		}
+        if (ec)
+        {
+            FORMAT_LOG_BLOCK(ctx.logger, levels::warn, "Error validating session auth: %s", ec.message().c_str());
+            ctx.start_retry_timer();
+            return WaitForRetry::get();
+        }
 
-		// go ahead and activate the session
-		ctx.sessions.activate_pending();
+        // go ahead and activate the session
+        ctx.sessions.activate_pending();
 
-		// we've completed the handshake
-		ctx.handshake_required = false;
-		
-		// the absolute time at which a renegotation should be triggered
-		const Timestamp session_timeout_abs_time(ctx.sessions.active->get_session_start().milliseconds + ctx.params.session_time_renegotiation_trigger_ms);
+        // we've completed the handshake
+        ctx.handshake_required = false;
 
-		ctx.session_timeout_timer.restart(session_timeout_abs_time, [&ctx]()
-		{
-			ctx.on_handshake_required();
-		});
+        // the absolute time at which a renegotation should be triggered
+        const Timestamp session_timeout_abs_time(ctx.sessions.active->get_session_start().milliseconds + ctx.params.session_time_renegotiation_trigger_ms);
 
-		ctx.upper->on_lower_open();
+        ctx.session_timeout_timer.restart(session_timeout_abs_time, [&ctx]()
+        {
+            ctx.on_handshake_required();
+        });
+
+        ctx.upper->on_lower_open();
 
         if (payload.is_not_empty())
         {
-            // process the payload 
-			ctx.payload_data = payload;
-			ctx.upper->on_lower_rx_ready();
-        }		       
-       
+            // process the payload
+            ctx.payload_data = payload;
+            ctx.upper->on_lower_rx_ready();
+        }
+
         return Idle::get();
     }
-    
+
 
     Initiator::IHandshakeState* InitiatorHandshakeStates::WaitForAuthReply::on_error_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const Timestamp& now)
     {

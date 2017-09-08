@@ -19,13 +19,13 @@ namespace ssp21
         TxState() {}
 
         void reset()
-        {         
+        {
             this->transmitting = false;
             this->remainder.make_empty();
         }
 
         void initialize(const seq32_t& data)
-        {            
+        {
             this->transmitting = false;
             this->remainder = data;
         }
@@ -51,7 +51,7 @@ namespace ssp21
         bool begin_transmit(const seq32_t& remainder)
         {
             if (this->remainder.is_empty()) return false;
-            
+
             this->transmitting = true;
             this->remainder = remainder;
 
@@ -78,10 +78,10 @@ namespace ssp21
         seq32_t get_remainder() const
         {
             return remainder;
-        }      
+        }
 
     private:
-        
+
         bool transmitting = false;
         seq32_t remainder;
 

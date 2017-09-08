@@ -9,10 +9,10 @@ namespace ssp21
     CryptoFixture::CryptoFixture()
     {
         assert(MockCryptoBackend::instance);
-		if (MockCryptoBackend::instance->fixture != nullptr)
-		{
-			throw std::logic_error("CryptoFixture already in scope");
-		}
+        if (MockCryptoBackend::instance->fixture != nullptr)
+        {
+            throw std::logic_error("CryptoFixture already in scope");
+        }
         MockCryptoBackend::instance->fixture = this;
     }
 

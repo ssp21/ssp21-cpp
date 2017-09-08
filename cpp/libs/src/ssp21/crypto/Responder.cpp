@@ -14,16 +14,16 @@ namespace ssp21
         const openpal::Logger& logger,
         const std::shared_ptr<IFrameWriter>& frame_writer,
         const std::shared_ptr<openpal::IExecutor>& executor,
-		const std::shared_ptr<ResponderHandshake>& handshake
-	) :
+        const std::shared_ptr<ResponderHandshake>& handshake
+    ) :
         CryptoLayer(
             config.config,
             config.session,
             logger,
             frame_writer,
-            executor            
+            executor
         ),
-		handshake(handshake)
+        handshake(handshake)
     {}
 
     void Responder::reply_with_handshake_error(HandshakeError err)
@@ -34,7 +34,7 @@ namespace ssp21
         {
             this->lower->start_tx_from_upper(res.frame);
         }
-    }    
+    }
 
     void Responder::reset_state_on_close_from_lower()
     {
@@ -59,7 +59,7 @@ namespace ssp21
         {
         case(Function::request_handshake_begin):
             this->reply_with_handshake_error(HandshakeError::bad_message_format);
-            break;		
+            break;
         default:
             break;
         }
@@ -67,59 +67,60 @@ namespace ssp21
 
     void Responder::on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_msg, const openpal::Timestamp& now)
     {
-		if (msg.version != consts::crypto::protocol_version)
-		{
-			FORMAT_LOG_BLOCK(this->logger, levels::warn, "Handshake request with unsupported version: %u", msg.version.value);
-			this->reply_with_handshake_error(HandshakeError::unsupported_version);
-			return;
-		}
+        if (msg.version != consts::crypto::protocol_version)
+        {
+            FORMAT_LOG_BLOCK(this->logger, levels::warn, "Handshake request with unsupported version: %u", msg.version.value);
+            this->reply_with_handshake_error(HandshakeError::unsupported_version);
+            return;
+        }
 
-		const auto result = this->handshake->process(msg, raw_msg, now, *this->frame_writer, *this->sessions.pending);
+        const auto result = this->handshake->process(msg, raw_msg, now, *this->frame_writer, *this->sessions.pending);
 
-		if (any(result.error))
-		{
-			FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error processing handshake request: %s", HandshakeErrorSpec::to_string(result.error));
-			this->reply_with_handshake_error(result.error);			
-		}
-		else
-		{
-			// start writing the reply
-			this->lower->start_tx_from_upper(result.reply_data);
-		}
-              
+        if (any(result.error))
+        {
+            FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error processing handshake request: %s", HandshakeErrorSpec::to_string(result.error));
+            this->reply_with_handshake_error(result.error);
+        }
+        else
+        {
+            // start writing the reply
+            this->lower->start_tx_from_upper(result.reply_data);
+        }
+
     }
 
     void Responder::on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
-		if (!this->sessions.pending->is_valid())
-		{
-			this->reply_with_handshake_error(HandshakeError::no_prior_handshake_begin);
-			return;
-		}
+        if (!this->sessions.pending->is_valid())
+        {
+            this->reply_with_handshake_error(HandshakeError::no_prior_handshake_begin);
+            return;
+        }
 
-		std::error_code ec;
-		const auto payload = this->sessions.pending->validate_session_auth(msg, now, payload_buffer.as_wslice(), ec);
+        std::error_code ec;
+        const auto payload = this->sessions.pending->validate_session_auth(msg, now, payload_buffer.as_wslice(), ec);
 
-		if (ec)
-		{
-			FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error processing session auth request: %s", ec.message().c_str());			
-			return;
-		}
+        if (ec)
+        {
+            FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error processing session auth request: %s", ec.message().c_str());
+            return;
+        }
 
-		this->sessions.activate_pending();		
-		
-		if (!this->transmit_session_auth(*this->sessions.active)) {
-			return;
-		}
+        this->sessions.activate_pending();
 
-		this->upper->on_lower_open();
-			
-		// notify the upper layer there is data ready
-		if (payload.is_not_empty())
-		{
-			this->payload_data = payload;
-			this->upper->on_lower_rx_ready();
-		}
+        if (!this->transmit_session_auth(*this->sessions.active))
+        {
+            return;
+        }
+
+        this->upper->on_lower_open();
+
+        // notify the upper layer there is data ready
+        if (payload.is_not_empty())
+        {
+            this->payload_data = payload;
+            this->upper->on_lower_rx_ready();
+        }
     }
 
 }

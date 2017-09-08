@@ -15,39 +15,39 @@ namespace ssp21
         const std::shared_ptr<ICertificateHandler>& certificate_handler)
     {
         return std::make_shared<ResponderStack>(
-			addresses,
-			config,
-			logger,
-			executor,
-			std::make_shared<ResponderHandshake>(
-				logger,
-				static_keys,
-				certificate_handler
-			)			
-		);
+                   addresses,
+                   config,
+                   logger,
+                   executor,
+                   std::make_shared<ResponderHandshake>(
+                       logger,
+                       static_keys,
+                       certificate_handler
+                   )
+               );
     }
 
     std::shared_ptr<IStack> Factory::initiator(
         Addresses addresses,
         const InitiatorConfig& config,
-		const CryptoSuite& crypto_suite,
+        const CryptoSuite& crypto_suite,
         openpal::Logger logger,
         const std::shared_ptr<openpal::IExecutor>& executor,
         const StaticKeys& static_keys,
         const std::shared_ptr<ICertificateHandler>& certificate_handler)
     {
         return std::make_shared<InitiatorStack>(
-			addresses,
-			config,
-			logger,
-			executor,
-			std::make_shared<InitiatorHandshake>(
-                logger,
-				static_keys,
-				crypto_suite,
-				certificate_handler
-			)
-		);
+                   addresses,
+                   config,
+                   logger,
+                   executor,
+                   std::make_shared<InitiatorHandshake>(
+                       logger,
+                       static_keys,
+                       crypto_suite,
+                       certificate_handler
+                   )
+               );
     }
 
 }

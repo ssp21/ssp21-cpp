@@ -24,11 +24,11 @@ namespace ssp21
             const std::shared_ptr<IFrameWriter>& frame_writer,
             const std::shared_ptr<openpal::IExecutor>& executor,
             const std::shared_ptr<ResponderHandshake>& handshake
-        );       
+        );
 
     private:
 
-		const std::shared_ptr<ResponderHandshake> handshake;
+        const std::shared_ptr<ResponderHandshake> handshake;
 
         // ---- final implementations from IUpperLayer ----
 
@@ -36,7 +36,7 @@ namespace ssp21
 
         // ---- private helper methods -----
 
-        void reply_with_handshake_error(HandshakeError err);        
+        void reply_with_handshake_error(HandshakeError err);
 
 
         // ---- implement CryptoLayer -----

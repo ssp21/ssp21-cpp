@@ -36,19 +36,19 @@ namespace ssp21
 {
     class PrintHex : private openpal::StaticOnly
     {
-        
+
     public:
 
-		static void print_line(const seq32_t& data)
-		{			
-			for (uint32_t i = 0; i < data.length(); ++i)
-			{
-				std::cout << std::hex << std::setfill('0') << std::setw(2) << (int) data[i] << " ";
-			}
+        static void print_line(const seq32_t& data)
+        {
+            for (uint32_t i = 0; i < data.length(); ++i)
+            {
+                std::cout << std::hex << std::setfill('0') << std::setw(2) << (int) data[i] << " ";
+            }
 
-			std::cout << std::endl;
-		}
-   
+            std::cout << std::endl;
+        }
+
     };
 
 }

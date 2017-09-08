@@ -32,7 +32,7 @@ namespace ssp21
     };
 
     struct InitiatorConfig
-    {        
+    {
         // TODO - Add a copy constructor that applies reasonable limits/relationships to some of these values
         struct Params
         {
@@ -54,7 +54,7 @@ namespace ssp21
             /// The initiator will begin renegotiating when either nonce value reaches this trigger level
             uint16_t nonce_renegotiation_trigger_value = consts::crypto::initiator::default_nonce_renegotiation_trigger;
         };
-        
+
         Params params;
         CryptoLayerConfig config;
         SessionConfig session;

@@ -9,24 +9,24 @@
 namespace ssp21
 {
 
-    CryptoLayer::CryptoLayer(        
+    CryptoLayer::CryptoLayer(
         const CryptoLayerConfig& context_config,
         const SessionConfig& session_config,
         const openpal::Logger& logger,
         const std::shared_ptr<IFrameWriter>& frame_writer,
-        const std::shared_ptr<openpal::IExecutor>& executor        
+        const std::shared_ptr<openpal::IExecutor>& executor
     ) :
         logger(logger),
         frame_writer(frame_writer),
         executor(executor),
-		statistics(std::make_shared<SessionStatistics>()),
+        statistics(std::make_shared<SessionStatistics>()),
         sessions(frame_writer, statistics, session_config),
-		payload_buffer(context_config.max_payload_size)
+        payload_buffer(context_config.max_payload_size)
     {}
 
     void CryptoLayer::discard_rx_data()
     {
-		this->payload_data.make_empty();
+        this->payload_data.make_empty();
     }
 
     bool CryptoLayer::start_tx_from_upper(const seq32_t& data)
@@ -44,16 +44,16 @@ namespace ssp21
     }
 
     seq32_t CryptoLayer::start_rx_from_upper_impl()
-    {      
+    {
         if (this->payload_data.is_empty())
         {
-			this->try_read_from_lower();
-			return seq32_t::empty();
+            this->try_read_from_lower();
+            return seq32_t::empty();
         }
         else
         {
-			return this->payload_data;
-        }                
+            return this->payload_data;
+        }
     }
 
     bool CryptoLayer::is_tx_ready() const
@@ -100,7 +100,7 @@ namespace ssp21
         this->reset_state_on_close_from_lower();
 
         this->sessions.reset_both();
-		this->payload_data.make_empty();        
+        this->payload_data.make_empty();
         this->upper->on_lower_close();
         this->tx_state.reset();
         this->reset_this_lower_layer();
@@ -147,8 +147,8 @@ namespace ssp21
         * 2) There isn't unread session data buffered for the upper layer
         *
         */
-        
-		if (!this->lower->is_tx_ready() || this->payload_data.is_not_empty()) return false;
+
+        if (!this->lower->is_tx_ready() || this->payload_data.is_not_empty()) return false;
 
         const seq32_t message = this->lower->start_rx_from_upper();
         if (message.is_empty()) return false;
@@ -225,29 +225,29 @@ namespace ssp21
         this->on_session_nonce_change(this->sessions.active->get_rx_nonce(), this->sessions.active->get_tx_nonce());
     }
 
-	bool CryptoLayer::transmit_session_auth(Session& session)
-	{		
-		auto remainder = this->tx_state.get_remainder();
-		const bool has_payload = remainder.is_not_empty();
+    bool CryptoLayer::transmit_session_auth(Session& session)
+    {
+        auto remainder = this->tx_state.get_remainder();
+        const bool has_payload = remainder.is_not_empty();
 
-		std::error_code ec;
-		const auto frame = session.format_session_auth(this->executor->get_time(), remainder, ec);
-		if (ec)
-		{
-			FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error formatting session auth message: %s", ec.message().c_str());
+        std::error_code ec;
+        const auto frame = session.format_session_auth(this->executor->get_time(), remainder, ec);
+        if (ec)
+        {
+            FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error formatting session auth message: %s", ec.message().c_str());
 
-			// TODO any other actions?			
+            // TODO any other actions?
 
-			return false;
-		}
+            return false;
+        }
 
-		if (has_payload)
-		{
-			this->tx_state.begin_transmit(remainder);
-		}
+        if (has_payload)
+        {
+            this->tx_state.begin_transmit(remainder);
+        }
 
-		return this->lower->start_tx_from_upper(frame);
-	}
+        return this->lower->start_tx_from_upper(frame);
+    }
 
     void CryptoLayer::on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
     {
@@ -273,11 +273,11 @@ namespace ssp21
             return;
         }
 
-		this->payload_data = payload;
+        this->payload_data = payload;
 
-        this->on_session_nonce_change(this->sessions.active->get_rx_nonce(), this->sessions.active->get_tx_nonce());        
+        this->on_session_nonce_change(this->sessions.active->get_rx_nonce(), this->sessions.active->get_tx_nonce());
 
-		this->upper->on_lower_rx_ready();        
+        this->upper->on_lower_rx_ready();
     }
 
 }

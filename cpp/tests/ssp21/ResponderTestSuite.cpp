@@ -67,7 +67,7 @@ TEST_CASE(SUITE("ignores user data without a session"))
 
     const auto request = hex::session_data(1, 0, "CA FE", hex::repeat(0xFF, 16));
     fix.lower.enqueue_message(request);
-    
+
     REQUIRE(fix.upper.is_empty());
 }
 
@@ -91,22 +91,22 @@ TEST_CASE(SUITE("ignores auth session w/ invalid HMAC value"))
     test_begin_handshake_success(fix);
 
     const auto request = hex::session_data(0, 0xFFFFFF, "", hex::repeat(0xEE, consts::crypto::sha256_hash_output_length));
-	fix.lower.enqueue_message(request);
-	fix.expect({CryptoAction::hmac_sha256, CryptoAction::secure_equals});
-	REQUIRE(fix.lower.num_tx_messages() == 0);    
+    fix.lower.enqueue_message(request);
+    fix.expect({CryptoAction::hmac_sha256, CryptoAction::secure_equals});
+    REQUIRE(fix.lower.num_tx_messages() == 0);
 }
 
 TEST_CASE(SUITE("ignores auth session w/ invalid HMAC size"))
 {
-	ResponderFixture fix;
-	fix.responder.on_lower_open();
+    ResponderFixture fix;
+    fix.responder.on_lower_open();
 
-	test_begin_handshake_success(fix);
+    test_begin_handshake_success(fix);
 
-	const auto request = hex::session_data(0, 0xFFFFFF, "", hex::repeat(0xFF, consts::crypto::sha256_hash_output_length - 1));
-	fix.lower.enqueue_message(request);
-	fix.expect({ CryptoAction::hmac_sha256, CryptoAction::secure_equals });
-	REQUIRE(fix.lower.num_tx_messages() == 0);
+    const auto request = hex::session_data(0, 0xFFFFFF, "", hex::repeat(0xFF, consts::crypto::sha256_hash_output_length - 1));
+    fix.lower.enqueue_message(request);
+    fix.expect({ CryptoAction::hmac_sha256, CryptoAction::secure_equals });
+    REQUIRE(fix.lower.num_tx_messages() == 0);
 }
 
 TEST_CASE(SUITE("handshake process can be repeated"))
@@ -154,9 +154,9 @@ TEST_CASE(SUITE("auth fails if insufficient data for tag"))
     test_init_session_success(fix);
 
     const auto short_tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16 - 1);
-    fix.lower.enqueue_message(hex::session_data(1, 0xFFFFFFFF, "AA", short_tag));    
+    fix.lower.enqueue_message(hex::session_data(1, 0xFFFFFFFF, "AA", short_tag));
 
-    REQUIRE(fix.responder.get_statistics().num_auth_fail == 1);	
+    REQUIRE(fix.responder.get_statistics().num_auth_fail == 1);
     REQUIRE(fix.upper.is_empty());
 }
 
@@ -171,7 +171,7 @@ TEST_CASE(SUITE("auth fails if TTL expired"))
     fix.exe->advance_time(TimeDuration::milliseconds(3));
 
     const auto tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
-    fix.lower.enqueue_message(hex::session_data(1, 2, "AA", tag)); // session TTL of 2    
+    fix.lower.enqueue_message(hex::session_data(1, 2, "AA", tag)); // session TTL of 2
 
     REQUIRE(fix.responder.get_statistics().num_ttl_expiration == 1);
     REQUIRE(fix.upper.is_empty());
@@ -186,7 +186,7 @@ TEST_CASE(SUITE("fails on empty user data"))
 
     const auto tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
 
-    fix.lower.enqueue_message(hex::session_data(1, 0xFFFFFFFF, "", tag));    
+    fix.lower.enqueue_message(hex::session_data(1, 0xFFFFFFFF, "", tag));
 
     REQUIRE(fix.responder.get_statistics().num_auth_fail == 1);
     REQUIRE(fix.upper.is_empty());
@@ -203,7 +203,7 @@ TEST_CASE(SUITE("can authenticate session data"))
     const auto tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
 
     fix.lower.enqueue_message(hex::session_data(1, 0, data, tag));
-   
+
     REQUIRE(fix.responder.get_statistics().num_success == 2);			// initial auth + this message
     REQUIRE(fix.upper.pop_rx_message() == data);
 }
@@ -213,7 +213,7 @@ TEST_CASE(SUITE("can authenticate multiple messages"))
     ResponderFixture fix;
     fix.responder.on_lower_open();
 
-    test_init_session_success(fix);	
+    test_init_session_success(fix);
 
     for (uint8_t i = 0; i < 3; ++i)
     {
@@ -346,29 +346,29 @@ void test_begin_handshake_success(ResponderFixture& fix, uint16_t max_nonce, uin
     const auto reply = hex::reply_handshake_begin(hex::repeat(0xFF, consts::crypto::x25519_key_length));
     REQUIRE(fix.lower.pop_tx_message() == reply);
     fix.set_tx_ready();
-	
+
 }
 
 void test_auth_handshake_success(ResponderFixture& fix, const std::string& payload)
 {
     const auto mac_hex = hex::repeat(0xFF, consts::crypto::sha256_hash_output_length);
 
-	fix.lower.enqueue_message(hex::session_data(0, 0xFFFFFFFF, payload, hex::repeat(0xFF, 16)));
+    fix.lower.enqueue_message(hex::session_data(0, 0xFFFFFFFF, payload, hex::repeat(0xFF, 16)));
 
-	const auto reply = hex::session_data(0, 0x00002710, "", hex::repeat(0xFF, 16));
+    const auto reply = hex::session_data(0, 0x00002710, "", hex::repeat(0xFF, 16));
 
-	REQUIRE(fix.lower.pop_tx_message() == reply);
+    REQUIRE(fix.lower.pop_tx_message() == reply);
 
     // expected order of crypto operations
     fix.expect(
     {
         CryptoAction::hmac_sha256,		// calculate expected value
-        CryptoAction::secure_equals,	// compare MAC values        
-        CryptoAction::hmac_sha256,		// calculate reply value        
+        CryptoAction::secure_equals,	// compare MAC values
+        CryptoAction::hmac_sha256,		// calculate reply value
     });
 
     fix.set_tx_ready();
-    
+
 }
 
 

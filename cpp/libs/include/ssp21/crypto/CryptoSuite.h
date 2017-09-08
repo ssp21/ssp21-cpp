@@ -9,7 +9,7 @@
 #include "ssp21/crypto/gen/SessionMode.h"
 
 namespace ssp21
-{    
+{
     // The cyrptographic modes that the initiator will request from the responder
     struct CryptoSuite
     {

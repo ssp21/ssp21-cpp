@@ -30,7 +30,7 @@ namespace ssp21
     }
 
     void Crypto::hash_sha256(
-		const std::initializer_list<seq32_t>& data,
+        const std::initializer_list<seq32_t>& data,
         SecureBuffer& output)
     {
         assert(backend);
@@ -39,7 +39,7 @@ namespace ssp21
 
     void Crypto::hmac_sha256(
         const seq32_t& key,
-		const std::initializer_list<seq32_t>& data,
+        const std::initializer_list<seq32_t>& data,
         SecureBuffer& output)
     {
         assert(backend);
@@ -67,7 +67,7 @@ namespace ssp21
 
     void Crypto::hkdf_sha256(
         const seq32_t& salt,
-		const std::initializer_list<seq32_t>& input_key_material,
+        const std::initializer_list<seq32_t>& input_key_material,
         SymmetricKey& output1,
         SymmetricKey& output2)
     {

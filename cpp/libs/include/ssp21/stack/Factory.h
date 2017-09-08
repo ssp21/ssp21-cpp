@@ -17,7 +17,7 @@
 
 namespace ssp21
 {
-    class Factory final : public IStack
+    class Factory final
     {
     public:
 
@@ -32,7 +32,7 @@ namespace ssp21
         static std::shared_ptr<IStack> initiator(
             Addresses addresses,
             const InitiatorConfig& config,
-			const CryptoSuite& crypto_suite,
+            const CryptoSuite& crypto_suite,
             openpal::Logger logger,
             const std::shared_ptr<openpal::IExecutor>& executor,
             const StaticKeys& static_keys,

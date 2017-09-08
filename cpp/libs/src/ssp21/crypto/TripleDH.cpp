@@ -4,7 +4,7 @@
 namespace ssp21
 {
 
-	TripleDH::Result TripleDH::compute(
+    TripleDH::Result TripleDH::compute(
         dh_func_t dh,
         const StaticKeys& static_keys,
         const KeyPair& ephemeral_keys,
@@ -14,15 +14,15 @@ namespace ssp21
     )
     {
         dh(ephemeral_keys.private_key, remote_public_ephemeral, dh1, ec);
-		if (ec) return Result();
+        if (ec) return Result();
 
         dh(ephemeral_keys.private_key, remote_public_static, dh2, ec);
-		if (ec) return Result();
+        if (ec) return Result();
 
         dh(*static_keys.private_key, remote_public_ephemeral, dh3, ec);
-		if (ec) return Result();
+        if (ec) return Result();
 
-		return Result( dh1.as_seq(), dh2.as_seq(), dh3.as_seq() );
+        return Result( dh1.as_seq(), dh2.as_seq(), dh3.as_seq() );
     }
 
 }
