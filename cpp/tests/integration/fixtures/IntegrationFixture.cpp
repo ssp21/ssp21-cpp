@@ -1,6 +1,7 @@
 #include "IntegrationFixture.h"
 
 #include "ssp21/crypto/Crypto.h"
+#include "ssp21/crypto/ResponderHandshakes.h"
 #include "ssp21/stack/Factory.h"
 
 #include "ssp21/crypto/gen/CertificateBody.h"
@@ -52,11 +53,7 @@ namespace ssp21
                                    ResponderConfig(),
                                    rlogger,
                                    exe,
-                                   std::make_shared<ResponderHandshake>(
-                                       rlogger,
-                                       keys.responder,
-                                       ICertificateHandler::preshared_key(keys.initiator.public_key)
-                                   )
+                                   ResponderHandshakes::public_key_mode(rlogger, keys.responder, ICertificateHandler::preshared_key(keys.initiator.public_key))
                                );
 
         return Stacks{ initiator, responder };
@@ -94,7 +91,7 @@ namespace ssp21
                                    ResponderConfig(),
                                    rlogger,
                                    exe,
-                                   std::make_shared<ResponderHandshake>(
+                                   ResponderHandshakes::public_key_mode(
                                        rlogger,
                                        keys.responder,
                                        ICertificateHandler::certificates(

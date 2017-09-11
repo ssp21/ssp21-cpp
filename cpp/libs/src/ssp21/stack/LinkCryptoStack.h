@@ -19,7 +19,7 @@ namespace ssp21
             const ResponderConfig& config,
             openpal::Logger logger,
             const std::shared_ptr<openpal::IExecutor>& executor,
-            const std::shared_ptr<ResponderHandshake>& handshake
+            const std::shared_ptr<IResponderHandshake>& handshake
         ) :
             link(addresses.source, addresses.destination),
             responder(

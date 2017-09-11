@@ -2,6 +2,8 @@
 
 #include "ssp21/stack/Factory.h"
 
+#include "ssp21/crypto/ResponderHandshakes.h"
+
 using namespace ssp21;
 using namespace openpal;
 
@@ -44,7 +46,7 @@ plugin_factory_t PluginFactory::get(const ProxyConfig& config)
                 config,
                 logger,
                 exe,
-                std::make_shared<ResponderHandshake>(
+                ResponderHandshakes::public_key_mode(
                     logger,
                     cfg.local_keys,
                     cfg.certificate_handler
