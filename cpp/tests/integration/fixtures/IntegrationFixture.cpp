@@ -2,7 +2,8 @@
 
 #include "ssp21/crypto/Crypto.h"
 #include "ssp21/crypto/ResponderHandshakes.h"
-#include "ssp21/stack/Factory.h"
+#include "ssp21/stack/ResponderFactory.h"
+#include "ssp21/stack/InitiatorFactory.h"
 
 #include "ssp21/crypto/gen/CertificateBody.h"
 #include "ssp21/crypto/gen/CertificateEnvelope.h"
@@ -35,7 +36,7 @@ namespace ssp21
     {
         const auto keys = generate_random_keys();
 
-        const auto initiator = Factory::initiator(
+        const auto initiator = InitiatorFactory::create(
                                    Addresses(1, 10),
                                    InitiatorConfig(),
                                    ilogger,
@@ -48,7 +49,7 @@ namespace ssp21
                                    )
                                );
 
-        const auto responder = Factory::responder(
+        const auto responder = ResponderFactory::create(
                                    Addresses(10, 1),
                                    ResponderConfig(),
                                    rlogger,
@@ -70,7 +71,7 @@ namespace ssp21
         const auto initiator_cert_data = make_cert_file_data(*keys.initiator.public_key, PublicKeyType::X25519, 0, *authority_data.private_key);
         const auto responder_cert_data = make_cert_file_data(*keys.responder.public_key, PublicKeyType::X25519, 0, *authority_data.private_key);
 
-        const auto initiator = Factory::initiator(
+        const auto initiator = InitiatorFactory::create(
                                    Addresses(1, 10),
                                    InitiatorConfig(),
                                    ilogger,
@@ -86,7 +87,7 @@ namespace ssp21
                                    )
                                );
 
-        const auto responder = Factory::responder(
+        const auto responder = ResponderFactory::create(
                                    Addresses(10, 1),
                                    ResponderConfig(),
                                    rlogger,

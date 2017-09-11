@@ -22,7 +22,7 @@ namespace ssp21
         static std::shared_ptr<IInitiatorHandshake> public_key_mode(
             const openpal::Logger& logger,
             const StaticKeys& static_keys,
-			const CryptoSuite& crypto_suite,
+            const CryptoSuite& crypto_suite,
             const std::shared_ptr<ICertificateHandler>& cert_handler
         );
     };

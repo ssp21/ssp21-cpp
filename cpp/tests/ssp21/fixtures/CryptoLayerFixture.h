@@ -118,12 +118,12 @@ namespace ssp21
                 this->log.logger,
                 get_frame_writer(this->log.logger, max_message_size),
                 this->exe,
-				InitiatorHandshakes::public_key_mode(
-					this->log.logger,
-					get_keys(),
-					crypto_suite,
-					get_certificate_handler()
-				)
+                InitiatorHandshakes::public_key_mode(
+                    this->log.logger,
+                    get_keys(),
+                    crypto_suite,
+                    get_certificate_handler()
+                )
             )
         {
             lower.bind_upper(initiator);

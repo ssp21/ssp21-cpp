@@ -1,6 +1,7 @@
 #include "PluginFactory.h"
 
-#include "ssp21/stack/Factory.h"
+#include "ssp21/stack/ResponderFactory.h"
+#include "ssp21/stack/InitiatorFactory.h"
 
 #include "ssp21/crypto/ResponderHandshakes.h"
 
@@ -19,7 +20,7 @@ plugin_factory_t PluginFactory::get(const ProxyConfig& config)
             InitiatorConfig config;
             CryptoSuite suite;
 
-            return Factory::initiator(
+            return InitiatorFactory::create(
                 Addresses(cfg.remote_address, cfg.local_address),
                 config,
                 logger,
@@ -41,7 +42,7 @@ plugin_factory_t PluginFactory::get(const ProxyConfig& config)
         {
             ResponderConfig config; // TODO - configure based on optional settings
 
-            return Factory::responder(
+            return ResponderFactory::create(
                 Addresses(cfg.remote_address, cfg.local_address),
                 config,
                 logger,

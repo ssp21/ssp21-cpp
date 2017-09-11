@@ -1,11 +1,11 @@
 
-#include "ssp21/stack/Factory.h"
+#include "ssp21/stack/InitiatorFactory.h"
 
 #include "ssp21/stack/LinkCryptoStack.h"
 
 namespace ssp21
 {
-
+    /*
     std::shared_ptr<IStack> Factory::responder(
         const Addresses& addresses,
         const ResponderConfig& config,
@@ -21,8 +21,9 @@ namespace ssp21
                    handshake
                );
     }
+    */
 
-    std::shared_ptr<IStack> Factory::initiator(
+    std::shared_ptr<IStack> InitiatorFactory::create(
         const Addresses& addresses,
         const InitiatorConfig& config,
         openpal::Logger logger,
