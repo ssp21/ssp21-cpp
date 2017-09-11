@@ -20,11 +20,14 @@ plugin_factory_t PluginFactory::get(const ProxyConfig& config)
             return Factory::initiator(
                 Addresses(cfg.remote_address, cfg.local_address),
                 config,
-                suite,
                 logger,
                 exe,
-                cfg.local_keys,
-                cfg.certificate_handler
+                std::make_shared<InitiatorHandshake>(
+                    logger,
+                    cfg.local_keys,
+                    suite,
+                    cfg.certificate_handler
+                )
             );
         };
     }
@@ -41,8 +44,11 @@ plugin_factory_t PluginFactory::get(const ProxyConfig& config)
                 config,
                 logger,
                 exe,
-                cfg.local_keys,
-                cfg.certificate_handler
+                std::make_shared<ResponderHandshake>(
+                    logger,
+                    cfg.local_keys,
+                    cfg.certificate_handler
+                )
             );
         };
     }

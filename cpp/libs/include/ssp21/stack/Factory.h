@@ -6,9 +6,10 @@
 
 #include "ssp21/crypto/CryptoLayerConfig.h"
 #include "ssp21/crypto/CryptoSuite.h"
+#include "ssp21/crypto/ResponderHandshake.h"
+#include "ssp21/crypto/InitiatorHandshake.h"
+
 #include "ssp21/link/Addresses.h"
-#include "ssp21/crypto/StaticKeys.h"
-#include "ssp21/crypto/ICertificateHandler.h"
 
 #include "openpal/logging/Logger.h"
 #include "openpal/executor/IExecutor.h"
@@ -22,22 +23,28 @@ namespace ssp21
     public:
 
         static std::shared_ptr<IStack> responder(
-            Addresses addresses,
+            const Addresses& addresses,
             const ResponderConfig& config,
             openpal::Logger logger,
             const std::shared_ptr<openpal::IExecutor>& executor,
-            const StaticKeys& static_keys,
-            const std::shared_ptr<ICertificateHandler>& certificate_handler);
+            const std::shared_ptr<ResponderHandshake>& handshake
+        );
 
         static std::shared_ptr<IStack> initiator(
-            Addresses addresses,
+            const Addresses& addresses,
             const InitiatorConfig& config,
-            const CryptoSuite& crypto_suite,
             openpal::Logger logger,
             const std::shared_ptr<openpal::IExecutor>& executor,
-            const StaticKeys& static_keys,
-            const std::shared_ptr<ICertificateHandler>& certificate_handler);
+            const std::shared_ptr<InitiatorHandshake>& handshake
+        );
 
+        /*
+        Addresses addresses,
+        	const InitiatorConfig& config,
+        	openpal::Logger logger,
+        	const std::shared_ptr<openpal::IExecutor>& executor,
+        	const std::shared_ptr<ResponderHandshake>& handshake)
+        */
     };
 }
 

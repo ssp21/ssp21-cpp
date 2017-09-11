@@ -37,20 +37,26 @@ namespace ssp21
         const auto initiator = Factory::initiator(
                                    Addresses(1, 10),
                                    InitiatorConfig(),
-                                   CryptoSuite(),
-                                   rlogger,
+                                   ilogger,
                                    exe,
-                                   keys.initiator,
-                                   ICertificateHandler::preshared_key(keys.responder.public_key)
+                                   std::make_shared<InitiatorHandshake>(
+                                       ilogger,
+                                       keys.initiator,
+                                       CryptoSuite(), // defaults
+                                       ICertificateHandler::preshared_key(keys.responder.public_key)
+                                   )
                                );
 
         const auto responder = Factory::responder(
                                    Addresses(10, 1),
                                    ResponderConfig(),
-                                   ilogger,
+                                   rlogger,
                                    exe,
-                                   keys.responder,
-                                   ICertificateHandler::preshared_key(keys.initiator.public_key)
+                                   std::make_shared<ResponderHandshake>(
+                                       rlogger,
+                                       keys.responder,
+                                       ICertificateHandler::preshared_key(keys.initiator.public_key)
+                                   )
                                );
 
         return Stacks{ initiator, responder };
@@ -70,25 +76,31 @@ namespace ssp21
         const auto initiator = Factory::initiator(
                                    Addresses(1, 10),
                                    InitiatorConfig(),
-                                   CryptoSuite(),
-                                   rlogger,
+                                   ilogger,
                                    exe,
-                                   keys.initiator,
-                                   ICertificateHandler::certificates(
-                                       authority_data.certificate_file_data,
-                                       initiator_cert_data
+                                   std::make_shared<InitiatorHandshake>(
+                                       ilogger,
+                                       keys.initiator,
+                                       CryptoSuite(),
+                                       ICertificateHandler::certificates(
+                                           authority_data.certificate_file_data,
+                                           initiator_cert_data
+                                       )
                                    )
                                );
 
         const auto responder = Factory::responder(
                                    Addresses(10, 1),
                                    ResponderConfig(),
-                                   ilogger,
+                                   rlogger,
                                    exe,
-                                   keys.responder,
-                                   ICertificateHandler::certificates(
-                                       authority_data.certificate_file_data,
-                                       responder_cert_data
+                                   std::make_shared<ResponderHandshake>(
+                                       rlogger,
+                                       keys.responder,
+                                       ICertificateHandler::certificates(
+                                           authority_data.certificate_file_data,
+                                           responder_cert_data
+                                       )
                                    )
                                );
 
