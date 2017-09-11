@@ -23,7 +23,7 @@ namespace ssp21
         static std::shared_ptr<IStack> create(
             const Addresses& addresses,
             const ResponderConfig& config,
-            openpal::Logger logger,
+            const openpal::Logger& logger,
             const std::shared_ptr<openpal::IExecutor>& executor,
             const std::shared_ptr<IResponderHandshake>& handshake
         );
