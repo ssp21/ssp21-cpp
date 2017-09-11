@@ -8,8 +8,7 @@
 #include "ssp21/crypto/gen/RequestHandshakeBegin.h"
 
 #include "ssp21/crypto/Session.h"
-#include "ssp21/crypto/StaticKeys.h"
-#include "ssp21/crypto/ICertificateHandler.h"
+
 
 namespace ssp21
 {

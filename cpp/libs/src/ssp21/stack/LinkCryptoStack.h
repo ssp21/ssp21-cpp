@@ -69,7 +69,7 @@ namespace ssp21
             const InitiatorConfig& config,
             openpal::Logger logger,
             const std::shared_ptr<openpal::IExecutor>& executor,
-            const std::shared_ptr<InitiatorHandshake>& handshake) :
+            const std::shared_ptr<IInitiatorHandshake>& handshake) :
             link(addresses.source, addresses.destination),
             initiator(
                 config,

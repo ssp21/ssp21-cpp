@@ -3,7 +3,7 @@
 #define SSP21_INITIATOR_H
 
 #include "ssp21/crypto/CryptoLayer.h"
-#include "ssp21/crypto/InitiatorHandshake.h"
+#include "ssp21/crypto/IInitiatorHandshake.h"
 
 #include "openpal/executor/TimerRef.h"
 
@@ -26,7 +26,7 @@ namespace ssp21
             const openpal::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
             const std::shared_ptr<openpal::IExecutor>& executor,
-            const std::shared_ptr<InitiatorHandshake>& handshake
+            const std::shared_ptr<IInitiatorHandshake>& handshake
         );
 
         class IHandshakeState : private openpal::Uncopyable
@@ -118,7 +118,7 @@ namespace ssp21
         const InitiatorConfig::Params params;
 
         IHandshakeState* handshake_state;
-        const std::shared_ptr<InitiatorHandshake> handshake;
+        const std::shared_ptr<IInitiatorHandshake> handshake;
 
         openpal::TimerRef response_and_retry_timer;
         openpal::TimerRef session_timeout_timer;

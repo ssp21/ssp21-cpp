@@ -16,7 +16,7 @@ namespace ssp21
         const Logger& logger,
         const std::shared_ptr<IFrameWriter>& frame_writer,
         const std::shared_ptr<IExecutor>& executor,
-        const std::shared_ptr<InitiatorHandshake>& handshake
+        const std::shared_ptr<IInitiatorHandshake>& handshake
     ) :
         CryptoLayer(
             config.config,
