@@ -2,8 +2,7 @@
 
 #include "ssp21/crypto/Crypto.h"
 #include "ssp21/crypto/ResponderHandshakes.h"
-#include "ssp21/stack/ResponderFactory.h"
-#include "ssp21/stack/InitiatorFactory.h"
+#include "ssp21/stack/Factory.h"
 
 #include "ssp21/crypto/gen/CertificateBody.h"
 #include "ssp21/crypto/gen/CertificateEnvelope.h"
@@ -36,7 +35,7 @@ namespace ssp21
     {
         const auto keys = generate_random_keys();
 
-        const auto initiator = InitiatorFactory::preshared_public_key_mode(
+        const auto initiator = initiator::factory::preshared_public_key_mode(
                                    Addresses(1, 10),
                                    InitiatorConfig(),
                                    ilogger,
@@ -46,7 +45,7 @@ namespace ssp21
 								   keys.responder.public_key
                                );
 
-        const auto responder = ResponderFactory::preshared_public_key_mode(
+        const auto responder = responder::factory::preshared_public_key_mode(
                                    Addresses(10, 1),
                                    ResponderConfig(),
                                    rlogger,
@@ -69,7 +68,7 @@ namespace ssp21
         const auto initiator_cert_data = make_cert_file_data(*keys.initiator.public_key, PublicKeyType::X25519, 0, *authority_data.private_key);
         const auto responder_cert_data = make_cert_file_data(*keys.responder.public_key, PublicKeyType::X25519, 0, *authority_data.private_key);
 
-        const auto initiator = InitiatorFactory::certificate_public_key_mode(
+        const auto initiator = initiator::factory::certificate_public_key_mode(
                                    Addresses(1, 10),
                                    InitiatorConfig(),
                                    ilogger,
@@ -80,7 +79,7 @@ namespace ssp21
 								   initiator_cert_data                                       
                                );
 
-        const auto responder = ResponderFactory::certificate_public_key_mode(
+        const auto responder = responder::factory::certificate_public_key_mode(
                                    Addresses(10, 1),
                                    ResponderConfig(),
                                    rlogger,
