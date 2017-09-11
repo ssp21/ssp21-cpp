@@ -13,7 +13,7 @@ plugin_factory_t PluginFactory::get(const ProxyConfig& config)
     {
         return [cfg = config.ssp21](
                    const Logger & logger,
-                   const std::shared_ptr<Executor>& exe) -> std::shared_ptr<IStack>
+                   const std::shared_ptr<IExecutor>& exe) -> std::shared_ptr<IStack>
         {
             // TODO - configure based on optional settings
             InitiatorConfig config;
@@ -37,7 +37,7 @@ plugin_factory_t PluginFactory::get(const ProxyConfig& config)
     {
         return [cfg = config.ssp21](
                    const Logger & logger,
-                   const std::shared_ptr<Executor>& exe) -> std::shared_ptr<IStack>
+                   const std::shared_ptr<IExecutor>& exe) -> std::shared_ptr<IStack>
         {
             ResponderConfig config; // TODO - configure based on optional settings
 
