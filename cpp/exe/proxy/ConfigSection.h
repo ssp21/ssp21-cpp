@@ -3,8 +3,10 @@
 
 #include "ProxyConfig.h"
 #include "ssp21/crypto/gen/ContainerEntryType.h"
+#include "ssp21/util/SecureDynamicBuffer.h"
 
 #include <map>
+#include <memory>
 
 class ConfigSection : openpal::Uncopyable
 {
@@ -18,9 +20,7 @@ public:
 
 private:
 
-    std::map<std::string, std::string> values;
-
-    std::shared_ptr<ssp21::ICertificateHandler> get_certificate_handler();
+    std::map<std::string, std::string> values;    
 
     openpal::LogLevels get_levels();
 

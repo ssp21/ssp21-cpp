@@ -5,8 +5,7 @@
 #include "openpal/logging/LogLevels.h"
 
 #include "ssp21/crypto/BufferTypes.h"
-#include "ssp21/crypto/ICertificateHandler.h"
-#include "ssp21/crypto/StaticKeys.h"
+#include "ssp21/link/Addresses.h"
 
 #include <string>
 #include <memory>
@@ -23,36 +22,14 @@ struct ProxyConfig : public openpal::Uncopyable
     {
         preshared_keys,
         certificates
-    };
-
-    struct SSP21
-    {
-        SSP21(
-            uint16_t local_address,
-            uint16_t remote_address,
-            const ssp21::StaticKeys& local_keys,
-            const std::shared_ptr<ssp21::ICertificateHandler>& certificate_handler
-        ) :
-            local_address(local_address),
-            remote_address(remote_address),
-            local_keys(local_keys),
-            certificate_handler(certificate_handler)
-        {}
-
-        SSP21() = delete;
-
-        const uint16_t local_address;
-        const uint16_t remote_address;
-
-        const ssp21::StaticKeys local_keys;
-        const std::shared_ptr<ssp21::ICertificateHandler> certificate_handler;
-    };
+    };   
 
     ProxyConfig(
         const std::string& id,
         openpal::LogLevels log_levels,
-		EndpointMode mode,
-        const SSP21& ssp21,
+		EndpointMode endpoint_mode,
+		CertificateMode cert_mode,
+		ssp21::Addresses addresses,
         uint16_t max_sessions,
         uint16_t listen_port,
         const std::string& listen_endpoint,
@@ -61,8 +38,9 @@ struct ProxyConfig : public openpal::Uncopyable
     ) :
         id(id),
         log_levels(log_levels),
-        mode(mode),
-        ssp21(ssp21),
+		endpoint_mode(endpoint_mode),
+		addresses(addresses),
+		cert_mode(cert_mode),
         max_sessions(max_sessions),
         listen_port(listen_port),
         listen_endpoint(listen_endpoint),
@@ -71,10 +49,11 @@ struct ProxyConfig : public openpal::Uncopyable
     {}
 
     const std::string id;
-    openpal::LogLevels log_levels;
-    const EndpointMode mode;
 
-    const SSP21 ssp21;
+    const openpal::LogLevels log_levels;
+    const EndpointMode endpoint_mode;
+	const CertificateMode cert_mode;
+	const ssp21::Addresses addresses;
 
     const uint16_t max_sessions;
 

@@ -27,7 +27,7 @@ Proxy::Proxy(
     factory(PluginFactory::get(config)),
     server(executor->get_context(), config.listen_endpoint, config.listen_port),
     connect_endpoint(ip::address::from_string(config.connect_endpoint), config.connect_port),
-    mode(config.mode),
+    mode(config.endpoint_mode),
     max_sessions(config.max_sessions == 0 ? 1 : config.max_sessions)
 {}
 

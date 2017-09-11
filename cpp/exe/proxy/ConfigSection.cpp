@@ -15,6 +15,7 @@
 
 #include <iostream>
 
+
 using namespace openpal;
 using namespace ssp21;
 
@@ -29,21 +30,19 @@ std::unique_ptr<ProxyConfig> ConfigSection::get_config(const std::string& id)
                    id,
                    this->get_levels(),
                    this->get_mode(),
-                   ProxyConfig::SSP21(
-                       this->get_integer_value<uint16_t>(props::local_address),
-                       this->get_integer_value<uint16_t>(props::remote_address),
-                       ssp21::StaticKeys(
-                           this->get_crypto_key<PublicKey>(props::local_public_key_path, ContainerEntryType::x25519_public_key),
-                           this->get_crypto_key<PrivateKey>(props::local_private_key_path, ContainerEntryType::x25519_private_key)
-                       ),
-                       this->get_certificate_handler()
-                   ),
+				   this->get_cert_mode(),
+				   ssp21::Addresses(
+					   this->get_integer_value<uint16_t>(props::remote_address),
+					   this->get_integer_value<uint16_t>(props::local_address)
+				   ),				   
                    this->get_integer_value<uint16_t>(props::max_sessions),
                    this->get_integer_value<uint16_t>(props::listen_port),
                    this->consume_value(props::listen_endpoint),
                    this->get_integer_value<uint16_t>(props::connect_port),
-                   this->consume_value(props::connect_endpoint)
+                   this->consume_value(props::connect_endpoint)				   
                );
+
+	
 
     for (auto& value : this->values)
     {
@@ -51,26 +50,6 @@ std::unique_ptr<ProxyConfig> ConfigSection::get_config(const std::string& id)
     }
 
     return std::move(ret);
-}
-
-std::shared_ptr<ssp21::ICertificateHandler> ConfigSection::get_certificate_handler()
-{
-    if (this->get_cert_mode() == ProxyConfig::CertificateMode::preshared_keys)
-    {
-        return ssp21::ICertificateHandler::preshared_key(
-                   this->get_crypto_key<ssp21::PublicKey>(
-                       props::remote_public_key_path,
-                       ContainerEntryType::x25519_public_key
-                   )
-               );
-    }
-    else
-    {
-        return ssp21::ICertificateHandler::certificates(
-                   this->get_file_data(props::authority_cert_path),
-                   this->get_file_data(props::local_cert_path)
-               );
-    }
 }
 
 LogLevels ConfigSection::get_levels()
