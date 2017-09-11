@@ -6,6 +6,7 @@
 #include "ssp21/crypto/Responder.h"
 #include "ssp21/crypto/Initiator.h"
 #include "ssp21/crypto/MessageOnlyFrameWriter.h"
+#include "ssp21/crypto/ResponderHandshakes.h"
 
 #include "testlib/MockExecutor.h"
 
@@ -86,7 +87,7 @@ namespace ssp21
                 this->log.logger,
                 get_frame_writer(this->log.logger, max_message_size),
                 this->exe,
-                std::make_shared<ResponderHandshake>(this->log.logger, get_keys(), get_certificate_handler())
+                ResponderHandshakes::public_key_mode(this->log.logger, get_keys(), get_certificate_handler())
             )
         {
             lower.bind_upper(responder);

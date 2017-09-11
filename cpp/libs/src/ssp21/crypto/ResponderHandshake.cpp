@@ -12,13 +12,13 @@
 namespace ssp21
 {
 
-    ResponderHandshake::ResponderHandshake(openpal::Logger logger, StaticKeys static_keys, const std::shared_ptr<ICertificateHandler>& cert_handler) :
+    ResponderHandshake::ResponderHandshake(const openpal::Logger& logger, const StaticKeys& static_keys, const std::shared_ptr<ICertificateHandler>& cert_handler) :
         logger(logger),
         static_keys(static_keys),
         cert_handler(cert_handler)
     {}
 
-    ResponderHandshake::Result ResponderHandshake::process(const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now, IFrameWriter& writer, Session& session)
+    IResponderHandshake::Result ResponderHandshake::process(const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now, IFrameWriter& writer, Session& session)
     {
         // verify that the public key length matches the DH mode
         if (msg.ephemeral_public_key.length() != consts::crypto::x25519_key_length)

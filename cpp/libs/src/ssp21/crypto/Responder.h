@@ -4,7 +4,7 @@
 
 #include "ssp21/crypto/CryptoLayer.h"
 
-#include "ssp21/crypto/ResponderHandshake.h"
+#include "ssp21/crypto/IResponderHandshake.h"
 
 namespace ssp21
 {
@@ -23,12 +23,12 @@ namespace ssp21
             const openpal::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
             const std::shared_ptr<openpal::IExecutor>& executor,
-            const std::shared_ptr<ResponderHandshake>& handshake
+            const std::shared_ptr<IResponderHandshake>& handshake
         );
 
     private:
 
-        const std::shared_ptr<ResponderHandshake> handshake;
+        const std::shared_ptr<IResponderHandshake> handshake;
 
         // ---- final implementations from IUpperLayer ----
 
