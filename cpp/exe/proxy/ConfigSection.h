@@ -29,7 +29,7 @@ private:
     template <class T>
     T get_integer_value(const std::string& propertyId);
 
-    ProxyConfig::Mode get_mode();
+    ProxyConfig::EndpointMode get_mode();
 
     ProxyConfig::CertificateMode get_cert_mode();
 

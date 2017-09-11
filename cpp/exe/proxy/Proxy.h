@@ -34,14 +34,14 @@ class Proxy : private openpal::Uncopyable
         ConnectOperation(asio::io_service& context, asio::ip::tcp::socket socket) : connect_socket(context), listen_socket(std::move(socket))
         {}
 
-        asio::ip::tcp::socket& get_lower_layer_socket(ProxyConfig::Mode mode)
+        asio::ip::tcp::socket& get_lower_layer_socket(ProxyConfig::EndpointMode mode)
         {
-            return (mode == ProxyConfig::Mode::initiator) ? connect_socket : listen_socket;
+            return (mode == ProxyConfig::EndpointMode::initiator) ? connect_socket : listen_socket;
         }
 
-        asio::ip::tcp::socket& get_upper_layer_socket(ProxyConfig::Mode mode)
+        asio::ip::tcp::socket& get_upper_layer_socket(ProxyConfig::EndpointMode mode)
         {
-            return (mode == ProxyConfig::Mode::initiator) ? listen_socket : connect_socket;
+            return (mode == ProxyConfig::EndpointMode::initiator) ? listen_socket : connect_socket;
         }
 
         asio::ip::tcp::socket connect_socket;
@@ -74,7 +74,7 @@ private:
 
     Server server;
     asio::ip::tcp::endpoint connect_endpoint;
-    const ProxyConfig::Mode mode;
+    const ProxyConfig::EndpointMode mode;
     const uint16_t max_sessions;
 
     uint64_t session_id = 0;

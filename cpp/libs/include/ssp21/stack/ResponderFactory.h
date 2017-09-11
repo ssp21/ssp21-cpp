@@ -5,7 +5,8 @@
 #include "ssp21/stack/IStack.h"
 
 #include "ssp21/crypto/CryptoLayerConfig.h"
-#include "ssp21/crypto/IResponderHandshake.h"
+#include "ssp21/crypto/StaticKeys.h"
+#include "ssp21/util/SecureDynamicBuffer.h"
 
 #include "ssp21/link/Addresses.h"
 
@@ -20,13 +21,24 @@ namespace ssp21
     {
     public:
 
-        static std::shared_ptr<IStack> create(
+        static std::shared_ptr<IStack> preshared_public_key_mode(
             const Addresses& addresses,
             const ResponderConfig& config,
             const openpal::Logger& logger,
             const std::shared_ptr<openpal::IExecutor>& executor,
-            const std::shared_ptr<IResponderHandshake>& handshake
+			const StaticKeys& local_keys,
+			const std::shared_ptr<const PublicKey>& remote_public_key
         );
+
+		static std::shared_ptr<IStack> certificate_public_key_mode(
+			const Addresses& addresses,
+			const ResponderConfig& config,
+			const openpal::Logger& logger,
+			const std::shared_ptr<openpal::IExecutor>& executor,
+			const StaticKeys& local_keys,
+			const std::shared_ptr<ssp21::SecureDynamicBuffer>& anchor_cert_file_data,
+			const std::shared_ptr<ssp21::SecureDynamicBuffer>& presented_chain_file_data
+		);
 
     };
 }

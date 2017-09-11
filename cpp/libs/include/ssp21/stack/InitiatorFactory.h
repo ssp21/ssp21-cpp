@@ -31,7 +31,7 @@ namespace ssp21
 			const std::shared_ptr<const PublicKey>& remote_public_key
         );
 
-		static std::shared_ptr<IStack> certificate_mode(
+		static std::shared_ptr<IStack> certificate_public_key_mode(
 			const Addresses& addresses,
 			const InitiatorConfig& config,
 			const openpal::Logger& logger,

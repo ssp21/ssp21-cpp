@@ -46,12 +46,13 @@ namespace ssp21
 								   keys.responder.public_key
                                );
 
-        const auto responder = ResponderFactory::create(
+        const auto responder = ResponderFactory::preshared_public_key_mode(
                                    Addresses(10, 1),
                                    ResponderConfig(),
                                    rlogger,
                                    exe,
-                                   ResponderHandshakes::public_key_mode(rlogger, keys.responder, ICertificateHandler::preshared_key(keys.initiator.public_key))
+                                   keys.responder,
+								   keys.initiator.public_key									
                                );
 
         return Stacks{ initiator, responder };
@@ -68,7 +69,7 @@ namespace ssp21
         const auto initiator_cert_data = make_cert_file_data(*keys.initiator.public_key, PublicKeyType::X25519, 0, *authority_data.private_key);
         const auto responder_cert_data = make_cert_file_data(*keys.responder.public_key, PublicKeyType::X25519, 0, *authority_data.private_key);
 
-        const auto initiator = InitiatorFactory::certificate_mode(
+        const auto initiator = InitiatorFactory::certificate_public_key_mode(
                                    Addresses(1, 10),
                                    InitiatorConfig(),
                                    ilogger,
@@ -79,19 +80,14 @@ namespace ssp21
 								   initiator_cert_data                                       
                                );
 
-        const auto responder = ResponderFactory::create(
+        const auto responder = ResponderFactory::certificate_public_key_mode(
                                    Addresses(10, 1),
                                    ResponderConfig(),
                                    rlogger,
                                    exe,
-                                   ResponderHandshakes::public_key_mode(
-                                       rlogger,
-                                       keys.responder,
-                                       ICertificateHandler::certificates(
-                                           authority_data.certificate_file_data,
-                                           responder_cert_data
-                                       )
-                                   )
+								   keys.responder,                                      
+                                   authority_data.certificate_file_data,
+                                   responder_cert_data                                       
                                );
 
         return Stacks{ initiator, responder };

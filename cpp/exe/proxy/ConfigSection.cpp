@@ -108,17 +108,17 @@ T ConfigSection::get_integer_value(const std::string& propertyId)
     return val;
 }
 
-ProxyConfig::Mode ConfigSection::get_mode()
+ProxyConfig::EndpointMode ConfigSection::get_mode()
 {
     const auto value = this->consume_value(props::mode);
 
     if (value == "initiator")
     {
-        return ProxyConfig::Mode::initiator;
+        return ProxyConfig::EndpointMode::initiator;
     }
     else if (value == "responder")
     {
-        return ProxyConfig::Mode::responder;
+        return ProxyConfig::EndpointMode::responder;
     }
     else
     {

@@ -13,7 +13,7 @@
 
 struct ProxyConfig : public openpal::Uncopyable
 {
-    enum class Mode
+    enum class EndpointMode
     {
         initiator,
         responder
@@ -51,7 +51,7 @@ struct ProxyConfig : public openpal::Uncopyable
     ProxyConfig(
         const std::string& id,
         openpal::LogLevels log_levels,
-        Mode mode,
+		EndpointMode mode,
         const SSP21& ssp21,
         uint16_t max_sessions,
         uint16_t listen_port,
@@ -72,7 +72,7 @@ struct ProxyConfig : public openpal::Uncopyable
 
     const std::string id;
     openpal::LogLevels log_levels;
-    const Mode mode;
+    const EndpointMode mode;
 
     const SSP21 ssp21;
 

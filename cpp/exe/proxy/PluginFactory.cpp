@@ -10,7 +10,7 @@ using namespace openpal;
 
 plugin_factory_t PluginFactory::get(const ProxyConfig& config)
 {
-    if (config.mode == ProxyConfig::Mode::initiator)
+    if (config.mode == ProxyConfig::EndpointMode::initiator)
     {
         return [cfg = config.ssp21](
                    const Logger & logger,
@@ -20,18 +20,7 @@ plugin_factory_t PluginFactory::get(const ProxyConfig& config)
             InitiatorConfig config;
             CryptoSuite suite;
 
-            return InitiatorFactory::create(
-                Addresses(cfg.remote_address, cfg.local_address),
-                config,
-                logger,
-                exe,
-                std::make_shared<InitiatorHandshake>(
-                    logger,
-                    cfg.local_keys,
-                    suite,
-                    cfg.certificate_handler
-                )
-            );
+			throw std::logic_error("not implemented");
         };
     }
     else
@@ -42,17 +31,8 @@ plugin_factory_t PluginFactory::get(const ProxyConfig& config)
         {
             ResponderConfig config; // TODO - configure based on optional settings
 
-            return ResponderFactory::create(
-                Addresses(cfg.remote_address, cfg.local_address),
-                config,
-                logger,
-                exe,
-                ResponderHandshakes::public_key_mode(
-                    logger,
-                    cfg.local_keys,
-                    cfg.certificate_handler
-                )
-            );
+			// TODO
+			throw std::logic_error("not implemented");
         };
     }
 }

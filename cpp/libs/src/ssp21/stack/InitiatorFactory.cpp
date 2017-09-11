@@ -30,7 +30,7 @@ namespace ssp21
 		);
     }
 
-	std::shared_ptr<IStack> InitiatorFactory::certificate_mode(
+	std::shared_ptr<IStack> InitiatorFactory::certificate_public_key_mode(
 		const Addresses& addresses,
 		const InitiatorConfig& config,
 		const openpal::Logger& logger,
