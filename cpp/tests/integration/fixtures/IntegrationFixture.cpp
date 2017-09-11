@@ -36,17 +36,14 @@ namespace ssp21
     {
         const auto keys = generate_random_keys();
 
-        const auto initiator = InitiatorFactory::create(
+        const auto initiator = InitiatorFactory::preshared_public_key_mode(
                                    Addresses(1, 10),
                                    InitiatorConfig(),
                                    ilogger,
                                    exe,
-                                   std::make_shared<InitiatorHandshake>(
-                                       ilogger,
-                                       keys.initiator,
-                                       CryptoSuite(), // defaults
-                                       ICertificateHandler::preshared_key(keys.responder.public_key)
-                                   )
+								   CryptoSuite(), // defaults
+								   keys.initiator,
+								   keys.responder.public_key
                                );
 
         const auto responder = ResponderFactory::create(
@@ -71,20 +68,15 @@ namespace ssp21
         const auto initiator_cert_data = make_cert_file_data(*keys.initiator.public_key, PublicKeyType::X25519, 0, *authority_data.private_key);
         const auto responder_cert_data = make_cert_file_data(*keys.responder.public_key, PublicKeyType::X25519, 0, *authority_data.private_key);
 
-        const auto initiator = InitiatorFactory::create(
+        const auto initiator = InitiatorFactory::certificate_mode(
                                    Addresses(1, 10),
                                    InitiatorConfig(),
                                    ilogger,
                                    exe,
-                                   std::make_shared<InitiatorHandshake>(
-                                       ilogger,
-                                       keys.initiator,
-                                       CryptoSuite(),
-                                       ICertificateHandler::certificates(
-                                           authority_data.certificate_file_data,
-                                           initiator_cert_data
-                                       )
-                                   )
+								   CryptoSuite(), // defaults
+                                   keys.initiator,
+								   authority_data.certificate_file_data,
+								   initiator_cert_data                                       
                                );
 
         const auto responder = ResponderFactory::create(
