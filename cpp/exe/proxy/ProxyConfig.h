@@ -5,7 +5,6 @@
 #include "openpal/logging/LogLevels.h"
 
 #include "ssp21/crypto/BufferTypes.h"
-#include "ssp21/link/Addresses.h"
 
 #include <string>
 #include <memory>
@@ -18,18 +17,10 @@ struct ProxyConfig : public openpal::Uncopyable
         responder
     };
 
-    enum class CertificateMode
-    {
-        preshared_keys,
-        certificates
-    };   
-
     ProxyConfig(
         const std::string& id,
         openpal::LogLevels log_levels,
-		EndpointMode endpoint_mode,
-		CertificateMode cert_mode,
-		ssp21::Addresses addresses,
+        EndpointMode endpoint_mode,
         uint16_t max_sessions,
         uint16_t listen_port,
         const std::string& listen_endpoint,
@@ -38,9 +29,7 @@ struct ProxyConfig : public openpal::Uncopyable
     ) :
         id(id),
         log_levels(log_levels),
-		endpoint_mode(endpoint_mode),
-		addresses(addresses),
-		cert_mode(cert_mode),
+        endpoint_mode(endpoint_mode),
         max_sessions(max_sessions),
         listen_port(listen_port),
         listen_endpoint(listen_endpoint),
@@ -52,9 +41,6 @@ struct ProxyConfig : public openpal::Uncopyable
 
     const openpal::LogLevels log_levels;
     const EndpointMode endpoint_mode;
-	const CertificateMode cert_mode;
-	const ssp21::Addresses addresses;
-
     const uint16_t max_sessions;
 
     const uint16_t listen_port;

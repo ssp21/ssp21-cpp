@@ -7,7 +7,9 @@
 #include "ssp21/util/SecureFile.h"
 #include "ssp21/util/Exception.h"
 #include "ssp21/stack/LogLevels.h"
+#include "ssp21/stack/Factory.h"
 #include "ssp21/crypto/gen/ContainerFile.h"
+#include "ssp21/link/Addresses.h"
 
 #include "ssp21/util/Exception.h"
 #include "ssp21/stack/LogLevels.h"
@@ -26,23 +28,19 @@ void ConfigSection::add(const std::string& propertyId, const std::string& value)
 
 std::unique_ptr<ProxyConfig> ConfigSection::get_config(const std::string& id)
 {
+    const auto endpoint_mode = this->get_mode();
+    const openpal::LogLevels levels(this->get_levels());
+
     auto ret = std::make_unique<ProxyConfig>(
                    id,
-                   this->get_levels(),
-                   this->get_mode(),
-				   this->get_cert_mode(),
-				   ssp21::Addresses(
-					   this->get_integer_value<uint16_t>(props::remote_address),
-					   this->get_integer_value<uint16_t>(props::local_address)
-				   ),				   
+                   levels,
+                   endpoint_mode,
                    this->get_integer_value<uint16_t>(props::max_sessions),
                    this->get_integer_value<uint16_t>(props::listen_port),
                    this->consume_value(props::listen_endpoint),
                    this->get_integer_value<uint16_t>(props::connect_port),
-                   this->consume_value(props::connect_endpoint)				   
+                   this->consume_value(props::connect_endpoint)
                );
-
-	
 
     for (auto& value : this->values)
     {
@@ -50,6 +48,130 @@ std::unique_ptr<ProxyConfig> ConfigSection::get_config(const std::string& id)
     }
 
     return std::move(ret);
+}
+
+stack_factory_t ConfigSection::get_stack_factory(ProxyConfig::EndpointMode ep_mode)
+{
+    const Addresses addresses(this->get_addresses());
+    return (ep_mode == ProxyConfig::EndpointMode::initiator) ? this->get_initiator_factory(addresses) : this->get_responder_factory(addresses);
+}
+
+stack_factory_t ConfigSection::get_initiator_factory(const ssp21::Addresses& addresses)
+{
+    switch (this->get_cert_mode())
+    {
+    case(CertificateMode::preshared_keys):
+        return this->get_initiator_preshared_public_key_factory(addresses);
+    case(CertificateMode::certificates):
+        return this->get_initiator_certificate_mode_factory(addresses);
+    default:
+        throw Exception("undefined certificate mode");
+    }
+}
+
+stack_factory_t ConfigSection::get_initiator_preshared_public_key_factory(const ssp21::Addresses& addresses)
+{
+    const auto local_keys = this->get_local_static_keys();
+    const auto remote_public_key = this->get_crypto_key<ssp21::PublicKey>(props::remote_public_key_path, ContainerEntryType::x25519_public_key);
+
+    return [ = ](const openpal::Logger & logger, const std::shared_ptr<openpal::IExecutor>& executor)
+    {
+        return initiator::factory::preshared_public_key_mode(
+                   addresses,
+                   InitiatorConfig(),	// TODO: default
+                   logger,
+                   executor,
+                   CryptoSuite(),		// TODO: default
+                   local_keys,
+                   remote_public_key);
+    };
+}
+
+stack_factory_t ConfigSection::get_initiator_certificate_mode_factory(const ssp21::Addresses& addresses)
+{
+    const auto local_keys = this->get_local_static_keys();
+    const auto anchor_cert_data = this->get_file_data(props::authority_cert_path);
+    const auto local_cert_data = this->get_file_data(props::local_cert_path);
+
+    return [ = ](const openpal::Logger & logger, const std::shared_ptr<openpal::IExecutor>& executor)
+    {
+        return initiator::factory::certificate_public_key_mode(
+                   addresses,
+                   InitiatorConfig(),	// TODO: default
+                   logger,
+                   executor,
+                   CryptoSuite(),		// TODO: default
+                   local_keys,
+                   anchor_cert_data,
+                   local_cert_data
+               );
+    };
+}
+
+stack_factory_t ConfigSection::get_responder_factory(const ssp21::Addresses& addresses)
+{
+    switch (this->get_cert_mode())
+    {
+    case(CertificateMode::preshared_keys):
+        return this->get_responder_preshared_public_key_factory(addresses);
+    case(CertificateMode::certificates):
+        return this->get_responder_certificate_mode_factory(addresses);
+    default:
+        throw Exception("undefined certificate mode");
+    }
+}
+
+stack_factory_t ConfigSection::get_responder_preshared_public_key_factory(const ssp21::Addresses& addresses)
+{
+    const auto local_keys = this->get_local_static_keys();
+    const auto remote_public_key = this->get_crypto_key<ssp21::PublicKey>(props::remote_public_key_path, ContainerEntryType::x25519_public_key);
+
+    return [ = ](const openpal::Logger & logger, const std::shared_ptr<openpal::IExecutor>& executor)
+    {
+        return responder::factory::preshared_public_key_mode(
+                   addresses,
+                   ResponderConfig(),	// TODO: default
+                   logger,
+                   executor,
+                   local_keys,
+                   remote_public_key);
+    };
+}
+
+stack_factory_t ConfigSection::get_responder_certificate_mode_factory(const ssp21::Addresses& addresses)
+{
+    const auto local_keys = this->get_local_static_keys();
+    const auto anchor_cert_data = this->get_file_data(props::authority_cert_path);
+    const auto local_cert_data = this->get_file_data(props::local_cert_path);
+
+    return [ = ](const openpal::Logger & logger, const std::shared_ptr<openpal::IExecutor>& executor)
+    {
+        return responder::factory::certificate_public_key_mode(
+                   addresses,
+                   ResponderConfig(),	// TODO: default
+                   logger,
+                   executor,
+                   local_keys,
+                   anchor_cert_data,
+                   local_cert_data
+               );
+    };
+}
+
+Addresses ConfigSection::get_addresses()
+{
+    return Addresses(
+               this->get_integer_value<uint16_t>(props::remote_address),
+               this->get_integer_value<uint16_t>(props::local_address)
+           );
+}
+
+ssp21::StaticKeys ConfigSection::get_local_static_keys()
+{
+    return ssp21::StaticKeys(
+               this->get_crypto_key<PublicKey>(props::local_public_key_path, ContainerEntryType::x25519_public_key),
+               this->get_crypto_key<PrivateKey>(props::local_private_key_path, ContainerEntryType::x25519_private_key)
+           );
 }
 
 LogLevels ConfigSection::get_levels()
@@ -105,17 +227,17 @@ ProxyConfig::EndpointMode ConfigSection::get_mode()
     }
 }
 
-ProxyConfig::CertificateMode ConfigSection::get_cert_mode()
+ConfigSection::CertificateMode ConfigSection::get_cert_mode()
 {
     const auto value = this->consume_value(props::certificate_mode);
 
     if (value == "preshared")
     {
-        return ProxyConfig::CertificateMode::preshared_keys;
+        return CertificateMode::preshared_keys;
     }
     else if (value == "certificate")
     {
-        return ProxyConfig::CertificateMode::certificates;
+        return CertificateMode::certificates;
     }
     else
     {

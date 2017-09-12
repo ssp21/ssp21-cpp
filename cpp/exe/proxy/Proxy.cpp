@@ -24,7 +24,7 @@ Proxy::Proxy(
 ) :
     executor(executor),
     logger(logger),
-    factory(PluginFactory::get(config)),
+    factory(nullptr), // TODO
     server(executor->get_context(), config.listen_endpoint, config.listen_port),
     connect_endpoint(ip::address::from_string(config.connect_endpoint), config.connect_port),
     mode(config.endpoint_mode),

@@ -40,9 +40,9 @@ namespace ssp21
                                    InitiatorConfig(),
                                    ilogger,
                                    exe,
-								   CryptoSuite(), // defaults
-								   keys.initiator,
-								   keys.responder.public_key
+                                   CryptoSuite(), // defaults
+                                   keys.initiator,
+                                   keys.responder.public_key
                                );
 
         const auto responder = responder::factory::preshared_public_key_mode(
@@ -51,7 +51,7 @@ namespace ssp21
                                    rlogger,
                                    exe,
                                    keys.responder,
-								   keys.initiator.public_key									
+                                   keys.initiator.public_key
                                );
 
         return Stacks{ initiator, responder };
@@ -73,10 +73,10 @@ namespace ssp21
                                    InitiatorConfig(),
                                    ilogger,
                                    exe,
-								   CryptoSuite(), // defaults
+                                   CryptoSuite(), // defaults
                                    keys.initiator,
-								   authority_data.certificate_file_data,
-								   initiator_cert_data                                       
+                                   authority_data.certificate_file_data,
+                                   initiator_cert_data
                                );
 
         const auto responder = responder::factory::certificate_public_key_mode(
@@ -84,9 +84,9 @@ namespace ssp21
                                    ResponderConfig(),
                                    rlogger,
                                    exe,
-								   keys.responder,                                      
+                                   keys.responder,
                                    authority_data.certificate_file_data,
-                                   responder_cert_data                                       
+                                   responder_cert_data
                                );
 
         return Stacks{ initiator, responder };

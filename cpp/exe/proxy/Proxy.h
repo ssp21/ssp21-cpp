@@ -8,7 +8,7 @@
 
 #include "Executor.h"
 #include "ProxyConfig.h"
-#include "PluginFactory.h"
+#include "StackFactory.h"
 #include "Session.h"
 
 #include <map>
@@ -70,7 +70,7 @@ private:
 
     const std::shared_ptr<Executor> executor;
     openpal::Logger logger;
-    plugin_factory_t factory;
+    stack_factory_t factory;
 
     Server server;
     asio::ip::tcp::endpoint connect_endpoint;
