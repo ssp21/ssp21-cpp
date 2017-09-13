@@ -4,9 +4,10 @@
 
 #include "ssp21/crypto/BufferTypes.h"
 
-#include <system_error>
-
 #include <openpal/util/Uncopyable.h>
+
+#include <system_error>
+#include <initializer_list>
 
 namespace ssp21
 {

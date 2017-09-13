@@ -34,7 +34,7 @@ namespace ssp21
             throw std::runtime_error("Error reading file");
         }
 
-        return std::move(buffer);
+        return buffer;
     }
 
 }
