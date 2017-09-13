@@ -50,22 +50,11 @@ namespace ssp21
         return HandshakeError::none;
     }
 
-    HandshakeError Algorithms::Handshake::configure(
-        HandshakeEphemeral handshake_ephemeral,
+    HandshakeError Algorithms::SharedSecretHandshake::configure(
         HandshakeKDF handshake_kdf,
         HandshakeHash handshake_hash
     )
     {
-        switch (handshake_ephemeral)
-        {
-        case(HandshakeEphemeral::x25519):
-            this->dh = &Crypto::dh_x25519;
-            this->gen_keypair = &Crypto::gen_keypair_x25519;
-            break;
-        default:
-            return HandshakeError::unsupported_handshake_ephemeral;
-        }
-
         switch (handshake_hash)
         {
         case(HandshakeHash::sha256):
@@ -85,6 +74,41 @@ namespace ssp21
         }
 
         return HandshakeError::none;
+    }
+
+    HandshakeError Algorithms::PublicKeyHandshake::configure(
+        HandshakeEphemeral handshake_ephemeral,
+        HandshakeKDF handshake_kdf,
+        HandshakeHash handshake_hash
+    )
+    {
+        {
+            const auto err = SharedSecretHandshake::configure(handshake_kdf, handshake_hash);
+            if (any(err)) return err;
+        }
+
+        switch (handshake_ephemeral)
+        {
+        case(HandshakeEphemeral::x25519):
+            this->dh = &Crypto::dh_x25519;
+            this->gen_keypair = &Crypto::gen_keypair_x25519;
+            break;
+        default:
+            return HandshakeError::unsupported_handshake_ephemeral;
+        }
+
+        return HandshakeError::none;
+    }
+
+    hash_func_t Algorithms::get_handshake_hash(HandshakeHash handshake_hash)
+    {
+        switch (handshake_hash)
+        {
+        case(HandshakeHash::sha256):
+            return &Crypto::hash_sha256;
+        default:
+            return nullptr;
+        }
     }
 
     HandshakeError Algorithms::configure(const CryptoSpec& spec)

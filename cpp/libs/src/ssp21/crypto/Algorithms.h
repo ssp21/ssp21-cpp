@@ -36,9 +36,22 @@ namespace ssp21
             ISessionMode* session_mode = &SessionModes::default_mode();
         };
 
-        struct Handshake
+        struct SharedSecretHandshake
         {
-            Handshake() = default;
+            SharedSecretHandshake() = default;
+
+            HandshakeError configure(
+                HandshakeKDF handshake_kdf,
+                HandshakeHash handshake_hash
+            );
+
+            kdf_func_t kdf = &Crypto::hkdf_sha256;
+            hash_func_t hash = &Crypto::hash_sha256;
+        };
+
+        struct PublicKeyHandshake : public SharedSecretHandshake
+        {
+            PublicKeyHandshake() = default;
 
             HandshakeError configure(
                 HandshakeEphemeral handshake_ephemeral,
@@ -47,10 +60,9 @@ namespace ssp21
             );
 
             dh_func_t dh = &Crypto::dh_x25519;
-            kdf_func_t kdf = &Crypto::hkdf_sha256;
-            hash_func_t hash = &Crypto::hash_sha256;
             gen_keypair_func_t gen_keypair = &Crypto::gen_keypair_x25519;
         };
+
 
         // default constructor initializes with default algorithms
         Algorithms() = default;
@@ -58,11 +70,13 @@ namespace ssp21
         // construct the algorithms
         Algorithms(const CryptoSuite& suite);
 
+        static hash_func_t get_handshake_hash(HandshakeHash handshake_hash);
+
         // configure the algorithms from a received CryptoSpec
         HandshakeError configure(const CryptoSpec& spec);
 
         // handshake algorithms
-        Handshake handshake;
+        PublicKeyHandshake handshake;
 
         // session algorithms
         Session session;
