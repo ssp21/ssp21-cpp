@@ -18,7 +18,7 @@ namespace ssp21
 
     public:
 
-		explicit SecureDynamicBuffer(uint32_t size) : openpal::Buffer(size)
+        explicit SecureDynamicBuffer(uint32_t size) : openpal::Buffer(size)
         {}
 
         ~SecureDynamicBuffer()

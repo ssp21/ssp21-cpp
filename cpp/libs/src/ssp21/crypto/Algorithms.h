@@ -5,7 +5,6 @@
 #include "ssp21/crypto/CryptoTypedefs.h"
 #include "ssp21/crypto/NonceFunctions.h"
 #include "ssp21/crypto/SessionModes.h"
-#include "ssp21/crypto/HandshakeAuthentication.h"
 #include "ssp21/crypto/CryptoSuite.h"
 
 #include "ssp21/crypto/gen/CryptoSpec.h"

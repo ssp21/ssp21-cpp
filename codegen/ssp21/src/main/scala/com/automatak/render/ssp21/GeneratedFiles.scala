@@ -43,8 +43,7 @@ object GeneratedFiles {
 
   private def internalEnumsImpl = List(
     ParseError,
-    FormatError,
-    ReassemblyResult
+    FormatError
   ).map(x => EnumConfig(x, false, true)).map(e => EnumGenerator(e, Some(basePath)))
 
   private def bitfields: List[WriteCppFiles] = Nil
