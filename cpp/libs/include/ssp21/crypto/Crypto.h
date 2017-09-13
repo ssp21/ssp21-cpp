@@ -27,6 +27,8 @@ namespace ssp21
 
         static void zero_memory(const wseq32_t& data);
 
+        static void gen_random(const wseq32_t& dest);
+
         static bool secure_equals(const seq32_t& lhs, const seq32_t& rhs);
 
         static void hash_sha256(

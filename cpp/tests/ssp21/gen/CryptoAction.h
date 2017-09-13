@@ -29,21 +29,23 @@ enum class CryptoAction : uint8_t
     /// 
     secure_equals = 0x0,
     /// 
-    hash_sha256 = 0x1,
+    gen_random = 0x1,
     /// 
-    hmac_sha256 = 0x2,
+    hash_sha256 = 0x2,
     /// 
-    hkdf_sha256 = 0x3,
+    hmac_sha256 = 0x3,
     /// 
-    gen_keypair_x25519 = 0x4,
+    hkdf_sha256 = 0x4,
     /// 
-    dh_x25519 = 0x5,
+    gen_keypair_x25519 = 0x5,
     /// 
-    gen_keypair_ed25519 = 0x6,
+    dh_x25519 = 0x6,
     /// 
-    sign_ed25519 = 0x7,
+    gen_keypair_ed25519 = 0x7,
     /// 
-    verify_ed25519 = 0x8
+    sign_ed25519 = 0x8,
+    /// 
+    verify_ed25519 = 0x9
 };
 
 struct CryptoActionSpec : private openpal::StaticOnly

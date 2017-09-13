@@ -63,7 +63,7 @@ namespace ssp21
             this->gen_keypair = &Crypto::gen_keypair_x25519;
             break;
         default:
-            return HandshakeError::unsupported_dh_mode;
+            return HandshakeError::unsupported_handshake_ephemeral;
         }
 
         switch (handshake_hash)

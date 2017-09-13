@@ -23,6 +23,8 @@ const char* CryptoActionSpec::to_string(CryptoAction arg)
     {
         case(CryptoAction::secure_equals):
             return "secure_equals";
+        case(CryptoAction::gen_random):
+            return "gen_random";
         case(CryptoAction::hash_sha256):
             return "hash_sha256";
         case(CryptoAction::hmac_sha256):

@@ -30,8 +30,8 @@ enum class HandshakeError : uint8_t
     bad_message_format = 0x0,
     /// The requested version is not supported
     unsupported_version = 0x1,
-    /// The requested DH mode is not supported
-    unsupported_dh_mode = 0x2,
+    /// The requested handshake ephemeral is not supported or doesn't match the handshake mode
+    unsupported_handshake_ephemeral = 0x2,
     /// The requested handshake hash is not supported
     unsupported_handshake_hash = 0x3,
     /// The requested handshake KDF is not supported

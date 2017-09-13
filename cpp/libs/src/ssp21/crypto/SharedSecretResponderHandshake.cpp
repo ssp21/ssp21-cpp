@@ -18,34 +18,30 @@ namespace ssp21
 
     IResponderHandshake::Result SharedSecretResponderHandshake::process(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now, IFrameWriter& writer, Session& session)
     {
-        /*
-        if(msg.spec.dh_mode)
+        if (msg.spec.handshake_ephemeral != HandshakeEphemeral::nonce)
+        {
+            return Result::failure(HandshakeError::unsupported_handshake_ephemeral);
+        }
 
         // verify that the public key length matches the DH mode
         if (msg.ephemeral_data.length() != consts::crypto::symmetric_ley_length)
         {
-        	return Result::failure(HandshakeError::bad_message_format);
+            return Result::failure(HandshakeError::bad_message_format);
         }
+
+        Algorithms::Session algorithms;
 
         {
-        	const auto err = this->cert_handler->validate(msg.certificate_mode, msg.handshake_data, remote_public_static_key);
-        	if (any(err))
-        	{
-        		return Result::failure(err);
-        	}
+            const auto err = algorithms.configure(msg.spec.nonce_mode, msg.spec.session_mode);
+            if (any(err))
+            {
+                return Result::failure(err);
+            }
         }
 
-        Algorithms algorithms;
+        // generate a nonce
 
-        {
-        	const auto err = algorithms.configure(msg.spec);
-        	if (any(err))
-        	{
-        		return Result::failure(err);
-        	}
-        }
-
-        // generate an ephemeral key pair
+        /*
         KeyPair ephemeralKeys;
         algorithms.handshake.gen_keypair(ephemeralKeys);
 

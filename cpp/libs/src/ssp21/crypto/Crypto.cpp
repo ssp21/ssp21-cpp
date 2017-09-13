@@ -23,6 +23,12 @@ namespace ssp21
         backend->zero_memory(data);
     }
 
+    void Crypto::gen_random(const wseq32_t& dest)
+    {
+        assert(backend);
+        backend->gen_random(dest);
+    }
+
     bool Crypto::secure_equals(const seq32_t& lhs, const seq32_t& rhs)
     {
         assert(backend);

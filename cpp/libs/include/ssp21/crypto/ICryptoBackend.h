@@ -23,6 +23,8 @@ namespace ssp21
 
         virtual void zero_memory(const wseq32_t& data) = 0;
 
+        virtual void gen_random(const wseq32_t& dest) = 0;
+
         virtual bool secure_equals(const seq32_t& lhs, const seq32_t& rhs) = 0;
 
         virtual void hash_sha256(

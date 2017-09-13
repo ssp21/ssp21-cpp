@@ -20,6 +20,11 @@ namespace ssp21
 
     IResponderHandshake::Result PublicKeyResponderHandshake::process(const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now, IFrameWriter& writer, Session& session)
     {
+        if (msg.spec.handshake_ephemeral != HandshakeEphemeral::x25519)
+        {
+            return Result::failure(HandshakeError::unsupported_handshake_ephemeral);
+        }
+
         // verify that the public key length matches the DH mode
         if (msg.ephemeral_data.length() != consts::crypto::x25519_key_length)
         {

@@ -36,6 +36,11 @@ namespace ssp21
         sodium_memzero(data, data.length());
     }
 
+    void SodiumBackend::gen_random(const wseq32_t& dest)
+    {
+        randombytes_buf(dest, dest.length());
+    }
+
     bool SodiumBackend::secure_equals(const seq32_t& lhs, const seq32_t& rhs)
     {
         if (lhs.length() != rhs.length()) return false;

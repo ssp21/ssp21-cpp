@@ -15,6 +15,7 @@ object CryptoAction extends EnumModel {
 
   override def nonDefaultValues: List[EnumValue] = EnumValue.list(
     "secure_equals",
+    "gen_random",
     "hash_sha256",
     "hmac_sha256",
     "hkdf_sha256",

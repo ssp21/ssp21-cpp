@@ -33,6 +33,13 @@ namespace ssp21
         memset(data, 0, data.length());
     }
 
+    void MockCryptoBackend::gen_random(const wseq32_t& dest)
+    {
+        this->assert_fixture();
+        memset(dest, fixture->fill_byte, dest.length());
+        fixture->actions.push_back(CryptoAction::gen_random);
+    }
+
     bool MockCryptoBackend::secure_equals(const seq32_t& lhs, const seq32_t& rhs)
     {
         this->assert_fixture();
