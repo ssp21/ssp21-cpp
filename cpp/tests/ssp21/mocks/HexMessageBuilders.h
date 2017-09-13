@@ -5,7 +5,7 @@
 #include <cstdint>
 
 #include "ssp21/crypto/gen/NonceMode.h"
-#include "ssp21/crypto/gen/DHMode.h"
+#include "ssp21/crypto/gen/HandshakeEphemeral.h"
 #include "ssp21/crypto/gen/HandshakeHash.h"
 #include "ssp21/crypto/gen/HandshakeKDF.h"
 #include "ssp21/crypto/gen/SessionMode.h"
@@ -25,7 +25,7 @@ namespace ssp21
         std::string request_handshake_begin(
             uint16_t version,
             NonceMode nonce_mode,
-            DHMode dh_mode,
+            HandshakeEphemeral handshake_ephemeral,
             HandshakeHash handshake_hash,
             HandshakeKDF handshake_kdf,
             SessionMode session_mode,

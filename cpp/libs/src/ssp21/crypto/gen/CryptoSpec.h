@@ -16,13 +16,13 @@
 #ifndef SSP21_CRYPTOSPEC_H
 #define SSP21_CRYPTOSPEC_H
 
-#include "ssp21/crypto/gen/DHMode.h"
 #include "ssp21/crypto/gen/NonceMode.h"
 #include "ssp21/crypto/gen/ParseError.h"
 #include "ssp21/crypto/gen/FormatError.h"
 #include "ssp21/crypto/gen/SessionMode.h"
 #include "ssp21/crypto/gen/HandshakeKDF.h"
 #include "ssp21/crypto/gen/HandshakeHash.h"
+#include "ssp21/crypto/gen/HandshakeEphemeral.h"
 #include "ssp21/util/SequenceTypes.h"
 #include "ssp21/crypto/EnumField.h"
 #include "ssp21/crypto/IMessagePrinter.h"
@@ -35,7 +35,7 @@ struct CryptoSpec final
 
     CryptoSpec(
         NonceMode nonce_mode,
-        DHMode dh_mode,
+        HandshakeEphemeral handshake_ephemeral,
         HandshakeHash handshake_hash,
         HandshakeKDF handshake_kdf,
         SessionMode session_mode
@@ -46,7 +46,7 @@ struct CryptoSpec final
     static const uint8_t fixed_size_bytes = 5;
 
     EnumField<NonceModeSpec> nonce_mode;
-    EnumField<DHModeSpec> dh_mode;
+    EnumField<HandshakeEphemeralSpec> handshake_ephemeral;
     EnumField<HandshakeHashSpec> handshake_hash;
     EnumField<HandshakeKDFSpec> handshake_kdf;
     EnumField<SessionModeSpec> session_mode;

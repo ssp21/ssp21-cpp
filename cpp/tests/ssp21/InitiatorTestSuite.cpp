@@ -34,7 +34,7 @@ TEST_CASE(SUITE("throws exception during construction if algorithms aren't suppo
 {
     InitiatorConfig config;
     CryptoSuite suite;
-    suite.dh_mode = DHMode::undefined;
+    suite.handshake_ephemeral = HandshakeEphemeral::undefined;
 
     REQUIRE_THROWS(
         InitiatorFixture fix(config, suite);
@@ -193,7 +193,7 @@ void test_request_handshake_begin(InitiatorFixture& fix)
     const auto expected = hex::request_handshake_begin(
                               0,
                               NonceMode::increment_last_rx,
-                              DHMode::x25519,
+                              HandshakeEphemeral::x25519,
                               HandshakeHash::sha256,
                               HandshakeKDF::hkdf_sha256,
                               SessionMode::hmac_sha256_16,

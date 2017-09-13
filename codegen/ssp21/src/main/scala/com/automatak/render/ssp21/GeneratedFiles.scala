@@ -22,7 +22,7 @@ object GeneratedFiles {
   private def ssp21EnumsAPI = List(
     HandshakeHash,
     NonceMode,
-    DHMode,
+    HandshakeEphemeral,
     SessionMode,
     CertificateMode,
     HandshakeError,

@@ -8,7 +8,7 @@ namespace ssp21
     Algorithms::Algorithms(const CryptoSuite& suite)
     {
         {
-            const auto err = this->handshake.configure(suite.dh_mode, suite.handshake_kdf, suite.handshake_hash);
+            const auto err = this->handshake.configure(suite.handshake_ephemeral, suite.handshake_kdf, suite.handshake_hash);
             if (any(err))
             {
                 throw Exception("Unable to configure handshake algorithms: ", HandshakeErrorSpec::to_string(err));
@@ -51,14 +51,14 @@ namespace ssp21
     }
 
     HandshakeError Algorithms::Handshake::configure(
-        DHMode dh_mode,
+        HandshakeEphemeral handshake_ephemeral,
         HandshakeKDF handshake_kdf,
         HandshakeHash handshake_hash
     )
     {
-        switch (dh_mode)
+        switch (handshake_ephemeral)
         {
-        case(DHMode::x25519):
+        case(HandshakeEphemeral::x25519):
             this->dh = &Crypto::dh_x25519;
             this->gen_keypair = &Crypto::gen_keypair_x25519;
             break;
@@ -92,7 +92,7 @@ namespace ssp21
         Algorithms algorithms;
 
         {
-            const auto err = algorithms.handshake.configure(spec.dh_mode, spec.handshake_kdf, spec.handshake_hash);
+            const auto err = algorithms.handshake.configure(spec.handshake_ephemeral, spec.handshake_kdf, spec.handshake_hash);
             if (any(err)) return err;
         }
 

@@ -13,8 +13,8 @@
 // Licensed under the terms of the BSDv3 license
 //
 
-#ifndef SSP21_DHMODE_H
-#define SSP21_DHMODE_H
+#ifndef SSP21_HANDSHAKEEPHEMERAL_H
+#define SSP21_HANDSHAKEEPHEMERAL_H
 
 #include <cstdint>
 #include "openpal/util/Uncopyable.h"
@@ -22,23 +22,25 @@
 namespace ssp21 {
 
 /**
-    Specifies which Diffie Hellman function is used during the handshake
+    Specifies the meaning of the ephemeral data in RequestHandshakeBegin
 */
-enum class DHMode : uint8_t
+enum class HandshakeEphemeral : uint8_t
 {
-    /// Use the x25519 algorithm
+    /// x25519 algorithm public key
     x25519 = 0x0,
+    /// 32-byte random nonce
+    nonce = 0x1,
     /// value not defined
     undefined = 0xFF
 };
 
-struct DHModeSpec : private openpal::StaticOnly
+struct HandshakeEphemeralSpec : private openpal::StaticOnly
 {
-    typedef DHMode enum_type_t;
+    typedef HandshakeEphemeral enum_type_t;
 
-    static uint8_t to_type(DHMode arg);
-    static DHMode from_type(uint8_t arg);
-    static const char* to_string(DHMode arg);
+    static uint8_t to_type(HandshakeEphemeral arg);
+    static HandshakeEphemeral from_type(uint8_t arg);
+    static const char* to_string(HandshakeEphemeral arg);
 };
 
 }

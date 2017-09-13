@@ -9,7 +9,7 @@ object CryptoSpec extends Struct {
 
   override def fields: List[Field] = List(
     Enum(NonceMode),
-    Enum(DHMode),
+    Enum(HandshakeEphemeral),
     Enum(HandshakeHash),
     Enum(HandshakeKDF),
     Enum(SessionMode)

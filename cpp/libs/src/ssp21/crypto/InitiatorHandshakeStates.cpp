@@ -25,7 +25,7 @@ namespace ssp21
 
         const CryptoSpec crypto_spec(
             suite.nonce_mode,
-            suite.dh_mode,
+            suite.handshake_ephemeral,
             suite.handshake_hash,
             suite.handshake_kdf,
             suite.session_mode

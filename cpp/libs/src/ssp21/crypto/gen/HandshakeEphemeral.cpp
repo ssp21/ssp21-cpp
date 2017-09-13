@@ -13,30 +13,34 @@
 // Licensed under the terms of the BSDv3 license
 //
 
-#include "ssp21/crypto/gen/DHMode.h"
+#include "ssp21/crypto/gen/HandshakeEphemeral.h"
 
 namespace ssp21 {
 
-uint8_t DHModeSpec::to_type(DHMode arg)
+uint8_t HandshakeEphemeralSpec::to_type(HandshakeEphemeral arg)
 {
     return static_cast<uint8_t>(arg);
 }
-DHMode DHModeSpec::from_type(uint8_t arg)
+HandshakeEphemeral HandshakeEphemeralSpec::from_type(uint8_t arg)
 {
     switch(arg)
     {
         case(0x0):
-            return DHMode::x25519;
+            return HandshakeEphemeral::x25519;
+        case(0x1):
+            return HandshakeEphemeral::nonce;
         default:
-            return DHMode::undefined;
+            return HandshakeEphemeral::undefined;
     }
 }
-const char* DHModeSpec::to_string(DHMode arg)
+const char* HandshakeEphemeralSpec::to_string(HandshakeEphemeral arg)
 {
     switch(arg)
     {
-        case(DHMode::x25519):
+        case(HandshakeEphemeral::x25519):
             return "x25519";
+        case(HandshakeEphemeral::nonce):
+            return "nonce";
         default:
             return "undefined";
     }

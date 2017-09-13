@@ -26,13 +26,13 @@ CryptoSpec::CryptoSpec()
 
 CryptoSpec::CryptoSpec(
     NonceMode nonce_mode,
-    DHMode dh_mode,
+    HandshakeEphemeral handshake_ephemeral,
     HandshakeHash handshake_hash,
     HandshakeKDF handshake_kdf,
     SessionMode session_mode
 ) :
     nonce_mode(nonce_mode),
-    dh_mode(dh_mode),
+    handshake_ephemeral(handshake_ephemeral),
     handshake_hash(handshake_hash),
     handshake_kdf(handshake_kdf),
     session_mode(session_mode)
@@ -43,7 +43,7 @@ size_t CryptoSpec::size() const
     return MessageFormatter::sum_sizes(
         0,
         nonce_mode,
-        dh_mode,
+        handshake_ephemeral,
         handshake_hash,
         handshake_kdf,
         session_mode
@@ -55,7 +55,7 @@ ParseError CryptoSpec::read(seq32_t& input)
     return MessageParser::read_fields(
         input,
         nonce_mode,
-        dh_mode,
+        handshake_ephemeral,
         handshake_hash,
         handshake_kdf,
         session_mode
@@ -75,7 +75,7 @@ FormatError CryptoSpec::write(wseq32_t& output) const
     return MessageFormatter::write_fields(
         output,
         nonce_mode,
-        dh_mode,
+        handshake_ephemeral,
         handshake_hash,
         handshake_kdf,
         session_mode
@@ -88,8 +88,8 @@ void CryptoSpec::print(const char* name, IMessagePrinter& printer) const
         printer,
         "nonce_mode",
         nonce_mode,
-        "dh_mode",
-        dh_mode,
+        "handshake_ephemeral",
+        handshake_ephemeral,
         "handshake_hash",
         handshake_hash,
         "handshake_kdf",

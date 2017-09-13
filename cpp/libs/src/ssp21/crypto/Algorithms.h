@@ -41,7 +41,7 @@ namespace ssp21
             Handshake() = default;
 
             HandshakeError configure(
-                DHMode dh_mode,
+                HandshakeEphemeral handshake_ephemeral,
                 HandshakeKDF handshake_kdf,
                 HandshakeHash handshake_hash
             );
