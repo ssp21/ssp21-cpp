@@ -16,7 +16,7 @@ namespace ssp21
 
     public:
 
-        Exception(const char* message) : std::runtime_error(message)
+        explicit Exception(const char* message) : std::runtime_error(message)
         {
 
         }
