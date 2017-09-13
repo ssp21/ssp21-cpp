@@ -1,7 +1,7 @@
 
 #include "InitiatorHandshakes.h"
 
-#include "ssp21/crypto/InitiatorHandshake.h"
+#include "ssp21/crypto/PublicKeyInitiatorHandshake.h"
 
 namespace ssp21
 {
@@ -12,7 +12,7 @@ namespace ssp21
         const std::shared_ptr<ICertificateHandler>& cert_handler
     )
     {
-        return InitiatorHandshake::create_shared(logger, static_keys, crypto_suite, cert_handler);
+        return PublicKeyInitiatorHandshake::create_shared(logger, static_keys, crypto_suite, cert_handler);
     }
 }
 

@@ -1,6 +1,6 @@
 
-#ifndef SSP21_INITIATORHANDSHAKE_H
-#define SSP21_INITIATORHANDSHAKE_H
+#ifndef SSP21_PUBLICKEYINITIATORHANDSHAKE_H
+#define SSP21_PUBLICKEYINITIATORHANDSHAKE_H
 
 #include "ssp21/crypto/IInitiatorHandshake.h"
 
@@ -13,11 +13,11 @@ namespace ssp21
     /**
     * Class that holds all of the data used during the handshake process
     */
-    class InitiatorHandshake final : public IInitiatorHandshake
+    class PublicKeyInitiatorHandshake final : public IInitiatorHandshake
     {
     public:
 
-        InitiatorHandshake(const openpal::Logger& logger, const StaticKeys& static_keys, const CryptoSuite& crypto_suite, const std::shared_ptr<ICertificateHandler>& cert_handler) :
+		PublicKeyInitiatorHandshake(const openpal::Logger& logger, const StaticKeys& static_keys, const CryptoSuite& crypto_suite, const std::shared_ptr<ICertificateHandler>& cert_handler) :
             logger(logger),
             static_keys(static_keys),
             crypto_suite(crypto_suite),
@@ -27,7 +27,7 @@ namespace ssp21
 
         static std::shared_ptr<IInitiatorHandshake> create_shared(const openpal::Logger& logger, const StaticKeys& static_keys, const CryptoSuite& crypto_suite, const std::shared_ptr<ICertificateHandler>& cert_handler)
         {
-            return std::make_shared<InitiatorHandshake>(logger, static_keys, crypto_suite, cert_handler);
+            return std::make_shared<PublicKeyInitiatorHandshake>(logger, static_keys, crypto_suite, cert_handler);
         }
 
         virtual seq32_t generate_ephemeral_data() override;

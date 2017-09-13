@@ -1,5 +1,5 @@
 
-#include "ssp21/crypto/InitiatorHandshake.h"
+#include "ssp21/crypto/PublicKeyInitiatorHandshake.h"
 
 #include "openpal/logging/LogMacros.h"
 
@@ -9,19 +9,19 @@ using namespace openpal;
 
 namespace ssp21
 {
-    seq32_t InitiatorHandshake::generate_ephemeral_data()
+    seq32_t PublicKeyInitiatorHandshake::generate_ephemeral_data()
     {
         this->algorithms.handshake.gen_keypair(this->local_ephemeral_keys);
         return this->local_ephemeral_keys.public_key.as_seq();
     }
 
-    void InitiatorHandshake::begin_request_transmit(const seq32_t& data, const openpal::Timestamp& now)
+    void PublicKeyInitiatorHandshake::begin_request_transmit(const seq32_t& data, const openpal::Timestamp& now)
     {
         this->time_request_tx = now;
         this->algorithms.handshake.hash({ data }, this->handshake_hash);
     }
 
-    bool InitiatorHandshake::initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const InitiatorConfig::Params& params, const Timestamp& now, Session& session)
+    bool PublicKeyInitiatorHandshake::initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const InitiatorConfig::Params& params, const Timestamp& now, Session& session)
     {
         // extract the remote public key
         seq32_t remote_public_key;
@@ -81,7 +81,7 @@ namespace ssp21
                );
     }
 
-    seq32_t InitiatorHandshake::mix_handshake_hash(const seq32_t& input)
+    seq32_t PublicKeyInitiatorHandshake::mix_handshake_hash(const seq32_t& input)
     {
         // h = hash(h || input)
 
