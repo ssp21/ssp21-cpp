@@ -77,9 +77,9 @@ TEST_CASE(SUITE("successfully parses message"))
     REQUIRE(msg.constraints.max_nonce == 0xFFFF);
     REQUIRE(msg.constraints.max_session_duration == 0xCAFEBABE);
     REQUIRE(msg.certificate_mode == CertificateMode::preshared_keys);
-    REQUIRE(to_hex(msg.ephemeral_public_key) == "AA AA AA");
+    REQUIRE(to_hex(msg.ephemeral_data) == "AA AA AA");
 
-    REQUIRE(msg.certificate_data.is_empty());
+    REQUIRE(msg.handshake_data.is_empty());
 }
 
 TEST_CASE(SUITE("pretty prints message"))
@@ -121,9 +121,9 @@ TEST_CASE(SUITE("pretty prints message"))
         "max_nonce: 32768",
         "max_session_duration: 3405691582",
         "certificate_mode: preshared_keys",
-        "ephemeral_public_key (length = 2)",
+        "ephemeral_data (length = 2)",
         "CA:FE",
-        "certificate_data (length = 0)"
+        "handshake_data (length = 0)"
     );
 
 }

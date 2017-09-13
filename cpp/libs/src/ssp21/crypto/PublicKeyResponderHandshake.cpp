@@ -21,7 +21,7 @@ namespace ssp21
     IResponderHandshake::Result PublicKeyResponderHandshake::process(const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now, IFrameWriter& writer, Session& session)
     {
         // verify that the public key length matches the DH mode
-        if (msg.ephemeral_public_key.length() != consts::crypto::x25519_key_length)
+        if (msg.ephemeral_data.length() != consts::crypto::x25519_key_length)
         {
             return Result::failure(HandshakeError::bad_message_format);
         }
@@ -29,7 +29,7 @@ namespace ssp21
         seq32_t remote_public_static_key;
 
         {
-            const auto err = this->cert_handler->validate(msg.certificate_mode, msg.certificate_data, remote_public_static_key);
+            const auto err = this->cert_handler->validate(msg.certificate_mode, msg.handshake_data, remote_public_static_key);
             if (any(err))
             {
                 return Result::failure(err);
@@ -74,7 +74,7 @@ namespace ssp21
                              this->static_keys,
                              ephemeralKeys,
                              remote_public_static_key,
-                             msg.ephemeral_public_key,
+                             msg.ephemeral_data,
                              ec
                          );
 

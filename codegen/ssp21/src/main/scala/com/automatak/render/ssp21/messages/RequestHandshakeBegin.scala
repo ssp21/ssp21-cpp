@@ -38,8 +38,8 @@ object RequestHandshakeBegin extends Message {
     StructField("spec", CryptoSpec),
     StructField("constraints", SessionConstraints),
     Enum(CertificateMode),
-    CommonFields.ephemeralPublicKey,
-    CommonFields.certificate_data
+    CommonFields.ephemeralData,
+    CommonFields.handshakeData
   )
 
 }

@@ -27,8 +27,8 @@ struct ReplyHandshakeBegin final : public IMessage, private openpal::Uncopyable
     ReplyHandshakeBegin();
 
     ReplyHandshakeBegin(
-        const seq32_t& ephemeral_public_key,
-        const seq32_t& certificate_data
+        const seq32_t& ephemeral_data,
+        const seq32_t& handshake_data
     );
 
     size_t size() const;
@@ -41,8 +41,8 @@ struct ReplyHandshakeBegin final : public IMessage, private openpal::Uncopyable
     static const uint8_t min_size_bytes = 3;
     static const Function function = Function::reply_handshake_begin;
 
-    SeqByteField ephemeral_public_key;
-    SeqByteField certificate_data;
+    SeqByteField ephemeral_data;
+    SeqByteField handshake_data;
 
 };
 

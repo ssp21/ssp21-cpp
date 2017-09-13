@@ -29,15 +29,15 @@ RequestHandshakeBegin::RequestHandshakeBegin(
     const CryptoSpec& spec,
     const SessionConstraints& constraints,
     CertificateMode certificate_mode,
-    const seq32_t& ephemeral_public_key,
-    const seq32_t& certificate_data
+    const seq32_t& ephemeral_data,
+    const seq32_t& handshake_data
 ) :
     version(version),
     spec(spec),
     constraints(constraints),
     certificate_mode(certificate_mode),
-    ephemeral_public_key(ephemeral_public_key),
-    certificate_data(certificate_data)
+    ephemeral_data(ephemeral_data),
+    handshake_data(handshake_data)
 {}
 
 size_t RequestHandshakeBegin::size() const
@@ -48,8 +48,8 @@ size_t RequestHandshakeBegin::size() const
         spec,
         constraints,
         certificate_mode,
-        ephemeral_public_key,
-        certificate_data
+        ephemeral_data,
+        handshake_data
     );
 }
 
@@ -64,8 +64,8 @@ ParseError RequestHandshakeBegin::read(seq32_t input)
             spec,
             constraints,
             certificate_mode,
-            ephemeral_public_key,
-            certificate_data
+            ephemeral_data,
+            handshake_data
         );
     };
 
@@ -82,8 +82,8 @@ FormatResult RequestHandshakeBegin::write(wseq32_t& output) const
             spec,
             constraints,
             certificate_mode,
-            ephemeral_public_key,
-            certificate_data
+            ephemeral_data,
+            handshake_data
         );
     };
 
@@ -101,10 +101,10 @@ void RequestHandshakeBegin::print(IMessagePrinter& printer) const
         constraints,
         "certificate_mode",
         certificate_mode,
-        "ephemeral_public_key",
-        ephemeral_public_key,
-        "certificate_data",
-        certificate_data
+        "ephemeral_data",
+        ephemeral_data,
+        "handshake_data",
+        handshake_data
     );
 }
 

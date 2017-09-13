@@ -17,8 +17,8 @@ namespace ssp21
     }
 
     IResponderHandshake::Result SharedSecretResponderHandshake::process(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now, IFrameWriter& writer, Session& session)
-    {		
-		return Result::failure(HandshakeError::internal);        
+    {
+        return Result::failure(HandshakeError::internal);
     }
 
 }

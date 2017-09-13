@@ -9,8 +9,8 @@ object ReplyHandshakeBegin extends Message {
   def function = CryptoFunction.replyHandshakeBegin
 
   override def fields: List[Field] = List(
-    CommonFields.ephemeralPublicKey,
-    CommonFields.certificate_data
+    CommonFields.ephemeralData,
+    CommonFields.handshakeData
   )
 
 }
