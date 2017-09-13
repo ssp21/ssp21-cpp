@@ -12,7 +12,7 @@
 namespace ssp21
 {
 
-	PublicKeyResponderHandshake::PublicKeyResponderHandshake(const openpal::Logger& logger, const StaticKeys& static_keys, const std::shared_ptr<ICertificateHandler>& cert_handler) :
+    PublicKeyResponderHandshake::PublicKeyResponderHandshake(const openpal::Logger& logger, const StaticKeys& static_keys, const std::shared_ptr<ICertificateHandler>& cert_handler) :
         logger(logger),
         static_keys(static_keys),
         cert_handler(cert_handler)

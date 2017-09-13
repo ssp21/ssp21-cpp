@@ -17,7 +17,7 @@ namespace ssp21
     {
     public:
 
-		PublicKeyInitiatorHandshake(const openpal::Logger& logger, const StaticKeys& static_keys, const CryptoSuite& crypto_suite, const std::shared_ptr<ICertificateHandler>& cert_handler) :
+        PublicKeyInitiatorHandshake(const openpal::Logger& logger, const StaticKeys& static_keys, const CryptoSuite& crypto_suite, const std::shared_ptr<ICertificateHandler>& cert_handler) :
             logger(logger),
             static_keys(static_keys),
             crypto_suite(crypto_suite),

@@ -10,15 +10,11 @@
 
 namespace ssp21
 {
-
-    /**
-    * Class that holds all of the data used during the handshake process
-    */
     class PublicKeyResponderHandshake : public IResponderHandshake
     {
     public:
 
-		PublicKeyResponderHandshake(const openpal::Logger& logger, const StaticKeys& static_keys, const std::shared_ptr<ICertificateHandler>& cert_handler);
+        PublicKeyResponderHandshake(const openpal::Logger& logger, const StaticKeys& static_keys, const std::shared_ptr<ICertificateHandler>& cert_handler);
 
         inline static std::shared_ptr<IResponderHandshake> create_shared(openpal::Logger logger, StaticKeys static_keys, const std::shared_ptr<ICertificateHandler>& cert_handler)
         {
