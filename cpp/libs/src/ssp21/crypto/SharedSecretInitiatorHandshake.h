@@ -10,19 +10,16 @@ namespace ssp21
     /**
     * Class that holds all of the data used during the handshake process
     */
-    /*
+
     class SharedSecretInitiatorHandshake final : public IInitiatorHandshake
     {
     public:
 
-    	SharedSecretInitiatorHandshake(const openpal::Logger& logger, const std::shared_ptr<const SymmetricKey>& shared_secret) :
-            logger(logger),
-    		shared_secret(shared_secret)
-        {}
+        SharedSecretInitiatorHandshake(const openpal::Logger& logger, const CryptoSuite& crypto_suite, const std::shared_ptr<const SymmetricKey>& shared_secret);
 
-        inline static std::shared_ptr<IInitiatorHandshake> make_shared(const openpal::Logger& logger, const std::shared_ptr<SymmetricKey>& shared_secret)
+        inline static std::shared_ptr<IInitiatorHandshake> make_shared(const openpal::Logger& logger, const CryptoSuite& crypto_suite, const std::shared_ptr<SymmetricKey>& shared_secret)
         {
-            return std::make_shared<SharedSecretInitiatorHandshake>(logger, shared_secret);
+            return std::make_shared<SharedSecretInitiatorHandshake>(logger, crypto_suite, shared_secret);
         }
 
         virtual seq32_t generate_ephemeral_data() override;
@@ -31,14 +28,14 @@ namespace ssp21
 
         virtual bool initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const InitiatorConfig::Params& params, const openpal::Timestamp& now, Session& session) override;
 
-        virtual CertificateMode get_certificate_mode() const override
+        virtual HandshakeMode get_handshake_mode() const override
         {
-            /
+            return HandshakeMode::shared_secret;
         }
 
         inline seq32_t get_mode_data() const override
         {
-            return cert_handler->certificate_data();
+            return seq32_t::empty();
         }
 
         virtual CryptoSuite get_crypto_suite() const override
@@ -51,7 +48,10 @@ namespace ssp21
         seq32_t mix_handshake_hash(const seq32_t& data);
 
         openpal::Logger logger;
-    	const std::shared_ptr<const SymmetricKey> shared_secret;
+        const CryptoSuite crypto_suite;
+        const Algorithms algorithms;
+        const std::shared_ptr<const SymmetricKey> shared_secret;
+        openpal::StaticBuffer<uint32_t, consts::crypto::nonce_length> nonce_buffer;
 
         // time that the request was transmitted
         openpal::Timestamp time_request_tx;
@@ -59,7 +59,7 @@ namespace ssp21
         // running hash value of first 2 handshake messages (h)
         HashOutput handshake_hash;
     };
-    */
+
 
 
 
