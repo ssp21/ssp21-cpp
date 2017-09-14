@@ -17,7 +17,8 @@ namespace ssp21
     enum class Mode : uint8_t
     {
         preshared_key,
-        certificates
+        certificates,
+		shared_secret
     };
 
 
@@ -46,6 +47,8 @@ namespace ssp21
 
         IntegrationFixture(Mode mode);
 
+
+
         const std::shared_ptr<openpal::MockExecutor> exe;
         openpal::MockLogHandler ilog;
         openpal::MockLogHandler rlog;
@@ -62,6 +65,8 @@ namespace ssp21
         Stacks stacks;
 
     private:
+
+		static Stacks get_stacks(Mode mode, openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe);
 
         static Stacks preshared_key_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe);
 

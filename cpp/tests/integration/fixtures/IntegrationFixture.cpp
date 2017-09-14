@@ -24,12 +24,24 @@ namespace ssp21
         rlog("responder"),
         initiator_lower(exe),
         responder_lower(exe),
-        stacks(
-            (mode == Mode::preshared_key) ? preshared_key_stacks(rlog.logger, ilog.logger, exe) : certificate_stacks(rlog.logger, ilog.logger, exe)
-        )
+        stacks(this->get_stacks(mode, rlog.logger, ilog.logger, exe))
     {
         this->wire();
     }
+
+	IntegrationFixture::Stacks IntegrationFixture::get_stacks(Mode mode, openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe)
+	{
+		switch (mode)
+		{
+			case(Mode::preshared_key):
+				return preshared_key_stacks(rlogger, ilogger, exe);
+			case(Mode::certificates):
+				return certificate_stacks(rlogger, ilogger, exe);
+			default:
+				throw new Exception("Unsupported integration test mode");
+		}
+	
+	}
 
     IntegrationFixture::Stacks IntegrationFixture::preshared_key_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe)
     {
