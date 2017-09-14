@@ -53,7 +53,7 @@ TEST_CASE(SUITE("responds to invalid key length with bad_message_format"))
                              SessionMode::hmac_sha256_16,
                              consts::crypto::initiator::default_max_nonce,
                              consts::crypto::initiator::default_max_session_time_ms,
-                             CertificateMode::preshared_keys,
+                             HandshakeMode::preshared_public_keys,
                              hex::repeat(0xFF, (consts::crypto::x25519_key_length - 1))
                          );
 
@@ -325,7 +325,7 @@ void test_begin_handshake_success(ResponderFixture& fix, uint16_t max_nonce, uin
                              SessionMode::hmac_sha256_16,
                              max_nonce,
                              max_session_time,
-                             CertificateMode::preshared_keys,
+                             HandshakeMode::preshared_public_keys,
                              hex::repeat(0xFF, consts::crypto::x25519_key_length)
                          );
 

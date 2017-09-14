@@ -199,7 +199,7 @@ void test_request_handshake_begin(InitiatorFixture& fix)
                               SessionMode::hmac_sha256_16,
                               consts::crypto::initiator::default_max_nonce,
                               consts::crypto::initiator::default_max_session_time_ms,
-                              CertificateMode::preshared_keys,
+                              HandshakeMode::preshared_public_keys,
                               hex::repeat(0xFF, 32)
                           );
 

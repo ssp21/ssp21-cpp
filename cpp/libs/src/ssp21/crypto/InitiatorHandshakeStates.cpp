@@ -40,7 +40,7 @@ namespace ssp21
                 ctx.params.max_nonce_value,
                 ctx.params.max_session_time_ms
             ),
-            ctx.handshake->get_certificate_mode(),
+            ctx.handshake->get_handshake_mode(),
             ephemeral_data,
             ctx.handshake->get_mode_data()
         );

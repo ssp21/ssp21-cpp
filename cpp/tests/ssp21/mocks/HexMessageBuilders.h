@@ -9,7 +9,7 @@
 #include "ssp21/crypto/gen/HandshakeHash.h"
 #include "ssp21/crypto/gen/HandshakeKDF.h"
 #include "ssp21/crypto/gen/SessionMode.h"
-#include "ssp21/crypto/gen/CertificateMode.h"
+#include "ssp21/crypto/gen/HandshakeMode.h"
 #include "ssp21/crypto/gen/HandshakeError.h"
 #include "ssp21/crypto/gen/Function.h"
 
@@ -31,7 +31,7 @@ namespace ssp21
             SessionMode session_mode,
             uint16_t max_nonce,
             uint32_t max_session_time,
-            CertificateMode certificate_mode,
+            HandshakeMode hansshake_mode,
             const std::string& hex_ephem_pub_key
         );
 

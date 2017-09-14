@@ -24,7 +24,7 @@ object GeneratedFiles {
     NonceMode,
     HandshakeEphemeral,
     SessionMode,
-    CertificateMode,
+    HandshakeMode,
     HandshakeError,
     HandshakeKDF,
     PublicKeyType,

@@ -40,8 +40,8 @@ enum class HandshakeError : uint8_t
     unsupported_session_mode = 0x6,
     /// The requested nonce verification mode is not supported
     unsupported_nonce_mode = 0x7,
-    /// The requested certificate mode is not supported
-    unsupported_certificate_mode = 0x8,
+    /// The requested handshake mode is not supported
+    unsupported_handshake_mode = 0x8,
     /// One of the received certificates was improperly encoded
     bad_certificate_format = 0x9,
     /// One of the received certificates was improperly encoded

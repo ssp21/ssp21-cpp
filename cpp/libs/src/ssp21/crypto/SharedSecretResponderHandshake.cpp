@@ -14,7 +14,7 @@ using namespace openpal;
 namespace ssp21
 {
 
-    SharedSecretResponderHandshake::SharedSecretResponderHandshake(const Logger& logger, const std::shared_ptr<SymmetricKey>& shared_secret) :
+    SharedSecretResponderHandshake::SharedSecretResponderHandshake(const Logger& logger, const std::shared_ptr<const SymmetricKey>& shared_secret) :
         logger(logger),
         shared_secret(shared_secret)
     {

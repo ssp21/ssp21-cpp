@@ -16,7 +16,7 @@ namespace ssp21
 
         PublicKeyResponderHandshake(const openpal::Logger& logger, const StaticKeys& static_keys, const std::shared_ptr<ICertificateHandler>& cert_handler);
 
-        inline static std::shared_ptr<IResponderHandshake> create_shared(openpal::Logger logger, StaticKeys static_keys, const std::shared_ptr<ICertificateHandler>& cert_handler)
+        inline static std::shared_ptr<IResponderHandshake> make_shared(openpal::Logger logger, StaticKeys static_keys, const std::shared_ptr<ICertificateHandler>& cert_handler)
         {
             return std::make_shared<PublicKeyResponderHandshake>(logger, static_keys, cert_handler);
         }

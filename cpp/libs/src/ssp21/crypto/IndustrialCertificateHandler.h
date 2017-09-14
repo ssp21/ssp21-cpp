@@ -31,12 +31,12 @@ namespace ssp21
 
         virtual seq32_t certificate_data() const override;
 
-        virtual CertificateMode mode() const override
+        virtual HandshakeMode mode() const override
         {
-            return CertificateMode::icf;
+            return HandshakeMode::industrial_certificates;
         }
 
-        virtual HandshakeError validate(CertificateMode mode, const seq32_t& certificate_data, seq32_t& public_key_output) override;
+        virtual HandshakeError validate(HandshakeMode mode, const seq32_t& certificate_data, seq32_t& public_key_output) override;
 
     private:
 

@@ -5,7 +5,7 @@
 #include <openpal/util/Uncopyable.h>
 
 #include "ssp21/crypto/gen/HandshakeError.h"
-#include "ssp21/crypto/gen/CertificateMode.h"
+#include "ssp21/crypto/gen/HandshakeMode.h"
 #include "ssp21/crypto/BufferTypes.h"
 
 #include "ssp21/util/SequenceTypes.h"
@@ -37,12 +37,12 @@ namespace ssp21
         /**
         * Initiator side mode query
         */
-        virtual CertificateMode mode() const = 0;
+        virtual HandshakeMode mode() const = 0;
 
         /**
         *  Given a particular certificate mode, validate the certificate data payload, and return a seq_t pointing to the validated public key
         */
-        virtual HandshakeError validate(CertificateMode mode, const seq32_t& certificate_data, seq32_t& public_key_output) = 0;
+        virtual HandshakeError validate(HandshakeMode mode, const seq32_t& certificate_data, seq32_t& public_key_output) = 0;
 
         /**
         *  Given a particular certificate mode, validate the certificate data payload, and return a seq_t pointing to the validated public key

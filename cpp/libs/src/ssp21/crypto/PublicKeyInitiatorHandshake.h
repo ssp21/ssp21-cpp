@@ -25,7 +25,7 @@ namespace ssp21
             cert_handler(cert_handler)
         {}
 
-        static std::shared_ptr<IInitiatorHandshake> create_shared(const openpal::Logger& logger, const StaticKeys& static_keys, const CryptoSuite& crypto_suite, const std::shared_ptr<ICertificateHandler>& cert_handler)
+        inline static std::shared_ptr<IInitiatorHandshake> make_shared(const openpal::Logger& logger, const StaticKeys& static_keys, const CryptoSuite& crypto_suite, const std::shared_ptr<ICertificateHandler>& cert_handler)
         {
             return std::make_shared<PublicKeyInitiatorHandshake>(logger, static_keys, crypto_suite, cert_handler);
         }
@@ -36,7 +36,7 @@ namespace ssp21
 
         virtual bool initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const InitiatorConfig::Params& params, const openpal::Timestamp& now, Session& session) override;
 
-        virtual CertificateMode get_certificate_mode() const override
+        virtual HandshakeMode get_handshake_mode() const override
         {
             return cert_handler->mode();
         }

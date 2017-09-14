@@ -13,8 +13,8 @@
 // Licensed under the terms of the BSDv3 license
 //
 
-#ifndef SSP21_CERTIFICATEMODE_H
-#define SSP21_CERTIFICATEMODE_H
+#ifndef SSP21_HANDSHAKEMODE_H
+#define SSP21_HANDSHAKEMODE_H
 
 #include <cstdint>
 #include "openpal/util/Uncopyable.h"
@@ -22,25 +22,27 @@
 namespace ssp21 {
 
 /**
-    specifies what type of certificate is exchanged by both parties to authenticate each other
+    specifies how key derivation occurs
 */
-enum class CertificateMode : uint8_t
+enum class HandshakeMode : uint8_t
 {
+    /// both parties have a shared secret
+    shared_secret = 0x0,
     /// both parties know each others public DH keys
-    preshared_keys = 0x0,
+    preshared_public_keys = 0x1,
     /// Industrial certificate format
-    icf = 0x1,
+    industrial_certificates = 0x2,
     /// value not defined
     undefined = 0xFF
 };
 
-struct CertificateModeSpec : private openpal::StaticOnly
+struct HandshakeModeSpec : private openpal::StaticOnly
 {
-    typedef CertificateMode enum_type_t;
+    typedef HandshakeMode enum_type_t;
 
-    static uint8_t to_type(CertificateMode arg);
-    static CertificateMode from_type(uint8_t arg);
-    static const char* to_string(CertificateMode arg);
+    static uint8_t to_type(HandshakeMode arg);
+    static HandshakeMode from_type(uint8_t arg);
+    static const char* to_string(HandshakeMode arg);
 };
 
 }

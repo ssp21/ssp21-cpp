@@ -5,7 +5,7 @@
 #include "ssp21/util/SequenceTypes.h"
 
 #include "ssp21/crypto/gen/ReplyHandshakeBegin.h"
-#include "ssp21/crypto/gen/CertificateMode.h"
+#include "ssp21/crypto/gen/HandshakeMode.h"
 #include "ssp21/crypto/Session.h"
 
 
@@ -25,7 +25,7 @@ namespace ssp21
 
         virtual bool initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const InitiatorConfig::Params& params, const openpal::Timestamp& now, Session& session) = 0;
 
-        virtual CertificateMode get_certificate_mode() const = 0;
+        virtual HandshakeMode get_handshake_mode() const = 0;
 
         virtual seq32_t get_mode_data() const = 0;
 

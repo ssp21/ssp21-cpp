@@ -37,7 +37,7 @@ object RequestHandshakeBegin extends Message {
     U16("version"),
     StructField("spec", CryptoSpec),
     StructField("constraints", SessionConstraints),
-    Enum(CertificateMode),
+    Enum(HandshakeMode),
     CommonFields.ephemeralData,
     CommonFields.handshakeData
   )

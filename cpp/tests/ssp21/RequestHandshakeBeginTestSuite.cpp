@@ -76,7 +76,7 @@ TEST_CASE(SUITE("successfully parses message"))
 
     REQUIRE(msg.constraints.max_nonce == 0xFFFF);
     REQUIRE(msg.constraints.max_session_duration == 0xCAFEBABE);
-    REQUIRE(msg.certificate_mode == CertificateMode::preshared_keys);
+    REQUIRE(msg.handshake_mode == HandshakeMode::shared_secret);
     REQUIRE(to_hex(msg.ephemeral_data) == "AA AA AA");
 
     REQUIRE(msg.handshake_data.is_empty());
@@ -100,7 +100,7 @@ TEST_CASE(SUITE("pretty prints message"))
             32768,
             0xCAFEBABE
         ),
-        CertificateMode::preshared_keys,
+        HandshakeMode::preshared_public_keys,
         public_key,
         seq32_t::empty()
     );
@@ -120,7 +120,7 @@ TEST_CASE(SUITE("pretty prints message"))
         "session_mode: hmac_sha256_16",
         "max_nonce: 32768",
         "max_session_duration: 3405691582",
-        "certificate_mode: preshared_keys",
+        "handshake_mode: preshared_public_keys",
         "ephemeral_data (length = 2)",
         "CA:FE",
         "handshake_data (length = 0)"

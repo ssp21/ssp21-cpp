@@ -19,7 +19,7 @@
 #include <cstdint>
 #include "openpal/serialization/BigEndian.h"
 #include "ssp21/crypto/gen/Function.h"
-#include "ssp21/crypto/gen/CertificateMode.h"
+#include "ssp21/crypto/gen/HandshakeMode.h"
 #include "ssp21/crypto/gen/CryptoSpec.h"
 #include "ssp21/crypto/gen/SessionConstraints.h"
 #include "ssp21/crypto/IMessage.h"
@@ -37,7 +37,7 @@ struct RequestHandshakeBegin final : public IMessage, private openpal::Uncopyabl
         uint16_t version,
         const CryptoSpec& spec,
         const SessionConstraints& constraints,
-        CertificateMode certificate_mode,
+        HandshakeMode handshake_mode,
         const seq32_t& ephemeral_data,
         const seq32_t& handshake_data
     );
@@ -55,7 +55,7 @@ struct RequestHandshakeBegin final : public IMessage, private openpal::Uncopyabl
     IntegerField<openpal::UInt16> version;
     CryptoSpec spec;
     SessionConstraints constraints;
-    EnumField<CertificateModeSpec> certificate_mode;
+    EnumField<HandshakeModeSpec> handshake_mode;
     SeqByteField ephemeral_data;
     SeqByteField handshake_data;
 

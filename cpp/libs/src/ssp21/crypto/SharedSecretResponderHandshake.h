@@ -12,9 +12,9 @@ namespace ssp21
     {
     public:
 
-        SharedSecretResponderHandshake(const openpal::Logger& logger, const std::shared_ptr<SymmetricKey>& shared_secret);
+        SharedSecretResponderHandshake(const openpal::Logger& logger, const std::shared_ptr<const SymmetricKey>& shared_secret);
 
-        inline static std::shared_ptr<IResponderHandshake> create_shared(openpal::Logger logger, const std::shared_ptr<SymmetricKey>& shared_secret)
+        inline static std::shared_ptr<IResponderHandshake> make_shared(openpal::Logger logger, const std::shared_ptr<SymmetricKey>& shared_secret)
         {
             return std::make_shared<SharedSecretResponderHandshake>(logger, shared_secret);
         }
@@ -24,7 +24,7 @@ namespace ssp21
     private:
 
         openpal::Logger logger;
-        const std::shared_ptr<SymmetricKey> shared_secret;
+        const std::shared_ptr<const SymmetricKey> shared_secret;
     };
 
 

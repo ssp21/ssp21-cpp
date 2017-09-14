@@ -28,14 +28,14 @@ RequestHandshakeBegin::RequestHandshakeBegin(
     uint16_t version,
     const CryptoSpec& spec,
     const SessionConstraints& constraints,
-    CertificateMode certificate_mode,
+    HandshakeMode handshake_mode,
     const seq32_t& ephemeral_data,
     const seq32_t& handshake_data
 ) :
     version(version),
     spec(spec),
     constraints(constraints),
-    certificate_mode(certificate_mode),
+    handshake_mode(handshake_mode),
     ephemeral_data(ephemeral_data),
     handshake_data(handshake_data)
 {}
@@ -47,7 +47,7 @@ size_t RequestHandshakeBegin::size() const
         version,
         spec,
         constraints,
-        certificate_mode,
+        handshake_mode,
         ephemeral_data,
         handshake_data
     );
@@ -63,7 +63,7 @@ ParseError RequestHandshakeBegin::read(seq32_t input)
             version,
             spec,
             constraints,
-            certificate_mode,
+            handshake_mode,
             ephemeral_data,
             handshake_data
         );
@@ -81,7 +81,7 @@ FormatResult RequestHandshakeBegin::write(wseq32_t& output) const
             version,
             spec,
             constraints,
-            certificate_mode,
+            handshake_mode,
             ephemeral_data,
             handshake_data
         );
@@ -99,8 +99,8 @@ void RequestHandshakeBegin::print(IMessagePrinter& printer) const
         spec,
         "constraints",
         constraints,
-        "certificate_mode",
-        certificate_mode,
+        "handshake_mode",
+        handshake_mode,
         "ephemeral_data",
         ephemeral_data,
         "handshake_data",

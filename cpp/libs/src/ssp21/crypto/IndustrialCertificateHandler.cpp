@@ -86,9 +86,9 @@ namespace ssp21
         return this->presented_certificate_data;
     }
 
-    HandshakeError IndustrialCertificateHandler::validate(CertificateMode mode, const seq32_t& certificate_data, seq32_t& public_key_output)
+    HandshakeError IndustrialCertificateHandler::validate(HandshakeMode mode, const seq32_t& certificate_data, seq32_t& public_key_output)
     {
-        if (mode != CertificateMode::icf) return HandshakeError::unsupported_certificate_mode;
+        if (mode != HandshakeMode::industrial_certificates) return HandshakeError::unsupported_handshake_mode;
 
         // first parse the data as a certificate chain
         CertificateChain chain;

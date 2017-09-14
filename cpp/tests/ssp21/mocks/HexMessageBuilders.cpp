@@ -54,7 +54,7 @@ namespace ssp21
             SessionMode session_mode,
             uint16_t max_nonce,
             uint32_t max_session_time,
-            CertificateMode certificate_mode,
+            HandshakeMode handshake_mode,
             const std::string& hex_ephem_pub_key
         )
         {
@@ -73,7 +73,7 @@ namespace ssp21
                     max_nonce,
                     max_session_time
                 ),
-                certificate_mode,
+                handshake_mode,
                 pub_key,
                 seq32_t::empty()
             );

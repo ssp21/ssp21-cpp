@@ -10,7 +10,7 @@ namespace ssp21
         const StaticKeys& static_keys,
         const std::shared_ptr<ICertificateHandler>& cert_handler)
     {
-        return PublicKeyResponderHandshake::create_shared(logger, static_keys, cert_handler);
+        return PublicKeyResponderHandshake::make_shared(logger, static_keys, cert_handler);
     }
 
 
