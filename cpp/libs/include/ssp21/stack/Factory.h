@@ -23,6 +23,13 @@ namespace ssp21
 
         namespace factory
         {
+            std::shared_ptr<IStack> shared_secret_mode(
+                const Addresses& addresses,
+                const ResponderConfig& config,
+                const openpal::Logger& logger,
+                const std::shared_ptr<openpal::IExecutor>& executor,
+                const std::shared_ptr<const SymmetricKey>& shared_secret
+            );
 
             std::shared_ptr<IStack> preshared_public_key_mode(
                 const Addresses& addresses,
@@ -51,6 +58,14 @@ namespace ssp21
     {
         namespace factory
         {
+            std::shared_ptr<IStack> shared_secert_mode(
+                const Addresses& addresses,
+                const InitiatorConfig& config,
+                const openpal::Logger& logger,
+                const std::shared_ptr<openpal::IExecutor>& executor,
+                const CryptoSuite& crypto_suite,
+                const std::shared_ptr<const SymmetricKey>& shared_secret
+            );
 
             std::shared_ptr<IStack> preshared_public_key_mode(
                 const Addresses& addresses,

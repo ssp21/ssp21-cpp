@@ -29,19 +29,21 @@ namespace ssp21
         this->wire();
     }
 
-	IntegrationFixture::Stacks IntegrationFixture::get_stacks(Mode mode, openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe)
-	{
-		switch (mode)
-		{
-			case(Mode::preshared_key):
-				return preshared_key_stacks(rlogger, ilogger, exe);
-			case(Mode::certificates):
-				return certificate_stacks(rlogger, ilogger, exe);
-			default:
-				throw new Exception("Unsupported integration test mode");
-		}
-	
-	}
+    IntegrationFixture::Stacks IntegrationFixture::get_stacks(Mode mode, openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe)
+    {
+        switch (mode)
+        {
+        case(Mode::preshared_key):
+            return preshared_key_stacks(rlogger, ilogger, exe);
+        case(Mode::certificates):
+            return certificate_stacks(rlogger, ilogger, exe);
+        case(Mode::shared_secret):
+            return shared_secret_stacks(rlogger, ilogger, exe);
+        default:
+            throw new Exception("Unsupported integration test mode");
+        }
+
+    }
 
     IntegrationFixture::Stacks IntegrationFixture::preshared_key_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe)
     {
@@ -104,6 +106,33 @@ namespace ssp21
         return Stacks{ initiator, responder };
     }
 
+    IntegrationFixture::Stacks IntegrationFixture::shared_secret_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe)
+    {
+        const auto shared_secret = generate_shared_secret();
+
+        CryptoSuite suite;
+        suite.handshake_ephemeral = HandshakeEphemeral::nonce;
+
+        const auto initiator = initiator::factory::shared_secert_mode(
+                                   Addresses(1, 10),
+                                   InitiatorConfig(),
+                                   ilogger,
+                                   exe,
+                                   suite,
+                                   shared_secret
+                               );
+
+        const auto responder = responder::factory::shared_secret_mode(
+                                   Addresses(10, 1),
+                                   ResponderConfig(),
+                                   rlogger,
+                                   exe,
+                                   shared_secret
+                               );
+
+        return Stacks{ initiator, responder };
+    }
+
     IntegrationFixture::EndpointKeys IntegrationFixture::generate_random_keys()
     {
         // we need to first perform some key derivation
@@ -128,6 +157,16 @@ namespace ssp21
                 std::make_shared<const PrivateKey>(kp_responder.private_key)
             ),
         };
+    }
+
+    std::shared_ptr<const SymmetricKey> IntegrationFixture::generate_shared_secret()
+    {
+        const std::shared_ptr<SymmetricKey> key = std::make_shared<SymmetricKey>();
+
+        Crypto::gen_random(key->as_wseq().take(consts::crypto::symmetric_ley_length));
+        key->set_type(BufferType::symmetric_key);
+
+        return key;
     }
 
     IntegrationFixture::AuthorityData IntegrationFixture::generate_authority_data()

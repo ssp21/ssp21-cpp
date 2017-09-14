@@ -13,6 +13,22 @@ namespace ssp21
     // The cyrptographic modes that the initiator will request from the responder
     struct CryptoSuite
     {
+        CryptoSuite() = default;
+
+        CryptoSuite(
+            NonceMode nonce_mode,
+            HandshakeEphemeral handshake_ephemeral,
+            HandshakeHash handshake_hash,
+            HandshakeKDF handshake_kdf,
+            SessionMode session_mode
+        ) :
+            nonce_mode(nonce_mode),
+            handshake_ephemeral(handshake_ephemeral),
+            handshake_hash(handshake_hash),
+            handshake_kdf(handshake_kdf),
+            session_mode(session_mode)
+        {}
+
         NonceMode nonce_mode = NonceMode::increment_last_rx;
         HandshakeEphemeral handshake_ephemeral = HandshakeEphemeral::x25519;
         HandshakeHash handshake_hash = HandshakeHash::sha256;

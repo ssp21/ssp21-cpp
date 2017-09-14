@@ -4,6 +4,8 @@
 
 #include "ssp21/crypto/IInitiatorHandshake.h"
 
+#include "ssp21/crypto/AlgorithmSet.h"
+
 namespace ssp21
 {
 
@@ -49,7 +51,7 @@ namespace ssp21
 
         openpal::Logger logger;
         const CryptoSuite crypto_suite;
-        const Algorithms algorithms;
+        const shared_secret_algorithms_t algorithms;
         const std::shared_ptr<const SymmetricKey> shared_secret;
         openpal::StaticBuffer<uint32_t, consts::crypto::nonce_length> nonce_buffer;
 

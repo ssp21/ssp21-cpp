@@ -14,7 +14,7 @@ object CryptoSpec extends Struct {
     Enum(HandshakeKDF),
     Enum(SessionMode)
   )
-
+I'
 }
 
 object SessionConstraints extends Struct {

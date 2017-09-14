@@ -4,6 +4,7 @@
 #include "ssp21/util/Exception.h"
 
 #include "ssp21/crypto/HandshakeHasher.h"
+#include "ssp21/crypto/AlgorithmSet.h"
 #include "ssp21/crypto/gen/ReplyHandshakeBegin.h"
 
 #include "openpal/logging/LogMacros.h"
@@ -37,16 +38,10 @@ namespace ssp21
             return Result::failure(HandshakeError::bad_message_format);
         }
 
-        Algorithms::Session session_algorithms;
-        Algorithms::SharedSecretHandshake handshake_algorithms;
+        shared_secret_algorithms_t algorithms;
 
         {
-            const auto err = session_algorithms.configure(msg.spec.nonce_mode, msg.spec.session_mode);
-            if (any(err)) return Result::failure(err);
-        }
-
-        {
-            const auto err = handshake_algorithms.configure(msg.spec.handshake_kdf, msg.spec.handshake_hash);
+            const auto err = algorithms.configure(msg.spec);
             if (any(err)) return Result::failure(err);
         }
 
@@ -68,11 +63,11 @@ namespace ssp21
         }
 
         HandshakeHasher hasher;
-        const auto handshake_hash = hasher.compute(handshake_algorithms.hash, msg_bytes, result.written);
+        const auto handshake_hash = hasher.compute(algorithms.handshake.hash, msg_bytes, result.written);
 
         SessionKeys session_keys;
 
-        handshake_algorithms.kdf(
+        algorithms.handshake.kdf(
             handshake_hash,
         { this->shared_secret->as_seq() },
         session_keys.rx_key,
@@ -80,7 +75,7 @@ namespace ssp21
         );
 
         session.initialize(
-            session_algorithms,
+            algorithms.session,
             Session::Param(
                 now,
                 msg.constraints.max_nonce,
@@ -89,7 +84,7 @@ namespace ssp21
             session_keys
         );
 
-        return Result::failure(HandshakeError::none);
+        return Result::success(result.frame);
     }
 
 }

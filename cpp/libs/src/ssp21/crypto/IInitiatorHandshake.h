@@ -5,8 +5,8 @@
 #include "ssp21/util/SequenceTypes.h"
 
 #include "ssp21/crypto/gen/ReplyHandshakeBegin.h"
-#include "ssp21/crypto/gen/HandshakeMode.h"
 #include "ssp21/crypto/Session.h"
+#include "ssp21/crypto/gen/HandshakeMode.h"
 
 
 namespace ssp21

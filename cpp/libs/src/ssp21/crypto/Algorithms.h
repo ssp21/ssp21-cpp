@@ -18,10 +18,8 @@ namespace ssp21
     /**
     * Represents a complete set of algorithms for the handshake and the session
     */
-    struct Algorithms
+    struct Algorithms : private openpal::StaticOnly
     {
-
-    public:
 
         struct Session
         {
@@ -41,6 +39,7 @@ namespace ssp21
             SharedSecretHandshake() = default;
 
             HandshakeError configure(
+                HandshakeEphemeral handshake_ephemeral,
                 HandshakeKDF handshake_kdf,
                 HandshakeHash handshake_hash
             );
@@ -63,23 +62,6 @@ namespace ssp21
             gen_keypair_func_t gen_keypair = &Crypto::gen_keypair_x25519;
         };
 
-
-        // default constructor initializes with default algorithms
-        Algorithms() = default;
-
-        // construct the algorithms
-        Algorithms(const CryptoSuite& suite);
-
-        static hash_func_t get_handshake_hash(HandshakeHash handshake_hash);
-
-        // configure the algorithms from a received CryptoSpec
-        HandshakeError configure(const CryptoSpec& spec);
-
-        // handshake algorithms
-        PublicKeyHandshake handshake;
-
-        // session algorithms
-        Session session;
     };
 
 

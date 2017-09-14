@@ -18,7 +18,7 @@ namespace ssp21
     {
         preshared_key,
         certificates,
-		shared_secret
+        shared_secret
     };
 
 
@@ -66,13 +66,17 @@ namespace ssp21
 
     private:
 
-		static Stacks get_stacks(Mode mode, openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe);
+        static Stacks get_stacks(Mode mode, openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe);
 
         static Stacks preshared_key_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe);
 
         static Stacks certificate_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe);
 
+        static Stacks shared_secret_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe);
+
         static EndpointKeys generate_random_keys();
+
+        static std::shared_ptr<const SymmetricKey> generate_shared_secret();
 
         static AuthorityData generate_authority_data();
 

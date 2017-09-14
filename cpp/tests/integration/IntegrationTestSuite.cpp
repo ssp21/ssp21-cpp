@@ -17,6 +17,11 @@ void test_bidirectional_data_transfer(IntegrationFixture& fix, const seq32_t& da
 void enable_all_logging(IntegrationFixture& fix);
 void perform_data_transfer_test(Mode mode);
 
+TEST_CASE(SUITE("fixture construction - shared secret mode"))
+{
+    IntegrationFixture fix(Mode::shared_secret);
+}
+
 TEST_CASE(SUITE("fixture construction - preshared key mode"))
 {
     IntegrationFixture fix(Mode::preshared_key);
@@ -25,6 +30,12 @@ TEST_CASE(SUITE("fixture construction - preshared key mode"))
 TEST_CASE(SUITE("fixture construction - certificate mode"))
 {
     IntegrationFixture fix(Mode::certificates);
+}
+
+TEST_CASE(SUITE("completes handshake - shared secret mode"))
+{
+    IntegrationFixture fix(Mode::shared_secret);
+    open_and_test_handshake(fix);
 }
 
 TEST_CASE(SUITE("completes handshake - preshared key mode"))
@@ -37,6 +48,11 @@ TEST_CASE(SUITE("completes handshake - certificate mode"))
 {
     IntegrationFixture fix(Mode::certificates);
     open_and_test_handshake(fix);
+}
+
+TEST_CASE(SUITE("can transfer data bidirectionally multiple times - shared secret mode"))
+{
+    perform_data_transfer_test(Mode::shared_secret);
 }
 
 TEST_CASE(SUITE("can transfer data bidirectionally multiple times - preshared key mode"))

@@ -3,6 +3,7 @@
 
 #include "ssp21/crypto/HandshakeHasher.h"
 #include "ssp21/crypto/TripleDH.h"
+#include "ssp21/crypto/AlgorithmSet.h"
 #include "ssp21/crypto/gen/ReplyHandshakeBegin.h"
 
 #include "ssp21/stack/LogLevels.h"
@@ -41,7 +42,7 @@ namespace ssp21
             }
         }
 
-        Algorithms algorithms;
+        public_key_algorithms_t algorithms;
 
         {
             const auto err = algorithms.configure(msg.spec);

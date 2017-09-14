@@ -6,6 +6,7 @@
 
 #include "ssp21/crypto/StaticKeys.h"
 #include "ssp21/crypto/ICertificateHandler.h"
+#include "ssp21/crypto/AlgorithmSet.h"
 
 namespace ssp21
 {
@@ -61,7 +62,7 @@ namespace ssp21
 
         // specific algorithms used to perform steps
         const CryptoSuite crypto_suite;
-        const Algorithms algorithms;
+        const public_key_algorithms_t algorithms;
         const std::shared_ptr<ICertificateHandler> cert_handler;
 
         // ephemeral keys

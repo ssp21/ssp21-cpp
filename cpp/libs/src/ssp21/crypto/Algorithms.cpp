@@ -5,25 +5,6 @@
 
 namespace ssp21
 {
-    Algorithms::Algorithms(const CryptoSuite& suite)
-    {
-        {
-            const auto err = this->handshake.configure(suite.handshake_ephemeral, suite.handshake_kdf, suite.handshake_hash);
-            if (any(err))
-            {
-                throw Exception("Unable to configure handshake algorithms: ", HandshakeErrorSpec::to_string(err));
-            }
-        }
-
-        {
-            const auto err = this->session.configure(suite.nonce_mode, suite.session_mode);
-            if (any(err))
-            {
-                throw Exception("Unable to configure session algorithms: ", HandshakeErrorSpec::to_string(err));
-            }
-        }
-    }
-
     HandshakeError Algorithms::Session::configure(NonceMode nonce_mode, SessionMode session_mode)
     {
         switch (nonce_mode)
@@ -51,6 +32,7 @@ namespace ssp21
     }
 
     HandshakeError Algorithms::SharedSecretHandshake::configure(
+        HandshakeEphemeral handshake_ephemeral,
         HandshakeKDF handshake_kdf,
         HandshakeHash handshake_hash
     )
@@ -83,7 +65,7 @@ namespace ssp21
     )
     {
         {
-            const auto err = SharedSecretHandshake::configure(handshake_kdf, handshake_hash);
+            const auto err = SharedSecretHandshake::configure(handshake_ephemeral, handshake_kdf, handshake_hash);
             if (any(err)) return err;
         }
 
@@ -96,36 +78,6 @@ namespace ssp21
         default:
             return HandshakeError::unsupported_handshake_ephemeral;
         }
-
-        return HandshakeError::none;
-    }
-
-    hash_func_t Algorithms::get_handshake_hash(HandshakeHash handshake_hash)
-    {
-        switch (handshake_hash)
-        {
-        case(HandshakeHash::sha256):
-            return &Crypto::hash_sha256;
-        default:
-            return nullptr;
-        }
-    }
-
-    HandshakeError Algorithms::configure(const CryptoSpec& spec)
-    {
-        Algorithms algorithms;
-
-        {
-            const auto err = algorithms.handshake.configure(spec.handshake_ephemeral, spec.handshake_kdf, spec.handshake_hash);
-            if (any(err)) return err;
-        }
-
-        {
-            const auto err = algorithms.session.configure(spec.nonce_mode, spec.session_mode);
-            if (any(err)) return err;
-        }
-
-        (*this) = algorithms;
 
         return HandshakeError::none;
     }

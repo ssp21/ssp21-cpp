@@ -12,7 +12,7 @@ namespace ssp21
         logger(logger),
         shared_secret(shared_secret),
         crypto_suite(crypto_suite),
-        algorithms(algorithms)
+        algorithms(crypto_suite)
     {
         if (crypto_suite.handshake_ephemeral != HandshakeEphemeral::nonce)
         {
