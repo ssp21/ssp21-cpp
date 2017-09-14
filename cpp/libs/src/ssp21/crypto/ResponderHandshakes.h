@@ -18,14 +18,16 @@ namespace ssp21
     */
     struct ResponderHandshakes : private openpal::StaticOnly
     {
+        static std::shared_ptr<IResponderHandshake> shared_secret_mode(
+            const openpal::Logger& logger,
+            const std::shared_ptr<const SymmetricKey>& shared_secret
+        );
+
         static std::shared_ptr<IResponderHandshake> public_key_mode(
             const openpal::Logger& logger,
             const StaticKeys& static_keys,
             const std::shared_ptr<ICertificateHandler>& cert_handler
         );
-
-
-
     };
 
 

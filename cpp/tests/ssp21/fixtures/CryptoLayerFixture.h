@@ -120,8 +120,8 @@ namespace ssp21
                 this->exe,
                 InitiatorHandshakes::public_key_mode(
                     this->log.logger,
-                    get_keys(),
                     crypto_suite,
+                    get_keys(),
                     get_certificate_handler()
                 )
             )

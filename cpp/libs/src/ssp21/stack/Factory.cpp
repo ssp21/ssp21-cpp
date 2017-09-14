@@ -85,8 +85,8 @@ namespace ssp21
                            executor,
                            InitiatorHandshakes::public_key_mode(
                                logger,
-                               local_keys,
                                crypto_suite,
+                               local_keys,
                                ICertificateHandler::preshared_key(remote_public_key)
                            )
                        );
@@ -110,8 +110,8 @@ namespace ssp21
                            executor,
                            InitiatorHandshakes::public_key_mode(
                                logger,
-                               local_keys,
                                crypto_suite,
+                               local_keys,
                                ICertificateHandler::certificates(anchor_cert_file_data, presented_chain_file_data)
                            )
                        );

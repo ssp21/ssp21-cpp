@@ -17,7 +17,7 @@ namespace ssp21
 
         SharedSecretInitiatorHandshake(const openpal::Logger& logger, const CryptoSuite& crypto_suite, const std::shared_ptr<const SymmetricKey>& shared_secret);
 
-        inline static std::shared_ptr<IInitiatorHandshake> make_shared(const openpal::Logger& logger, const CryptoSuite& crypto_suite, const std::shared_ptr<SymmetricKey>& shared_secret)
+        inline static std::shared_ptr<IInitiatorHandshake> make_shared(const openpal::Logger& logger, const CryptoSuite& crypto_suite, const std::shared_ptr<const SymmetricKey>& shared_secret)
         {
             return std::make_shared<SharedSecretInitiatorHandshake>(logger, crypto_suite, shared_secret);
         }
