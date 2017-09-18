@@ -10,9 +10,9 @@ namespace ssp21
 {
     SharedSecretInitiatorHandshake::SharedSecretInitiatorHandshake(const openpal::Logger& logger, const CryptoSuite& crypto_suite, const std::shared_ptr<const SymmetricKey>& shared_secret) :
         logger(logger),
-        shared_secret(shared_secret),
         crypto_suite(crypto_suite),
-        algorithms(crypto_suite)
+        algorithms(crypto_suite),
+        shared_secret(shared_secret)
     {
         if (crypto_suite.handshake_ephemeral != HandshakeEphemeral::nonce)
         {
