@@ -9,6 +9,7 @@ namespace props
     static const char* local_public_key_path = "local_public_key_path";
     static const char* local_private_key_path = "local_private_key_path";
     static const char* remote_public_key_path = "remote_public_key_path";
+    static const char* shared_secret_key_path = "shared_secret_key_path";
     static const char* authority_cert_path = "authority_cert_path";
     static const char* local_cert_path = "local_cert_path";
     static const char* local_address = "local_address";

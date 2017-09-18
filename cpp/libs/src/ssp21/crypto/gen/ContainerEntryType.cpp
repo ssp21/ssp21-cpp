@@ -26,14 +26,16 @@ ContainerEntryType ContainerEntryTypeSpec::from_type(uint8_t arg)
     switch(arg)
     {
         case(0x0):
-            return ContainerEntryType::certificate_chain;
+            return ContainerEntryType::shared_secret;
         case(0x1):
-            return ContainerEntryType::x25519_public_key;
+            return ContainerEntryType::certificate_chain;
         case(0x2):
-            return ContainerEntryType::x25519_private_key;
+            return ContainerEntryType::x25519_public_key;
         case(0x3):
-            return ContainerEntryType::ed25519_public_key;
+            return ContainerEntryType::x25519_private_key;
         case(0x4):
+            return ContainerEntryType::ed25519_public_key;
+        case(0x5):
             return ContainerEntryType::ed25519_private_key;
         default:
             return ContainerEntryType::undefined;
@@ -43,6 +45,8 @@ const char* ContainerEntryTypeSpec::to_string(ContainerEntryType arg)
 {
     switch(arg)
     {
+        case(ContainerEntryType::shared_secret):
+            return "shared_secret";
         case(ContainerEntryType::certificate_chain):
             return "certificate_chain";
         case(ContainerEntryType::x25519_public_key):

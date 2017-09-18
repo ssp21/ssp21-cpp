@@ -26,16 +26,18 @@ namespace ssp21 {
 */
 enum class ContainerEntryType : uint8_t
 {
+    /// 256-bit shared secret
+    shared_secret = 0x0,
     /// industrial certificate chain
-    certificate_chain = 0x0,
+    certificate_chain = 0x1,
     /// X25519 private key
-    x25519_public_key = 0x1,
+    x25519_public_key = 0x2,
     /// X25519 private key
-    x25519_private_key = 0x2,
+    x25519_private_key = 0x3,
     /// Ed25519 private key
-    ed25519_public_key = 0x3,
+    ed25519_public_key = 0x4,
     /// Ed25519 private key
-    ed25519_private_key = 0x4,
+    ed25519_private_key = 0x5,
     /// value not defined
     undefined = 0xFF
 };

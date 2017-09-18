@@ -60,6 +60,8 @@ stack_factory_t ConfigSection::get_initiator_factory(const ssp21::Addresses& add
 {
     switch (this->get_cert_mode())
     {
+    case(CertificateMode::shared_secert):
+        return this->get_initiator_shared_secert_factory(addresses);
     case(CertificateMode::preshared_keys):
         return this->get_initiator_preshared_public_key_factory(addresses);
     case(CertificateMode::certificates):
@@ -67,6 +69,23 @@ stack_factory_t ConfigSection::get_initiator_factory(const ssp21::Addresses& add
     default:
         throw Exception("undefined certificate mode");
     }
+}
+
+stack_factory_t ConfigSection::get_initiator_shared_secert_factory(const ssp21::Addresses& addresses)
+{
+    const auto shared_secret = this->get_shared_secert();
+
+    return [ = ](const openpal::Logger & logger, const std::shared_ptr<openpal::IExecutor>& executor)
+    {
+        return initiator::factory::shared_secert_mode(
+                   addresses,
+                   InitiatorConfig(),	// TODO: default
+                   logger,
+                   executor,
+                   CryptoSuite(),		// TODO: default
+                   shared_secret
+               );
+    };
 }
 
 stack_factory_t ConfigSection::get_initiator_preshared_public_key_factory(const ssp21::Addresses& addresses)
@@ -112,6 +131,8 @@ stack_factory_t ConfigSection::get_responder_factory(const ssp21::Addresses& add
 {
     switch (this->get_cert_mode())
     {
+    case(CertificateMode::shared_secert):
+        return this->get_responder_shared_secert_factory(addresses);
     case(CertificateMode::preshared_keys):
         return this->get_responder_preshared_public_key_factory(addresses);
     case(CertificateMode::certificates):
@@ -119,6 +140,22 @@ stack_factory_t ConfigSection::get_responder_factory(const ssp21::Addresses& add
     default:
         throw Exception("undefined certificate mode");
     }
+}
+
+stack_factory_t ConfigSection::get_responder_shared_secert_factory(const ssp21::Addresses& addresses)
+{
+    const auto shared_secret = this->get_shared_secert();
+
+    return [ = ](const openpal::Logger & logger, const std::shared_ptr<openpal::IExecutor>& executor)
+    {
+        return responder::factory::shared_secret_mode(
+                   addresses,
+                   ResponderConfig(),	// TODO: default
+                   logger,
+                   executor,
+                   shared_secret
+               );
+    };
 }
 
 stack_factory_t ConfigSection::get_responder_preshared_public_key_factory(const ssp21::Addresses& addresses)
@@ -172,6 +209,11 @@ ssp21::StaticKeys ConfigSection::get_local_static_keys()
                this->get_crypto_key<PublicKey>(props::local_public_key_path, ContainerEntryType::x25519_public_key),
                this->get_crypto_key<PrivateKey>(props::local_private_key_path, ContainerEntryType::x25519_private_key)
            );
+}
+
+std::shared_ptr<const SymmetricKey> ConfigSection::get_shared_secert()
+{
+    return this->get_crypto_key<SymmetricKey>(props::shared_secret_key_path, ContainerEntryType::shared_secret);
 }
 
 LogLevels ConfigSection::get_levels()

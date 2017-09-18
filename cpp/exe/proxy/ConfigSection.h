@@ -18,6 +18,7 @@ class ConfigSection : openpal::Uncopyable
 {
     enum class CertificateMode
     {
+        shared_secert,
         preshared_keys,
         certificates
     };
@@ -36,11 +37,15 @@ private:
 
     stack_factory_t get_initiator_factory(const ssp21::Addresses& addresses);
 
+    stack_factory_t get_initiator_shared_secert_factory(const ssp21::Addresses& addresses);
+
     stack_factory_t get_initiator_preshared_public_key_factory(const ssp21::Addresses& addresses);
 
     stack_factory_t get_initiator_certificate_mode_factory(const ssp21::Addresses& addresses);
 
     stack_factory_t get_responder_factory(const ssp21::Addresses& addresses);
+
+    stack_factory_t get_responder_shared_secert_factory(const ssp21::Addresses& addresses);
 
     stack_factory_t get_responder_preshared_public_key_factory(const ssp21::Addresses& addresses);
 
@@ -49,6 +54,8 @@ private:
     ssp21::Addresses get_addresses();
 
     ssp21::StaticKeys get_local_static_keys();
+
+    std::shared_ptr<const ssp21::SymmetricKey> get_shared_secert();
 
     openpal::LogLevels get_levels();
 
