@@ -15,6 +15,7 @@ Program::Program() :
     parser{{
         { flags::help, { "-h", "--help" }, "shows this help message", 0 },
         { flags::show, { "-s", "--show" }, "show contents of one or more <icf files ....>", 0 },
+        { flags::shared, {"-r", "--shared"}, "generate a shared secret <key file>", 0},
         { flags::x25519, { "-x", "--x25519" }, "generate a x25519 key pair <private key file> <public key file>", 0 },
         { flags::ed25519, { "-e", "--ed25519" }, "generate a Ed25519 key pair <private key file> <public key file>", 0 },
         { flags::cert, { "-c", "--cert" }, "interactively generate a <certificate file> for a <public key file> signed by a <private key file>", 0 },
@@ -46,6 +47,17 @@ void Program::run(int argc, char*  argv[])
             Actions::print_contents(file_path);
         }
 
+        return;
+    }
+
+    if (args.has_option(flags::shared))
+    {
+        if (args.pos.size() != 1)
+        {
+            throw ssp21::Exception("Required positional arguments: <key file>");
+        }
+
+        Actions::gen_shared_secert(args.pos[0]);
         return;
     }
 

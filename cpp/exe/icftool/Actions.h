@@ -28,6 +28,7 @@ public:
     };
 
     static void print_contents(const std::string& path);
+    static void gen_shared_secert(const std::string& path);
     static void gen_x25519_key_pair(const std::string& private_key_path, const std::string& public_key_path);
     static void gen_ed25519_key_pair(const std::string& private_key_path, const std::string& public_key_path);
     static void append_certificate_chains(const std::string& file1, const std::string& file2, const std::string& output_file);

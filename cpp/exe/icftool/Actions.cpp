@@ -58,6 +58,16 @@ void Actions::print_contents(const std::string& path)
     std::cout << std::endl;
 }
 
+void Actions::gen_shared_secert(const std::string& path)
+{
+    std::cout << "creating shared secret..." << std::endl;
+    SymmetricKey key;
+    Crypto::gen_random(key.as_wseq().take(consts::crypto::symmetric_ley_length));
+    key.set_type(BufferType::symmetric_key);
+
+    write(path, ContainerEntryType::shared_secret, key.as_seq());
+}
+
 void Actions::gen_x25519_key_pair(const std::string& private_key_path, const std::string& public_key_path)
 {
     std::cout << "generating x25519 key pair..." << std::endl;
