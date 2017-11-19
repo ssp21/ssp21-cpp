@@ -31,7 +31,7 @@ namespace ssp21
             return std::make_shared<PublicKeyInitiatorHandshake>(logger, static_keys, crypto_suite, cert_handler);
         }
 
-        virtual seq32_t generate_ephemeral_data() override;
+        virtual InitResult initialize_new_handshake() override;
 
         virtual void finalize_request_tx(const seq32_t& request_data, const openpal::Timestamp& now) override;
 
@@ -40,11 +40,6 @@ namespace ssp21
         virtual HandshakeMode get_handshake_mode() const override
         {
             return cert_handler->mode();
-        }
-
-        inline seq32_t get_mode_data() const override
-        {
-            return cert_handler->certificate_data();
         }
 
         virtual CryptoSuite get_crypto_suite() const override

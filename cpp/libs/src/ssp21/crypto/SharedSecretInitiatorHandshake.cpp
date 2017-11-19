@@ -20,10 +20,10 @@ namespace ssp21
         }
     }
 
-    seq32_t SharedSecretInitiatorHandshake::generate_ephemeral_data()
+    IInitiatorHandshake::InitResult SharedSecretInitiatorHandshake::initialize_new_handshake()
     {
         Crypto::gen_random(this->nonce_buffer.as_wseq());
-        return this->nonce_buffer.as_seq();
+        return InitResult::success(this->nonce_buffer.as_seq(), seq32_t::empty());
     }
 
     void SharedSecretInitiatorHandshake::finalize_request_tx(const seq32_t& request_data, const openpal::Timestamp& now)

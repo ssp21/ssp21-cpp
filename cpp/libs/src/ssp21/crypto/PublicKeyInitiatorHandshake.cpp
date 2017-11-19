@@ -9,10 +9,10 @@ using namespace openpal;
 
 namespace ssp21
 {
-    seq32_t PublicKeyInitiatorHandshake::generate_ephemeral_data()
+    IInitiatorHandshake::InitResult PublicKeyInitiatorHandshake::initialize_new_handshake()
     {
         this->algorithms.handshake.gen_keypair(this->local_ephemeral_keys);
-        return this->local_ephemeral_keys.public_key.as_seq();
+        return InitResult::success(this->local_ephemeral_keys.public_key.as_seq(), this->cert_handler->certificate_data());
     }
 
     void PublicKeyInitiatorHandshake::finalize_request_tx(const seq32_t& request_data, const openpal::Timestamp& now)

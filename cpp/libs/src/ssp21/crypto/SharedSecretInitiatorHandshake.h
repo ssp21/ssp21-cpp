@@ -24,7 +24,7 @@ namespace ssp21
             return std::make_shared<SharedSecretInitiatorHandshake>(logger, crypto_suite, shared_secret);
         }
 
-        virtual seq32_t generate_ephemeral_data() override;
+        virtual InitResult initialize_new_handshake() override;
 
         virtual void finalize_request_tx(const seq32_t& request_data, const openpal::Timestamp& now) override;
 
@@ -33,11 +33,6 @@ namespace ssp21
         virtual HandshakeMode get_handshake_mode() const override
         {
             return HandshakeMode::shared_secret;
-        }
-
-        inline seq32_t get_mode_data() const override
-        {
-            return seq32_t::empty();
         }
 
         virtual CryptoSuite get_crypto_suite() const override

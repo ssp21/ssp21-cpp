@@ -31,7 +31,14 @@ namespace ssp21
             suite.session_mode
         );
 
-        const auto ephemeral_data = ctx.handshake->generate_ephemeral_data();
+        const auto init_result = ctx.handshake->initialize_new_handshake();
+
+        if (!init_result.is_success)
+        {
+            // any failures in handshake initialization just get retried
+            ctx.start_retry_timer();
+            return WaitForRetry::get();
+        }
 
         const RequestHandshakeBegin request(
             consts::crypto::protocol_version,
@@ -41,8 +48,8 @@ namespace ssp21
                 ctx.session_limits.max_session_time_ms
             ),
             ctx.handshake->get_handshake_mode(),
-            ephemeral_data,
-            ctx.handshake->get_mode_data()
+            init_result.ephemeral_data,
+            init_result.mode_data
         );
 
         const auto result = ctx.frame_writer->write(request);

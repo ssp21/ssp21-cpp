@@ -21,12 +21,45 @@ namespace ssp21
     public:
 
         /**
-        * Generate a new ephemeral data for the RequestHandshakeBegin message. This is a public DH key or random nonce.
-        * This will modify internal state inside the object, as it needs to be recorded for processing when the response is received.
-        *
-        * @return ephemeral data
+        * Result class returned from nitialize_new_handshake()
         */
-        virtual seq32_t generate_ephemeral_data() = 0;
+        class InitResult
+        {
+        public:
+            // true if we were able to initialize the handshake, false otherwise
+            const bool is_success;
+            // if succesful, this contains the ephemeral data to send to the responder
+            const seq32_t ephemeral_data;
+            // if succesful, this contains the mode data to send to the responder
+            const seq32_t mode_data;
+
+            static InitResult success(const seq32_t& ephemeral_data, const seq32_t& mode_data)
+            {
+                return InitResult(true, ephemeral_data, mode_data);
+            }
+
+            static InitResult failure()
+            {
+                return InitResult(false, seq32_t::empty(), seq32_t::empty());
+            }
+
+        private:
+            InitResult(bool is_success, const seq32_t& ephemeral_data, const seq32_t& mode_data) :
+                is_success(is_success),
+                ephemeral_data(ephemeral_data),
+                mode_data(mode_data)
+            {}
+        };
+
+        /**
+        * Start the process of initiating a new handshake.
+        *
+        * 1) Obtain the mode data for handshake
+        * 2) Intiailize fresh ephemeral data (DH or nonce)
+        *
+        * @return HandshakeData instance indicating success/failure and containing ephemeral/mode data fields
+        */
+        virtual InitResult initialize_new_handshake() = 0;
 
         /**
         * Initialize the handshake hash and record the time at which the request transmission started
@@ -48,10 +81,14 @@ namespace ssp21
         */
         virtual bool initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& response_data, const SessionLimits& limits, const openpal::Timestamp& now, Session& session) = 0;
 
+        /**
+        * @return the handshake mode enumeration that this class implements
+        */
         virtual HandshakeMode get_handshake_mode() const = 0;
 
-        virtual seq32_t get_mode_data() const = 0;
-
+        /**
+        * The crypto suite that this handshake mode is configured to use
+        */
         virtual CryptoSuite get_crypto_suite() const = 0;
 
     };
