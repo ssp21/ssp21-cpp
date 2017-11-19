@@ -15,10 +15,10 @@ namespace ssp21
         return this->local_ephemeral_keys.public_key.as_seq();
     }
 
-    void PublicKeyInitiatorHandshake::begin_request_transmit(const seq32_t& data, const openpal::Timestamp& now)
+    void PublicKeyInitiatorHandshake::finalize_request_tx(const seq32_t& request_data, const openpal::Timestamp& now)
     {
         this->time_request_tx = now;
-        this->algorithms.handshake.hash({ data }, this->handshake_hash);
+        this->algorithms.handshake.hash({ request_data }, this->handshake_hash);
     }
 
     bool PublicKeyInitiatorHandshake::initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const InitiatorConfig::Params& params, const Timestamp& now, Session& session)

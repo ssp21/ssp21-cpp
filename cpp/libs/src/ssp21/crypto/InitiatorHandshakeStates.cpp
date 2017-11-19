@@ -52,7 +52,7 @@ namespace ssp21
             return InitiatorHandshakeStates::BadConfiguration::get();
         }
 
-        ctx.handshake->begin_request_transmit(result.written, now);
+        ctx.handshake->finalize_request_tx(result.written, now);
 
         ctx.lower->start_tx_from_upper(result.frame);
 

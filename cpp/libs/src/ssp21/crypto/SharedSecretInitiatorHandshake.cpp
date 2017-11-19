@@ -26,10 +26,10 @@ namespace ssp21
         return this->nonce_buffer.as_seq();
     }
 
-    void SharedSecretInitiatorHandshake::begin_request_transmit(const seq32_t& data, const openpal::Timestamp& now)
+    void SharedSecretInitiatorHandshake::finalize_request_tx(const seq32_t& request_data, const openpal::Timestamp& now)
     {
         this->time_request_tx = now;
-        this->algorithms.handshake.hash({ data }, this->handshake_hash);
+        this->algorithms.handshake.hash({ request_data }, this->handshake_hash);
     }
 
     bool SharedSecretInitiatorHandshake::initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const InitiatorConfig::Params& params, const openpal::Timestamp& now, Session& session)

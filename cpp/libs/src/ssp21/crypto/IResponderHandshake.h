@@ -55,15 +55,15 @@ namespace ssp21
 
 
         /**
-        *	 Process a received handshake begin message. If no errors occur, use the frame writer to write a reply.
+        * Process a received handshake begin message. If no errors occur, use the frame writer to write a reply.
         *
-        *    @param msg the parsed RequestHandshakeBegin message
-        *    @param raw_data the raw bytes from which the message was parsed
-        *    @param now the time at which the message was received
-        *    @param writer interface used to write the reply to a buffer owned by the writer
-        *    @param session the session to initialize if the request is valid
+        * @param msg the parsed RequestHandshakeBegin message
+        * @param raw_data the raw bytes from which the message was parsed
+        * @param now the time at which the message was received
+        * @param writer interface used to write the reply to a buffer owned by the writer
+        * @param session the session to initialize if the request is valid
         *
-        *	 @return a result type that indicate success/error. On success, the reply_data is valid.
+        * @return a result type that indicate success/error. On success, the reply_data is valid.
         */
         virtual Result process(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now, IFrameWriter& writer, Session& session) = 0;
 
