@@ -14,16 +14,22 @@ namespace ssp21
 {
 
     /**
-    * Class that holds all of the data used during the handshake process
+    * Interface that defines what a concrete responder handshake needs to do
     */
     class IResponderHandshake : private openpal::Uncopyable
     {
     public:
 
+        virtual ~IResponderHandshake() {}
+
+        /**
+        * Result type returned that indicates success/error along w/ reply data
+        */
         class Result
         {
 
         public:
+
 
             HandshakeError error;
             seq32_t reply_data;
@@ -47,8 +53,18 @@ namespace ssp21
 
         };
 
-        virtual ~IResponderHandshake() {}
 
+        /**
+        *	 Process a received handshake begin message. If no errors occur, use the frame writer to write a reply.
+        *
+        *    @param msg the parsed RequestHandshakeBegin message
+        *    @param raw_data the raw bytes from which the message was parsed
+        *    @param now the time at which the message was received
+        *    @param writer interface used to write the reply to a buffer owned by the writer
+        *    @param session the session to initialize if the request is valid
+        *
+        *	 @return a result type that indicate success/error. On success, the reply_data is valid.
+        */
         virtual Result process(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now, IFrameWriter& writer, Session& session) = 0;
 
     };
