@@ -37,8 +37,8 @@ namespace ssp21
             consts::crypto::protocol_version,
             crypto_spec,
             SessionConstraints(
-                ctx.params.max_nonce_value,
-                ctx.params.max_session_time_ms
+                ctx.session_limits.max_nonce_value,
+                ctx.session_limits.max_session_time_ms
             ),
             ctx.handshake->get_handshake_mode(),
             ephemeral_data,
@@ -67,7 +67,7 @@ namespace ssp21
     {
         ctx.response_and_retry_timer.cancel();
 
-        if (!ctx.handshake->initialize_session(msg, msg_bytes, ctx.params, now, *ctx.sessions.pending))
+        if (!ctx.handshake->initialize_session(msg, msg_bytes, ctx.session_limits, now, *ctx.sessions.pending))
         {
             ctx.start_retry_timer();
             return WaitForRetry::get();

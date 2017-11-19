@@ -116,6 +116,7 @@ namespace ssp21
         // ---- private members -----
 
         const InitiatorConfig::Params params;
+        const SessionLimits session_limits;
 
         IHandshakeState* handshake_state;
         const std::shared_ptr<IInitiatorHandshake> handshake;

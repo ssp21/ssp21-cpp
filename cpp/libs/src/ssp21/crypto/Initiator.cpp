@@ -26,6 +26,7 @@ namespace ssp21
             executor
         ),
         params(config.params),
+        session_limits(config.session_limits),
         handshake_state(InitiatorHandshakeStates::Idle::get()),
         handshake(handshake),
         response_and_retry_timer(executor),

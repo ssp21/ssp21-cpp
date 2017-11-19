@@ -32,7 +32,7 @@ namespace ssp21
         this->algorithms.handshake.hash({ request_data }, this->handshake_hash);
     }
 
-    bool SharedSecretInitiatorHandshake::initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const InitiatorConfig::Params& params, const openpal::Timestamp& now, Session& session)
+    bool SharedSecretInitiatorHandshake::initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const SessionLimits& limits, const openpal::Timestamp& now, Session& session)
     {
         if (msg.ephemeral_data.length() != consts::crypto::nonce_length)
         {
@@ -72,7 +72,7 @@ namespace ssp21
 
         return session.initialize(
                    this->algorithms.session,
-                   Session::Param(session_start_time, params.max_nonce_value, params.max_session_time_ms),
+                   Session::Param(session_start_time, limits.max_nonce_value, limits.max_session_time_ms),
                    session_keys
                );
 

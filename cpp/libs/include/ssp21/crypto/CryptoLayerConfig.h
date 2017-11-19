@@ -31,6 +31,15 @@ namespace ssp21
         SessionConfig session;
     };
 
+    struct SessionLimits
+    {
+        /// The maximum tx or rx nonce value that the initiator will request in the handshake
+        uint16_t max_nonce_value = consts::crypto::initiator::default_max_nonce;
+
+        /// The maximum session time that the initiator will request in the handshake
+        uint32_t max_session_time_ms = consts::crypto::initiator::default_max_session_time_ms;
+    };
+
     struct InitiatorConfig
     {
         // TODO - Add a copy constructor that applies reasonable limits/relationships to some of these values
@@ -42,20 +51,15 @@ namespace ssp21
             /// How long the initiator will wait before retrying a failed timeout
             openpal::TimeDuration retry_timeout = consts::crypto::initiator::default_retry_timeout;
 
-            /// The maximum session time that the initiator will request in the handshake
-            uint32_t max_session_time_ms = consts::crypto::initiator::default_max_session_time_ms;
-
             /// The initiator will begin renegotiating when the session time reaches this value
             uint32_t session_time_renegotiation_trigger_ms = consts::crypto::initiator::default_session_time_renegotiation_trigger_ms;
-
-            /// The maximum tx or rx nonce value that the initiator will request in the handshake
-            uint16_t max_nonce_value = consts::crypto::initiator::default_max_nonce;
 
             /// The initiator will begin renegotiating when either nonce value reaches this trigger level
             uint16_t nonce_renegotiation_trigger_value = consts::crypto::initiator::default_nonce_renegotiation_trigger;
         };
 
         Params params;
+        SessionLimits session_limits;
         CryptoLayerConfig config;
         SessionConfig session;
     };

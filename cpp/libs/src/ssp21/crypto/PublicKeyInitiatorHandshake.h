@@ -35,7 +35,7 @@ namespace ssp21
 
         virtual void finalize_request_tx(const seq32_t& request_data, const openpal::Timestamp& now) override;
 
-        virtual bool initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const InitiatorConfig::Params& params, const openpal::Timestamp& now, Session& session) override;
+        virtual bool initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const SessionLimits& limits, const openpal::Timestamp& now, Session& session) override;
 
         virtual HandshakeMode get_handshake_mode() const override
         {
