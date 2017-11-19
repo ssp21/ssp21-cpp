@@ -21,7 +21,7 @@ namespace ssp21
     public:
 
         /**
-        * Result class returned from nitialize_new_handshake()
+        * Result class returned from initialize_new_handshake()
         */
         class InitResult
         {
