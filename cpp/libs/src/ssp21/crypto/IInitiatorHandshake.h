@@ -30,10 +30,23 @@ namespace ssp21
 
         /**
         * Initialize the handshake hash and record the time at which the request transmission started
+        *
+        * @param request_data The seralized data of the RequestHandshakeBegin message used to initialize the handshake hash
+        * @param the time request transmission started so that the latency can be measured for the response
         */
         virtual void finalize_request_tx(const seq32_t& request_data, const openpal::Timestamp& now) = 0;
 
-        virtual bool initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const InitiatorConfig::Params& params, const openpal::Timestamp& now, Session& session) = 0;
+        /**
+        * Process the response to the message, and if successful, initialize the Session
+        *
+        * @param msg the fully parsed reply message
+        * @param response_data the raw bytes corresponding to the parsed message
+        * @param params configuration parameters for the initiator
+        * @param now the time the message was received
+        * @param session the Session to initialize
+        * @return True if successful and the session was initialized, false otherwise
+        */
+        virtual bool initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& response_data, const InitiatorConfig::Params& params, const openpal::Timestamp& now, Session& session) = 0;
 
         virtual HandshakeMode get_handshake_mode() const = 0;
 
