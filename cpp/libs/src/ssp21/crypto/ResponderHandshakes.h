@@ -5,6 +5,7 @@
 #include "ssp21/crypto/IResponderHandshake.h"
 #include "ssp21/crypto/ICertificateHandler.h"
 #include "ssp21/crypto/StaticKeys.h"
+#include "ssp21/crypto/IKeyLookup.h"
 
 #include "openpal/logging/Logger.h"
 
@@ -20,7 +21,7 @@ namespace ssp21
     {
         static std::shared_ptr<IResponderHandshake> shared_secret_mode(
             const openpal::Logger& logger,
-            const std::shared_ptr<const SymmetricKey>& shared_secret
+            const std::shared_ptr<IKeyLookup>& key_lookup
         );
 
         static std::shared_ptr<IResponderHandshake> public_key_mode(

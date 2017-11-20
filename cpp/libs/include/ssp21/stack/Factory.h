@@ -7,6 +7,8 @@
 #include "ssp21/crypto/CryptoLayerConfig.h"
 #include "ssp21/crypto/StaticKeys.h"
 #include "ssp21/crypto/CryptoSuite.h"
+#include "ssp21/crypto/IKeySource.h"
+#include "ssp21/crypto/IKeyLookup.h"
 #include "ssp21/util/SecureDynamicBuffer.h"
 
 #include "ssp21/link/Addresses.h"
@@ -28,7 +30,7 @@ namespace ssp21
                 const ResponderConfig& config,
                 const openpal::Logger& logger,
                 const std::shared_ptr<openpal::IExecutor>& executor,
-                const std::shared_ptr<const SymmetricKey>& shared_secret
+                const std::shared_ptr<IKeyLookup>& key_lookup
             );
 
             std::shared_ptr<IStack> preshared_public_key_mode(
@@ -64,7 +66,7 @@ namespace ssp21
                 const openpal::Logger& logger,
                 const std::shared_ptr<openpal::IExecutor>& executor,
                 const CryptoSuite& crypto_suite,
-                const std::shared_ptr<const SymmetricKey>& shared_secret
+                const std::shared_ptr<IKeySource>& key_source
             );
 
             std::shared_ptr<IStack> preshared_public_key_mode(
