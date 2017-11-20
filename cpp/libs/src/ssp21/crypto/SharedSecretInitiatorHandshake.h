@@ -5,6 +5,7 @@
 #include "ssp21/crypto/IInitiatorHandshake.h"
 
 #include "ssp21/crypto/AlgorithmSet.h"
+#include "ssp21/crypto/IKeySource.h"
 
 namespace ssp21
 {
@@ -17,11 +18,11 @@ namespace ssp21
     {
     public:
 
-        SharedSecretInitiatorHandshake(const openpal::Logger& logger, const CryptoSuite& crypto_suite, const std::shared_ptr<const SymmetricKey>& shared_secret);
+        SharedSecretInitiatorHandshake(const openpal::Logger& logger, const CryptoSuite& crypto_suite, const std::shared_ptr<IKeySource>& key_source);
 
-        inline static std::shared_ptr<IInitiatorHandshake> make_shared(const openpal::Logger& logger, const CryptoSuite& crypto_suite, const std::shared_ptr<const SymmetricKey>& shared_secret)
+        inline static std::shared_ptr<IInitiatorHandshake> make_shared(const openpal::Logger& logger, const CryptoSuite& crypto_suite, const std::shared_ptr<IKeySource>& key_source)
         {
-            return std::make_shared<SharedSecretInitiatorHandshake>(logger, crypto_suite, shared_secret);
+            return std::make_shared<SharedSecretInitiatorHandshake>(logger, crypto_suite, key_source);
         }
 
         virtual InitResult initialize_new_handshake() override;
@@ -47,8 +48,15 @@ namespace ssp21
         openpal::Logger logger;
         const CryptoSuite crypto_suite;
         const shared_secret_algorithms_t algorithms;
-        const std::shared_ptr<const SymmetricKey> shared_secret;
+        const std::shared_ptr<IKeySource> key_source;
+
         openpal::StaticBuffer<uint32_t, consts::crypto::nonce_length> nonce_buffer;
+
+        // the key to use for the current handshake
+        std::shared_ptr<const SymmetricKey> key;
+
+        // buffer that stores the key identifier
+        HashOutput key_identifier;
 
         // time that the request was transmitted
         openpal::Timestamp time_request_tx;

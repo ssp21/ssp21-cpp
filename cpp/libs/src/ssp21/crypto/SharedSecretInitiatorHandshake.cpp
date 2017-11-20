@@ -8,11 +8,11 @@
 
 namespace ssp21
 {
-    SharedSecretInitiatorHandshake::SharedSecretInitiatorHandshake(const openpal::Logger& logger, const CryptoSuite& crypto_suite, const std::shared_ptr<const SymmetricKey>& shared_secret) :
+    SharedSecretInitiatorHandshake::SharedSecretInitiatorHandshake(const openpal::Logger& logger, const CryptoSuite& crypto_suite, const std::shared_ptr<IKeySource>& key_source) :
         logger(logger),
         crypto_suite(crypto_suite),
         algorithms(crypto_suite),
-        shared_secret(shared_secret)
+        key_source(key_source)
     {
         if (crypto_suite.handshake_ephemeral != HandshakeEphemeral::nonce)
         {
@@ -23,7 +23,16 @@ namespace ssp21
     IInitiatorHandshake::InitResult SharedSecretInitiatorHandshake::initialize_new_handshake()
     {
         Crypto::gen_random(this->nonce_buffer.as_wseq());
-        return InitResult::success(this->nonce_buffer.as_seq(), seq32_t::empty());
+
+        this->key = this->key_source->get_key(this->key_identifier);
+
+        if (!this->key)
+        {
+            return InitResult::failure();
+        }
+
+        // The mode data is a (possibly empty) key identifier
+        return InitResult::success(this->nonce_buffer.as_seq(), this->key_identifier.as_seq());
     }
 
     void SharedSecretInitiatorHandshake::finalize_request_tx(const seq32_t& request_data, const openpal::Timestamp& now)
@@ -32,8 +41,14 @@ namespace ssp21
         this->algorithms.handshake.hash({ request_data }, this->handshake_hash);
     }
 
-    bool SharedSecretInitiatorHandshake::initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const SessionLimits& limits, const openpal::Timestamp& now, Session& session)
+    bool SharedSecretInitiatorHandshake::initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& reply_data, const SessionLimits& limits, const openpal::Timestamp& now, Session& session)
     {
+        if (!this->key)
+        {
+            SIMPLE_LOG_BLOCK(this->logger, levels::error, "shared secret key not initialized");
+            return false;
+        }
+
         if (msg.ephemeral_data.length() != consts::crypto::nonce_length)
         {
             FORMAT_LOG_BLOCK(this->logger, levels::warn, "bad nonce length: %u", msg.ephemeral_data.length());
@@ -47,7 +62,7 @@ namespace ssp21
         }
 
         // mix the handshake hash
-        const auto salt = this->mix_handshake_hash(msg_bytes);
+        const auto salt = this->mix_handshake_hash(reply_data);
 
         // perform session key derivation
         SessionKeys session_keys;
@@ -55,7 +70,7 @@ namespace ssp21
         // perform key derivation
         this->algorithms.handshake.kdf(
             salt,
-        { this->shared_secret->as_seq() },
+        { this->key->as_seq() },
         session_keys.tx_key,
         session_keys.rx_key
         );
