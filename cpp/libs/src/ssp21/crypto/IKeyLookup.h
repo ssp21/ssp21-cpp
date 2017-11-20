@@ -25,7 +25,7 @@ namespace ssp21
         *
         * @return a valid key, or nullptr if no key is available w/ the specified id
         */
-        std::shared_ptr<const SymmetricKey> find_key(const seq32_t& key_id);
+        virtual std::shared_ptr<const SymmetricKey> find_key(const seq32_t& key_id) = 0;
     };
 
 

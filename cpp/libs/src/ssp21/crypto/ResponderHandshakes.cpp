@@ -3,6 +3,7 @@
 
 #include "ssp21/crypto/PublicKeyResponderHandshake.h"
 #include "ssp21/crypto/SharedSecretResponderHandshake.h"
+#include "ssp21/crypto/StaticKeyLookup.h"
 
 namespace ssp21
 {
@@ -11,7 +12,7 @@ namespace ssp21
         const std::shared_ptr<const SymmetricKey>& shared_secret
     )
     {
-        return SharedSecretResponderHandshake::make_shared(logger, shared_secret);
+        return SharedSecretResponderHandshake::make_shared(logger, StaticKeyLookup::create(logger, shared_secret));
     }
 
     std::shared_ptr<IResponderHandshake> ResponderHandshakes::public_key_mode(

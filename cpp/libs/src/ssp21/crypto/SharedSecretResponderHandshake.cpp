@@ -15,14 +15,11 @@ using namespace openpal;
 namespace ssp21
 {
 
-    SharedSecretResponderHandshake::SharedSecretResponderHandshake(const Logger& logger, const std::shared_ptr<const SymmetricKey>& shared_secret) :
+    SharedSecretResponderHandshake::SharedSecretResponderHandshake(const Logger& logger, const std::shared_ptr<IKeyLookup>& key_lookup) :
         logger(logger),
-        shared_secret(shared_secret)
+        key_lookup(key_lookup)
     {
-        if (shared_secret->as_seq().length() != consts::crypto::symmetric_ley_length)
-        {
-            throw Exception("Invalid length for shared secret: ", shared_secret->as_seq().length());
-        }
+
     }
 
     IResponderHandshake::Result SharedSecretResponderHandshake::process(const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const Timestamp& now, IFrameWriter& writer, Session& session)
@@ -39,6 +36,14 @@ namespace ssp21
         }
 
         shared_secret_algorithms_t algorithms;
+
+        // look-up the request shared secret, this also validates the handshake data field (empty or key id)
+        const auto shared_secret = this->key_lookup->find_key(msg.handshake_data);
+        if (!shared_secret)
+        {
+            // the requested key was not found
+            return Result::failure(HandshakeError::key_not_found);
+        }
 
         {
             const auto err = algorithms.configure(msg.spec);
@@ -69,7 +74,7 @@ namespace ssp21
 
         algorithms.handshake.kdf(
             handshake_hash,
-        { this->shared_secret->as_seq() },
+        { shared_secret->as_seq() },
         session_keys.rx_key,
         session_keys.tx_key
         );

@@ -52,6 +52,8 @@ enum class HandshakeError : uint8_t
     authentication_error = 0xC,
     /// The master requested handshake auth, but no prior handshake begin was received
     no_prior_handshake_begin = 0xD,
+    /// In shared-secret mode, the requested key id (mode_data) was not found
+    key_not_found = 0xE,
     /// This value gets used internally in ssp21-cpp only
     none = 0xFD,
     /// value not defined

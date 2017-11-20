@@ -24,7 +24,7 @@ namespace ssp21
         *
         * @return a valid key, or nullptr if no key is available
         */
-        std::shared_ptr<const SymmetricKey> get_key(SecureBuffer& key_id_out);
+        virtual std::shared_ptr<const SymmetricKey> get_key(SecureBuffer& key_id_out) = 0;
     };
 
 

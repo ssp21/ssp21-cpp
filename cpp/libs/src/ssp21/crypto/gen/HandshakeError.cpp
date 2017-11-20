@@ -51,6 +51,8 @@ HandshakeError HandshakeErrorSpec::from_type(uint8_t arg)
             return HandshakeError::authentication_error;
         case(0xD):
             return HandshakeError::no_prior_handshake_begin;
+        case(0xE):
+            return HandshakeError::key_not_found;
         case(0xFF):
             return HandshakeError::internal;
         case(0xFD):
@@ -89,6 +91,8 @@ const char* HandshakeErrorSpec::to_string(HandshakeError arg)
             return "authentication_error";
         case(HandshakeError::no_prior_handshake_begin):
             return "no_prior_handshake_begin";
+        case(HandshakeError::key_not_found):
+            return "key_not_found";
         case(HandshakeError::internal):
             return "internal";
         case(HandshakeError::none):

@@ -35,6 +35,7 @@ object HandshakeError extends EnumModel {
     EnumValue("unsupported_certificate_feature", 11, "One of the received certificates utilizes an unsupported feature"),
     EnumValue("authentication_error", 12, "The outstation was unable to authenticate the master"),
     EnumValue("no_prior_handshake_begin", 13, "The master requested handshake auth, but no prior handshake begin was received"),
+    EnumValue("key_not_found", 14, "In shared-secret mode, the requested key id (mode_data) was not found"),
     EnumValue("internal", 255, "internal error"),
     noneValue
   )
