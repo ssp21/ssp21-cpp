@@ -14,9 +14,9 @@ namespace ssp21
     {
     public:
 
-        StaticKeyLookup(openpal::Logger logger, const std::shared_ptr<const SymmetricKey>& static_key);
+        StaticKeyLookup(const openpal::Logger& logger, const std::shared_ptr<const SymmetricKey>& static_key);
 
-        static std::shared_ptr<IKeyLookup> create(openpal::Logger logger, const std::shared_ptr<const SymmetricKey>& static_key)
+        static std::shared_ptr<IKeyLookup> create(const openpal::Logger& logger, const std::shared_ptr<const SymmetricKey>& static_key)
         {
             return std::make_shared<StaticKeyLookup>(logger, static_key);
         }
