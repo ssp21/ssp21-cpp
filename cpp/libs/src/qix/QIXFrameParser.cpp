@@ -38,7 +38,7 @@ bool QIXFrameParser::parse(QIXFrame& frame)
     // we can now parse the frame. first verify the CRC.
     if (calc_crc != actual_crc)
     {
-        FORMAT_LOG_BLOCK(this->logger, levels::warn, "CRC on frame () doesn't match calculated crc ()");
+        FORMAT_LOG_BLOCK(this->logger, levels::warn, "CRC on frame (0x%x) doesn't match calculated crc (0x%x)", actual_crc, calc_crc);
         // toss the entire frame
         return false;
     }
@@ -53,7 +53,7 @@ void QIXFrameParser::read_frame_fields(QIXFrame& frame)
     // read the key_id, and advance the slice
     openpal::BigEndian::read(payload, frame.key_id);
     // the next 32 bytes are the actual key
-    frame.key.as_wseq().copy_from(payload.take(32));
+    frame.key_data = payload.take(32);
 }
 
 uint32_t QIXFrameParser::calc_frame_crc()

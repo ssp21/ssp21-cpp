@@ -14,11 +14,10 @@ class QIXFrameParser : openpal::Uncopyable
 {
     static const uint8_t sync1 = 0x5A;
     static const uint8_t sync2 = 0xA5;
+public:
 
     // sync + id + key + crc
     static const uint8_t total_frame_size = 2 + 8 + 32 + 4;
-
-public:
 
     QIXFrameParser(const openpal::Logger& logger) : logger(logger) {}
 

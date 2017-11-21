@@ -93,6 +93,13 @@ target_link_libraries (testcryptobackend sodiumbackend testlib)
 set_target_properties(testcryptobackend PROPERTIES FOLDER tests)
 add_test(testcryptobackend-sodium testcryptobackend)
 
+# ---- qix tests ----
+file(GLOB_RECURSE testqix_SRC ./cpp/tests/qix/*.cpp ./cpp/tests/qix/*.h)
+add_executable (testqix ${testqix_SRC})
+target_link_libraries (testqix qix testlib)
+set_target_properties(testqix PROPERTIES FOLDER tests)
+add_test(testqix testqix)
+
 # ----integration tests ----
 file(GLOB_RECURSE integration_SRC ./cpp/tests/integration/*.cpp ./cpp/tests/integration/*.h)
 add_executable (testintegration ${integration_SRC})

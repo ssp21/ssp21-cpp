@@ -1,7 +1,7 @@
 #ifndef SSP21PROXY_QIXFRAME_H
 #define SSP21PROXY_QIXFRAME_H
 
-#include "ssp21/crypto/BufferTypes.h"
+#include "ssp21/util/SequenceTypes.h"
 
 #include <memory>
 
@@ -15,7 +15,7 @@ public:
     QIXFrame() = default;
 
     uint64_t key_id = 0;
-    ssp21::SymmetricKey key;
+    ssp21::seq32_t key_data;
 };
 
 #endif
