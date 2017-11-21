@@ -24,13 +24,19 @@ target_link_libraries(ssp21 openpal)
 install(TARGETS ssp21 DESTINATION lib)
 set_target_properties(ssp21 PROPERTIES FOLDER libs)
 
-
 # ---- sodiumbackend library ----
 file(GLOB_RECURSE sodiumbackend_SRC ./cpp/libs/src/sodium/*.cpp ./cpp/libs/src/sodium/*.h ./cpp/libs/include/sodium/*.h)
 add_library(sodiumbackend ${LIB_TYPE} ${sodiumbackend_SRC})
 target_link_libraries(sodiumbackend ssp21 ${SODIUM_LIB_NAME})
 install(TARGETS sodiumbackend DESTINATION lib)
 set_target_properties(sodiumbackend PROPERTIES FOLDER libs)
+
+# ---- qix library ----
+file(GLOB_RECURSE qix_SRC ./cpp/libs/src/qix/*.cpp ./cpp/libs/src/qix/*.h ./cpp/libs/include/qix/*.h)
+add_library(qix ${LIB_TYPE} ${qix_SRC})
+target_link_libraries(qix ssp21)
+install(TARGETS qix DESTINATION lib)
+set_target_properties(qix PROPERTIES FOLDER libs)
 
 # ---- icf-tool executable ----
 add_executable (icftool ./cpp/exe/icftool/main.cpp ./cpp/exe/icftool/ConsolePrinter.h ./cpp/exe/icftool/Program.h ./cpp/exe/icftool/Program.cpp ./cpp/exe/icftool/UserInput.h ./cpp/exe/icftool/UserInput.cpp ./cpp/exe/icftool/Actions.h ./cpp/exe/icftool/Actions.cpp)
