@@ -10,27 +10,30 @@
 #include <asio.hpp>
 
 /**
-* A base class source and look-up for 
+* A base class source and look-up for
 */
 class QIXKeySource
 {
 public:
-	
-	QIXKeySource(const std::shared_ptr<IQIXFrameHandler>& handler, const openpal::Logger& logger, const std::string& serial_device);
 
-	~QIXKeySource();
+    QIXKeySource(const std::shared_ptr<IQIXFrameHandler>& handler, const openpal::Logger& logger, const std::string& serial_device);
+
+    ~QIXKeySource();
 
 
 private:
 
-	const std::shared_ptr<IQIXFrameHandler> handler;
-	openpal::Logger logger;
+    const std::shared_ptr<IQIXFrameHandler> handler;
+    openpal::Logger logger;
 
-	asio::io_service service;
-	asio::serial_port port;
-	std::unique_ptr<std::thread> thread;
+    bool shutting_down = false;
+    asio::io_service service;
+    asio::serial_port port;
+    std::unique_ptr<std::thread> thread;
 
-	void run();
+    void run();
+
+    void run_and_catch();
 
 };
 

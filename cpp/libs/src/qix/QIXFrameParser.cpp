@@ -22,7 +22,12 @@ bool QIXFrameParser::parse(QIXFrame& frame)
     auto remainder = this->buffer.as_seq();
 
     // first, consume any input until we hit the first sync character
-    this->find_sync(remainder);
+    const auto num_bytes_discarded = this->find_sync(remainder);
+
+    if (num_bytes_discarded > 0)
+    {
+        FORMAT_LOG_BLOCK(this->logger, levels::warn, "Discarded %u bytes looking for start characters", num_bytes_discarded);
+    }
 
     if (remainder.length() < total_frame_size)
     {
@@ -69,8 +74,10 @@ uint32_t QIXFrameParser::read_frame_crc()
     return crc;
 }
 
-bool QIXFrameParser::find_sync(ssp21::seq32_t& input)
+size_t QIXFrameParser::find_sync(ssp21::seq32_t& input)
 {
+    size_t num_discard = 0;
+
     // search the first two bytes for a match
     while (input.length() > 0)
     {
@@ -78,20 +85,21 @@ bool QIXFrameParser::find_sync(ssp21::seq32_t& input)
         {
             if (input[0] == QIXFrameParser::sync1)
             {
-                return true;
+                return num_discard;
             }
         }
         else
         {
             if (input[0] == QIXFrameParser::sync1 && input[1] == QIXFrameParser::sync2)
             {
-                return true;
+                return num_discard;
             }
         }
 
+        ++num_discard;
         input.advance(1);
     }
 
-    return false;
+    return num_discard;
 }
 

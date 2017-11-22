@@ -35,7 +35,7 @@ private:
 
     uint32_t read_frame_crc();
 
-    static bool find_sync(ssp21::seq32_t& input);
+    static size_t find_sync(ssp21::seq32_t& input);
 
     uint32_t num_bytes_buffered = 0;
     openpal::StaticBuffer<uint32_t, total_frame_size> buffer;

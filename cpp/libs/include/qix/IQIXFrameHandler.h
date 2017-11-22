@@ -7,9 +7,9 @@ class IQIXFrameHandler
 {
 public:
 
-	virtual ~IQIXFrameHandler() {}
+    virtual ~IQIXFrameHandler() {}
 
-	virtual void handle(const QIXFrame& frame) = 0;
+    virtual void handle(const QIXFrame& frame) = 0;
 
 };
 
