@@ -14,7 +14,6 @@ using namespace openpal;
 
 void open_and_test_handshake(IntegrationFixture& fix);
 void test_bidirectional_data_transfer(IntegrationFixture& fix, const seq32_t& data);
-void enable_all_logging(IntegrationFixture& fix);
 
 template <class T>
 void for_each_mode(const T& action)
@@ -96,13 +95,4 @@ void test_bidirectional_data_transfer(IntegrationFixture& fix, const seq32_t& da
 
     REQUIRE(fix.responder_validator->is_empty());
     REQUIRE(fix.initiator_validator->is_empty());
-}
-
-void enable_all_logging(IntegrationFixture& fix)
-{
-    fix.ilog.log_everything();
-    fix.ilog.add_backend(std::make_shared<ConsolePrettyPrinter>());
-
-    fix.rlog.log_everything();
-    fix.rlog.add_backend(std::make_shared<ConsolePrettyPrinter>());
 }

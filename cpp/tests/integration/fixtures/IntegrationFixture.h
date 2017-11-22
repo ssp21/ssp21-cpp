@@ -6,6 +6,7 @@
 #include "../mocks/SeqValidator.h"
 
 #include "testlib/MockLogHandler.h"
+#include "ssp21/util/ConsolePrettyPrinter.h"
 
 #include "ssp21/stack/IStack.h"
 #include "ssp21/crypto/StaticKeys.h"
@@ -52,9 +53,10 @@ namespace ssp21
         void log_everything_to_stdio()
         {
             this->ilog.log_everything();
-            this->ilog.write_to_stdio();
+            this->ilog.add_backend(std::make_shared<ConsolePrettyPrinter>());
+
             this->rlog.log_everything();
-            this->rlog.write_to_stdio();
+            this->rlog.add_backend(std::make_shared<ConsolePrettyPrinter>());
         }
 
         const std::shared_ptr<openpal::MockExecutor> exe;
