@@ -10,6 +10,13 @@
 
 using namespace ssp21;
 
+class QIXPrinter : public IQIXFrameHandler {
+
+	virtual void handle(const QIXFrame& frame) override {
+		std::cout << "Received frame w/ id: " << frame.key_id << std::endl;
+	}
+};
+
 int main(int argc, char*  argv[])
 {
 	if (argc != 2) {
@@ -21,7 +28,7 @@ int main(int argc, char*  argv[])
     try
     {
 		QIXKeySource key_source(
-			nullptr, 
+			std::make_shared<QIXPrinter>(), 
 			openpal::Logger(std::make_shared<ssp21::ConsolePrettyPrinter>(), Module::id, "qix-reader", openpal::LogLevels(~0)),
 			argv[1]
 		);
