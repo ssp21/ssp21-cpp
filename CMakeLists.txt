@@ -43,6 +43,11 @@ add_executable (icftool ./cpp/exe/icftool/main.cpp ./cpp/exe/icftool/ConsolePrin
 target_link_libraries(icftool sodiumbackend)
 set_target_properties(icftool PROPERTIES FOLDER exe)
 
+# ---- qix-reader executable ----
+add_executable (qixreader ./cpp/exe/qixreader/main.cpp)
+target_link_libraries(qixreader qix)
+set_target_properties(qixreader PROPERTIES FOLDER exe)
+
 # ---- proxy executable ----
 if(SSP21_PROXY)   
    
