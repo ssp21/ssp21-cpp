@@ -24,10 +24,10 @@ namespace ssp21
             const std::shared_ptr<const SymmetricKey>& key
         );
 
-		static std::shared_ptr<IResponderHandshake> qkd_mode(
-			const openpal::Logger& logger,
-			const std::shared_ptr<IKeyLookup>& key_lookup
-		);
+        static std::shared_ptr<IResponderHandshake> qkd_mode(
+            const openpal::Logger& logger,
+            const std::shared_ptr<IKeyLookup>& key_lookup
+        );
 
         static std::shared_ptr<IResponderHandshake> public_key_mode(
             const openpal::Logger& logger,

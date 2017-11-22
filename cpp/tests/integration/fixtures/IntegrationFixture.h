@@ -18,8 +18,10 @@ namespace ssp21
     {
         preshared_key,
         certificates,
-        shared_secret
+        shared_secret,
+        qkd
     };
+
 
 
     class IntegrationFixture
@@ -47,7 +49,13 @@ namespace ssp21
 
         IntegrationFixture(Mode mode);
 
-
+        void log_everything_to_stdio()
+        {
+            this->ilog.log_everything();
+            this->ilog.write_to_stdio();
+            this->rlog.log_everything();
+            this->rlog.write_to_stdio();
+        }
 
         const std::shared_ptr<openpal::MockExecutor> exe;
         openpal::MockLogHandler ilog;
@@ -69,6 +77,8 @@ namespace ssp21
         static Stacks get_stacks(Mode mode, openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe);
 
         static Stacks preshared_key_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe);
+
+        static Stacks qkd_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe);
 
         static Stacks certificate_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe);
 

@@ -50,9 +50,9 @@ namespace ssp21
             return false;
         }
 
-        if (msg.ephemeral_data.length() != consts::crypto::nonce_length)
+        if (msg.ephemeral_data.is_not_empty())
         {
-            FORMAT_LOG_BLOCK(this->logger, levels::warn, "bad nonce length: %u", msg.ephemeral_data.length());
+            FORMAT_LOG_BLOCK(this->logger, levels::warn, "non-empty emphemeral data: %u", msg.ephemeral_data.length());
             return false;
         }
 

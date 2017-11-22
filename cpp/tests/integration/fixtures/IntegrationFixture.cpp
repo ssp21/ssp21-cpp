@@ -15,6 +15,8 @@
 
 #include "openpal/logging/HexLogging.h"
 
+#include "MockKeyStore.h"
+
 namespace ssp21
 {
 
@@ -39,6 +41,8 @@ namespace ssp21
             return certificate_stacks(rlogger, ilogger, exe);
         case(Mode::shared_secret):
             return shared_secret_stacks(rlogger, ilogger, exe);
+        case(Mode::qkd):
+            return qkd_stacks(rlogger, ilogger, exe);
         default:
             throw new Exception("Unsupported integration test mode");
         }
@@ -66,6 +70,33 @@ namespace ssp21
                                    exe,
                                    keys.responder,
                                    keys.initiator.public_key
+                               );
+
+        return Stacks{ initiator, responder };
+    }
+
+    IntegrationFixture::Stacks IntegrationFixture::qkd_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe)
+    {
+        const auto key_store = std::make_shared<MockKeyStore>();
+
+        CryptoSuite suite;
+        suite.handshake_ephemeral = HandshakeEphemeral::none;
+
+        const auto initiator = initiator::factory::qkd_mode(
+                                   Addresses(1, 10),
+                                   InitiatorConfig(),
+                                   ilogger,
+                                   exe,
+                                   suite,
+                                   key_store
+                               );
+
+        const auto responder = responder::factory::qkd_mode(
+                                   Addresses(10, 1),
+                                   ResponderConfig(),
+                                   rlogger,
+                                   exe,
+                                   key_store
                                );
 
         return Stacks{ initiator, responder };
