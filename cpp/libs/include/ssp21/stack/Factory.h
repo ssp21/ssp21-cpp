@@ -30,7 +30,7 @@ namespace ssp21
                 const ResponderConfig& config,
                 const openpal::Logger& logger,
                 const std::shared_ptr<openpal::IExecutor>& executor,
-                const std::shared_ptr<IKeyLookup>& key_lookup
+                const std::shared_ptr<const SymmetricKey>& key
             );
 
             std::shared_ptr<IStack> preshared_public_key_mode(
@@ -66,7 +66,7 @@ namespace ssp21
                 const openpal::Logger& logger,
                 const std::shared_ptr<openpal::IExecutor>& executor,
                 const CryptoSuite& crypto_suite,
-                const std::shared_ptr<IKeySource>& key_source
+                const std::shared_ptr<const SymmetricKey>& key
             );
 
             std::shared_ptr<IStack> preshared_public_key_mode(

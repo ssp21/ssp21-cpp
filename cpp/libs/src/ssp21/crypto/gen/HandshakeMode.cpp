@@ -31,6 +31,8 @@ HandshakeMode HandshakeModeSpec::from_type(uint8_t arg)
             return HandshakeMode::preshared_public_keys;
         case(0x2):
             return HandshakeMode::industrial_certificates;
+        case(0x3):
+            return HandshakeMode::quantum_key_distribution;
         default:
             return HandshakeMode::undefined;
     }
@@ -45,6 +47,8 @@ const char* HandshakeModeSpec::to_string(HandshakeMode arg)
             return "preshared_public_keys";
         case(HandshakeMode::industrial_certificates):
             return "industrial_certificates";
+        case(HandshakeMode::quantum_key_distribution):
+            return "quantum_key_distribution";
         default:
             return "undefined";
     }

@@ -4,8 +4,6 @@
 #include "ConfigProperties.h"
 
 #include "ssp21/crypto/ICertificateHandler.h"
-#include "ssp21/crypto/StaticKeyLookup.h"
-#include "ssp21/crypto/StaticKeySource.h"
 
 #include "ssp21/util/SecureFile.h"
 #include "ssp21/util/Exception.h"
@@ -86,7 +84,7 @@ stack_factory_t ConfigSection::get_initiator_shared_secert_factory(const ssp21::
                    logger,
                    executor,
                    CryptoSuite(),		// TODO: default
-                   StaticKeySource::create(shared_secret)
+                   shared_secret
                );
     };
 }
@@ -156,7 +154,7 @@ stack_factory_t ConfigSection::get_responder_shared_secert_factory(const ssp21::
                    ResponderConfig(),	// TODO: default
                    logger,
                    executor,
-                   StaticKeyLookup::create(logger, shared_secret)
+                   shared_secret
                );
     };
 }

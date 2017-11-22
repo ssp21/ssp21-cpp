@@ -1,5 +1,5 @@
 
-#include "SharedSecretInitiatorHandshake.h"
+#include "QKDInitiatorHandshake.h"
 
 #include "ssp21/util/Exception.h"
 
@@ -8,33 +8,48 @@
 
 namespace ssp21
 {
-    SharedSecretInitiatorHandshake::SharedSecretInitiatorHandshake(const openpal::Logger& logger, const CryptoSuite& crypto_suite, const std::shared_ptr<const SymmetricKey>& key) :
+    QKDInitiatorHandshake::QKDInitiatorHandshake(const openpal::Logger& logger, const CryptoSuite& crypto_suite, const std::shared_ptr<IKeySource>& key_source) :
         logger(logger),
         crypto_suite(crypto_suite),
         algorithms(crypto_suite),
-        key(key)
+        key_source(key_source)
     {
-        if (crypto_suite.handshake_ephemeral != HandshakeEphemeral::nonce)
+        if (crypto_suite.handshake_ephemeral != HandshakeEphemeral::none)
         {
-            throw new Exception("handshake_ephemeral must be nonce");
+            throw new Exception("handshake_ephemeral must be 'none'");
         }
     }
 
-    IInitiatorHandshake::InitResult SharedSecretInitiatorHandshake::initialize_new_handshake()
+    IInitiatorHandshake::InitResult QKDInitiatorHandshake::initialize_new_handshake()
     {
-        Crypto::gen_random(this->nonce_buffer.as_wseq());
+        this->key = this->key_source->consume_key();
 
-        return InitResult::success(this->nonce_buffer.as_seq(), seq32_t::empty());
+        if (!this->key)
+        {
+            return InitResult::failure();
+        }
+
+        // compute the hash of the key to use as a key identifier
+        algorithms.handshake.hash({ this->key->as_seq() }, this->key_identifier);
+
+        // The mode data is the key identifier
+        return InitResult::success(seq32_t::empty(), this->key_identifier.as_seq());
     }
 
-    void SharedSecretInitiatorHandshake::finalize_request_tx(const seq32_t& request_data, const openpal::Timestamp& now)
+    void QKDInitiatorHandshake::finalize_request_tx(const seq32_t& request_data, const openpal::Timestamp& now)
     {
         this->time_request_tx = now;
         this->algorithms.handshake.hash({ request_data }, this->handshake_hash);
     }
 
-    bool SharedSecretInitiatorHandshake::initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& reply_data, const SessionLimits& limits, const openpal::Timestamp& now, Session& session)
+    bool QKDInitiatorHandshake::initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& reply_data, const SessionLimits& limits, const openpal::Timestamp& now, Session& session)
     {
+        if (!this->key)
+        {
+            SIMPLE_LOG_BLOCK(this->logger, levels::error, "shared secret key not initialized");
+            return false;
+        }
+
         if (msg.ephemeral_data.length() != consts::crypto::nonce_length)
         {
             FORMAT_LOG_BLOCK(this->logger, levels::warn, "bad nonce length: %u", msg.ephemeral_data.length());
@@ -80,7 +95,7 @@ namespace ssp21
         return false;
     }
 
-    seq32_t SharedSecretInitiatorHandshake::mix_handshake_hash(const seq32_t& input)
+    seq32_t QKDInitiatorHandshake::mix_handshake_hash(const seq32_t& input)
     {
         // h = hash(h || input)
 

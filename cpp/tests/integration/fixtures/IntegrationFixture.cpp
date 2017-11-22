@@ -2,8 +2,6 @@
 
 #include "ssp21/crypto/Crypto.h"
 #include "ssp21/crypto/ResponderHandshakes.h"
-#include "ssp21/crypto/StaticKeySource.h"
-#include "ssp21/crypto/StaticKeyLookup.h"
 #include "ssp21/stack/Factory.h"
 
 #include "ssp21/crypto/gen/CertificateBody.h"
@@ -121,7 +119,7 @@ namespace ssp21
                                    ilogger,
                                    exe,
                                    suite,
-                                   StaticKeySource::create(shared_secret)
+                                   shared_secret
                                );
 
         const auto responder = responder::factory::shared_secret_mode(
@@ -129,7 +127,7 @@ namespace ssp21
                                    ResponderConfig(),
                                    rlogger,
                                    exe,
-                                   StaticKeyLookup::create(rlogger, shared_secret)
+                                   shared_secret
                                );
 
         return Stacks{ initiator, responder };

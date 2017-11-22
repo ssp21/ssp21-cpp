@@ -29,6 +29,8 @@ HandshakeEphemeral HandshakeEphemeralSpec::from_type(uint8_t arg)
             return HandshakeEphemeral::x25519;
         case(0x1):
             return HandshakeEphemeral::nonce;
+        case(0x2):
+            return HandshakeEphemeral::none;
         default:
             return HandshakeEphemeral::undefined;
     }
@@ -41,6 +43,8 @@ const char* HandshakeEphemeralSpec::to_string(HandshakeEphemeral arg)
             return "x25519";
         case(HandshakeEphemeral::nonce):
             return "nonce";
+        case(HandshakeEphemeral::none):
+            return "none";
         default:
             return "undefined";
     }

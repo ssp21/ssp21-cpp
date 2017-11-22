@@ -32,6 +32,8 @@ enum class HandshakeMode : uint8_t
     preshared_public_keys = 0x1,
     /// Industrial certificate format
     industrial_certificates = 0x2,
+    /// Single-use shared secrets
+    quantum_key_distribution = 0x3,
     /// value not defined
     undefined = 0xFF
 };

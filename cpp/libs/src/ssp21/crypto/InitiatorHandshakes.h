@@ -23,6 +23,12 @@ namespace ssp21
         static std::shared_ptr<IInitiatorHandshake> shared_secret_mode(
             const openpal::Logger& logger,
             const CryptoSuite& crypto_suite,
+            const std::shared_ptr<const SymmetricKey>& key
+        );
+
+        static std::shared_ptr<IInitiatorHandshake> qkd_mode(
+            const openpal::Logger& logger,
+            const CryptoSuite& crypto_suite,
             const std::shared_ptr<IKeySource>& key_source
         );
 

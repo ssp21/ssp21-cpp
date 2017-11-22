@@ -3,16 +3,26 @@
 
 #include "ssp21/crypto/PublicKeyInitiatorHandshake.h"
 #include "ssp21/crypto/SharedSecretInitiatorHandshake.h"
+#include "ssp21/crypto/QKDInitiatorHandshake.h"
 
 namespace ssp21
 {
     std::shared_ptr<IInitiatorHandshake> InitiatorHandshakes::shared_secret_mode(
         const openpal::Logger& logger,
         const CryptoSuite& crypto_suite,
+        const std::shared_ptr<const SymmetricKey>& key
+    )
+    {
+        return SharedSecretInitiatorHandshake::make_shared(logger, crypto_suite, key);
+    }
+
+    std::shared_ptr<IInitiatorHandshake> InitiatorHandshakes::qkd_mode(
+        const openpal::Logger& logger,
+        const CryptoSuite& crypto_suite,
         const std::shared_ptr<IKeySource>& key_source
     )
     {
-        return SharedSecretInitiatorHandshake::make_shared(logger, crypto_suite, key_source);
+        return QKDInitiatorHandshake::make_shared(logger, crypto_suite, key_source);
     }
 
     std::shared_ptr<IInitiatorHandshake> InitiatorHandshakes::public_key_mode(

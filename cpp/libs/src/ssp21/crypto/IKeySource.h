@@ -18,13 +18,11 @@ namespace ssp21
         virtual ~IKeySource() {}
 
         /**
-        * Try to get a key from the key source. This could be the same static key every time, or it might consume a key from a store of keys.
-        *
-        * @param key_id_out An optional key identifier set if the key is a rotating key.
+        * Consume a key from the key source.
         *
         * @return a valid key, or nullptr if no key is available
         */
-        virtual std::shared_ptr<const SymmetricKey> get_key(SecureBuffer& key_id_out) = 0;
+        virtual std::shared_ptr<const SymmetricKey> consume_key() = 0;
     };
 
 

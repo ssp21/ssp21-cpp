@@ -1,5 +1,5 @@
 
-#include "ssp21/crypto/SharedSecretResponderHandshake.h"
+#include "ssp21/crypto/QKDResponderHandshake.h"
 
 #include "ssp21/util/Exception.h"
 
@@ -15,42 +15,43 @@ using namespace openpal;
 namespace ssp21
 {
 
-    SharedSecretResponderHandshake::SharedSecretResponderHandshake(const Logger& logger, const std::shared_ptr<const SymmetricKey>& key) :
+    QKDResponderHandshake::QKDResponderHandshake(const Logger& logger, const std::shared_ptr<IKeyLookup>& key_lookup) :
         logger(logger),
-        key(key)
+        key_lookup(key_lookup)
     {
 
     }
 
-    IResponderHandshake::Result SharedSecretResponderHandshake::process(const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const Timestamp& now, IFrameWriter& writer, Session& session)
+    IResponderHandshake::Result QKDResponderHandshake::process(const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const Timestamp& now, IFrameWriter& writer, Session& session)
     {
-        if (msg.spec.handshake_ephemeral != HandshakeEphemeral::nonce)
+        if (msg.spec.handshake_ephemeral != HandshakeEphemeral::none)
         {
             return Result::failure(HandshakeError::unsupported_handshake_ephemeral);
         }
 
-        // verify that the nonce is the correct length
-        if (msg.ephemeral_data.length() != consts::crypto::nonce_length)
+        // ephemeral data must be empty
+        if (msg.ephemeral_data.is_not_empty())
         {
             return Result::failure(HandshakeError::bad_message_format);
         }
 
         shared_secret_algorithms_t algorithms;
 
+        // look-up the request shared secret, this also validates the handshake data field (empty or key id)
+        const auto shared_secret = this->key_lookup->find_and_consume_key(msg.handshake_data);
+        if (!shared_secret)
+        {
+            // the requested key was not found
+            return Result::failure(HandshakeError::key_not_found);
+        }
+
         {
             const auto err = algorithms.configure(msg.spec);
             if (any(err)) return Result::failure(err);
         }
 
-        // generate a nonce
-        StaticBuffer<uint32_t, consts::crypto::nonce_length> nonce_buffer;
-        Crypto::gen_random(nonce_buffer.as_wseq());
-
         // prepare the response
-        const ReplyHandshakeBegin reply(
-            nonce_buffer.as_seq(),
-            seq32_t::empty()
-        );
+        const ReplyHandshakeBegin reply(seq32_t::empty(), seq32_t::empty());
 
         const auto result = writer.write(reply);
         if (any(result.err))
@@ -66,7 +67,7 @@ namespace ssp21
 
         algorithms.handshake.kdf(
             handshake_hash,
-        { this->key->as_seq() },
+        { shared_secret->as_seq() },
         session_keys.rx_key,
         session_keys.tx_key
         );

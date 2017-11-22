@@ -18,7 +18,7 @@ namespace ssp21
                 const ResponderConfig& config,
                 const openpal::Logger& logger,
                 const std::shared_ptr<openpal::IExecutor>& executor,
-                const std::shared_ptr<IKeyLookup>& key_lookup
+                const std::shared_ptr<const SymmetricKey>& key
             )
             {
                 return std::make_shared<ResponderStack>(
@@ -28,7 +28,7 @@ namespace ssp21
                            executor,
                            ResponderHandshakes::shared_secret_mode(
                                logger,
-                               key_lookup
+                               key
                            )
                        );
             }
@@ -94,7 +94,7 @@ namespace ssp21
                 const openpal::Logger& logger,
                 const std::shared_ptr<openpal::IExecutor>& executor,
                 const CryptoSuite& crypto_suite,
-                const std::shared_ptr<IKeySource>& key_source
+                const std::shared_ptr<const SymmetricKey>& key
             )
             {
                 return std::make_shared<InitiatorStack>(
@@ -105,7 +105,7 @@ namespace ssp21
                            InitiatorHandshakes::shared_secret_mode(
                                logger,
                                crypto_suite,
-                               key_source
+                               key
                            )
                        );
             }

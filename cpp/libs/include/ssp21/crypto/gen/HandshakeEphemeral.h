@@ -30,6 +30,8 @@ enum class HandshakeEphemeral : uint8_t
     x25519 = 0x0,
     /// 32-byte random nonce
     nonce = 0x1,
+    /// Empty ephemeral used for QKD mode
+    none = 0x2,
     /// value not defined
     undefined = 0xFF
 };

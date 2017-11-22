@@ -8,10 +8,10 @@ namespace ssp21
 {
     std::shared_ptr<IResponderHandshake> ResponderHandshakes::shared_secret_mode(
         const openpal::Logger& logger,
-        const std::shared_ptr<IKeyLookup>& key_lookup
+        const std::shared_ptr<const SymmetricKey>& key
     )
     {
-        return SharedSecretResponderHandshake::make_shared(logger, key_lookup);
+        return SharedSecretResponderHandshake::make_shared(logger, key);
     }
 
     std::shared_ptr<IResponderHandshake> ResponderHandshakes::public_key_mode(
