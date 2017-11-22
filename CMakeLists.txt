@@ -45,7 +45,7 @@ set_target_properties(icftool PROPERTIES FOLDER exe)
 
 # ---- qix-reader executable ----
 add_executable (qixreader ./cpp/exe/qixreader/main.cpp)
-target_link_libraries(qixreader qix)
+target_link_libraries(qixreader qix ${PTHREAD})
 set_target_properties(qixreader PROPERTIES FOLDER exe)
 
 # ---- proxy executable ----
@@ -101,7 +101,7 @@ add_test(testcryptobackend-sodium testcryptobackend)
 # ---- qix tests ----
 file(GLOB_RECURSE testqix_SRC ./cpp/tests/qix/*.cpp ./cpp/tests/qix/*.h)
 add_executable (testqix ${testqix_SRC})
-target_link_libraries (testqix qix testlib)
+target_link_libraries (testqix qix testlib ${PTHREAD})
 set_target_properties(testqix PROPERTIES FOLDER tests)
 add_test(testqix testqix)
 

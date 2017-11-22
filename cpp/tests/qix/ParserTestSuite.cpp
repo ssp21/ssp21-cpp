@@ -25,10 +25,10 @@ TEST_CASE(SUITE("correctly parses QIX frame"))
     const std::string crc("C9 80 72 81");
 
     Hex hex(sync + key_id + key_data + crc);
-    REQUIRE(hex.as_rslice().length() == QIXFrameParser::total_frame_size);
+    REQUIRE(hex.as_rslice().length() == QIXFrameParser::get_fixed_frame_size());
 
     auto dest = parser.get_write_slice();
-    REQUIRE(dest.length() == QIXFrameParser::total_frame_size);
+    REQUIRE(dest.length() == QIXFrameParser::get_fixed_frame_size());
     dest.copy_from(hex.as_rslice());
 
     QIXFrame frame;

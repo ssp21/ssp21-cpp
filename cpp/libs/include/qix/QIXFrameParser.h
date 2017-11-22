@@ -14,11 +14,17 @@ class QIXFrameParser : openpal::Uncopyable
 {
     static const uint8_t sync1 = 0x5A;
     static const uint8_t sync2 = 0xA5;
-public:
 
     // sync + id + key + crc
-    static const uint8_t total_frame_size = 2 + 8 + 32 + 4;
+    static const uint8_t total_frame_size = 46;
+    
+public:
 
+    inline static uint8_t get_fixed_frame_size()
+    {
+	return total_frame_size;
+    }
+  
     QIXFrameParser(const openpal::Logger& logger) : logger(logger) {}
 
     // the buffer that needs to be filled with data before calling parse()
@@ -35,7 +41,7 @@ private:
 
     uint32_t read_frame_crc();
 
-    static size_t find_sync(ssp21::seq32_t& input);
+    static uint32_t find_sync(ssp21::seq32_t& input);
 
     uint32_t num_bytes_buffered = 0;
     openpal::StaticBuffer<uint32_t, total_frame_size> buffer;

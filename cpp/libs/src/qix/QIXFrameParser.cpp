@@ -74,9 +74,9 @@ uint32_t QIXFrameParser::read_frame_crc()
     return crc;
 }
 
-size_t QIXFrameParser::find_sync(ssp21::seq32_t& input)
+uint32_t QIXFrameParser::find_sync(ssp21::seq32_t& input)
 {
-    size_t num_discard = 0;
+    uint32_t num_discard = 0;
 
     // search the first two bytes for a match
     while (input.length() > 0)
