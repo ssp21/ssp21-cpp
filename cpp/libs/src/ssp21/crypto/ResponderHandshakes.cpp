@@ -3,6 +3,7 @@
 
 #include "ssp21/crypto/PublicKeyResponderHandshake.h"
 #include "ssp21/crypto/SharedSecretResponderHandshake.h"
+#include "ssp21/crypto/QKDResponderHandshake.h"
 
 namespace ssp21
 {
@@ -13,6 +14,14 @@ namespace ssp21
     {
         return SharedSecretResponderHandshake::make_shared(logger, key);
     }
+
+	std::shared_ptr<IResponderHandshake> ResponderHandshakes::qkd_mode(
+		const openpal::Logger& logger,
+		const std::shared_ptr<IKeyLookup>& key_lookup
+	)
+	{
+		return QKDResponderHandshake::make_shared(logger, key_lookup);
+	}
 
     std::shared_ptr<IResponderHandshake> ResponderHandshakes::public_key_mode(
         const openpal::Logger& logger,

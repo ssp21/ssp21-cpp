@@ -33,6 +33,14 @@ namespace ssp21
                 const std::shared_ptr<const SymmetricKey>& key
             );
 
+			std::shared_ptr<IStack> qkd_mode(
+				const Addresses& addresses,
+				const ResponderConfig& config,
+				const openpal::Logger& logger,
+				const std::shared_ptr<openpal::IExecutor>& executor,
+				const std::shared_ptr<IKeyLookup>& key_lookup
+			);
+
             std::shared_ptr<IStack> preshared_public_key_mode(
                 const Addresses& addresses,
                 const ResponderConfig& config,
@@ -68,6 +76,15 @@ namespace ssp21
                 const CryptoSuite& crypto_suite,
                 const std::shared_ptr<const SymmetricKey>& key
             );
+
+			std::shared_ptr<IStack> qkd_mode(
+				const Addresses& addresses,
+				const InitiatorConfig& config,
+				const openpal::Logger& logger,
+				const std::shared_ptr<openpal::IExecutor>& executor,
+				const CryptoSuite& crypto_suite,
+				const std::shared_ptr<IKeySource>& key_source
+			);
 
             std::shared_ptr<IStack> preshared_public_key_mode(
                 const Addresses& addresses,
