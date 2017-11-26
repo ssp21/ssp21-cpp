@@ -54,21 +54,36 @@ bool QIXFrameParser::parse(QIXFrame& frame)
 
 void QIXFrameParser::read_frame_fields(QIXFrame& frame)
 {
-    auto payload = this->buffer.as_seq().skip(2);
+    auto payload = this->buffer.as_seq().skip(sync_size);
     // read the key_id, and advance the slice
     openpal::BigEndian::read(payload, frame.key_id);
     // the next 32 bytes are the actual key
-    frame.key_data = payload.take(32);
+    frame.key_data = payload.take(key_size);
+    // the next byte is the status
+    frame.status = get_status(payload.skip(key_size)[0]);
+}
+
+QIXFrame::Status QIXFrameParser::get_status(uint8_t value)
+{
+    switch (value)
+    {
+    case(static_cast<uint8_t>(QIXFrame::Status::ok)):
+        return QIXFrame::Status::ok;
+    case(static_cast<uint8_t>(QIXFrame::Status::key_compromised)):
+        return QIXFrame::Status::key_compromised;
+    default:
+        return QIXFrame::Status::undefined;
+    }
 }
 
 uint32_t QIXFrameParser::calc_frame_crc()
 {
-    return CastagnoliCRC32::calc(this->buffer.as_seq().skip(2).take(40));
+    return CastagnoliCRC32::calc(this->buffer.as_seq().skip(sync_size).take(crc_data_size));
 }
 
 uint32_t QIXFrameParser::read_frame_crc()
 {
-    auto data = this->buffer.as_seq().skip(42);
+    auto data = this->buffer.as_seq().skip(sync_size + crc_data_size);
     uint32_t crc;
     openpal::BigEndian::read(data, crc);
     return crc;

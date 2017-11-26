@@ -69,7 +69,18 @@ void QIXKeySource::run()
         QIXFrame frame;
         if (parser.parse(frame))
         {
-            this->handler->handle(frame);
+            switch (frame.status)
+            {
+            case(QIXFrame::Status::ok):
+                this->handler->handle(frame);
+                break;
+            case(QIXFrame::Status::key_compromised):
+                FORMAT_LOG_BLOCK(this->logger, openpal::levels::warn, "Key compromised w/ id: %llu", frame.key_id);
+                break;
+            default:
+                FORMAT_LOG_BLOCK(this->logger, openpal::levels::warn, "Received undefined key status w/ id: %llu", frame.key_id);
+                break;
+            }
         }
     }
 }

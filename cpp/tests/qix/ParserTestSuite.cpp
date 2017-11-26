@@ -22,9 +22,10 @@ TEST_CASE(SUITE("correctly parses QIX frame"))
     const std::string sync("5A A5");
     const std::string key_id("00 00 00 00 00 00 00 01");
     const std::string key_data("00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F 10 11 12 13 14 15 16 17 18 19 1A 1B 1C 1D 1E 1F");
-    const std::string crc("C9 80 72 81");
+    const std::string key_status("00");
+    const std::string crc("FB 02 BF 4D");
 
-    Hex hex(sync + key_id + key_data + crc);
+    Hex hex(sync + key_id + key_data + key_status + crc);
     REQUIRE(hex.as_rslice().length() == QIXFrameParser::get_fixed_frame_size());
 
     auto dest = parser.get_write_slice();
@@ -36,6 +37,8 @@ TEST_CASE(SUITE("correctly parses QIX frame"))
 
     REQUIRE(frame.key_id == 1);
     REQUIRE(to_hex(frame.key_data) == key_data);
+    REQUIRE(frame.status == QIXFrame::Status::ok);
+
 }
 
 
