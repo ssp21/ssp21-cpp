@@ -1,10 +1,10 @@
 
-#include "qix/QIXKeySource.h"
+#include "qix/QIXFrameReader.h"
 #include "qix/QIXFrameParser.h"
 
 #include "openpal/logging/LogMacros.h"
 
-QIXKeySource::QIXKeySource(const std::shared_ptr<IQIXFrameHandler>& handler, const openpal::Logger& logger, const std::string& serial_device) :
+QIXFrameReader::QIXFrameReader(const std::shared_ptr<IQIXFrameHandler>& handler, const openpal::Logger& logger, const std::string& serial_device) :
     handler(handler),
     logger(logger),
     service(1),
@@ -27,7 +27,7 @@ QIXKeySource::QIXKeySource(const std::shared_ptr<IQIXFrameHandler>& handler, con
     });
 }
 
-QIXKeySource::~QIXKeySource()
+QIXFrameReader::~QIXFrameReader()
 {
     // closing the port causes the port read operation to throw
     this->shutting_down = true;
@@ -35,7 +35,7 @@ QIXKeySource::~QIXKeySource()
     thread->join();
 }
 
-void QIXKeySource::run_and_catch()
+void QIXFrameReader::run_and_catch()
 {
     try
     {
@@ -50,7 +50,7 @@ void QIXKeySource::run_and_catch()
     }
 }
 
-void QIXKeySource::run()
+void QIXFrameReader::run()
 {
     QIXFrameParser parser(this->logger);
 

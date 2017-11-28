@@ -1,5 +1,5 @@
 
-#include "qix/QIXKeySource.h"
+#include "qix/QIXFrameReader.h"
 
 #include "ssp21/util/ConsolePrettyPrinter.h"
 #include "ssp21/stack/LogLevels.h"
@@ -30,7 +30,7 @@ int main(int argc, char*  argv[])
 
     try
     {
-        QIXKeySource key_source(
+        QIXFrameReader reader(
             std::make_shared<QIXPrinter>(),
             openpal::Logger(std::make_shared<ssp21::ConsolePrettyPrinter>(), Module::id, "qix-reader", openpal::LogLevels(~0)),
             argv[1]

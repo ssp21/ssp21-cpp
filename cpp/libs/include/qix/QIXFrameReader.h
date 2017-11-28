@@ -12,13 +12,13 @@
 /**
 * A base class source and look-up for
 */
-class QIXKeySource
+class QIXFrameReader
 {
 public:
 
-    QIXKeySource(const std::shared_ptr<IQIXFrameHandler>& handler, const openpal::Logger& logger, const std::string& serial_device);
+    QIXFrameReader(const std::shared_ptr<IQIXFrameHandler>& handler, const openpal::Logger& logger, const std::string& serial_device);
 
-    ~QIXKeySource();
+    ~QIXFrameReader();
 
 
 private:

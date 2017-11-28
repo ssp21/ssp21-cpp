@@ -5,26 +5,74 @@
 
 #include "openpal/logging/LogMacros.h"
 
-QIXKeyCache::QIXKeyCache(const openpal::Logger& logger, size_t max_keys) : logger(logger), max_keys(max_keys)
-{}
+class FrameHandler : public IQIXFrameHandler
+{
+
+    typedef std::function<void(const QIXFrame&)> frame_handler_t;
+
+    frame_handler_t handler;
+
+public:
+
+    FrameHandler(const frame_handler_t& handler) : handler(handler) {}
+
+    virtual void handle(const QIXFrame& frame) override
+    {
+        this->handler(frame);
+    }
+};
+
+QIXKeyCache::QIXKeyCache(const std::string& serial_port, const openpal::Logger& logger, size_t max_keys) :
+    logger(logger),
+    max_keys(max_keys)
+{
+    this->reader = std::make_shared<QIXFrameReader>(
+                       std::make_shared<FrameHandler>([this](const QIXFrame & frame)
+    {
+        this->handle(frame);
+    }),
+    logger,
+    serial_port
+                   );
+}
 
 void QIXKeyCache::handle(const QIXFrame& frame)
 {
     std::unique_lock<std::mutex> lock(this->mutex);
 
-    if (!this->keys.empty() && (frame.key_id <= this->keys.begin()->first))
+    if (!this->key_map.empty() && (frame.key_id <= this->key_map.begin()->first))
     {
         SIMPLE_LOG_BLOCK(logger, ssp21::levels::warn, "QKD receiver reboot detected, clearing all keys from memory");
-        this->keys.clear();
+        this->key_map.clear();
     }
 
-    this->keys[frame.key_id] = std::make_shared<ssp21::KeyRecord>(frame.key_id, frame.key_data);
+    this->key_map[frame.key_id] = std::make_shared<ssp21::KeyRecord>(frame.key_id, frame.key_data);
 
-    if (this->keys.size() > this->max_keys)
+    if (this->key_map.size() > this->max_keys)
     {
         // discard the oldest key
-        this->keys.erase(this->keys.begin());
+        this->key_map.erase(this->key_map.begin());
     }
 }
 
+std::shared_ptr<const ssp21::KeyRecord> QIXKeyCache::consume_key()
+{
+    std::unique_lock<std::mutex> lock(this->mutex);
+
+    if (this->key_map.empty()) return nullptr;
+    auto ret = this->key_map.rbegin()->second;
+    this->key_map.erase(this->key_map.rbegin()->first);
+    return ret;
+}
+
+std::shared_ptr<const ssp21::SymmetricKey> QIXKeyCache::find_and_consume_key(uint64_t key_id)
+{
+    std::unique_lock<std::mutex> lock(this->mutex);
+
+    const auto entry = this->key_map.find(key_id);
+    if (entry == this->key_map.end()) return nullptr;
+    auto key = entry->second->key;
+    this->key_map.erase(entry);
+    return key;
+}
 
