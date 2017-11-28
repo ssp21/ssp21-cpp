@@ -4,6 +4,7 @@
 #include "ProxyConfig.h"
 
 #include "ssp21/crypto/gen/ContainerEntryType.h"
+#include "ssp21/crypto/gen/HandshakeMode.h"
 #include "ssp21/util/SecureDynamicBuffer.h"
 #include "ssp21/stack/IStack.h"
 #include "ssp21/link/Addresses.h"
@@ -16,12 +17,6 @@
 
 class ConfigSection : openpal::Uncopyable
 {
-    enum class CertificateMode
-    {
-        shared_secert,
-        preshared_keys,
-        certificates
-    };
 
 public:
 
@@ -38,6 +33,8 @@ private:
     stack_factory_t get_initiator_factory(const ssp21::Addresses& addresses);
 
     stack_factory_t get_initiator_shared_secert_factory(const ssp21::Addresses& addresses);
+
+    stack_factory_t get_initiator_qkd_factory(const ssp21::Addresses& addresses);
 
     stack_factory_t get_initiator_preshared_public_key_factory(const ssp21::Addresses& addresses);
 
@@ -61,12 +58,14 @@ private:
 
     std::string consume_value(const std::string& propertyId);
 
+    std::string get_serial_port();
+
     template <class T>
     T get_integer_value(const std::string& propertyId);
 
     ProxyConfig::EndpointMode get_mode();
 
-    CertificateMode get_cert_mode();
+    ssp21::HandshakeMode get_handshake_mode();
 
     std::shared_ptr<ssp21::SecureDynamicBuffer> get_file_data(const std::string& property);
 

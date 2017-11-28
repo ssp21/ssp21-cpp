@@ -16,6 +16,8 @@
 #include "ssp21/stack/LogLevels.h"
 #include "ssp21/crypto/gen/ContainerFile.h"
 
+#include "qix/QIXKeyCache.h"
+
 #include <iostream>
 
 
@@ -33,6 +35,7 @@ std::unique_ptr<ProxyConfig> ConfigSection::get_config(const std::string& id)
     const openpal::LogLevels levels(this->get_levels());
 
     auto ret = std::make_unique<ProxyConfig>(
+                   this->get_stack_factory(endpoint_mode),
                    id,
                    levels,
                    endpoint_mode,
@@ -59,16 +62,17 @@ stack_factory_t ConfigSection::get_stack_factory(ProxyConfig::EndpointMode ep_mo
 
 stack_factory_t ConfigSection::get_initiator_factory(const ssp21::Addresses& addresses)
 {
-    switch (this->get_cert_mode())
+    const auto mode = this->get_handshake_mode();
+    switch (mode)
     {
-    case(CertificateMode::shared_secert):
+    case(HandshakeMode::shared_secret):
         return this->get_initiator_shared_secert_factory(addresses);
-    case(CertificateMode::preshared_keys):
+    case(HandshakeMode::preshared_public_keys):
         return this->get_initiator_preshared_public_key_factory(addresses);
-    case(CertificateMode::certificates):
+    case(HandshakeMode::industrial_certificates):
         return this->get_initiator_certificate_mode_factory(addresses);
     default:
-        throw Exception("undefined certificate mode");
+        throw Exception("undefined initiator handshake mode: ", HandshakeModeSpec::to_string(mode));
     }
 }
 
@@ -85,6 +89,23 @@ stack_factory_t ConfigSection::get_initiator_shared_secert_factory(const ssp21::
                    executor,
                    CryptoSuite(),		// TODO: default
                    shared_secret
+               );
+    };
+}
+
+stack_factory_t ConfigSection::get_initiator_qkd_factory(const ssp21::Addresses& addresses)
+{
+
+
+    return [ = ](const openpal::Logger & logger, const std::shared_ptr<openpal::IExecutor>& executor)
+    {
+        return initiator::factory::qkd_mode(
+                   addresses,
+                   InitiatorConfig(),	// TODO: default
+                   logger,
+                   executor,
+                   CryptoSuite(),		// TODO: default
+                   nullptr // TODO
                );
     };
 }
@@ -130,16 +151,17 @@ stack_factory_t ConfigSection::get_initiator_certificate_mode_factory(const ssp2
 
 stack_factory_t ConfigSection::get_responder_factory(const ssp21::Addresses& addresses)
 {
-    switch (this->get_cert_mode())
+    const auto mode = this->get_handshake_mode();
+    switch (mode)
     {
-    case(CertificateMode::shared_secert):
+    case(HandshakeMode::shared_secret):
         return this->get_responder_shared_secert_factory(addresses);
-    case(CertificateMode::preshared_keys):
+    case(HandshakeMode::preshared_public_keys):
         return this->get_responder_preshared_public_key_factory(addresses);
-    case(CertificateMode::certificates):
+    case(HandshakeMode::industrial_certificates):
         return this->get_responder_certificate_mode_factory(addresses);
     default:
-        throw Exception("undefined certificate mode");
+        throw Exception("undefined responder handshake mode: ", HandshakeModeSpec::to_string(mode));
     }
 }
 
@@ -217,6 +239,11 @@ std::shared_ptr<const SymmetricKey> ConfigSection::get_shared_secert()
     return this->get_crypto_key<SymmetricKey>(props::shared_secret_key_path, ContainerEntryType::shared_secret);
 }
 
+std::string ConfigSection::get_serial_port()
+{
+    return this->consume_value(props::serial_port);
+}
+
 LogLevels ConfigSection::get_levels()
 {
     LogLevels levels;
@@ -270,17 +297,25 @@ ProxyConfig::EndpointMode ConfigSection::get_mode()
     }
 }
 
-ConfigSection::CertificateMode ConfigSection::get_cert_mode()
+ssp21::HandshakeMode ConfigSection::get_handshake_mode()
 {
     const auto value = this->consume_value(props::certificate_mode);
 
-    if (value == "preshared")
+    if (value == "shared_secert")
     {
-        return CertificateMode::preshared_keys;
+        return HandshakeMode::shared_secret;
+    }
+    else if (value == "qkd")
+    {
+        return HandshakeMode::quantum_key_distribution;
+    }
+    else if (value == "preshared")
+    {
+        return HandshakeMode::preshared_public_keys;
     }
     else if (value == "certificate")
     {
-        return CertificateMode::certificates;
+        return HandshakeMode::industrial_certificates;
     }
     else
     {

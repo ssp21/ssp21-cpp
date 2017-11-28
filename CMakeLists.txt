@@ -58,7 +58,7 @@ if(SSP21_PROXY)
 
    file(GLOB_RECURSE proxy_SRC ./cpp/exe/proxy/*.cpp ./cpp/exe/proxy/*.h)
    add_executable (ssp21-proxy ${proxy_SRC} ./deps/inih/ini.c)
-   target_link_libraries(ssp21-proxy sodiumbackend ${PTHREAD})
+   target_link_libraries(ssp21-proxy qix sodiumbackend ${PTHREAD})
    
    include_directories(./deps ${ASIO_SUBMODULE_DIR})
    add_definitions(-DASIO_STANDALONE)

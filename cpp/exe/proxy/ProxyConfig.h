@@ -6,6 +6,8 @@
 
 #include "ssp21/crypto/BufferTypes.h"
 
+#include "StackFactory.h"
+
 #include <string>
 #include <memory>
 
@@ -18,6 +20,7 @@ struct ProxyConfig : public openpal::Uncopyable
     };
 
     ProxyConfig(
+        const stack_factory_t& factory,
         const std::string& id,
         openpal::LogLevels log_levels,
         EndpointMode endpoint_mode,
@@ -27,6 +30,7 @@ struct ProxyConfig : public openpal::Uncopyable
         uint16_t connect_port,
         const std::string& connect_endpoint
     ) :
+        factory(factory),
         id(id),
         log_levels(log_levels),
         endpoint_mode(endpoint_mode),
@@ -37,6 +41,7 @@ struct ProxyConfig : public openpal::Uncopyable
         connect_endpoint(connect_endpoint)
     {}
 
+    const stack_factory_t factory;
     const std::string id;
 
     const openpal::LogLevels log_levels;

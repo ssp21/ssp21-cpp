@@ -19,6 +19,7 @@ namespace props
     static const char* listen_endpoint = "listen_endpoint";
     static const char* connect_port = "connect_port";
     static const char* connect_endpoint = "connect_endpoint";
+    static const char* serial_port = "serial_port";
 }
 
 #endif
