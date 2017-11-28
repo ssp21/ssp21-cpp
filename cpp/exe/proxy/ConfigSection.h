@@ -22,27 +22,29 @@ public:
 
     void add(const std::string& propertyId, const std::string& value);
 
-    std::unique_ptr<ProxyConfig> get_config(const std::string& id);
+    std::unique_ptr<ProxyConfig> get_config(const openpal::Logger& logger, const std::string& id);
 
 private:
 
     std::map<std::string, std::string> values;
 
-    stack_factory_t get_stack_factory(ProxyConfig::EndpointMode ep_mode);
+    stack_factory_t get_stack_factory(const openpal::Logger& logger, ProxyConfig::EndpointMode ep_mode);
 
-    stack_factory_t get_initiator_factory(const ssp21::Addresses& addresses);
+    stack_factory_t get_initiator_factory(const openpal::Logger& logger, const ssp21::Addresses& addresses);
 
     stack_factory_t get_initiator_shared_secert_factory(const ssp21::Addresses& addresses);
 
-    stack_factory_t get_initiator_qkd_factory(const ssp21::Addresses& addresses);
+    stack_factory_t get_initiator_qkd_factory(const openpal::Logger& logger, const ssp21::Addresses& addresses);
 
     stack_factory_t get_initiator_preshared_public_key_factory(const ssp21::Addresses& addresses);
 
     stack_factory_t get_initiator_certificate_mode_factory(const ssp21::Addresses& addresses);
 
-    stack_factory_t get_responder_factory(const ssp21::Addresses& addresses);
+    stack_factory_t get_responder_factory(const openpal::Logger& logger, const ssp21::Addresses& addresses);
 
     stack_factory_t get_responder_shared_secert_factory(const ssp21::Addresses& addresses);
+
+	stack_factory_t get_responder_qkd_factory(const openpal::Logger& logger, const ssp21::Addresses& addresses);
 
     stack_factory_t get_responder_preshared_public_key_factory(const ssp21::Addresses& addresses);
 

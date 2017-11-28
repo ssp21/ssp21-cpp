@@ -16,7 +16,7 @@ using namespace std;
 using namespace ssp21;
 using namespace openpal;
 
-void run(const vector<unique_ptr<ProxyConfig>>& config);
+void run(const std::string& config_file_path);
 
 int main(int argc, char*  argv[])
 {
@@ -34,7 +34,7 @@ int main(int argc, char*  argv[])
 
     try
     {
-        run(ConfigReader::read(argv[1]));
+        run(argv[1]);
     }
     catch (const exception& ex)
     {
@@ -45,32 +45,39 @@ int main(int argc, char*  argv[])
     return 0;
 }
 
-void run(const vector<unique_ptr<ProxyConfig>>& config)
+std::shared_ptr<openpal::ILogHandler> get_log_backend()
 {
-    if (config.empty())
+	ConsolePrettyPrinter::Settings settings;
+	settings.max_id_size = 20;
+	return make_shared<ConsolePrettyPrinter>(settings);
+}
+
+void run(const std::string& config_file_path)
+{
+	// setup the logging backend
+	Logger logger(get_log_backend(), Module::id, "ssp21-proxy", LogLevels(~0));
+
+	auto configurations = ConfigReader::read(logger, config_file_path);
+
+    if (configurations.empty())
     {
         throw std::logic_error("no proxy configurations were specified");
     }
-
-    ConsolePrettyPrinter::Settings settings;
-    settings.max_id_size = 20;
-
-    Logger logger(make_shared<ConsolePrettyPrinter>(settings), Module::id, "ssp21-proxy", LogLevels(~0));
-
+     
     const auto executor = make_shared<Executor>();
 
     std::vector<std::unique_ptr<Proxy>> proxies;
 
     // initialize all the proxies. might throw on bad configuration.
-    for (auto& c : config)
+    for (auto& config : configurations)
     {
-        FORMAT_LOG_BLOCK(logger, ssp21::levels::event, "initializing proxy: %s", c->id.c_str());
+        FORMAT_LOG_BLOCK(logger, ssp21::levels::event, "initializing proxy: %s", config->id.c_str());
 
         proxies.push_back(
             std::make_unique<Proxy>(
-                *c,
+                *config,
                 executor,
-                logger.detach(c->id, c->log_levels)
+                logger.detach(config->id, config->log_levels)
             )
         );
     }

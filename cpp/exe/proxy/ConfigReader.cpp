@@ -20,7 +20,7 @@ int ConfigReader::config_ini_handler(void* user, const char* section, const char
     return 1;
 }
 
-std::vector<std::unique_ptr<ProxyConfig>> ConfigReader::read(const std::string& file_path)
+std::vector<std::unique_ptr<ProxyConfig>> ConfigReader::read(const openpal::Logger& logger, const std::string& file_path)
 {
     ConfigReader c;
 
@@ -42,7 +42,7 @@ std::vector<std::unique_ptr<ProxyConfig>> ConfigReader::read(const std::string& 
     {
         try
         {
-            ret.push_back(pair.second->get_config(pair.first));
+            ret.push_back(pair.second->get_config(logger, pair.first));
         }
         catch (const ssp21::Exception& ex)
         {

@@ -29,13 +29,13 @@ void ConfigSection::add(const std::string& propertyId, const std::string& value)
     this->values[propertyId] = value;
 }
 
-std::unique_ptr<ProxyConfig> ConfigSection::get_config(const std::string& id)
+std::unique_ptr<ProxyConfig> ConfigSection::get_config(const openpal::Logger& logger, const std::string& id)
 {
     const auto endpoint_mode = this->get_mode();
     const openpal::LogLevels levels(this->get_levels());
 
     auto ret = std::make_unique<ProxyConfig>(
-                   this->get_stack_factory(endpoint_mode),
+                   this->get_stack_factory(logger, endpoint_mode),
                    id,
                    levels,
                    endpoint_mode,
@@ -54,19 +54,21 @@ std::unique_ptr<ProxyConfig> ConfigSection::get_config(const std::string& id)
     return std::move(ret);
 }
 
-stack_factory_t ConfigSection::get_stack_factory(ProxyConfig::EndpointMode ep_mode)
+stack_factory_t ConfigSection::get_stack_factory(const openpal::Logger& logger, ProxyConfig::EndpointMode ep_mode)
 {
     const Addresses addresses(this->get_addresses());
-    return (ep_mode == ProxyConfig::EndpointMode::initiator) ? this->get_initiator_factory(addresses) : this->get_responder_factory(addresses);
+    return (ep_mode == ProxyConfig::EndpointMode::initiator) ? this->get_initiator_factory(logger, addresses) : this->get_responder_factory(logger, addresses);
 }
 
-stack_factory_t ConfigSection::get_initiator_factory(const ssp21::Addresses& addresses)
+stack_factory_t ConfigSection::get_initiator_factory(const openpal::Logger& logger, const ssp21::Addresses& addresses)
 {
     const auto mode = this->get_handshake_mode();
     switch (mode)
-    {
+    {	
     case(HandshakeMode::shared_secret):
         return this->get_initiator_shared_secert_factory(addresses);
+	case(HandshakeMode::quantum_key_distribution):
+		return this->get_initiator_qkd_factory(logger, addresses);
     case(HandshakeMode::preshared_public_keys):
         return this->get_initiator_preshared_public_key_factory(addresses);
     case(HandshakeMode::industrial_certificates):
@@ -93,9 +95,15 @@ stack_factory_t ConfigSection::get_initiator_shared_secert_factory(const ssp21::
     };
 }
 
-stack_factory_t ConfigSection::get_initiator_qkd_factory(const ssp21::Addresses& addresses)
+stack_factory_t ConfigSection::get_initiator_qkd_factory(const openpal::Logger& logger, const ssp21::Addresses& addresses)
 {
+	const auto serial_port = this->get_serial_port();
 
+	const auto key_cache = std::make_shared<QIXKeyCache>(
+		serial_port,
+		logger.detach_and_append("qkd receiver - ", serial_port),
+		100 // TODO - make this configurable?
+	);
 
     return [ = ](const openpal::Logger & logger, const std::shared_ptr<openpal::IExecutor>& executor)
     {
@@ -105,7 +113,7 @@ stack_factory_t ConfigSection::get_initiator_qkd_factory(const ssp21::Addresses&
                    logger,
                    executor,
                    CryptoSuite(),		// TODO: default
-                   nullptr // TODO
+				   key_cache
                );
     };
 }
@@ -149,13 +157,15 @@ stack_factory_t ConfigSection::get_initiator_certificate_mode_factory(const ssp2
     };
 }
 
-stack_factory_t ConfigSection::get_responder_factory(const ssp21::Addresses& addresses)
+stack_factory_t ConfigSection::get_responder_factory(const openpal::Logger& logger, const ssp21::Addresses& addresses)
 {
     const auto mode = this->get_handshake_mode();
     switch (mode)
     {
     case(HandshakeMode::shared_secret):
         return this->get_responder_shared_secert_factory(addresses);
+	case(HandshakeMode::quantum_key_distribution):
+		return this->get_responder_qkd_factory(logger, addresses);
     case(HandshakeMode::preshared_public_keys):
         return this->get_responder_preshared_public_key_factory(addresses);
     case(HandshakeMode::industrial_certificates):
@@ -179,6 +189,28 @@ stack_factory_t ConfigSection::get_responder_shared_secert_factory(const ssp21::
                    shared_secret
                );
     };
+}
+
+stack_factory_t ConfigSection::get_responder_qkd_factory(const openpal::Logger& logger, const ssp21::Addresses& addresses)
+{
+	const auto serial_port = this->get_serial_port();
+
+	const auto key_cache = std::make_shared<QIXKeyCache>(
+		serial_port,
+		logger.detach_and_append("qkd receiver - ", serial_port),
+		100 // TODO - make this configurable?
+	);
+
+	return [=](const openpal::Logger & logger, const std::shared_ptr<openpal::IExecutor>& executor)
+	{
+		return responder::factory::qkd_mode(
+			addresses,
+			ResponderConfig(),	// TODO: default
+			logger,
+			executor,
+			key_cache
+		);
+	};
 }
 
 stack_factory_t ConfigSection::get_responder_preshared_public_key_factory(const ssp21::Addresses& addresses)
