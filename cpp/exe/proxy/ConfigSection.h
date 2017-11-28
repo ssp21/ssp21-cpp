@@ -15,6 +15,8 @@
 #include <map>
 #include <memory>
 
+class QIXKeyCache;
+
 class ConfigSection : openpal::Uncopyable
 {
 
@@ -44,7 +46,7 @@ private:
 
     stack_factory_t get_responder_shared_secert_factory(const ssp21::Addresses& addresses);
 
-	stack_factory_t get_responder_qkd_factory(const openpal::Logger& logger, const ssp21::Addresses& addresses);
+    stack_factory_t get_responder_qkd_factory(const openpal::Logger& logger, const ssp21::Addresses& addresses);
 
     stack_factory_t get_responder_preshared_public_key_factory(const ssp21::Addresses& addresses);
 
@@ -60,7 +62,7 @@ private:
 
     std::string consume_value(const std::string& propertyId);
 
-    std::string get_serial_port();
+    std::shared_ptr<QIXKeyCache> get_qix_key_cache(const openpal::Logger& logger);
 
     template <class T>
     T get_integer_value(const std::string& propertyId);

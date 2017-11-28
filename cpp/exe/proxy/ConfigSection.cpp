@@ -64,11 +64,11 @@ stack_factory_t ConfigSection::get_initiator_factory(const openpal::Logger& logg
 {
     const auto mode = this->get_handshake_mode();
     switch (mode)
-    {	
+    {
     case(HandshakeMode::shared_secret):
         return this->get_initiator_shared_secert_factory(addresses);
-	case(HandshakeMode::quantum_key_distribution):
-		return this->get_initiator_qkd_factory(logger, addresses);
+    case(HandshakeMode::quantum_key_distribution):
+        return this->get_initiator_qkd_factory(logger, addresses);
     case(HandshakeMode::preshared_public_keys):
         return this->get_initiator_preshared_public_key_factory(addresses);
     case(HandshakeMode::industrial_certificates):
@@ -97,13 +97,7 @@ stack_factory_t ConfigSection::get_initiator_shared_secert_factory(const ssp21::
 
 stack_factory_t ConfigSection::get_initiator_qkd_factory(const openpal::Logger& logger, const ssp21::Addresses& addresses)
 {
-	const auto serial_port = this->get_serial_port();
-
-	const auto key_cache = std::make_shared<QIXKeyCache>(
-		serial_port,
-		logger.detach_and_append("qkd receiver - ", serial_port),
-		100 // TODO - make this configurable?
-	);
+    const auto key_cache = this->get_qix_key_cache(logger);
 
     return [ = ](const openpal::Logger & logger, const std::shared_ptr<openpal::IExecutor>& executor)
     {
@@ -113,7 +107,7 @@ stack_factory_t ConfigSection::get_initiator_qkd_factory(const openpal::Logger& 
                    logger,
                    executor,
                    CryptoSuite(),		// TODO: default
-				   key_cache
+                   key_cache
                );
     };
 }
@@ -164,8 +158,8 @@ stack_factory_t ConfigSection::get_responder_factory(const openpal::Logger& logg
     {
     case(HandshakeMode::shared_secret):
         return this->get_responder_shared_secert_factory(addresses);
-	case(HandshakeMode::quantum_key_distribution):
-		return this->get_responder_qkd_factory(logger, addresses);
+    case(HandshakeMode::quantum_key_distribution):
+        return this->get_responder_qkd_factory(logger, addresses);
     case(HandshakeMode::preshared_public_keys):
         return this->get_responder_preshared_public_key_factory(addresses);
     case(HandshakeMode::industrial_certificates):
@@ -193,24 +187,18 @@ stack_factory_t ConfigSection::get_responder_shared_secert_factory(const ssp21::
 
 stack_factory_t ConfigSection::get_responder_qkd_factory(const openpal::Logger& logger, const ssp21::Addresses& addresses)
 {
-	const auto serial_port = this->get_serial_port();
+    const auto key_cache = this->get_qix_key_cache(logger);
 
-	const auto key_cache = std::make_shared<QIXKeyCache>(
-		serial_port,
-		logger.detach_and_append("qkd receiver - ", serial_port),
-		100 // TODO - make this configurable?
-	);
-
-	return [=](const openpal::Logger & logger, const std::shared_ptr<openpal::IExecutor>& executor)
-	{
-		return responder::factory::qkd_mode(
-			addresses,
-			ResponderConfig(),	// TODO: default
-			logger,
-			executor,
-			key_cache
-		);
-	};
+    return [ = ](const openpal::Logger & logger, const std::shared_ptr<openpal::IExecutor>& executor)
+    {
+        return responder::factory::qkd_mode(
+                   addresses,
+                   ResponderConfig(),	// TODO: default
+                   logger,
+                   executor,
+                   key_cache
+               );
+    };
 }
 
 stack_factory_t ConfigSection::get_responder_preshared_public_key_factory(const ssp21::Addresses& addresses)
@@ -271,9 +259,15 @@ std::shared_ptr<const SymmetricKey> ConfigSection::get_shared_secert()
     return this->get_crypto_key<SymmetricKey>(props::shared_secret_key_path, ContainerEntryType::shared_secret);
 }
 
-std::string ConfigSection::get_serial_port()
+std::shared_ptr<QIXKeyCache> ConfigSection::get_qix_key_cache(const openpal::Logger& logger)
 {
-    return this->consume_value(props::serial_port);
+    const auto port = this->consume_value(props::serial_port);
+
+    return std::make_shared<QIXKeyCache>(
+               port,
+               logger.detach_and_append("qkd receiver - ", port),
+               100 // TODO - make this configurable?
+           );
 }
 
 LogLevels ConfigSection::get_levels()

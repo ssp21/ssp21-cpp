@@ -47,23 +47,23 @@ int main(int argc, char*  argv[])
 
 std::shared_ptr<openpal::ILogHandler> get_log_backend()
 {
-	ConsolePrettyPrinter::Settings settings;
-	settings.max_id_size = 20;
-	return make_shared<ConsolePrettyPrinter>(settings);
+    ConsolePrettyPrinter::Settings settings;
+    settings.max_id_size = 20;
+    return make_shared<ConsolePrettyPrinter>(settings);
 }
 
 void run(const std::string& config_file_path)
 {
-	// setup the logging backend
-	Logger logger(get_log_backend(), Module::id, "ssp21-proxy", LogLevels(~0));
+    // setup the logging backend
+    Logger logger(get_log_backend(), Module::id, "ssp21-proxy", LogLevels(~0));
 
-	auto configurations = ConfigReader::read(logger, config_file_path);
+    auto configurations = ConfigReader::read(logger, config_file_path);
 
     if (configurations.empty())
     {
         throw std::logic_error("no proxy configurations were specified");
     }
-     
+
     const auto executor = make_shared<Executor>();
 
     std::vector<std::unique_ptr<Proxy>> proxies;
