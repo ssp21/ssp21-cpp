@@ -2,30 +2,18 @@
 #define SSP21PROXY_QIXKEYCACHE_H
 
 #include "IQIXFrameHandler.h"
-#include "ssp21/crypto/Constants.h"
-#include "ssp21/crypto/BufferTypes.h"
+
+#include "ssp21/crypto/KeyRecord.h"
+#include "openpal/logging/Logger.h"
 
 #include <mutex>
 #include <deque>
-#include <array>
-
-struct KeyRecord
-{
-
-    typedef std::array<uint8_t, ssp21::consts::crypto::sha256_hash_output_length> fingerprint_t;
-
-    KeyRecord(const QIXFrame& frame);
-
-    fingerprint_t fingerprint;
-    const std::shared_ptr<ssp21::SymmetricKey> key;
-
-};
 
 class QIXKeyCache : public IQIXFrameHandler
 {
 public:
 
-    QIXKeyCache(size_t max_keys);
+    QIXKeyCache(const openpal::Logger& logger, size_t max_keys);
 
     virtual ~QIXKeyCache() {}
 
@@ -34,10 +22,11 @@ public:
 protected:
 
     const size_t max_keys;
+    openpal::Logger logger;
 
     std::mutex mutex;
 
-    std::deque<std::unique_ptr<KeyRecord>> keys;
+    std::deque<std::shared_ptr<const ssp21::KeyRecord>> keys;
 
 };
 
