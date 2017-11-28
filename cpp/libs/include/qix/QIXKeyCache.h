@@ -7,7 +7,7 @@
 #include "openpal/logging/Logger.h"
 
 #include <mutex>
-#include <deque>
+#include <map>
 
 class QIXKeyCache : public IQIXFrameHandler
 {
@@ -26,7 +26,7 @@ protected:
 
     std::mutex mutex;
 
-    std::deque<std::shared_ptr<const ssp21::KeyRecord>> keys;
+    std::map<uint64_t, std::shared_ptr<const ssp21::KeyRecord>> keys;
 
 };
 
