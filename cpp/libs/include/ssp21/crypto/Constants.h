@@ -21,7 +21,7 @@ namespace ssp21
             const uint8_t ed25519_private_key_length = 64;
             const uint8_t ed25519_signature_length = 64;
 
-            const uint8_t symmetric_ley_length = 32;
+            const uint8_t symmetric_key_length = 32;
             const uint8_t nonce_length = 32;
 
             // HMAC truncation lengths

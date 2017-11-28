@@ -37,8 +37,18 @@ namespace ssp21
 
         shared_secret_algorithms_t algorithms;
 
+        // deserialize the key identifier from the handshake data
+        uint64_t key_id;
+        {
+            auto key_id_data = msg.handshake_data;
+            if (!openpal::BigEndian::read(key_id_data, key_id) || key_id_data.is_not_empty())
+            {
+                return Result::failure(HandshakeError::bad_message_format);
+            }
+        }
+
         // look-up the request shared secret, this also validates the handshake data field (empty or key id)
-        const auto shared_secret = this->key_lookup->find_and_consume_key(msg.handshake_data);
+        const auto shared_secret = this->key_lookup->find_and_consume_key(key_id);
         if (!shared_secret)
         {
             // the requested key was not found

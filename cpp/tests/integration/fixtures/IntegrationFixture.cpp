@@ -194,7 +194,7 @@ namespace ssp21
     {
         const std::shared_ptr<SymmetricKey> key = std::make_shared<SymmetricKey>();
 
-        Crypto::gen_random(key->as_wseq().take(consts::crypto::symmetric_ley_length));
+        Crypto::gen_random(key->as_wseq().take(consts::crypto::symmetric_key_length));
         key->set_type(BufferType::symmetric_key);
 
         return key;

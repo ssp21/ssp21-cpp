@@ -56,7 +56,7 @@ namespace ssp21
         std::shared_ptr<const SymmetricKey> key;
 
         // buffer that stores the key identifier
-        HashOutput key_identifier;
+        openpal::StaticBuffer<uint32_t, openpal::UInt64::size> key_id_buffer;
 
         // time that the request was transmitted
         openpal::Timestamp time_request_tx;

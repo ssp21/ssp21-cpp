@@ -22,18 +22,23 @@ namespace ssp21
 
     IInitiatorHandshake::InitResult QKDInitiatorHandshake::initialize_new_handshake()
     {
-        this->key = this->key_source->consume_key();
+        this->key.reset();
 
-        if (!this->key)
+        auto record = this->key_source->consume_key();
+
+        if (!record || !record->key)
         {
             return InitResult::failure();
         }
 
-        // compute the hash of the key to use as a key identifier
-        algorithms.handshake.hash({ this->key->as_seq() }, this->key_identifier);
+        this->key = record->key;
+
+        // write key identifier to the buffer
+        auto dest = this->key_id_buffer.as_wseq();
+        openpal::BigEndian::write(dest, record->id);
 
         // The mode data is the key identifier
-        return InitResult::success(seq32_t::empty(), this->key_identifier.as_seq());
+        return InitResult::success(seq32_t::empty(), this->key_id_buffer.as_seq());
     }
 
     void QKDInitiatorHandshake::finalize_request_tx(const seq32_t& request_data, const openpal::Timestamp& now)

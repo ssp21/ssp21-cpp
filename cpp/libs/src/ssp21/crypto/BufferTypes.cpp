@@ -49,7 +49,7 @@ namespace ssp21
         case(BufferType::ed25519_signature) :
             return consts::crypto::ed25519_signature_length;
         case(BufferType::symmetric_key) :
-            return consts::crypto::symmetric_ley_length;
+            return consts::crypto::symmetric_key_length;
         default:
             return 0;
         }

@@ -3,17 +3,15 @@
 namespace ssp21
 {
 
-    std::shared_ptr<const SymmetricKey> MockKeyStore::find_and_consume_key(const seq32_t& key_id)
+    std::shared_ptr<const SymmetricKey> MockKeyStore::find_and_consume_key(uint64_t key_id)
     {
         if (this->current_key)
         {
-            // calc the SHA-2 hash of the key
-            HashOutput hash;
-            Crypto::hash_sha256({ this->current_key->as_seq() }, hash);
-            if (!hash.as_seq().equals(key_id)) return nullptr;
-            const auto ret = this->current_key;
+            if (key_id != this->current_key->id) return nullptr;
+
+            const auto key = this->current_key->key;
             this->current_key.reset();
-            return ret;
+            return key;
         }
         else
         {
@@ -21,17 +19,19 @@ namespace ssp21
         }
     }
 
-    std::shared_ptr<const SymmetricKey> MockKeyStore::consume_key()
+    std::shared_ptr<const KeyRecord> MockKeyStore::consume_key()
     {
-        auto key = std::make_shared<SymmetricKey>();
+        SymmetricKey key_data;
+        {
+            auto dest = key_data.as_wseq();
+            Crypto::gen_random(dest);
+            key_data.set_type(BufferType::symmetric_key);
+        }
 
-        auto dest = key->as_wseq();
-        Crypto::gen_random(dest);
-        key->set_type(BufferType::symmetric_key);
 
-        this->current_key = key;
-
-        return key;
+        this->current_key = std::make_shared<KeyRecord>(this->key_id, key_data.as_seq());
+        ++(this->key_id);
+        return this->current_key;
     }
 
 }

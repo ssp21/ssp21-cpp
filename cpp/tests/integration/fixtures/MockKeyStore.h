@@ -12,13 +12,15 @@ namespace ssp21
 
     public:
 
-        virtual std::shared_ptr<const SymmetricKey> find_and_consume_key(const seq32_t& key_id) override;
+        virtual std::shared_ptr<const SymmetricKey> find_and_consume_key(uint64_t key_id) override;
 
-        virtual std::shared_ptr<const SymmetricKey> consume_key() override;
+        virtual std::shared_ptr<const KeyRecord> consume_key() override;
 
     private:
 
-        std::shared_ptr<const SymmetricKey> current_key;
+        uint64_t key_id = 0;
+
+        std::shared_ptr<const KeyRecord> current_key;
 
     };
 
