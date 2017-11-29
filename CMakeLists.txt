@@ -5,6 +5,15 @@ set(SSP21CPP_VERSION 0.0.1)
 include(${PROJECT_SOURCE_DIR}/cmake/settings.cmake)
 
 option(SSP21_PROXY "Build the proxy" ON)
+option(WERROR "Convert warnings to errors" OFF)
+
+if(WERROR)
+   if(CMAKE_COMPILER_IS_GNUCXX)
+       SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+   else()
+       message(FATAL_ERROR "This compiler does not support WERROR!")  
+   endif()
+endif()
 
 include_directories(./cpp/libs/include)
 include_directories(./cpp/libs/src)

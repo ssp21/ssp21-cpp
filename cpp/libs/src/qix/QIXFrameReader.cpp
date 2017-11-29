@@ -4,6 +4,8 @@
 
 #include "openpal/logging/LogMacros.h"
 
+#include <cinttypes>
+
 QIXFrameReader::QIXFrameReader(const std::shared_ptr<IQIXFrameHandler>& handler, const openpal::Logger& logger, const std::string& serial_device) :
     handler(handler),
     logger(logger),
@@ -75,10 +77,10 @@ void QIXFrameReader::run()
                 this->handler->handle(frame);
                 break;
             case(QIXFrame::Status::key_compromised):
-                FORMAT_LOG_BLOCK(this->logger, openpal::levels::warn, "Key compromised w/ id: %llu", frame.key_id);
+                FORMAT_LOG_BLOCK(this->logger, openpal::levels::warn, "Key compromised w/ id: %" PRIu64, frame.key_id);
                 break;
             default:
-                FORMAT_LOG_BLOCK(this->logger, openpal::levels::warn, "Received undefined key status w/ id: %llu", frame.key_id);
+                FORMAT_LOG_BLOCK(this->logger, openpal::levels::warn, "Received undefined key status w/ id: %" PRIu64, frame.key_id);
                 break;
             }
         }

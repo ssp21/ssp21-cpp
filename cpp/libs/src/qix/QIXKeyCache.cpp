@@ -23,8 +23,8 @@ public:
 };
 
 QIXKeyCache::QIXKeyCache(const std::string& serial_port, const openpal::Logger& logger, size_t max_keys) :
-    logger(logger),
-    max_keys(max_keys)
+    max_keys(max_keys),
+    logger(logger)    
 {
     this->reader = std::make_shared<QIXFrameReader>(
                        std::make_shared<FrameHandler>([this](const QIXFrame & frame)
