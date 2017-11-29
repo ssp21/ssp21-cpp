@@ -265,7 +265,7 @@ std::shared_ptr<QIXKeyCache> ConfigSection::get_qix_key_cache(const openpal::Log
 
     return std::make_shared<QIXKeyCache>(
                port,
-               logger.detach_and_append("qkd receiver - ", port),
+               logger.detach_and_append("-qix"),
                100 // TODO - make this configurable?
            );
 }

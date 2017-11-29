@@ -31,9 +31,9 @@ std::vector<std::unique_ptr<ProxyConfig>> ConfigReader::read(const openpal::Logg
     case(0):
         break;
     case(-1):
-        throw std::logic_error("config file not found");
+        throw Exception("config file not found: ", file_path);
     default:
-        throw std::logic_error("error reading config file");
+        throw Exception("error reading config file: ", file_path);
     }
 
     std::vector<std::unique_ptr<ProxyConfig>> ret;
