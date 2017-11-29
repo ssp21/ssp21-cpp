@@ -71,7 +71,7 @@ if(SSP21_PROXY)
    
    include_directories(./deps ${ASIO_SUBMODULE_DIR})
    add_definitions(-DASIO_STANDALONE)
-   #set_target_properties(ssp21-proxy PROPERTIES FOLDER exe)
+   set_target_properties(ssp21-proxy PROPERTIES FOLDER exe)
 
 endif()
 
