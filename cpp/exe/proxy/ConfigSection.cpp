@@ -325,7 +325,7 @@ ProxyConfig::EndpointMode ConfigSection::get_mode()
 
 ssp21::HandshakeMode ConfigSection::get_handshake_mode()
 {
-    const auto value = this->consume_value(props::certificate_mode);
+    const auto value = this->consume_value(props::handshake_mode);
 
     if (value == "shared_secert")
     {

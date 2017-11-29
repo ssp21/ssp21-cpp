@@ -1,6 +1,6 @@
 [i-proxy]
 mode=initiator
-certificate_mode=certificate
+handshake_mode=certificate
 log_levels=iwemf
 local_public_key_path=./initiator.pub.icf
 local_private_key_path=./initiator.priv.icf
@@ -16,7 +16,7 @@ connect_endpoint=127.0.0.1
 
 [r-proxy]
 mode=responder
-certificate_mode=certificate
+handshake_mode=certificate
 log_levels=iwemf
 local_public_key_path=./responder.pub.icf
 local_private_key_path=./responder.priv.icf
