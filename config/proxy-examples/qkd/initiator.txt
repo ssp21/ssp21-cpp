@@ -1,0 +1,12 @@
+[i-proxy]
+mode=initiator
+handshake_mode=qkd
+log_levels=iwemf
+serial_port=COM1
+remote_address=1
+local_address=10
+max_sessions=1
+listen_port=20000
+listen_endpoint=127.0.0.1
+connect_port=20001
+connect_endpoint=127.0.0.1
