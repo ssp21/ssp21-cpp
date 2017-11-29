@@ -5,6 +5,8 @@
 
 #include "openpal/logging/LogMacros.h"
 
+#include <cinttypes>
+
 class FrameHandler : public IQIXFrameHandler
 {
 
@@ -38,6 +40,8 @@ QIXKeyCache::QIXKeyCache(const std::string& serial_port, const openpal::Logger& 
 
 void QIXKeyCache::handle(const QIXFrame& frame)
 {
+	FORMAT_LOG_BLOCK(logger, ssp21::levels::debug, "Received QIX frame w/ id: %" PRIu64, frame.key_id);
+
     std::unique_lock<std::mutex> lock(this->mutex);
 
     if (!this->key_map.empty() && (frame.key_id <= this->key_map.begin()->first))
