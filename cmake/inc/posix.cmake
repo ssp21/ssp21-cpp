@@ -1,13 +1,6 @@
 set(PTHREAD pthread)   
 find_package(Threads)
 
-if(STATICLIBS)
-	set(LIB_TYPE STATIC)
-else()
-	set(LIB_TYPE SHARED)
-endif()
-
-
 include (CheckLibraryExists)
 check_library_exists(pthread pthread_timedjoin_np "" HAVE_PHTREAD_TIMEDJOIN_NP)
 set(CMAKE_C_FLAGS "-Wall -W -Wno-multichar -Wunused-variable -Wno-unused-parameter -Wunused-function -Wunused -Wno-system-headers -Wwrite-strings")

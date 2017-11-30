@@ -1,8 +1,6 @@
 
 
-
-if(WIN32)
-	
+if(WIN32)	
 	set(SODIUM_LIB_NAME libsodium)
 	# these definitions are required when linking libsodium statically on Windows
 	add_definitions(-DSODIUM_STATIC=1 -DSODIUM_EXPORT=)
@@ -41,5 +39,9 @@ if(WIN32)
 	link_directories(${SSP21_SODIUM_LIB_DIR})
 
 else()
-	set(SODIUM_LIB_NAME sodium)
+	if(STATIC_LIBS)
+  	    set(SODIUM_LIB_NAME libsodium.a)
+        else()
+	    set(SODIUM_LIB_NAME sodium)
+        endif()
 endif()

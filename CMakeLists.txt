@@ -2,10 +2,11 @@ cmake_minimum_required (VERSION 2.8)
 project (ssp21-cpp)
 set(SSP21CPP_VERSION 0.0.1)
 
-include(${PROJECT_SOURCE_DIR}/cmake/settings.cmake)
-
 option(SSP21_PROXY "Build the proxy" ON)
 option(WERROR "Convert warnings to errors" OFF)
+option(STATIC_LIBS "Build static libraries and link all dependencies statically" OFF)
+
+include(${PROJECT_SOURCE_DIR}/cmake/settings.cmake)
 
 if(WERROR)
    if(CMAKE_COMPILER_IS_GNUCXX)
