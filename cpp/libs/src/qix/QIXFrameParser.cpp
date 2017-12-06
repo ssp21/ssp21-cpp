@@ -37,6 +37,7 @@ bool QIXFrameParser::parse(QIXFrame& frame)
         return false;
     }
 
+/*
     const auto calc_crc = this->calc_frame_crc();
     const auto actual_crc = this->read_frame_crc();
 
@@ -47,6 +48,7 @@ bool QIXFrameParser::parse(QIXFrame& frame)
         // toss the entire frame
         return false;
     }
+*/
 
     this->read_frame_fields(frame);
     return true;
