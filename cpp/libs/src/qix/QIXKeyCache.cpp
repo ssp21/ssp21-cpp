@@ -42,7 +42,7 @@ void QIXKeyCache::handle(const QIXFrame& frame)
 {
     std::unique_lock<std::mutex> lock(this->mutex);
 
-    if (!this->key_map.empty() && frame.key_id < this->key_map.begin()->first)
+    if (!this->key_map.empty() && frame.key_id < this->key_map.rbegin()->first)
     {
 		SIMPLE_LOG_BLOCK(logger, ssp21::levels::warn, "QKD receiver reboot detected, clearing all keys from memory");
 		this->key_map.clear();
@@ -52,7 +52,7 @@ void QIXKeyCache::handle(const QIXFrame& frame)
 	{
 		this->add_key_to_map(frame);
 	}
-	else if(frame.key_id > this->key_map.begin()->first)
+	else if(frame.key_id > this->key_map.rbegin()->first)
 	{
 		this->add_key_to_map(frame);
 	}
