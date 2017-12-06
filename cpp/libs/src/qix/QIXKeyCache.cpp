@@ -40,23 +40,34 @@ QIXKeyCache::QIXKeyCache(const std::string& serial_port, const openpal::Logger& 
 
 void QIXKeyCache::handle(const QIXFrame& frame)
 {
-	FORMAT_LOG_BLOCK(logger, ssp21::levels::debug, "Received QIX frame w/ id: %" PRIu64, frame.key_id);
-
     std::unique_lock<std::mutex> lock(this->mutex);
 
-    if (!this->key_map.empty() && (frame.key_id <= this->key_map.begin()->first))
+    if (!this->key_map.empty() && frame.key_id < this->key_map.begin()->first)
     {
-        SIMPLE_LOG_BLOCK(logger, ssp21::levels::warn, "QKD receiver reboot detected, clearing all keys from memory");
-        this->key_map.clear();
+		SIMPLE_LOG_BLOCK(logger, ssp21::levels::warn, "QKD receiver reboot detected, clearing all keys from memory");
+		this->key_map.clear();
     }
 
-    this->key_map[frame.key_id] = std::make_shared<ssp21::KeyRecord>(frame.key_id, frame.key_data);
+	if (this->key_map.empty())
+	{
+		this->add_key_to_map(frame);
+	}
+	else if(frame.key_id > this->key_map.begin()->first)
+	{
+		this->add_key_to_map(frame);
+	}
 
     if (this->key_map.size() > this->max_keys)
     {
         // discard the oldest key
         this->key_map.erase(this->key_map.begin());
     }
+}
+
+void QIXKeyCache::add_key_to_map(const QIXFrame& frame)
+{
+	FORMAT_LOG_BLOCK(this->logger, ssp21::levels::info, "Received new key w/ id: %" PRIu64, frame.key_id);
+	this->key_map[frame.key_id] = std::make_shared<ssp21::KeyRecord>(frame.key_id, frame.key_data);
 }
 
 std::shared_ptr<const ssp21::KeyRecord> QIXKeyCache::consume_key()

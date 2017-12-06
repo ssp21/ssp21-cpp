@@ -27,6 +27,7 @@ public:
 protected:
 
     void handle(const QIXFrame& frame);
+	void add_key_to_map(const QIXFrame& frame);
 
     std::mutex mutex;
 
