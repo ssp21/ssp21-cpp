@@ -327,7 +327,7 @@ ssp21::HandshakeMode ConfigSection::get_handshake_mode()
 {
     const auto value = this->consume_value(props::handshake_mode);
 
-    if (value == "shared_secert")
+    if (value == "shared_secret")
     {
         return HandshakeMode::shared_secret;
     }
