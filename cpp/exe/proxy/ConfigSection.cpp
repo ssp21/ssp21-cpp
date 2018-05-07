@@ -84,15 +84,15 @@ stack_factory_t ConfigSection::get_initiator_shared_secert_factory(const ssp21::
 
     return [ = ](const openpal::Logger & logger, const std::shared_ptr<openpal::IExecutor>& executor)
     {
-		CryptoSuite suite;
-		suite.handshake_ephemeral = HandshakeEphemeral::nonce;
+        CryptoSuite suite;
+        suite.handshake_ephemeral = HandshakeEphemeral::nonce;
 
         return initiator::factory::shared_secert_mode(
                    addresses,
                    InitiatorConfig(),	// TODO: default
                    logger,
                    executor,
-				   suite,
+                   suite,
                    shared_secret
                );
     };
@@ -104,8 +104,8 @@ stack_factory_t ConfigSection::get_initiator_qkd_factory(const openpal::Logger& 
 
     return [ = ](const openpal::Logger & logger, const std::shared_ptr<openpal::IExecutor>& executor)
     {
-		CryptoSuite suite;
-		suite.handshake_ephemeral = HandshakeEphemeral::none;
+        CryptoSuite suite;
+        suite.handshake_ephemeral = HandshakeEphemeral::none;
 
         return initiator::factory::qkd_mode(
                    addresses,

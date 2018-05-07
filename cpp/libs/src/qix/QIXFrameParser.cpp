@@ -37,18 +37,18 @@ bool QIXFrameParser::parse(QIXFrame& frame)
         return false;
     }
 
-/*
-    const auto calc_crc = this->calc_frame_crc();
-    const auto actual_crc = this->read_frame_crc();
+    /*
+        const auto calc_crc = this->calc_frame_crc();
+        const auto actual_crc = this->read_frame_crc();
 
-    // we can now parse the frame. first verify the CRC.
-    if (calc_crc != actual_crc)
-    {
-        FORMAT_LOG_BLOCK(this->logger, levels::warn, "CRC on frame (0x%x) doesn't match calculated crc (0x%x)", actual_crc, calc_crc);
-        // toss the entire frame
-        return false;
-    }
-*/
+        // we can now parse the frame. first verify the CRC.
+        if (calc_crc != actual_crc)
+        {
+            FORMAT_LOG_BLOCK(this->logger, levels::warn, "CRC on frame (0x%x) doesn't match calculated crc (0x%x)", actual_crc, calc_crc);
+            // toss the entire frame
+            return false;
+        }
+    */
 
     this->read_frame_fields(frame);
     return true;

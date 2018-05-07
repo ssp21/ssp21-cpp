@@ -22,7 +22,7 @@ QIXFrameReader::QIXFrameReader(const std::shared_ptr<IQIXFrameHandler>& handler,
     port.set_option(asio::serial_port::flow_control(asio::serial_port::flow_control::type::none));
     port.set_option(asio::serial_port_base::stop_bits(asio::serial_port_base::stop_bits::type::one));
 
-	FORMAT_LOG_BLOCK(this->logger, openpal::levels::info, "Reading QIX frames on: %s", serial_device.c_str());
+    FORMAT_LOG_BLOCK(this->logger, openpal::levels::info, "Reading QIX frames on: %s", serial_device.c_str());
 
     // launch the thread to read frames
     thread = std::make_unique<std::thread>([this]()

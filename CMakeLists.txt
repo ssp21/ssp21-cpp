@@ -129,6 +129,11 @@ target_link_libraries (testssp21 ssp21 testlib)
 set_target_properties(testssp21 PROPERTIES FOLDER tests)
 add_test(testssp21 testssp21)
 
+# ---- ssp21 afl test harness ----
+add_executable (ssp21-afl ./cpp/tests/ssp21-afl/main.cpp)
+target_link_libraries (ssp21-afl ssp21)
+set_target_properties(ssp21-afl PROPERTIES FOLDER tests)
+
 add_custom_target(
 	FORMAT 
 	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
