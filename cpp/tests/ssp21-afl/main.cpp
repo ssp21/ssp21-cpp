@@ -8,7 +8,10 @@
 #include <ssp21/util/ConsolePrettyPrinter.h>
 #include <ssp21/crypto/LogMessagePrinter.h>
 #include <ssp21/stack/LogLevels.h>
+#include <ssp21/util/Exception.h>
 
+#include <iostream>
+#include <fstream>
 
 using namespace ssp21;
 
@@ -18,7 +21,8 @@ void parse_input_as(const seq32_t& input, IMessagePrinter& printer)
     seq32_t copy = input;
     T message;
     const auto err = message.read(copy);
-    if(!any(err)) {
+    if(!any(err))
+    {
         message.print(printer);
     }
 }
@@ -29,12 +33,64 @@ void parse_input_as(const seq32_t& input, const char* name, IMessagePrinter& pri
     seq32_t copy = input;
     T message;
     const auto err = message.read(copy);
-    if(!any(err)) {
+    if(!any(err))
+    {
         message.print(name, printer);
     }
 }
 
-int main(int argc, char*  argv[])
+template <class T>
+void write_default_seed(const std::string& directory, const std::string& filename)
+{
+    const uint32_t max_bytes = 256;
+    uint8_t buffer[max_bytes];
+
+    wseq32_t output(buffer, max_bytes);
+    T message;
+    const auto result = message.write(output);
+    if(any(result.err))
+    {
+        throw Exception("unable to write default seed: ", FormatErrorSpec::to_string(result.err));
+    }
+
+    const auto path = directory + "/" + filename;
+
+    std::ofstream file(path, std::ios::out | std::ios::binary | std::ios::trunc);
+    if(!file.is_open()) {
+        throw Exception("unable to open seed file for writing: ", path);
+    }
+
+
+    file.write(reinterpret_cast<const char*>(buffer), result.written.length());
+}
+
+template <class T>
+void write_default_seed_field(const std::string& directory, const std::string& filename)
+{
+    const uint32_t max_bytes = 256;
+    uint8_t buffer[max_bytes];
+
+    wseq32_t output(buffer, max_bytes);
+    T message;
+    const auto err = message.write(output);
+    if(any(err))
+    {
+        throw Exception("unable to write default seed: ", FormatErrorSpec::to_string(err));
+    }
+
+    const auto path = directory + "/" + filename;
+
+    std::ofstream file(path, std::ios::out | std::ios::binary | std::ios::trunc);
+    if(!file.is_open()) {
+        throw Exception("unable to open seed file for writing: ", path);
+    }
+
+    //figure out how much was written to the output buffer
+    const auto length = max_bytes - output.length();
+    file.write(reinterpret_cast<const char*>(buffer), length);
+}
+
+int perform_fuzzing()
 {
     // read stdin
     const size_t max_bytes = 1024;
@@ -60,4 +116,20 @@ int main(int argc, char*  argv[])
     parse_input_as<CertificateBody>(slice, "body", printer);
 
     return 0;
+}
+
+int write_seeds(const std::string& directory)
+{
+    write_default_seed<RequestHandshakeBegin>(directory, "seed1.bin");
+    write_default_seed<ReplyHandshakeBegin>(directory, "seed2.bin");
+    write_default_seed<SessionData>(directory, "seed3.bin");
+    write_default_seed_field<CertificateEnvelope>(directory, "seed4.bin");
+    write_default_seed_field<CertificateBody>(directory, "seed5.bin");
+
+    return 0;
+}
+
+int main(int argc, char*  argv[])
+{
+    return (argc > 1) ? write_seeds(argv[1]) : perform_fuzzing();
 }
