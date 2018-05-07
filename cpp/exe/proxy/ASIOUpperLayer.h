@@ -5,6 +5,8 @@
 
 #include "ASIOLayerBase.h"
 
+#include <functional>
+
 class ASIOUpperLayer final : public ssp21::IUpperLayer, public ASIOLayerBase
 {
 

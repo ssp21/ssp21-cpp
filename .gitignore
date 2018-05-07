@@ -6,3 +6,6 @@
 /codegen/.idea
 /codegen/**/*.iml
 /codegen/**/target
+
+#clion
+/cmake-build-*

@@ -6,6 +6,7 @@
 #include "openpal/logging/LogMacros.h"
 
 #include <cinttypes>
+#include <functional>
 
 class FrameHandler : public IQIXFrameHandler
 {
