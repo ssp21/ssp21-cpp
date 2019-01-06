@@ -6,23 +6,36 @@ set(ssp21_public_headers
     ./include/ssp21/crypto/CryptoLayerConfig.h
     ./include/ssp21/crypto/CryptoSuite.h
     ./include/ssp21/crypto/CryptoTypedefs.h
+    ./include/ssp21/crypto/EnumField.h
+    ./include/ssp21/crypto/ICertificateHandler.h
     ./include/ssp21/crypto/ICryptoBackend.h
     ./include/ssp21/crypto/IKeyLookup.h
     ./include/ssp21/crypto/IKeySource.h
     ./include/ssp21/crypto/IMessagePrinter.h
+    ./include/ssp21/crypto/IntegerField.h
     ./include/ssp21/crypto/KeyRecord.h
+    ./include/ssp21/crypto/SeqByteField.h
+    ./include/ssp21/crypto/SeqStructField.h
     ./include/ssp21/crypto/StaticKeys.h
     ./include/ssp21/crypto/Statistics.h
+    ./include/ssp21/crypto/VLength.h
 
     ./include/ssp21/crypto/gen/Base64DecodeError.h
+    ./include/ssp21/crypto/gen/CertificateBody.h
+    ./include/ssp21/crypto/gen/CertificateChain.h
+    ./include/ssp21/crypto/gen/CertificateEnvelope.h
     ./include/ssp21/crypto/gen/ContainerEntryType.h
+    ./include/ssp21/crypto/gen/ContainerFile.h
     ./include/ssp21/crypto/gen/CryptoError.h
+    ./include/ssp21/crypto/gen/ExtensionEnvelope.h
+    ./include/ssp21/crypto/gen/FormatError.h
     ./include/ssp21/crypto/gen/HandshakeEphemeral.h
     ./include/ssp21/crypto/gen/HandshakeError.h
     ./include/ssp21/crypto/gen/HandshakeHash.h
     ./include/ssp21/crypto/gen/HandshakeKDF.h
     ./include/ssp21/crypto/gen/HandshakeMode.h
     ./include/ssp21/crypto/gen/NonceMode.h
+    ./include/ssp21/crypto/gen/ParseError.h
     ./include/ssp21/crypto/gen/PEMDecodeError.h
     ./include/ssp21/crypto/gen/PublicKeyType.h
     ./include/ssp21/crypto/gen/SessionMode.h
@@ -55,11 +68,9 @@ set(ssp21_private_headers
     ./src/crypto/Algorithms.h
     ./src/crypto/AlgorithmSet.h
     ./src/crypto/CryptoLayer.h
-    ./src/crypto/EnumField.h
     ./src/crypto/FlagsPrinting.h
     ./src/crypto/FormatResult.h
     ./src/crypto/HandshakeHasher.h
-    ./src/crypto/ICertificateHandler.h
     ./src/crypto/IInitiatorHandshake.h
     ./src/crypto/IMessage.h
     ./src/crypto/IMessageHandler.h
@@ -67,7 +78,6 @@ set(ssp21_private_headers
     ./src/crypto/Initiator.h
     ./src/crypto/InitiatorHandshakes.h
     ./src/crypto/InitiatorHandshakeStates.h
-    ./src/crypto/IntegerField.h
     ./src/crypto/IResponderHandshake.h
     ./src/crypto/ISessionMode.h
     ./src/crypto/LogMessagePrinter.h
@@ -84,8 +94,6 @@ set(ssp21_private_headers
     ./src/crypto/QKDResponderHandshake.h
     ./src/crypto/Responder.h
     ./src/crypto/ResponderHandshakes.h
-    ./src/crypto/SeqByteField.h
-    ./src/crypto/SeqStructField.h
     ./src/crypto/Session.h
     ./src/crypto/SessionModes.h
     ./src/crypto/Sessions.h
@@ -94,18 +102,10 @@ set(ssp21_private_headers
     ./src/crypto/TripleDH.h
     ./src/crypto/TruncatedMacSessionMode.h
     ./src/crypto/TxState.h
-    ./src/crypto/VLength.h
 
     ./src/crypto/gen/AuthMetadata.h
-    ./src/crypto/gen/CertificateBody.h
-    ./src/crypto/gen/CertificateChain.h
-    ./src/crypto/gen/CertificateEnvelope.h
-    ./src/crypto/gen/ContainerFile.h
     ./src/crypto/gen/CryptoSpec.h
-    ./src/crypto/gen/ExtensionEnvelope.h
-    ./src/crypto/gen/FormatError.h
     ./src/crypto/gen/Function.h
-    ./src/crypto/gen/ParseError.h
     ./src/crypto/gen/ReplyHandshakeBegin.h
     ./src/crypto/gen/ReplyHandshakeError.h
     ./src/crypto/gen/RequestHandshakeBegin.h

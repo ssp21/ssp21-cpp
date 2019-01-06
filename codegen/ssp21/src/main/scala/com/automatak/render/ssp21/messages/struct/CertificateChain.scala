@@ -13,4 +13,6 @@ object CertificateChain extends Struct {
     SeqOfStruct("certificates", CertificateEnvelope, 6)
   )
 
+  override def public: Boolean = true
+
 }

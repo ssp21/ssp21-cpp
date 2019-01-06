@@ -18,7 +18,7 @@ import com.automatak.render.ssp21.messages.struct._
 object GeneratedFiles {
 
   def api: List[WriteCppFiles] = ssp21EnumsAPI ::: internalEnumsAPI ::: structsAPI
-  def impl : List[WriteCppFiles] = ssp21EnumsImpl ::: internalEnumsImpl ::: bitfields ::: structsImpl ::: messages
+  def impl : List[WriteCppFiles] = ssp21EnumsImpl ::: bitfields ::: structsImpl ::: messages
 
   private def ssp21EnumsAPI = List(
     HandshakeHash,
@@ -39,13 +39,10 @@ object GeneratedFiles {
   private def internalEnumsAPI = List(
     Base64DecodeError,
     PEMDecodeError,
-    CryptoError
-  ).map(x => EnumConfig(x, false, true, true)).map(e => EnumGenerator(e))
-
-  private def internalEnumsImpl = List(
+    CryptoError,
     ParseError,
     FormatError
-  ).map(x => EnumConfig(x, false, true, false)).map(e => EnumGenerator(e))
+  ).map(x => EnumConfig(x, false, true, true)).map(e => EnumGenerator(e))
 
   private def bitfields: List[WriteCppFiles] = Nil
 

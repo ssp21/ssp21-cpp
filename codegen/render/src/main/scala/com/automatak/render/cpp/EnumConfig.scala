@@ -12,7 +12,8 @@ case class EnumConfig(
                        model: EnumModel,
                        conversions: Boolean,
                        stringConv: Boolean,
-                       public: Boolean) {
+                       public: Boolean,
+                       test: Boolean = false) {
   def anyOptionalFunctions: Boolean = conversions || stringConv
 }
 

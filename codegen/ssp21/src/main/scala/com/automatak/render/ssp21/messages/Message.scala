@@ -98,6 +98,7 @@ trait Struct {
 
   def fields: List[Field]
 
+  def public: Boolean
 
   def minSizeBytes: Int = fields.foldLeft(0)(_ + _.minSizeBytes)
 
@@ -119,6 +120,8 @@ case class StructField(name: String, struct: Struct) extends Field {
 
 trait Message extends Struct {
   def function: EnumValue
+
+  override def public: Boolean = false
 
   override def minSizeBytes = super.minSizeBytes + 1
 

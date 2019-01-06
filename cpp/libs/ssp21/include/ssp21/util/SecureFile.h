@@ -3,7 +3,7 @@
 #define SSP21_SECUREFILE_H
 
 #include "ssp21/util/SequenceTypes.h"
-#include "crypto/gen/FormatError.h"
+#include "ssp21/crypto/gen/FormatError.h"
 
 #include "ssp21/util/SerializationUtils.h"
 #include "ssp21/util/SecureDynamicBuffer.h"

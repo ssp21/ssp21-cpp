@@ -13,7 +13,7 @@
 // Licensed under the terms of the BSDv3 license
 //
 
-#include "crypto/gen/CertificateBody.h"
+#include "ssp21/crypto/gen/CertificateBody.h"
 
 #include "crypto/MessageParser.h"
 #include "crypto/MessagePrinting.h"

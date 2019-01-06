@@ -2,11 +2,11 @@
 
 #include "catch.hpp"
 
-#include "crypto/EnumField.h"
-#include "crypto/IntegerField.h"
+#include "ssp21/crypto/EnumField.h"
+#include "ssp21/crypto/IntegerField.h"
 #include "crypto/MessageParser.h"
 
-#include "crypto/SeqByteField.h"
+#include "ssp21/crypto/SeqByteField.h"
 
 #include "testlib/Hex.h"
 #include "testlib/HexConversions.h"

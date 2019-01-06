@@ -3,7 +3,7 @@
 #define SSP21_IMESSAGE_H
 
 #include "IWritable.h"
-#include "crypto/gen/ParseError.h"
+#include "ssp21/crypto/gen/ParseError.h"
 
 namespace ssp21
 {

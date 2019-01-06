@@ -16,9 +16,9 @@
 #ifndef SSP21_REPLYHANDSHAKEBEGIN_H
 #define SSP21_REPLYHANDSHAKEBEGIN_H
 
+#include "ssp21/crypto/SeqByteField.h"
 #include "crypto/IMessage.h"
 #include "crypto/gen/Function.h"
-#include "crypto/SeqByteField.h"
 
 namespace ssp21 {
 

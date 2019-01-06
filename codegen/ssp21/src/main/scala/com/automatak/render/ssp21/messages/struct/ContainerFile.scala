@@ -15,4 +15,6 @@ object ContainerFile extends Struct {
     SeqOfByte("payload")
   )
 
+  override def public: Boolean = true
+
 }

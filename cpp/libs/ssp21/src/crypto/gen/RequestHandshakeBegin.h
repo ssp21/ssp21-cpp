@@ -18,12 +18,12 @@
 
 #include <cstdint>
 #include "openpal/serialization/BigEndian.h"
+#include "ssp21/crypto/EnumField.h"
+#include "ssp21/crypto/IntegerField.h"
+#include "ssp21/crypto/SeqByteField.h"
 #include "ssp21/crypto/gen/HandshakeMode.h"
 #include "crypto/IMessage.h"
-#include "crypto/EnumField.h"
 #include "crypto/gen/Function.h"
-#include "crypto/SeqByteField.h"
-#include "crypto/IntegerField.h"
 #include "crypto/gen/CryptoSpec.h"
 #include "crypto/gen/SessionConstraints.h"
 

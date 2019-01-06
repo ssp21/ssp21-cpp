@@ -16,9 +16,9 @@
 #ifndef SSP21_REPLYHANDSHAKEERROR_H
 #define SSP21_REPLYHANDSHAKEERROR_H
 
+#include "ssp21/crypto/EnumField.h"
 #include "ssp21/crypto/gen/HandshakeError.h"
 #include "crypto/IMessage.h"
-#include "crypto/EnumField.h"
 #include "crypto/gen/Function.h"
 
 namespace ssp21 {

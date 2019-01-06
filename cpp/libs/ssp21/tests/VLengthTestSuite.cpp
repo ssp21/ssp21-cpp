@@ -2,7 +2,7 @@
 
 #include "catch.hpp"
 
-#include "crypto/VLength.h"
+#include "ssp21/crypto/VLength.h"
 
 #include "openpal/container/StaticBuffer.h"
 #include "testlib/HexConversions.h"

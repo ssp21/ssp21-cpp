@@ -5,7 +5,7 @@
 #include "crypto/IInitiatorHandshake.h"
 
 #include "ssp21/crypto/StaticKeys.h"
-#include "crypto/ICertificateHandler.h"
+#include "ssp21/crypto/ICertificateHandler.h"
 #include "crypto/AlgorithmSet.h"
 
 namespace ssp21

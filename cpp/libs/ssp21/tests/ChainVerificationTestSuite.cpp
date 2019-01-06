@@ -2,7 +2,7 @@
 #include "catch.hpp"
 
 #include "ssp21/crypto/Chain.h"
-#include "crypto/gen/CertificateChain.h"
+#include "ssp21/crypto/gen/CertificateChain.h"
 #include "ssp21/util/Exception.h"
 
 #include "mocks/CryptoFixture.h"

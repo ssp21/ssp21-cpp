@@ -16,16 +16,16 @@
 #ifndef SSP21_CRYPTOSPEC_H
 #define SSP21_CRYPTOSPEC_H
 
+#include "ssp21/crypto/EnumField.h"
 #include "ssp21/util/SequenceTypes.h"
 #include "ssp21/crypto/gen/NonceMode.h"
+#include "ssp21/crypto/gen/ParseError.h"
+#include "ssp21/crypto/gen/FormatError.h"
 #include "ssp21/crypto/gen/SessionMode.h"
+#include "ssp21/crypto/IMessagePrinter.h"
 #include "ssp21/crypto/gen/HandshakeKDF.h"
 #include "ssp21/crypto/gen/HandshakeHash.h"
 #include "ssp21/crypto/gen/HandshakeEphemeral.h"
-#include "crypto/EnumField.h"
-#include "crypto/gen/ParseError.h"
-#include "crypto/gen/FormatError.h"
-#include "ssp21/crypto/IMessagePrinter.h"
 
 namespace ssp21 {
 

@@ -95,7 +95,10 @@ case class EnumGenerator(cfg: EnumConfig) extends WriteCppFiles {
       case None => Iterator.empty
     }
 
-    def includes = Includes.enum(cfg.model.name, cfg.public).line
+    def includes = cfg.test match {
+      case true => Includes.test(cfg.model.name).line
+      case false => Includes.enum(cfg.model.name, cfg.public).line
+    }
 
     license ++ space ++ includes ++ space ++ namespace(cppNamespace)(constants ++ funcs)
   }

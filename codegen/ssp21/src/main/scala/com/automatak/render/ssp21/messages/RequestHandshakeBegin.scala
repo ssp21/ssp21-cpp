@@ -18,6 +18,8 @@ object CryptoSpec extends Struct {
     Enum(SessionMode)
   )
 
+  override def public: Boolean = false
+
 }
 
 object SessionConstraints extends Struct {
@@ -28,6 +30,9 @@ object SessionConstraints extends Struct {
     U16("max_nonce"),
     U32("max_session_duration")
   )
+
+  override def public: Boolean = false
+
 }
 
 object RequestHandshakeBegin extends Message {

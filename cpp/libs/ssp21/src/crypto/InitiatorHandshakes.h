@@ -3,7 +3,7 @@
 #define SSP21_INITIATORHANDSHAKES_H
 
 #include "crypto/IInitiatorHandshake.h"
-#include "crypto/ICertificateHandler.h"
+#include "ssp21/crypto/ICertificateHandler.h"
 #include "ssp21/crypto/StaticKeys.h"
 #include "ssp21/crypto/IKeySource.h"
 

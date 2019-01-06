@@ -24,22 +24,22 @@ object Includes {
   val uncopyable = openpal("util/Uncopyable")
   val bigEndian = openpal("serialization/BigEndian")
 
-  val parseError = enum("ParseError", false)
-  val formatError = enum("FormatError", false)
+  val parseError = enum("ParseError", true)
+  val formatError = enum("FormatError", true)
   val function = enum("Function", false)
 
   val errorCategory = ssp21("util/ErrorCategory", true)
   val seqTypes = ssp21("util/SequenceTypes", true)
 
-  val imessage = crypto("IMessage", false)
-  val enumField = crypto("EnumField", false)
-  val integerField = crypto("IntegerField", false)
+  val msgPrinter = crypto("IMessagePrinter", true)
+  val enumField = crypto("EnumField", true)
+  val integerField = crypto("IntegerField", true)
+  val seqField = crypto("SeqByteField", true)
+  val seqStructField = crypto("SeqStructField", true)
 
-  val seqField = crypto("SeqByteField", false)
-  val seqStructField = crypto("SeqStructField", false)
+  val imessage = crypto("IMessage", false)
   val msgFormatter = crypto("MessageFormatter", false)
   val formatResult = crypto("FormatResult", false)
-  val msgPrinter = crypto("IMessagePrinter", false)
   val msgPrinting = crypto("MessagePrinting", false)
   val flagsPrinting = crypto("FlagsPrinting", false)
   val msgParser = crypto("MessageParser", false)
@@ -51,6 +51,8 @@ object Includes {
   def message(className: String, public: Boolean) = crypto("gen/%s".format(className), public)
 
   def crypto(className: String, public: Boolean) = ssp21("crypto/%s".format(className), public)
+
+  def test(className: String) = ssp21("gen/%s".format(className), false)
 
   def ssp21(className: String, public: Boolean): Include = {
     public match {

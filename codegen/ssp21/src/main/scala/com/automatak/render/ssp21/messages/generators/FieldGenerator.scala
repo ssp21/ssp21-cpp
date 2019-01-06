@@ -41,7 +41,7 @@ case class BitfieldGenerator(field: Bitfield) extends FieldGenerator with PassBy
 }
 
 case class StructFieldGenerator(sf: StructField) extends FieldGenerator with PassByConstRef {
-  override def includes = Set(Includes.message(sf.struct.name, false))
+  override def includes = Set(Includes.message(sf.struct.name, sf.struct.public))
 
   override def cppType: String = sf.struct.name
 
@@ -111,7 +111,7 @@ object SeqOfByteFieldGenerator extends FieldGenerator with PassByConstRef {
 
 case class SeqOfStructGenerator(struct: Struct, capacity: Int) extends FieldGenerator with PassByConstRef {
 
-  override def includes = Set(Includes.seqStructField, Includes.message(struct.name, false))
+  override def includes = Set(Includes.seqStructField, Includes.message(struct.name, struct.public))
 
   override def cppType: String = "SeqStructField<%s, %d>".format(struct.name, capacity)
 

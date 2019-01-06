@@ -1,5 +1,5 @@
 
-#include "crypto/ICertificateHandler.h"
+#include "ssp21/crypto/ICertificateHandler.h"
 
 #include "crypto/PresharedKeyCertificateHandler.h"
 #include "crypto/IndustrialCertificateHandler.h"

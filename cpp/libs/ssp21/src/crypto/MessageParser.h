@@ -2,9 +2,9 @@
 #define SSP21_MESSAGE_PARSER_H
 
 #include "crypto/gen/Function.h"
-#include "crypto/gen/ParseError.h"
+#include "ssp21/crypto/gen/ParseError.h"
 
-#include "crypto/EnumField.h"
+#include "ssp21/crypto/EnumField.h"
 
 #include "openpal/util/Uncopyable.h"
 

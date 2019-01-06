@@ -2,7 +2,7 @@
 #define SSP21_FORMAT_RESULT_H
 
 #include "ssp21/util/SequenceTypes.h"
-#include "crypto/gen/FormatError.h"
+#include "ssp21/crypto/gen/FormatError.h"
 
 namespace ssp21
 {

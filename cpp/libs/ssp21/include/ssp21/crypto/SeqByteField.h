@@ -6,13 +6,13 @@
 
 #include "ssp21/util/SequenceTypes.h"
 
-#include "crypto/gen/FormatError.h"
-#include "crypto/gen/ParseError.h"
+#include "ssp21/crypto/gen/FormatError.h"
+#include "ssp21/crypto/gen/ParseError.h"
 
 #include "ssp21/crypto/IMessagePrinter.h"
-#include "crypto/IntegerField.h"
+#include "ssp21/crypto/IntegerField.h"
 
-#include "crypto/VLength.h"
+#include "ssp21/crypto/VLength.h"
 
 
 namespace ssp21

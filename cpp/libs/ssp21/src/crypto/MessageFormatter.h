@@ -4,7 +4,7 @@
 #include "crypto/gen/Function.h"
 
 #include "crypto/FormatResult.h"
-#include "crypto/EnumField.h"
+#include "ssp21/crypto/EnumField.h"
 
 #include "openpal/util/Uncopyable.h"
 

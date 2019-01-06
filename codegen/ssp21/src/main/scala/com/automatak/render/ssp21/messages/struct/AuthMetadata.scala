@@ -14,4 +14,6 @@ object AuthMetadata extends Struct {
     U32("valid_until_ms")
   )
 
+  override def public: Boolean = false
+
 }

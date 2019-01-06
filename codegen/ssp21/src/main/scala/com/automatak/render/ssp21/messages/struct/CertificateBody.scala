@@ -19,4 +19,6 @@ object CertificateBody extends Struct {
     SeqOfStruct("extensions", ExtensionEnvelope, 5)
   )
 
+  override def public: Boolean = true
+
 }

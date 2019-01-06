@@ -2,8 +2,8 @@
 
 #include "crypto/IndustrialCertificateHandler.h"
 
-#include "crypto/gen/CertificateChain.h"
-#include "crypto/gen/ContainerFile.h"
+#include "ssp21/crypto/gen/CertificateChain.h"
+#include "ssp21/crypto/gen/ContainerFile.h"
 
 #include "ssp21/crypto/Chain.h"
 

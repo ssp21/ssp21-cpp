@@ -2,8 +2,8 @@
 #ifndef SSP21_CHAIN_H
 #define SSP21_CHAIN_H
 
-#include "crypto/gen/CertificateBody.h"
-#include "crypto/gen/CertificateEnvelope.h"
+#include "ssp21/crypto/gen/CertificateBody.h"
+#include "ssp21/crypto/gen/CertificateEnvelope.h"
 #include "ssp21/crypto/gen/HandshakeError.h"
 #include "ssp21/crypto/CryptoTypedefs.h"
 

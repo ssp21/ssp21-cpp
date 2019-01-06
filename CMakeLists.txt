@@ -13,6 +13,7 @@ find_package(sodium REQUIRED)
 add_subdirectory(./deps/argagg)
 add_subdirectory(./deps/asio)
 add_subdirectory(./deps/catch)
+add_subdirectory(./deps/inih)
 add_subdirectory(./deps/openpal)
 
 # Libs
@@ -22,144 +23,9 @@ add_subdirectory(./cpp/libs/qix)
 
 # Executables
 add_subdirectory(./cpp/exe/icftool)
+add_subdirectory(./cpp/exe/proxy)
 add_subdirectory(./cpp/exe/qixreader)
 
-#[[
-option(SSP21_PROXY "Build the proxy" ON)
-option(WERROR "Convert warnings to errors" OFF)
-option(STATIC_LIBS "Build static libraries and link all dependencies statically" OFF)
-
-include(${PROJECT_SOURCE_DIR}/cmake/settings.cmake)
-
-if(WERROR)
-   if(CMAKE_COMPILER_IS_GNUCXX)
-       SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
-   else()
-       message(FATAL_ERROR "This compiler does not support WERROR!")  
-   endif()
-endif()
-
-include_directories(./cpp/libs/include)
-include_directories(./cpp/libs/src)
-include_directories(./deps/openpal/cpp/libs/include)
-include_directories(./deps/argagg/include)
-
-# ---- openpal library ----
-file(GLOB_RECURSE openpal_SRC ./deps/openpal/cpp/libs/src/openpal/*.cpp ./deps/openpal/cpp/libs/src/openpal/*.h ./deps/openpal/cpp/libs/include/openpal/*.h)
-add_library(openpal ${LIB_TYPE} ${openpal_SRC})
-install(TARGETS openpal DESTINATION lib)
-set_target_properties(openpal PROPERTIES FOLDER libs)
-
-# ---- ssp21 library ----
-file(GLOB_RECURSE ssp21_SRC ./cpp/libs/src/ssp21/*.cpp ./cpp/libs/src/ssp21/*.h ./cpp/libs/include/ssp21/*.h)
-add_library(ssp21 ${LIB_TYPE} ${ssp21_SRC})
-target_link_libraries(ssp21 openpal)
-install(TARGETS ssp21 DESTINATION lib)
-set_target_properties(ssp21 PROPERTIES FOLDER libs)
-
-# ---- sodiumbackend library ----
-file(GLOB_RECURSE sodiumbackend_SRC ./cpp/libs/src/sodium/*.cpp ./cpp/libs/src/sodium/*.h ./cpp/libs/include/sodium/*.h)
-add_library(sodiumbackend ${LIB_TYPE} ${sodiumbackend_SRC})
-target_link_libraries(sodiumbackend ssp21 ${SODIUM_LIB_NAME})
-install(TARGETS sodiumbackend DESTINATION lib)
-set_target_properties(sodiumbackend PROPERTIES FOLDER libs)
-
-# ---- qix library ----
-file(GLOB_RECURSE qix_SRC ./cpp/libs/src/qix/*.cpp ./cpp/libs/src/qix/*.h ./cpp/libs/include/qix/*.h)
-add_library(qix ${LIB_TYPE} ${qix_SRC})
-target_link_libraries(qix ssp21)
-install(TARGETS qix DESTINATION lib)
-set_target_properties(qix PROPERTIES FOLDER libs)
-
-# ---- icf-tool executable ----
-add_executable (icftool ./cpp/exe/icftool/main.cpp ./cpp/exe/icftool/ConsolePrinter.h ./cpp/exe/icftool/Program.h ./cpp/exe/icftool/Program.cpp ./cpp/exe/icftool/UserInput.h ./cpp/exe/icftool/UserInput.cpp ./cpp/exe/icftool/Actions.h ./cpp/exe/icftool/Actions.cpp)
-target_link_libraries(icftool sodiumbackend)
-set_target_properties(icftool PROPERTIES FOLDER exe)
-
-# ---- qix-reader executable ----
-add_executable (qixreader ./cpp/exe/qixreader/main.cpp)
-target_link_libraries(qixreader qix ${PTHREAD})
-set_target_properties(qixreader PROPERTIES FOLDER exe)
-
-# ---- proxy executable ----
-if(SSP21_PROXY)   
-   
-   SET(ASIO_SUBMODULE_DIR "${PROJECT_SOURCE_DIR}/deps/asio/asio/include")
-   if (NOT EXISTS "${ASIO_SUBMODULE_DIR}/asio.hpp")    
-       message(FATAL_ERROR "ASIO has not been checked out as a submodule!")       
-   endif()
-
-   file(GLOB_RECURSE proxy_SRC ./cpp/exe/proxy/*.cpp ./cpp/exe/proxy/*.h)
-   add_executable (ssp21-proxy ${proxy_SRC} ./deps/inih/ini.c)
-   target_link_libraries(ssp21-proxy qix sodiumbackend ${PTHREAD})
-   
-   include_directories(./deps ${ASIO_SUBMODULE_DIR})
-   add_definitions(-DASIO_STANDALONE)
-   set_target_properties(ssp21-proxy PROPERTIES FOLDER exe)
-
-endif()
-
-enable_testing()
-
-include_directories(./cpp/tests/catch)
-include_directories(./deps/openpal/cpp/tests)
-
-# ----- install -----
-
-# common pattern and exludes for all installed headers
-set(INSTALL_ARGS FILES_MATCHING PATTERN "*.h" PATTERN ".deps" EXCLUDE PATTERN ".libs" EXCLUDE)
-install(DIRECTORY ./cpp/libs/include/ DESTINATION include ${INSTALL_ARGS})
-install(DIRECTORY ./deps/openpal/cpp/libs/include/ DESTINATION include ${INSTALL_ARGS})
-
-# ---- testlib ----
-file(GLOB_RECURSE testlib_SRC ./deps/openpal/cpp/tests/testlib/*.cpp ./deps/openpal/cpp/tests/testlib/*.h)
-add_library(testlib ${LIB_TYPE} ${testlib_SRC})
-target_link_libraries(testlib openpal)
-set_target_properties(testlib PROPERTIES FOLDER tests)
-
-# ---- testopenpal ----
-file(GLOB_RECURSE testopenpal_SRC ./deps/openpal/cpp/tests/openpaltests/src/*.cpp ./deps/openpal/cpp/tests/openpaltests/src/*.h)
-add_executable (testopenpal ${testopenpal_SRC})
-target_link_libraries (testopenpal testlib)
-set_target_properties(testopenpal PROPERTIES FOLDER tests)
-add_test(testopenpal testopenpal)
-
-# ---- cryptobackends tests ----
-file(GLOB_RECURSE cryptobackend_SRC ./cpp/tests/cryptobackend/*.cpp ./cpp/tests/cryptobackend/*.h)
-add_executable (testcryptobackend ${cryptobackend_SRC})
-target_link_libraries (testcryptobackend sodiumbackend testlib)
-set_target_properties(testcryptobackend PROPERTIES FOLDER tests)
-add_test(testcryptobackend-sodium testcryptobackend)
-
-# ---- qix tests ----
-file(GLOB_RECURSE testqix_SRC ./cpp/tests/qix/*.cpp ./cpp/tests/qix/*.h)
-add_executable (testqix ${testqix_SRC})
-target_link_libraries (testqix qix testlib ${PTHREAD})
-set_target_properties(testqix PROPERTIES FOLDER tests)
-add_test(testqix testqix)
-
-# ----integration tests ----
-file(GLOB_RECURSE integration_SRC ./cpp/tests/integration/*.cpp ./cpp/tests/integration/*.h)
-add_executable (testintegration ${integration_SRC})
-target_link_libraries (testintegration ssp21 sodiumbackend testlib)
-set_target_properties(testintegration PROPERTIES FOLDER tests)
-add_test(testintegration-sodium testintegration)
-
-# ---- ssp21 tests ----
-file(GLOB_RECURSE testssp21_SRC ./cpp/tests/ssp21/*.cpp ./cpp/tests/ssp21/*.h)
-add_executable (testssp21 ${testssp21_SRC})
-target_link_libraries (testssp21 ssp21 testlib)
-set_target_properties(testssp21 PROPERTIES FOLDER tests)
-add_test(testssp21 testssp21)
-
-# ---- ssp21 afl test harness ----
-add_executable (ssp21-afl ./cpp/tests/ssp21-afl/main.cpp)
-target_link_libraries (ssp21-afl ssp21)
-set_target_properties(ssp21-afl PROPERTIES FOLDER tests)
-
-add_custom_target(
-	FORMAT 
-	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-	COMMAND astyle -R ./cpp/*.h ./cpp/*.cpp --options=./astyle.cfg --exclude=./cpp/libs/include/ssp21/crypto/gen --exclude=./cpp/libs/src/ssp21/crypto/gen --exclude=./cpp/tests/ssp21/gen
-)
-]]#
+# Tests
+add_subdirectory(./cpp/tests/integration)
+add_subdirectory(./cpp/tests/ssp21-afl)

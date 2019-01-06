@@ -15,4 +15,4 @@ set(icftool_srcs
 
 add_library(icftool ${icftool_headers} ${icftool_srcs})
 target_include_directories(icftool PRIVATE .)
-target_link_libraries(icftool PRIVATE ssp21 sodium argagg)
+target_link_libraries(icftool PRIVATE ssp21 sodium_backend argagg)

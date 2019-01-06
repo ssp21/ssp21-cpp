@@ -6,7 +6,7 @@
 
 #include "ssp21/util/StringUtil.h"
 #include "ssp21/util/SecureDynamicBuffer.h"
-#include "crypto/gen/FormatError.h"
+#include "ssp21/crypto/gen/FormatError.h"
 
 namespace ssp21
 {

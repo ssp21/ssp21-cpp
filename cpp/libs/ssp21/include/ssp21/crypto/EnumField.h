@@ -1,8 +1,8 @@
 #ifndef SSP21_ENUMFIELD_H
 #define SSP21_ENUMFIELD_H
 
-#include "crypto/gen/ParseError.h"
-#include "crypto/gen/FormatError.h"
+#include "ssp21/crypto/gen/ParseError.h"
+#include "ssp21/crypto/gen/FormatError.h"
 #include "ssp21/crypto/IMessagePrinter.h"
 
 #include "openpal/serialization/BigEndian.h"

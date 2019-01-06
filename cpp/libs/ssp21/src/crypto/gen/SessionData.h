@@ -16,9 +16,9 @@
 #ifndef SSP21_SESSIONDATA_H
 #define SSP21_SESSIONDATA_H
 
+#include "ssp21/crypto/SeqByteField.h"
 #include "crypto/IMessage.h"
 #include "crypto/gen/Function.h"
-#include "crypto/SeqByteField.h"
 #include "crypto/gen/AuthMetadata.h"
 
 namespace ssp21 {

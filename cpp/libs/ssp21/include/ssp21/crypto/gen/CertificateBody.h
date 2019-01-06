@@ -18,16 +18,16 @@
 
 #include <cstdint>
 #include "openpal/serialization/BigEndian.h"
+#include "ssp21/crypto/EnumField.h"
 #include "ssp21/util/SequenceTypes.h"
-#include "ssp21/crypto/gen/PublicKeyType.h"
-#include "crypto/EnumField.h"
-#include "crypto/SeqByteField.h"
-#include "crypto/IntegerField.h"
-#include "crypto/gen/ParseError.h"
-#include "crypto/SeqStructField.h"
-#include "crypto/gen/FormatError.h"
+#include "ssp21/crypto/IntegerField.h"
+#include "ssp21/crypto/SeqByteField.h"
+#include "ssp21/crypto/SeqStructField.h"
+#include "ssp21/crypto/gen/ParseError.h"
+#include "ssp21/crypto/gen/FormatError.h"
 #include "ssp21/crypto/IMessagePrinter.h"
-#include "crypto/gen/ExtensionEnvelope.h"
+#include "ssp21/crypto/gen/PublicKeyType.h"
+#include "ssp21/crypto/gen/ExtensionEnvelope.h"
 
 namespace ssp21 {
 

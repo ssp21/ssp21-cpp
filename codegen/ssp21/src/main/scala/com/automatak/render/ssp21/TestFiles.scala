@@ -14,7 +14,7 @@ import com.automatak.render.ssp21.enums.test.CryptoAction
 object TestFiles {
 
   def list: List[WriteCppFiles] = List(
-    EnumConfig(CryptoAction, false, true, false)
+    EnumConfig(CryptoAction, false, true, false, true)
   ).map(c => EnumGenerator(c))
 
 }

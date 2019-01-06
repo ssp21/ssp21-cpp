@@ -14,4 +14,6 @@ object ExtensionEnvelope extends Struct {
     SeqOfByte("extension_body")
   )
 
+  override def public: Boolean = true
+
 }

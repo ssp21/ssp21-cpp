@@ -8,7 +8,7 @@ import com.automatak.render.ssp21.messages.Message
 import com.automatak.render.ssp21.{Include, Includes}
 
 
-final case class MessageGenerator(msg: Message) extends StructGenerator(msg) {
+final case class MessageGenerator(msg: Message) extends StructGenerator(msg, false) {
 
   override def prefixSize: Int = 1 // the function
 

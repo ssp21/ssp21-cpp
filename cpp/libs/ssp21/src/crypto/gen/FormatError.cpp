@@ -13,7 +13,7 @@
 // Licensed under the terms of the BSDv3 license
 //
 
-#include "crypto/gen/FormatError.h"
+#include "ssp21/crypto/gen/FormatError.h"
 
 namespace ssp21 {
 

@@ -13,7 +13,7 @@
 // Licensed under the terms of the BSDv3 license
 //
 
-#include "crypto/gen/ParseError.h"
+#include "ssp21/crypto/gen/ParseError.h"
 
 namespace ssp21 {
 

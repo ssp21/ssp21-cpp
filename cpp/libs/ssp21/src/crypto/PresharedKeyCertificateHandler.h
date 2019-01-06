@@ -2,7 +2,7 @@
 #ifndef SSP21_PRESHAREDKEYCERTIFICATEHANDLER_H
 #define SSP21_PRESHAREDKEYCERTIFICATEHANDLER_H
 
-#include "crypto/ICertificateHandler.h"
+#include "ssp21/crypto/ICertificateHandler.h"
 
 #include "ssp21/crypto/BufferTypes.h"
 

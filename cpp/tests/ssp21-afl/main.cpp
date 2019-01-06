@@ -1,14 +1,14 @@
 
-#include <ssp21/crypto/gen/RequestHandshakeBegin.h>
-#include <ssp21/crypto/gen/ReplyHandshakeBegin.h>
-#include <ssp21/crypto/gen/SessionData.h>
-#include <ssp21/crypto/gen/CertificateEnvelope.h>
-#include <ssp21/crypto/gen/CertificateBody.h>
+#include "crypto/gen/RequestHandshakeBegin.h"
+#include "crypto/gen/ReplyHandshakeBegin.h"
+#include "crypto/gen/SessionData.h"
+#include "ssp21/crypto/gen/CertificateEnvelope.h"
+#include "ssp21/crypto/gen/CertificateBody.h"
 
-#include <ssp21/util/ConsolePrettyPrinter.h>
-#include <ssp21/crypto/LogMessagePrinter.h>
-#include <ssp21/stack/LogLevels.h>
-#include <ssp21/util/Exception.h>
+#include "ssp21/util/ConsolePrettyPrinter.h"
+#include "crypto/LogMessagePrinter.h"
+#include "ssp21/stack/LogLevels.h"
+#include "ssp21/util/Exception.h"
 
 #include <iostream>
 #include <fstream>

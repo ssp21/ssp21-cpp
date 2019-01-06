@@ -6,7 +6,7 @@
 
 
 #include "ssp21/crypto/StaticKeys.h"
-#include "crypto/ICertificateHandler.h"
+#include "ssp21/crypto/ICertificateHandler.h"
 
 namespace ssp21
 {

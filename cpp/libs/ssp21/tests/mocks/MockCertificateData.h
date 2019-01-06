@@ -3,8 +3,8 @@
 
 #include "openpal/container/Buffer.h"
 
-#include "crypto/gen/CertificateEnvelope.h"
-#include "crypto/gen/CertificateBody.h"
+#include "ssp21/crypto/gen/CertificateEnvelope.h"
+#include "ssp21/crypto/gen/CertificateBody.h"
 
 #include "openpal/util/Uncopyable.h"
 

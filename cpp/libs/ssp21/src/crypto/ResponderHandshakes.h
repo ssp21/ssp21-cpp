@@ -3,7 +3,7 @@
 #define SSP21_RESPONDERHANDSHAKES_H
 
 #include "crypto/IResponderHandshake.h"
-#include "crypto/ICertificateHandler.h"
+#include "ssp21/crypto/ICertificateHandler.h"
 #include "ssp21/crypto/StaticKeys.h"
 #include "ssp21/crypto/IKeyLookup.h"
 

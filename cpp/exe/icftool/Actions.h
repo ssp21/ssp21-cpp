@@ -5,9 +5,9 @@
 #include "ssp21/crypto/IMessagePrinter.h"
 #include "ssp21/crypto/BufferTypes.h"
 
-#include "crypto/gen/ContainerFile.h"
+#include "ssp21/crypto/gen/ContainerFile.h"
 #include "ssp21/crypto/gen/PublicKeyType.h"
-#include "crypto/gen/CertificateChain.h"
+#include "ssp21/crypto/gen/CertificateChain.h"
 
 #include "ssp21/util/SequenceTypes.h"
 #include "ssp21/util/Exception.h"

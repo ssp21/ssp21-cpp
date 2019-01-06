@@ -6,7 +6,7 @@
 #include "openpal/logging/LogMacros.h"
 
 #include "ssp21/crypto/IMessagePrinter.h"
-#include "crypto/VLength.h"
+#include "ssp21/crypto/VLength.h"
 
 #include "ssp21/util/ICollection.h"
 

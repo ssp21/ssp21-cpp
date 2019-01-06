@@ -14,4 +14,6 @@ object CertificateEnvelope extends Struct {
     SeqOfByte("certificate_body")
   )
 
+  override def public: Boolean = true
+
 }

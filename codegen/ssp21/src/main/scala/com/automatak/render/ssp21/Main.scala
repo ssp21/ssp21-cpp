@@ -15,7 +15,7 @@ object Main {
   private val basePath = "../cpp/libs/ssp21"
   private val ssp21GenHeaderPath = Paths.get(basePath, "/include/ssp21/crypto/gen")
   private val ssp21GenImplPath = Paths.get(basePath, "/src/crypto/gen")
-  private val testPath = Paths.get("../cpp/tests/ssp21/gen")
+  private val testPath = Paths.get("../cpp/libs/ssp21/tests/gen")
 
   private val paths = List(ssp21GenHeaderPath, ssp21GenImplPath, testPath)
 

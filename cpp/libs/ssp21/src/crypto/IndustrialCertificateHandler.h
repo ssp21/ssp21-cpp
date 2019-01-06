@@ -2,14 +2,14 @@
 #ifndef SSP21_INDUSTRIALCERTIFICATEHANDLER_H
 #define SSP21_INDUSTRIALCERTIFICATEHANDLER_H
 
-#include "crypto/ICertificateHandler.h"
+#include "ssp21/crypto/ICertificateHandler.h"
 
 #include "ssp21/crypto/BufferTypes.h"
 
 #include "ssp21/util/SecureDynamicBuffer.h"
 
-#include "crypto/gen/CertificateEnvelope.h"
-#include "crypto/gen/CertificateBody.h"
+#include "ssp21/crypto/gen/CertificateEnvelope.h"
+#include "ssp21/crypto/gen/CertificateBody.h"
 
 #include <memory>
 #include <string>
