@@ -3,18 +3,18 @@
 
 #include "ConfigProperties.h"
 
-#include "ssp21/crypto/ICertificateHandler.h"
+#include "crypto/ICertificateHandler.h"
 
 #include "ssp21/util/SecureFile.h"
 #include "ssp21/util/Exception.h"
 #include "ssp21/stack/LogLevels.h"
 #include "ssp21/stack/Factory.h"
-#include "ssp21/crypto/gen/ContainerFile.h"
+#include "crypto/gen/ContainerFile.h"
 #include "ssp21/link/Addresses.h"
 
 #include "ssp21/util/Exception.h"
 #include "ssp21/stack/LogLevels.h"
-#include "ssp21/crypto/gen/ContainerFile.h"
+#include "crypto/gen/ContainerFile.h"
 
 #include "qix/QIXKeyCache.h"
 

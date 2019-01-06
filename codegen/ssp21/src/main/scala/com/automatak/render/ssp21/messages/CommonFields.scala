@@ -1,3 +1,6 @@
+/**
+ * License TBD
+ */
 package com.automatak.render.ssp21.messages
 
 object CommonFields {

@@ -5,7 +5,7 @@
 
 #include "ssp21/util/SecureFile.h"
 #include "ssp21/stack/LogLevels.h"
-#include "ssp21/crypto/gen/ContainerFile.h"
+#include "crypto/gen/ContainerFile.h"
 #include "ssp21/util/Exception.h"
 
 #include <iostream>

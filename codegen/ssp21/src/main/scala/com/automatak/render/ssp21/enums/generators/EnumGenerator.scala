@@ -1,4 +1,7 @@
 /**
+ * License TBD
+ */
+/**
   * License TBD
   */
 package com.automatak.render.ssp21.enums.generators
@@ -7,7 +10,7 @@ import com.automatak.render._
 import com.automatak.render.cpp._
 import com.automatak.render.ssp21._
 
-case class EnumGenerator(cfg: EnumConfig, headerPath: Option[String]) extends WriteCppFiles {
+case class EnumGenerator(cfg: EnumConfig) extends WriteCppFiles {
 
   def cppNamespace = "ssp21"
 
@@ -92,10 +95,7 @@ case class EnumGenerator(cfg: EnumConfig, headerPath: Option[String]) extends Wr
       case None => Iterator.empty
     }
 
-    def includes = headerPath match {
-      case Some(path) => Includes.enum(cfg.model.name, path).line
-      case None => Includes.enum(cfg.model.name).line
-    }
+    def includes = Includes.enum(cfg.model.name, cfg.public).line
 
     license ++ space ++ includes ++ space ++ namespace(cppNamespace)(constants ++ funcs)
   }

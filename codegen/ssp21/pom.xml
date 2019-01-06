@@ -24,4 +24,27 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <sourceDirectory>src/main/scala</sourceDirectory>
+        <plugins>
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>${maven-scala.plugin.version}</version>
+                <configuration>
+                    <mainClass>com.automatak.render.ssp21.Main</mainClass>
+                    <args>
+                        <arg>-feature</arg>
+                        <arg>-language:implicitConversions</arg>
+                        <arg>-deprecation</arg>
+                        <arg>-Ywarn-adapted-args</arg>
+                    </args>
+                    <jvmArgs>
+                        <jvmArg>-Xmx1024m</jvmArg>
+                    </jvmArgs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

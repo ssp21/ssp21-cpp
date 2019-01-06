@@ -1,3 +1,6 @@
+/**
+ * License TBD
+ */
 package com.automatak.render.ssp21.messages.generators
 
 import com.automatak.render._
@@ -6,10 +9,10 @@ import com.automatak.render.ssp21.messages.Struct
 import com.automatak.render.ssp21.{Include, Includes, WriteCppFiles}
 
 object StructGenerator {
-  def apply(sf: Struct) = new StructGenerator(sf)
+  def apply(sf: Struct, public: Boolean) = new StructGenerator(sf, public)
 }
 
-class StructGenerator(sf: Struct) extends WriteCppFiles {
+class StructGenerator(sf: Struct, public: Boolean) extends WriteCppFiles {
 
   protected def prefixSize : Int = 0
 
@@ -217,7 +220,7 @@ class StructGenerator(sf: Struct) extends WriteCppFiles {
         extraImplFunctions
     }
 
-    def selfInclude = Includes.message(sf.name).line
+    def selfInclude = Includes.message(sf.name, public).line
 
     def includes = {
       Includes.lines(List(Includes.msgParser, Includes.msgFormatter, Includes.msgPrinting))

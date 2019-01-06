@@ -1,3 +1,6 @@
+/**
+ * License TBD
+ */
 package com.automatak.render.ssp21.messages.generators
 
 import com.automatak.render._
@@ -116,7 +119,7 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
       }
     }
 
-    def selfInclude = Includes.message(field.name).line
+    def selfInclude = Includes.message(field.name, true).line
 
     def otherIncludes = Includes.lines(List(Includes.bigEndian, Includes.flagsPrinting))
 

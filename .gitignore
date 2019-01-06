@@ -9,3 +9,6 @@
 
 #clion
 /cmake-build-*
+
+# VS Code
+/.vscode

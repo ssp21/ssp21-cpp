@@ -1,3 +1,6 @@
+/**
+ * License TBD
+ */
 package com.automatak.render.ssp21.messages.generators
 
 import com.automatak.render.EnumModel
@@ -30,7 +33,7 @@ sealed trait PassByConstRef {
 }
 
 case class BitfieldGenerator(field: Bitfield) extends FieldGenerator with PassByConstRef {
-  override def includes = Set(Includes.message(field.name))
+  override def includes = Set(Includes.message(field.name, false))
 
   override def cppType: String = field.name
 
@@ -38,7 +41,7 @@ case class BitfieldGenerator(field: Bitfield) extends FieldGenerator with PassBy
 }
 
 case class StructFieldGenerator(sf: StructField) extends FieldGenerator with PassByConstRef {
-  override def includes = Set(Includes.message(sf.struct.name))
+  override def includes = Set(Includes.message(sf.struct.name, false))
 
   override def cppType: String = sf.struct.name
 
@@ -87,7 +90,7 @@ object U64FieldGenerator extends FieldGenerator with PassByValue {
 
 case class EnumFieldGenerator(enum: EnumModel) extends FieldGenerator with PassByValue {
 
-  override def includes = Set(Includes.enum(enum.name), Includes.enumField)
+  override def includes = Set(Includes.enum(enum.name, true), Includes.enumField)
 
   override def cppType: String = "EnumField<%s>".format(enum.specName)
 
@@ -108,7 +111,7 @@ object SeqOfByteFieldGenerator extends FieldGenerator with PassByConstRef {
 
 case class SeqOfStructGenerator(struct: Struct, capacity: Int) extends FieldGenerator with PassByConstRef {
 
-  override def includes = Set(Includes.seqStructField, Includes.message(struct.name))
+  override def includes = Set(Includes.seqStructField, Includes.message(struct.name, false))
 
   override def cppType: String = "SeqStructField<%s, %d>".format(struct.name, capacity)
 

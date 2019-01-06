@@ -4,9 +4,9 @@
 #include "ssp21/crypto/Crypto.h"
 #include "ssp21/crypto/Chain.h"
 
-#include "ssp21/crypto/gen/CertificateBody.h"
-#include "ssp21/crypto/gen/CertificateEnvelope.h"
-#include "ssp21/crypto/gen/ContainerFile.h"
+#include "crypto/gen/CertificateBody.h"
+#include "crypto/gen/CertificateEnvelope.h"
+#include "crypto/gen/ContainerFile.h"
 
 #include "ssp21/util/SecureFile.h"
 

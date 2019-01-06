@@ -1,13 +1,13 @@
 #include "IntegrationFixture.h"
 
 #include "ssp21/crypto/Crypto.h"
-#include "ssp21/crypto/ResponderHandshakes.h"
+#include "crypto/ResponderHandshakes.h"
 #include "ssp21/stack/Factory.h"
 
-#include "ssp21/crypto/gen/CertificateBody.h"
-#include "ssp21/crypto/gen/CertificateEnvelope.h"
-#include "ssp21/crypto/gen/CertificateChain.h"
-#include "ssp21/crypto/gen/ContainerFile.h"
+#include "crypto/gen/CertificateBody.h"
+#include "crypto/gen/CertificateEnvelope.h"
+#include "crypto/gen/CertificateChain.h"
+#include "crypto/gen/ContainerFile.h"
 
 #include "ssp21/util/SerializationUtils.h"
 #include "ssp21/util/Exception.h"

@@ -1,4 +1,7 @@
 /**
+ * License TBD
+ */
+/**
   * License TBD
   */
 package com.automatak.render.ssp21
@@ -14,10 +17,8 @@ import com.automatak.render.ssp21.messages.struct._
 
 object GeneratedFiles {
 
-  def api: List[WriteCppFiles] = ssp21EnumsAPI ::: internalEnumsAPI
-  def impl : List[WriteCppFiles] = ssp21EnumsImpl ::: internalEnumsImpl ::: bitfields ::: structs ::: messsages
-
-  val basePath = "ssp21/crypto/gen/"
+  def api: List[WriteCppFiles] = ssp21EnumsAPI ::: internalEnumsAPI ::: structsAPI
+  def impl : List[WriteCppFiles] = ssp21EnumsImpl ::: internalEnumsImpl ::: bitfields ::: structsImpl ::: messages
 
   private def ssp21EnumsAPI = List(
     HandshakeHash,
@@ -29,37 +30,40 @@ object GeneratedFiles {
     HandshakeKDF,
     PublicKeyType,
     ContainerEntryType
-  ).map(x => EnumConfig(x, true, true)).map(e => EnumGenerator(e, Some(basePath)))
+  ).map(x => EnumConfig(x, true, true, true)).map(e => EnumGenerator(e))
 
   private def ssp21EnumsImpl = List(
     CryptoFunction
-  ).map(x => EnumConfig(x, true, true)).map(e => EnumGenerator(e, Some(basePath)))
+  ).map(x => EnumConfig(x, true, true, false)).map(e => EnumGenerator(e))
 
   private def internalEnumsAPI = List(
     Base64DecodeError,
     PEMDecodeError,
     CryptoError
-  ).map(x => EnumConfig(x, false, true)).map(e => EnumGenerator(e, Some(basePath)))
+  ).map(x => EnumConfig(x, false, true, true)).map(e => EnumGenerator(e))
 
   private def internalEnumsImpl = List(
     ParseError,
     FormatError
-  ).map(x => EnumConfig(x, false, true)).map(e => EnumGenerator(e, Some(basePath)))
+  ).map(x => EnumConfig(x, false, true, false)).map(e => EnumGenerator(e))
 
   private def bitfields: List[WriteCppFiles] = Nil
 
-  private def structs: List[WriteCppFiles] = List(
-    AuthMetadata,
-    CryptoSpec,
+  private def structsAPI: List[WriteCppFiles] = List(
     CertificateEnvelope,
     CertificateBody,
     CertificateChain,
     ExtensionEnvelope,
-    SessionConstraints,
     ContainerFile
-  ).map(x => StructGenerator(x))
+  ).map(x => StructGenerator(x, true))
 
-  private def messsages: List[WriteCppFiles] = List(
+  private def structsImpl: List[WriteCppFiles] = List(
+    AuthMetadata,
+    CryptoSpec,
+    SessionConstraints
+  ).map(x => StructGenerator(x, false))
+
+  private def messages: List[WriteCppFiles] = List(
     RequestHandshakeBegin,
     ReplyHandshakeBegin,
     ReplyHandshakeError,

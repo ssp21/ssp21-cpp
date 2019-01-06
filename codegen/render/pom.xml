@@ -11,8 +11,8 @@
     <artifactId>ssp21-codegen-render</artifactId>
     <packaging>jar</packaging>
 
-    <dependencies>
-
-    </dependencies>
+    <build>
+        <sourceDirectory>src/main/scala</sourceDirectory>
+    </build>
 
 </project>

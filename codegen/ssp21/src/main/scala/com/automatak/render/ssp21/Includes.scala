@@ -1,3 +1,6 @@
+/**
+ * License TBD
+ */
 package com.automatak.render.ssp21
 
 import com.automatak.render._
@@ -6,10 +9,8 @@ import com.automatak.render.cpp._
 object Ordering {
   val system = 0
   val openpal = 1
-  val enum = 2
-  val msg = 3
-  val ssp21 = 4
-  val crypto = 5
+  val public_ssp21 = 2
+  val private_ssp21 = 3
 }
 
 case class Include(file: String, order: Int) {
@@ -23,37 +24,40 @@ object Includes {
   val uncopyable = openpal("util/Uncopyable")
   val bigEndian = openpal("serialization/BigEndian")
 
-  val parseError = enum("ParseError")
-  val formatError = enum("FormatError")
-  val function = enum("Function")
+  val parseError = enum("ParseError", false)
+  val formatError = enum("FormatError", false)
+  val function = enum("Function", false)
 
-  val errorCategory = ssp21("util/ErrorCategory")
-  val seqTypes = ssp21("util/SequenceTypes")
+  val errorCategory = ssp21("util/ErrorCategory", true)
+  val seqTypes = ssp21("util/SequenceTypes", true)
 
-  val imessage = crypto("IMessage")
-  val enumField = crypto("EnumField")
-  val integerField = crypto("IntegerField")
+  val imessage = crypto("IMessage", false)
+  val enumField = crypto("EnumField", false)
+  val integerField = crypto("IntegerField", false)
 
-  val seqField = crypto("SeqByteField")
-  val seqStructField = crypto("SeqStructField")
-  val msgFormatter = crypto("MessageFormatter")
-  val formatResult = crypto("FormatResult")
-  val msgPrinter = crypto("IMessagePrinter")
-  val msgPrinting = crypto("MessagePrinting")
-  val flagsPrinting = crypto("FlagsPrinting")
-  val msgParser = crypto("MessageParser")
+  val seqField = crypto("SeqByteField", false)
+  val seqStructField = crypto("SeqStructField", false)
+  val msgFormatter = crypto("MessageFormatter", false)
+  val formatResult = crypto("FormatResult", false)
+  val msgPrinter = crypto("IMessagePrinter", false)
+  val msgPrinting = crypto("MessagePrinting", false)
+  val flagsPrinting = crypto("FlagsPrinting", false)
+  val msgParser = crypto("MessageParser", false)
 
   val messageField = List(parseError, formatError, msgPrinter, seqTypes)
 
-  def ssp21(className: String) = Include(quoted("ssp21/%s.h".format(className)), Ordering.ssp21)
+  def enum(className: String, public: Boolean) = crypto("gen/%s".format(className), public)
 
-  def crypto(className: String) = Include(quoted("ssp21/crypto/%s.h".format(className)), Ordering.crypto)
+  def message(className: String, public: Boolean) = crypto("gen/%s".format(className), public)
 
-  def enum(className: String, path: String): Include = Include(quoted("%s%s.h".format(path, className)), Ordering.enum)
+  def crypto(className: String, public: Boolean) = ssp21("crypto/%s".format(className), public)
 
-  def enum(className: String): Include = enum(className, "ssp21/crypto/gen/")
-
-  def message(className: String) = Include(quoted("ssp21/crypto/gen/%s.h".format(className)), Ordering.msg)
+  def ssp21(className: String, public: Boolean): Include = {
+    public match {
+      case true => Include(quoted("ssp21/%s.h".format(className)), Ordering.public_ssp21)
+      case false => Include(quoted("%s.h".format(className)), Ordering.private_ssp21)
+    }
+  }
 
   def openpal(classPath: String) = Include(quoted("openpal/%s.h".format(classPath)), Ordering.openpal)
 

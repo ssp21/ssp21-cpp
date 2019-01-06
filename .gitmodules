@@ -1,12 +1,15 @@
-[submodule "deps/openpal"]
-	path = deps/openpal
-	url = https://github.com/automatak/openpal.git
-[submodule "deps/asio"]
-	path = deps/asio
-	url = https://github.com/chriskohlhoff/asio.git
 [submodule "deps/inih"]
 	path = deps/inih
 	url = https://github.com/benhoyt/inih.git
-[submodule "deps/argagg"]
-	path = deps/argagg
+[submodule "deps/openpal/openpal"]
+	path = deps/openpal/openpal
+	url = https://github.com/automatak/openpal.git
+[submodule "deps/catch/catch"]
+	path = deps/catch/catch
+	url = https://github.com/catchorg/Catch2.git
+[submodule "deps/asio/asio"]
+	path = deps/asio/asio
+	url = https://github.com/chriskohlhoff/asio.git
+[submodule "deps/argagg/argagg"]
+	path = deps/argagg/argagg
 	url = https://github.com/vietjtnguyen/argagg.git
