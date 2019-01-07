@@ -13,7 +13,18 @@ set(qix_srcs
 )
 
 add_library(qix ${qix_public_headers} ${qix_srcs})
-target_include_directories(qix PUBLIC ./include PRIVATE ./src)
+target_include_directories(qix
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+    PRIVATE ./src
+)
 target_link_libraries(qix PUBLIC ssp21 asio)
+
+#install(TARGETS qix EXPORT Ssp21Targets
+#    LIBRARY DESTINATION lib
+#    ARCHIVE DESTINATION lib
+#)
+#install(FILES ${qix_public_headers} DESTINATION include/qix)
 
 add_subdirectory(./tests)

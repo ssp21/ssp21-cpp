@@ -22,6 +22,10 @@ set(proxy_srcs
     ./Session.cpp
 )
 
-add_library(proxy ${proxy_headers} ${proxy_srcs})
+add_executable(proxy ${proxy_headers} ${proxy_srcs})
 target_include_directories(proxy PRIVATE .)
 target_link_libraries(proxy PRIVATE ssp21 sodium_backend qix asio inih)
+
+install(TARGETS proxy EXPORT Ssp21Targets
+    RUNTIME DESTINATION bin
+)

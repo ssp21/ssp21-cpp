@@ -193,7 +193,18 @@ set(ssp21_srcs
 )
 
 add_library(ssp21 ${ssp21_public_headers} ${ssp21_private_headers} ${ssp21_srcs})
-target_include_directories(ssp21 PUBLIC ./include PRIVATE ./src)
+target_include_directories(ssp21
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+    PRIVATE ./src
+)
 target_link_libraries(ssp21 PUBLIC openpal)
+
+install(TARGETS ssp21 EXPORT Ssp21Targets
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+)
+install(DIRECTORY ./include/ssp21 DESTINATION include)
 
 add_subdirectory(./tests)
