@@ -200,6 +200,7 @@ target_include_directories(ssp21
     PRIVATE ./src
 )
 target_link_libraries(ssp21 PUBLIC openpal)
+target_compile_features(ssp21 PUBLIC cxx_std_14)
 
 install(TARGETS ssp21 EXPORT Ssp21Targets
     LIBRARY DESTINATION lib
