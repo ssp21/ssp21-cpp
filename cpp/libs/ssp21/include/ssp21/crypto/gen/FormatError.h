@@ -17,7 +17,7 @@
 #define SSP21_FORMATERROR_H
 
 #include <cstdint>
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 #include "ssp21/util/ErrorCategory.h"
 
 namespace ssp21 {
@@ -38,7 +38,7 @@ inline bool any(FormatError value)
     return value != FormatError::ok;
 }
 
-struct FormatErrorSpec : private openpal::StaticOnly
+struct FormatErrorSpec : private ser4cpp::StaticOnly
 {
     typedef FormatError enum_type_t;
 

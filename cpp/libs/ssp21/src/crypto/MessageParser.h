@@ -6,12 +6,12 @@
 
 #include "ssp21/crypto/EnumField.h"
 
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 
 namespace ssp21
 {
 
-    class MessageParser : private openpal::StaticOnly
+    class MessageParser : private ser4cpp::StaticOnly
     {
 
     public:

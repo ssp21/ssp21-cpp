@@ -8,7 +8,7 @@
 #define SUITE(name) "LinkLayerTestSuite - " name
 
 using namespace ssp21;
-using namespace openpal;
+using namespace ser4cpp;
 
 TEST_CASE(SUITE("forwards open/close"))
 {
@@ -65,21 +65,18 @@ TEST_CASE(SUITE("forwards transmitted data"))
     LinkLayerFixture fix;
     fix.link.on_lower_open();
 
-    Hex message("CA FE");
+    auto message = HexConversions::from_hex("CA FE");
     IUpperLayer& link_upper = fix.link;
     ILowerLayer& link_lower = fix.link;
 
     for (int i = 0; i < 3; ++i)
     {
         REQUIRE(fix.upper.num_tx_ready == i);
-        REQUIRE(link_lower.start_tx_from_upper(message.as_rslice()));
+        REQUIRE(link_lower.start_tx_from_upper(message->as_rslice()));
         REQUIRE(fix.lower.pop_tx_message() == "CA FE");
         REQUIRE(fix.lower.num_tx_messages() == 0);
 
         REQUIRE(link_upper.on_lower_tx_ready());
         REQUIRE(fix.upper.num_tx_ready == i + 1);
     }
-
-
 }
-

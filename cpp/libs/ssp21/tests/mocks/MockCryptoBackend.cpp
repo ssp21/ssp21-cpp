@@ -1,15 +1,18 @@
 
 #include "MockCryptoBackend.h"
 
-#include "testlib/HexConversions.h"
 #include "ssp21/crypto/gen/CryptoError.h"
 #include "ssp21/crypto/Crypto.h"
 #include "ssp21/util/Exception.h"
 
 #include "CryptoFixture.h"
 
+#include "ser4cpp/util/HexConversions.h"
+
 #include <cstring>
 #include <assert.h>
+
+using namespace ser4cpp;
 
 namespace ssp21
 {
@@ -45,8 +48,8 @@ namespace ssp21
         this->assert_fixture();
         fixture->actions.push_back(CryptoAction::secure_equals);
 
-        const auto lhs_string = openpal::to_hex(lhs);
-        const auto rhs_string = openpal::to_hex(rhs);
+        const auto lhs_string = HexConversions::to_hex(lhs);
+        const auto rhs_string = HexConversions::to_hex(rhs);
 
         return lhs_string == rhs_string;
     }

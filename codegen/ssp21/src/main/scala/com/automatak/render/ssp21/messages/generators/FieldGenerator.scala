@@ -51,7 +51,7 @@ case class StructFieldGenerator(sf: StructField) extends FieldGenerator with Pas
 object U8FieldGenerator extends FieldGenerator with PassByValue {
   override def includes = Set(Includes.cstdint, Includes.integerField, Includes.bigEndian)
 
-  override def cppType: String = "IntegerField<openpal::UInt8>"
+  override def cppType: String = "IntegerField<ser4cpp::UInt8>"
 
   override def paramType: String = "uint8_t"
 
@@ -61,7 +61,7 @@ object U8FieldGenerator extends FieldGenerator with PassByValue {
 object U16FieldGenerator extends FieldGenerator with PassByValue {
   override def includes = Set(Includes.cstdint, Includes.integerField, Includes.bigEndian)
 
-  override def cppType: String = "IntegerField<openpal::UInt16>"
+  override def cppType: String = "IntegerField<ser4cpp::UInt16>"
 
   override def paramType: String = "uint16_t"
 
@@ -71,7 +71,7 @@ object U16FieldGenerator extends FieldGenerator with PassByValue {
 object U32FieldGenerator extends FieldGenerator with PassByValue {
   override def includes = Set(Includes.cstdint, Includes.integerField, Includes.bigEndian)
 
-  override def cppType: String = "IntegerField<openpal::UInt32>"
+  override def cppType: String = "IntegerField<ser4cpp::UInt32>"
 
   override def paramType: String = "uint32_t"
 
@@ -81,7 +81,7 @@ object U32FieldGenerator extends FieldGenerator with PassByValue {
 object U64FieldGenerator extends FieldGenerator with PassByValue {
   override def includes = Set(Includes.cstdint, Includes.integerField, Includes.bigEndian)
 
-  override def cppType: String = "IntegerField<openpal::UInt64>"
+  override def cppType: String = "IntegerField<ser4cpp::UInt64>"
 
   override def paramType: String = "uint64_t"
 

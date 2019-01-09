@@ -22,7 +22,7 @@
 
 namespace ssp21 {
 
-struct ReplyHandshakeBegin final : public IMessage, private openpal::Uncopyable
+struct ReplyHandshakeBegin final : public IMessage, private ser4cpp::Uncopyable
 {
     ReplyHandshakeBegin();
 

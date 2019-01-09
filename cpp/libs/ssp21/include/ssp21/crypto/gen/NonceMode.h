@@ -17,7 +17,7 @@
 #define SSP21_NONCEMODE_H
 
 #include <cstdint>
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 
 namespace ssp21 {
 
@@ -34,7 +34,7 @@ enum class NonceMode : uint8_t
     undefined = 0xFF
 };
 
-struct NonceModeSpec : private openpal::StaticOnly
+struct NonceModeSpec : private ser4cpp::StaticOnly
 {
     typedef NonceMode enum_type_t;
 

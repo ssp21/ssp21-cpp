@@ -5,7 +5,7 @@
 #include "ssp21/crypto/gen/FormatError.h"
 #include "ssp21/crypto/IMessagePrinter.h"
 
-#include "openpal/serialization/BigEndian.h"
+#include "ser4cpp/serialization/BigEndian.h"
 
 namespace ssp21
 {
@@ -36,7 +36,7 @@ namespace ssp21
         ParseError read(seq32_t& input)
         {
             uint8_t raw_value;
-            if (!openpal::BigEndian::read(input, raw_value)) return ParseError::insufficient_bytes;
+            if (!ser4cpp::BigEndian::read(input, raw_value)) return ParseError::insufficient_bytes;
 
             auto enum_value = Spec::from_type(raw_value);
 
@@ -52,7 +52,7 @@ namespace ssp21
 
         FormatError write(wseq32_t& output) const
         {
-            return openpal::BigEndian::write(output, Spec::to_type(value)) ? FormatError::ok : FormatError::insufficient_space;
+            return ser4cpp::BigEndian::write(output, Spec::to_type(value)) ? FormatError::ok : FormatError::insufficient_space;
         }
 
         void print(const char* name, IMessagePrinter& printer) const

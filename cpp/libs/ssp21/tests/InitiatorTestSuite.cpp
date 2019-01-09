@@ -6,7 +6,6 @@
 #define SUITE(name) "InitiatorTestSuite - " name
 
 using namespace ssp21;
-using namespace openpal;
 
 using HandshakeState = Initiator::IHandshakeState::Enum;
 
@@ -138,10 +137,10 @@ TEST_CASE(SUITE("triggers session renegotiation after timeout"))
     REQUIRE(fix.exe->advance_to_next_timer());
     REQUIRE(fix.exe->run_many() == 1);
 
-    const auto actual_elapsed_ms = fix.exe->get_time().milliseconds - before_time.milliseconds;
+    const auto actual_elapsed = fix.exe->get_time() - before_time;
     const auto expected_elapsed_ms = consts::crypto::initiator::default_session_time_renegotiation_trigger_ms;
 
-    REQUIRE(actual_elapsed_ms == expected_elapsed_ms);
+    REQUIRE(actual_elapsed == std::chrono::milliseconds(expected_elapsed_ms));
 
     test_request_handshake_begin(fix);
 }

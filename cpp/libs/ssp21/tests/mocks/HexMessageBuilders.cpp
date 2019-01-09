@@ -1,9 +1,8 @@
 
 #include "HexMessageBuilders.h"
 
-#include "openpal/container/StaticBuffer.h"
-
-#include "testlib/HexConversions.h"
+#include "ser4cpp/container/StaticBuffer.h"
+#include "ser4cpp/util/HexConversions.h"
 
 #include "crypto/gen/RequestHandshakeBegin.h"
 #include "crypto/gen/ReplyHandshakeBegin.h"
@@ -17,8 +16,6 @@
 #include <vector>
 #include <assert.h>
 
-using namespace openpal;
-
 namespace ssp21
 {
     namespace hex
@@ -26,23 +23,23 @@ namespace ssp21
 
         std::string write_message(const IMessage& msg)
         {
-            openpal::StaticBuffer<uint32_t, 1024> buffer;
+            ser4cpp::StaticBuffer<uint32_t, 1024> buffer;
             auto dest = buffer.as_wseq();
             auto result = msg.write(dest);
 
             assert(!result.is_error());
 
-            return to_hex(result.written);
+            return ser4cpp::HexConversions::to_hex(result.written);
         }
 
         std::string repeat(uint8_t value, uint8_t count)
         {
-            return openpal::repeat_hex(value, count);
+            return ser4cpp::HexConversions::repeat_hex(value, count);
         }
 
         std::string func_to_hex(Function func)
         {
-            return byte_to_hex(FunctionSpec::to_type(func));
+            return ser4cpp::HexConversions::byte_to_hex(FunctionSpec::to_type(func));
         }
 
         std::string request_handshake_begin(
@@ -148,9 +145,9 @@ namespace ssp21
         {
             const auto max = consts::link::max_config_payload_size;
 
-            Hex data(payload);
-            if (data.as_rslice().length() > max) throw std::logic_error("payload length exceeds maximum");
-            const auto payload_u16 = data.as_rslice().take(max);
+            const auto data = ser4cpp::HexConversions::from_hex(payload);
+            if (data->as_rslice().length() > max) throw std::logic_error("payload length exceeds maximum");
+            const auto payload_u16 = data->as_rslice().take(max);
 
             LinkFrameWriter writer(openpal::Logger::empty(), Addresses(dest, src), max);
 
@@ -158,7 +155,7 @@ namespace ssp21
 
             if (result.is_error()) throw std::logic_error("error writing frame");
 
-            return to_hex(result.frame);
+            return ser4cpp::HexConversions::to_hex(result.frame);
         }
 
     }

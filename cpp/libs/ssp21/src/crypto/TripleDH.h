@@ -5,7 +5,7 @@
 #include "ssp21/crypto/BufferTypes.h"
 #include "ssp21/crypto/CryptoTypedefs.h"
 #include "ssp21/crypto/StaticKeys.h"
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 
 
 namespace ssp21
@@ -14,7 +14,7 @@ namespace ssp21
     /**
     * Computes a "triple DH" usign the supplied hash function and keys
     */
-    class TripleDH : public openpal::Uncopyable
+    class TripleDH : public ser4cpp::Uncopyable
     {
 
     public:

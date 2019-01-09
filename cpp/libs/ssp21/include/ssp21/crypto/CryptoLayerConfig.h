@@ -46,10 +46,10 @@ namespace ssp21
         struct Params
         {
             /// How long the initiator will will for responses
-            openpal::TimeDuration response_timeout = consts::crypto::initiator::default_response_timeout;
+            exe4cpp::duration_t response_timeout = consts::crypto::initiator::default_response_timeout;
 
             /// How long the initiator will wait before retrying a failed timeout
-            openpal::TimeDuration retry_timeout = consts::crypto::initiator::default_retry_timeout;
+            exe4cpp::duration_t retry_timeout = consts::crypto::initiator::default_retry_timeout;
 
             /// The initiator will begin renegotiating when the session time reaches this value
             uint32_t session_time_renegotiation_trigger_ms = consts::crypto::initiator::default_session_time_renegotiation_trigger_ms;

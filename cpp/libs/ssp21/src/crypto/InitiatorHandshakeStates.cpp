@@ -6,14 +6,12 @@
 
 #include "openpal/logging/LogMacros.h"
 
-using namespace openpal;
-
 namespace ssp21
 {
 
     // -------- Idle --------
 
-    Initiator::IHandshakeState* InitiatorHandshakeStates::Idle::on_handshake_required(Initiator& ctx, const Timestamp& now)
+    Initiator::IHandshakeState* InitiatorHandshakeStates::Idle::on_handshake_required(Initiator& ctx, const exe4cpp::steady_time_t& now)
     {
         if (!ctx.lower->is_tx_ready())
         {
@@ -70,7 +68,7 @@ namespace ssp21
 
     // -------- WaitForBeginReply --------
 
-    Initiator::IHandshakeState* InitiatorHandshakeStates::WaitForBeginReply::on_reply_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const Timestamp& now)
+    Initiator::IHandshakeState* InitiatorHandshakeStates::WaitForBeginReply::on_reply_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const exe4cpp::steady_time_t& now)
     {
         ctx.response_and_retry_timer.cancel();
 
@@ -91,7 +89,7 @@ namespace ssp21
         return WaitForAuthReply::get();
     }
 
-    Initiator::IHandshakeState* InitiatorHandshakeStates::WaitForBeginReply::on_error_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const Timestamp& now)
+    Initiator::IHandshakeState* InitiatorHandshakeStates::WaitForBeginReply::on_error_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const exe4cpp::steady_time_t& now)
     {
         ctx.response_and_retry_timer.cancel();
         FORMAT_LOG_BLOCK(ctx.logger, levels::error, "responder handshake error: %s", HandshakeErrorSpec::to_string(msg.handshake_error));
@@ -108,7 +106,7 @@ namespace ssp21
 
     // -------- WaitForAuthReply --------
 
-    Initiator::IHandshakeState* InitiatorHandshakeStates::WaitForAuthReply::on_auth_message(Initiator& ctx, const SessionData& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
+    Initiator::IHandshakeState* InitiatorHandshakeStates::WaitForAuthReply::on_auth_message(Initiator& ctx, const SessionData& msg, const seq32_t& msg_bytes, const exe4cpp::steady_time_t& now)
     {
         ctx.response_and_retry_timer.cancel();
 
@@ -129,12 +127,8 @@ namespace ssp21
         ctx.handshake_required = false;
 
         // the absolute time at which a renegotation should be triggered
-        const Timestamp session_timeout_abs_time(ctx.sessions.active->get_session_start().milliseconds + ctx.params.session_time_renegotiation_trigger_ms);
-
-        ctx.session_timeout_timer.restart(session_timeout_abs_time, [&ctx]()
-        {
-            ctx.on_handshake_required();
-        });
+        const exe4cpp::steady_time_t session_timeout_abs_time(ctx.sessions.active->get_session_start() + std::chrono::milliseconds(ctx.params.session_time_renegotiation_trigger_ms));
+        ctx.start_session_timer(session_timeout_abs_time);        
 
         ctx.upper->on_lower_open();
 
@@ -149,7 +143,7 @@ namespace ssp21
     }
 
 
-    Initiator::IHandshakeState* InitiatorHandshakeStates::WaitForAuthReply::on_error_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const Timestamp& now)
+    Initiator::IHandshakeState* InitiatorHandshakeStates::WaitForAuthReply::on_error_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const exe4cpp::steady_time_t& now)
     {
         ctx.response_and_retry_timer.cancel();
         FORMAT_LOG_BLOCK(ctx.logger, levels::error, "responder handshake error: %s", HandshakeErrorSpec::to_string(msg.handshake_error));

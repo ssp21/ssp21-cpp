@@ -20,7 +20,7 @@ namespace ssp21
             return std::make_shared<QKDResponderHandshake>(logger, key_lookup);
         }
 
-        virtual IResponderHandshake::Result process(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now, IFrameWriter& writer, Session& session) override;
+        virtual IResponderHandshake::Result process(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now, IFrameWriter& writer, Session& session) override;
 
     private:
 

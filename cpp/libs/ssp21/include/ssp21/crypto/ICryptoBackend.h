@@ -4,7 +4,7 @@
 
 #include "ssp21/crypto/BufferTypes.h"
 
-#include <openpal/util/Uncopyable.h>
+#include "ser4cpp/util/Uncopyable.h"
 
 #include <system_error>
 #include <initializer_list>
@@ -14,7 +14,7 @@ namespace ssp21
     /**
     * Pluggable crypto backend
     */
-    class ICryptoBackend : private openpal::Uncopyable
+    class ICryptoBackend : private ser4cpp::Uncopyable
     {
 
     public:

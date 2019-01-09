@@ -35,19 +35,19 @@ namespace ssp21
 
         // write key identifier to the buffer
         auto dest = this->key_id_buffer.as_wseq();
-        openpal::BigEndian::write(dest, record->id);
+        ser4cpp::BigEndian::write(dest, record->id);
 
         // The mode data is the key identifier
         return InitResult::success(seq32_t::empty(), this->key_id_buffer.as_seq());
     }
 
-    void QKDInitiatorHandshake::finalize_request_tx(const seq32_t& request_data, const openpal::Timestamp& now)
+    void QKDInitiatorHandshake::finalize_request_tx(const seq32_t& request_data, const exe4cpp::steady_time_t& now)
     {
         this->time_request_tx = now;
         this->algorithms.handshake.hash({ request_data }, this->handshake_hash);
     }
 
-    bool QKDInitiatorHandshake::initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& reply_data, const SessionLimits& limits, const openpal::Timestamp& now, Session& session)
+    bool QKDInitiatorHandshake::initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& reply_data, const SessionLimits& limits, const exe4cpp::steady_time_t& now, Session& session)
     {
         if (!this->key)
         {
@@ -88,12 +88,12 @@ namespace ssp21
         }
 
         // estimate the session initialization time
-        const auto elapsed_ms = now.milliseconds - this->time_request_tx.milliseconds;
-        const auto session_start_time = openpal::Timestamp(now.milliseconds - (elapsed_ms / 2)); // estimate
+        const auto elapsed_ms = now - this->time_request_tx;
+        const auto session_start_time = now - (elapsed_ms / 2); // estimate
 
         return session.initialize(
                    this->algorithms.session,
-                   Session::Param(session_start_time, limits.max_nonce_value, limits.max_session_time_ms),
+                   Session::Param(session_start_time, limits.max_nonce_value, std::chrono::milliseconds(limits.max_session_time_ms)),
                    session_keys
                );
 

@@ -4,14 +4,13 @@
 
 #include "ssp21/crypto/VLength.h"
 
-#include "openpal/container/StaticBuffer.h"
-#include "testlib/HexConversions.h"
-#include "testlib/Hex.h"
+#include "ser4cpp/container/StaticBuffer.h"
+#include "ser4cpp/util/HexConversions.h"
 
 #define SUITE(name) "VLenthTestSuite - " name
 
 using namespace ssp21;
-using namespace openpal;
+using namespace ser4cpp;
 
 void test_encoding_decoding(uint32_t number, const std::string& hex)
 {
@@ -19,13 +18,13 @@ void test_encoding_decoding(uint32_t number, const std::string& hex)
     auto dest = buffer.as_wseq();
 
     REQUIRE(VLength::write(number, dest) == FormatError::ok);
-    const auto length = buffer.size() - dest.length();
+    const auto length = buffer.length() - dest.length();
 
     //ensure that the size written is what the size_in_bytes() function tells us it would be
     REQUIRE(length == VLength::size_in_bytes(number));
 
     const auto bytes = buffer.as_seq(length);
-    REQUIRE(to_hex(bytes) == hex);
+    REQUIRE(HexConversions::to_hex(bytes) == hex);
 
     auto remainder = bytes;
     uint32_t parsed_value;
@@ -35,12 +34,12 @@ void test_encoding_decoding(uint32_t number, const std::string& hex)
 
 void test_decoding_failure(const std::string& data, ParseError expected_err)
 {
-    Hex hex(data);
-    auto remainder = hex.as_rslice();
+    auto input = HexConversions::from_hex(data);
+    auto slice = input->as_rslice();
     uint32_t parsed_value;
 
-    const auto err = VLength::read(parsed_value, remainder);
-    REQUIRE(remainder.is_empty());
+    const auto err = VLength::read(parsed_value, slice);
+    REQUIRE(slice.is_empty());
     REQUIRE(err == expected_err);
 }
 

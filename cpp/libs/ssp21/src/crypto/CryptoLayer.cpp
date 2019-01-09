@@ -14,7 +14,7 @@ namespace ssp21
         const SessionConfig& session_config,
         const openpal::Logger& logger,
         const std::shared_ptr<IFrameWriter>& frame_writer,
-        const std::shared_ptr<openpal::IExecutor>& executor
+        const std::shared_ptr<exe4cpp::IExecutor>& executor
     ) :
         logger(logger),
         frame_writer(frame_writer),
@@ -68,7 +68,7 @@ namespace ssp21
     }
 
     template <class MsgType>
-    bool CryptoLayer::handle_message(const seq32_t& message, const openpal::Timestamp& now)
+    bool CryptoLayer::handle_message(const seq32_t& message, const exe4cpp::steady_time_t& now)
     {
         MsgType msg;
         auto err = msg.read(message);
@@ -249,7 +249,7 @@ namespace ssp21
         return this->lower->start_tx_from_upper(frame);
     }
 
-    void CryptoLayer::on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+    void CryptoLayer::on_message(const SessionData& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now)
     {
         // differentiate
         if (msg.metadata.nonce == 0)
@@ -262,7 +262,7 @@ namespace ssp21
         }
     }
 
-    void CryptoLayer::on_session_data(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+    void CryptoLayer::on_session_data(const SessionData& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now)
     {
         std::error_code ec;
         const auto payload = this->sessions.active->validate_session_data(msg, now, this->payload_buffer.as_wslice(), ec);

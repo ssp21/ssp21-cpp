@@ -4,7 +4,7 @@
 
 #include "IFrameWriter.h"
 
-#include "openpal/container/Buffer.h"
+#include "ser4cpp/container/Buffer.h"
 
 #include "ssp21/link/LinkConstants.h"
 #include "ssp21/link/Addresses.h"
@@ -39,7 +39,7 @@ namespace ssp21
 
         Addresses addr;
         uint16_t max_payload_size;
-        openpal::Buffer frame_buffer;
+        ser4cpp::Buffer frame_buffer;
 
     };
 

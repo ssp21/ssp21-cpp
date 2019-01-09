@@ -4,7 +4,7 @@
 #define SSP21_MESSAGEONLYFRAMEWRITER_H
 
 #include "IFrameWriter.h"
-#include "openpal/container/Buffer.h"
+#include "ser4cpp/container/Buffer.h"
 #include "ssp21/link/LinkConstants.h"
 
 namespace ssp21
@@ -40,7 +40,7 @@ namespace ssp21
         }
 
         uint16_t max_payload_size;
-        openpal::Buffer buffer;
+        ser4cpp::Buffer buffer;
     };
 
 

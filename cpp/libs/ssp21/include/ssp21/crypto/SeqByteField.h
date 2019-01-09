@@ -2,7 +2,7 @@
 #ifndef SSP21_SEQBYTEFIELD_H
 #define SSP21_SEQBYTEFIELD_H
 
-#include "openpal/serialization/BigEndian.h"
+#include "ser4cpp/serialization/BigEndian.h"
 
 #include "ssp21/util/SequenceTypes.h"
 

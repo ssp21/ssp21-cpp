@@ -27,9 +27,9 @@ namespace ssp21
 
         virtual InitResult initialize_new_handshake() override;
 
-        virtual void finalize_request_tx(const seq32_t& request_data, const openpal::Timestamp& now) override;
+        virtual void finalize_request_tx(const seq32_t& request_data, const exe4cpp::steady_time_t& now) override;
 
-        virtual bool initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const SessionLimits& limits, const openpal::Timestamp& now, Session& session) override;
+        virtual bool initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const SessionLimits& limits, const exe4cpp::steady_time_t& now, Session& session) override;
 
         virtual HandshakeMode get_handshake_mode() const override
         {
@@ -56,10 +56,10 @@ namespace ssp21
         std::shared_ptr<const SymmetricKey> key;
 
         // buffer that stores the key identifier
-        openpal::StaticBuffer<uint32_t, openpal::UInt64::size> key_id_buffer;
+        ser4cpp::StaticBuffer<uint32_t, ser4cpp::UInt64::size> key_id_buffer;
 
         // time that the request was transmitted
-        openpal::Timestamp time_request_tx;
+        exe4cpp::steady_time_t time_request_tx;
 
         // running hash value of first 2 handshake messages (h)
         HashOutput handshake_hash;

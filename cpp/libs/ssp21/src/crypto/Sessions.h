@@ -2,7 +2,7 @@
 #ifndef SSP21_SESSIONS_H
 #define SSP21_SESSIONS_H
 
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 #include "crypto/Session.h"
 
 namespace ssp21
@@ -10,7 +10,7 @@ namespace ssp21
     /**
     	Structure that contains both a pending and an active session
     */
-    class Sessions final : private openpal::Uncopyable
+    class Sessions final : private ser4cpp::Uncopyable
     {
 
     public:

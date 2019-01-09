@@ -6,7 +6,7 @@
 #define SUITE(name) "ResponderTestSuite - " name
 
 using namespace ssp21;
-using namespace openpal;
+using namespace ser4cpp;
 
 // helper methods
 void test_begin_handshake_success(ResponderFixture& fix, uint16_t max_nonce = consts::crypto::initiator::default_max_nonce, uint32_t max_session_time = consts::crypto::initiator::default_max_session_time_ms);
@@ -168,7 +168,7 @@ TEST_CASE(SUITE("auth fails if TTL expired"))
 
     test_init_session_success(fix);
 
-    fix.exe->advance_time(TimeDuration::milliseconds(3));
+    fix.exe->advance_time(std::chrono::milliseconds(3));
 
     const auto tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
     fix.lower.enqueue_message(hex::session_data(1, 2, "AA", tag)); // session TTL of 2
@@ -217,7 +217,7 @@ TEST_CASE(SUITE("can authenticate multiple messages"))
 
     for (uint8_t i = 0; i < 3; ++i)
     {
-        const auto data = to_hex(&i, 1);
+        const auto data = HexConversions::to_hex(&i, 1);
         const auto tag = hex::repeat(0xFF, ssp21::consts::crypto::trunc16);
 
         fix.lower.enqueue_message(hex::session_data(i + 1, 0, data, tag));
@@ -232,18 +232,20 @@ TEST_CASE(SUITE("can authenticate multiple messages"))
 TEST_CASE(SUITE("won't transmit if offline"))
 {
     ResponderFixture fix;
-    Hex msg("");
+    auto msg = HexConversions::from_hex("");
+    auto slice = msg->as_rslice();
 
-    REQUIRE_FALSE(fix.responder.start_tx_from_upper(msg));
+    REQUIRE_FALSE(fix.responder.start_tx_from_upper(slice));
 }
 
 TEST_CASE(SUITE("won't transmit if no session"))
 {
     ResponderFixture fix;
     fix.responder.on_lower_open();
-    Hex msg("");
+    auto msg = HexConversions::from_hex("");
+    auto slice = msg->as_rslice();
 
-    REQUIRE_FALSE(fix.responder.start_tx_from_upper(msg));
+    REQUIRE_FALSE(fix.responder.start_tx_from_upper(slice));
 }
 
 TEST_CASE(SUITE("can transmit multiple messages if session is initialized"))
@@ -256,8 +258,9 @@ TEST_CASE(SUITE("can transmit multiple messages if session is initialized"))
 
     for (uint16_t i = 0; i < 3; ++i)
     {
-        Hex msg(payload);
-        REQUIRE(fix.responder.start_tx_from_upper(msg));
+        auto msg = HexConversions::from_hex(payload);
+        auto slice = msg->as_rslice();
+        REQUIRE(fix.responder.start_tx_from_upper(slice));
 
         const auto expected = hex::session_data(i + 1, consts::crypto::default_ttl_pad_ms, payload, hex::repeat(0xFF, 16));
         REQUIRE(fix.lower.pop_tx_message() == expected);
@@ -278,8 +281,10 @@ TEST_CASE(SUITE("closes upper layer if nonce exceeds configured maximum"))
 
     const auto payload = "CA FE";
 
-    Hex msg(payload);
-    REQUIRE(fix.responder.start_tx_from_upper(msg));
+    auto msg = HexConversions::from_hex(payload);
+    auto slice = msg->as_rslice();
+
+    REQUIRE(fix.responder.start_tx_from_upper(slice));
     REQUIRE(fix.upper.is_empty());
     REQUIRE_FALSE(fix.upper.get_is_open());
 }
@@ -294,14 +299,15 @@ TEST_CASE(SUITE("defers transmission if lower layer is not tx_ready"))
 
     fix.lower.set_tx_ready(false);
 
-    Hex msg(payload);
-    REQUIRE(fix.responder.start_tx_from_upper(msg));
+    auto msg = HexConversions::from_hex(payload);
+    auto slice = msg->as_rslice();
+
+    REQUIRE(fix.responder.start_tx_from_upper(slice));
     REQUIRE(fix.lower.num_tx_messages() == 0);
     REQUIRE(fix.upper.num_tx_ready == 0);
 
     fix.lower.set_tx_ready(true);
     fix.responder.on_lower_tx_ready();
-
 
     const auto expected = hex::session_data(1, consts::crypto::default_ttl_pad_ms, payload, hex::repeat(0xFF, 16));
     REQUIRE(fix.lower.pop_tx_message() == expected);

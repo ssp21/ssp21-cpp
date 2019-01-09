@@ -17,7 +17,7 @@
 #define SSP21_PUBLICKEYTYPE_H
 
 #include <cstdint>
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 
 namespace ssp21 {
 
@@ -34,7 +34,7 @@ enum class PublicKeyType : uint8_t
     undefined = 0xFF
 };
 
-struct PublicKeyTypeSpec : private openpal::StaticOnly
+struct PublicKeyTypeSpec : private ser4cpp::StaticOnly
 {
     typedef PublicKeyType enum_type_t;
 

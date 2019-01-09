@@ -5,8 +5,6 @@
 
 #include "crypto/TripleDH.h"
 
-using namespace openpal;
-
 namespace ssp21
 {
     IInitiatorHandshake::InitResult PublicKeyInitiatorHandshake::initialize_new_handshake()
@@ -15,20 +13,20 @@ namespace ssp21
         return InitResult::success(this->local_ephemeral_keys.public_key.as_seq(), this->cert_handler->certificate_data());
     }
 
-    void PublicKeyInitiatorHandshake::finalize_request_tx(const seq32_t& request_data, const openpal::Timestamp& now)
+    void PublicKeyInitiatorHandshake::finalize_request_tx(const seq32_t& request_data, const exe4cpp::steady_time_t& now)
     {
         this->time_request_tx = now;
         this->algorithms.handshake.hash({ request_data }, this->handshake_hash);
     }
 
-    bool PublicKeyInitiatorHandshake::initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const SessionLimits& limits, const Timestamp& now, Session& session)
+    bool PublicKeyInitiatorHandshake::initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const SessionLimits& limits, const exe4cpp::steady_time_t& now, Session& session)
     {
         // extract the remote public key
         seq32_t remote_public_key;
         const auto err = this->cert_handler->validate(msg.handshake_data, remote_public_key);
         if (any(err))
         {
-            FORMAT_LOG_BLOCK(this->logger, levels::error, "error validating certificate data: %s", HandshakeErrorSpec::to_string(err));
+            FORMAT_LOG_BLOCK(this->logger, openpal::levels::error, "error validating certificate data: %s", HandshakeErrorSpec::to_string(err));
             return false;
         }
 
@@ -50,7 +48,7 @@ namespace ssp21
 
         if (ec)
         {
-            FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error generating input key material: %s", ec.message().c_str());
+            FORMAT_LOG_BLOCK(this->logger, openpal::levels::warn, "Error generating input key material: %s", ec.message().c_str());
             return false;
         }
 
@@ -66,17 +64,17 @@ namespace ssp21
 
         if (now < this->time_request_tx)
         {
-            SIMPLE_LOG_BLOCK(this->logger, levels::error, "clock rollback detected");
+            SIMPLE_LOG_BLOCK(this->logger, openpal::levels::error, "clock rollback detected");
             return false;
         }
 
         // estimate the session initialization time
-        const auto elapsed_ms = now.milliseconds - this->time_request_tx.milliseconds;
-        const auto session_start_time = openpal::Timestamp(now.milliseconds - (elapsed_ms / 2)); // estimate
+        const auto elapsed_ms = now - this->time_request_tx;
+        const auto session_start_time = now - (elapsed_ms / 2); // estimate
 
         return session.initialize(
                    this->algorithms.session,
-                   Session::Param(session_start_time, limits.max_nonce_value, limits.max_session_time_ms),
+                   Session::Param(session_start_time, limits.max_nonce_value, std::chrono::milliseconds(limits.max_session_time_ms)),
                    session_keys
                );
     }

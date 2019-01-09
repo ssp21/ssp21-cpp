@@ -14,7 +14,7 @@ namespace ssp21
 
         public:
 
-            virtual IHandshakeState* on_handshake_required(Initiator& ctx, const openpal::Timestamp& now) override;
+            virtual IHandshakeState* on_handshake_required(Initiator& ctx, const exe4cpp::steady_time_t& now) override;
 
             static Initiator::IHandshakeState* get()
             {
@@ -29,8 +29,8 @@ namespace ssp21
 
         public:
 
-            virtual IHandshakeState* on_reply_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) override;
-            virtual IHandshakeState* on_error_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) override;
+            virtual IHandshakeState* on_reply_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const exe4cpp::steady_time_t& now) override;
+            virtual IHandshakeState* on_error_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const exe4cpp::steady_time_t& now) override;
             virtual IHandshakeState* on_response_timeout(Initiator& ctx) override;
 
             static Initiator::IHandshakeState* get()
@@ -44,9 +44,9 @@ namespace ssp21
         {
             WaitForAuthReply() : Initiator::IHandshakeState(Initiator::IHandshakeState::Enum::wait_for_auth_reply) {}
 
-            virtual IHandshakeState* on_error_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) override;
+            virtual IHandshakeState* on_error_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const exe4cpp::steady_time_t& now) override;
 
-            virtual IHandshakeState* on_auth_message(Initiator& ctx, const SessionData& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now) override;
+            virtual IHandshakeState* on_auth_message(Initiator& ctx, const SessionData& msg, const seq32_t& msg_bytes, const exe4cpp::steady_time_t& now) override;
 
             virtual IHandshakeState* on_response_timeout(Initiator& ctx) override;
 

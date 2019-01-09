@@ -17,7 +17,7 @@
 #define SSP21_HANDSHAKEMODE_H
 
 #include <cstdint>
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 
 namespace ssp21 {
 
@@ -38,7 +38,7 @@ enum class HandshakeMode : uint8_t
     undefined = 0xFF
 };
 
-struct HandshakeModeSpec : private openpal::StaticOnly
+struct HandshakeModeSpec : private ser4cpp::StaticOnly
 {
     typedef HandshakeMode enum_type_t;
 

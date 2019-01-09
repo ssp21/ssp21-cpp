@@ -8,11 +8,7 @@
 #include "mocks/CryptoFixture.h"
 #include "mocks/MockCertificateData.h"
 
-#include "testlib/Hex.h"
-#include "testlib/HexConversions.h"
-
 using namespace ssp21;
-using namespace openpal;
 
 HandshakeError test_chain_validation(uint8_t anchor_signing_level, CertificateChain& chain, HandshakeError expected_result, std::initializer_list<CryptoAction> actions);
 

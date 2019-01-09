@@ -17,7 +17,7 @@
 #define SSP21_PARSEERROR_H
 
 #include <cstdint>
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 
 namespace ssp21 {
 
@@ -49,7 +49,7 @@ inline bool any(ParseError value)
     return value != ParseError::ok;
 }
 
-struct ParseErrorSpec : private openpal::StaticOnly
+struct ParseErrorSpec : private ser4cpp::StaticOnly
 {
     typedef ParseError enum_type_t;
 

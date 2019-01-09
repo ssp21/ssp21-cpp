@@ -13,7 +13,7 @@ namespace ssp21
         const ResponderConfig& config,
         const openpal::Logger& logger,
         const std::shared_ptr<IFrameWriter>& frame_writer,
-        const std::shared_ptr<openpal::IExecutor>& executor,
+        const std::shared_ptr<exe4cpp::IExecutor>& executor,
         const std::shared_ptr<IResponderHandshake>& handshake
     ) :
         CryptoLayer(
@@ -65,7 +65,7 @@ namespace ssp21
         }
     }
 
-    void Responder::on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_msg, const openpal::Timestamp& now)
+    void Responder::on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_msg, const exe4cpp::steady_time_t& now)
     {
         if (msg.version != consts::crypto::protocol_version)
         {
@@ -89,7 +89,7 @@ namespace ssp21
 
     }
 
-    void Responder::on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+    void Responder::on_auth_session(const SessionData& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now)
     {
         if (!this->sessions.pending->is_valid())
         {

@@ -17,7 +17,7 @@
 #define SSP21_CONTAINERENTRYTYPE_H
 
 #include <cstdint>
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 
 namespace ssp21 {
 
@@ -42,7 +42,7 @@ enum class ContainerEntryType : uint8_t
     undefined = 0xFF
 };
 
-struct ContainerEntryTypeSpec : private openpal::StaticOnly
+struct ContainerEntryTypeSpec : private ser4cpp::StaticOnly
 {
     typedef ContainerEntryType enum_type_t;
 

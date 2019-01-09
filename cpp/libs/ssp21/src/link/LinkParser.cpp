@@ -1,19 +1,19 @@
 
 #include "link/LinkParser.h"
 
-#include "openpal/util/Comparisons.h"
-#include "openpal/serialization/BigEndian.h"
+#include "ser4cpp/util/Comparisons.h"
+#include "ser4cpp/serialization/BigEndian.h"
 
 #include "link/CastagnoliCRC32.h"
 #include "ssp21/link/LinkConstants.h"
 
-using namespace openpal;
+#include <algorithm>
 
 namespace ssp21
 {
     LinkParser::Context::Context(uint16_t max_payload_length, IReporter& reporter) :
         max_payload_length(
-            min<uint32_t>(
+            ser4cpp::min<uint32_t>(
                 max_payload_length,
                 consts::link::max_config_payload_size
             )
@@ -79,7 +79,7 @@ namespace ssp21
             input.advance(1);
             if (value == consts::link::sync1)
             {
-                ctx.buffer[0] = value;
+                ctx.buffer.as_wslice()[0] = value;
                 return State::wait_sync2();
             }
         }
@@ -93,7 +93,7 @@ namespace ssp21
         input.advance(1);
         if (value == consts::link::sync2)
         {
-            ctx.buffer[1] = value;
+            ctx.buffer.as_wslice()[1] = value;
             return State::wait_header(2);
         }
         else
@@ -115,7 +115,7 @@ namespace ssp21
 
         uint32_t actual_crc = 0;
 
-        BigEndian::read(
+        ser4cpp::BigEndian::read(
             header_start,
             ctx.result.destination,
             ctx.result.source,
@@ -164,7 +164,7 @@ namespace ssp21
         auto crcb_start = ctx.buffer.as_rslice().skip(consts::link::header_total_size + ctx.payload_length);
 
         uint32_t actual_crc = 0;
-        UInt32::read_from(crcb_start, actual_crc);
+        ser4cpp::UInt32::read_from(crcb_start, actual_crc);
 
         if (expected_crc != actual_crc)
         {
@@ -178,7 +178,7 @@ namespace ssp21
     uint32_t LinkParser::transfer_data(const State& state, Context& ctx, seq32_t& input, uint32_t max_bytes_to_buffer)
     {
         const auto remaining = max_bytes_to_buffer - state.num_buffered;
-        const auto num_to_copy = min<uint32_t>(remaining, input.length());
+        const auto num_to_copy = ser4cpp::min<uint32_t>(remaining, input.length());
         auto dest = ctx.buffer.as_wslice().skip(state.num_buffered);
 
         dest.move_from(input.take(num_to_copy));

@@ -13,3 +13,9 @@
 [submodule "deps/inih/inih"]
 	path = deps/inih/inih
 	url = https://github.com/benhoyt/inih.git
+[submodule "deps/ser4cpp"]
+	path = deps/ser4cpp
+	url = https://github.com/automatak/ser4cpp.git
+[submodule "deps/exe4cpp"]
+	path = deps/exe4cpp
+	url = https://github.com/automatak/exe4cpp.git

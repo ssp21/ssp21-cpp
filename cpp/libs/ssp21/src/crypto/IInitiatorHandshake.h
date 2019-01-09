@@ -7,6 +7,7 @@
 #include "crypto/gen/ReplyHandshakeBegin.h"
 #include "crypto/Session.h"
 #include "ssp21/crypto/gen/HandshakeMode.h"
+#include "ser4cpp/util/Uncopyable.h"
 
 
 namespace ssp21
@@ -15,7 +16,7 @@ namespace ssp21
     /**
     * Interface that defines what a concrete initiator handshake needs to do
     */
-    class IInitiatorHandshake : private openpal::Uncopyable
+    class IInitiatorHandshake : private ser4cpp::Uncopyable
     {
 
     public:
@@ -67,7 +68,7 @@ namespace ssp21
         * @param request_data The seralized data of the RequestHandshakeBegin message used to initialize the handshake hash
         * @param the time request transmission started so that the latency can be measured for the response
         */
-        virtual void finalize_request_tx(const seq32_t& request_data, const openpal::Timestamp& now) = 0;
+        virtual void finalize_request_tx(const seq32_t& request_data, const exe4cpp::steady_time_t& now) = 0;
 
         /**
         * Process the response to the message, and if successful, initialize the Session
@@ -79,7 +80,7 @@ namespace ssp21
         * @param session the Session to initialize
         * @return True if successful and the session was initialized, false otherwise
         */
-        virtual bool initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& response_data, const SessionLimits& limits, const openpal::Timestamp& now, Session& session) = 0;
+        virtual bool initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& response_data, const SessionLimits& limits, const exe4cpp::steady_time_t& now, Session& session) = 0;
 
         /**
         * @return the handshake mode enumeration that this class implements

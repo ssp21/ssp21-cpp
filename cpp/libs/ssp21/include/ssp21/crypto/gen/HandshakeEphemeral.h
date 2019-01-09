@@ -17,7 +17,7 @@
 #define SSP21_HANDSHAKEEPHEMERAL_H
 
 #include <cstdint>
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 
 namespace ssp21 {
 
@@ -36,7 +36,7 @@ enum class HandshakeEphemeral : uint8_t
     undefined = 0xFF
 };
 
-struct HandshakeEphemeralSpec : private openpal::StaticOnly
+struct HandshakeEphemeralSpec : private ser4cpp::StaticOnly
 {
     typedef HandshakeEphemeral enum_type_t;
 

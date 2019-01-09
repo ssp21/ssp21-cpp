@@ -39,9 +39,9 @@ namespace ssp21
         }
     }
 
-    std::unique_ptr<openpal::Buffer> MockCertificateData::allocate(uint8_t size)
+    std::unique_ptr<ser4cpp::Buffer> MockCertificateData::allocate(uint8_t size)
     {
-        auto ret = std::make_unique<openpal::Buffer>(size);
+        auto ret = std::make_unique<ser4cpp::Buffer>(size);
         ret->as_wslice().set_all_to(0xFF);
         return ret;
     }

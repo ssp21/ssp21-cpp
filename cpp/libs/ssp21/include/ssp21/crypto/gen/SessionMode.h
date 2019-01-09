@@ -17,7 +17,7 @@
 #define SSP21_SESSIONMODE_H
 
 #include <cstdint>
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 
 namespace ssp21 {
 
@@ -32,7 +32,7 @@ enum class SessionMode : uint8_t
     undefined = 0xFF
 };
 
-struct SessionModeSpec : private openpal::StaticOnly
+struct SessionModeSpec : private ser4cpp::StaticOnly
 {
     typedef SessionMode enum_type_t;
 

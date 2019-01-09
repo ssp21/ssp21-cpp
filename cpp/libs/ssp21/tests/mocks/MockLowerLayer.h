@@ -1,21 +1,19 @@
 #ifndef SSP21_MOCKLOWERLAYER_H
 #define SSP21_MOCKLOWERLAYER_H
 
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
+#include "ser4cpp/util/HexConversions.h"
 
 #include "ssp21/stack/ILowerLayer.h"
 #include "ssp21/stack/IUpperLayer.h"
-
-#include "testlib/Hex.h"
-#include "testlib/HexConversions.h"
 
 #include <deque>
 
 namespace ssp21
 {
-    class MockLowerLayer : public ILowerLayer, private openpal::Uncopyable
+    class MockLowerLayer : public ILowerLayer, private ser4cpp::Uncopyable
     {
-        typedef openpal::Buffer message_t;
+        typedef ser4cpp::Buffer message_t;
 
     public:
 
@@ -48,8 +46,7 @@ namespace ssp21
 
         void enqueue_message(const std::string& hex)
         {
-            openpal::Hex hexdata(hex);
-            this->rx_messages.push_back(std::make_unique<message_t>(hexdata.as_rslice()));
+            this->rx_messages.push_back(ser4cpp::HexConversions::from_hex(hex));
             if (!this->is_upper_processing_rx())
             {
                 this->upper->on_lower_rx_ready();
@@ -68,7 +65,7 @@ namespace ssp21
                 throw std::logic_error("No messages to pop()");
             }
 
-            auto hex = openpal::to_hex(this->tx_messages.front()->as_rslice());
+            auto hex = ser4cpp::HexConversions::to_hex(this->tx_messages.front()->as_rslice());
             this->tx_messages.pop_front();
             return hex;
         }

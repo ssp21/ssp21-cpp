@@ -13,8 +13,10 @@ find_package(sodium REQUIRED)
 add_subdirectory(./deps/argagg)
 add_subdirectory(./deps/asio)
 add_subdirectory(./deps/catch)
+add_subdirectory(./deps/exe4cpp)
 add_subdirectory(./deps/inih)
 add_subdirectory(./deps/openpal)
+add_subdirectory(./deps/ser4cpp)
 
 # Libs
 add_subdirectory(./cpp/libs/ssp21)
@@ -31,11 +33,12 @@ add_subdirectory(./cpp/tests/integration)
 add_subdirectory(./cpp/tests/ssp21-afl)
 
 # Installation
-install(EXPORT Ssp21Targets
-    FILE Ssp21Targets.cmake
-    NAMESPACE Ssp21::
-    DESTINATION lib/cmake/Ssp21
-)
+#install(EXPORT Ssp21Targets
+#    FILE Ssp21Targets.cmake
+#    NAMESPACE Ssp21::
+#    DESTINATION lib/cmake/Ssp21
+#)
+install(FILES ./Ssp21Config.cmake DESTINATION lib/cmake/Ssp21)
 
 install(DIRECTORY ./script DESTINATION .)
 install(DIRECTORY ./config DESTINATION .)

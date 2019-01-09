@@ -17,7 +17,7 @@
 #define SSP21_FUNCTION_H
 
 #include <cstdint>
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 
 namespace ssp21 {
 
@@ -38,7 +38,7 @@ enum class Function : uint8_t
     undefined = 0xFF
 };
 
-struct FunctionSpec : private openpal::StaticOnly
+struct FunctionSpec : private ser4cpp::StaticOnly
 {
     typedef Function enum_type_t;
 

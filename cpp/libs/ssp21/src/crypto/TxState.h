@@ -4,14 +4,14 @@
 
 #include "crypto/Session.h"
 
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 
 namespace ssp21
 {
     /**
     	Tracks the state of a transmission from the crypto layer
     */
-    class TxState final : openpal::Uncopyable
+    class TxState final : ser4cpp::Uncopyable
     {
 
     public:

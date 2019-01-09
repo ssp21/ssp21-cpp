@@ -17,7 +17,7 @@
 #define SSP21_CERTIFICATEBODY_H
 
 #include <cstdint>
-#include "openpal/serialization/BigEndian.h"
+#include "ser4cpp/serialization/BigEndian.h"
 #include "ssp21/crypto/EnumField.h"
 #include "ssp21/util/SequenceTypes.h"
 #include "ssp21/crypto/IntegerField.h"
@@ -47,9 +47,9 @@ struct CertificateBody final
 
     static const uint8_t min_size_bytes = 20;
 
-    IntegerField<openpal::UInt64> valid_after;
-    IntegerField<openpal::UInt64> valid_before;
-    IntegerField<openpal::UInt8> signing_level;
+    IntegerField<ser4cpp::UInt64> valid_after;
+    IntegerField<ser4cpp::UInt64> valid_before;
+    IntegerField<ser4cpp::UInt8> signing_level;
     EnumField<PublicKeyTypeSpec> public_key_type;
     SeqByteField public_key;
     SeqStructField<ExtensionEnvelope, 5> extensions;

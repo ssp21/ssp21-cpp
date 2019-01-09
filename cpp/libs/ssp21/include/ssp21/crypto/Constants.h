@@ -4,7 +4,7 @@
 #include <cstdint>
 
 #include "ssp21/link/LinkConstants.h"
-#include "openpal/executor/TimeDuration.h"
+#include "exe4cpp/Typedefs.h"
 
 namespace ssp21
 {
@@ -39,8 +39,8 @@ namespace ssp21
             // defaults for the initiator
             namespace initiator
             {
-                const openpal::TimeDuration default_response_timeout = openpal::TimeDuration::seconds(2);
-                const openpal::TimeDuration default_retry_timeout = openpal::TimeDuration::seconds(5);
+                const exe4cpp::duration_t default_response_timeout = std::chrono::seconds(2);
+                const exe4cpp::duration_t default_retry_timeout = std::chrono::seconds(5);
 
                 const uint16_t default_max_nonce = 32768;
                 const uint16_t default_nonce_renegotiation_trigger = default_max_nonce - 128;

@@ -8,21 +8,19 @@
 #include "crypto/gen/ReplyHandshakeBegin.h"
 
 #include "openpal/logging/LogMacros.h"
-#include "openpal/logging/LogLevels.h"
-
-using namespace openpal;
+#include "ssp21/stack/LogLevels.h"
 
 namespace ssp21
 {
 
-    QKDResponderHandshake::QKDResponderHandshake(const Logger& logger, const std::shared_ptr<IKeyLookup>& key_lookup) :
+    QKDResponderHandshake::QKDResponderHandshake(const openpal::Logger& logger, const std::shared_ptr<IKeyLookup>& key_lookup) :
         logger(logger),
         key_lookup(key_lookup)
     {
 
     }
 
-    IResponderHandshake::Result QKDResponderHandshake::process(const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const Timestamp& now, IFrameWriter& writer, Session& session)
+    IResponderHandshake::Result QKDResponderHandshake::process(const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const exe4cpp::steady_time_t& now, IFrameWriter& writer, Session& session)
     {
         if (msg.spec.handshake_ephemeral != HandshakeEphemeral::none)
         {
@@ -41,7 +39,7 @@ namespace ssp21
         uint64_t key_id;
         {
             auto key_id_data = msg.handshake_data;
-            if (!openpal::BigEndian::read(key_id_data, key_id) || key_id_data.is_not_empty())
+            if (!ser4cpp::BigEndian::read(key_id_data, key_id) || key_id_data.is_not_empty())
             {
                 return Result::failure(HandshakeError::bad_message_format);
             }
@@ -87,7 +85,7 @@ namespace ssp21
             Session::Param(
                 now,
                 msg.constraints.max_nonce,
-                msg.constraints.max_session_duration
+                std::chrono::milliseconds(msg.constraints.max_session_duration)
             ),
             session_keys
         );

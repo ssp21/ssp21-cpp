@@ -17,7 +17,7 @@
 #define SSP21_EXTENSIONENVELOPE_H
 
 #include <cstdint>
-#include "openpal/serialization/BigEndian.h"
+#include "ser4cpp/serialization/BigEndian.h"
 #include "ssp21/util/SequenceTypes.h"
 #include "ssp21/crypto/IntegerField.h"
 #include "ssp21/crypto/SeqByteField.h"
@@ -40,7 +40,7 @@ struct ExtensionEnvelope final
 
     static const uint8_t min_size_bytes = 5;
 
-    IntegerField<openpal::UInt32> identifier;
+    IntegerField<ser4cpp::UInt32> identifier;
     SeqByteField extension_body;
 
     ParseError read(seq32_t& input);

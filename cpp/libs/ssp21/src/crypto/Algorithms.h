@@ -11,6 +11,7 @@
 #include "ssp21/crypto/gen/HandshakeError.h"
 
 #include "ssp21/crypto/Crypto.h"
+#include "ser4cpp/util/Uncopyable.h"
 
 
 namespace ssp21
@@ -18,7 +19,7 @@ namespace ssp21
     /**
     * Represents a complete set of algorithms for the handshake and the session
     */
-    struct Algorithms : private openpal::StaticOnly
+    struct Algorithms : private ser4cpp::StaticOnly
     {
 
         struct Session

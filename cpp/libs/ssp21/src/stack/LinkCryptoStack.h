@@ -18,7 +18,7 @@ namespace ssp21
             Addresses addresses,
             const ResponderConfig& config,
             openpal::Logger logger,
-            const std::shared_ptr<openpal::IExecutor>& executor,
+            const std::shared_ptr<exe4cpp::IExecutor>& executor,
             const std::shared_ptr<IResponderHandshake>& handshake
         ) :
             link(addresses.source, addresses.destination),
@@ -68,7 +68,7 @@ namespace ssp21
             Addresses addresses,
             const InitiatorConfig& config,
             openpal::Logger logger,
-            const std::shared_ptr<openpal::IExecutor>& executor,
+            const std::shared_ptr<exe4cpp::IExecutor>& executor,
             const std::shared_ptr<IInitiatorHandshake>& handshake) :
             link(addresses.source, addresses.destination),
             initiator(

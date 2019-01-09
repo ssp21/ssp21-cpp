@@ -2,7 +2,7 @@
 #include "link/LinkFrameWriter.h"
 
 #include "link/CastagnoliCRC32.h"
-#include "openpal/serialization/BigEndian.h"
+#include "ser4cpp/serialization/BigEndian.h"
 
 namespace ssp21
 {
@@ -30,7 +30,7 @@ namespace ssp21
 
         auto dest = this->frame_buffer.as_wslice();
 
-        if (!openpal::BigEndian::write(
+        if (!ser4cpp::BigEndian::write(
                     dest,
                     consts::link::sync1,
                     consts::link::sync2,
@@ -43,7 +43,7 @@ namespace ssp21
 
         const auto crc_h = CastagnoliCRC32::calc(this->frame_buffer.as_rslice().take(consts::link::header_fields_size));
 
-        if (!openpal::UInt32::write_to(dest, crc_h))
+        if (!ser4cpp::UInt32::write_to(dest, crc_h))
         {
             return WriteResult::error(FormatError::insufficient_space);
         }
@@ -59,7 +59,7 @@ namespace ssp21
         const auto result = payload.write(dest);
         if (result.is_error()) return result;
 
-        if (!openpal::BigEndian::write(dest, CastagnoliCRC32::calc(result.written)))
+        if (!ser4cpp::BigEndian::write(dest, CastagnoliCRC32::calc(result.written)))
         {
             return FormatResult::error(FormatError::insufficient_space);
         }

@@ -23,7 +23,7 @@
 
 namespace ssp21 {
 
-struct SessionData final : public IMessage, private openpal::Uncopyable
+struct SessionData final : public IMessage, private ser4cpp::Uncopyable
 {
     SessionData();
 

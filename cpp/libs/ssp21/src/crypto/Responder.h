@@ -22,7 +22,7 @@ namespace ssp21
             const ResponderConfig& config,
             const openpal::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
-            const std::shared_ptr<openpal::IExecutor>& executor,
+            const std::shared_ptr<exe4cpp::IExecutor>& executor,
             const std::shared_ptr<IResponderHandshake>& handshake
         );
 
@@ -47,9 +47,9 @@ namespace ssp21
 
         virtual void on_parse_error(Function function, ParseError error) override;
 
-        virtual void on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
+        virtual void on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now) override;
 
-        virtual void on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
+        virtual void on_auth_session(const SessionData& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now) override;
 
     };
 

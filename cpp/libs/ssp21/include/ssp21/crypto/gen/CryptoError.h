@@ -17,7 +17,7 @@
 #define SSP21_CRYPTOERROR_H
 
 #include <cstdint>
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 #include "ssp21/util/ErrorCategory.h"
 
 namespace ssp21 {
@@ -59,7 +59,7 @@ enum class CryptoError : uint8_t
     clock_rollback = 0xE
 };
 
-struct CryptoErrorSpec : private openpal::StaticOnly
+struct CryptoErrorSpec : private ser4cpp::StaticOnly
 {
     typedef CryptoError enum_type_t;
 

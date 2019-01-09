@@ -25,7 +25,7 @@ namespace ssp21
     *  Therefore, the 5th byte can NEVER be > than 0x0F
     *
     */
-    class VLength : private openpal::StaticOnly
+    class VLength : private ser4cpp::StaticOnly
     {
         static const uint8_t top_bit_mask = 0x80;
         static const uint8_t bottom_bits_mask = 0x7F;

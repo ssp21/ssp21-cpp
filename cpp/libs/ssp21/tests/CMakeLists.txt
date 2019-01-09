@@ -14,7 +14,7 @@ set(ssp21_tests_headers
     ./mocks/MockUpperLayer.h
 )
 
-set(ssp21_tests_srcs
+set(ssp21_tests_srcsP
     ./main.cpp
 
     ./ChainVerificationTestSuite.cpp
@@ -39,5 +39,5 @@ set(ssp21_tests_srcs
 
 add_executable(ssp21_tests ${ssp21_tests_headers} ${ssp21_tests_srcs})
 target_include_directories(ssp21_tests PRIVATE . ../src)
-target_link_libraries(ssp21_tests PRIVATE ssp21 testlib catch)
+target_link_libraries(ssp21_tests PRIVATE ssp21 catch)
 add_test(NAME ssp21_tests COMMAND ssp21_tests)

@@ -14,7 +14,7 @@
 #include "ssp21/link/Addresses.h"
 
 #include "openpal/logging/Logger.h"
-#include "openpal/executor/IExecutor.h"
+#include "exe4cpp/IExecutor.h"
 
 #include <memory>
 
@@ -29,7 +29,7 @@ namespace ssp21
                 const Addresses& addresses,
                 const ResponderConfig& config,
                 const openpal::Logger& logger,
-                const std::shared_ptr<openpal::IExecutor>& executor,
+                const std::shared_ptr<exe4cpp::IExecutor>& executor,
                 const std::shared_ptr<const SymmetricKey>& key
             );
 
@@ -37,7 +37,7 @@ namespace ssp21
                 const Addresses& addresses,
                 const ResponderConfig& config,
                 const openpal::Logger& logger,
-                const std::shared_ptr<openpal::IExecutor>& executor,
+                const std::shared_ptr<exe4cpp::IExecutor>& executor,
                 const std::shared_ptr<IKeyLookup>& key_lookup
             );
 
@@ -45,7 +45,7 @@ namespace ssp21
                 const Addresses& addresses,
                 const ResponderConfig& config,
                 const openpal::Logger& logger,
-                const std::shared_ptr<openpal::IExecutor>& executor,
+                const std::shared_ptr<exe4cpp::IExecutor>& executor,
                 const StaticKeys& local_keys,
                 const std::shared_ptr<const PublicKey>& remote_public_key
             );
@@ -54,7 +54,7 @@ namespace ssp21
                 const Addresses& addresses,
                 const ResponderConfig& config,
                 const openpal::Logger& logger,
-                const std::shared_ptr<openpal::IExecutor>& executor,
+                const std::shared_ptr<exe4cpp::IExecutor>& executor,
                 const StaticKeys& local_keys,
                 const std::shared_ptr<ssp21::SecureDynamicBuffer>& anchor_cert_file_data,
                 const std::shared_ptr<ssp21::SecureDynamicBuffer>& presented_chain_file_data
@@ -72,7 +72,7 @@ namespace ssp21
                 const Addresses& addresses,
                 const InitiatorConfig& config,
                 const openpal::Logger& logger,
-                const std::shared_ptr<openpal::IExecutor>& executor,
+                const std::shared_ptr<exe4cpp::IExecutor>& executor,
                 const CryptoSuite& crypto_suite,
                 const std::shared_ptr<const SymmetricKey>& key
             );
@@ -81,7 +81,7 @@ namespace ssp21
                 const Addresses& addresses,
                 const InitiatorConfig& config,
                 const openpal::Logger& logger,
-                const std::shared_ptr<openpal::IExecutor>& executor,
+                const std::shared_ptr<exe4cpp::IExecutor>& executor,
                 const CryptoSuite& crypto_suite,
                 const std::shared_ptr<IKeySource>& key_source
             );
@@ -90,7 +90,7 @@ namespace ssp21
                 const Addresses& addresses,
                 const InitiatorConfig& config,
                 const openpal::Logger& logger,
-                const std::shared_ptr<openpal::IExecutor>& executor,
+                const std::shared_ptr<exe4cpp::IExecutor>& executor,
                 const CryptoSuite& crypto_suite,
                 const StaticKeys& local_keys,
                 const std::shared_ptr<const PublicKey>& remote_public_key
@@ -100,7 +100,7 @@ namespace ssp21
                 const Addresses& addresses,
                 const InitiatorConfig& config,
                 const openpal::Logger& logger,
-                const std::shared_ptr<openpal::IExecutor>& executor,
+                const std::shared_ptr<exe4cpp::IExecutor>& executor,
                 const CryptoSuite& crypto_suite,
                 const StaticKeys& local_keys,
                 const std::shared_ptr<ssp21::SecureDynamicBuffer>& anchor_cert_file_data,

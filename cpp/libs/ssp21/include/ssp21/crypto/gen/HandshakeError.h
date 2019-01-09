@@ -17,7 +17,7 @@
 #define SSP21_HANDSHAKEERROR_H
 
 #include <cstdint>
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 
 namespace ssp21 {
 
@@ -67,7 +67,7 @@ inline bool any(HandshakeError value)
     return value != HandshakeError::none;
 }
 
-struct HandshakeErrorSpec : private openpal::StaticOnly
+struct HandshakeErrorSpec : private ser4cpp::StaticOnly
 {
     typedef HandshakeError enum_type_t;
 

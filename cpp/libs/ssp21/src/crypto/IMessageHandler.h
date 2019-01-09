@@ -9,7 +9,7 @@
 #include "crypto/gen/ReplyHandshakeError.h"
 #include "crypto/gen/SessionData.h"
 
-#include "openpal/executor/Timestamp.h"
+#include "exe4cpp/Typedefs.h"
 
 namespace ssp21
 {
@@ -32,32 +32,32 @@ namespace ssp21
 
         // --- optionally overriden message callbacks ---
 
-        virtual bool on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+        virtual bool on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now)
         {
             return false;
         }
 
-        virtual bool on_message(const RequestHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+        virtual bool on_message(const RequestHandshakeAuth& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now)
         {
             return false;
         }
 
-        virtual bool on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+        virtual bool on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now)
         {
             return false;
         }
 
-        virtual bool on_message(const ReplyHandshakeAuth& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+        virtual bool on_message(const ReplyHandshakeAuth& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now)
         {
             return false;
         }
 
-        virtual bool on_message(const ReplyHandshakeError& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+        virtual bool on_message(const ReplyHandshakeError& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now)
         {
             return false;
         }
 
-        virtual bool on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+        virtual bool on_message(const SessionData& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now)
         {
             return false;
         }

@@ -17,7 +17,7 @@
 #define SSP21_PEMDECODEERROR_H
 
 #include <cstdint>
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 #include "ssp21/util/ErrorCategory.h"
 
 namespace ssp21 {
@@ -40,7 +40,7 @@ inline bool any(PEMDecodeError value)
     return value != PEMDecodeError::ok;
 }
 
-struct PEMDecodeErrorSpec : private openpal::StaticOnly
+struct PEMDecodeErrorSpec : private ser4cpp::StaticOnly
 {
     typedef PEMDecodeError enum_type_t;
 

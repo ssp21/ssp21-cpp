@@ -3,7 +3,7 @@
 
 #include "ssp21/util/SequenceTypes.h"
 
-#include <openpal/util/Uncopyable.h>
+#include "ser4cpp/util/Uncopyable.h"
 
 namespace ssp21
 {
@@ -19,7 +19,7 @@ namespace ssp21
     * 0xFA567D89 (Koopman)
     *
     */
-    struct CastagnoliCRC32 : private openpal::StaticOnly
+    struct CastagnoliCRC32 : private ser4cpp::StaticOnly
     {
         static uint32_t calc(const seq32_t& data);
 

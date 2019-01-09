@@ -12,7 +12,7 @@ final case class MessageGenerator(msg: Message) extends StructGenerator(msg, fal
 
   override def prefixSize: Int = 1 // the function
 
-  override def interfaces: String = ": public IMessage, private openpal::Uncopyable"
+  override def interfaces: String = ": public IMessage, private ser4cpp::Uncopyable"
 
   override def headerIncludes: List[Include] = List(Includes.imessage, Includes.function)
 

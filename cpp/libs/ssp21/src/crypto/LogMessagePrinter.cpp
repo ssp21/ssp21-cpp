@@ -44,9 +44,8 @@ namespace ssp21
         SAFE_STRING_FORMAT(message, max_log_entry_size, "%s (length = %u)", name, data.length());
         logger_.log(level_, LOCATION, message);
 
-        HexLogging::log(logger_, level_, data, ':', max_hex_bytes_per_line_, max_hex_bytes_per_line_);
+        // TODO: Fix this
+        //HexLogging::log(logger_, level_, data, ':', max_hex_bytes_per_line_, max_hex_bytes_per_line_);
     }
 
 }
-
-

@@ -8,21 +8,19 @@
 #include "crypto/gen/ReplyHandshakeBegin.h"
 
 #include "openpal/logging/LogMacros.h"
-#include "openpal/logging/LogLevels.h"
-
-using namespace openpal;
+#include "ssp21/stack/LogLevels.h"
 
 namespace ssp21
 {
 
-    SharedSecretResponderHandshake::SharedSecretResponderHandshake(const Logger& logger, const std::shared_ptr<const SymmetricKey>& key) :
+    SharedSecretResponderHandshake::SharedSecretResponderHandshake(const openpal::Logger& logger, const std::shared_ptr<const SymmetricKey>& key) :
         logger(logger),
         key(key)
     {
 
     }
 
-    IResponderHandshake::Result SharedSecretResponderHandshake::process(const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const Timestamp& now, IFrameWriter& writer, Session& session)
+    IResponderHandshake::Result SharedSecretResponderHandshake::process(const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const exe4cpp::steady_time_t& now, IFrameWriter& writer, Session& session)
     {
         if (msg.spec.handshake_ephemeral != HandshakeEphemeral::nonce)
         {
@@ -43,7 +41,7 @@ namespace ssp21
         }
 
         // generate a nonce
-        StaticBuffer<uint32_t, consts::crypto::nonce_length> nonce_buffer;
+        ser4cpp::StaticBuffer<uint32_t, consts::crypto::nonce_length> nonce_buffer;
         Crypto::gen_random(nonce_buffer.as_wseq());
 
         // prepare the response
@@ -76,7 +74,7 @@ namespace ssp21
             Session::Param(
                 now,
                 msg.constraints.max_nonce,
-                msg.constraints.max_session_duration
+                std::chrono::milliseconds(msg.constraints.max_session_duration)
             ),
             session_keys
         );

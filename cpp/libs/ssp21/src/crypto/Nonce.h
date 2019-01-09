@@ -2,13 +2,13 @@
 #ifndef SSP21_NONCE_H
 #define SSP21_NONCE_H
 
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 
 #include <cstdint>
 
 namespace ssp21
 {
-    class Nonce final : private openpal::Uncopyable
+    class Nonce final : private ser4cpp::Uncopyable
     {
 
     public:

@@ -19,7 +19,7 @@ namespace ssp21
         cert_handler(cert_handler)
     {}
 
-    IResponderHandshake::Result PublicKeyResponderHandshake::process(const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now, IFrameWriter& writer, Session& session)
+    IResponderHandshake::Result PublicKeyResponderHandshake::process(const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const exe4cpp::steady_time_t& now, IFrameWriter& writer, Session& session)
     {
         if (msg.spec.handshake_ephemeral != HandshakeEphemeral::x25519)
         {
@@ -104,7 +104,7 @@ namespace ssp21
             Session::Param(
                 now,
                 msg.constraints.max_nonce,
-                msg.constraints.max_session_duration
+                std::chrono::milliseconds(msg.constraints.max_session_duration)
             ),
             session_keys
         );

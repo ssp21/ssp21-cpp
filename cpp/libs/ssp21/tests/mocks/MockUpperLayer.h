@@ -1,18 +1,16 @@
 #ifndef SSP21_MOCKUPPERLAYER_H
 #define SSP21_MOCKUPPERLAYER_H
 
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
+#include "ser4cpp/util/HexConversions.h"
 
 #include "ssp21/stack/IUpperLayer.h"
-
-#include "testlib/Hex.h"
-#include "testlib/HexConversions.h"
 
 #include <deque>
 
 namespace ssp21
 {
-    class MockUpperLayer : public IUpperLayer, private openpal::Uncopyable
+    class MockUpperLayer : public IUpperLayer, private ser4cpp::Uncopyable
     {
 
     public:
@@ -77,7 +75,7 @@ namespace ssp21
             const auto data = this->lower->start_rx_from_upper();
             if (data.is_not_empty())
             {
-                this->rx_messages.push_back(to_hex(data));
+                this->rx_messages.push_back(ser4cpp::HexConversions::to_hex(data));
                 this->on_lower_rx_ready_impl();
             }
         }

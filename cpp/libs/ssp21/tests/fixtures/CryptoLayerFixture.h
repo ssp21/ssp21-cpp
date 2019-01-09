@@ -9,13 +9,13 @@
 #include "crypto/ResponderHandshakes.h"
 #include "crypto/InitiatorHandshakes.h"
 
-#include "testlib/MockExecutor.h"
-
 #include "mocks/MockLogHandler.h"
 #include "mocks/MockLowerLayer.h"
 #include "mocks/MockUpperLayer.h"
 #include "mocks/CryptoFixture.h"
 #include "mocks/HexMessageBuilders.h"
+
+#include "exe4cpp/MockExecutor.h"
 
 namespace ssp21
 {
@@ -29,7 +29,7 @@ namespace ssp21
             uint16_t max_message_size = consts::link::max_config_payload_size
         ) :
             log("responder"),
-            exe(openpal::MockExecutor::Create())
+            exe(std::make_shared<exe4cpp::MockExecutor>())
         {
 
         }
@@ -70,7 +70,7 @@ namespace ssp21
     public:
 
         ssp21::MockLogHandler log;
-        const std::shared_ptr<openpal::MockExecutor> exe;
+        const std::shared_ptr<exe4cpp::MockExecutor> exe;
         MockLowerLayer lower;
         MockUpperLayer upper;
 

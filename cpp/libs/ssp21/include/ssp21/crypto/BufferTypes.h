@@ -6,8 +6,8 @@
 
 #include "ssp21/util/SequenceTypes.h"
 
-#include <openpal/util/Uncopyable.h>
-#include <openpal/container/StaticBuffer.h>
+#include "ser4cpp/util/Uncopyable.h"
+#include "ser4cpp/container/StaticBuffer.h"
 
 namespace ssp21
 {
@@ -23,7 +23,7 @@ namespace ssp21
         symmetric_key
     };
 
-    class BufferBase : private openpal::Uncopyable
+    class BufferBase : private ser4cpp::Uncopyable
     {
     public:
 
@@ -52,7 +52,7 @@ namespace ssp21
 
     protected:
 
-        openpal::StaticBuffer<uint32_t, consts::crypto::max_primitive_buffer_length> buffer;
+        ser4cpp::StaticBuffer<uint32_t, consts::crypto::max_primitive_buffer_length> buffer;
     };
 
     /**

@@ -8,7 +8,7 @@ import com.automatak.render.cpp._
 
 object Ordering {
   val system = 0
-  val openpal = 1
+  val ser4cpp = 1
   val public_ssp21 = 2
   val private_ssp21 = 3
 }
@@ -21,8 +21,8 @@ object Includes {
 
   val cstdint = Include("<cstdint>", Ordering.system)
 
-  val uncopyable = openpal("util/Uncopyable")
-  val bigEndian = openpal("serialization/BigEndian")
+  val uncopyable = ser4cpp("util/Uncopyable")
+  val bigEndian = ser4cpp("serialization/BigEndian")
 
   val parseError = enum("ParseError", true)
   val formatError = enum("FormatError", true)
@@ -61,7 +61,7 @@ object Includes {
     }
   }
 
-  def openpal(classPath: String) = Include(quoted("openpal/%s.h".format(classPath)), Ordering.openpal)
+  def ser4cpp(classPath: String) = Include(quoted("ser4cpp/%s.h".format(classPath)), Ordering.ser4cpp)
 
   def lines(lines: Seq[Include]): Iterator[String] = {
 

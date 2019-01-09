@@ -2,7 +2,7 @@
 #define SSP21_MOCKLOGHANDLER_H
 
 #include "openpal/logging/Logger.h"
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 
 #include "ssp21/stack/LogLevels.h"
 
@@ -13,7 +13,7 @@
 
 namespace ssp21
 {
-    class MockLogHandler : public openpal::ILogHandler, openpal::Uncopyable
+    class MockLogHandler : public openpal::ILogHandler, ser4cpp::Uncopyable
     {
         struct Backend final : public openpal::ILogHandler
         {

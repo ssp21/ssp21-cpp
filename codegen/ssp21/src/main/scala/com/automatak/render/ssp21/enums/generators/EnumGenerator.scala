@@ -35,7 +35,7 @@ case class EnumGenerator(cfg: EnumConfig) extends WriteCppFiles {
       space ++ "static const char* name;".iter
     } else Iterator.empty
 
-    def spec = "struct %s : private openpal::StaticOnly".format(cfg.model.specName).iter ++ bracketSemiColon {
+    def spec = "struct %s : private ser4cpp::StaticOnly".format(cfg.model.specName).iter ++ bracketSemiColon {
       "typedef %s enum_type_t;".format(cfg.model.name).iter ++
         nameLine ++
         space ++

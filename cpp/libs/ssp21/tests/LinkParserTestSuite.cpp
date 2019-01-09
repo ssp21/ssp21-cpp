@@ -3,14 +3,12 @@
 #include "catch.hpp"
 
 #include "link/LinkParser.h"
-
-#include "testlib/Hex.h"
-#include "testlib/HexConversions.h"
+#include "ser4cpp/util/HexConversions.h"
 
 #define SUITE(name) "LinkParserTestSuite - " name
 
 using namespace ssp21;
-using namespace openpal;
+using namespace ser4cpp;
 
 class CountingReporter : public LinkParser::IReporter
 {
@@ -53,11 +51,11 @@ TEST_CASE(SUITE("gracefully handles empty message"))
     CountingReporter reporter;
     LinkParser parser(1024, reporter);
 
-    Hex hex("");
-    auto input = hex.as_rslice();
+    auto input = HexConversions::from_hex("");
+    auto slice = input->as_rslice();
 
-    REQUIRE(!parser.parse(input));
-    REQUIRE(input.is_empty());
+    REQUIRE(!parser.parse(slice));
+    REQUIRE(slice.is_empty());
 }
 
 TEST_CASE(SUITE("reads a full message properly"))
@@ -65,19 +63,19 @@ TEST_CASE(SUITE("reads a full message properly"))
     CountingReporter reporter;
     LinkParser parser(1024, reporter);
 
-    Hex hex("07 AA 00 01 00 02 00 06 11 FB E3 40 DD DD DD DD DD DD 51 0D 37 6B");
-    auto input = hex.as_rslice();
+    auto input = HexConversions::from_hex("07 AA 00 01 00 02 00 06 11 FB E3 40 DD DD DD DD DD DD 51 0D 37 6B");
+    auto slice = input->as_rslice();
 
-    REQUIRE(parser.parse(input));
+    REQUIRE(parser.parse(slice));
     REQUIRE(reporter.no_errors());
-    REQUIRE(input.is_empty());
+    REQUIRE(slice.is_empty());
 
     LinkParser::Result result;
 
     REQUIRE(parser.read(result));
     REQUIRE(result.destination == 1);
     REQUIRE(result.source == 2);
-    REQUIRE(to_hex(result.payload) == "DD DD DD DD DD DD");
+    REQUIRE(HexConversions::to_hex(result.payload) == "DD DD DD DD DD DD");
 
 }
 
@@ -86,12 +84,12 @@ TEST_CASE(SUITE("discards leading data properly"))
     CountingReporter reporter;
     LinkParser parser(1024, reporter);
 
-    Hex hex("FF FF FF FF 07 AA 00 01 00 02 00 06 11 FB E3 40 DD DD DD DD DD DD 51 0D 37 6B");
-    auto input = hex.as_rslice();
+    auto input = HexConversions::from_hex("FF FF FF FF 07 AA 00 01 00 02 00 06 11 FB E3 40 DD DD DD DD DD DD 51 0D 37 6B");
+    auto slice = input->as_rslice();
 
-    REQUIRE(parser.parse(input));
+    REQUIRE(parser.parse(slice));
     REQUIRE(reporter.no_errors());
-    REQUIRE(input.is_empty());
+    REQUIRE(slice.is_empty());
 }
 
 TEST_CASE(SUITE("detects header crc failure properly"))
@@ -99,13 +97,13 @@ TEST_CASE(SUITE("detects header crc failure properly"))
     CountingReporter reporter;
     LinkParser parser(1024, reporter);
 
-    /// -----------------------------VV-----------------------------------------
-    Hex hex("07 AA 00 01 00 02 00 06 12 FB E3 40 DD DD DD DD DD DD 51 0D 37 6B");
-    auto input = hex.as_rslice();
+    ///                                   -------------------------VV----------------------------------------
+    auto input = HexConversions::from_hex("07 AA 00 01 00 02 00 06 12 FB E3 40 DD DD DD DD DD DD 51 0D 37 6B");
+    auto slice = input->as_rslice();
 
-    REQUIRE_FALSE(parser.parse(input));
+    REQUIRE_FALSE(parser.parse(slice));
     REQUIRE(reporter.num_bad_header_crc == 1);
-    REQUIRE(input.is_empty());
+    REQUIRE(slice.is_empty());
 }
 
 TEST_CASE(SUITE("recursively processes header crc failure"))
@@ -115,25 +113,25 @@ TEST_CASE(SUITE("recursively processes header crc failure"))
 
     {
         // packet in a packet
-        //             07 AA 00 01 00 02 00 06 11 FB E3 40 DD DD DD DD DD DD 51 0D 37 6B < - valid packet
-        Hex hex("07 AA 07 AA 00 01 00 02 00 06 11 FB E3 40 DD DD DD DD DD DD 51");
-        auto input = hex.as_rslice();
+        //                                           07 AA 00 01 00 02 00 06 11 FB E3 40 DD DD DD DD DD DD 51 0D 37 6B < - valid packet
+        auto input = HexConversions::from_hex("07 AA 07 AA 00 01 00 02 00 06 11 FB E3 40 DD DD DD DD DD DD 51");
+        auto slice = input->as_rslice();
 
-        REQUIRE_FALSE(parser.parse(input));
+        REQUIRE_FALSE(parser.parse(slice));
         REQUIRE(reporter.num_bad_header_crc == 1);
-        REQUIRE(input.is_empty());
+        REQUIRE(slice.is_empty());
     }
 
     reporter.clear();
 
     {
         // last 3 bytes of body CRC will complete the frame
-        Hex trailing("0D 37 6B");
-        auto input = trailing.as_rslice();
+        auto input = HexConversions::from_hex("0D 37 6B");
+        auto slice = input->as_rslice();
 
-        REQUIRE(parser.parse(input));
+        REQUIRE(parser.parse(slice));
         REQUIRE(reporter.no_errors());
-        REQUIRE(input.is_empty());
+        REQUIRE(slice.is_empty());
     }
 }
 
@@ -142,14 +140,13 @@ TEST_CASE(SUITE("detects body crc failure properly"))
     CountingReporter reporter;
     LinkParser parser(1024, reporter);
 
+    ///                                   ----------------------------------------------------------VV-------
+    auto input = HexConversions::from_hex("07 AA 00 01 00 02 00 06 11 FB E3 40 DD DD DD DD DD DD 51 0E 37 6B");
+    auto slice = input->as_rslice();
 
-    /// --------------------------------------------------------------VV--------
-    Hex hex("07 AA 00 01 00 02 00 06 11 FB E3 40 DD DD DD DD DD DD 51 0E 37 6B");
-    auto input = hex.as_rslice();
-
-    REQUIRE_FALSE(parser.parse(input));
+    REQUIRE_FALSE(parser.parse(slice));
     REQUIRE(reporter.num_bad_body_crc == 1);
-    REQUIRE(input.is_empty());
+    REQUIRE(slice.is_empty());
 }
 
 TEST_CASE(SUITE("allows frame with maximum body length"))
@@ -157,13 +154,13 @@ TEST_CASE(SUITE("allows frame with maximum body length"))
     CountingReporter reporter;
     LinkParser parser(6, reporter);
 
-    /// -----------------------LL-LL--------------------------------------------
-    Hex hex("07 AA 00 01 00 02 00 06 11 FB E3 40 DD DD DD DD DD DD 51 0D 37 6B");
-    auto input = hex.as_rslice();
+    ///                                  --------------------LL-LL-------------------------------------------
+    auto input = HexConversions::from_hex("07 AA 00 01 00 02 00 06 11 FB E3 40 DD DD DD DD DD DD 51 0D 37 6B");
+    auto slice = input->as_rslice();
 
-    REQUIRE(parser.parse(input));
+    REQUIRE(parser.parse(slice));
     REQUIRE(reporter.no_errors());
-    REQUIRE(input.is_empty());
+    REQUIRE(slice.is_empty());
 }
 
 TEST_CASE(SUITE("fails if length exceeds maximum body length"))
@@ -171,13 +168,13 @@ TEST_CASE(SUITE("fails if length exceeds maximum body length"))
     CountingReporter reporter;
     LinkParser parser(5, reporter);
 
-    /// -----------------------LL-LL--------------------------------------------
-    Hex hex("07 AA 00 01 00 02 00 06 11 FB E3 40 DD DD DD DD DD DD 51 0D 37 6B");
-    auto input = hex.as_rslice();
+    ///                                   -------------------LL-LL-------------------------------------------
+    auto input = HexConversions::from_hex("07 AA 00 01 00 02 00 06 11 FB E3 40 DD DD DD DD DD DD 51 0D 37 6B");
+    auto slice = input->as_rslice();
 
-    REQUIRE_FALSE(parser.parse(input));
+    REQUIRE_FALSE(parser.parse(slice));
     REQUIRE(reporter.num_bad_length == 1);
     REQUIRE(reporter.num_bad_header_crc == 0);
     REQUIRE(reporter.num_bad_body_crc == 0);
-    REQUIRE(input.is_empty());
+    REQUIRE(slice.is_empty());
 }

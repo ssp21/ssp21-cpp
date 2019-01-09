@@ -7,14 +7,14 @@
 #include "ssp21/crypto/gen/HandshakeError.h"
 #include "ssp21/crypto/CryptoTypedefs.h"
 
-#include <openpal/util/Uncopyable.h>
+#include "ser4cpp/util/Uncopyable.h"
 
 namespace ssp21
 {
     /**
     * Operations for verifying certificate chains
     */
-    class Chain final : openpal::StaticOnly
+    class Chain final : ser4cpp::StaticOnly
     {
 
     public:

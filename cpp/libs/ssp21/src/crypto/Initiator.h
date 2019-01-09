@@ -4,8 +4,7 @@
 
 #include "crypto/CryptoLayer.h"
 #include "crypto/IInitiatorHandshake.h"
-
-#include "openpal/executor/TimerRef.h"
+#include "exe4cpp/Timer.h"
 
 namespace ssp21
 {
@@ -25,11 +24,11 @@ namespace ssp21
             const InitiatorConfig& config,
             const openpal::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
-            const std::shared_ptr<openpal::IExecutor>& executor,
+            const std::shared_ptr<exe4cpp::IExecutor>& executor,
             const std::shared_ptr<IInitiatorHandshake>& handshake
         );
 
-        class IHandshakeState : private openpal::Uncopyable
+        class IHandshakeState : private ser4cpp::Uncopyable
         {
 
         public:
@@ -47,15 +46,15 @@ namespace ssp21
             {}
 
             // called when conditions are met that require we renegotiate the session
-            virtual IHandshakeState* on_handshake_required(Initiator& ctx, const openpal::Timestamp& now)
+            virtual IHandshakeState* on_handshake_required(Initiator& ctx, const exe4cpp::steady_time_t& now)
             {
                 ctx.handshake_required = true; // defer renegotiation
                 return this;
             }
 
-            virtual IHandshakeState* on_reply_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now);
-            virtual IHandshakeState* on_error_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now);
-            virtual IHandshakeState* on_auth_message(Initiator& ctx, const SessionData& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now);
+            virtual IHandshakeState* on_reply_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const exe4cpp::steady_time_t& now);
+            virtual IHandshakeState* on_error_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const exe4cpp::steady_time_t& now);
+            virtual IHandshakeState* on_auth_message(Initiator& ctx, const SessionData& msg, const seq32_t& msg_bytes, const exe4cpp::steady_time_t& now);
 
             // called when the response timeout timer fires
             virtual IHandshakeState* on_response_timeout(Initiator& ctx);
@@ -91,6 +90,8 @@ namespace ssp21
 
         void start_retry_timer();
 
+        void start_session_timer(const exe4cpp::steady_time_t& session_timeout);
+
         void on_handshake_required();
 
         // ---- final implementations from IUpperLayer ----
@@ -107,11 +108,11 @@ namespace ssp21
 
         virtual void on_pre_tx_ready() override;
 
-        virtual void on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
+        virtual void on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now) override;
 
-        virtual void on_message(const ReplyHandshakeError& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
+        virtual void on_message(const ReplyHandshakeError& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now) override;
 
-        virtual void on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now) override;
+        virtual void on_auth_session(const SessionData& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now) override;
 
         // ---- private members -----
 
@@ -121,8 +122,8 @@ namespace ssp21
         IHandshakeState* handshake_state;
         const std::shared_ptr<IInitiatorHandshake> handshake;
 
-        openpal::TimerRef response_and_retry_timer;
-        openpal::TimerRef session_timeout_timer;
+        exe4cpp::Timer response_and_retry_timer;
+        exe4cpp::Timer session_timeout_timer;
 
         bool handshake_required = false;
     };

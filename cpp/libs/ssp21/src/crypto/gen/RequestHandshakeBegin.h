@@ -17,7 +17,7 @@
 #define SSP21_REQUESTHANDSHAKEBEGIN_H
 
 #include <cstdint>
-#include "openpal/serialization/BigEndian.h"
+#include "ser4cpp/serialization/BigEndian.h"
 #include "ssp21/crypto/EnumField.h"
 #include "ssp21/crypto/IntegerField.h"
 #include "ssp21/crypto/SeqByteField.h"
@@ -29,7 +29,7 @@
 
 namespace ssp21 {
 
-struct RequestHandshakeBegin final : public IMessage, private openpal::Uncopyable
+struct RequestHandshakeBegin final : public IMessage, private ser4cpp::Uncopyable
 {
     RequestHandshakeBegin();
 
@@ -52,7 +52,7 @@ struct RequestHandshakeBegin final : public IMessage, private openpal::Uncopyabl
     static const uint8_t min_size_bytes = 17;
     static const Function function = Function::request_handshake_begin;
 
-    IntegerField<openpal::UInt16> version;
+    IntegerField<ser4cpp::UInt16> version;
     CryptoSpec spec;
     SessionConstraints constraints;
     EnumField<HandshakeModeSpec> handshake_mode;

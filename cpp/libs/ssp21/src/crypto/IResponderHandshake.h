@@ -16,7 +16,7 @@ namespace ssp21
     /**
     * Interface that defines what a concrete responder handshake needs to do
     */
-    class IResponderHandshake : private openpal::Uncopyable
+    class IResponderHandshake : private ser4cpp::Uncopyable
     {
     public:
 
@@ -65,7 +65,7 @@ namespace ssp21
         *
         * @return a result type that indicate success/error. On success, the reply_data is valid.
         */
-        virtual Result process(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now, IFrameWriter& writer, Session& session) = 0;
+        virtual Result process(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now, IFrameWriter& writer, Session& session) = 0;
 
     };
 

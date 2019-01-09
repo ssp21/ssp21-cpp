@@ -12,7 +12,7 @@ namespace ssp21
     * Assumming for the time being that a static backend is fine
     * to keep dependency injection simple.
     */
-    class Crypto final : openpal::StaticOnly
+    class Crypto final : ser4cpp::StaticOnly
     {
 
         static std::shared_ptr<ICryptoBackend> backend;

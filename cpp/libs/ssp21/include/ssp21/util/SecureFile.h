@@ -14,7 +14,7 @@
 namespace ssp21
 {
 
-    class SecureFile : openpal::StaticOnly
+    class SecureFile : ser4cpp::StaticOnly
     {
 
     public:

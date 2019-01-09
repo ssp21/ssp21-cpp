@@ -7,15 +7,15 @@
 
 #include "openpal/logging/LogMacros.h"
 
-using namespace openpal;
+#include <algorithm>
 
 namespace ssp21
 {
     Initiator::Initiator(
         const InitiatorConfig& config,
-        const Logger& logger,
+        const openpal::Logger& logger,
         const std::shared_ptr<IFrameWriter>& frame_writer,
-        const std::shared_ptr<IExecutor>& executor,
+        const std::shared_ptr<exe4cpp::IExecutor>& executor,
         const std::shared_ptr<IInitiatorHandshake>& handshake
     ) :
         CryptoLayer(
@@ -29,23 +29,23 @@ namespace ssp21
         session_limits(config.session_limits),
         handshake_state(InitiatorHandshakeStates::Idle::get()),
         handshake(handshake),
-        response_and_retry_timer(executor),
-        session_timeout_timer(executor)
+        response_and_retry_timer(nullptr),
+        session_timeout_timer(nullptr)
     {}
 
-    Initiator::IHandshakeState* Initiator::IHandshakeState::on_reply_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const Timestamp& now)
+    Initiator::IHandshakeState* Initiator::IHandshakeState::on_reply_message(Initiator& ctx, const ReplyHandshakeBegin& msg, const seq32_t& msg_bytes, const exe4cpp::steady_time_t& now)
     {
         this->log_unexpected_message(ctx.logger, msg.function);
         return this;
     }
 
-    Initiator::IHandshakeState* Initiator::IHandshakeState::on_error_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const Timestamp& now)
+    Initiator::IHandshakeState* Initiator::IHandshakeState::on_error_message(Initiator& ctx, const ReplyHandshakeError& msg, const seq32_t& msg_bytes, const exe4cpp::steady_time_t& now)
     {
         this->log_unexpected_message(ctx.logger, msg.function);
         return this;
     }
 
-    Initiator::IHandshakeState* Initiator::IHandshakeState::on_auth_message(Initiator& ctx, const SessionData& msg, const seq32_t& msg_bytes, const openpal::Timestamp& now)
+    Initiator::IHandshakeState* Initiator::IHandshakeState::on_auth_message(Initiator& ctx, const SessionData& msg, const seq32_t& msg_bytes, const exe4cpp::steady_time_t& now)
     {
         this->log_unexpected_message(ctx.logger, msg.function);
         return this;
@@ -63,7 +63,7 @@ namespace ssp21
         return this;
     }
 
-    void Initiator::IHandshakeState::log_unexpected_message(Logger& logger, Function function)
+    void Initiator::IHandshakeState::log_unexpected_message(openpal::Logger& logger, Function function)
     {
         FORMAT_LOG_BLOCK(logger, levels::warn, "Received unexpected message: %s", FunctionSpec::to_string(function));
     }
@@ -75,7 +75,7 @@ namespace ssp21
             this->handshake_state = this->handshake_state->on_response_timeout(*this);
         };
 
-        this->response_and_retry_timer.restart(this->params.response_timeout, on_timeout);
+        this->response_and_retry_timer = exe4cpp::Timer(executor->start(this->params.response_timeout, on_timeout));
     }
 
     void Initiator::start_retry_timer()
@@ -86,7 +86,17 @@ namespace ssp21
             this->on_handshake_required();
         };
 
-        this->response_and_retry_timer.restart(this->params.retry_timeout, on_timeout);
+        this->response_and_retry_timer = exe4cpp::Timer(executor->start(this->params.retry_timeout, on_timeout));
+    }
+
+    void Initiator::start_session_timer(const exe4cpp::steady_time_t& session_timeout)
+    {
+        auto on_timeout = [this]()
+        {
+            this->on_handshake_required();
+        };
+
+        this->session_timeout_timer = exe4cpp::Timer(executor->start(session_timeout, on_timeout));
     }
 
     void Initiator::on_handshake_required()
@@ -122,7 +132,7 @@ namespace ssp21
 
     void Initiator::on_session_nonce_change(uint16_t rx_nonce, uint16_t tx_nonce)
     {
-        if (max(tx_nonce, rx_nonce) >= this->params.nonce_renegotiation_trigger_value)
+        if (ser4cpp::max(tx_nonce, rx_nonce) >= this->params.nonce_renegotiation_trigger_value)
         {
             this->session_timeout_timer.cancel();
             this->on_handshake_required();
@@ -137,17 +147,17 @@ namespace ssp21
         }
     }
 
-    void Initiator::on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const Timestamp& now)
+    void Initiator::on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now)
     {
         this->handshake_state = this->handshake_state->on_reply_message(*this, msg, raw_data, now);
     }
 
-    void Initiator::on_message(const ReplyHandshakeError& msg, const seq32_t& raw_data, const Timestamp& now)
+    void Initiator::on_message(const ReplyHandshakeError& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now)
     {
         this->handshake_state = this->handshake_state->on_error_message(*this, msg, raw_data, now);
     }
 
-    void Initiator::on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now)
+    void Initiator::on_auth_session(const SessionData& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now)
     {
         this->handshake_state = this->handshake_state->on_auth_message(*this, msg, raw_data, now);
     }

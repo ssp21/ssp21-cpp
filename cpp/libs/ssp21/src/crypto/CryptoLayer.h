@@ -15,7 +15,7 @@
 #include "ssp21/stack/IUpperLayer.h"
 #include "IFrameWriter.h"
 
-#include "openpal/executor/IExecutor.h"
+#include "exe4cpp/IExecutor.h"
 #include "ssp21/util/SecureDynamicBuffer.h"
 
 namespace ssp21
@@ -33,7 +33,7 @@ namespace ssp21
             const SessionConfig& session_config,
             const openpal::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
-            const std::shared_ptr<openpal::IExecutor>& executor
+            const std::shared_ptr<exe4cpp::IExecutor>& executor
         );
 
         void bind(ILowerLayer& lower, IUpperLayer& upper)
@@ -85,16 +85,16 @@ namespace ssp21
         virtual void on_session_nonce_change(uint16_t rx_nonce, uint16_t tx_nonce) {}
 
         // optional overrides for optional messages
-        virtual void on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}
-        virtual void on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}
-        virtual void on_message(const ReplyHandshakeError& msg, const seq32_t& raw_data, const openpal::Timestamp& now) {}
+        virtual void on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now) {}
+        virtual void on_message(const ReplyHandshakeBegin& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now) {}
+        virtual void on_message(const ReplyHandshakeError& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now) {}
 
         // non-virtual b/c both sides implement it the same way
-        void on_message(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now);
-        void on_session_data(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now);
+        void on_message(const SessionData& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now);
+        void on_session_data(const SessionData& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now);
 
         // both parties implement this in different ways
-        virtual void on_auth_session(const SessionData& msg, const seq32_t& raw_data, const openpal::Timestamp& now) = 0;
+        virtual void on_auth_session(const SessionData& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now) = 0;
 
         // both parties need to call this to complete the handshake at different times
         bool transmit_session_auth(Session& session);
@@ -104,7 +104,7 @@ namespace ssp21
         openpal::Logger logger;
 
         const std::shared_ptr<IFrameWriter> frame_writer;
-        const std::shared_ptr<openpal::IExecutor> executor;
+        const std::shared_ptr<exe4cpp::IExecutor> executor;
         const std::shared_ptr<SessionStatistics> statistics;
         Sessions sessions;
 
@@ -139,7 +139,7 @@ namespace ssp21
         void check_transmit();
 
         template <class MsgType>
-        bool handle_message(const seq32_t& message, const openpal::Timestamp& now);
+        bool handle_message(const seq32_t& message, const exe4cpp::steady_time_t& now);
     };
 }
 

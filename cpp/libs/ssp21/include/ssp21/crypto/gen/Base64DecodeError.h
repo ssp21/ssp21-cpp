@@ -17,7 +17,7 @@
 #define SSP21_BASE64DECODEERROR_H
 
 #include <cstdint>
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 
 namespace ssp21 {
 
@@ -41,7 +41,7 @@ inline bool any(Base64DecodeError value)
     return value != Base64DecodeError::ok;
 }
 
-struct Base64DecodeErrorSpec : private openpal::StaticOnly
+struct Base64DecodeErrorSpec : private ser4cpp::StaticOnly
 {
     typedef Base64DecodeError enum_type_t;
 

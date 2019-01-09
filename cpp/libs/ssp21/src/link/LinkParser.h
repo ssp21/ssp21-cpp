@@ -2,8 +2,8 @@
 #ifndef SSP21_LINKPARSER_H
 #define SSP21_LINKPARSER_H
 
-#include "openpal/util/Uncopyable.h"
-#include "openpal/container/Buffer.h"
+#include "ser4cpp/util/Uncopyable.h"
+#include "ser4cpp/container/Buffer.h"
 
 #include "ssp21/util/SequenceTypes.h"
 
@@ -11,7 +11,7 @@
 
 namespace ssp21
 {
-    class LinkParser : openpal::Uncopyable
+    class LinkParser : ser4cpp::Uncopyable
     {
 
     public:
@@ -115,7 +115,7 @@ namespace ssp21
 
             const uint16_t max_payload_length;
             IReporter* reporter;
-            openpal::Buffer buffer;
+            ser4cpp::Buffer buffer;
 
             Result result;
             uint16_t payload_length = 0;

@@ -17,7 +17,7 @@
 #define SSP21_SESSIONCONSTRAINTS_H
 
 #include <cstdint>
-#include "openpal/serialization/BigEndian.h"
+#include "ser4cpp/serialization/BigEndian.h"
 #include "ssp21/util/SequenceTypes.h"
 #include "ssp21/crypto/IntegerField.h"
 #include "ssp21/crypto/gen/ParseError.h"
@@ -39,8 +39,8 @@ struct SessionConstraints final
 
     static const uint8_t fixed_size_bytes = 6;
 
-    IntegerField<openpal::UInt16> max_nonce;
-    IntegerField<openpal::UInt32> max_session_duration;
+    IntegerField<ser4cpp::UInt16> max_nonce;
+    IntegerField<ser4cpp::UInt32> max_session_duration;
 
     ParseError read(seq32_t& input);
     ParseError read_all(const seq32_t& input);

@@ -27,9 +27,9 @@ namespace ssp21
         }
 
         template <class T>
-        std::unique_ptr<openpal::Buffer> to_buffer(const T& value)
+        std::unique_ptr<ser4cpp::Buffer> to_buffer(const T& value)
         {
-            return to_any_buffer<openpal::Buffer>(value);
+            return to_any_buffer<ser4cpp::Buffer>(value);
         }
 
         template <class T>

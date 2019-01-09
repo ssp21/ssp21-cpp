@@ -17,7 +17,7 @@
 #define SSP21_CRYPTOACTION_H
 
 #include <cstdint>
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 
 namespace ssp21 {
 
@@ -48,7 +48,7 @@ enum class CryptoAction : uint8_t
     verify_ed25519 = 0x9
 };
 
-struct CryptoActionSpec : private openpal::StaticOnly
+struct CryptoActionSpec : private ser4cpp::StaticOnly
 {
     typedef CryptoAction enum_type_t;
 

@@ -4,12 +4,12 @@
 
 #include "ssp21/crypto/BufferTypes.h"
 #include "ssp21/crypto/CryptoTypedefs.h"
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 
 namespace ssp21
 {
 
-    class HandshakeHasher : public openpal::Uncopyable
+    class HandshakeHasher : public ser4cpp::Uncopyable
     {
 
     public:

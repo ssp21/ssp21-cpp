@@ -3,12 +3,12 @@
 
 #include "ssp21/crypto/IMessagePrinter.h"
 
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 
 namespace ssp21
 {
 
-    class MessagePrinting : private openpal::StaticOnly
+    class MessagePrinting : private ser4cpp::StaticOnly
     {
 
     public:

@@ -1,8 +1,6 @@
 #include "ssp21/crypto/VLength.h"
 
-#include "openpal/serialization/BigEndian.h"
-
-using namespace openpal;
+#include "ser4cpp/serialization/BigEndian.h"
 
 namespace ssp21
 {
@@ -14,7 +12,7 @@ namespace ssp21
             const auto more = value >> 7;
             const auto current = (value & 0x7F) | (more ? 0x80 : 0x00);
 
-            if (!UInt8::write_to(dest, current))
+            if (!ser4cpp::UInt8::write_to(dest, current))
             {
                 return FormatError::insufficient_space;
             }
@@ -33,7 +31,7 @@ namespace ssp21
         while (true)
         {
             uint8_t current;
-            if (!UInt8::read_from(src, current)) return ParseError::insufficient_bytes;
+            if (!ser4cpp::UInt8::read_from(src, current)) return ParseError::insufficient_bytes;
 
             if (byte == 4 && (current > 0x0F)) return ParseError::bad_vlength;
 

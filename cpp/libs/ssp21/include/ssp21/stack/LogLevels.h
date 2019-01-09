@@ -3,11 +3,11 @@
 #define SSP21_LOGLEVELS_H
 
 #include "openpal/logging/LogLevels.h"
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 
 namespace ssp21
 {
-    struct Module : openpal::StaticOnly
+    struct Module : ser4cpp::StaticOnly
     {
         // can be changed at runtime if there's ever a collision
         static openpal::ModuleId id;

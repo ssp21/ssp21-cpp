@@ -2,8 +2,7 @@
 #ifndef SSP21_CRYPTOFIXTURE_H
 #define SSP21_CRYPTOFIXTURE_H
 
-#include "openpal/util/Uncopyable.h"
-#include "../gen/CryptoAction.h"
+#include "gen/CryptoAction.h"
 
 #include <deque>
 #include <sstream>

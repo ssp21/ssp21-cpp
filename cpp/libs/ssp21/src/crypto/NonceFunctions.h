@@ -2,8 +2,8 @@
 #ifndef SSP21_NONCE_FUNCTIONS_H
 #define SSP21_NONCE_FUNCTIONS_H
 
-#include "openpal/util/Uncopyable.h"
-#include "openpal/util/Limits.h"
+#include "ser4cpp/util/Uncopyable.h"
+#include "ser4cpp/serialization/BigEndian.h"
 
 #include "ssp21/crypto/gen/NonceMode.h"
 
@@ -13,7 +13,7 @@ namespace ssp21
 {
     typedef bool(*verify_nonce_func_t)(uint16_t last_nonce, uint16_t new_nonce);
 
-    struct NonceFunctions : private openpal::StaticOnly
+    struct NonceFunctions : private ser4cpp::StaticOnly
     {
         inline static verify_nonce_func_t default_verify()
         {
@@ -22,7 +22,7 @@ namespace ssp21
 
         inline static bool verify_strict_increment(uint16_t last_nonce, uint16_t new_nonce)
         {
-            if (last_nonce == openpal::max_value<uint16_t>()) // don't allow rollover
+            if (last_nonce == ser4cpp::UInt16::max_value) // don't allow rollover
             {
                 return false;
             }

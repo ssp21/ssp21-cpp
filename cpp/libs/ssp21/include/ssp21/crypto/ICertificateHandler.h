@@ -2,7 +2,7 @@
 #ifndef SSP21_ICERTIFICATEHANDLER_H
 #define SSP21_ICERTIFICATEHANDLER_H
 
-#include <openpal/util/Uncopyable.h>
+#include "ser4cpp/util/Uncopyable.h"
 
 #include "ssp21/crypto/gen/HandshakeError.h"
 #include "ssp21/crypto/gen/HandshakeMode.h"
@@ -23,7 +23,7 @@ namespace ssp21
     * Implementations could be for preshared public keys or retrieved from a certificate chain
     * authenticated by a trust anchor.
     */
-    class ICertificateHandler : private openpal::Uncopyable
+    class ICertificateHandler : private ser4cpp::Uncopyable
     {
     public:
 

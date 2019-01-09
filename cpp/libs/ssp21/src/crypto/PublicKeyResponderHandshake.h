@@ -21,7 +21,7 @@ namespace ssp21
             return std::make_shared<PublicKeyResponderHandshake>(logger, static_keys, cert_handler);
         }
 
-        virtual IResponderHandshake::Result process(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const openpal::Timestamp& now, IFrameWriter& writer, Session& session) override;
+        virtual IResponderHandshake::Result process(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now, IFrameWriter& writer, Session& session) override;
 
     private:
 
@@ -30,8 +30,6 @@ namespace ssp21
         const StaticKeys static_keys;
         const std::shared_ptr<ICertificateHandler> cert_handler;
     };
-
-
 
 }
 
