@@ -1,10 +1,5 @@
 #include "Executor.h"
 
-
-
-using namespace openpal;
-using namespace std::chrono;
-
 class Timer : public ITimer
 {
     friend class Executor;

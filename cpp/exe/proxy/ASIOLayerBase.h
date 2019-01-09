@@ -1,19 +1,18 @@
 #ifndef SSP21PROXY_ASIOLAYERBASE_H
 #define SSP21PROXY_ASIOLAYERBASE_H
 
-#include <openpal/util/Uncopyable.h>
-#include <openpal/container/Buffer.h>
+#include <ser4cpp/util/Uncopyable.h>
+#include <ser4cpp/container/Buffer.h>
 #include <openpal/logging/Logger.h>
+#include <openpal/logging/LogMacros.h>
 
 #include <ssp21/link/LinkConstants.h>
 #include <ssp21/util/SequenceTypes.h>
 #include <ssp21/stack/LogLevels.h>
 
-#include <openpal/logging/LogMacros.h>
-
 #include <asio.hpp>
 
-class ASIOLayerBase : private openpal::Uncopyable
+class ASIOLayerBase : private ser4cpp::Uncopyable
 {
 
 public:
@@ -72,7 +71,7 @@ protected:
                 FORMAT_LOG_BLOCK(this->logger, ssp21::levels::debug, "complete socket rx: %u, tx: %s", rx_data.length(), bool_str(this->is_tx_active));
                 if (this->logger.is_enabled(ssp21::levels::debug))
                 {
-                    openpal::HexLogging::log(this->logger, ssp21::levels::debug, rx_data);
+                    //openpal::HexLogging::log(this->logger, ssp21::levels::debug, rx_data);
                 }
                 this->on_rx_complete(rx_data);
             }
@@ -147,7 +146,7 @@ private:
 protected:
 
     openpal::Logger logger;
-    openpal::Buffer rx_buffer;
+    ser4cpp::Buffer rx_buffer;
 };
 
 #endif

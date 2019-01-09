@@ -14,7 +14,7 @@ set(ssp21_tests_headers
     ./mocks/MockUpperLayer.h
 )
 
-set(ssp21_tests_srcsP
+set(ssp21_tests_srcs
     ./main.cpp
 
     ./ChainVerificationTestSuite.cpp

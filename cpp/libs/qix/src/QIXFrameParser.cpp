@@ -2,7 +2,7 @@
 
 #include "ssp21/stack/LogLevels.h"
 
-#include "openpal/serialization/BigEndian.h"
+#include "ser4cpp/serialization/BigEndian.h"
 
 #include "openpal/logging/LogMacros.h"
 
@@ -57,7 +57,7 @@ void QIXFrameParser::read_frame_fields(QIXFrame& frame)
 {
     auto payload = this->buffer.as_seq().skip(sync_size);
     // read the key_id, and advance the slice
-    openpal::BigEndian::read(payload, frame.key_id);
+    ser4cpp::BigEndian::read(payload, frame.key_id);
     // the next 32 bytes are the actual key
     frame.key_data = payload.take(key_size);
     // the next byte is the status

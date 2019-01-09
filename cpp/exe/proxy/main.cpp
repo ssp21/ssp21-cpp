@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include <asio.hpp>
+#include <exe4cpp/asio/BasicExecutor.h>
 
 #include <ssp21/util/ConsolePrettyPrinter.h>
 #include <ssp21/stack/LogLevels.h>
@@ -9,7 +10,6 @@
 #include <openpal/logging/LogMacros.h>
 
 #include "ConfigReader.h"
-#include "Executor.h"
 #include "Proxy.h"
 
 using namespace std;
@@ -64,7 +64,8 @@ void run(const std::string& config_file_path)
         throw std::logic_error("no proxy configurations were specified");
     }
 
-    const auto executor = make_shared<Executor>();
+    auto service = std::make_shared<asio::io_service>();
+    const auto executor = make_shared<exe4cpp::BasicExecutor>(service);
 
     std::vector<std::unique_ptr<Proxy>> proxies;
 
@@ -86,6 +87,6 @@ void run(const std::string& config_file_path)
     for (auto& p : proxies) p->start();
 
     SIMPLE_LOG_BLOCK(logger, ssp21::levels::event, "begin io_context::run()");
-    executor->run();
+    executor->get_service()->run();
     SIMPLE_LOG_BLOCK(logger, ssp21::levels::event, "end io_context::run()");
 }

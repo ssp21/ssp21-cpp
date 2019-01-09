@@ -1,7 +1,7 @@
 #ifndef SSP21PROXY_PROXYCONFIG_H
 #define SSP21PROXY_PROXYCONFIG_H
 
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 #include "openpal/logging/LogLevels.h"
 
 #include "ssp21/crypto/BufferTypes.h"
@@ -11,7 +11,7 @@
 #include <string>
 #include <memory>
 
-struct ProxyConfig : public openpal::Uncopyable
+struct ProxyConfig : public ser4cpp::Uncopyable
 {
     enum class EndpointMode
     {

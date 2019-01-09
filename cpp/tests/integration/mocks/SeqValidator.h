@@ -3,8 +3,6 @@
 
 #include "UpperLayer.h"
 
-#include "testlib/MockExecutor.h"
-
 #include <deque>
 #include <memory>
 

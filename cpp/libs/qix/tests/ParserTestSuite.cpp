@@ -3,21 +3,17 @@
 #include "catch.hpp"
 
 #include "qix/QIXFrameParser.h"
-#include "testlib/MockLogHandler.h"
-#include "testlib/Hex.h"
-#include "testlib/HexConversions.h"
+#include "ser4cpp/util/HexConversions.h"
 
 #define SUITE(name) "ParserTestSuite - " name
 
 using namespace ssp21;
-using namespace openpal;
+using namespace ser4cpp;
 
 TEST_CASE(SUITE("correctly parses QIX frame"))
 {
-    MockLogHandler handler;
-    handler.write_to_stdio();
-    handler.log_everything();
-    QIXFrameParser parser(handler.logger);
+    openpal::Logger logger(nullptr, openpal::ModuleId(0), "test", openpal::LogLevels::everything());
+    QIXFrameParser parser(logger);
 
     const std::string sync("5A A5");
     const std::string key_id("00 00 00 00 00 00 00 01");
@@ -25,21 +21,17 @@ TEST_CASE(SUITE("correctly parses QIX frame"))
     const std::string key_status("00");
     const std::string crc("FB 02 BF 4D");
 
-    Hex hex(sync + key_id + key_data + key_status + crc);
-    REQUIRE(hex.as_rslice().length() == QIXFrameParser::get_fixed_frame_size());
+    auto hex = HexConversions::from_hex(sync + key_id + key_data + key_status + crc);
+    REQUIRE(hex->as_rslice().length() == QIXFrameParser::get_fixed_frame_size());
 
     auto dest = parser.get_write_slice();
     REQUIRE(dest.length() == QIXFrameParser::get_fixed_frame_size());
-    dest.copy_from(hex.as_rslice());
+    dest.copy_from(hex->as_rslice());
 
     QIXFrame frame;
     REQUIRE(parser.parse(frame));
 
     REQUIRE(frame.key_id == 1);
-    REQUIRE(to_hex(frame.key_data) == key_data);
+    REQUIRE(HexConversions::to_hex(frame.key_data) == key_data);
     REQUIRE(frame.status == QIXFrame::Status::ok);
-
 }
-
-
-

@@ -1,12 +1,12 @@
 #ifndef SSP21PROXY_PROXY_H
 #define SSP21PROXY_PROXY_H
 
-#include <openpal/util/Uncopyable.h>
+#include <ser4cpp/util/Uncopyable.h>
+#include <exe4cpp/asio/BasicExecutor.h>
 #include <openpal/logging/Logger.h>
 
 #include <asio.hpp>
 
-#include "Executor.h"
 #include "ProxyConfig.h"
 #include "StackFactory.h"
 #include "Session.h"
@@ -16,7 +16,7 @@
 /**
 * A proxy has an accepting server and multiple concurrent sessions
 */
-class Proxy : private openpal::Uncopyable
+class Proxy : private ser4cpp::Uncopyable
 {
     struct Server
     {
@@ -52,7 +52,7 @@ public:
 
     Proxy(
         const ProxyConfig& config,
-        const std::shared_ptr<Executor>& executor,
+        const std::shared_ptr<exe4cpp::BasicExecutor>& executor,
         const openpal::Logger& logger
     );
 
@@ -68,7 +68,7 @@ private:
 
     void start_connect(asio::ip::tcp::socket accepted_socket);
 
-    const std::shared_ptr<Executor> executor;
+    const std::shared_ptr<exe4cpp::BasicExecutor> executor;
     openpal::Logger logger;
     stack_factory_t factory;
 

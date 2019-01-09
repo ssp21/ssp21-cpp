@@ -5,7 +5,7 @@
 
 #include "openpal/logging/Logger.h"
 
-#include "openpal/container/StaticBuffer.h"
+#include "ser4cpp/container/StaticBuffer.h"
 
 /**
 * Data contained in a QIX Frame
@@ -55,7 +55,7 @@ private:
     static uint32_t find_sync(ssp21::seq32_t& input);
 
     uint32_t num_bytes_buffered = 0;
-    openpal::StaticBuffer<uint32_t, total_frame_size> buffer;
+    ser4cpp::StaticBuffer<uint32_t, total_frame_size> buffer;
 
     openpal::Logger logger;
 

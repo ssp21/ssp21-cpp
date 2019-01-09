@@ -4,8 +4,8 @@
 #include "ssp21/stack/ILowerLayer.h"
 #include "ssp21/stack/IUpperLayer.h"
 
-#include "openpal/executor/IExecutor.h"
-#include "openpal/container/Buffer.h"
+#include "exe4cpp/IExecutor.h"
+#include "ser4cpp/container/Buffer.h"
 
 #include <stdexcept>
 #include <memory>
@@ -16,11 +16,11 @@ namespace ssp21
 
     class LowerLayer final : public ILowerLayer
     {
-        typedef openpal::Buffer message_t;
+        typedef ser4cpp::Buffer message_t;
 
     public:
 
-        explicit LowerLayer(const std::shared_ptr<openpal::IExecutor>& executor) : executor(executor)
+        explicit LowerLayer(const std::shared_ptr<exe4cpp::IExecutor>& executor) : executor(executor)
         {}
 
         virtual bool start_tx_from_upper(const seq32_t& data) override
@@ -78,7 +78,7 @@ namespace ssp21
             this->upper->on_lower_rx_ready();
         }
 
-        const std::shared_ptr<openpal::IExecutor> executor;
+        const std::shared_ptr<exe4cpp::IExecutor> executor;
 
         std::deque<std::unique_ptr<message_t>> messages;
 

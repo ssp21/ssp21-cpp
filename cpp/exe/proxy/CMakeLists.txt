@@ -5,7 +5,6 @@ set(proxy_headers
     ./ConfigProperties.h
     ./ConfigReader.h
     ./ConfigSection.h
-    ./Executor.h
     ./Proxy.h
     ./ProxyConfig.h
     ./Session.h
@@ -17,7 +16,6 @@ set(proxy_srcs
 
     ./ConfigReader.cpp
     ./ConfigSection.cpp
-    ./Executor.cpp
     ./Proxy.cpp
     ./Session.cpp
 )

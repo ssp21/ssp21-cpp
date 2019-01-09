@@ -1,11 +1,13 @@
 #ifndef SSP21_INTEGRATION_FIXTURE_H
 #define SSP21_INTEGRATION_FIXTURE_H
 
-#include "../mocks/LowerLayer.h"
-#include "../mocks/UpperLayer.h"
-#include "../mocks/SeqValidator.h"
+#include "mocks/LowerLayer.h"
+#include "mocks/UpperLayer.h"
+#include "mocks/SeqValidator.h"
 
-#include "testlib/MockLogHandler.h"
+#include "exe4cpp/MockExecutor.h"
+
+#include "openpal/logging/Logger.h"
 #include "ssp21/util/ConsolePrettyPrinter.h"
 
 #include "ssp21/stack/IStack.h"
@@ -50,18 +52,9 @@ namespace ssp21
 
         IntegrationFixture(Mode mode);
 
-        void log_everything_to_stdio()
-        {
-            this->ilog.log_everything();
-            this->ilog.add_backend(std::make_shared<ConsolePrettyPrinter>());
-
-            this->rlog.log_everything();
-            this->rlog.add_backend(std::make_shared<ConsolePrettyPrinter>());
-        }
-
-        const std::shared_ptr<openpal::MockExecutor> exe;
-        openpal::MockLogHandler ilog;
-        openpal::MockLogHandler rlog;
+        const std::shared_ptr<exe4cpp::MockExecutor> exe;
+        openpal::Logger ilog;
+        openpal::Logger rlog;
 
         LowerLayer initiator_lower;
         LowerLayer responder_lower;
@@ -76,15 +69,15 @@ namespace ssp21
 
     private:
 
-        static Stacks get_stacks(Mode mode, openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe);
+        static Stacks get_stacks(Mode mode, openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe);
 
-        static Stacks preshared_key_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe);
+        static Stacks preshared_key_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe);
 
-        static Stacks qkd_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe);
+        static Stacks qkd_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe);
 
-        static Stacks certificate_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe);
+        static Stacks certificate_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe);
 
-        static Stacks shared_secret_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<openpal::IExecutor> exe);
+        static Stacks shared_secret_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe);
 
         static EndpointKeys generate_random_keys();
 

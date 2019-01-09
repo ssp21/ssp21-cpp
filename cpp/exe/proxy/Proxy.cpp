@@ -1,11 +1,12 @@
 #include "Proxy.h"
 
 #include <openpal/logging/LogMacros.h>
+#include <ssp21/stack/LogLevels.h>
 
 #include "Session.h"
 
-using namespace openpal;
 using namespace asio;
+using namespace ssp21;
 
 Proxy::Server::Server(asio::io_service& context, const std::string& address, uint16_t port) :
     acceptor(context),
@@ -19,13 +20,13 @@ Proxy::Server::Server(asio::io_service& context, const std::string& address, uin
 
 Proxy::Proxy(
     const ProxyConfig& config,
-    const std::shared_ptr<Executor>& executor,
+    const std::shared_ptr<exe4cpp::BasicExecutor>& executor,
     const openpal::Logger& logger
 ) :
     executor(executor),
     logger(logger),
     factory(config.factory),
-    server(executor->get_context(), config.listen_endpoint, config.listen_port),
+    server(*executor->get_service(), config.listen_endpoint, config.listen_port),
     connect_endpoint(ip::address::from_string(config.connect_endpoint), config.connect_port),
     mode(config.endpoint_mode),
     max_sessions(config.max_sessions == 0 ? 1 : config.max_sessions)
@@ -79,7 +80,7 @@ void Proxy::start_connect(asio::ip::tcp::socket accepted_socket)
 {
     // let's now kick off a connect operation
     // won't need this once C++XX has move capture
-    const auto connect = std::make_shared<ConnectOperation>(executor->get_context(), std::move(accepted_socket));
+    const auto connect = std::make_shared<ConnectOperation>(*executor->get_service(), std::move(accepted_socket));
 
     auto connect_cb = [this, connect](const std::error_code & ec)
     {

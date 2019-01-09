@@ -18,5 +18,5 @@ set(integration_tests_srcs
 
 add_executable(integration_tests ${integration_tests_headers} ${integration_tests_srcs})
 target_include_directories(integration_tests PRIVATE .)
-target_link_libraries(integration_tests PRIVATE ssp21 sodium_backend testlib catch)
+target_link_libraries(integration_tests PRIVATE ssp21 sodium_backend catch)
 add_test(NAME integration_tests COMMAND integration_tests)

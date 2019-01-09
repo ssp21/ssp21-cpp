@@ -5,7 +5,7 @@
 #include "ASIOUpperLayer.h"
 
 #include <ssp21/stack/IStack.h>
-#include <openpal/executor/IExecutor.h>
+#include <exe4cpp/IExecutor.h>
 
 #include <functional>
 
@@ -21,7 +21,7 @@ public:
     Session(
         uint64_t id,
         const session_error_handler_t& error_handler,
-        const std::shared_ptr<openpal::IExecutor>& executor,
+        const std::shared_ptr<exe4cpp::IExecutor>& executor,
         std::unique_ptr<socket_lower_layer_t> lower,
         std::unique_ptr<socket_upper_layer_t> upper,
         const std::shared_ptr<ssp21::IStack>& stack
@@ -39,7 +39,7 @@ public:
     static std::shared_ptr<Session> create(
         uint64_t id,
         const session_error_handler_t& error_handler,
-        const std::shared_ptr<openpal::IExecutor>& executor,
+        const std::shared_ptr<exe4cpp::IExecutor>& executor,
         std::unique_ptr<socket_lower_layer_t> lower,
         std::unique_ptr<socket_upper_layer_t> upper,
         const std::shared_ptr<ssp21::IStack>& stack
@@ -81,7 +81,7 @@ private:
 
     const uint64_t id;
     const session_error_handler_t error_handler;
-    const std::shared_ptr<openpal::IExecutor> executor;
+    const std::shared_ptr<exe4cpp::IExecutor> executor;
     const std::unique_ptr<socket_lower_layer_t> lower;
     const std::unique_ptr<socket_upper_layer_t> upper;
     const std::shared_ptr<ssp21::IStack> stack;
