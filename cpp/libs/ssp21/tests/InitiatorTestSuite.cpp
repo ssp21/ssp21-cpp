@@ -37,7 +37,7 @@ TEST_CASE(SUITE("throws exception during construction if algorithms aren't suppo
 
     REQUIRE_THROWS([&]() {
         InitiatorFixture fix(config, suite);
-    });
+    }());
 }
 
 TEST_CASE(SUITE("ignores auth session while waiting for reply handshake begin"))
