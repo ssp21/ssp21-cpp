@@ -9,7 +9,8 @@
 #include "ser4cpp/container/StaticBuffer.h"
 #include "ser4cpp/util/HexConversions.h"
 
-#include "mocks/MockLogHandler.h"
+#include "log4cpp/MockLogHandler.h"
+#include "ssp21/stack/LogLevels.h"
 #include "mocks/HexSequences.h"
 
 #define SUITE(name) "RequestHandshakeBeginTestSuite - " name
@@ -105,7 +106,7 @@ TEST_CASE(SUITE("pretty prints message"))
     );
 
 
-    MockLogHandler log("log");
+    log4cpp::MockLogHandler log("log");
     LogMessagePrinter printer(log.logger, ssp21::levels::info, 16);
 
     msg.print(printer);

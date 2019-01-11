@@ -7,7 +7,7 @@
 #include "ssp21/crypto/KeyRecord.h"
 #include "ssp21/crypto/IKeySource.h"
 #include "ssp21/crypto/IKeyLookup.h"
-#include "openpal/logging/Logger.h"
+#include "log4cpp/Logger.h"
 
 #include <mutex>
 #include <map>
@@ -16,7 +16,7 @@ class QIXKeyCache final : public ssp21::IKeySource, public ssp21::IKeyLookup
 {
 public:
 
-    QIXKeyCache(const std::string& serial_port, const openpal::Logger& logger, size_t max_keys);
+    QIXKeyCache(const std::string& serial_port, const log4cpp::Logger& logger, size_t max_keys);
 
     virtual ~QIXKeyCache() {}
 
@@ -32,7 +32,7 @@ protected:
     std::mutex mutex;
 
     const size_t max_keys;
-    openpal::Logger logger;
+    log4cpp::Logger logger;
 
     std::map<uint64_t, std::shared_ptr<const ssp21::KeyRecord>> key_map;
 

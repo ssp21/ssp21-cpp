@@ -1,10 +1,10 @@
 
 #include "qix/QIXFrameReader.h"
 
-#include "ssp21/util/ConsolePrettyPrinter.h"
+#include "log4cpp/ConsolePrettyPrinter.h"
 #include "ssp21/stack/LogLevels.h"
 
-#include "openpal/logging/LogMacros.h"
+#include "log4cpp/LogMacros.h"
 
 #include <iostream>
 
@@ -32,7 +32,7 @@ int main(int argc, char*  argv[])
     {
         QIXFrameReader reader(
             std::make_shared<QIXPrinter>(),
-            openpal::Logger(std::make_shared<ssp21::ConsolePrettyPrinter>(), Module::id, "qix-reader", openpal::LogLevels(~0)),
+            log4cpp::Logger(std::make_shared<log4cpp::ConsolePrettyPrinter>(), Module::id, "qix-reader", log4cpp::LogLevels(~0)),
             argv[1]
         );
 

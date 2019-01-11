@@ -2,11 +2,11 @@
 #include "qix/QIXFrameReader.h"
 #include "qix/QIXFrameParser.h"
 
-#include "openpal/logging/LogMacros.h"
+#include "log4cpp/LogMacros.h"
 
 #include <cinttypes>
 
-QIXFrameReader::QIXFrameReader(const std::shared_ptr<IQIXFrameHandler>& handler, const openpal::Logger& logger, const std::string& serial_device) :
+QIXFrameReader::QIXFrameReader(const std::shared_ptr<IQIXFrameHandler>& handler, const log4cpp::Logger& logger, const std::string& serial_device) :
     handler(handler),
     logger(logger),
     service(1),
@@ -22,7 +22,7 @@ QIXFrameReader::QIXFrameReader(const std::shared_ptr<IQIXFrameHandler>& handler,
     port.set_option(asio::serial_port::flow_control(asio::serial_port::flow_control::type::none));
     port.set_option(asio::serial_port_base::stop_bits(asio::serial_port_base::stop_bits::type::one));
 
-    FORMAT_LOG_BLOCK(this->logger, openpal::levels::info, "Reading QIX frames on: %s", serial_device.c_str());
+    FORMAT_LOG_BLOCK(this->logger, log4cpp::levels::info, "Reading QIX frames on: %s", serial_device.c_str());
 
     // launch the thread to read frames
     thread = std::make_unique<std::thread>([this]()
@@ -49,7 +49,7 @@ void QIXFrameReader::run_and_catch()
     {
         if (!shutting_down)
         {
-            SIMPLE_LOG_BLOCK(this->logger, openpal::levels::error, ex.what());
+            SIMPLE_LOG_BLOCK(this->logger, log4cpp::levels::error, ex.what());
         }
     }
 }
@@ -79,10 +79,10 @@ void QIXFrameReader::run()
                 this->handler->handle(frame);
                 break;
             case(QIXFrame::Status::key_compromised):
-                FORMAT_LOG_BLOCK(this->logger, openpal::levels::warn, "Key compromised w/ id: %" PRIu64, frame.key_id);
+                FORMAT_LOG_BLOCK(this->logger, log4cpp::levels::warn, "Key compromised w/ id: %" PRIu64, frame.key_id);
                 break;
             default:
-                FORMAT_LOG_BLOCK(this->logger, openpal::levels::warn, "Received undefined key status w/ id: %" PRIu64, frame.key_id);
+                FORMAT_LOG_BLOCK(this->logger, log4cpp::levels::warn, "Received undefined key status w/ id: %" PRIu64, frame.key_id);
                 break;
             }
         }

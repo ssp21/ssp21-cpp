@@ -5,7 +5,7 @@
 
 #include "ssp21/stack/LogLevels.h"
 
-#include "openpal/logging/LogMacros.h"
+#include "log4cpp/LogMacros.h"
 
 #include <algorithm>
 
@@ -13,7 +13,7 @@ namespace ssp21
 {
     Initiator::Initiator(
         const InitiatorConfig& config,
-        const openpal::Logger& logger,
+        const log4cpp::Logger& logger,
         const std::shared_ptr<IFrameWriter>& frame_writer,
         const std::shared_ptr<exe4cpp::IExecutor>& executor,
         const std::shared_ptr<IInitiatorHandshake>& handshake
@@ -63,7 +63,7 @@ namespace ssp21
         return this;
     }
 
-    void Initiator::IHandshakeState::log_unexpected_message(openpal::Logger& logger, Function function)
+    void Initiator::IHandshakeState::log_unexpected_message(log4cpp::Logger& logger, Function function)
     {
         FORMAT_LOG_BLOCK(logger, levels::warn, "Received unexpected message: %s", FunctionSpec::to_string(function));
     }
@@ -163,5 +163,3 @@ namespace ssp21
     }
 
 }
-
-

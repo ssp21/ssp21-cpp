@@ -4,8 +4,6 @@
 #include "ssp21/crypto/gen/CryptoError.h"
 #include "ssp21/crypto/Crypto.h"
 
-using namespace openpal;
-
 namespace ssp21
 {
     seq32_t TruncatedMacSessionMode::read_impl(

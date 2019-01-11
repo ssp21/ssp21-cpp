@@ -3,8 +3,8 @@
 
 #include <ser4cpp/util/Uncopyable.h>
 #include <ser4cpp/container/Buffer.h>
-#include <openpal/logging/Logger.h>
-#include <openpal/logging/LogMacros.h>
+#include <log4cpp/Logger.h>
+#include <log4cpp/LogMacros.h>
 
 #include <ssp21/link/LinkConstants.h>
 #include <ssp21/util/SequenceTypes.h>
@@ -19,7 +19,7 @@ public:
 
     typedef asio::ip::tcp::socket socket_t;
 
-    ASIOLayerBase(const openpal::Logger& logger, socket_t socket) :
+    ASIOLayerBase(const log4cpp::Logger& logger, socket_t socket) :
         socket(std::move(socket)),
         logger(logger),
         rx_buffer(ssp21::consts::link::max_frame_size)
@@ -71,7 +71,7 @@ protected:
                 FORMAT_LOG_BLOCK(this->logger, ssp21::levels::debug, "complete socket rx: %u, tx: %s", rx_data.length(), bool_str(this->is_tx_active));
                 if (this->logger.is_enabled(ssp21::levels::debug))
                 {
-                    //openpal::HexLogging::log(this->logger, ssp21::levels::debug, rx_data);
+                    log4cpp::HexLogging::log(this->logger, ssp21::levels::debug, rx_data);
                 }
                 this->on_rx_complete(rx_data);
             }
@@ -145,7 +145,7 @@ private:
 
 protected:
 
-    openpal::Logger logger;
+    log4cpp::Logger logger;
     ser4cpp::Buffer rx_buffer;
 };
 

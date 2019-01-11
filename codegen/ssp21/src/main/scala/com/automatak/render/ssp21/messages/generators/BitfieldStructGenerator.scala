@@ -88,7 +88,7 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
 
       "ParseError %s::read(seq32_t& input)".format(field.name).iter ++ bracket {
         "uint8_t value = 0;".iter ++
-          "if(!openpal::UInt8::read_from(input, value)) return ParseError::insufficient_bytes;".iter ++ space ++
+          "if(!ser4cpp::UInt8::read_from(input, value)) return ParseError::insufficient_bytes;".iter ++ space ++
           "if((value & %s) != 0) return ParseError::reserved_bit;".format(reserved_mask).iter ++ space ++
           fields ++ space ++
           "return ParseError::ok;".iter
@@ -105,7 +105,7 @@ case class BitfieldStructGenerator(field: Bitfield) extends WriteCppFiles {
       "FormatError %s::write(wseq32_t& output) const".format(field.name).iter ++ bracket {
         "uint8_t value = 0;".iter ++
           space ++ fields ++ space ++
-          "return openpal::UInt8::write_to(output, value) ? FormatError::ok : FormatError::insufficient_space;".iter
+          "return ser4cpp::UInt8::write_to(output, value) ? FormatError::ok : FormatError::insufficient_space;".iter
       }
     }
 

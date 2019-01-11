@@ -9,7 +9,6 @@ set(ssp21_tests_headers
     ./mocks/HexSequences.h
     ./mocks/MockCertificateData.h
     ./mocks/MockCryptoBackend.h
-    ./mocks/MockLogHandler.h
     ./mocks/MockLowerLayer.h
     ./mocks/MockUpperLayer.h
 )

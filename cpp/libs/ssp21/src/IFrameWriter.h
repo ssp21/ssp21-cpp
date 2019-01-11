@@ -3,7 +3,7 @@
 #define SSP21_IFRAMEWRITER_H
 
 #include "IWritable.h"
-#include "openpal/logging/Logger.h"
+#include "log4cpp/Logger.h"
 
 namespace ssp21
 {
@@ -42,7 +42,7 @@ namespace ssp21
     {
     public:
 
-        explicit IFrameWriter(const openpal::Logger& logger);
+        explicit IFrameWriter(const log4cpp::Logger& logger);
 
         virtual ~IFrameWriter() {}
 
@@ -54,7 +54,7 @@ namespace ssp21
 
         virtual WriteResult write_impl(const IWritable& payload) = 0;
 
-        openpal::Logger logger;
+        log4cpp::Logger logger;
     };
 
 }

@@ -9,7 +9,7 @@
 #include "crypto/ResponderHandshakes.h"
 #include "crypto/InitiatorHandshakes.h"
 
-#include "mocks/MockLogHandler.h"
+#include "log4cpp/MockLogHandler.h"
 #include "mocks/MockLowerLayer.h"
 #include "mocks/MockUpperLayer.h"
 #include "mocks/CryptoFixture.h"
@@ -34,7 +34,7 @@ namespace ssp21
 
         }
 
-        static std::shared_ptr<IFrameWriter> get_frame_writer(const openpal::Logger& logger, uint16_t max_message_size)
+        static std::shared_ptr<IFrameWriter> get_frame_writer(const log4cpp::Logger& logger, uint16_t max_message_size)
         {
             return std::make_shared<MessageOnlyFrameWriter>(logger, max_message_size);
         }
@@ -69,7 +69,7 @@ namespace ssp21
 
     public:
 
-        ssp21::MockLogHandler log;
+        log4cpp::MockLogHandler log;
         const std::shared_ptr<exe4cpp::MockExecutor> exe;
         MockLowerLayer lower;
         MockUpperLayer upper;

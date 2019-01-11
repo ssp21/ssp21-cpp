@@ -8,12 +8,12 @@
 
 #include "ssp21/stack/LogLevels.h"
 
-#include "openpal/logging/LogMacros.h"
+#include "log4cpp/LogMacros.h"
 
 namespace ssp21
 {
 
-    PublicKeyResponderHandshake::PublicKeyResponderHandshake(const openpal::Logger& logger, const StaticKeys& static_keys, const std::shared_ptr<ICertificateHandler>& cert_handler) :
+    PublicKeyResponderHandshake::PublicKeyResponderHandshake(const log4cpp::Logger& logger, const StaticKeys& static_keys, const std::shared_ptr<ICertificateHandler>& cert_handler) :
         logger(logger),
         static_keys(static_keys),
         cert_handler(cert_handler)

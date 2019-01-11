@@ -7,13 +7,13 @@
 #include "crypto/AlgorithmSet.h"
 #include "crypto/gen/ReplyHandshakeBegin.h"
 
-#include "openpal/logging/LogMacros.h"
+#include "log4cpp/LogMacros.h"
 #include "ssp21/stack/LogLevels.h"
 
 namespace ssp21
 {
 
-    QKDResponderHandshake::QKDResponderHandshake(const openpal::Logger& logger, const std::shared_ptr<IKeyLookup>& key_lookup) :
+    QKDResponderHandshake::QKDResponderHandshake(const log4cpp::Logger& logger, const std::shared_ptr<IKeyLookup>& key_lookup) :
         logger(logger),
         key_lookup(key_lookup)
     {

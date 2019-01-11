@@ -4,6 +4,7 @@
 
 #include "qix/QIXFrameParser.h"
 #include "ser4cpp/util/HexConversions.h"
+#include "log4cpp/MockLogHandler.h"
 
 #define SUITE(name) "ParserTestSuite - " name
 
@@ -12,8 +13,8 @@ using namespace ser4cpp;
 
 TEST_CASE(SUITE("correctly parses QIX frame"))
 {
-    openpal::Logger logger(nullptr, openpal::ModuleId(0), "test", openpal::LogLevels::everything());
-    QIXFrameParser parser(logger);
+    log4cpp::MockLogHandler handler("test");
+    QIXFrameParser parser(handler.logger);
 
     const std::string sync("5A A5");
     const std::string key_id("00 00 00 00 00 00 00 01");

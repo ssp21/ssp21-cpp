@@ -15,7 +15,7 @@ namespace ssp21
     {
     public:
 
-        MessageOnlyFrameWriter(const openpal::Logger& logger = openpal::Logger::empty(), uint16_t max_payload_size = consts::link::max_config_payload_size) :
+        MessageOnlyFrameWriter(const log4cpp::Logger& logger = log4cpp::Logger::empty(), uint16_t max_payload_size = consts::link::max_config_payload_size) :
             IFrameWriter(logger),
             max_payload_size(max_payload_size),
             buffer(max_payload_size)

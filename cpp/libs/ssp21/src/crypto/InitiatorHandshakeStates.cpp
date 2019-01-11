@@ -4,7 +4,7 @@
 #include "crypto/TripleDH.h"
 #include "ssp21/stack/LogLevels.h"
 
-#include "openpal/logging/LogMacros.h"
+#include "log4cpp/LogMacros.h"
 
 namespace ssp21
 {

@@ -1,12 +1,12 @@
 
 #include "crypto/LogMessagePrinter.h"
 
-#include "openpal/logging/LogMacros.h"
-#include "openpal/logging/HexLogging.h"
+#include "log4cpp/LogMacros.h"
+#include "log4cpp/HexLogging.h"
 
 #include <inttypes.h>
 
-using namespace openpal;
+using namespace log4cpp;
 
 namespace ssp21
 {
@@ -44,8 +44,7 @@ namespace ssp21
         SAFE_STRING_FORMAT(message, max_log_entry_size, "%s (length = %u)", name, data.length());
         logger_.log(level_, LOCATION, message);
 
-        // TODO: Fix this
-        //HexLogging::log(logger_, level_, data, ':', max_hex_bytes_per_line_, max_hex_bytes_per_line_);
+        HexLogging::log(logger_, level_, data, ':', max_hex_bytes_per_line_, max_hex_bytes_per_line_);
     }
 
 }

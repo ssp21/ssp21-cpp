@@ -3,7 +3,7 @@
 
 #include <ser4cpp/util/Uncopyable.h>
 #include <exe4cpp/asio/BasicExecutor.h>
-#include <openpal/logging/Logger.h>
+#include <log4cpp/Logger.h>
 
 #include <asio.hpp>
 
@@ -53,7 +53,7 @@ public:
     Proxy(
         const ProxyConfig& config,
         const std::shared_ptr<exe4cpp::BasicExecutor>& executor,
-        const openpal::Logger& logger
+        const log4cpp::Logger& logger
     );
 
     void start();
@@ -69,7 +69,7 @@ private:
     void start_connect(asio::ip::tcp::socket accepted_socket);
 
     const std::shared_ptr<exe4cpp::BasicExecutor> executor;
-    openpal::Logger logger;
+    log4cpp::Logger logger;
     stack_factory_t factory;
 
     Server server;

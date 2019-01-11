@@ -6,7 +6,7 @@
 
 namespace ssp21
 {
-    class SessionModes : private openpal::StaticOnly
+    class SessionModes : private ser4cpp::StaticOnly
     {
 
     public:

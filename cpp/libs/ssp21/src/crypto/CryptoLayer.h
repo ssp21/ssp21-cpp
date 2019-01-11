@@ -31,7 +31,7 @@ namespace ssp21
         CryptoLayer(
             const CryptoLayerConfig& context_config,
             const SessionConfig& session_config,
-            const openpal::Logger& logger,
+            const log4cpp::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
             const std::shared_ptr<exe4cpp::IExecutor>& executor
         );
@@ -101,7 +101,7 @@ namespace ssp21
 
         // ------ member variables ------
 
-        openpal::Logger logger;
+        log4cpp::Logger logger;
 
         const std::shared_ptr<IFrameWriter> frame_writer;
         const std::shared_ptr<exe4cpp::IExecutor> executor;

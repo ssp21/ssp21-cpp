@@ -1,7 +1,8 @@
 
 #include "crypto/PublicKeyInitiatorHandshake.h"
 
-#include "openpal/logging/LogMacros.h"
+#include "log4cpp/LogMacros.h"
+#include "ssp21/stack/LogLevels.h"
 
 #include "crypto/TripleDH.h"
 
@@ -26,7 +27,7 @@ namespace ssp21
         const auto err = this->cert_handler->validate(msg.handshake_data, remote_public_key);
         if (any(err))
         {
-            FORMAT_LOG_BLOCK(this->logger, openpal::levels::error, "error validating certificate data: %s", HandshakeErrorSpec::to_string(err));
+            FORMAT_LOG_BLOCK(this->logger, levels::error, "error validating certificate data: %s", HandshakeErrorSpec::to_string(err));
             return false;
         }
 
@@ -48,7 +49,7 @@ namespace ssp21
 
         if (ec)
         {
-            FORMAT_LOG_BLOCK(this->logger, openpal::levels::warn, "Error generating input key material: %s", ec.message().c_str());
+            FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error generating input key material: %s", ec.message().c_str());
             return false;
         }
 
@@ -64,7 +65,7 @@ namespace ssp21
 
         if (now < this->time_request_tx)
         {
-            SIMPLE_LOG_BLOCK(this->logger, openpal::levels::error, "clock rollback detected");
+            SIMPLE_LOG_BLOCK(this->logger, levels::error, "clock rollback detected");
             return false;
         }
 

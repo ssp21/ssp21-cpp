@@ -11,7 +11,7 @@ class ConfigReader
 
 public:
 
-    static std::vector<std::unique_ptr<ProxyConfig>> read(const openpal::Logger& logger, const std::string& file_path);
+    static std::vector<std::unique_ptr<ProxyConfig>> read(const log4cpp::Logger& logger, const std::string& file_path);
 
 private:
 

@@ -13,9 +13,9 @@ namespace ssp21
     {
     public:
 
-        QKDResponderHandshake(const openpal::Logger& logger, const std::shared_ptr<IKeyLookup>& key_lookup);
+        QKDResponderHandshake(const log4cpp::Logger& logger, const std::shared_ptr<IKeyLookup>& key_lookup);
 
-        inline static std::shared_ptr<IResponderHandshake> make_shared(openpal::Logger logger, const std::shared_ptr<IKeyLookup>& key_lookup)
+        inline static std::shared_ptr<IResponderHandshake> make_shared(log4cpp::Logger logger, const std::shared_ptr<IKeyLookup>& key_lookup)
         {
             return std::make_shared<QKDResponderHandshake>(logger, key_lookup);
         }
@@ -24,7 +24,7 @@ namespace ssp21
 
     private:
 
-        openpal::Logger logger;
+        log4cpp::Logger logger;
         const std::shared_ptr<IKeyLookup> key_lookup;
     };
 

@@ -1,17 +1,15 @@
 
 #include "crypto/Responder.h"
 
-#include "openpal/logging/LogMacros.h"
+#include "log4cpp/LogMacros.h"
 
 #include "ssp21/stack/LogLevels.h"
-
-using namespace openpal;
 
 namespace ssp21
 {
     Responder::Responder(
         const ResponderConfig& config,
-        const openpal::Logger& logger,
+        const log4cpp::Logger& logger,
         const std::shared_ptr<IFrameWriter>& frame_writer,
         const std::shared_ptr<exe4cpp::IExecutor>& executor,
         const std::shared_ptr<IResponderHandshake>& handshake

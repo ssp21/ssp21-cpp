@@ -20,8 +20,6 @@
 
 #include <iostream>
 
-
-using namespace openpal;
 using namespace ssp21;
 
 void ConfigSection::add(const std::string& propertyId, const std::string& value)
@@ -29,10 +27,10 @@ void ConfigSection::add(const std::string& propertyId, const std::string& value)
     this->values[propertyId] = value;
 }
 
-std::unique_ptr<ProxyConfig> ConfigSection::get_config(const openpal::Logger& logger, const std::string& id)
+std::unique_ptr<ProxyConfig> ConfigSection::get_config(const log4cpp::Logger& logger, const std::string& id)
 {
     const auto endpoint_mode = this->get_mode();
-    const openpal::LogLevels levels(this->get_levels());
+    const log4cpp::LogLevels levels(this->get_levels());
 
     auto ret = std::make_unique<ProxyConfig>(
                    this->get_stack_factory(logger, endpoint_mode),
@@ -54,13 +52,13 @@ std::unique_ptr<ProxyConfig> ConfigSection::get_config(const openpal::Logger& lo
     return std::move(ret);
 }
 
-stack_factory_t ConfigSection::get_stack_factory(const openpal::Logger& logger, ProxyConfig::EndpointMode ep_mode)
+stack_factory_t ConfigSection::get_stack_factory(const log4cpp::Logger& logger, ProxyConfig::EndpointMode ep_mode)
 {
     const Addresses addresses(this->get_addresses());
     return (ep_mode == ProxyConfig::EndpointMode::initiator) ? this->get_initiator_factory(logger, addresses) : this->get_responder_factory(logger, addresses);
 }
 
-stack_factory_t ConfigSection::get_initiator_factory(const openpal::Logger& logger, const ssp21::Addresses& addresses)
+stack_factory_t ConfigSection::get_initiator_factory(const log4cpp::Logger& logger, const ssp21::Addresses& addresses)
 {
     const auto mode = this->get_handshake_mode();
     switch (mode)
@@ -82,7 +80,7 @@ stack_factory_t ConfigSection::get_initiator_shared_secert_factory(const ssp21::
 {
     const auto shared_secret = this->get_shared_secert();
 
-    return [ = ](const openpal::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
+    return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
     {
         CryptoSuite suite;
         suite.handshake_ephemeral = HandshakeEphemeral::nonce;
@@ -98,11 +96,11 @@ stack_factory_t ConfigSection::get_initiator_shared_secert_factory(const ssp21::
     };
 }
 
-stack_factory_t ConfigSection::get_initiator_qkd_factory(const openpal::Logger& logger, const ssp21::Addresses& addresses)
+stack_factory_t ConfigSection::get_initiator_qkd_factory(const log4cpp::Logger& logger, const ssp21::Addresses& addresses)
 {
     const auto key_cache = this->get_qix_key_cache(logger);
 
-    return [ = ](const openpal::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
+    return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
     {
         CryptoSuite suite;
         suite.handshake_ephemeral = HandshakeEphemeral::none;
@@ -123,7 +121,7 @@ stack_factory_t ConfigSection::get_initiator_preshared_public_key_factory(const 
     const auto local_keys = this->get_local_static_keys();
     const auto remote_public_key = this->get_crypto_key<ssp21::PublicKey>(props::remote_public_key_path, ContainerEntryType::x25519_public_key);
 
-    return [ = ](const openpal::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
+    return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
     {
         return initiator::factory::preshared_public_key_mode(
                    addresses,
@@ -142,7 +140,7 @@ stack_factory_t ConfigSection::get_initiator_certificate_mode_factory(const ssp2
     const auto anchor_cert_data = this->get_file_data(props::authority_cert_path);
     const auto local_cert_data = this->get_file_data(props::local_cert_path);
 
-    return [ = ](const openpal::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
+    return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
     {
         return initiator::factory::certificate_public_key_mode(
                    addresses,
@@ -157,7 +155,7 @@ stack_factory_t ConfigSection::get_initiator_certificate_mode_factory(const ssp2
     };
 }
 
-stack_factory_t ConfigSection::get_responder_factory(const openpal::Logger& logger, const ssp21::Addresses& addresses)
+stack_factory_t ConfigSection::get_responder_factory(const log4cpp::Logger& logger, const ssp21::Addresses& addresses)
 {
     const auto mode = this->get_handshake_mode();
     switch (mode)
@@ -179,7 +177,7 @@ stack_factory_t ConfigSection::get_responder_shared_secert_factory(const ssp21::
 {
     const auto shared_secret = this->get_shared_secert();
 
-    return [ = ](const openpal::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
+    return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
     {
         return responder::factory::shared_secret_mode(
                    addresses,
@@ -191,11 +189,11 @@ stack_factory_t ConfigSection::get_responder_shared_secert_factory(const ssp21::
     };
 }
 
-stack_factory_t ConfigSection::get_responder_qkd_factory(const openpal::Logger& logger, const ssp21::Addresses& addresses)
+stack_factory_t ConfigSection::get_responder_qkd_factory(const log4cpp::Logger& logger, const ssp21::Addresses& addresses)
 {
     const auto key_cache = this->get_qix_key_cache(logger);
 
-    return [ = ](const openpal::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
+    return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
     {
         return responder::factory::qkd_mode(
                    addresses,
@@ -212,7 +210,7 @@ stack_factory_t ConfigSection::get_responder_preshared_public_key_factory(const 
     const auto local_keys = this->get_local_static_keys();
     const auto remote_public_key = this->get_crypto_key<ssp21::PublicKey>(props::remote_public_key_path, ContainerEntryType::x25519_public_key);
 
-    return [ = ](const openpal::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
+    return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
     {
         return responder::factory::preshared_public_key_mode(
                    addresses,
@@ -230,7 +228,7 @@ stack_factory_t ConfigSection::get_responder_certificate_mode_factory(const ssp2
     const auto anchor_cert_data = this->get_file_data(props::authority_cert_path);
     const auto local_cert_data = this->get_file_data(props::local_cert_path);
 
-    return [ = ](const openpal::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
+    return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
     {
         return responder::factory::certificate_public_key_mode(
                    addresses,
@@ -265,7 +263,7 @@ std::shared_ptr<const SymmetricKey> ConfigSection::get_shared_secert()
     return this->get_crypto_key<SymmetricKey>(props::shared_secret_key_path, ContainerEntryType::shared_secret);
 }
 
-std::shared_ptr<QIXKeyCache> ConfigSection::get_qix_key_cache(const openpal::Logger& logger)
+std::shared_ptr<QIXKeyCache> ConfigSection::get_qix_key_cache(const log4cpp::Logger& logger)
 {
     const auto port = this->consume_value(props::serial_port);
 
@@ -276,9 +274,9 @@ std::shared_ptr<QIXKeyCache> ConfigSection::get_qix_key_cache(const openpal::Log
            );
 }
 
-LogLevels ConfigSection::get_levels()
+log4cpp::LogLevels ConfigSection::get_levels()
 {
-    LogLevels levels;
+    log4cpp::LogLevels levels;
     for (auto flag : this->consume_value(props::log_levels))
     {
         levels |= this->get_levels_for_char(flag);
@@ -391,27 +389,25 @@ std::shared_ptr<const T> ConfigSection::get_crypto_key(const std::string& key, s
     return ret;
 }
 
-LogLevels ConfigSection::get_levels_for_char(char value)
+log4cpp::LogLevels ConfigSection::get_levels_for_char(char value)
 {
     switch (value)
     {
     case('v'):
-        return LogLevels(ssp21::levels::event.value);
+        return log4cpp::LogLevels(ssp21::levels::event.value);
     case('e'):
-        return LogLevels(ssp21::levels::error.value);
+        return log4cpp::LogLevels(ssp21::levels::error.value);
     case('w'):
-        return LogLevels(ssp21::levels::warn.value);
+        return log4cpp::LogLevels(ssp21::levels::warn.value);
     case('i'):
-        return LogLevels(ssp21::levels::info.value);
+        return log4cpp::LogLevels(ssp21::levels::info.value);
     case('d'):
-        return LogLevels(ssp21::levels::debug.value);
+        return log4cpp::LogLevels(ssp21::levels::debug.value);
     case('m'):
-        return LogLevels(ssp21::levels::rx_crypto_msg.value | ssp21::levels::tx_crypto_msg.value);
+        return log4cpp::LogLevels(ssp21::levels::rx_crypto_msg.value | ssp21::levels::tx_crypto_msg.value);
     case('f'):
-        return LogLevels(ssp21::levels::rx_crypto_msg_fields.value | ssp21::levels::tx_crypto_msg_fields.value);
+        return log4cpp::LogLevels(ssp21::levels::rx_crypto_msg_fields.value | ssp21::levels::tx_crypto_msg_fields.value);
     default:
         throw ssp21::Exception("unknown log level: ", value);
     }
 }
-
-

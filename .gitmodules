@@ -1,6 +1,3 @@
-[submodule "deps/openpal/openpal"]
-	path = deps/openpal/openpal
-	url = https://github.com/automatak/openpal.git
 [submodule "deps/catch/catch"]
 	path = deps/catch/catch
 	url = https://github.com/catchorg/Catch2.git
@@ -19,3 +16,6 @@
 [submodule "deps/exe4cpp"]
 	path = deps/exe4cpp
 	url = https://github.com/automatak/exe4cpp.git
+[submodule "deps/log4cpp"]
+	path = deps/log4cpp
+	url = https://github.com/automatak/log4cpp.git

@@ -7,13 +7,13 @@
 #include "crypto/AlgorithmSet.h"
 #include "crypto/gen/ReplyHandshakeBegin.h"
 
-#include "openpal/logging/LogMacros.h"
+#include "log4cpp/LogMacros.h"
 #include "ssp21/stack/LogLevels.h"
 
 namespace ssp21
 {
 
-    SharedSecretResponderHandshake::SharedSecretResponderHandshake(const openpal::Logger& logger, const std::shared_ptr<const SymmetricKey>& key) :
+    SharedSecretResponderHandshake::SharedSecretResponderHandshake(const log4cpp::Logger& logger, const std::shared_ptr<const SymmetricKey>& key) :
         logger(logger),
         key(key)
     {

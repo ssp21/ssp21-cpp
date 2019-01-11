@@ -1,7 +1,7 @@
 
 #include "crypto/Session.h"
 
-#include "openpal/logging/LogMacros.h"
+#include "log4cpp/LogMacros.h"
 
 #include "ssp21/stack/LogLevels.h"
 #include "ssp21/crypto/gen/CryptoError.h"

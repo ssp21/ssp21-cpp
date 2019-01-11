@@ -3,12 +3,12 @@
 
 #include "ssp21/util/Exception.h"
 
-#include "openpal/logging/LogMacros.h"
+#include "log4cpp/LogMacros.h"
 #include "ssp21/stack/LogLevels.h"
 
 namespace ssp21
 {
-    QKDInitiatorHandshake::QKDInitiatorHandshake(const openpal::Logger& logger, const CryptoSuite& crypto_suite, const std::shared_ptr<IKeySource>& key_source) :
+    QKDInitiatorHandshake::QKDInitiatorHandshake(const log4cpp::Logger& logger, const CryptoSuite& crypto_suite, const std::shared_ptr<IKeySource>& key_source) :
         logger(logger),
         crypto_suite(crypto_suite),
         algorithms(crypto_suite),

@@ -49,7 +49,6 @@ set(ssp21_public_headers
     ./include/ssp21/stack/IUpperLayer.h
     ./include/ssp21/stack/LogLevels.h
 
-    ./include/ssp21/util/ConsolePrettyPrinter.h
     ./include/ssp21/util/ErrorCategory.h
     ./include/ssp21/util/Exception.h
     ./include/ssp21/util/ICollection.h
@@ -188,7 +187,6 @@ set(ssp21_srcs
 
     ./src/stack/Factory.cpp
 
-    ./src/util/ConsolePrettyPrinter.cpp
     ./src/util/SecureFile.cpp
 )
 
@@ -199,7 +197,7 @@ target_include_directories(ssp21
         $<INSTALL_INTERFACE:include>
     PRIVATE ./src
 )
-target_link_libraries(ssp21 PUBLIC exe4cpp ser4cpp openpal)
+target_link_libraries(ssp21 PUBLIC exe4cpp ser4cpp log4cpp)
 target_compile_features(ssp21 PUBLIC cxx_std_14)
 
 install(TARGETS ssp21 EXPORT Ssp21Targets

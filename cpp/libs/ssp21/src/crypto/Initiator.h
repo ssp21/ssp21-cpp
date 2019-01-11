@@ -22,7 +22,7 @@ namespace ssp21
 
         Initiator(
             const InitiatorConfig& config,
-            const openpal::Logger& logger,
+            const log4cpp::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
             const std::shared_ptr<exe4cpp::IExecutor>& executor,
             const std::shared_ptr<IInitiatorHandshake>& handshake
@@ -66,7 +66,7 @@ namespace ssp21
 
         private:
 
-            void log_unexpected_message(openpal::Logger& logger, Function func);
+            void log_unexpected_message(log4cpp::Logger& logger, Function func);
 
         };
 

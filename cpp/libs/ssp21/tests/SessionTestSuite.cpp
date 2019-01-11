@@ -199,7 +199,7 @@ TEST_CASE(SUITE("won't format a message if adding the TTL would exceed the maxim
 TEST_CASE(SUITE("forwards the formatting error if the session::write function can't write to the output buffer"))
 {
     SessionFixture fixture(
-        std::make_shared<MessageOnlyFrameWriter>(openpal::Logger::empty(), 0)
+        std::make_shared<MessageOnlyFrameWriter>(log4cpp::Logger::empty(), 0)
     );
 
     fixture.test_format_failure(Session::Param(), exe4cpp::steady_time_t(), "CA FE", CryptoError::bad_buffer_size);

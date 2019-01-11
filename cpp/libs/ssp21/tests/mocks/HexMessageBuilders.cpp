@@ -149,7 +149,7 @@ namespace ssp21
             if (data->as_rslice().length() > max) throw std::logic_error("payload length exceeds maximum");
             const auto payload_u16 = data->as_rslice().take(max);
 
-            LinkFrameWriter writer(openpal::Logger::empty(), Addresses(dest, src), max);
+            LinkFrameWriter writer(log4cpp::Logger::empty(), Addresses(dest, src), max);
 
             const auto result = writer.write(SeqWritable(payload_u16));
 

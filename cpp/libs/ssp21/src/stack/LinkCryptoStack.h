@@ -17,7 +17,7 @@ namespace ssp21
         ResponderStack(
             Addresses addresses,
             const ResponderConfig& config,
-            openpal::Logger logger,
+            log4cpp::Logger logger,
             const std::shared_ptr<exe4cpp::IExecutor>& executor,
             const std::shared_ptr<IResponderHandshake>& handshake
         ) :
@@ -51,7 +51,7 @@ namespace ssp21
 
     private:
 
-        static std::shared_ptr<IFrameWriter> get_frame_writer(openpal::Logger logger, Addresses addresses, uint16_t max_payload_size)
+        static std::shared_ptr<IFrameWriter> get_frame_writer(log4cpp::Logger logger, Addresses addresses, uint16_t max_payload_size)
         {
             return std::make_shared<LinkFrameWriter>(logger, addresses, max_payload_size);
         }
@@ -67,7 +67,7 @@ namespace ssp21
         InitiatorStack(
             Addresses addresses,
             const InitiatorConfig& config,
-            openpal::Logger logger,
+            log4cpp::Logger logger,
             const std::shared_ptr<exe4cpp::IExecutor>& executor,
             const std::shared_ptr<IInitiatorHandshake>& handshake) :
             link(addresses.source, addresses.destination),
@@ -100,7 +100,7 @@ namespace ssp21
 
     private:
 
-        static std::shared_ptr<IFrameWriter> get_frame_writer(openpal::Logger logger, Addresses addresses, uint16_t max_payload_size)
+        static std::shared_ptr<IFrameWriter> get_frame_writer(log4cpp::Logger logger, Addresses addresses, uint16_t max_payload_size)
         {
             return std::make_shared<LinkFrameWriter>(logger, addresses, max_payload_size);
         }

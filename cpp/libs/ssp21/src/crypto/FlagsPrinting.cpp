@@ -1,7 +1,7 @@
 
 #include "crypto/FlagsPrinting.h"
 
-#include "openpal/logging/LogMacros.h"
+#include "log4cpp/LogMacros.h"
 
 namespace ssp21
 {

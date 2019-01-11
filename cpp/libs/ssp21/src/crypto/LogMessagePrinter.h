@@ -4,7 +4,7 @@
 
 #include "ssp21/crypto/IMessagePrinter.h"
 
-#include "openpal/logging/Logger.h"
+#include "log4cpp/Logger.h"
 #include "ser4cpp/util/Uncopyable.h"
 
 namespace ssp21
@@ -18,7 +18,7 @@ namespace ssp21
     {
 
     public:
-        LogMessagePrinter(const openpal::Logger& logger, openpal::LogLevel level, uint32_t max_hex_bytes_per_line = 20);
+        LogMessagePrinter(const log4cpp::Logger& logger, log4cpp::LogLevel level, uint32_t max_hex_bytes_per_line = 20);
 
         virtual void print(const char* message) override;
         virtual void print(const char* name, uint64_t value) override;
@@ -26,8 +26,8 @@ namespace ssp21
         virtual void print(const char* name, const seq32_t& data) override;
 
     private:
-        openpal::Logger logger_;
-        openpal::LogLevel level_;
+        log4cpp::Logger logger_;
+        log4cpp::LogLevel level_;
         const uint32_t max_hex_bytes_per_line_;
     };
 

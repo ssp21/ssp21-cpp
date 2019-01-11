@@ -4,7 +4,7 @@
 #include <string>
 #include <thread>
 
-#include "openpal/logging/Logger.h"
+#include "log4cpp/Logger.h"
 #include "qix/IQIXFrameHandler.h"
 
 #include <asio.hpp>
@@ -16,7 +16,7 @@ class QIXFrameReader
 {
 public:
 
-    QIXFrameReader(const std::shared_ptr<IQIXFrameHandler>& handler, const openpal::Logger& logger, const std::string& serial_device);
+    QIXFrameReader(const std::shared_ptr<IQIXFrameHandler>& handler, const log4cpp::Logger& logger, const std::string& serial_device);
 
     ~QIXFrameReader();
 
@@ -24,7 +24,7 @@ public:
 private:
 
     const std::shared_ptr<IQIXFrameHandler> handler;
-    openpal::Logger logger;
+    log4cpp::Logger logger;
 
     bool shutting_down = false;
     asio::io_service service;

@@ -8,7 +8,7 @@
 namespace ssp21
 {
     std::shared_ptr<IInitiatorHandshake> InitiatorHandshakes::shared_secret_mode(
-        const openpal::Logger& logger,
+        const log4cpp::Logger& logger,
         const CryptoSuite& crypto_suite,
         const std::shared_ptr<const SymmetricKey>& key
     )
@@ -17,7 +17,7 @@ namespace ssp21
     }
 
     std::shared_ptr<IInitiatorHandshake> InitiatorHandshakes::qkd_mode(
-        const openpal::Logger& logger,
+        const log4cpp::Logger& logger,
         const CryptoSuite& crypto_suite,
         const std::shared_ptr<IKeySource>& key_source
     )
@@ -26,7 +26,7 @@ namespace ssp21
     }
 
     std::shared_ptr<IInitiatorHandshake> InitiatorHandshakes::public_key_mode(
-        const openpal::Logger& logger,
+        const log4cpp::Logger& logger,
         const CryptoSuite& crypto_suite,
         const StaticKeys& static_keys,
         const std::shared_ptr<ICertificateHandler>& cert_handler

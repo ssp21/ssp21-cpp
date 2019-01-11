@@ -1,6 +1,6 @@
 #include "Proxy.h"
 
-#include <openpal/logging/LogMacros.h>
+#include <log4cpp/LogMacros.h>
 #include <ssp21/stack/LogLevels.h>
 
 #include "Session.h"
@@ -21,7 +21,7 @@ Proxy::Server::Server(asio::io_service& context, const std::string& address, uin
 Proxy::Proxy(
     const ProxyConfig& config,
     const std::shared_ptr<exe4cpp::BasicExecutor>& executor,
-    const openpal::Logger& logger
+    const log4cpp::Logger& logger
 ) :
     executor(executor),
     logger(logger),

@@ -13,7 +13,7 @@ class ASIOLowerLayer final : public ssp21::ILowerLayer, public ASIOLayerBase
 
 public:
 
-    ASIOLowerLayer(const openpal::Logger& logger, socket_t socket) : ASIOLayerBase(logger, std::move(socket))
+    ASIOLowerLayer(const log4cpp::Logger& logger, socket_t socket) : ASIOLayerBase(logger, std::move(socket))
     {}
 
     void open(ssp21::IUpperLayer& upper)

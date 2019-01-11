@@ -2,8 +2,8 @@
 #ifndef SSP21_SEQSTRUCTFIELD_H
 #define SSP21_SEQSTRUCTFIELD_H
 
-#include "openpal/logging/Logger.h"
-#include "openpal/logging/LogMacros.h"
+#include "log4cpp/Logger.h"
+#include "log4cpp/LogMacros.h"
 
 #include "ssp21/crypto/IMessagePrinter.h"
 #include "ssp21/crypto/VLength.h"
@@ -76,13 +76,13 @@ namespace ssp21
 
         void print(const char* name, IMessagePrinter& printer) const
         {
-            char message[openpal::max_log_entry_size];
-            SAFE_STRING_FORMAT(message, openpal::max_log_entry_size, "%s (count = %u)", name, this->count());
+            char message[log4cpp::max_log_entry_size];
+            SAFE_STRING_FORMAT(message, log4cpp::max_log_entry_size, "%s (count = %u)", name, this->count());
             printer.print(message);
 
             for (uint32_t i = 0; i < this->count_; ++i)
             {
-                SAFE_STRING_FORMAT(message, openpal::max_log_entry_size, "field #%u", i + 1);
+                SAFE_STRING_FORMAT(message, log4cpp::max_log_entry_size, "field #%u", i + 1);
                 printer.print(message);
 
                 this->items_[i].print("test", printer); // TODO

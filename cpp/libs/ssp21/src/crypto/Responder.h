@@ -20,7 +20,7 @@ namespace ssp21
 
         Responder(
             const ResponderConfig& config,
-            const openpal::Logger& logger,
+            const log4cpp::Logger& logger,
             const std::shared_ptr<IFrameWriter>& frame_writer,
             const std::shared_ptr<exe4cpp::IExecutor>& executor,
             const std::shared_ptr<IResponderHandshake>& handshake

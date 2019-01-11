@@ -4,7 +4,7 @@
 #include "crypto/LogMessagePrinter.h"
 #include "ssp21/stack/LogLevels.h"
 
-#include "openpal/logging/LogMacros.h"
+#include "log4cpp/LogMacros.h"
 
 namespace ssp21
 {
@@ -12,7 +12,7 @@ namespace ssp21
     CryptoLayer::CryptoLayer(
         const CryptoLayerConfig& context_config,
         const SessionConfig& session_config,
-        const openpal::Logger& logger,
+        const log4cpp::Logger& logger,
         const std::shared_ptr<IFrameWriter>& frame_writer,
         const std::shared_ptr<exe4cpp::IExecutor>& executor
     ) :

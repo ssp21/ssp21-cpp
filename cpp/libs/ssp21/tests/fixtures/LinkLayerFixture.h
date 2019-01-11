@@ -3,7 +3,7 @@
 #ifndef SSP21_LINKLAYERFIXTURE_H
 #define SSP21_LINKLAYERFIXTURE_H
 
-#include "mocks/MockLogHandler.h"
+#include "log4cpp/MockLogHandler.h"
 #include "mocks/MockLowerLayer.h"
 #include "mocks/MockUpperLayer.h"
 
@@ -23,7 +23,7 @@ namespace ssp21
             link.bind(lower, upper);
         }
 
-        ssp21::MockLogHandler log;
+        log4cpp::MockLogHandler log;
         MockLowerLayer lower;
         MockUpperLayer upper;
         LinkLayer link;

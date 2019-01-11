@@ -12,7 +12,7 @@ class ASIOUpperLayer final : public ssp21::IUpperLayer, public ASIOLayerBase
 
 public:
 
-    ASIOUpperLayer(const openpal::Logger& logger, socket_t socket) : ASIOLayerBase(logger, std::move(socket))
+    ASIOUpperLayer(const log4cpp::Logger& logger, socket_t socket) : ASIOLayerBase(logger, std::move(socket))
     {}
 
     void bind(ssp21::ILowerLayer& crypto_layer, const std::function<void ()>& error_handler)

@@ -2,7 +2,7 @@
 #define SSP21PROXY_PROXYCONFIG_H
 
 #include "ser4cpp/util/Uncopyable.h"
-#include "openpal/logging/LogLevels.h"
+#include "log4cpp/LogLevels.h"
 
 #include "ssp21/crypto/BufferTypes.h"
 
@@ -22,7 +22,7 @@ struct ProxyConfig : public ser4cpp::Uncopyable
     ProxyConfig(
         const stack_factory_t& factory,
         const std::string& id,
-        openpal::LogLevels log_levels,
+        log4cpp::LogLevels log_levels,
         EndpointMode endpoint_mode,
         uint16_t max_sessions,
         uint16_t listen_port,
@@ -44,7 +44,7 @@ struct ProxyConfig : public ser4cpp::Uncopyable
     const stack_factory_t factory;
     const std::string id;
 
-    const openpal::LogLevels log_levels;
+    const log4cpp::LogLevels log_levels;
     const EndpointMode endpoint_mode;
     const uint16_t max_sessions;
 

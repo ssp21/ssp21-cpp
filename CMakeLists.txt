@@ -15,8 +15,8 @@ add_subdirectory(./deps/asio)
 add_subdirectory(./deps/catch)
 add_subdirectory(./deps/exe4cpp)
 add_subdirectory(./deps/inih)
-add_subdirectory(./deps/openpal)
 add_subdirectory(./deps/ser4cpp)
+add_subdirectory(./deps/log4cpp)
 
 # Libs
 add_subdirectory(./cpp/libs/ssp21)

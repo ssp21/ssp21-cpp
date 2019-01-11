@@ -16,7 +16,7 @@ namespace ssp21
             std::shared_ptr<IStack> shared_secret_mode(
                 const Addresses& addresses,
                 const ResponderConfig& config,
-                const openpal::Logger& logger,
+                const log4cpp::Logger& logger,
                 const std::shared_ptr<exe4cpp::IExecutor>& executor,
                 const std::shared_ptr<const SymmetricKey>& key
             )
@@ -36,7 +36,7 @@ namespace ssp21
             std::shared_ptr<IStack> qkd_mode(
                 const Addresses& addresses,
                 const ResponderConfig& config,
-                const openpal::Logger& logger,
+                const log4cpp::Logger& logger,
                 const std::shared_ptr<exe4cpp::IExecutor>& executor,
                 const std::shared_ptr<IKeyLookup>& key_lookup
             )
@@ -56,7 +56,7 @@ namespace ssp21
             std::shared_ptr<IStack> preshared_public_key_mode(
                 const Addresses& addresses,
                 const ResponderConfig& config,
-                const openpal::Logger& logger,
+                const log4cpp::Logger& logger,
                 const std::shared_ptr<exe4cpp::IExecutor>& executor,
                 const StaticKeys& local_keys,
                 const std::shared_ptr<const PublicKey>& remote_public_key
@@ -78,7 +78,7 @@ namespace ssp21
             std::shared_ptr<IStack> certificate_public_key_mode(
                 const Addresses& addresses,
                 const ResponderConfig& config,
-                const openpal::Logger& logger,
+                const log4cpp::Logger& logger,
                 const std::shared_ptr<exe4cpp::IExecutor>& executor,
                 const StaticKeys& local_keys,
                 const std::shared_ptr<ssp21::SecureDynamicBuffer>& anchor_cert_file_data,
@@ -111,7 +111,7 @@ namespace ssp21
             std::shared_ptr<IStack> shared_secert_mode(
                 const Addresses& addresses,
                 const InitiatorConfig& config,
-                const openpal::Logger& logger,
+                const log4cpp::Logger& logger,
                 const std::shared_ptr<exe4cpp::IExecutor>& executor,
                 const CryptoSuite& crypto_suite,
                 const std::shared_ptr<const SymmetricKey>& key
@@ -133,7 +133,7 @@ namespace ssp21
             std::shared_ptr<IStack> qkd_mode(
                 const Addresses& addresses,
                 const InitiatorConfig& config,
-                const openpal::Logger& logger,
+                const log4cpp::Logger& logger,
                 const std::shared_ptr<exe4cpp::IExecutor>& executor,
                 const CryptoSuite& crypto_suite,
                 const std::shared_ptr<IKeySource>& key_source
@@ -155,7 +155,7 @@ namespace ssp21
             std::shared_ptr<IStack> preshared_public_key_mode(
                 const Addresses& addresses,
                 const InitiatorConfig& config,
-                const openpal::Logger& logger,
+                const log4cpp::Logger& logger,
                 const std::shared_ptr<exe4cpp::IExecutor>& executor,
                 const CryptoSuite& crypto_suite,
                 const StaticKeys& local_keys,
@@ -178,7 +178,7 @@ namespace ssp21
             std::shared_ptr<IStack> certificate_public_key_mode(
                 const Addresses& addresses,
                 const InitiatorConfig& config,
-                const openpal::Logger& logger,
+                const log4cpp::Logger& logger,
                 const std::shared_ptr<exe4cpp::IExecutor>& executor,
                 const CryptoSuite& crypto_suite,
                 const StaticKeys& local_keys,

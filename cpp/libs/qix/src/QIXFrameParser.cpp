@@ -4,7 +4,7 @@
 
 #include "ser4cpp/serialization/BigEndian.h"
 
-#include "openpal/logging/LogMacros.h"
+#include "log4cpp/LogMacros.h"
 
 using namespace ssp21;
 
@@ -86,7 +86,7 @@ uint32_t QIXFrameParser::read_frame_crc()
 {
     auto data = this->buffer.as_seq().skip(sync_size + crc_data_size);
     uint32_t crc;
-    openpal::BigEndian::read(data, crc);
+    ser4cpp::BigEndian::read(data, crc);
     return crc;
 }*/
 

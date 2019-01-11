@@ -3,14 +3,14 @@
 
 #include "QIXFrame.h"
 
-#include "openpal/logging/Logger.h"
+#include "log4cpp/Logger.h"
 
 #include "ser4cpp/container/StaticBuffer.h"
 
 /**
 * Data contained in a QIX Frame
 */
-class QIXFrameParser : openpal::Uncopyable
+class QIXFrameParser : ser4cpp::Uncopyable
 {
     static const uint8_t sync1 = 0x5A;
     static const uint8_t sync2 = 0xA5;
@@ -34,7 +34,7 @@ public:
         return total_frame_size;
     }
 
-    QIXFrameParser(const openpal::Logger& logger) : logger(logger) {}
+    QIXFrameParser(const log4cpp::Logger& logger) : logger(logger) {}
 
     // the buffer that needs to be filled with data before calling parse()
     ssp21::wseq32_t get_write_slice();
@@ -57,7 +57,7 @@ private:
     uint32_t num_bytes_buffered = 0;
     ser4cpp::StaticBuffer<uint32_t, total_frame_size> buffer;
 
-    openpal::Logger logger;
+    log4cpp::Logger logger;
 
 };
 

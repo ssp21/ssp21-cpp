@@ -18,9 +18,9 @@ namespace ssp21
     {
     public:
 
-        QKDInitiatorHandshake(const openpal::Logger& logger, const CryptoSuite& crypto_suite, const std::shared_ptr<IKeySource>& key_source);
+        QKDInitiatorHandshake(const log4cpp::Logger& logger, const CryptoSuite& crypto_suite, const std::shared_ptr<IKeySource>& key_source);
 
-        inline static std::shared_ptr<IInitiatorHandshake> make_shared(const openpal::Logger& logger, const CryptoSuite& crypto_suite, const std::shared_ptr<IKeySource>& key_source)
+        inline static std::shared_ptr<IInitiatorHandshake> make_shared(const log4cpp::Logger& logger, const CryptoSuite& crypto_suite, const std::shared_ptr<IKeySource>& key_source)
         {
             return std::make_shared<QKDInitiatorHandshake>(logger, crypto_suite, key_source);
         }
@@ -45,7 +45,7 @@ namespace ssp21
 
         seq32_t mix_handshake_hash(const seq32_t& data);
 
-        openpal::Logger logger;
+        log4cpp::Logger logger;
         const CryptoSuite crypto_suite;
         const shared_secret_algorithms_t algorithms;
 

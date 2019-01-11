@@ -3,7 +3,7 @@
 #define SSP21_SESSION_H
 
 #include "ser4cpp/util/Uncopyable.h"
-#include "openpal/logging/Logger.h"
+#include "log4cpp/Logger.h"
 #include "exe4cpp/Typedefs.h"
 
 #include "crypto/Nonce.h"

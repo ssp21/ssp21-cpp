@@ -5,12 +5,11 @@
 #include "fixtures/IntegrationFixture.h"
 
 #include "ssp21/stack/LogLevels.h"
-#include "ssp21/util/ConsolePrettyPrinter.h"
+#include "log4cpp/ConsolePrettyPrinter.h"
 
 #define SUITE(name) "IntegrationTestSuite - " name
 
 using namespace ssp21;
-using namespace openpal;
 
 void open_and_test_handshake(IntegrationFixture& fix);
 void test_bidirectional_data_transfer(IntegrationFixture& fix, const seq32_t& data);

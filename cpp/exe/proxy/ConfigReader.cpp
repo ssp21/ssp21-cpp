@@ -11,7 +11,6 @@
 #include <iostream>
 #include <sstream>
 
-using namespace openpal;
 using namespace ssp21;
 
 int ConfigReader::config_ini_handler(void* user, const char* section, const char* key, const char* value)
@@ -20,7 +19,7 @@ int ConfigReader::config_ini_handler(void* user, const char* section, const char
     return 1;
 }
 
-std::vector<std::unique_ptr<ProxyConfig>> ConfigReader::read(const openpal::Logger& logger, const std::string& file_path)
+std::vector<std::unique_ptr<ProxyConfig>> ConfigReader::read(const log4cpp::Logger& logger, const std::string& file_path)
 {
     ConfigReader c;
 

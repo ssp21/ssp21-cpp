@@ -25,7 +25,7 @@
 #ifndef SSP21_PRINTHEX_H
 #define SSP21_PRINTHEX_H
 
-#include "openpal/util/Uncopyable.h"
+#include "ser4cpp/util/Uncopyable.h"
 #include "ssp21/util/SequenceTypes.h"
 
 #include <iostream>
@@ -34,7 +34,7 @@
 
 namespace ssp21
 {
-    class PrintHex : private openpal::StaticOnly
+    class PrintHex : private ser4cpp::StaticOnly
     {
 
     public:

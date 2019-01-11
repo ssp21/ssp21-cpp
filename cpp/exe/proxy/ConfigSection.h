@@ -17,36 +17,36 @@
 
 class QIXKeyCache;
 
-class ConfigSection : openpal::Uncopyable
+class ConfigSection : ser4cpp::Uncopyable
 {
 
 public:
 
     void add(const std::string& propertyId, const std::string& value);
 
-    std::unique_ptr<ProxyConfig> get_config(const openpal::Logger& logger, const std::string& id);
+    std::unique_ptr<ProxyConfig> get_config(const log4cpp::Logger& logger, const std::string& id);
 
 private:
 
     std::map<std::string, std::string> values;
 
-    stack_factory_t get_stack_factory(const openpal::Logger& logger, ProxyConfig::EndpointMode ep_mode);
+    stack_factory_t get_stack_factory(const log4cpp::Logger& logger, ProxyConfig::EndpointMode ep_mode);
 
-    stack_factory_t get_initiator_factory(const openpal::Logger& logger, const ssp21::Addresses& addresses);
+    stack_factory_t get_initiator_factory(const log4cpp::Logger& logger, const ssp21::Addresses& addresses);
 
     stack_factory_t get_initiator_shared_secert_factory(const ssp21::Addresses& addresses);
 
-    stack_factory_t get_initiator_qkd_factory(const openpal::Logger& logger, const ssp21::Addresses& addresses);
+    stack_factory_t get_initiator_qkd_factory(const log4cpp::Logger& logger, const ssp21::Addresses& addresses);
 
     stack_factory_t get_initiator_preshared_public_key_factory(const ssp21::Addresses& addresses);
 
     stack_factory_t get_initiator_certificate_mode_factory(const ssp21::Addresses& addresses);
 
-    stack_factory_t get_responder_factory(const openpal::Logger& logger, const ssp21::Addresses& addresses);
+    stack_factory_t get_responder_factory(const log4cpp::Logger& logger, const ssp21::Addresses& addresses);
 
     stack_factory_t get_responder_shared_secert_factory(const ssp21::Addresses& addresses);
 
-    stack_factory_t get_responder_qkd_factory(const openpal::Logger& logger, const ssp21::Addresses& addresses);
+    stack_factory_t get_responder_qkd_factory(const log4cpp::Logger& logger, const ssp21::Addresses& addresses);
 
     stack_factory_t get_responder_preshared_public_key_factory(const ssp21::Addresses& addresses);
 
@@ -58,11 +58,11 @@ private:
 
     std::shared_ptr<const ssp21::SymmetricKey> get_shared_secert();
 
-    openpal::LogLevels get_levels();
+    log4cpp::LogLevels get_levels();
 
     std::string consume_value(const std::string& propertyId);
 
-    std::shared_ptr<QIXKeyCache> get_qix_key_cache(const openpal::Logger& logger);
+    std::shared_ptr<QIXKeyCache> get_qix_key_cache(const log4cpp::Logger& logger);
 
     template <class T>
     T get_integer_value(const std::string& propertyId);
@@ -76,8 +76,7 @@ private:
     template <class T>
     std::shared_ptr<const T> get_crypto_key(const std::string& key, ssp21::ContainerEntryType expectedType);
 
-    static openpal::LogLevels get_levels_for_char(char value);
-
+    static log4cpp::LogLevels get_levels_for_char(char value);
 
 };
 

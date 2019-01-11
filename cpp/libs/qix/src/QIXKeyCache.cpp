@@ -3,7 +3,7 @@
 #include "ssp21/crypto/Crypto.h"
 #include "ssp21/stack/LogLevels.h"
 
-#include "openpal/logging/LogMacros.h"
+#include "log4cpp/LogMacros.h"
 
 #include <cinttypes>
 #include <functional>
@@ -25,7 +25,7 @@ public:
     }
 };
 
-QIXKeyCache::QIXKeyCache(const std::string& serial_port, const openpal::Logger& logger, size_t max_keys) :
+QIXKeyCache::QIXKeyCache(const std::string& serial_port, const log4cpp::Logger& logger, size_t max_keys) :
     max_keys(max_keys),
     logger(logger)
 {

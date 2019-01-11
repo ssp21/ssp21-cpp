@@ -10,9 +10,8 @@
 
 #include "ssp21/util/SerializationUtils.h"
 #include "ssp21/util/Exception.h"
-#include "ssp21/util/ConsolePrettyPrinter.h"
 
-#include "openpal/logging/HexLogging.h"
+#include "log4cpp/HexLogging.h"
 
 #include "MockKeyStore.h"
 
@@ -21,16 +20,16 @@ namespace ssp21
 
     IntegrationFixture::IntegrationFixture(Mode mode) :
         exe(std::make_shared<exe4cpp::MockExecutor>()),
-        ilog(std::make_shared<ConsolePrettyPrinter>(), openpal::ModuleId(0), "initiator", openpal::LogLevels::everything()),
-        rlog(std::make_shared<ConsolePrettyPrinter>(), openpal::ModuleId(0), "responder", openpal::LogLevels::everything()),
+        ilog("initiator"),
+        rlog("responder"),
         initiator_lower(exe),
         responder_lower(exe),
-        stacks(this->get_stacks(mode, rlog, ilog, exe))
+        stacks(this->get_stacks(mode, rlog.logger, ilog.logger, exe))
     {
         this->wire();
     }
 
-    IntegrationFixture::Stacks IntegrationFixture::get_stacks(Mode mode, openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe)
+    IntegrationFixture::Stacks IntegrationFixture::get_stacks(Mode mode, log4cpp::Logger rlogger, log4cpp::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe)
     {
         switch (mode)
         {
@@ -48,7 +47,7 @@ namespace ssp21
 
     }
 
-    IntegrationFixture::Stacks IntegrationFixture::preshared_key_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe)
+    IntegrationFixture::Stacks IntegrationFixture::preshared_key_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe)
     {
         const auto keys = generate_random_keys();
 
@@ -74,7 +73,7 @@ namespace ssp21
         return Stacks{ initiator, responder };
     }
 
-    IntegrationFixture::Stacks IntegrationFixture::qkd_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe)
+    IntegrationFixture::Stacks IntegrationFixture::qkd_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe)
     {
         const auto key_store = std::make_shared<MockKeyStore>();
 
@@ -101,7 +100,7 @@ namespace ssp21
         return Stacks{ initiator, responder };
     }
 
-    IntegrationFixture::Stacks IntegrationFixture::certificate_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe)
+    IntegrationFixture::Stacks IntegrationFixture::certificate_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe)
     {
         const auto keys = generate_random_keys();
 
@@ -136,7 +135,7 @@ namespace ssp21
         return Stacks{ initiator, responder };
     }
 
-    IntegrationFixture::Stacks IntegrationFixture::shared_secret_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe)
+    IntegrationFixture::Stacks IntegrationFixture::shared_secret_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe)
     {
         const auto shared_secret = generate_shared_secret();
 

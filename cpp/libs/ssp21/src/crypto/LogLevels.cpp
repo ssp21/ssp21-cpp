@@ -4,7 +4,5 @@
 
 namespace ssp21
 {
-    openpal::ModuleId Module::id(0xAAAAAAAA);
+    log4cpp::ModuleId Module::id(0xAAAAAAAA);
 }
-
-

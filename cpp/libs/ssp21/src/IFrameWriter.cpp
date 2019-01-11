@@ -1,6 +1,6 @@
 #include "IFrameWriter.h"
 
-#include "openpal/logging/LogMacros.h"
+#include "log4cpp/LogMacros.h"
 
 #include "ssp21/stack/LogLevels.h"
 #include "crypto/LogMessagePrinter.h"
@@ -8,7 +8,7 @@
 namespace ssp21
 {
 
-    IFrameWriter::IFrameWriter(const openpal::Logger& logger) : logger(logger)
+    IFrameWriter::IFrameWriter(const log4cpp::Logger& logger) : logger(logger)
     {}
 
 

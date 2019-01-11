@@ -5,7 +5,7 @@
 #include "ssp21/crypto/gen/CertificateEnvelope.h"
 #include "ssp21/crypto/gen/CertificateBody.h"
 
-#include "ssp21/util/ConsolePrettyPrinter.h"
+#include "log4cpp/ConsolePrettyPrinter.h"
 #include "crypto/LogMessagePrinter.h"
 #include "ssp21/stack/LogLevels.h"
 #include "ssp21/util/Exception.h"
@@ -99,12 +99,12 @@ int perform_fuzzing()
     const ssp21::seq32_t slice(buffer, static_cast<uint32_t>(count));
 
     // set up pretty printing
-    const auto console_logger = std::make_shared<ConsolePrettyPrinter>();
-    openpal::Logger logger(
-            std::make_shared<ConsolePrettyPrinter>(),
+    const auto console_logger = std::make_shared<log4cpp::ConsolePrettyPrinter>();
+    log4cpp::Logger logger(
+            std::make_shared<log4cpp::ConsolePrettyPrinter>(),
             ssp21::Module::id,
             "fuzz",
-            openpal::LogLevels::everything()
+            log4cpp::LogLevels::everything()
     );
     LogMessagePrinter printer(logger, levels::event);
 

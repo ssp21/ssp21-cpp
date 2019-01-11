@@ -7,8 +7,8 @@
 
 #include "exe4cpp/MockExecutor.h"
 
-#include "openpal/logging/Logger.h"
-#include "ssp21/util/ConsolePrettyPrinter.h"
+#include "log4cpp/MockLogHandler.h"
+#include "log4cpp/ConsolePrettyPrinter.h"
 
 #include "ssp21/stack/IStack.h"
 #include "ssp21/crypto/StaticKeys.h"
@@ -53,8 +53,8 @@ namespace ssp21
         IntegrationFixture(Mode mode);
 
         const std::shared_ptr<exe4cpp::MockExecutor> exe;
-        openpal::Logger ilog;
-        openpal::Logger rlog;
+        log4cpp::MockLogHandler ilog;
+        log4cpp::MockLogHandler rlog;
 
         LowerLayer initiator_lower;
         LowerLayer responder_lower;
@@ -69,15 +69,15 @@ namespace ssp21
 
     private:
 
-        static Stacks get_stacks(Mode mode, openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe);
+        static Stacks get_stacks(Mode mode, log4cpp::Logger rlogger, log4cpp::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe);
 
-        static Stacks preshared_key_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe);
+        static Stacks preshared_key_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe);
 
-        static Stacks qkd_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe);
+        static Stacks qkd_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe);
 
-        static Stacks certificate_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe);
+        static Stacks certificate_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe);
 
-        static Stacks shared_secret_stacks(openpal::Logger rlogger, openpal::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe);
+        static Stacks shared_secret_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe);
 
         static EndpointKeys generate_random_keys();
 

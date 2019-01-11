@@ -17,7 +17,7 @@ namespace ssp21
 
     public:
 
-        LinkFrameWriter(const openpal::Logger& logger, Addresses addr, uint16_t max_payload_size);
+        LinkFrameWriter(const log4cpp::Logger& logger, Addresses addr, uint16_t max_payload_size);
 
         virtual uint16_t get_max_payload_size() const override
         {

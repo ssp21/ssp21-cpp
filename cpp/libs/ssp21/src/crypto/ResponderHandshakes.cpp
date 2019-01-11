@@ -8,7 +8,7 @@
 namespace ssp21
 {
     std::shared_ptr<IResponderHandshake> ResponderHandshakes::shared_secret_mode(
-        const openpal::Logger& logger,
+        const log4cpp::Logger& logger,
         const std::shared_ptr<const SymmetricKey>& key
     )
     {
@@ -16,7 +16,7 @@ namespace ssp21
     }
 
     std::shared_ptr<IResponderHandshake> ResponderHandshakes::qkd_mode(
-        const openpal::Logger& logger,
+        const log4cpp::Logger& logger,
         const std::shared_ptr<IKeyLookup>& key_lookup
     )
     {
@@ -24,7 +24,7 @@ namespace ssp21
     }
 
     std::shared_ptr<IResponderHandshake> ResponderHandshakes::public_key_mode(
-        const openpal::Logger& logger,
+        const log4cpp::Logger& logger,
         const StaticKeys& static_keys,
         const std::shared_ptr<ICertificateHandler>& cert_handler)
     {

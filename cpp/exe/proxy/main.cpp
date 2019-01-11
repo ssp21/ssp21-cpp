@@ -4,17 +4,16 @@
 #include <asio.hpp>
 #include <exe4cpp/asio/BasicExecutor.h>
 
-#include <ssp21/util/ConsolePrettyPrinter.h>
+#include <log4cpp/ConsolePrettyPrinter.h>
 #include <ssp21/stack/LogLevels.h>
 #include <sodium/SodiumBackend.h>
-#include <openpal/logging/LogMacros.h>
+#include <log4cpp/LogMacros.h>
 
 #include "ConfigReader.h"
 #include "Proxy.h"
 
 using namespace std;
 using namespace ssp21;
-using namespace openpal;
 
 void run(const std::string& config_file_path);
 
@@ -45,17 +44,17 @@ int main(int argc, char*  argv[])
     return 0;
 }
 
-std::shared_ptr<openpal::ILogHandler> get_log_backend()
+std::shared_ptr<log4cpp::ILogHandler> get_log_backend()
 {
-    ConsolePrettyPrinter::Settings settings;
+    log4cpp::ConsolePrettyPrinter::Settings settings;
     settings.max_id_size = 20;
-    return make_shared<ConsolePrettyPrinter>(settings);
+    return make_shared<log4cpp::ConsolePrettyPrinter>(settings);
 }
 
 void run(const std::string& config_file_path)
 {
     // setup the logging backend
-    Logger logger(get_log_backend(), Module::id, "ssp21-proxy", LogLevels(~0));
+    log4cpp::Logger logger(get_log_backend(), Module::id, "ssp21-proxy", log4cpp::LogLevels::everything());
 
     auto configurations = ConfigReader::read(logger, config_file_path);
 
