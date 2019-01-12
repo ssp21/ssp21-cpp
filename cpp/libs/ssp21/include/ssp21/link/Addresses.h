@@ -1,26 +1,39 @@
-
 #ifndef SSP21_ADDRESSES_H
 #define SSP21_ADDRESSES_H
+
+/** @file
+ * @brief Structure @ref ssp21::Addresses
+ */
 
 #include <cstdint>
 
 namespace ssp21
 {
+
+/**
+ * @brief Link-layer pair of addresses.
+ */
+struct Addresses
+{
     /**
-    * Addressing information from a source to a destination
-    */
-    struct Addresses
-    {
-        Addresses(uint16_t destination, uint16_t source) :
-            destination(destination), source(source)
-        {}
+     * @brief Constructor.
+     * @param destination Destination address
+     * @param source Source address
+     */
+    Addresses(uint16_t destination = 0, uint16_t source = 0) :
+        destination(destination), source(source)
+    {}
 
-        Addresses() : destination(0), source(0)
-        {}
+    /**
+     * @brief Destination address.
+     */
+    uint16_t destination;
 
-        uint16_t destination;
-        uint16_t source;
-    };
+    /**
+     * @brief Source address.
+     */
+    uint16_t source;
+};
 
 }
 

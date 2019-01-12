@@ -1,0 +1,29 @@
+/** @namespace ssp21
+ * @brief SSP21-cpp main namespace.
+ *
+ * See @ref Factory.h for the entrypoint of the library.
+ */
+
+/** @dir ssp21
+ * @brief Contains all the ssp21-cpp library public API
+ */
+
+/** @dir ssp21/crypto
+* @brief Contains crypto-layer related classes.
+*/
+
+/** @dir ssp21/link
+* @brief Contains link-layer related classes.
+*/
+
+/** @dir ssp21/stack
+* @brief Contains classes for interaction between protocol layers.
+*
+* @ref Factory.h is the entrypoint of the library.
+*/
+
+/** @dir ssp21/util
+* @brief Contains utility classes.
+*
+* Includes exceptions, secure types, string manipulation, collection handling.
+*/
