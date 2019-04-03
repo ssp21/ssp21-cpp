@@ -33,7 +33,7 @@ public:
      * Once the operation is successfully completed, the implementor must call @ref IUpperLayer::on_lower_tx_ready().
      * 
      * The underlying buffer pointed to by `data` is loaned out to this layer
-     * and must not be mutated until @ref IUpperLayer::on_tx_ready() is called.
+     * and must not be mutated until @ref IUpperLayer::on_lower_tx_ready() is called.
      */
     virtual bool start_tx_from_upper(const seq32_t& data) = 0;
 

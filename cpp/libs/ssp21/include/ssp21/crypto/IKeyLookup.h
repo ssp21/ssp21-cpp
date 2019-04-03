@@ -18,10 +18,9 @@ namespace ssp21
         virtual ~IKeyLookup() {}
 
         /**
-        * Try to find a key using an identifier. Static key schemes expect the key identifier to be empty
-        * and always return the same key.
+        * Try to find a key using an identifier
         *
-        * @param key_id_out An optional key identifier set if the key is a rotating key.
+        * @param key_id The key identifier if the key is a rotating key.
         *
         * @return a valid key, or nullptr if no key is available w/ the specified id
         */
