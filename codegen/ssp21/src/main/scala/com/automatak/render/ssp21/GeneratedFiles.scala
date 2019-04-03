@@ -37,8 +37,6 @@ object GeneratedFiles {
   ).map(x => EnumConfig(x, true, true, false)).map(e => EnumGenerator(e))
 
   private def internalEnumsAPI = List(
-    Base64DecodeError,
-    PEMDecodeError,
     CryptoError,
     ParseError,
     FormatError

@@ -19,8 +19,7 @@ set(ssp21_public_headers
     ./include/ssp21/crypto/StaticKeys.h
     ./include/ssp21/crypto/Statistics.h
     ./include/ssp21/crypto/VLength.h
-
-    ./include/ssp21/crypto/gen/Base64DecodeError.h
+    
     ./include/ssp21/crypto/gen/CertificateBody.h
     ./include/ssp21/crypto/gen/CertificateChain.h
     ./include/ssp21/crypto/gen/CertificateEnvelope.h
@@ -35,8 +34,7 @@ set(ssp21_public_headers
     ./include/ssp21/crypto/gen/HandshakeKDF.h
     ./include/ssp21/crypto/gen/HandshakeMode.h
     ./include/ssp21/crypto/gen/NonceMode.h
-    ./include/ssp21/crypto/gen/ParseError.h
-    ./include/ssp21/crypto/gen/PEMDecodeError.h
+    ./include/ssp21/crypto/gen/ParseError.h    
     ./include/ssp21/crypto/gen/PublicKeyType.h
     ./include/ssp21/crypto/gen/SessionMode.h
 
@@ -152,8 +150,7 @@ set(ssp21_srcs
     ./src/crypto/TruncatedMacSessionMode.cpp
     ./src/crypto/VLength.cpp
 
-    ./src/crypto/gen/AuthMetadata.cpp
-    ./src/crypto/gen/Base64DecodeError.cpp
+    ./src/crypto/gen/AuthMetadata.cpp    
     ./src/crypto/gen/CertificateBody.cpp
     ./src/crypto/gen/CertificateChain.cpp
     ./src/crypto/gen/CertificateEnvelope.cpp
@@ -170,8 +167,7 @@ set(ssp21_srcs
     ./src/crypto/gen/HandshakeKDF.cpp
     ./src/crypto/gen/HandshakeMode.cpp
     ./src/crypto/gen/NonceMode.cpp
-    ./src/crypto/gen/ParseError.cpp
-    ./src/crypto/gen/PEMDecodeError.cpp
+    ./src/crypto/gen/ParseError.cpp    
     ./src/crypto/gen/PublicKeyType.cpp
     ./src/crypto/gen/ReplyHandshakeBegin.cpp
     ./src/crypto/gen/ReplyHandshakeError.cpp
