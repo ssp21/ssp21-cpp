@@ -6,7 +6,7 @@
 
 #include <log4cpp/ConsolePrettyPrinter.h>
 #include <ssp21/stack/LogLevels.h>
-#include <sodium/SodiumBackend.h>
+#include <sodium/CryptoBackend.h>
 #include <log4cpp/LogMacros.h>
 
 #include "ConfigReader.h"
@@ -19,7 +19,7 @@ void run(const std::string& config_file_path);
 
 int main(int argc, char*  argv[])
 {
-    if (!ssp21::SodiumBackend::initialize())
+    if (!ssp21::sodium::CryptoBackend::initialize())
     {
         cerr << "Unable to initialze the crypto backend" << endl;
         return -1;

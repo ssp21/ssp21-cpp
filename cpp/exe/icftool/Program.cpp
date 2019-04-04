@@ -3,7 +3,7 @@
 
 #include "Actions.h"
 
-#include "sodium/SodiumBackend.h"
+#include "sodium/CryptoBackend.h"
 
 #include <iostream>
 
@@ -24,7 +24,7 @@ Program::Program() :
         { flags::level, { "-l", "--level" }, "signing level [0, 5] of the certificate. 0 == endpoint. >0  is an authority", 1 }
     }}
 {
-    if (!ssp21::SodiumBackend::initialize())
+    if (!ssp21::sodium::CryptoBackend::initialize())
     {
         throw ssp21::Exception("unable to initialize crypto backend");
     }

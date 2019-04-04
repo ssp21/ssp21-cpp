@@ -1,5 +1,5 @@
 set(sodium_backend_public_headers
-    ./include/sodium/SodiumBackend.h
+    ./include/sodium/CryptoBackend.h
 )
 
 set(sodium_backend_private_headers
@@ -7,7 +7,7 @@ set(sodium_backend_private_headers
 )
 
 set(sodium_backend_srcs
-    ./src/SodiumBackend.cpp
+    ./src/CryptoBackend.cpp
 )
 
 add_library(sodium_backend ${sodium_backend_public_headers} ${sodium_backend_private_headers} ${sodium_backend_srcs})
