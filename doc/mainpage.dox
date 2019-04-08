@@ -1,9 +1,13 @@
-/** @mainpage SSP21-CPP
+/** @mainpage About
 
-This is SSP21-CPP.
+This is the auto-generated documentation package for SSP21-CPP.
+
+It is provided exclusively as a class/function/namespace reference for the public API.
+
+Detailed <a href="TODO">companion documentation</a> exists to provide the context and examples needed to use the library.
 
 @section mainpage-license License
 
-TBD
+SSP21-CPP is provided under the BSD-3-clause license.
 
 */
