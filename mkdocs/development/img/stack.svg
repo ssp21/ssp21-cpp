@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="539"
+   height="500"
+   version="1.1"
+   id="svg3781"
+   sodipodi:docname="stack.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata3787">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs3785" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="2405"
+     inkscape:window-height="1417"
+     id="namedview3783"
+     showgrid="false"
+     inkscape:zoom="2.1010101"
+     inkscape:cx="210.7524"
+     inkscape:cy="242.42161"
+     inkscape:window-x="2707"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg3781" />
+  <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
+  <g
+     id="g3757"
+     transform="matrix(1,0.00483564,0.01437468,1.0000695,-4.2692792,-95.422979)">
+    <title
+       id="title3751">background</title>
+    <g
+       display="none"
+       overflow="visible"
+       y="0"
+       x="0"
+       height="100%"
+       width="100%"
+       id="canvasGrid"
+       style="display:none;overflow:visible">
+      <rect
+         y="0"
+         x="0"
+         height="100%"
+         width="100%"
+         id="rect3754"
+         style="fill:url(#gridpattern);stroke-width:0" />
+    </g>
+  </g>
+  <g
+     id="g3779"
+     transform="translate(36.64904,-13.471155)">
+    <title
+       id="title3759">Layer 1</title>
+    <rect
+       id="svg_1"
+       height="234.00002"
+       width="351.99997"
+       y="145.43748"
+       x="117.49999"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+    <rect
+       id="svg_5"
+       height="77"
+       width="289"
+       y="169.4375"
+       x="156.5"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+    <rect
+       id="svg_7"
+       height="77"
+       width="289"
+       y="266.4375"
+       x="156.5"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+    <text
+       xml:space="preserve"
+       font-size="24"
+       id="svg_8"
+       y="214.4375"
+       x="199.5"
+       fill-opacity="null"
+       stroke-opacity="null"
+       style="font-size:24px;font-family:Helvetica, Arial, sans-serif;text-anchor:start;fill:#000000;stroke:#000000;stroke-width:0">ssp21::ILowerLayer</text>
+    <text
+       xml:space="preserve"
+       font-size="24"
+       id="svg_10"
+       y="311.4375"
+       x="201.5"
+       fill-opacity="null"
+       stroke-opacity="null"
+       style="font-size:24px;font-family:Helvetica, Arial, sans-serif;text-anchor:start;fill:#000000;stroke:#000000;stroke-width:0">ssp21::IUpperLayer</text>
+    <rect
+       id="svg_12"
+       height="102.00001"
+       width="349"
+       y="31.4375"
+       x="118.49999"
+       fill-opacity="null"
+       stroke-opacity="null"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+    <rect
+       id="svg_13"
+       height="0"
+       width="1"
+       y="76.4375"
+       x="141.5"
+       fill-opacity="null"
+       stroke-opacity="null"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+    <text
+       xml:space="preserve"
+       font-size="24"
+       id="svg_16"
+       y="63.4375"
+       x="167.5"
+       fill-opacity="null"
+       stroke-opacity="null"
+       style="font-size:24px;font-family:Helvetica, Arial, sans-serif;text-anchor:start;fill:#000000;stroke:#000000;stroke-width:0">User defined application</text>
+    <rect
+       id="svg_17"
+       height="34"
+       width="275"
+       y="85.437508"
+       x="160.49998"
+       fill-opacity="null"
+       stroke-opacity="null"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+    <path
+       id="svg_14"
+       d="m 184.50998,147.06651 15,-29.92799 15,29.92799 h -7.5 v 30.07201 h -15 v -30.072 z"
+       fill-opacity="null"
+       stroke-opacity="null"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+    <text
+       xml:space="preserve"
+       font-size="24"
+       id="svg_18"
+       y="106.4375"
+       x="193.5"
+       fill-opacity="null"
+       stroke-opacity="null"
+       style="font-size:24px;font-family:Helvetica, Arial, sans-serif;text-anchor:start;fill:#000000;stroke:#000000;stroke-width:0">ssp21::IUpperLayer</text>
+    <path
+       transform="rotate(178.82555,411.95892,145.03706)"
+       id="svg_15"
+       d="m 396.95893,144.96234 15,-31.05934 15,31.05934 h -7.5 v 31.20879 h -15 v -31.20879 z"
+       fill-opacity="null"
+       stroke-opacity="null"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+    <rect
+       id="svg_19"
+       height="102.00001"
+       width="356"
+       y="391.4375"
+       x="117.49999"
+       fill-opacity="null"
+       stroke-opacity="null"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+    <text
+       xml:space="preserve"
+       font-size="24"
+       id="svg_20"
+       y="473.4375"
+       x="161.5"
+       fill-opacity="null"
+       stroke-opacity="null"
+       style="font-size:24px;font-family:Helvetica, Arial, sans-serif;text-anchor:start;fill:#000000;stroke:#000000;stroke-width:0">User defined I/O</text>
+    <rect
+       id="svg_21"
+       height="34"
+       width="281"
+       y="403.4375"
+       x="160.49998"
+       fill-opacity="null"
+       stroke-opacity="null"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+    <text
+       xml:space="preserve"
+       font-size="24"
+       id="svg_22"
+       y="427.4375"
+       x="199.5"
+       fill-opacity="null"
+       stroke-opacity="null"
+       style="font-size:24px;font-family:Helvetica, Arial, sans-serif;text-anchor:start;fill:#000000;stroke:#000000;stroke-width:0">ssp21::ILowerLayer</text>
+    <path
+       id="svg_23"
+       d="m 181.50998,372.55091 15,-36.41239 15,36.41239 h -7.5 v 36.58761 h -15 v -36.58761 z"
+       fill-opacity="null"
+       stroke-opacity="null"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+    <path
+       transform="rotate(178.82555,411.11282,372.54413)"
+       id="svg_24"
+       d="m 396.11283,372.45138 15,-38.55 15,38.55 h -7.5 v 38.73548 h -15 v -38.73548 z"
+       fill-opacity="null"
+       stroke-opacity="null"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+    <text
+       xml:space="preserve"
+       font-size="24"
+       id="svg_18-7"
+       y="271.21021"
+       x="-17.733625"
+       fill-opacity="null"
+       stroke-opacity="null"
+       style="font-size:24px;font-family:Helvetica, Arial, sans-serif;text-anchor:start;fill:#000000;stroke:#000000;stroke-width:0">IStack</text>
+  </g>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:168.10957336px;line-height:1.25;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:20.54031372"
+     x="135.29477"
+     y="194.35796"
+     id="text3791"
+     transform="scale(0.64659114,1.5465724)"><tspan
+       sodipodi:role="line"
+       id="tspan3789"
+       x="135.29477"
+       y="194.35796"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:168.10957336px;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:20.54031372">{</tspan></text>
+</svg>
