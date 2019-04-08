@@ -85,10 +85,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a81c921e76560902bbe7919aabe05d3c1"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classssp21_1_1ILowerLayer.html#a81c921e76560902bbe7919aabe05d3c1">is_tx_ready</a> () const =0</td></tr>
 <tr class="memdesc:a81c921e76560902bbe7919aabe05d3c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the layer is ready to transmit data.  <a href="#a81c921e76560902bbe7919aabe05d3c1">More...</a><br /></td></tr>
 <tr class="separator:a81c921e76560902bbe7919aabe05d3c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2b13ba64fb6133cf6ea4cfd998d51e6"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classssp21_1_1ILowerLayer.html#ab2b13ba64fb6133cf6ea4cfd998d51e6">start_tx_from_upper</a> (const seq32_t &amp;data)=0</td></tr>
+<tr class="memitem:ab2b13ba64fb6133cf6ea4cfd998d51e6"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classssp21_1_1ILowerLayer.html#ab2b13ba64fb6133cf6ea4cfd998d51e6">start_tx_from_upper</a> (const <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &amp;data)=0</td></tr>
 <tr class="memdesc:ab2b13ba64fb6133cf6ea4cfd998d51e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start an asynchronous TX operation.  <a href="#ab2b13ba64fb6133cf6ea4cfd998d51e6">More...</a><br /></td></tr>
 <tr class="separator:ab2b13ba64fb6133cf6ea4cfd998d51e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9d5f425d6c18f38d1acd1035f86d769"><td class="memItemLeft" align="right" valign="top">seq32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classssp21_1_1ILowerLayer.html#aa9d5f425d6c18f38d1acd1035f86d769">start_rx_from_upper</a> ()</td></tr>
+<tr class="memitem:aa9d5f425d6c18f38d1acd1035f86d769"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classssp21_1_1ILowerLayer.html#aa9d5f425d6c18f38d1acd1035f86d769">start_rx_from_upper</a> ()</td></tr>
 <tr class="memdesc:aa9d5f425d6c18f38d1acd1035f86d769"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called by the <a class="el" href="classssp21_1_1IUpperLayer.html">IUpperLayer</a> when it's ready to receive the next chunk of data.  <a href="#aa9d5f425d6c18f38d1acd1035f86d769">More...</a><br /></td></tr>
 <tr class="separator:aa9d5f425d6c18f38d1acd1035f86d769"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -97,7 +97,7 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a9377d39cf67aa9dada32aad0cc510adf"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classssp21_1_1ILowerLayer.html#a9377d39cf67aa9dada32aad0cc510adf">discard_rx_data</a> ()=0</td></tr>
 <tr class="memdesc:a9377d39cf67aa9dada32aad0cc510adf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when a previous <a class="el" href="classssp21_1_1ILowerLayer.html#aa9d5f425d6c18f38d1acd1035f86d769">ILowerLayer::start_rx_from_upper()</a> operation completes.  <a href="#a9377d39cf67aa9dada32aad0cc510adf">More...</a><br /></td></tr>
 <tr class="separator:a9377d39cf67aa9dada32aad0cc510adf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a65c807b7c972dacc534b2ddaa09ec4d3"><td class="memItemLeft" align="right" valign="top">virtual seq32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classssp21_1_1ILowerLayer.html#a65c807b7c972dacc534b2ddaa09ec4d3">start_rx_from_upper_impl</a> ()=0</td></tr>
+<tr class="memitem:a65c807b7c972dacc534b2ddaa09ec4d3"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classssp21_1_1ILowerLayer.html#a65c807b7c972dacc534b2ddaa09ec4d3">start_rx_from_upper_impl</a> ()=0</td></tr>
 <tr class="memdesc:a65c807b7c972dacc534b2ddaa09ec4d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start reading data.  <a href="#a65c807b7c972dacc534b2ddaa09ec4d3">More...</a><br /></td></tr>
 <tr class="separator:a65c807b7c972dacc534b2ddaa09ec4d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8fab8634ec324067fee19e13ff3ba603"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classssp21_1_1ILowerLayer.html#a8fab8634ec324067fee19e13ff3ba603">reset_this_lower_layer</a> ()</td></tr>
@@ -153,7 +153,7 @@ Protected Member Functions</h2></td></tr>
         <tr>
           <td class="memname">virtual bool ssp21::ILowerLayer::start_tx_from_upper </td>
           <td>(</td>
-          <td class="paramtype">const seq32_t &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &amp;&#160;</td>
           <td class="paramname"><em>data</em></td><td>)</td>
           <td></td>
         </tr>
@@ -188,7 +188,7 @@ Protected Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">seq32_t ssp21::ILowerLayer::start_rx_from_upper </td>
+          <td class="memname"><a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> ssp21::ILowerLayer::start_rx_from_upper </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -248,7 +248,7 @@ Protected Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual seq32_t ssp21::ILowerLayer::start_rx_from_upper_impl </td>
+          <td class="memname">virtual <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> ssp21::ILowerLayer::start_rx_from_upper_impl </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -332,7 +332,7 @@ Protected Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 8 2019 13:54:05 for SSP21-CPP by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Apr 8 2019 16:17:25 for SSP21-CPP by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

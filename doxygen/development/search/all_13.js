@@ -1,5 +1,9 @@
 var searchData=
 [
+  ['ubit48',['UBit48',['../classser4cpp_1_1UBit48.html',1,'ser4cpp']]],
+  ['uint48type',['UInt48Type',['../classser4cpp_1_1UInt48Type.html',1,'ser4cpp']]],
+  ['uint8',['UInt8',['../classser4cpp_1_1UInt8.html',1,'ser4cpp']]],
+  ['uncopyable',['Uncopyable',['../classser4cpp_1_1Uncopyable.html',1,'ser4cpp']]],
   ['undefined',['undefined',['../namespacessp21.html#a6fa88d3cd2d0df3ed92f81505f413204a5e543256c480ac577d30f76f9120eb74',1,'ssp21::undefined()'],['../namespacessp21.html#a260efe57058ec676152ed78889bc47dfa5e543256c480ac577d30f76f9120eb74',1,'ssp21::undefined()'],['../namespacessp21.html#a278f33309ade46a5920cf3d7cc64e5afa5e543256c480ac577d30f76f9120eb74',1,'ssp21::undefined()'],['../namespacessp21.html#a0ab3449569714cc36d41f4ea891a9b25a5e543256c480ac577d30f76f9120eb74',1,'ssp21::undefined()'],['../namespacessp21.html#a31d594e807c85e3aa5059d50996a4f06a5e543256c480ac577d30f76f9120eb74',1,'ssp21::undefined()'],['../namespacessp21.html#adf3d32be2f23612a00d3301bf63aee6aa5e543256c480ac577d30f76f9120eb74',1,'ssp21::undefined()'],['../namespacessp21.html#ad1fd31184aa341ce953086648bc8b5f4a5e543256c480ac577d30f76f9120eb74',1,'ssp21::undefined()'],['../namespacessp21.html#ad1d8da0fa6a193a7e724d9a5d3e14c16a5e543256c480ac577d30f76f9120eb74',1,'ssp21::undefined()'],['../namespacessp21.html#a7c8757a8d43f50e97f0980cb0c92e1fda5e543256c480ac577d30f76f9120eb74',1,'ssp21::undefined()']]],
   ['undefined_5falgorithm',['undefined_algorithm',['../namespacessp21.html#a9e12b6a108fcfba591d4edd8fa1ad433ac4458867fd927216a83d3cf8063add68',1,'ssp21']]],
   ['undefined_5fenum',['undefined_enum',['../namespacessp21.html#a28d8b32e69a6aebfd967e0dcf374f1dca8ca0fca276048fd65f04e0793e72b2c9',1,'ssp21']]],

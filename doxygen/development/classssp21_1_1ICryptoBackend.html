@@ -79,37 +79,37 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:affaa7befd3850ac982119f29dd14f7a8"><td class="memItemLeft" align="right" valign="top"><a id="affaa7befd3850ac982119f29dd14f7a8"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>zero_memory</b> (const wseq32_t &amp;data)=0</td></tr>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>zero_memory</b> (const <a class="el" href="classser4cpp_1_1WSeq.html">wseq32_t</a> &amp;data)=0</td></tr>
 <tr class="separator:affaa7befd3850ac982119f29dd14f7a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6eb2bd5857dda8bad010f56ba0955cc1"><td class="memItemLeft" align="right" valign="top"><a id="a6eb2bd5857dda8bad010f56ba0955cc1"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>gen_random</b> (const wseq32_t &amp;dest)=0</td></tr>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>gen_random</b> (const <a class="el" href="classser4cpp_1_1WSeq.html">wseq32_t</a> &amp;dest)=0</td></tr>
 <tr class="separator:a6eb2bd5857dda8bad010f56ba0955cc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0501ba8f3792071b3a777dccf6246410"><td class="memItemLeft" align="right" valign="top"><a id="a0501ba8f3792071b3a777dccf6246410"></a>
-virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>secure_equals</b> (const seq32_t &amp;lhs, const seq32_t &amp;rhs)=0</td></tr>
+virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>secure_equals</b> (const <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &amp;lhs, const <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &amp;rhs)=0</td></tr>
 <tr class="separator:a0501ba8f3792071b3a777dccf6246410"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b9b3c527e81266699a3fb3b52a52e24"><td class="memItemLeft" align="right" valign="top"><a id="a1b9b3c527e81266699a3fb3b52a52e24"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>hash_sha256</b> (const std::initializer_list&lt; seq32_t &gt; &amp;data, <a class="el" href="classssp21_1_1SecureBuffer.html">SecureBuffer</a> &amp;output)=0</td></tr>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>hash_sha256</b> (const std::initializer_list&lt; <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &gt; &amp;data, <a class="el" href="classssp21_1_1SecureBuffer.html">SecureBuffer</a> &amp;output)=0</td></tr>
 <tr class="separator:a1b9b3c527e81266699a3fb3b52a52e24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf0611fa440dedc887f3e8a9f69b5506"><td class="memItemLeft" align="right" valign="top"><a id="adf0611fa440dedc887f3e8a9f69b5506"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>hmac_sha256</b> (const seq32_t &amp;key, const std::initializer_list&lt; seq32_t &gt; &amp;data, <a class="el" href="classssp21_1_1SecureBuffer.html">SecureBuffer</a> &amp;output)=0</td></tr>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>hmac_sha256</b> (const <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &amp;key, const std::initializer_list&lt; <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &gt; &amp;data, <a class="el" href="classssp21_1_1SecureBuffer.html">SecureBuffer</a> &amp;output)=0</td></tr>
 <tr class="separator:adf0611fa440dedc887f3e8a9f69b5506"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ba33b6c5d6fb595f0426b9e797879e2"><td class="memItemLeft" align="right" valign="top"><a id="a6ba33b6c5d6fb595f0426b9e797879e2"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>gen_keypair_x25519</b> (<a class="el" href="structssp21_1_1KeyPair.html">KeyPair</a> &amp;pair)=0</td></tr>
 <tr class="separator:a6ba33b6c5d6fb595f0426b9e797879e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0de253036b2a96e93facf74d99922593"><td class="memItemLeft" align="right" valign="top"><a id="a0de253036b2a96e93facf74d99922593"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>dh_x25519</b> (const <a class="el" href="classssp21_1_1PrivateKey.html">PrivateKey</a> &amp;priv_key, const seq32_t &amp;pub_key, <a class="el" href="classssp21_1_1DHOutput.html">DHOutput</a> &amp;output, std::error_code &amp;ec)=0</td></tr>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>dh_x25519</b> (const <a class="el" href="classssp21_1_1PrivateKey.html">PrivateKey</a> &amp;priv_key, const <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &amp;pub_key, <a class="el" href="classssp21_1_1DHOutput.html">DHOutput</a> &amp;output, std::error_code &amp;ec)=0</td></tr>
 <tr class="separator:a0de253036b2a96e93facf74d99922593"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a449be246657904f9b6f6130c6adb0eee"><td class="memItemLeft" align="right" valign="top"><a id="a449be246657904f9b6f6130c6adb0eee"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>hkdf_sha256</b> (const seq32_t &amp;salt, const std::initializer_list&lt; seq32_t &gt; &amp;input_key_material, <a class="el" href="classssp21_1_1SymmetricKey.html">SymmetricKey</a> &amp;key1, <a class="el" href="classssp21_1_1SymmetricKey.html">SymmetricKey</a> &amp;key2)=0</td></tr>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>hkdf_sha256</b> (const <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &amp;salt, const std::initializer_list&lt; <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &gt; &amp;input_key_material, <a class="el" href="classssp21_1_1SymmetricKey.html">SymmetricKey</a> &amp;key1, <a class="el" href="classssp21_1_1SymmetricKey.html">SymmetricKey</a> &amp;key2)=0</td></tr>
 <tr class="separator:a449be246657904f9b6f6130c6adb0eee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a512c186e169e6e0890a574829d1faf75"><td class="memItemLeft" align="right" valign="top"><a id="a512c186e169e6e0890a574829d1faf75"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>gen_keypair_ed25519</b> (<a class="el" href="structssp21_1_1KeyPair.html">KeyPair</a> &amp;pair)=0</td></tr>
 <tr class="separator:a512c186e169e6e0890a574829d1faf75"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a458924116c5a3403180fb9405e1bbbc5"><td class="memItemLeft" align="right" valign="top"><a id="a458924116c5a3403180fb9405e1bbbc5"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>sign_ed25519</b> (const seq32_t &amp;input, const seq32_t &amp;private_key, <a class="el" href="classssp21_1_1DSAOutput.html">DSAOutput</a> &amp;output, std::error_code &amp;ec)=0</td></tr>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>sign_ed25519</b> (const <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &amp;input, const <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &amp;private_key, <a class="el" href="classssp21_1_1DSAOutput.html">DSAOutput</a> &amp;output, std::error_code &amp;ec)=0</td></tr>
 <tr class="separator:a458924116c5a3403180fb9405e1bbbc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a856561e46ba4823342be61bc7204f222"><td class="memItemLeft" align="right" valign="top"><a id="a856561e46ba4823342be61bc7204f222"></a>
-virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>verify_ed25519</b> (const seq32_t &amp;message, const seq32_t &amp;signature, const seq32_t &amp;public_key)=0</td></tr>
+virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>verify_ed25519</b> (const <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &amp;message, const <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &amp;signature, const <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &amp;public_key)=0</td></tr>
 <tr class="separator:a856561e46ba4823342be61bc7204f222"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -119,7 +119,7 @@ virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>verify_ed2551
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 8 2019 13:54:05 for SSP21-CPP by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Apr 8 2019 16:17:25 for SSP21-CPP by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

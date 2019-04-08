@@ -79,19 +79,19 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a20e8621bb6610321eaf6dbca4074cae7"><td class="memItemLeft" align="right" valign="top"><a id="a20e8621bb6610321eaf6dbca4074cae7"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>CertificateBody</b> (uint64_t valid_after, uint64_t valid_before, uint8_t signing_level, <a class="el" href="namespacessp21.html#ad1d8da0fa6a193a7e724d9a5d3e14c16">PublicKeyType</a> public_key_type, const seq32_t &amp;public_key)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><b>CertificateBody</b> (uint64_t valid_after, uint64_t valid_before, uint8_t signing_level, <a class="el" href="namespacessp21.html#ad1d8da0fa6a193a7e724d9a5d3e14c16">PublicKeyType</a> public_key_type, const <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &amp;public_key)</td></tr>
 <tr class="separator:a20e8621bb6610321eaf6dbca4074cae7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5f58036606385698586d26994421b0e"><td class="memItemLeft" align="right" valign="top"><a id="ac5f58036606385698586d26994421b0e"></a>
 size_t&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> () const</td></tr>
 <tr class="separator:ac5f58036606385698586d26994421b0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4723035486e59239d0735ddafb3c6238"><td class="memItemLeft" align="right" valign="top"><a id="a4723035486e59239d0735ddafb3c6238"></a>
-<a class="el" href="namespacessp21.html#a28d8b32e69a6aebfd967e0dcf374f1dc">ParseError</a>&#160;</td><td class="memItemRight" valign="bottom"><b>read</b> (seq32_t &amp;input)</td></tr>
+<a class="el" href="namespacessp21.html#a28d8b32e69a6aebfd967e0dcf374f1dc">ParseError</a>&#160;</td><td class="memItemRight" valign="bottom"><b>read</b> (<a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &amp;input)</td></tr>
 <tr class="separator:a4723035486e59239d0735ddafb3c6238"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f0128c4011219e9629f8a018ef4187e"><td class="memItemLeft" align="right" valign="top"><a id="a9f0128c4011219e9629f8a018ef4187e"></a>
-<a class="el" href="namespacessp21.html#a28d8b32e69a6aebfd967e0dcf374f1dc">ParseError</a>&#160;</td><td class="memItemRight" valign="bottom"><b>read_all</b> (const seq32_t &amp;input)</td></tr>
+<a class="el" href="namespacessp21.html#a28d8b32e69a6aebfd967e0dcf374f1dc">ParseError</a>&#160;</td><td class="memItemRight" valign="bottom"><b>read_all</b> (const <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &amp;input)</td></tr>
 <tr class="separator:a9f0128c4011219e9629f8a018ef4187e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9af18990943279729c0e02c6bd713ca5"><td class="memItemLeft" align="right" valign="top"><a id="a9af18990943279729c0e02c6bd713ca5"></a>
-<a class="el" href="namespacessp21.html#a7ce9b1f72948cfaf31868c0eede46f88">FormatError</a>&#160;</td><td class="memItemRight" valign="bottom"><b>write</b> (wseq32_t &amp;output) const</td></tr>
+<a class="el" href="namespacessp21.html#a7ce9b1f72948cfaf31868c0eede46f88">FormatError</a>&#160;</td><td class="memItemRight" valign="bottom"><b>write</b> (<a class="el" href="classser4cpp_1_1WSeq.html">wseq32_t</a> &amp;output) const</td></tr>
 <tr class="separator:a9af18990943279729c0e02c6bd713ca5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a69267536c3a75a49ecaa2230cde3db27"><td class="memItemLeft" align="right" valign="top"><a id="a69267536c3a75a49ecaa2230cde3db27"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>print</b> (const char *name, <a class="el" href="classssp21_1_1IMessagePrinter.html">IMessagePrinter</a> &amp;printer) const</td></tr>
@@ -100,13 +100,13 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>print</b> (const char
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ae89d1e88caef8de2b157d8d0df8d7894"><td class="memItemLeft" align="right" valign="top"><a id="ae89d1e88caef8de2b157d8d0df8d7894"></a>
-<a class="el" href="classssp21_1_1IntegerField.html">IntegerField</a>&lt; ser4cpp::UInt64 &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>valid_after</b></td></tr>
+<a class="el" href="classssp21_1_1IntegerField.html">IntegerField</a>&lt; <a class="el" href="classser4cpp_1_1Bit64.html">ser4cpp::UInt64</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>valid_after</b></td></tr>
 <tr class="separator:ae89d1e88caef8de2b157d8d0df8d7894"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5463d4072ca9344db8042d39951293f"><td class="memItemLeft" align="right" valign="top"><a id="ac5463d4072ca9344db8042d39951293f"></a>
-<a class="el" href="classssp21_1_1IntegerField.html">IntegerField</a>&lt; ser4cpp::UInt64 &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>valid_before</b></td></tr>
+<a class="el" href="classssp21_1_1IntegerField.html">IntegerField</a>&lt; <a class="el" href="classser4cpp_1_1Bit64.html">ser4cpp::UInt64</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>valid_before</b></td></tr>
 <tr class="separator:ac5463d4072ca9344db8042d39951293f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c418ac1bd4678e68763a7b0e4d4f6fd"><td class="memItemLeft" align="right" valign="top"><a id="a2c418ac1bd4678e68763a7b0e4d4f6fd"></a>
-<a class="el" href="classssp21_1_1IntegerField.html">IntegerField</a>&lt; ser4cpp::UInt8 &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>signing_level</b></td></tr>
+<a class="el" href="classssp21_1_1IntegerField.html">IntegerField</a>&lt; <a class="el" href="classser4cpp_1_1UInt8.html">ser4cpp::UInt8</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>signing_level</b></td></tr>
 <tr class="separator:a2c418ac1bd4678e68763a7b0e4d4f6fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a850200d1fb0d12f85e14b4760d564ac4"><td class="memItemLeft" align="right" valign="top"><a id="a850200d1fb0d12f85e14b4760d564ac4"></a>
 <a class="el" href="classssp21_1_1EnumField.html">EnumField</a>&lt; <a class="el" href="structssp21_1_1PublicKeyTypeSpec.html">PublicKeyTypeSpec</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>public_key_type</b></td></tr>
@@ -130,7 +130,7 @@ static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>min_s
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 8 2019 13:54:05 for SSP21-CPP by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Apr 8 2019 16:17:25 for SSP21-CPP by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

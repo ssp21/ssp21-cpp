@@ -7,5 +7,6 @@ var searchData=
   ['nonce_5freplay',['nonce_replay',['../namespacessp21.html#a9e12b6a108fcfba591d4edd8fa1ad433a0ba9c1f058156418acc74b1a3fe986b2',1,'ssp21']]],
   ['noncemode',['NonceMode',['../namespacessp21.html#ad1fd31184aa341ce953086648bc8b5f4',1,'ssp21']]],
   ['noncemodespec',['NonceModeSpec',['../structssp21_1_1NonceModeSpec.html',1,'ssp21']]],
-  ['none',['none',['../namespacessp21.html#a260efe57058ec676152ed78889bc47dfa334c4a4c42fdb79d7ebc3e73b517e6f8',1,'ssp21::none()'],['../namespacessp21.html#a278f33309ade46a5920cf3d7cc64e5afa334c4a4c42fdb79d7ebc3e73b517e6f8',1,'ssp21::none()']]]
+  ['none',['none',['../namespacessp21.html#a260efe57058ec676152ed78889bc47dfa334c4a4c42fdb79d7ebc3e73b517e6f8',1,'ssp21::none()'],['../namespacessp21.html#a278f33309ade46a5920cf3d7cc64e5afa334c4a4c42fdb79d7ebc3e73b517e6f8',1,'ssp21::none()']]],
+  ['num_5factive',['num_active',['../classexe4cpp_1_1MockExecutor.html#acb6685c38441f59501d67cea1547dded',1,'exe4cpp::MockExecutor']]]
 ];

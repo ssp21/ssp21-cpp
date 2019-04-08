@@ -223,19 +223,19 @@ Typedefs</h2></td></tr>
 typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><b>gen_keypair_func_t</b>) (<a class="el" href="structssp21_1_1KeyPair.html">KeyPair</a> &amp;pair)</td></tr>
 <tr class="separator:aedf53f5ec9ad54887265206aedd9e7cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a302d1579cf86a1b00a659907a8e430c3"><td class="memItemLeft" align="right" valign="top"><a id="a302d1579cf86a1b00a659907a8e430c3"></a>
-typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><b>hash_func_t</b>) (const std::initializer_list&lt; seq32_t &gt; &amp;data, <a class="el" href="classssp21_1_1SecureBuffer.html">SecureBuffer</a> &amp;output)</td></tr>
+typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><b>hash_func_t</b>) (const std::initializer_list&lt; <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &gt; &amp;data, <a class="el" href="classssp21_1_1SecureBuffer.html">SecureBuffer</a> &amp;output)</td></tr>
 <tr class="separator:a302d1579cf86a1b00a659907a8e430c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44f338950b49c604ecbc89f14f414336"><td class="memItemLeft" align="right" valign="top"><a id="a44f338950b49c604ecbc89f14f414336"></a>
-typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><b>mac_func_t</b>) (const seq32_t &amp;key, const std::initializer_list&lt; seq32_t &gt; &amp;data, <a class="el" href="classssp21_1_1SecureBuffer.html">SecureBuffer</a> &amp;output)</td></tr>
+typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><b>mac_func_t</b>) (const <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &amp;key, const std::initializer_list&lt; <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &gt; &amp;data, <a class="el" href="classssp21_1_1SecureBuffer.html">SecureBuffer</a> &amp;output)</td></tr>
 <tr class="separator:a44f338950b49c604ecbc89f14f414336"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a63ead46b2a1d7108aea5c91e61efb2e3"><td class="memItemLeft" align="right" valign="top"><a id="a63ead46b2a1d7108aea5c91e61efb2e3"></a>
-typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><b>dh_func_t</b>) (const <a class="el" href="classssp21_1_1PrivateKey.html">PrivateKey</a> &amp;priv_key, const seq32_t &amp;pub_key, <a class="el" href="classssp21_1_1DHOutput.html">DHOutput</a> &amp;output, std::error_code &amp;ec)</td></tr>
+typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><b>dh_func_t</b>) (const <a class="el" href="classssp21_1_1PrivateKey.html">PrivateKey</a> &amp;priv_key, const <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &amp;pub_key, <a class="el" href="classssp21_1_1DHOutput.html">DHOutput</a> &amp;output, std::error_code &amp;ec)</td></tr>
 <tr class="separator:a63ead46b2a1d7108aea5c91e61efb2e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb8b39f7eb2cc88ecfb5212bd6547b2b"><td class="memItemLeft" align="right" valign="top"><a id="aeb8b39f7eb2cc88ecfb5212bd6547b2b"></a>
-typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><b>kdf_func_t</b>) (const seq32_t &amp;salt, const std::initializer_list&lt; seq32_t &gt; &amp;input_key_material, <a class="el" href="classssp21_1_1SymmetricKey.html">SymmetricKey</a> &amp;key1, <a class="el" href="classssp21_1_1SymmetricKey.html">SymmetricKey</a> &amp;key2)</td></tr>
+typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><b>kdf_func_t</b>) (const <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &amp;salt, const std::initializer_list&lt; <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &gt; &amp;input_key_material, <a class="el" href="classssp21_1_1SymmetricKey.html">SymmetricKey</a> &amp;key1, <a class="el" href="classssp21_1_1SymmetricKey.html">SymmetricKey</a> &amp;key2)</td></tr>
 <tr class="separator:aeb8b39f7eb2cc88ecfb5212bd6547b2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5ad04b694cf9c5d526dc88161f4c1f9"><td class="memItemLeft" align="right" valign="top"><a id="ac5ad04b694cf9c5d526dc88161f4c1f9"></a>
-typedef bool(*&#160;</td><td class="memItemRight" valign="bottom"><b>verify_dsa_t</b>) (const seq32_t &amp;message, const seq32_t &amp;signature, const seq32_t &amp;public_key)</td></tr>
+typedef bool(*&#160;</td><td class="memItemRight" valign="bottom"><b>verify_dsa_t</b>) (const <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &amp;message, const <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &amp;signature, const <a class="el" href="classser4cpp_1_1RSeq.html">seq32_t</a> &amp;public_key)</td></tr>
 <tr class="separator:ac5ad04b694cf9c5d526dc88161f4c1f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a445846d709377b575082b625f5b3f45c"><td class="memItemLeft" align="right" valign="top"><a id="a445846d709377b575082b625f5b3f45c"></a>
 typedef <a class="el" href="classssp21_1_1ErrorCategory.html">ErrorCategory</a>&lt; <a class="el" href="structssp21_1_1CryptoErrorSpec.html">CryptoErrorSpec</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CryptoErrorCategory</b></td></tr>
@@ -244,10 +244,10 @@ typedef <a class="el" href="classssp21_1_1ErrorCategory.html">ErrorCategory</a>&
 typedef <a class="el" href="classssp21_1_1ErrorCategory.html">ErrorCategory</a>&lt; <a class="el" href="structssp21_1_1FormatErrorSpec.html">FormatErrorSpec</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>FormatErrorCategory</b></td></tr>
 <tr class="separator:a095cff7f903bd0723b55844b9418dd18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8dc05a48f1cd15f96b74e236cc58437"><td class="memItemLeft" align="right" valign="top"><a id="ac8dc05a48f1cd15f96b74e236cc58437"></a>
-typedef ser4cpp::RSeq&lt; uint32_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>seq32_t</b></td></tr>
+typedef <a class="el" href="classser4cpp_1_1RSeq.html">ser4cpp::RSeq</a>&lt; uint32_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>seq32_t</b></td></tr>
 <tr class="separator:ac8dc05a48f1cd15f96b74e236cc58437"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8dccba923d9d80716ed506e3fafce03"><td class="memItemLeft" align="right" valign="top"><a id="aa8dccba923d9d80716ed506e3fafce03"></a>
-typedef ser4cpp::WSeq&lt; uint32_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>wseq32_t</b></td></tr>
+typedef <a class="el" href="classser4cpp_1_1WSeq.html">ser4cpp::WSeq</a>&lt; uint32_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>wseq32_t</b></td></tr>
 <tr class="separator:aa8dccba923d9d80716ed506e3fafce03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
@@ -868,7 +868,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>any</b> (<a class="el
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 8 2019 13:54:05 for SSP21-CPP by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Apr 8 2019 16:17:25 for SSP21-CPP by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

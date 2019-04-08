@@ -8,6 +8,9 @@ var searchData=
   ['max_5fsession_5ftime_5fexceeded',['max_session_time_exceeded',['../namespacessp21.html#a9e12b6a108fcfba591d4edd8fa1ad433a618649e53b5e573f8943f8459babf005',1,'ssp21']]],
   ['max_5fsession_5ftime_5fms',['max_session_time_ms',['../structssp21_1_1SessionLimits.html#a8d557fbed0796423146a1e5dfe61737b',1,'ssp21::SessionLimits']]],
   ['min_5fframe_5fsize',['min_frame_size',['../namespacessp21_1_1consts_1_1link.html#a37beeae0f90372299213d248f9a0f9aa',1,'ssp21::consts::link']]],
+  ['mockexecutor',['MockExecutor',['../classexe4cpp_1_1MockExecutor.html',1,'exe4cpp']]],
+  ['mockloghandler',['MockLogHandler',['../classlog4cpp_1_1MockLogHandler.html',1,'log4cpp']]],
   ['mode',['mode',['../classssp21_1_1ICertificateHandler.html#abcc88b3fe3b0289c9138f775a2123ae4',1,'ssp21::ICertificateHandler']]],
-  ['module',['Module',['../structssp21_1_1Module.html',1,'ssp21']]]
+  ['module',['Module',['../structssp21_1_1Module.html',1,'ssp21']]],
+  ['moduleid',['ModuleId',['../structlog4cpp_1_1ModuleId.html',1,'log4cpp']]]
 ];
