@@ -757,7 +757,10 @@ WARN_LOGFILE           =
 # spaces.
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = cpp/libs/ssp21/include \
+INPUT                  = deps/log4cpp/include/log4cpp \
+                         deps/ser4cpp/src/ser4cpp \
+                         deps/exe4cpp/src/exe4cpp \
+                         cpp/libs/ssp21/include \
                          cpp/libs/sodium/include \
                          doc \
 
