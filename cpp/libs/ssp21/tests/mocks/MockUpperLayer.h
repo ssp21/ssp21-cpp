@@ -48,7 +48,7 @@ namespace ssp21
 
         bool is_open = false;
 
-        typedef std::deque<std::string> message_queue_t;
+        using message_queue_t = std::deque<std::string>;
 
         message_queue_t rx_messages;
 

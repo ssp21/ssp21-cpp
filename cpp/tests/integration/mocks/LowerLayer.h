@@ -16,14 +16,14 @@ namespace ssp21
 
     class LowerLayer final : public ILowerLayer
     {
-        typedef ser4cpp::Buffer message_t;
+		using message_t = ser4cpp::Buffer;
 
     public:
 
         explicit LowerLayer(const std::shared_ptr<exe4cpp::IExecutor>& executor) : executor(executor)
         {}
 
-        virtual bool start_tx_from_upper(const seq32_t& data) override
+        bool start_tx_from_upper(const seq32_t& data) override
         {
             this->sibling->messages.push_back(std::make_unique<message_t>(data));
 
@@ -42,12 +42,12 @@ namespace ssp21
             return true;
         }
 
-        virtual seq32_t start_rx_from_upper_impl() override
+        seq32_t start_rx_from_upper_impl() override
         {
             return this->messages.empty() ? seq32_t::empty() : messages.front()->as_rslice();
         }
 
-        virtual bool is_tx_ready() const override
+        bool is_tx_ready() const override
         {
             return true;
         }
@@ -60,7 +60,7 @@ namespace ssp21
 
     private:
 
-        virtual void discard_rx_data() override
+        void discard_rx_data() override
         {
             if (this->messages.empty())
             {

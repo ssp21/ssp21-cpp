@@ -40,7 +40,7 @@ enum class Function : uint8_t
 
 struct FunctionSpec : private ser4cpp::StaticOnly
 {
-    typedef Function enum_type_t;
+    using enum_type_t = Function;
 
     static uint8_t to_type(Function arg);
     static Function from_type(uint8_t arg);

@@ -34,7 +34,7 @@ enum class SessionMode : uint8_t
 
 struct SessionModeSpec : private ser4cpp::StaticOnly
 {
-    typedef SessionMode enum_type_t;
+    using enum_type_t = SessionMode;
 
     static uint8_t to_type(SessionMode arg);
     static SessionMode from_type(uint8_t arg);

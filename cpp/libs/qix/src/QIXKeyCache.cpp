@@ -11,7 +11,7 @@
 class FrameHandler : public IQIXFrameHandler
 {
 
-    typedef std::function<void(const QIXFrame&)> frame_handler_t;
+    using frame_handler_t = std::function<void(const QIXFrame&)>;
 
     frame_handler_t handler;
 

@@ -50,7 +50,7 @@ enum class CryptoAction : uint8_t
 
 struct CryptoActionSpec : private ser4cpp::StaticOnly
 {
-    typedef CryptoAction enum_type_t;
+    using enum_type_t = CryptoAction;
 
     static const char* to_string(CryptoAction arg);
 };

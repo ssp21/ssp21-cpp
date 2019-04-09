@@ -84,8 +84,8 @@ namespace ssp21
             std::error_code& ec
         ) const = 0;
 
-        typedef ser4cpp::StaticBuffer<uint32_t, AuthMetadata::fixed_size_bytes> metadata_buffer_t;
-        typedef ser4cpp::StaticBuffer<uint32_t, ser4cpp::UInt16::size> user_data_length_buffer_t;
+        using  metadata_buffer_t = ser4cpp::StaticBuffer<uint32_t, AuthMetadata::fixed_size_bytes>;
+        using user_data_length_buffer_t = ser4cpp::StaticBuffer<uint32_t, ser4cpp::UInt16::size>;
 
         inline static seq32_t get_metadata_bytes(const AuthMetadata& metadata, metadata_buffer_t& buffer)
         {

@@ -11,7 +11,7 @@
 
 namespace ssp21
 {
-    typedef bool(*verify_nonce_func_t)(uint16_t last_nonce, uint16_t new_nonce);
+    using verify_nonce_func_t = bool(*)(uint16_t last_nonce, uint16_t new_nonce);
 
     struct NonceFunctions : private ser4cpp::StaticOnly
     {

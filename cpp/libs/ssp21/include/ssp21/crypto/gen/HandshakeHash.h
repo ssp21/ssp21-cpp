@@ -34,7 +34,7 @@ enum class HandshakeHash : uint8_t
 
 struct HandshakeHashSpec : private ser4cpp::StaticOnly
 {
-    typedef HandshakeHash enum_type_t;
+    using enum_type_t = HandshakeHash;
 
     static uint8_t to_type(HandshakeHash arg);
     static HandshakeHash from_type(uint8_t arg);

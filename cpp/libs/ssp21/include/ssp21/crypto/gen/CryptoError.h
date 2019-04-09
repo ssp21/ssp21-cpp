@@ -61,14 +61,14 @@ enum class CryptoError : uint8_t
 
 struct CryptoErrorSpec : private ser4cpp::StaticOnly
 {
-    typedef CryptoError enum_type_t;
+    using enum_type_t = CryptoError;
 
     static const char* name;
 
     static const char* to_string(CryptoError arg);
 };
 
-typedef ErrorCategory<CryptoErrorSpec> CryptoErrorCategory;
+using CryptoErrorCategory = ErrorCategory<CryptoErrorSpec>;
 
 inline std::error_code make_error_code(CryptoError err)
 {

@@ -8,11 +8,10 @@
 
 #include <ssp21/stack/IStack.h>
 
-
 // abstracts the creation of responder or initiator
-typedef std::function<std::shared_ptr<ssp21::IStack>(
+using stack_factory_t = std::function<std::shared_ptr<ssp21::IStack>(
     const log4cpp::Logger& logger,
     const std::shared_ptr<exe4cpp::IExecutor>& exe
-)> stack_factory_t;
+)>;
 
 #endif

@@ -36,7 +36,7 @@ enum class PublicKeyType : uint8_t
 
 struct PublicKeyTypeSpec : private ser4cpp::StaticOnly
 {
-    typedef PublicKeyType enum_type_t;
+    using enum_type_t = PublicKeyType;
 
     static uint8_t to_type(PublicKeyType arg);
     static PublicKeyType from_type(uint8_t arg);

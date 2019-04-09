@@ -36,7 +36,7 @@ enum class NonceMode : uint8_t
 
 struct NonceModeSpec : private ser4cpp::StaticOnly
 {
-    typedef NonceMode enum_type_t;
+    using enum_type_t = NonceMode;
 
     static uint8_t to_type(NonceMode arg);
     static NonceMode from_type(uint8_t arg);

@@ -34,7 +34,7 @@ enum class HandshakeKDF : uint8_t
 
 struct HandshakeKDFSpec : private ser4cpp::StaticOnly
 {
-    typedef HandshakeKDF enum_type_t;
+    using enum_type_t = HandshakeKDF;
 
     static uint8_t to_type(HandshakeKDF arg);
     static HandshakeKDF from_type(uint8_t arg);

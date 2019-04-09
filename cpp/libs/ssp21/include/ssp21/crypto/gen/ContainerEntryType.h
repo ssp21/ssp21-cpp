@@ -44,7 +44,7 @@ enum class ContainerEntryType : uint8_t
 
 struct ContainerEntryTypeSpec : private ser4cpp::StaticOnly
 {
-    typedef ContainerEntryType enum_type_t;
+    using enum_type_t = ContainerEntryType;
 
     static uint8_t to_type(ContainerEntryType arg);
     static ContainerEntryType from_type(uint8_t arg);

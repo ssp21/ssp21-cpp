@@ -13,7 +13,7 @@ namespace ssp21
 {
     class MockLowerLayer : public ILowerLayer, private ser4cpp::Uncopyable
     {
-        typedef ser4cpp::Buffer message_t;
+        using message_t = ser4cpp::Buffer;
 
     public:
 
@@ -95,7 +95,7 @@ namespace ssp21
 
         bool is_tx_ready_flag = true;
 
-        typedef std::deque<std::unique_ptr<message_t>> message_queue_t;
+        using message_queue_t = std::deque<std::unique_ptr<message_t>>;
 
         message_queue_t tx_messages;
 

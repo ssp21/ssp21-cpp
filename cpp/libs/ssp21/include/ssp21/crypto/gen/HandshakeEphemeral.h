@@ -38,7 +38,7 @@ enum class HandshakeEphemeral : uint8_t
 
 struct HandshakeEphemeralSpec : private ser4cpp::StaticOnly
 {
-    typedef HandshakeEphemeral enum_type_t;
+    using enum_type_t = HandshakeEphemeral;
 
     static uint8_t to_type(HandshakeEphemeral arg);
     static HandshakeEphemeral from_type(uint8_t arg);

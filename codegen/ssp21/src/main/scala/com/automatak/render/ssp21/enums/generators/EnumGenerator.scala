@@ -36,7 +36,7 @@ case class EnumGenerator(cfg: EnumConfig) extends WriteCppFiles {
     } else Iterator.empty
 
     def spec = "struct %s : private ser4cpp::StaticOnly".format(cfg.model.specName).iter ++ bracketSemiColon {
-      "typedef %s enum_type_t;".format(cfg.model.name).iter ++
+      "using enum_type_t = %s;".format(cfg.model.name).iter ++
         nameLine ++
         space ++
         signatures
@@ -57,7 +57,7 @@ case class EnumGenerator(cfg: EnumConfig) extends WriteCppFiles {
     def errorCategory: Iterator[String] = cfg.model.errorCategory match {
       case Some(cat) => {
         space ++
-          "typedef ErrorCategory<%s> %s;".format(cfg.model.specName, cat.className).iter ++
+          "using %s = ErrorCategory<%s>;".format(cat.className, cfg.model.specName).iter ++
           space ++
           "inline std::error_code make_error_code(%s err)".format(cfg.model.name).iter ++ bracket {
           "return std::error_code(static_cast<int>(err), %s::get());".format(cat.className).iter

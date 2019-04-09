@@ -74,8 +74,8 @@ namespace ssp21
         Algorithms::Session session;
     };
 
-    typedef AlgorithmSet<Algorithms::PublicKeyHandshake> public_key_algorithms_t;
-    typedef AlgorithmSet<Algorithms::SharedSecretHandshake> shared_secret_algorithms_t;
+    using public_key_algorithms_t = AlgorithmSet<Algorithms::PublicKeyHandshake>;
+    using shared_secret_algorithms_t = AlgorithmSet<Algorithms::SharedSecretHandshake>;
 
 }
 

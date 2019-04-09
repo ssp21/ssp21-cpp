@@ -69,7 +69,7 @@ inline bool any(HandshakeError value)
 
 struct HandshakeErrorSpec : private ser4cpp::StaticOnly
 {
-    typedef HandshakeError enum_type_t;
+    using enum_type_t = HandshakeError;
 
     static uint8_t to_type(HandshakeError arg);
     static HandshakeError from_type(uint8_t arg);

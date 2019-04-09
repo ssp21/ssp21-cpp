@@ -11,7 +11,7 @@ namespace ssp21
     template <typename IntegerType>
     class IntegerField final
     {
-        typedef typename IntegerType::type_t integer_t;
+        using integer_t = typename IntegerType::type_t;
 
     public:
 

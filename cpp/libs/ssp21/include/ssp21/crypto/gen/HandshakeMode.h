@@ -40,7 +40,7 @@ enum class HandshakeMode : uint8_t
 
 struct HandshakeModeSpec : private ser4cpp::StaticOnly
 {
-    typedef HandshakeMode enum_type_t;
+    using enum_type_t = HandshakeMode;
 
     static uint8_t to_type(HandshakeMode arg);
     static HandshakeMode from_type(uint8_t arg);

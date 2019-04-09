@@ -51,7 +51,7 @@ inline bool any(ParseError value)
 
 struct ParseErrorSpec : private ser4cpp::StaticOnly
 {
-    typedef ParseError enum_type_t;
+    using enum_type_t = ParseError;
 
     static const char* to_string(ParseError arg);
 };

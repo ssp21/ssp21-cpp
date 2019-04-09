@@ -9,9 +9,9 @@
 
 #include <functional>
 
-typedef ASIOLowerLayer socket_lower_layer_t;
-typedef ASIOUpperLayer socket_upper_layer_t;
-typedef std::function<void()> session_error_handler_t;
+using socket_lower_layer_t = ASIOLowerLayer;
+using socket_upper_layer_t = ASIOUpperLayer;
+using session_error_handler_t = std::function<void()>;
 
 class Session : public std::enable_shared_from_this<Session>
 {

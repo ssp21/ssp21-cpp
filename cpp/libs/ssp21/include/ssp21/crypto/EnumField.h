@@ -13,7 +13,7 @@ namespace ssp21
     template <typename Spec>
     class EnumField final
     {
-        typedef typename Spec::enum_type_t enum_t;
+        using enum_t = typename Spec::enum_type_t;
 
     public:
 

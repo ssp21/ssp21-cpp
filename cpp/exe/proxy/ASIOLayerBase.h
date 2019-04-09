@@ -17,7 +17,7 @@ class ASIOLayerBase : private ser4cpp::Uncopyable
 
 public:
 
-    typedef asio::ip::tcp::socket socket_t;
+    using socket_t = asio::ip::tcp::socket;
 
     ASIOLayerBase(const log4cpp::Logger& logger, socket_t socket) :
         socket(std::move(socket)),

@@ -40,14 +40,14 @@ inline bool any(FormatError value)
 
 struct FormatErrorSpec : private ser4cpp::StaticOnly
 {
-    typedef FormatError enum_type_t;
+    using enum_type_t = FormatError;
 
     static const char* name;
 
     static const char* to_string(FormatError arg);
 };
 
-typedef ErrorCategory<FormatErrorSpec> FormatErrorCategory;
+using FormatErrorCategory = ErrorCategory<FormatErrorSpec>;
 
 inline std::error_code make_error_code(FormatError err)
 {

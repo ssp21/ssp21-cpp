@@ -6,8 +6,8 @@
 
 namespace ssp21
 {
-    typedef ser4cpp::RSeq<uint32_t> seq32_t;
-    typedef ser4cpp::WSeq<uint32_t> wseq32_t;
+    using seq32_t = ser4cpp::RSeq<uint32_t>;
+    using wseq32_t = ser4cpp::WSeq<uint32_t>;
 }
 
 #endif
