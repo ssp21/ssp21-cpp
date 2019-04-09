@@ -21,15 +21,15 @@ public:
         : payload(HexConversions::from_hex(payload))
     {}
 
-    virtual FormatResult write(wseq32_t& output) const override
+    FormatResult write(wseq32_t& output) const override
     {
         const auto src = payload->as_rslice();
         return src.length() < output.length() ? FormatResult::success(output.copy_from(src)) : FormatResult::error(FormatError::insufficient_space);
     }
 
-    virtual void print(IMessagePrinter& printer) const override {}
+    void print(IMessagePrinter& printer) const override {}
 
-    virtual Function get_function() const
+    Function get_function() const override 
     {
         return Function::undefined;
     }
