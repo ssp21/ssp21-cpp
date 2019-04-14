@@ -195,7 +195,7 @@ void test_request_handshake_begin(InitiatorFixture& fix)
                               HandshakeEphemeral::x25519,
                               HandshakeHash::sha256,
                               HandshakeKDF::hkdf_sha256,
-                              SessionMode::hmac_sha256_16,
+                              SessionCryptoMode::hmac_sha256_16,
                               consts::crypto::initiator::default_max_nonce,
                               consts::crypto::initiator::default_max_session_time_ms,
                               HandshakeMode::preshared_public_keys,

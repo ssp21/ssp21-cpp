@@ -72,7 +72,7 @@ TEST_CASE(SUITE("successfully parses message"))
     REQUIRE(msg.spec.handshake_ephemeral == HandshakeEphemeral::x25519);
     REQUIRE(msg.spec.handshake_hash == HandshakeHash::sha256);
     REQUIRE(msg.spec.handshake_kdf == HandshakeKDF::hkdf_sha256);
-    REQUIRE(msg.spec.session_mode == SessionMode::hmac_sha256_16);
+    REQUIRE(msg.spec.session_crypto_mode == SessionCryptoMode::hmac_sha256_16);
 
     REQUIRE(msg.constraints.max_nonce == 0xFFFF);
     REQUIRE(msg.constraints.max_session_duration == 0xCAFEBABE);
@@ -94,7 +94,7 @@ TEST_CASE(SUITE("pretty prints message"))
             HandshakeHash::sha256,
             HandshakeKDF::hkdf_sha256,
 			SessionNonceMode::greater_than_last_rx,
-            SessionMode::hmac_sha256_16
+            SessionCryptoMode::hmac_sha256_16
         ),
         SessionConstraints(
             32768,
@@ -117,7 +117,7 @@ TEST_CASE(SUITE("pretty prints message"))
         "handshake_hash: sha256",
         "handshake_kdf: hkdf_sha256",
 		"session_nonce_mode: greater_than_last_rx",
-        "session_mode: hmac_sha256_16",
+        "session_crypto_mode: hmac_sha256_16",
         "max_nonce: 32768",
         "max_session_duration: 3405691582",
         "handshake_mode: preshared_public_keys",

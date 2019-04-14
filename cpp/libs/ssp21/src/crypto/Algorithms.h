@@ -28,7 +28,7 @@ namespace ssp21
 
             HandshakeError configure(
                 SessionNonceMode nonce_mode,
-                SessionMode session_mode
+				SessionCryptoMode session_mode
             );
 
             verify_nonce_func_t verify_nonce = NonceFunctions::default_verify();

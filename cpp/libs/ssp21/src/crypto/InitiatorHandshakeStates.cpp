@@ -25,8 +25,8 @@ namespace ssp21
             suite.handshake_ephemeral,
             suite.handshake_hash,
             suite.handshake_kdf,
-			suite.nonce_mode,
-            suite.session_mode
+			suite.session_nonce_mode,
+            suite.session_crypto_mode
         );
 
         const auto init_result = ctx.handshake->initialize_new_handshake();

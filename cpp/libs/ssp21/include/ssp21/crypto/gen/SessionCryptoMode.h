@@ -13,8 +13,8 @@
 // Licensed under the terms of the BSDv3 license
 //
 
-#ifndef SSP21_SESSIONMODE_H
-#define SSP21_SESSIONMODE_H
+#ifndef SSP21_SESSIONCRYPTOMODE_H
+#define SSP21_SESSIONCRYPTOMODE_H
 
 #include <cstdint>
 #include "ser4cpp/util/Uncopyable.h"
@@ -24,7 +24,7 @@ namespace ssp21 {
 /**
     Specifies the complete set of algorithms used to secure the session
 */
-enum class SessionMode : uint8_t
+enum class SessionCryptoMode : uint8_t
 {
     /// HMAC-SHA256 truncated to 16 bytes
     hmac_sha256_16 = 0x0,
@@ -32,13 +32,13 @@ enum class SessionMode : uint8_t
     undefined = 0xFF
 };
 
-struct SessionModeSpec : private ser4cpp::StaticOnly
+struct SessionCryptoModeSpec : private ser4cpp::StaticOnly
 {
-    using enum_type_t = SessionMode;
+    using enum_type_t = SessionCryptoMode;
 
-    static uint8_t to_type(SessionMode arg);
-    static SessionMode from_type(uint8_t arg);
-    static const char* to_string(SessionMode arg);
+    static uint8_t to_type(SessionCryptoMode arg);
+    static SessionCryptoMode from_type(uint8_t arg);
+    static const char* to_string(SessionCryptoMode arg);
 };
 
 }

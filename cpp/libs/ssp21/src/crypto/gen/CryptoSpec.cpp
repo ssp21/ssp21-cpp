@@ -29,13 +29,13 @@ CryptoSpec::CryptoSpec(
     HandshakeHash handshake_hash,
     HandshakeKDF handshake_kdf,
     SessionNonceMode session_nonce_mode,
-    SessionMode session_mode
+    SessionCryptoMode session_crypto_mode
 ) :
     handshake_ephemeral(handshake_ephemeral),
     handshake_hash(handshake_hash),
     handshake_kdf(handshake_kdf),
     session_nonce_mode(session_nonce_mode),
-    session_mode(session_mode)
+    session_crypto_mode(session_crypto_mode)
 {}
 
 size_t CryptoSpec::size() const
@@ -46,7 +46,7 @@ size_t CryptoSpec::size() const
         handshake_hash,
         handshake_kdf,
         session_nonce_mode,
-        session_mode
+        session_crypto_mode
     );
 }
 
@@ -58,7 +58,7 @@ ParseError CryptoSpec::read(seq32_t& input)
         handshake_hash,
         handshake_kdf,
         session_nonce_mode,
-        session_mode
+        session_crypto_mode
     );
 }
 
@@ -78,7 +78,7 @@ FormatError CryptoSpec::write(wseq32_t& output) const
         handshake_hash,
         handshake_kdf,
         session_nonce_mode,
-        session_mode
+        session_crypto_mode
     );
 }
 
@@ -94,8 +94,8 @@ void CryptoSpec::print(const char* name, IMessagePrinter& printer) const
         handshake_kdf,
         "session_nonce_mode",
         session_nonce_mode,
-        "session_mode",
-        session_mode
+        "session_crypto_mode",
+        session_crypto_mode
     );
 }
 

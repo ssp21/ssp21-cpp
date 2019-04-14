@@ -35,7 +35,7 @@ namespace ssp21
             }
 
             {
-                const HandshakeError err = algorithms.session.configure(suite.nonce_mode, suite.session_mode);
+                const HandshakeError err = algorithms.session.configure(suite.session_nonce_mode, suite.session_crypto_mode);
                 if (any(err)) return err;
             }
 
@@ -52,7 +52,7 @@ namespace ssp21
                            spec.handshake_hash,
                            spec.handshake_kdf,
 						   spec.session_nonce_mode,
-                           spec.session_mode
+                           spec.session_crypto_mode
                        )
                    );
         }

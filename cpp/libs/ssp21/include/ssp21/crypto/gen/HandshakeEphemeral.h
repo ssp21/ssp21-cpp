@@ -26,7 +26,7 @@ namespace ssp21 {
 */
 enum class HandshakeEphemeral : uint8_t
 {
-    /// x25519 algorithm public key
+    /// x25519 DH public key
     x25519 = 0x0,
     /// 32-byte random nonce
     nonce = 0x1,

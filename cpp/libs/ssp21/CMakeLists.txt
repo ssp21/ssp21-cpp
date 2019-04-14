@@ -36,7 +36,7 @@ set(ssp21_public_headers
     ./include/ssp21/crypto/gen/SessionNonceMode.h
     ./include/ssp21/crypto/gen/ParseError.h    
     ./include/ssp21/crypto/gen/PublicKeyType.h
-    ./include/ssp21/crypto/gen/SessionMode.h
+    ./include/ssp21/crypto/gen/SessionCryptoMode.h
 
     ./include/ssp21/link/Addresses.h
     ./include/ssp21/link/LinkConstants.h
@@ -174,7 +174,7 @@ set(ssp21_srcs
     ./src/crypto/gen/RequestHandshakeBegin.cpp
     ./src/crypto/gen/SessionConstraints.cpp
     ./src/crypto/gen/SessionData.cpp
-    ./src/crypto/gen/SessionMode.cpp
+    ./src/crypto/gen/SessionCryptoMode.cpp
 
     ./src/link/CastagnoliCRC32.cpp
     ./src/link/LinkFrameWriter.cpp

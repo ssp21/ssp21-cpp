@@ -4,11 +4,11 @@
 #include <string>
 #include <cstdint>
 
-#include "ssp21/crypto/gen/SessionNonceMode.h"
 #include "ssp21/crypto/gen/HandshakeEphemeral.h"
 #include "ssp21/crypto/gen/HandshakeHash.h"
 #include "ssp21/crypto/gen/HandshakeKDF.h"
-#include "ssp21/crypto/gen/SessionMode.h"
+#include "ssp21/crypto/gen/SessionNonceMode.h"
+#include "ssp21/crypto/gen/SessionCryptoMode.h"
 #include "ssp21/crypto/gen/HandshakeMode.h"
 #include "ssp21/crypto/gen/HandshakeError.h"
 #include "crypto/gen/Function.h"
@@ -28,7 +28,7 @@ namespace ssp21
             HandshakeEphemeral handshake_ephemeral,
             HandshakeHash handshake_hash,
             HandshakeKDF handshake_kdf,
-            SessionMode session_mode,
+            SessionCryptoMode session_mode,
             uint16_t max_nonce,
             uint32_t max_session_time,
             HandshakeMode hansshake_mode,

@@ -13,29 +13,29 @@
 // Licensed under the terms of the BSDv3 license
 //
 
-#include "ssp21/crypto/gen/SessionMode.h"
+#include "ssp21/crypto/gen/SessionCryptoMode.h"
 
 namespace ssp21 {
 
-uint8_t SessionModeSpec::to_type(SessionMode arg)
+uint8_t SessionCryptoModeSpec::to_type(SessionCryptoMode arg)
 {
     return static_cast<uint8_t>(arg);
 }
-SessionMode SessionModeSpec::from_type(uint8_t arg)
+SessionCryptoMode SessionCryptoModeSpec::from_type(uint8_t arg)
 {
     switch(arg)
     {
         case(0x0):
-            return SessionMode::hmac_sha256_16;
+            return SessionCryptoMode::hmac_sha256_16;
         default:
-            return SessionMode::undefined;
+            return SessionCryptoMode::undefined;
     }
 }
-const char* SessionModeSpec::to_string(SessionMode arg)
+const char* SessionCryptoModeSpec::to_string(SessionCryptoMode arg)
 {
     switch(arg)
     {
-        case(SessionMode::hmac_sha256_16):
+        case(SessionCryptoMode::hmac_sha256_16):
             return "hmac_sha256_16";
         default:
             return "undefined";

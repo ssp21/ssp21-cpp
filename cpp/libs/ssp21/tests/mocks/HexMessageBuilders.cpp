@@ -48,7 +48,7 @@ namespace ssp21
             HandshakeEphemeral handshake_ephemeral,
             HandshakeHash handshake_hash,
             HandshakeKDF handshake_kdf,
-            SessionMode session_mode,
+			SessionCryptoMode session_mode,
             uint16_t max_nonce,
             uint32_t max_session_time,
             HandshakeMode handshake_mode,

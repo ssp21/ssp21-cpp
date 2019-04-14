@@ -8,11 +8,11 @@ package com.automatak.render.ssp21.enums.ssp21
 
 import com.automatak.render._
 
-object SessionMode extends EnumModel {
+object SessionCryptoMode extends EnumModel {
 
-  override def name: String = "SessionMode"
+  override def name: String = "SessionCryptoMode"
 
-  override def underscoredName: String = "session_mode"
+  override def underscoredName: String = "session_crypto_mode"
 
   override def comments: List[String] = List("Specifies the complete set of algorithms used to secure the session")
 

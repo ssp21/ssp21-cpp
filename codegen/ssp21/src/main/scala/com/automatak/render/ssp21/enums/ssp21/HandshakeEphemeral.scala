@@ -21,7 +21,7 @@ object HandshakeEphemeral extends EnumModel {
   override def defaultValue: Option[EnumValue] = Some(EnumValue.undefined(255))
 
   private val codes = List(
-    EnumValue("x25519", 0, "x25519 algorithm public key"),
+    EnumValue("x25519", 0, "x25519 DH public key"),
     EnumValue("nonce", 1, "32-byte random nonce"),
     EnumValue("none", 2, "Empty ephemeral used for QKD mode")
   )

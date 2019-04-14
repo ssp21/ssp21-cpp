@@ -6,7 +6,7 @@
 #include "ssp21/crypto/gen/HandshakeHash.h"
 #include "ssp21/crypto/gen/HandshakeKDF.h"
 #include "ssp21/crypto/gen/SessionNonceMode.h"
-#include "ssp21/crypto/gen/SessionMode.h"
+#include "ssp21/crypto/gen/SessionCryptoMode.h"
 
 namespace ssp21
 {
@@ -19,21 +19,21 @@ namespace ssp21
             HandshakeEphemeral handshake_ephemeral,
             HandshakeHash handshake_hash,
             HandshakeKDF handshake_kdf,
-			SessionNonceMode nonce_mode,
-            SessionMode session_mode
-        ) :
-            nonce_mode(nonce_mode),
+			SessionNonceMode session_nonce_mode,
+			SessionCryptoMode session_crypto_mode
+        ) :			
             handshake_ephemeral(handshake_ephemeral),
             handshake_hash(handshake_hash),
             handshake_kdf(handshake_kdf),
-            session_mode(session_mode)
+			session_nonce_mode(session_nonce_mode),
+			session_crypto_mode(session_crypto_mode)
         {}
         
         HandshakeEphemeral handshake_ephemeral = HandshakeEphemeral::x25519;
         HandshakeHash handshake_hash = HandshakeHash::sha256;
         HandshakeKDF handshake_kdf = HandshakeKDF::hkdf_sha256;
-		SessionNonceMode nonce_mode = SessionNonceMode::increment_last_rx;
-        SessionMode session_mode = SessionMode::hmac_sha256_16;
+		SessionNonceMode session_nonce_mode = SessionNonceMode::increment_last_rx;
+		SessionCryptoMode session_crypto_mode = SessionCryptoMode::hmac_sha256_16;
     };
 
 }

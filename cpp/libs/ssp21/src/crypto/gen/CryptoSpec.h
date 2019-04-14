@@ -20,11 +20,11 @@
 #include "ssp21/util/SequenceTypes.h"
 #include "ssp21/crypto/gen/ParseError.h"
 #include "ssp21/crypto/gen/FormatError.h"
-#include "ssp21/crypto/gen/SessionMode.h"
 #include "ssp21/crypto/IMessagePrinter.h"
 #include "ssp21/crypto/gen/HandshakeKDF.h"
 #include "ssp21/crypto/gen/HandshakeHash.h"
 #include "ssp21/crypto/gen/SessionNonceMode.h"
+#include "ssp21/crypto/gen/SessionCryptoMode.h"
 #include "ssp21/crypto/gen/HandshakeEphemeral.h"
 
 namespace ssp21 {
@@ -38,7 +38,7 @@ struct CryptoSpec final
         HandshakeHash handshake_hash,
         HandshakeKDF handshake_kdf,
         SessionNonceMode session_nonce_mode,
-        SessionMode session_mode
+        SessionCryptoMode session_crypto_mode
     );
 
     size_t size() const;
@@ -49,7 +49,7 @@ struct CryptoSpec final
     EnumField<HandshakeHashSpec> handshake_hash;
     EnumField<HandshakeKDFSpec> handshake_kdf;
     EnumField<SessionNonceModeSpec> session_nonce_mode;
-    EnumField<SessionModeSpec> session_mode;
+    EnumField<SessionCryptoModeSpec> session_crypto_mode;
 
     ParseError read(seq32_t& input);
     ParseError read_all(const seq32_t& input);

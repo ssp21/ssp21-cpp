@@ -15,7 +15,7 @@ object CryptoSpec extends Struct {
     Enum(HandshakeHash),
     Enum(HandshakeKDF),
     Enum(SessionNonceMode),
-    Enum(SessionMode)
+    Enum(SessionCryptoMode)
   )
 
   override def public: Boolean = false

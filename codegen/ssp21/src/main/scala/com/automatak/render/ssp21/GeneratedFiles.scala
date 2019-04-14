@@ -24,7 +24,7 @@ object GeneratedFiles {
     HandshakeHash,
     SessionNonceMode,
     HandshakeEphemeral,
-    SessionMode,
+    SessionCryptoMode,
     HandshakeMode,
     HandshakeError,
     HandshakeKDF,
