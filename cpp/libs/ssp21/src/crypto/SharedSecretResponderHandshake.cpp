@@ -64,7 +64,7 @@ namespace ssp21
 
         algorithms.handshake.kdf(
             handshake_hash,
-        { this->key->as_seq() },
+        { this->key->as_seq(), msg.ephemeral_data, nonce_buffer.as_seq() },
         session_keys.rx_key,
         session_keys.tx_key
         );

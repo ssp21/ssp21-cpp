@@ -56,7 +56,7 @@ namespace ssp21
         // perform key derivation
         this->algorithms.handshake.kdf(
             salt,
-        { this->key->as_seq() },
+        { this->key->as_seq(), this->nonce_buffer.as_seq(), msg.ephemeral_data },
         session_keys.tx_key,
         session_keys.rx_key
         );
