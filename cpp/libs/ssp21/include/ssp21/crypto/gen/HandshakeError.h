@@ -37,29 +37,29 @@ enum class HandshakeError : uint8_t
     /// The requested handshake KDF is not supported
     unsupported_handshake_kdf = 0x4,
     /// The requested session mode is not supported
-    unsupported_session_mode = 0x6,
+    unsupported_session_mode = 0x5,
     /// The requested nonce verification mode is not supported
-    unsupported_nonce_mode = 0x7,
+    unsupported_nonce_mode = 0x6,
     /// The requested handshake mode is not supported
-    unsupported_handshake_mode = 0x8,
+    unsupported_handshake_mode = 0x7,
     /// One of the received certificates was improperly encoded
-    bad_certificate_format = 0x9,
-    /// One of the received certificates was improperly encoded
-    bad_certificate_chain = 0xA,
+    bad_certificate_format = 0x8,
+    /// The certificate chain contains an authentication or other issue
+    bad_certificate_chain = 0x9,
     /// One of the received certificates utilizes an unsupported feature
-    unsupported_certificate_feature = 0xB,
-    /// The outstation was unable to authenticate the master
-    authentication_error = 0xC,
-    /// The master requested handshake auth, but no prior handshake begin was received
-    no_prior_handshake_begin = 0xD,
-    /// In shared-secret mode, the requested key id (mode_data) was not found
-    key_not_found = 0xE,
+    unsupported_certificate_feature = 0xA,
+    /// The responder was unable to authenticate the initiator
+    authentication_error = 0xB,
+    /// The initiator requested handshake auth, but no prior handshake begin was received
+    no_prior_handshake_begin = 0xC,
+    /// In QKD mode, the requested key id was not found
+    key_not_found = 0xD,
     /// This value gets used internally in ssp21-cpp only
     none = 0xFD,
     /// value not defined
     undefined = 0xFE,
-    /// internal error
-    internal = 0xFF
+    /// A error code for any unforeseen condition or implementation specific error
+    unknown = 0xFF
 };
 
 inline bool any(HandshakeError value)

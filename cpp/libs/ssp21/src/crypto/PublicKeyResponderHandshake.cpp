@@ -66,7 +66,7 @@ namespace ssp21
         if (any(result.err))
         {
             FORMAT_LOG_BLOCK(this->logger, levels::error, "Error writing handshake reply: %s", FormatErrorSpec::to_string(result.err));
-            return Result::failure(HandshakeError::internal);
+            return Result::failure(HandshakeError::unknown);
         }
 
         HandshakeHasher hasher;
@@ -87,7 +87,7 @@ namespace ssp21
         if (ec)
         {
             FORMAT_LOG_BLOCK(this->logger, levels::error, "Error calculating input key material: %s", ec.message().c_str());
-            return Result::failure(HandshakeError::internal); // TODO
+            return Result::failure(HandshakeError::unknown);
         }
 
         SessionKeys session_keys;

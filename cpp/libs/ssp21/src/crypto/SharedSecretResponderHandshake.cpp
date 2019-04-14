@@ -54,7 +54,7 @@ namespace ssp21
         if (any(result.err))
         {
             FORMAT_LOG_BLOCK(this->logger, levels::error, "Error writing handshake reply: %s", FormatErrorSpec::to_string(result.err));
-            return Result::failure(HandshakeError::internal);
+            return Result::failure(HandshakeError::unknown);
         }
 
         HandshakeHasher hasher;

@@ -35,26 +35,26 @@ HandshakeError HandshakeErrorSpec::from_type(uint8_t arg)
             return HandshakeError::unsupported_handshake_hash;
         case(0x4):
             return HandshakeError::unsupported_handshake_kdf;
-        case(0x6):
+        case(0x5):
             return HandshakeError::unsupported_session_mode;
-        case(0x7):
+        case(0x6):
             return HandshakeError::unsupported_nonce_mode;
-        case(0x8):
+        case(0x7):
             return HandshakeError::unsupported_handshake_mode;
-        case(0x9):
+        case(0x8):
             return HandshakeError::bad_certificate_format;
-        case(0xA):
+        case(0x9):
             return HandshakeError::bad_certificate_chain;
-        case(0xB):
+        case(0xA):
             return HandshakeError::unsupported_certificate_feature;
-        case(0xC):
+        case(0xB):
             return HandshakeError::authentication_error;
-        case(0xD):
+        case(0xC):
             return HandshakeError::no_prior_handshake_begin;
-        case(0xE):
+        case(0xD):
             return HandshakeError::key_not_found;
         case(0xFF):
-            return HandshakeError::internal;
+            return HandshakeError::unknown;
         case(0xFD):
             return HandshakeError::none;
         default:
@@ -93,8 +93,8 @@ const char* HandshakeErrorSpec::to_string(HandshakeError arg)
             return "no_prior_handshake_begin";
         case(HandshakeError::key_not_found):
             return "key_not_found";
-        case(HandshakeError::internal):
-            return "internal";
+        case(HandshakeError::unknown):
+            return "unknown";
         case(HandshakeError::none):
             return "none";
         default:
