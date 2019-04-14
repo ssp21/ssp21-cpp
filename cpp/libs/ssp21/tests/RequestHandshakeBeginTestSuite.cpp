@@ -79,7 +79,7 @@ TEST_CASE(SUITE("successfully parses message"))
     REQUIRE(msg.handshake_mode == HandshakeMode::shared_secret);
     REQUIRE(HexConversions::to_hex(msg.ephemeral_data) == "AA AA AA");
 
-    REQUIRE(msg.handshake_data.is_empty());
+    REQUIRE(msg.mode_data.is_empty());
 }
 
 TEST_CASE(SUITE("pretty prints message"))
@@ -123,7 +123,7 @@ TEST_CASE(SUITE("pretty prints message"))
         "handshake_mode: preshared_public_keys",
         "ephemeral_data (length = 2)",
         "CA:FE",
-        "handshake_data (length = 0)"
+        "mode_data (length = 0)"
     );
 
 }

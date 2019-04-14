@@ -24,7 +24,7 @@ namespace ssp21
     {
         // extract the remote public key
         seq32_t remote_public_key;
-        const auto err = this->cert_handler->validate(msg.handshake_data, remote_public_key);
+        const auto err = this->cert_handler->validate(msg.mode_data, remote_public_key);
         if (any(err))
         {
             FORMAT_LOG_BLOCK(this->logger, levels::error, "error validating certificate data: %s", HandshakeErrorSpec::to_string(err));

@@ -28,7 +28,7 @@ struct ReplyHandshakeBegin final : public IMessage, private ser4cpp::Uncopyable
 
     ReplyHandshakeBegin(
         const seq32_t& ephemeral_data,
-        const seq32_t& handshake_data
+        const seq32_t& mode_data
     );
 
     size_t size() const;
@@ -42,7 +42,7 @@ struct ReplyHandshakeBegin final : public IMessage, private ser4cpp::Uncopyable
     static const Function function = Function::reply_handshake_begin;
 
     SeqByteField ephemeral_data;
-    SeqByteField handshake_data;
+    SeqByteField mode_data;
 
 };
 

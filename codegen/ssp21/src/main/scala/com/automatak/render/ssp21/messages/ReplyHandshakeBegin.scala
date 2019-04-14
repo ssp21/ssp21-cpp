@@ -13,7 +13,7 @@ object ReplyHandshakeBegin extends Message {
 
   override def fields: List[Field] = List(
     CommonFields.ephemeralData,
-    CommonFields.handshakeData
+    CommonFields.modeData
   )
 
 }

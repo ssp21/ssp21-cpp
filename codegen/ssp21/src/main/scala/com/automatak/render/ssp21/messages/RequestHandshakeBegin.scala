@@ -47,7 +47,7 @@ object RequestHandshakeBegin extends Message {
     StructField("constraints", SessionConstraints),
     Enum(HandshakeMode),
     CommonFields.ephemeralData,
-    CommonFields.handshakeData
+    CommonFields.modeData
   )
 
 }

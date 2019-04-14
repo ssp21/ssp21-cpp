@@ -35,7 +35,7 @@ namespace ssp21
         seq32_t remote_public_static_key;
 
         {
-            const auto err = this->cert_handler->validate(msg.handshake_mode, msg.handshake_data, remote_public_static_key);
+            const auto err = this->cert_handler->validate(msg.handshake_mode, msg.mode_data, remote_public_static_key);
             if (any(err))
             {
                 return Result::failure(err);

@@ -38,7 +38,7 @@ namespace ssp21
         // deserialize the key identifier from the handshake data
         uint64_t key_id;
         {
-            auto key_id_data = msg.handshake_data;
+            auto key_id_data = msg.mode_data;
             if (!ser4cpp::BigEndian::read(key_id_data, key_id) || key_id_data.is_not_empty())
             {
                 return Result::failure(HandshakeError::bad_message_format);

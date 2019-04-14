@@ -30,14 +30,14 @@ RequestHandshakeBegin::RequestHandshakeBegin(
     const SessionConstraints& constraints,
     HandshakeMode handshake_mode,
     const seq32_t& ephemeral_data,
-    const seq32_t& handshake_data
+    const seq32_t& mode_data
 ) :
     version(version),
     spec(spec),
     constraints(constraints),
     handshake_mode(handshake_mode),
     ephemeral_data(ephemeral_data),
-    handshake_data(handshake_data)
+    mode_data(mode_data)
 {}
 
 size_t RequestHandshakeBegin::size() const
@@ -49,7 +49,7 @@ size_t RequestHandshakeBegin::size() const
         constraints,
         handshake_mode,
         ephemeral_data,
-        handshake_data
+        mode_data
     );
 }
 
@@ -65,7 +65,7 @@ ParseError RequestHandshakeBegin::read(seq32_t input)
             constraints,
             handshake_mode,
             ephemeral_data,
-            handshake_data
+            mode_data
         );
     };
 
@@ -83,7 +83,7 @@ FormatResult RequestHandshakeBegin::write(wseq32_t& output) const
             constraints,
             handshake_mode,
             ephemeral_data,
-            handshake_data
+            mode_data
         );
     };
 
@@ -103,8 +103,8 @@ void RequestHandshakeBegin::print(IMessagePrinter& printer) const
         handshake_mode,
         "ephemeral_data",
         ephemeral_data,
-        "handshake_data",
-        handshake_data
+        "mode_data",
+        mode_data
     );
 }
 

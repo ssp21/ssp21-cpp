@@ -61,9 +61,9 @@ namespace ssp21
             return false;
         }
 
-        if (msg.handshake_data.is_not_empty())
+        if (msg.mode_data.is_not_empty())
         {
-            FORMAT_LOG_BLOCK(this->logger, levels::warn, "non-empty handshake data: %u", msg.handshake_data.length());
+            FORMAT_LOG_BLOCK(this->logger, levels::warn, "non-empty handshake data: %u", msg.mode_data.length());
             return false;
         }
 
