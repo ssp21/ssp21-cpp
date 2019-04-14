@@ -13,33 +13,33 @@
 // Licensed under the terms of the BSDv3 license
 //
 
-#include "ssp21/crypto/gen/NonceMode.h"
+#include "ssp21/crypto/gen/SessionNonceMode.h"
 
 namespace ssp21 {
 
-uint8_t NonceModeSpec::to_type(NonceMode arg)
+uint8_t SessionNonceModeSpec::to_type(SessionNonceMode arg)
 {
     return static_cast<uint8_t>(arg);
 }
-NonceMode NonceModeSpec::from_type(uint8_t arg)
+SessionNonceMode SessionNonceModeSpec::from_type(uint8_t arg)
 {
     switch(arg)
     {
         case(0x0):
-            return NonceMode::increment_last_rx;
+            return SessionNonceMode::increment_last_rx;
         case(0x1):
-            return NonceMode::greater_than_last_rx;
+            return SessionNonceMode::greater_than_last_rx;
         default:
-            return NonceMode::undefined;
+            return SessionNonceMode::undefined;
     }
 }
-const char* NonceModeSpec::to_string(NonceMode arg)
+const char* SessionNonceModeSpec::to_string(SessionNonceMode arg)
 {
     switch(arg)
     {
-        case(NonceMode::increment_last_rx):
+        case(SessionNonceMode::increment_last_rx):
             return "increment_last_rx";
-        case(NonceMode::greater_than_last_rx):
+        case(SessionNonceMode::greater_than_last_rx):
             return "greater_than_last_rx";
         default:
             return "undefined";

@@ -11,10 +11,10 @@ object CryptoSpec extends Struct {
   override def name: String = "CryptoSpec"
 
   override def fields: List[Field] = List(
-    Enum(NonceMode),
     Enum(HandshakeEphemeral),
     Enum(HandshakeHash),
     Enum(HandshakeKDF),
+    Enum(SessionNonceMode),
     Enum(SessionMode)
   )
 

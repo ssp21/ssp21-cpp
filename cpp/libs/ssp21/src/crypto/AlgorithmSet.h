@@ -47,11 +47,11 @@ namespace ssp21
         HandshakeError configure(const CryptoSpec& spec)
         {
             return this->configure(
-                       CryptoSuite(
-                           spec.nonce_mode,
+                       CryptoSuite(                           
                            spec.handshake_ephemeral,
                            spec.handshake_hash,
                            spec.handshake_kdf,
+						   spec.session_nonce_mode,
                            spec.session_mode
                        )
                    );

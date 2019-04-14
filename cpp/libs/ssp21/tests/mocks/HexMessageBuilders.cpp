@@ -44,7 +44,7 @@ namespace ssp21
 
         std::string request_handshake_begin(
             uint16_t version,
-            NonceMode nonce_mode,
+			SessionNonceMode nonce_mode,
             HandshakeEphemeral handshake_ephemeral,
             HandshakeHash handshake_hash,
             HandshakeKDF handshake_kdf,
@@ -59,11 +59,11 @@ namespace ssp21
 
             RequestHandshakeBegin msg(
                 version,
-                CryptoSpec(
-                    nonce_mode,
+                CryptoSpec(                    
                     handshake_ephemeral,
                     handshake_hash,
                     handshake_kdf,
+					nonce_mode,
                     session_mode
                 ),
                 SessionConstraints(

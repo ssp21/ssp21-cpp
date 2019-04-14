@@ -13,8 +13,8 @@
 // Licensed under the terms of the BSDv3 license
 //
 
-#ifndef SSP21_NONCEMODE_H
-#define SSP21_NONCEMODE_H
+#ifndef SSP21_SESSIONNONCEMODE_H
+#define SSP21_SESSIONNONCEMODE_H
 
 #include <cstdint>
 #include "ser4cpp/util/Uncopyable.h"
@@ -24,7 +24,7 @@ namespace ssp21 {
 /**
     Determines how nonces are verified during the session
 */
-enum class NonceMode : uint8_t
+enum class SessionNonceMode : uint8_t
 {
     /// new nonce must strictly be equal to last nonce plus one
     increment_last_rx = 0x0,
@@ -34,13 +34,13 @@ enum class NonceMode : uint8_t
     undefined = 0xFF
 };
 
-struct NonceModeSpec : private ser4cpp::StaticOnly
+struct SessionNonceModeSpec : private ser4cpp::StaticOnly
 {
-    using enum_type_t = NonceMode;
+    using enum_type_t = SessionNonceMode;
 
-    static uint8_t to_type(NonceMode arg);
-    static NonceMode from_type(uint8_t arg);
-    static const char* to_string(NonceMode arg);
+    static uint8_t to_type(SessionNonceMode arg);
+    static SessionNonceMode from_type(uint8_t arg);
+    static const char* to_string(SessionNonceMode arg);
 };
 
 }

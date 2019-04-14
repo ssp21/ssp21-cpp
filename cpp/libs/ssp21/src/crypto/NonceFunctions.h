@@ -5,8 +5,6 @@
 #include "ser4cpp/util/Uncopyable.h"
 #include "ser4cpp/serialization/BigEndian.h"
 
-#include "ssp21/crypto/gen/NonceMode.h"
-
 #include <cstdint>
 
 namespace ssp21

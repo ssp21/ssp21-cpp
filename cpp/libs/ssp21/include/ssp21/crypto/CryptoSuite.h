@@ -2,10 +2,10 @@
 #ifndef SSP21_CRYPTOSUITE_H
 #define SSP21_CRYPTOSUITE_H
 
-#include "ssp21/crypto/gen/NonceMode.h"
 #include "ssp21/crypto/gen/HandshakeEphemeral.h"
 #include "ssp21/crypto/gen/HandshakeHash.h"
 #include "ssp21/crypto/gen/HandshakeKDF.h"
+#include "ssp21/crypto/gen/SessionNonceMode.h"
 #include "ssp21/crypto/gen/SessionMode.h"
 
 namespace ssp21
@@ -15,11 +15,11 @@ namespace ssp21
     {
         CryptoSuite() = default;
 
-        CryptoSuite(
-            NonceMode nonce_mode,
+        CryptoSuite(            
             HandshakeEphemeral handshake_ephemeral,
             HandshakeHash handshake_hash,
             HandshakeKDF handshake_kdf,
+			SessionNonceMode nonce_mode,
             SessionMode session_mode
         ) :
             nonce_mode(nonce_mode),
@@ -28,11 +28,11 @@ namespace ssp21
             handshake_kdf(handshake_kdf),
             session_mode(session_mode)
         {}
-
-        NonceMode nonce_mode = NonceMode::increment_last_rx;
+        
         HandshakeEphemeral handshake_ephemeral = HandshakeEphemeral::x25519;
         HandshakeHash handshake_hash = HandshakeHash::sha256;
         HandshakeKDF handshake_kdf = HandshakeKDF::hkdf_sha256;
+		SessionNonceMode nonce_mode = SessionNonceMode::increment_last_rx;
         SessionMode session_mode = SessionMode::hmac_sha256_16;
     };
 

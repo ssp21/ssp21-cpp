@@ -46,7 +46,7 @@ TEST_CASE(SUITE("responds to invalid key length with bad_message_format"))
 
     const auto request = hex::request_handshake_begin(
                              0,
-                             NonceMode::increment_last_rx,
+                             SessionNonceMode::increment_last_rx,
                              HandshakeEphemeral::x25519,
                              HandshakeHash::sha256,
                              HandshakeKDF::hkdf_sha256,
@@ -324,7 +324,7 @@ void test_begin_handshake_success(ResponderFixture& fix, uint16_t max_nonce, uin
 {
     const auto request = hex::request_handshake_begin(
                              0,
-                             NonceMode::increment_last_rx,
+                             SessionNonceMode::increment_last_rx,
                              HandshakeEphemeral::x25519,
                              HandshakeHash::sha256,
                              HandshakeKDF::hkdf_sha256,

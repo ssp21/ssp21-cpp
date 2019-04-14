@@ -8,11 +8,11 @@ package com.automatak.render.ssp21.enums.ssp21
 
 import com.automatak.render._
 
-object NonceMode extends EnumModel {
+object SessionNonceMode extends EnumModel {
 
-  override def name: String = "NonceMode"
+  override def name: String = "SessionNonceMode"
 
-  override def underscoredName: String = "nonce_mode"
+  override def underscoredName: String = "session_nonce_mode"
 
   override def comments: List[String] = List("Determines how nonces are verified during the session")
 

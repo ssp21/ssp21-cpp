@@ -5,14 +5,14 @@
 
 namespace ssp21
 {
-    HandshakeError Algorithms::Session::configure(NonceMode nonce_mode, SessionMode session_mode)
+    HandshakeError Algorithms::Session::configure(SessionNonceMode nonce_mode, SessionMode session_mode)
     {
         switch (nonce_mode)
         {
-        case(NonceMode::greater_than_last_rx):
+        case(SessionNonceMode::greater_than_last_rx):
             this->verify_nonce = &NonceFunctions::verify_greater_than_last;
             break;
-        case(NonceMode::increment_last_rx):
+        case(SessionNonceMode::increment_last_rx):
             this->verify_nonce = &NonceFunctions::verify_strict_increment;
             break;
         default:

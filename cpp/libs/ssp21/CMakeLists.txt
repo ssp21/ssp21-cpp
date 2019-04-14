@@ -33,7 +33,7 @@ set(ssp21_public_headers
     ./include/ssp21/crypto/gen/HandshakeHash.h
     ./include/ssp21/crypto/gen/HandshakeKDF.h
     ./include/ssp21/crypto/gen/HandshakeMode.h
-    ./include/ssp21/crypto/gen/NonceMode.h
+    ./include/ssp21/crypto/gen/SessionNonceMode.h
     ./include/ssp21/crypto/gen/ParseError.h    
     ./include/ssp21/crypto/gen/PublicKeyType.h
     ./include/ssp21/crypto/gen/SessionMode.h
@@ -166,7 +166,7 @@ set(ssp21_srcs
     ./src/crypto/gen/HandshakeHash.cpp
     ./src/crypto/gen/HandshakeKDF.cpp
     ./src/crypto/gen/HandshakeMode.cpp
-    ./src/crypto/gen/NonceMode.cpp
+    ./src/crypto/gen/SessionNonceMode.cpp
     ./src/crypto/gen/ParseError.cpp    
     ./src/crypto/gen/PublicKeyType.cpp
     ./src/crypto/gen/ReplyHandshakeBegin.cpp

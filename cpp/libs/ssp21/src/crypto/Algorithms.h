@@ -27,7 +27,7 @@ namespace ssp21
             Session() = default;
 
             HandshakeError configure(
-                NonceMode nonce_mode,
+                SessionNonceMode nonce_mode,
                 SessionMode session_mode
             );
 

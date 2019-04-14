@@ -191,7 +191,7 @@ void test_request_handshake_begin(InitiatorFixture& fix)
 
     const auto expected = hex::request_handshake_begin(
                               0,
-                              NonceMode::increment_last_rx,
+                              SessionNonceMode::increment_last_rx,
                               HandshakeEphemeral::x25519,
                               HandshakeHash::sha256,
                               HandshakeKDF::hkdf_sha256,

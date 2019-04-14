@@ -68,7 +68,7 @@ TEST_CASE(SUITE("successfully parses message"))
     auto err = msg.read(slice);
     REQUIRE(!any(err));
     REQUIRE(msg.version == 0xD1D2);
-    REQUIRE(msg.spec.nonce_mode == NonceMode::increment_last_rx);
+    REQUIRE(msg.spec.session_nonce_mode == SessionNonceMode::increment_last_rx);
     REQUIRE(msg.spec.handshake_ephemeral == HandshakeEphemeral::x25519);
     REQUIRE(msg.spec.handshake_hash == HandshakeHash::sha256);
     REQUIRE(msg.spec.handshake_kdf == HandshakeKDF::hkdf_sha256);
@@ -89,11 +89,11 @@ TEST_CASE(SUITE("pretty prints message"))
 
     RequestHandshakeBegin msg(
         7,
-        CryptoSpec(
-            NonceMode::greater_than_last_rx,
+        CryptoSpec(			
             HandshakeEphemeral::x25519,
             HandshakeHash::sha256,
             HandshakeKDF::hkdf_sha256,
+			SessionNonceMode::greater_than_last_rx,
             SessionMode::hmac_sha256_16
         ),
         SessionConstraints(
@@ -112,11 +112,11 @@ TEST_CASE(SUITE("pretty prints message"))
     msg.print(printer);
 
     log.expect(
-        "version: 7",
-        "nonce_mode: greater_than_last_rx",
+        "version: 7",        
         "handshake_ephemeral: x25519",
         "handshake_hash: sha256",
         "handshake_kdf: hkdf_sha256",
+		"session_nonce_mode: greater_than_last_rx",
         "session_mode: hmac_sha256_16",
         "max_nonce: 32768",
         "max_session_duration: 3405691582",

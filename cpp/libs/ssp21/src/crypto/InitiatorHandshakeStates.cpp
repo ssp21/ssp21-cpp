@@ -21,11 +21,11 @@ namespace ssp21
 
         const auto suite = ctx.handshake->get_crypto_suite();
 
-        const CryptoSpec crypto_spec(
-            suite.nonce_mode,
+        const CryptoSpec crypto_spec(            
             suite.handshake_ephemeral,
             suite.handshake_hash,
             suite.handshake_kdf,
+			suite.nonce_mode,
             suite.session_mode
         );
 
