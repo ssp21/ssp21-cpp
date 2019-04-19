@@ -24,14 +24,23 @@ namespace ssp21
     {
         if (msg.spec.handshake_ephemeral != HandshakeEphemeral::nonce)
         {
+			FORMAT_LOG_BLOCK(this->logger, levels::warn, "unsupported handshake emphemeral: %s", HandshakeEphemeralSpec::to_string(msg.spec.handshake_ephemeral));
             return Result::failure(HandshakeError::unsupported_handshake_ephemeral);
         }
 
         // verify that the nonce is the correct length
         if (msg.ephemeral_data.length() != consts::crypto::nonce_length)
         {
+			FORMAT_LOG_BLOCK(this->logger, levels::warn, "bad nonce length: %u", msg.ephemeral_data.length());
             return Result::failure(HandshakeError::bad_message_format);
         }
+
+		// verify that the mode data is empty
+		if (!msg.mode_data.is_empty())
+		{
+			FORMAT_LOG_BLOCK(this->logger, levels::warn, "non-empty mode data: %u", msg.mode_data.length());
+			return Result::failure(HandshakeError::bad_message_format);
+		}
 
         shared_secret_algorithms_t algorithms;
 
