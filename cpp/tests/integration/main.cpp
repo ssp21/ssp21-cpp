@@ -10,6 +10,7 @@ int main(int argc, char*  argv[])
     if(!ssp21::sodium::CryptoBackend::initialize())
     {
         std::cerr << "unable to initialize sodium backend" << std::endl;
+        return -1;
     }
 
     int result = Catch::Session().run(argc, argv);

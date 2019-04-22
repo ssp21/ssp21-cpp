@@ -1,15 +1,40 @@
-# Use the latest 2.1 version of CircleCI pipeline processing engine, see https://circleci.com/docs/2.0/configuration-reference/
-version: 2.1
+# version of CircleCI pipeline processing engine (https://circleci.com/docs/2.0/configuration-reference/)
+version: 2
 
-# Use a package of configuration called an orb, see https://circleci.com/docs/2.0/orb-intro/
-orbs:
-  # Declare a dependency on the welcome-orb
-  welcome: circleci/welcome-orb@0.3.1
+jobs:
+  build-gcc-release:
+    docker:
+        - image: ubuntu:18.10
+    steps:
+      - run:
+          name: Update image
+          command: "apt-get update && apt-get upgrade -y && apt-get autoremove && apt-get autoclean"
+      - run:
+          name: Install dependencies
+          command: apt-get -y install g++ git cmake libsodium-dev
+      - checkout # check out code in project directory
+      - run:
+          name: Initialize submodules
+          command: git submodule update --init
+      - run:
+          name: Build the library and tests
+          command: "mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Release && make -j`grep -c ^processor /proc/cpuinfo`"
+      - run:
+          name: Run the tests
+          command:
+            >
+              cd build &&
+              mkdir -p ~/test-results/junit &&
+              ./cpp/libs/ssp21/tests/ssp21_tests -r junit > ~/test-results/junit/ssp21_tests.xml &&
+              ./cpp/tests/integration/integration_tests -r junit > ~/test-results/junit/integration_tests.xml &&
+              ./cpp/libs/sodium/tests/sodium_backend_tests -r junit > ~/test-results/junit/sodium_backend_tests.xml
+      - store_test_results:
+          path: ~/test-results
+      - store_artifacts:
+          path: ~/test-results
 
-# Orchestrate or schedule a set of jobs, see https://circleci.com/docs/2.0/workflows/
 workflows:
-  # Name the workflow "Welcome"
-  Welcome:
-    # Run the welcome/run job in its own container
+  version: 2
+  build_and_test:
     jobs:
-      - welcome/run
+      - build-gcc-release

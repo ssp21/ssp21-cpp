@@ -212,8 +212,6 @@ TEST_CASE(SUITE("successfully formats and increments nonce"))
 
     auto data = HexConversions::from_hex("CAFE");
 
-    std::error_code ec;
-
     for (uint16_t nonce = 1; nonce < 4; ++nonce)
     {
         std::error_code ec;

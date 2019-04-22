@@ -11,6 +11,7 @@ int main(int argc, char*  argv[])
     if(!ssp21::MockCryptoBackend::initialize())
     {
         std::cerr << "unable to initialize mock cyrpto backend" << std::endl;
+        return -1;
     }
 
     return Catch::Session().run(argc, argv);
