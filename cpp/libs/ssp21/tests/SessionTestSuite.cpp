@@ -210,18 +210,19 @@ TEST_CASE(SUITE("successfully formats and increments nonce"))
     SessionFixture fixture;
     fixture.init();
 
-    auto input = HexConversions::from_hex("CAFE")->as_rslice();
+    auto data = HexConversions::from_hex("CAFE");
 
     std::error_code ec;
 
     for (uint16_t nonce = 1; nonce < 4; ++nonce)
     {
         std::error_code ec;
+        auto input = data->as_rslice();
 
-        const auto data = fixture.session.format_session_data(exe4cpp::steady_time_t(), input, ec);
+        const auto output = fixture.session.format_session_data(exe4cpp::steady_time_t(), input, ec);
         REQUIRE_FALSE(ec);
         REQUIRE(input.is_empty());
-        REQUIRE(data.is_not_empty());
+        REQUIRE(output.is_not_empty());
         fixture.crypto.expect({ CryptoAction::hmac_sha256 });
     }
 
