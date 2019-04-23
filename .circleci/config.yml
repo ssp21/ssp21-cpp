@@ -3,6 +3,9 @@ version: 2
 
 jobs:
   build-gcc-release:
+    branches:
+      ignore:
+        - gh-pages
     docker:
         - image: ubuntu:18.10
     steps:
