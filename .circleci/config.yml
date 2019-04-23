@@ -3,9 +3,6 @@ version: 2
 
 jobs:
   build-gcc-release:
-    branches:
-      ignore:
-        - gh-pages
     docker:
         - image: ubuntu:18.10
     steps:
@@ -41,3 +38,9 @@ workflows:
   build_and_test:
     jobs:
       - build-gcc-release
+	      filters:  # using regex filters requires the entire branch to match
+            branches:
+              only:  # only branches matching the below regex filters will run
+                - master
+				- develop
+                - /feature*/
