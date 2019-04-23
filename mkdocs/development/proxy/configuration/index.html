@@ -1,0 +1,816 @@
+
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.1.1">
+    
+    
+      
+        <title>Configuration - SSP21-CPP</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/application.3020aac5.css">
+      
+        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.224b79ff.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#546e7a">
+      
+    
+    
+      <script src="../../assets/javascripts/modernizr.01ccdecf.js"></script>
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,400i,700|Ubuntu+Mono">
+        <style>body,input{font-family:"Ubuntu","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Ubuntu Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    
+      
+    
+    
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="blue-grey" data-md-color-accent="green">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#configuration" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../.." title="SSP21-CPP" class="md-header-nav__button md-logo">
+          
+            <img src="../../img/ssp21.png" width="24" height="24">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            <span class="md-header-nav__topic">
+              SSP21-CPP
+            </span>
+            <span class="md-header-nav__topic">
+              Configuration
+            </span>
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+      </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../.." title="SSP21-CPP" class="md-nav__button md-logo">
+      
+        <img src="../../img/ssp21.png" width="48" height="48">
+      
+    </a>
+    SSP21-CPP
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../build/" title="Building" class="md-nav__link">
+      Building
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      API
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        API
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/intro/" title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/executor/" title="IExecutor" class="md-nav__link">
+      IExecutor
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/logging/" title="Logging" class="md-nav__link">
+      Logging
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/crypto/" title="ICryptoBackend" class="md-nav__link">
+      ICryptoBackend
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/error_handling/" title="Error Handling" class="md-nav__link">
+      Error Handling
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      ICFTool
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        ICFTool
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../icftool/intro/" title="Usage" class="md-nav__link">
+      Usage
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" checked>
+    
+    <label class="md-nav__link" for="nav-5">
+      Proxy
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        Proxy
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../intro/" title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Configuration
+      </label>
+    
+    <a href="./" title="Configuration" class="md-nav__link md-nav__link--active">
+      Configuration
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#standard-options" title="Standard options" class="md-nav__link">
+    Standard options
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#log-levels" title="Log levels" class="md-nav__link">
+    Log levels
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mode-specific-parameters" title="Mode-specific parameters" class="md-nav__link">
+    Mode-specific parameters
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shared-secret-mode" title="Shared-secret mode" class="md-nav__link">
+    Shared-secret mode
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qkd-mode" title="QKD mode" class="md-nav__link">
+    QKD mode
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pre-shared-public-key-mode" title="Pre-shared public key mode" class="md-nav__link">
+    Pre-shared public key mode
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#certificate-mode" title="Certificate mode" class="md-nav__link">
+    Certificate mode
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#standard-options" title="Standard options" class="md-nav__link">
+    Standard options
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#log-levels" title="Log levels" class="md-nav__link">
+    Log levels
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mode-specific-parameters" title="Mode-specific parameters" class="md-nav__link">
+    Mode-specific parameters
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shared-secret-mode" title="Shared-secret mode" class="md-nav__link">
+    Shared-secret mode
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qkd-mode" title="QKD mode" class="md-nav__link">
+    QKD mode
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pre-shared-public-key-mode" title="Pre-shared public key mode" class="md-nav__link">
+    Pre-shared public key mode
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#certificate-mode" title="Certificate mode" class="md-nav__link">
+    Certificate mode
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="configuration">Configuration</h1>
+<p>The proxy accepts a single argument: the path to an <a href="https://en.wikipedia.org/wiki/INI_file">INI-style</a> configuration file. 
+This file may contain an arbitrary number of configuration sections. Each section represents a single SSP21 <code>initiator</code> or <code>responder</code>
+configuration, e.g.:</p>
+<div class="codehilite"><pre><span></span><span class="k">[i-proxy]</span>
+<span class="na">mode</span><span class="o">=</span><span class="s">&lt;initiator|responder&gt;</span>
+<span class="na">log_levels</span><span class="o">=</span><span class="s">iwemf</span>
+<span class="na">remote_address</span><span class="o">=</span><span class="s">1</span>
+<span class="na">local_address</span><span class="o">=</span><span class="s">10</span>
+<span class="na">max_sessions</span><span class="o">=</span><span class="s">1</span>
+<span class="na">listen_port</span><span class="o">=</span><span class="s">20000</span>
+<span class="na">listen_endpoint</span><span class="o">=</span><span class="s">127.0.0.1</span>
+<span class="na">connect_port</span><span class="o">=</span><span class="s">20001</span>
+<span class="na">connect_endpoint</span><span class="o">=</span><span class="s">127.0.0.1</span>
+<span class="na">handshake_mode</span><span class="o">=</span><span class="s">&lt;shared_secret|qkd|preshared|certificate&gt;</span>
+<span class="c1">; additional parameters depend on the handshake mode </span>
+</pre></div>
+
+
+<p>The name of section (i-proxy above) is used for logging purposes to uniquely identify log messages for a particular session.</p>
+<h2 id="standard-options">Standard options</h2>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mode</td>
+<td>Defines whether the session is an SSP21 <code>initiator</code> or a <code>responder</code></td>
+</tr>
+<tr>
+<td>log_levels</td>
+<td>string of enabled log levels (see <a href="#log-levels">table</a>)</td>
+</tr>
+<tr>
+<td>remote_address</td>
+<td>16-bit remote address field to place in SSP21 link frames</td>
+</tr>
+<tr>
+<td>local_address</td>
+<td>16-bit local address field to place in SSP21 link frames and expect from remote SSP21 peer</td>
+</tr>
+<tr>
+<td>max sessions</td>
+<td>Number of allowed concurrent connections. When a new connection is received, the oldest is closed.</td>
+</tr>
+<tr>
+<td>listen_port</td>
+<td>For <code>inititor</code> mode, port where proxy will listen for the insecure protocol connection.</td>
+</tr>
+<tr>
+<td></td>
+<td>For <code>responder</code> mode, port where proxy will listen for SSP21 connection from an <code>initiator</code></td>
+</tr>
+<tr>
+<td>listen_endpoint</td>
+<td>For <code>inititor</code> mode, the IP address of the adapter on which the proxy will listen for the insecure protocol connection.</td>
+</tr>
+<tr>
+<td></td>
+<td>For <code>responder</code> mode, the IP address of the adapter on which the proxy will listen for SSP21 connection from an <code>initiator</code></td>
+</tr>
+<tr>
+<td>connect_port</td>
+<td>For <code>inititor</code> mode, port where proxy will attempt to connect and send SSP21 traffic.</td>
+</tr>
+<tr>
+<td></td>
+<td>For <code>responder</code> mode, port where proxy will attempt to connect and send insecure protcol traffic.</td>
+</tr>
+<tr>
+<td>connect_endpoint</td>
+<td>For <code>inititor</code> mode, the IP address to connect to and send SSP21 traffic</td>
+</tr>
+<tr>
+<td></td>
+<td>For <code>responder</code> mode, the IP address to connect to and send insecure protcol traffic</td>
+</tr>
+<tr>
+<td>handshake_mode</td>
+<td>Defines which of the four handshake modes to use. Additional parameters depend on this mode</td>
+</tr>
+</tbody>
+</table>
+<h3 id="log-levels">Log levels</h3>
+<table>
+<thead>
+<tr>
+<th>level</th>
+<th>character</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>event</td>
+<td>v</td>
+<td></td>
+</tr>
+<tr>
+<td>error</td>
+<td>e</td>
+<td></td>
+</tr>
+<tr>
+<td>warning</td>
+<td>w</td>
+<td></td>
+</tr>
+<tr>
+<td>info</td>
+<td>i</td>
+<td></td>
+</tr>
+<tr>
+<td>debug</td>
+<td>d</td>
+<td></td>
+</tr>
+<tr>
+<td>crypto message</td>
+<td>m</td>
+<td>Log the type of SSP21 message received and its length</td>
+</tr>
+<tr>
+<td>crypto fields</td>
+<td>f</td>
+<td>Log the individual fields in SSP21 messages</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mode-specific-parameters">Mode-specific parameters</h2>
+<p>Different handshake modes require different paramters described in the following sub-sections.</p>
+<h3 id="shared-secret-mode">Shared-secret mode</h3>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>shared_secret_key_path</td>
+<td>path to an ICF file containing 256-bit symmetric key</td>
+</tr>
+</tbody>
+</table>
+<h3 id="qkd-mode">QKD mode</h3>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>serial_port</td>
+<td>string ID of the serial port (e.g. COM1 or /dev/ttysO) where keys will be received</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The format of the key data transmitted over the serial port is not standarized yet and is only interoperable at the moment with QKD transceivers from 
+<a href="http://qubitekk.com/">Qubitekk</a>.</p>
+</div>
+<h3 id="pre-shared-public-key-mode">Pre-shared public key mode</h3>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>local_public_key_path</td>
+<td>ICF file containing this side's public DH key</td>
+</tr>
+<tr>
+<td>local_private_key_path</td>
+<td>ICF file containing this side's private DH key</td>
+</tr>
+<tr>
+<td>local_public_key_path</td>
+<td>ICF file containing the remote peers's public DH key</td>
+</tr>
+</tbody>
+</table>
+<h3 id="certificate-mode">Certificate mode</h3>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>local_public_key_path</td>
+<td>ICF file containing this side's public DH key</td>
+</tr>
+<tr>
+<td>local_private_key_path</td>
+<td>ICF file containing this side's private DH key</td>
+</tr>
+<tr>
+<td>authority_cert_path</td>
+<td>ICF file contain authority certificate on which to base trust of remote certificates</td>
+</tr>
+<tr>
+<td>local_cert_path</td>
+<td>ICF file containing certificate chain to present to remote peer</td>
+</tr>
+</tbody>
+</table>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../intro/" title="Introduction" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Introduction
+              </span>
+            </div>
+          </a>
+        
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/application.dc02f8ce.js"></script>
+      
+      <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
+      
+    
+  </body>
+</html>

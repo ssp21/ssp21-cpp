@@ -36,7 +36,7 @@
     
     
       
-        <title>IExecutor - SSP21-CPP</title>
+        <title>Introduction - SSP21-CPP</title>
       
     
     
@@ -85,7 +85,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#iexecutor" tabindex="1" class="md-skip">
+      <a href="#introduction" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -110,7 +110,7 @@
               SSP21-CPP
             </span>
             <span class="md-header-nav__topic">
-              IExecutor
+              Introduction
             </span>
           
         </div>
@@ -175,12 +175,10 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
     
     <label class="md-nav__link" for="nav-3">
       API
@@ -198,7 +196,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../intro/" title="Introduction" class="md-nav__link">
+    <a href="../../api/intro/" title="Introduction" class="md-nav__link">
       Introduction
     </a>
   </li>
@@ -208,49 +206,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-      
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        IExecutor
-      </label>
-    
-    <a href="./" title="IExecutor" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../../api/executor/" title="IExecutor" class="md-nav__link">
       IExecutor
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#event-driven" title="Event-driven" class="md-nav__link">
-    Event-driven
-  </a>
-  
-</li>
-      
-      
-      
-      
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
         
@@ -260,7 +220,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../logging/" title="Logging" class="md-nav__link">
+    <a href="../../api/logging/" title="Logging" class="md-nav__link">
       Logging
     </a>
   </li>
@@ -272,7 +232,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../crypto/" title="ICryptoBackend" class="md-nav__link">
+    <a href="../../api/crypto/" title="ICryptoBackend" class="md-nav__link">
       ICryptoBackend
     </a>
   </li>
@@ -284,7 +244,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../error_handling/" title="Error Handling" class="md-nav__link">
+    <a href="../../api/error_handling/" title="Error Handling" class="md-nav__link">
       Error Handling
     </a>
   </li>
@@ -335,10 +295,12 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" checked>
     
     <label class="md-nav__link" for="nav-5">
       Proxy
@@ -354,11 +316,20 @@
           
           
 
+  
 
-  <li class="md-nav__item">
-    <a href="../../proxy/intro/" title="Introduction" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+    <a href="./" title="Introduction" class="md-nav__link md-nav__link--active">
       Introduction
     </a>
+    
   </li>
 
         
@@ -368,7 +339,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../proxy/configuration/" title="Configuration" class="md-nav__link">
+    <a href="../configuration/" title="Configuration" class="md-nav__link">
       Configuration
     </a>
   </li>
@@ -396,22 +367,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#event-driven" title="Event-driven" class="md-nav__link">
-    Event-driven
-  </a>
-  
-</li>
-      
-      
-      
-      
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -423,35 +378,14 @@
               
                 
                 
-                <h1 id="iexecutor">IExecutor</h1>
-<p><a href="https://ssp21.github.io/ssp21-cpp/doxygen/development//classexe4cpp_1_1IExecutor.html">IExecutor</a> is an abstraction around some concrete event loop. The library code
-uses <code>IExecutor</code> to "post" callbacks and to start timers.</p>
-<p>An application using SSP21-CPP needs to provide a concrete implementation of this abstract class. The most common event-based networking library in C++
-is <a href="https://think-async.com/Asio/">ASIO</a>. As such, the <code>exe4cpp</code> dependency provides two concrete implementations of <code>IExecutor</code> based on ASIO:</p>
-<ul>
-<li><a href="https://ssp21.github.io/ssp21-cpp/doxygen/development/classexe4cpp_1_1BasicExecutor.html">BasicExecutor</a> is a single-threaded implementation.</li>
-<li><a href="https://ssp21.github.io/ssp21-cpp/doxygen/development/classexe4cpp_1_1StrandExecutor.html">StrandExecutor</a> is multi-threaded and meant to be used with a <a href="https://ssp21.github.io/ssp21-cpp/doxygen/development/classexe4cpp_1_1ThreadPool.html">ThreadPool</a>.
-It can be forked to create sibling executors which guarantee that any callback (e.g. a timer) are only called by a single thread at a time.</li>
-</ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>While SSP21-CPP only provides examples of integration with ASIO, it should be quite possible to adapt other event libraries such as <a href="http://libuv.org/">libuv</a>
-to the abstractions that SSP21-CPP provides.</p>
-</div>
-<h2 id="event-driven">Event-driven</h2>
-<p>Ultimately, any application using the library will need to run an event loop. The proxy application uses the <code>BasicExecutor</code> to run a single-threaded event loop:</p>
-<div class="codehilite"><pre><span></span><span class="k">const</span> <span class="k">auto</span> <span class="n">executor</span> <span class="o">=</span> <span class="n">make_shared</span><span class="o">&lt;</span><span class="n">exe4cpp</span><span class="o">::</span><span class="n">BasicExecutor</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">asio</span><span class="o">::</span><span class="n">io_service</span><span class="o">&gt;</span><span class="p">());</span>
-
-<span class="c1">// omitted: configure proxy components</span>
-
-<span class="n">SIMPLE_LOG_BLOCK</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">ssp21</span><span class="o">::</span><span class="n">levels</span><span class="o">::</span><span class="n">event</span><span class="p">,</span> <span class="s">&quot;begin io_context::run()&quot;</span><span class="p">);</span>
-<span class="n">executor</span><span class="o">-&gt;</span><span class="n">get_service</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">run</span><span class="p">();</span>
-<span class="n">SIMPLE_LOG_BLOCK</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">ssp21</span><span class="o">::</span><span class="n">levels</span><span class="o">::</span><span class="n">event</span><span class="p">,</span> <span class="s">&quot;end io_context::run()&quot;</span><span class="p">);</span>
-</pre></div>
-
-
-<p>The program exits after the last 3 lines above. The program consists solely of asynchronous operations, and is
-capable of running many concurrent communication sessions without blocking.</p>
+                <h1 id="introduction">Introduction</h1>
+<p>The library provides a bump-in-the-wire (BitW) application that can intercept arbitrary TCP traffic,
+wrap it in SSP21, and redirect to a different host and port. This functionality is almost identical to what
+<a href="https://www.stunnel.org/">stunnel</a> provides for transport layer security (TLS).</p>
+<p><img alt="IStack" src="../../img/proxy.svg" /></p>
+<p>Of course it's also possible to interface a single proxy instance with something that supports SSP21 natively. The proxy
+is meant to be a turn-key solution for adding security to legacy applications and a convienent way to perform interoperability
+testing against the SSP21-CPP reference implementation.</p>
                 
                   
                 
@@ -472,7 +406,7 @@ capable of running many concurrent communication sessions without blocking.</p>
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../intro/" title="Introduction" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../../icftool/intro/" title="Usage" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -481,19 +415,19 @@ capable of running many concurrent communication sessions without blocking.</p>
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Introduction
+                Usage
               </span>
             </div>
           </a>
         
         
-          <a href="../logging/" title="Logging" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../configuration/" title="Configuration" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Logging
+                Configuration
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
