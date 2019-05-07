@@ -1,7 +1,7 @@
 
 #include "link/LinkFrameWriter.h"
 
-#include "link/CastagnoliCRC32.h"
+#include "ssp21/link/CastagnoliCRC32.h"
 #include "ser4cpp/serialization/BigEndian.h"
 
 namespace ssp21

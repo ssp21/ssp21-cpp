@@ -2,7 +2,7 @@
 
 #include "catch.hpp"
 
-#include "link/CastagnoliCRC32.h"
+#include "ssp21/link/CastagnoliCRC32.h"
 #include "ser4cpp/util/HexConversions.h"
 
 #define SUITE(name) "CRCTestSuite - " name

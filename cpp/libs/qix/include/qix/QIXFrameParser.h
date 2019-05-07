@@ -48,9 +48,9 @@ private:
 
     void read_frame_fields(QIXFrame& frame);
 
-    //uint32_t calc_frame_crc();
+    uint32_t calc_frame_crc();
 
-    //uint32_t read_frame_crc();
+    uint32_t read_frame_crc();
 
     static uint32_t find_sync(ssp21::seq32_t& input);
 

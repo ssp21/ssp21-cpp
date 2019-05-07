@@ -14,7 +14,7 @@ public:
 
     enum class Status : uint8_t
     {
-        ok = 0x00,
+        ok = 0x01,
         key_compromised = 0xFF,
         undefined = 0xFE
     };

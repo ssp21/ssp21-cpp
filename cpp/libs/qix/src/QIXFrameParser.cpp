@@ -1,6 +1,7 @@
 #include "qix/QIXFrameParser.h"
 
 #include "ssp21/stack/LogLevels.h"
+#include "ssp21/link/CastagnoliCRC32.h"
 
 #include "ser4cpp/serialization/BigEndian.h"
 
@@ -35,19 +36,17 @@ bool QIXFrameParser::parse(QIXFrame& frame)
         this->buffer.as_wseq().copy_from(remainder);
         return false;
     }
+    
+    const auto calc_crc = this->calc_frame_crc();
+    const auto actual_crc = this->read_frame_crc();
 
-    /*
-        const auto calc_crc = this->calc_frame_crc();
-        const auto actual_crc = this->read_frame_crc();
-
-        // we can now parse the frame. first verify the CRC.
-        if (calc_crc != actual_crc)
-        {
-            FORMAT_LOG_BLOCK(this->logger, levels::warn, "CRC on frame (0x%x) doesn't match calculated crc (0x%x)", actual_crc, calc_crc);
-            // toss the entire frame
-            return false;
-        }
-    */
+    // we can now parse the frame. first verify the CRC.
+    if (calc_crc != actual_crc)
+    {
+        FORMAT_LOG_BLOCK(this->logger, levels::warn, "CRC on frame (0x%x) doesn't match calculated crc (0x%x)", actual_crc, calc_crc);
+        // toss the entire frame
+        return false;
+    }    
 
     this->read_frame_fields(frame);
     return true;
@@ -77,7 +76,7 @@ QIXFrame::Status QIXFrameParser::get_status(uint8_t value)
     }
 }
 
-/*uint32_t QIXFrameParser::calc_frame_crc()
+uint32_t QIXFrameParser::calc_frame_crc()
 {
     return CastagnoliCRC32::calc(this->buffer.as_seq().skip(sync_size).take(crc_data_size));
 }
@@ -88,7 +87,7 @@ uint32_t QIXFrameParser::read_frame_crc()
     uint32_t crc;
     ser4cpp::BigEndian::read(data, crc);
     return crc;
-}*/
+}
 
 uint32_t QIXFrameParser::find_sync(ssp21::seq32_t& input)
 {

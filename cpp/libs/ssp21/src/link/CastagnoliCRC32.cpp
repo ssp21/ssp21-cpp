@@ -1,5 +1,5 @@
 
-#include "link/CastagnoliCRC32.h"
+#include "ssp21/link/CastagnoliCRC32.h"
 
 namespace ssp21
 {

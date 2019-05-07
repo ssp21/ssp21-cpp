@@ -40,6 +40,7 @@ set(ssp21_public_headers
 
     ./include/ssp21/link/Addresses.h
     ./include/ssp21/link/LinkConstants.h
+	./include/ssp21/link/CastagnoliCRC32.h
 
     ./include/ssp21/stack/Factory.h
     ./include/ssp21/stack/ILowerLayer.h
@@ -108,8 +109,7 @@ set(ssp21_private_headers
     ./src/crypto/gen/RequestHandshakeBegin.h
     ./src/crypto/gen/SessionConstraints.h
     ./src/crypto/gen/SessionData.h
-
-    ./src/link/CastagnoliCRC32.h
+    
     ./src/link/LinkFrameWriter.h
     ./src/link/LinkLayer.h
     ./src/link/LinkParser.h
