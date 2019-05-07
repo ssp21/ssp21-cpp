@@ -26,7 +26,7 @@ add_subdirectory(./cpp/libs/qix)
 # Executables
 add_subdirectory(./cpp/exe/icftool)
 add_subdirectory(./cpp/exe/proxy)
-add_subdirectory(./cpp/exe/qixreader)
+add_subdirectory(./cpp/exe/qix-emulator)
 
 # Tests
 add_subdirectory(./cpp/tests/integration)
