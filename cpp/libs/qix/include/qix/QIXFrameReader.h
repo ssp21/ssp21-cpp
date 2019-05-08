@@ -9,9 +9,6 @@
 
 #include <asio.hpp>
 
-/**
-* A base class source and look-up for
-*/
 class QIXFrameReader
 {
 public:

@@ -3,12 +3,14 @@ set(qix_public_headers
     ./include/qix/QIXFrame.h
     ./include/qix/QIXFrameParser.h
     ./include/qix/QIXFrameReader.h
+    ./include/qix/QIXFrameWriter.h
     ./include/qix/QIXKeyCache.h
 )
 
 set(qix_srcs
     ./src/QIXFrameParser.cpp
     ./src/QIXFrameReader.cpp
+    ./src/QIXFrameWriter.cpp
     ./src/QIXKeyCache.cpp
 )
 

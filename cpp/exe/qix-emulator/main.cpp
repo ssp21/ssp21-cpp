@@ -1,6 +1,4 @@
 
-#include "qix/QIXFrameReader.h"
-
 
 #include <ssp21/stack/LogLevels.h>
 #include <ssp21/crypto/Crypto.h>
@@ -12,32 +10,33 @@
 #include <log4cpp/ConsolePrettyPrinter.h>
 
 #include <argagg/argagg.hpp>
-#include <ser4cpp/serialization/BigEndian.h>
+
 #include <ser4cpp/container/StaticBuffer.h>
-#include <ser4cpp/serialization/SerializationTemplates.h>
 #include <ser4cpp/util/HexConversions.h>
 
+#include <qix/QIXFrameReader.h>
+#include <qix/QIXFrameWriter.h>
+
 #include <iostream>
-#include <asio.hpp>
 
 using namespace ser4cpp;
 using namespace ssp21;
 
+const char* get_status_string(QIXFrame::Status status)
+{
+    switch(status)
+    {
+        case(QIXFrame::Status::ok):
+            return "ok";
+        case(QIXFrame::Status::key_compromised):
+            return "compromised";
+        default:
+            return "undefined";
+    }
+}
+
 class QIXPrinter : public IQIXFrameHandler
 {
-    static const char* get_status_string(QIXFrame::Status status)
-    {
-        switch(status)
-        {
-            case(QIXFrame::Status::ok):
-                return "ok";
-            case(QIXFrame::Status::key_compromised):
-                return "compromised";
-            default:
-                return "undefined";
-        }
-    }
-
     void handle(const QIXFrame& frame) override
     {
         std::cout << "read: " << frame.key_id << " - " << get_status_string(frame.status) << " - " << HexConversions::to_hex(frame.key_data) << std::endl;
@@ -118,20 +117,8 @@ int write_frames(const std::string& serial_port, uint64_t frame_count, uint16_t 
 		throw std::runtime_error("can't initialize sodium backend");
 	}
 
-	asio::io_service service;
-	asio::serial_port port(service);
+	QIXFrameWriter writer(serial_port);
 
-	port.open(serial_port);
-
-    // 9600 bps
-    port.set_option(asio::serial_port_base::baud_rate(9600));
-
-    // 8/N/1
-    port.set_option(asio::serial_port_base::character_size(8));
-    port.set_option(asio::serial_port::flow_control(asio::serial_port::flow_control::type::none));
-    port.set_option(asio::serial_port_base::stop_bits(asio::serial_port_base::stop_bits::type::one));
-
-	StaticBuffer<uint32_t, 47> frame;
 	StaticBuffer<uint32_t, 32> random_key;
 
 	for (uint64_t i = 0; i < frame_count; ++i) {
@@ -139,24 +126,11 @@ int write_frames(const std::string& serial_port, uint64_t frame_count, uint16_t 
 		// fill up a new random key
 		ssp21::Crypto::gen_random(random_key.as_wseq());
 
-		auto dest = frame.as_wseq();
+		const QIXFrame frame { i , random_key.as_seq(), QIXFrame::Status::ok };
 
-		UInt8::write_to(dest, 0x5A);
-		UInt8::write_to(dest, 0xA5);
-		UInt64::write_to(dest, i);
-		dest.copy_from(random_key.as_seq());
-		UInt8::write_to(dest, 0x01); // status - OK
+		writer.write(frame);
 
-		// write the CRC
-		UInt32::write_to(
-			dest,
-			// skip the sync bytes, calculate over count(8) + key(32) + status(1) == 41 bytes
-			CastagnoliCRC32::calc(frame.as_seq().skip(2).take(41))
-		);
-
-		asio::write(port, asio::buffer(frame.as_seq(), frame.length()));
-
-        std::cout << "wrote: " << i << " - " << "ok" << " - " << HexConversions::to_hex(random_key.as_seq()) << std::endl;
+        std::cout << "wrote: " << frame.key_id << " - " << get_status_string(frame.status) << " - " << HexConversions::to_hex(frame.key_data) << std::endl;
 
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
