@@ -113,6 +113,13 @@ int read_frames(const std::string& serial_port)
 
 int write_frames(const std::string& serial_port, uint64_t frame_count, uint16_t frames_per_sec)
 {
+    if(frames_per_sec == 0) {
+        throw std::runtime_error("frame rate cannot be zero");
+    }
+
+    const auto frame_delay = std::chrono::milliseconds(1000 / frames_per_sec);
+
+
 	if (!sodium::CryptoBackend::initialize()) {
 		throw std::runtime_error("can't initialize sodium backend");
 	}
@@ -123,6 +130,8 @@ int write_frames(const std::string& serial_port, uint64_t frame_count, uint16_t 
 
 	for (uint64_t i = 0; i < frame_count; ++i) {
 
+	    const auto start = std::chrono::steady_clock::now();
+
 		// fill up a new random key
 		ssp21::Crypto::gen_random(random_key.as_wseq());
 
@@ -132,7 +141,12 @@ int write_frames(const std::string& serial_port, uint64_t frame_count, uint16_t 
 
         std::cout << "wrote: " << frame.key_id << " - " << get_status_string(frame.status) << " - " << HexConversions::to_hex(frame.key_data) << std::endl;
 
-		std::this_thread::sleep_for(std::chrono::seconds(1));
+        const auto elapsed = start - std::chrono::steady_clock::now();
+
+        if(elapsed < frame_delay) {
+            std::this_thread::sleep_for(frame_delay - elapsed);
+        }
+
 	}
 
 	return 0;
