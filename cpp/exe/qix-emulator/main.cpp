@@ -32,11 +32,13 @@ class QIXPrinter : public IQIXFrameHandler
 
 int read_frames(const std::string& serial_port);
 
-int write_frames(const std::string& serial_port, uint16_t frames_per_sec);
+int write_frames(const std::string& serial_port, uint64_t frame_count, uint16_t frames_per_sec);
 
 std::string get_port(const argagg::parser_results& results);
 
 uint16_t get_key_rate(const argagg::parser_results& results);
+
+uint64_t get_frame_count(const argagg::parser_results& results);
 
 int main(int argc, char*  argv[])
 {
@@ -46,6 +48,7 @@ int main(int argc, char*  argv[])
 		{ "write", { "-w", "--write" }, "read QIX frames", 0 },
 		{ "port", { "-p", "--port" }, "serial port", 1 },
 		{ "rate", { "-t", "--rate" }, "number of keys per second (write only) - defaults to 1", 1 },
+        { "count", { "-c", "--count" }, "number of frames to transmit (write only) - defaults to 2^64 -1", 1 },
 	}};
 
 	try {
@@ -58,7 +61,7 @@ int main(int argc, char*  argv[])
 			return read_frames(port);
 		}
 		else if (results.has_option("write")) {			
-			return write_frames(port, get_key_rate(results));
+			return write_frames(port, get_frame_count(results), get_key_rate(results));
 		}
 		else {
 			throw std::runtime_error("You must specify read or write mode");
@@ -95,7 +98,7 @@ int read_frames(const std::string& serial_port)
 	return 0;
 }
 
-int write_frames(const std::string& serial_port, uint16_t frames_per_sec)
+int write_frames(const std::string& serial_port, uint64_t frame_count, uint16_t frames_per_sec)
 {
 	if (!sodium::CryptoBackend::initialize()) {
 		throw std::runtime_error("can't initialize sodium backend");
@@ -106,13 +109,11 @@ int write_frames(const std::string& serial_port, uint16_t frames_per_sec)
 
 	port.open(serial_port);
 
-	uint64_t frame_count = 0;
-
 	StaticBuffer<uint32_t, 47> frame;
 	StaticBuffer<uint32_t, 32> random_key;
 	
 	
-	while (true) {
+	for (uint64_t i = 0; i < frame_count; ++i) {
 
 		// fill up a new random key
 		ssp21::Crypto::gen_random(random_key.as_wseq());
@@ -134,9 +135,7 @@ int write_frames(const std::string& serial_port, uint16_t frames_per_sec)
 
 		asio::write(port, asio::buffer(frame.as_seq(), frame.length()));
 
-		std::cout << "wrote frame # " << frame_count << std::endl;
-
-		++frame_count;
+		std::cout << "wrote frame # " << i << std::endl;
 
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
@@ -157,10 +156,20 @@ std::string get_port(const argagg::parser_results& results)
 
 uint16_t get_key_rate(const argagg::parser_results& results)
 {
-	if (results.has_option("key_rate")) {
-		return results["key_rate"][0];
+	if (results.has_option("rate")) {
+		return results["rate"][0];
 	}
 	else {
 		return 1;
 	}
+}
+
+uint64_t get_frame_count(const argagg::parser_results& results)
+{
+    if (results.has_option("count")) {
+        return results["count"][0];
+    }
+    else {
+        return std::numeric_limits<uint64_t>::max();
+    }
 }
