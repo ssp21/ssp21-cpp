@@ -123,6 +123,14 @@ int write_frames(const std::string& serial_port, uint64_t frame_count, uint16_t 
 
 	port.open(serial_port);
 
+    // 9600 bps
+    port.set_option(asio::serial_port_base::baud_rate(9600));
+
+    // 8/N/1
+    port.set_option(asio::serial_port_base::character_size(8));
+    port.set_option(asio::serial_port::flow_control(asio::serial_port::flow_control::type::none));
+    port.set_option(asio::serial_port_base::stop_bits(asio::serial_port_base::stop_bits::type::one));
+
 	StaticBuffer<uint32_t, 47> frame;
 	StaticBuffer<uint32_t, 32> random_key;
 
