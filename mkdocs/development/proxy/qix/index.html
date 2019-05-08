@@ -36,7 +36,7 @@
     
     
       
-        <title>ICryptoBackend - SSP21-CPP</title>
+        <title>QIX - SSP21-CPP</title>
       
     
     
@@ -85,7 +85,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#icryptobackend" tabindex="1" class="md-skip">
+      <a href="#quantum-information-exchange-qix" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -110,7 +110,7 @@
               SSP21-CPP
             </span>
             <span class="md-header-nav__topic">
-              ICryptoBackend
+              QIX
             </span>
           
         </div>
@@ -175,12 +175,10 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
     
     <label class="md-nav__link" for="nav-3">
       API
@@ -198,7 +196,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../intro/" title="Introduction" class="md-nav__link">
+    <a href="../../api/intro/" title="Introduction" class="md-nav__link">
       Introduction
     </a>
   </li>
@@ -210,7 +208,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../executor/" title="IExecutor" class="md-nav__link">
+    <a href="../../api/executor/" title="IExecutor" class="md-nav__link">
       IExecutor
     </a>
   </li>
@@ -222,7 +220,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../logging/" title="Logging" class="md-nav__link">
+    <a href="../../api/logging/" title="Logging" class="md-nav__link">
       Logging
     </a>
   </li>
@@ -232,20 +230,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-      
-    
-    
-    <a href="./" title="ICryptoBackend" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../../api/crypto/" title="ICryptoBackend" class="md-nav__link">
       ICryptoBackend
     </a>
-    
   </li>
 
         
@@ -255,7 +244,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../error_handling/" title="Error Handling" class="md-nav__link">
+    <a href="../../api/error_handling/" title="Error Handling" class="md-nav__link">
       Error Handling
     </a>
   </li>
@@ -306,10 +295,12 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" checked>
     
     <label class="md-nav__link" for="nav-5">
       Proxy
@@ -327,7 +318,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../proxy/intro/" title="Introduction" class="md-nav__link">
+    <a href="../intro/" title="Introduction" class="md-nav__link">
       Introduction
     </a>
   </li>
@@ -339,7 +330,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../proxy/configuration/" title="Configuration" class="md-nav__link">
+    <a href="../configuration/" title="Configuration" class="md-nav__link">
       Configuration
     </a>
   </li>
@@ -349,11 +340,49 @@
           
           
 
+  
 
-  <li class="md-nav__item">
-    <a href="../../proxy/qix/" title="QIX" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        QIX
+      </label>
+    
+    <a href="./" title="QIX" class="md-nav__link md-nav__link--active">
       QIX
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#qix-emulator" title="QIX Emulator" class="md-nav__link">
+    QIX Emulator
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
   </li>
 
         
@@ -379,6 +408,22 @@
     
   
   
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#qix-emulator" title="QIX Emulator" class="md-nav__link">
+    QIX Emulator
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -390,50 +435,70 @@
               
                 
                 
-                <h1 id="icryptobackend">ICryptoBackend</h1>
-<p>You'll notice that the factory methods to create an <code>IStack</code> instance, don't accept any arguments that specify the cryptographic backend. The cryptographic library
-is specified globally, usually as the first thing the application does during initialization. This makes it possible to call the cryptographic functions statelessly
-without relying on an object instance.</p>
-<p>Cryptographic backends implement the <a href="https://ssp21.github.io/ssp21-cpp/doxygen/development/classssp21_1_1ICryptoBackend.html">ICryptoBackend</a> interface. In the future, this interface might also
-contain methods that define the support provided by the backend, but for the time being all backends must implement all of the abstract methods.</p>
-<p>There is an <a href="https://ssp21.github.io/ssp21-cpp/doxygen/development/classssp21_1_1sodium_1_1CryptoBackend.html">implementation available</a> for libsodium. You must initialize any program you write with
-some backend or the <code>IStack</code> factory methods will fail. Initializing with libsodium is straight forward:</p>
-<div class="codehilite"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;sodium/CryptoBackend.h&quot;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+                <h1 id="quantum-information-exchange-qix">Quantum Information Exchange (QIX)</h1>
+<p>In QKD mode, the proxy receives quantum keys via the serial port in a binary format called QIX.</p>
+<p>The frame consists of the following fields:</p>
+<p><code>[sync][key id][key data][status][crc]</code></p>
+<ul>
+<li><strong><code>sync</code></strong> is the 2-byte constant {0x5A, 0xA5}</li>
+<li><strong><code>key id</code></strong> is an unsigned 64-bit key identifier that increments</li>
+<li><strong><code>key data</code></strong> is the 256-bit random key</li>
+<li><strong><code>status</code></strong> is a one byte value where:<ul>
+<li><code>0x01</code> - <code>OK</code>: key is safe to use</li>
+<li><code>0xFF</code> - <code>Compromised</code>: key should not be used</li>
+<li>All other values are undefined and should be consider compromised</li>
+</ul>
+</li>
+<li><strong><code>crc</code></strong> is the 32-bit Castagnoli CRC used in the SSP21 standard, calculated over the key id, key data, and status fields</li>
+</ul>
+<h2 id="qix-emulator">QIX Emulator</h2>
+<p>The project includes a command line application called <code>qix-emulator</code> that can read and write frames via a serial port.</p>
+<div class="codehilite"><pre><span></span>&gt; qix-emulator --help
 
-<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span>  <span class="n">argv</span><span class="p">[])</span>
-<span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">ssp21</span><span class="o">::</span><span class="n">sodium</span><span class="o">::</span><span class="n">CryptoBackend</span><span class="o">::</span><span class="n">initialize</span><span class="p">())</span>
-    <span class="p">{</span>
-        <span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Unable to initialze the crypto backend&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="c1">// rest of program</span>
-<span class="p">}</span>
+    -h, --help
+        shows this help message
+    -r, --read
+        read QIX frames
+    -w, --write
+        read QIX frames
+    -p, --port
+        serial port
+    -t, --rate
+        number of keys per second (write only) - defaults to 1
+    -c, --count
+        number of frames to transmit (write only) - defaults to 2^64 -1
 </pre></div>
 
 
-<p>To implement your own backend based on another library (e.g. openssl):</p>
-<ol>
-<li>
-<p>Implement the <code>ICryptoBackend</code> interface using the alternate library, either in a standalone library or in your application.</p>
-</li>
-<li>
-<p>Call <a href="https://ssp21.github.io/ssp21-cpp/doxygen/development/classssp21_1_1Crypto.html">Crypto::initialize(..)</a> to inject the backend before calling any of the <code>IStack</code> factory methods.</p>
-</li>
-</ol>
-<p>The libsodium initialize routine is simple:</p>
-<div class="codehilite"><pre><span></span><span class="kt">bool</span> <span class="n">CryptoBackend</span><span class="o">::</span><span class="n">initialize</span><span class="p">()</span>
-<span class="p">{</span>
-    <span class="c1">// call libsodium&#39;s own initialize function</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">sodium_init</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<p>For testing purposes, you can use <code>socat</code> to create a virtual null-modem serial port pair:</p>
+<div class="codehilite"><pre><span></span>&gt; socat -d -d pty,raw,echo=0 pty,raw,echo=0
+2019/05/08 13:02:31 socat[50869] N PTY is /dev/pts/1
+2019/05/08 13:02:31 socat[50869] N PTY is /dev/pts/2
+2019/05/08 13:02:31 socat[50869] N starting data transfer loop with FDs [5,5] and [7,7]
+</pre></div>
 
-    <span class="c1">// create a shared_ptr&lt;ICryptoBackend&gt; and pass it to Crypto::Initialize(..)</span>
-    <span class="k">return</span> <span class="n">Crypto</span><span class="o">::</span><span class="n">initialize</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">CryptoBackend</span><span class="o">&gt;</span><span class="p">());</span>
-<span class="p">}</span>
+
+<p>You can then start writing and reading on each end of the null-modem pair:</p>
+<div class="codehilite"><pre><span></span>&gt; ./cpp/exe/qix-emulator/qix-emulator -w -p /dev/pts/1
+wrote: 0 - ok - 7F 24 C9 E1 91 50 1B 27 24 74 BD 0E ED F9 2D 2F 2B 7A 70 8D 7F DB CB 1D ED 5E 72 51 00 05 EA 0C
+wrote: 1 - ok - FF 0E 81 E5 C1 A3 52 CD 43 9A E9 DF 4B 50 CC BB 98 70 7C DD A5 41 24 BB 38 B6 F6 6A 2B B2 45 E3
+wrote: 2 - ok - E2 A4 53 E5 9E 88 59 BB 33 25 E8 35 71 16 9A 0D E4 C9 BE EA B1 11 52 A1 15 1A 09 67 D9 C5 DD 6D
+wrote: 3 - ok - 96 D8 D8 C0 14 29 9D 00 3E 45 7B 73 0A 84 75 50 DF 94 3A DF A9 8E 24 24 98 87 9F 41 98 E8 93 48
+wrote: 4 - ok - 70 0A D4 86 E0 29 93 CC 04 4D 68 A0 89 84 0C F5 EA BB 97 BD 84 0C 9F BC 68 DD 75 C2 76 B9 ED F4
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>&gt; ./cpp/exe/qix-emulator/qix-emulator -r -p /dev/pts/2
+read: 0 - ok - 7F 24 C9 E1 91 50 1B 27 24 74 BD 0E ED F9 2D 2F 2B 7A 70 8D 7F DB CB 1D ED 5E 72 51 00 05 EA 0C
+read: 1 - ok - FF 0E 81 E5 C1 A3 52 CD 43 9A E9 DF 4B 50 CC BB 98 70 7C DD A5 41 24 BB 38 B6 F6 6A 2B B2 45 E3
+read: 2 - ok - E2 A4 53 E5 9E 88 59 BB 33 25 E8 35 71 16 9A 0D E4 C9 BE EA B1 11 52 A1 15 1A 09 67 D9 C5 DD 6D
+read: 3 - ok - 96 D8 D8 C0 14 29 9D 00 3E 45 7B 73 0A 84 75 50 DF 94 3A DF A9 8E 24 24 98 87 9F 41 98 E8 93 48
+read: 4 - ok - 70 0A D4 86 E0 29 93 CC 04 4D 68 A0 89 84 0C F5 EA BB 97 BD 84 0C 9F BC 68 DD 75 C2 76 B9 ED F4
+</pre></div>
+
+
+<p>If you want to write the same key data to two ports to test a proxy link without QKD hardware, just supply two port arguments:</p>
+<div class="codehilite"><pre><span></span>&gt; ./qix-emulator -w -p /dev/pts/1 -p /dev/pts/2
 </pre></div>
                 
                   
@@ -455,7 +520,7 @@ some backend or the <code>IStack</code> factory methods will fail. Initializing 
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../logging/" title="Logging" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../configuration/" title="Configuration" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -464,25 +529,11 @@ some backend or the <code>IStack</code> factory methods will fail. Initializing 
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Logging
+                Configuration
               </span>
             </div>
           </a>
         
-        
-          <a href="../error_handling/" title="Error Handling" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
-            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
-              <span class="md-flex__ellipsis">
-                <span class="md-footer-nav__direction">
-                  Next
-                </span>
-                Error Handling
-              </span>
-            </div>
-            <div class="md-flex__cell md-flex__cell--shrink">
-              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
-            </div>
-          </a>
         
       </nav>
     </div>
