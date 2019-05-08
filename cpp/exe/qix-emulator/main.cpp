@@ -139,6 +139,8 @@ int write_frames(const std::string& serial_port, uint64_t frame_count, uint16_t 
 
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
+
+	return 0;
 }
 
 std::string get_port(const argagg::parser_results& results)
