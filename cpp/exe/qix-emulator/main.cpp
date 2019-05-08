@@ -15,6 +15,7 @@
 #include <ser4cpp/serialization/BigEndian.h>
 #include <ser4cpp/container/StaticBuffer.h>
 #include <ser4cpp/serialization/SerializationTemplates.h>
+#include <ser4cpp/util/HexConversions.h>
 
 #include <iostream>
 #include <asio.hpp>
@@ -24,9 +25,22 @@ using namespace ssp21;
 
 class QIXPrinter : public IQIXFrameHandler
 {
-    virtual void handle(const QIXFrame& frame) override
+    static const char* get_status_string(QIXFrame::Status status)
     {
-        std::cout << "Received frame w/ id: " << frame.key_id << std::endl;
+        switch(status)
+        {
+            case(QIXFrame::Status::ok):
+                return "ok";
+            case(QIXFrame::Status::key_compromised):
+                return "compromised";
+            default:
+                return "undefined";
+        }
+    }
+
+    void handle(const QIXFrame& frame) override
+    {
+        std::cout << "read: " << frame.key_id << " - " << get_status_string(frame.status) << " - " << HexConversions::to_hex(frame.key_data) << std::endl;
     }
 };
 
@@ -111,8 +125,7 @@ int write_frames(const std::string& serial_port, uint64_t frame_count, uint16_t 
 
 	StaticBuffer<uint32_t, 47> frame;
 	StaticBuffer<uint32_t, 32> random_key;
-	
-	
+
 	for (uint64_t i = 0; i < frame_count; ++i) {
 
 		// fill up a new random key
@@ -122,7 +135,7 @@ int write_frames(const std::string& serial_port, uint64_t frame_count, uint16_t 
 
 		UInt8::write_to(dest, 0x5A);
 		UInt8::write_to(dest, 0xA5);
-		UInt64::write_to(dest, frame_count);		
+		UInt64::write_to(dest, i);
 		dest.copy_from(random_key.as_seq());
 		UInt8::write_to(dest, 0x01); // status - OK
 
@@ -135,7 +148,7 @@ int write_frames(const std::string& serial_port, uint64_t frame_count, uint16_t 
 
 		asio::write(port, asio::buffer(frame.as_seq(), frame.length()));
 
-		std::cout << "wrote frame # " << i << std::endl;
+        std::cout << "wrote: " << i << " - " << "ok" << " - " << HexConversions::to_hex(random_key.as_seq()) << std::endl;
 
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
