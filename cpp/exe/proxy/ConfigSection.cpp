@@ -29,6 +29,7 @@ void ConfigSection::add(const std::string& propertyId, const std::string& value)
 
 std::unique_ptr<ProxyConfig> ConfigSection::get_config(const log4cpp::Logger& logger, const std::string& id)
 {
+    const auto proto_type = this->get_proto_type();
     const auto endpoint_mode = this->get_mode();
     const log4cpp::LogLevels levels(this->get_levels());
 
@@ -36,12 +37,13 @@ std::unique_ptr<ProxyConfig> ConfigSection::get_config(const log4cpp::Logger& lo
                    this->get_stack_factory(logger, endpoint_mode),
                    id,
                    levels,
+                   proto_type,
                    endpoint_mode,
-                   this->get_integer_value<uint16_t>(props::max_sessions),
+                   this->get_integer_value_or_default<uint16_t>(props::max_sessions, 1),
                    this->get_integer_value<uint16_t>(props::listen_port),
                    this->consume_value(props::listen_endpoint),
-                   this->get_integer_value<uint16_t>(props::connect_port),
-                   this->consume_value(props::connect_endpoint)
+                   this->get_integer_value<uint16_t>(props::destination_port),
+                   this->consume_value(props::destination_endpoint)
                );
 
     for (auto& value : this->values)
@@ -78,7 +80,7 @@ stack_factory_t ConfigSection::get_initiator_factory(const log4cpp::Logger& logg
 
 stack_factory_t ConfigSection::get_initiator_shared_secert_factory(const ssp21::Addresses& addresses)
 {
-    const auto shared_secret = this->get_shared_secert();
+    const auto shared_secret = this->get_shared_secret();
 
     return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
     {
@@ -175,7 +177,7 @@ stack_factory_t ConfigSection::get_responder_factory(const log4cpp::Logger& logg
 
 stack_factory_t ConfigSection::get_responder_shared_secert_factory(const ssp21::Addresses& addresses)
 {
-    const auto shared_secret = this->get_shared_secert();
+    const auto shared_secret = this->get_shared_secret();
 
     return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
     {
@@ -258,7 +260,7 @@ ssp21::StaticKeys ConfigSection::get_local_static_keys()
            );
 }
 
-std::shared_ptr<const SymmetricKey> ConfigSection::get_shared_secert()
+std::shared_ptr<const SymmetricKey> ConfigSection::get_shared_secret()
 {
     return this->get_crypto_key<SymmetricKey>(props::shared_secret_key_path, ContainerEntryType::shared_secret);
 }
@@ -296,7 +298,7 @@ std::string ConfigSection::consume_value(const std::string& propertyId)
     return ret;
 }
 
-template <class T>
+template <typename T>
 T ConfigSection::get_integer_value(const std::string& propertyId)
 {
     const auto value = this->consume_value(propertyId);
@@ -307,6 +309,37 @@ T ConfigSection::get_integer_value(const std::string& propertyId)
         throw Exception("bad integer value: ", value);
     }
     return val;
+}
+
+template <typename T>
+T ConfigSection::get_integer_value_or_default(const std::string& propertyId, T defaultValue)
+{
+    try
+    {
+        return get_integer_value<T>(propertyId);
+    }
+    catch(Exception)
+    {
+        return defaultValue;
+    }
+}
+
+ProxyConfig::ProtoType ConfigSection::get_proto_type()
+{
+    const auto value = this->consume_value(props::proto_type);
+
+    if (value == "tcp")
+    {
+        return ProxyConfig::ProtoType::tcp;
+    }
+    else if (value == "udp")
+    {
+        return ProxyConfig::ProtoType::udp;
+    }
+    else
+    {
+        throw Exception("Unknown protocol type: ", value);
+    }
 }
 
 ProxyConfig::EndpointMode ConfigSection::get_mode()

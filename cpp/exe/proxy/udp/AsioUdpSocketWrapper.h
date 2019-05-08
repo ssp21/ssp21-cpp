@@ -1,5 +1,5 @@
-#ifndef SSP21PROXY_ASIOLAYERBASE_H
-#define SSP21PROXY_ASIOLAYERBASE_H
+#ifndef SSP21PROXY_ASIOUDPSOCKETWRAPPER_H
+#define SSP21PROXY_ASIOUDPSOCKETWRAPPER_H
 
 #include <ser4cpp/util/Uncopyable.h>
 #include <ser4cpp/container/Buffer.h>
@@ -10,47 +10,45 @@
 #include <ssp21/util/SequenceTypes.h>
 #include <ssp21/stack/LogLevels.h>
 
+#include "IAsioLayer.h"
+#include "IAsioSocketWrapper.h"
+
 #include <asio.hpp>
 
-class ASIOLayerBase : private ser4cpp::Uncopyable
+class AsioUdpSocketWrapper final : public IAsioSocketWrapper, private ser4cpp::Uncopyable
 {
 
 public:
 
-    using socket_t = asio::ip::tcp::socket;
+    using socket_t = asio::ip::udp::socket;
+    using endpoint_t = asio::ip::udp::endpoint;
 
-    ASIOLayerBase(const log4cpp::Logger& logger, socket_t socket) :
+    AsioUdpSocketWrapper(const log4cpp::Logger& logger, IAsioLayer& layer, socket_t socket) :
+        layer(layer),
         socket(std::move(socket)),
         logger(logger),
         rx_buffer(ssp21::consts::link::max_frame_size)
     {}
 
-    inline bool is_active() const
+    virtual ~AsioUdpSocketWrapper()
     {
-        return this->is_rx_active || this->is_tx_active;
+
     }
 
-protected:
-
-    inline bool try_close_socket()
+    bool try_close_socket() override
     {
         if (!this->socket.is_open()) return false;
 
         std::error_code ec;
-        this->socket.shutdown(asio::ip::tcp::socket::shutdown_both, ec);
+        this->socket.shutdown(asio::ip::udp::socket::shutdown_both, ec);
         this->socket.close(ec);
 
         return true;
     }
 
-    virtual void on_rx_complete(const ssp21::seq32_t& data) = 0;
-    virtual void on_tx_complete() = 0;
-    virtual void on_rx_or_tx_error() = 0;
-
-
-    bool start_rx_from_socket()
+    bool start_rx_from_socket() override
     {
-        if (!this->socket.is_open() || this->is_rx_active) return false;
+        if (this->is_rx_active) return false;
 
         auto callback = [this](const std::error_code & ec, size_t num_rx)
         {
@@ -62,8 +60,12 @@ protected:
                 {
                     FORMAT_LOG_BLOCK(this->logger, ssp21::levels::error, "rx error: %s", ec.message().c_str());
                     this->try_close_socket();
-                    this->on_rx_or_tx_error();
+                    this->layer.on_rx_or_tx_error();
                 }
+                /*else
+                {
+                    this->start_rx_from_socket();
+                }*/
             }
             else
             {
@@ -73,7 +75,7 @@ protected:
                 {
                     log4cpp::HexLogging::log(this->logger, ssp21::levels::debug, rx_data);
                 }
-                this->on_rx_complete(rx_data);
+                this->layer.on_rx_complete(rx_data);
             }
         };
 
@@ -83,14 +85,14 @@ protected:
 
         FORMAT_LOG_BLOCK(this->logger, ssp21::levels::debug, "start socket rx, tx: %s", bool_str(this->is_tx_active));
 
-        this->socket.async_read_some(asio::buffer(dest, dest.length()), callback);
+        this->socket.async_receive(asio::buffer(dest, dest.length()), callback);
 
         return true;
     }
 
-    bool start_tx_to_socket(const ssp21::seq32_t& data)
+    bool start_tx_to_socket(const ssp21::seq32_t& data) override
     {
-        if (!this->socket.is_open() || this->is_tx_active) return false;
+        if (this->is_tx_active) return false;
 
         auto callback = [this](const std::error_code & ec, size_t num_tx)
         {
@@ -98,17 +100,17 @@ protected:
 
             if (ec)
             {
-                if (socket.is_open())
-                {
+                //if (socket.is_open())
+                //{
                     FORMAT_LOG_BLOCK(this->logger, ssp21::levels::error, "tx error: %s", ec.message().c_str());
                     this->try_close_socket();
-                    this->on_rx_or_tx_error();
-                }
+                    this->layer.on_rx_or_tx_error();
+                //}
             }
             else
             {
                 FORMAT_LOG_BLOCK(this->logger, ssp21::levels::debug, "complete socket tx: %u - rx: %s", static_cast<uint32_t>(num_tx), bool_str(this->is_rx_active));
-                this->on_tx_complete();
+                this->layer.on_tx_complete();
             }
         };
 
@@ -116,17 +118,17 @@ protected:
 
         FORMAT_LOG_BLOCK(this->logger, ssp21::levels::debug, "start socket tx: %d, rx: %s", data.length(), bool_str(this->is_tx_active));
 
-        asio::async_write(this->socket, asio::buffer(data, data.length()), callback);
+        this->socket.async_send(asio::buffer(data, data.length()), callback);
 
         return true;
     }
 
-    inline bool get_is_tx_active() const
+    bool get_is_tx_active() const override
     {
         return this->is_tx_active;
     }
 
-    inline bool get_is_rx_active() const
+    bool get_is_rx_active() const override
     {
         return this->is_rx_active;
     }
@@ -141,10 +143,8 @@ private:
     bool is_tx_active = false;
     bool is_rx_active = false;
 
+    IAsioLayer& layer;
     socket_t socket;
-
-protected:
-
     log4cpp::Logger logger;
     ser4cpp::Buffer rx_buffer;
 };

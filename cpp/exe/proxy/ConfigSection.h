@@ -56,7 +56,7 @@ private:
 
     ssp21::StaticKeys get_local_static_keys();
 
-    std::shared_ptr<const ssp21::SymmetricKey> get_shared_secert();
+    std::shared_ptr<const ssp21::SymmetricKey> get_shared_secret();
 
     log4cpp::LogLevels get_levels();
 
@@ -64,8 +64,13 @@ private:
 
     std::shared_ptr<QIXKeyCache> get_qix_key_cache(const log4cpp::Logger& logger);
 
-    template <class T>
+    template <typename T>
     T get_integer_value(const std::string& propertyId);
+
+    template <typename T>
+    T get_integer_value_or_default(const std::string& propertyId, T defaultValue);
+
+    ProxyConfig::ProtoType get_proto_type();
 
     ProxyConfig::EndpointMode get_mode();
 

@@ -1,82 +1,94 @@
 #ifndef SSP21PROXY_ASIOLOWERLAYER_H
 #define SSP21PROXY_ASIOLOWERLAYER_H
 
-#include "ASIOLayerBase.h"
+#include "IAsioLayer.h"
+#include "IAsioSocketWrapper.h"
 
-#include "ssp21/stack/ILowerLayer.h"
-#include "ssp21/stack/IUpperLayer.h"
+#include <ssp21/stack/ILowerLayer.h>
+#include <ssp21/stack/IUpperLayer.h>
+
+#include <log4cpp/LogMacros.h>
 
 #include <asio.hpp>
 
-class ASIOLowerLayer final : public ssp21::ILowerLayer, public ASIOLayerBase
+class AsioLowerLayer final : public ssp21::ILowerLayer, public IAsioLayer
 {
 
 public:
 
-    ASIOLowerLayer(const log4cpp::Logger& logger, socket_t socket) : ASIOLayerBase(logger, std::move(socket))
+    AsioLowerLayer(const log4cpp::Logger& logger)
     {}
 
-    void open(ssp21::IUpperLayer& upper)
+    void open(IAsioSocketWrapper& socket, ssp21::IUpperLayer& upper)
     {
+        this->socket = &socket;
         this->upper = &upper;
-        this->start_rx_from_socket();
+
+        this->socket->start_rx_from_socket();
         this->upper->on_lower_open();
     }
 
     bool close()
     {
-        this->try_close_socket();
+        this->socket->try_close_socket();
         return this->upper->on_lower_close();
     }
 
 private:
 
-    ssp21::IUpperLayer* upper = nullptr;
-
     // --- ILowerLayer ---
 
-    virtual bool start_tx_from_upper(const ssp21::seq32_t& data) override
+    bool start_tx_from_upper(const ssp21::seq32_t& data) override
     {
-        return this->start_tx_to_socket(data);
+        return this->socket->start_tx_to_socket(data);
     }
 
-    virtual bool is_tx_ready() const override
+    bool is_tx_ready() const override
     {
-        return !this->get_is_tx_active();
+        return !this->socket->get_is_tx_active();
     }
 
-    virtual void discard_rx_data() override
+    void discard_rx_data() override
     {
         this->unread_data.make_empty();
     }
 
-    virtual ssp21::seq32_t start_rx_from_upper_impl() override
+    ssp21::seq32_t start_rx_from_upper_impl() override
     {
-        if (this->unread_data.is_empty()) this->start_rx_from_socket();
+        if (this->unread_data.is_empty()) this->socket->start_rx_from_socket();
 
         return this->unread_data;
     }
 
-    // --- ASIOLayerBase ---
+public:
 
-    virtual void on_rx_complete(const ssp21::seq32_t& data) override
+    // --- IAsioLayer ---
+
+    void on_rx_complete(const ssp21::seq32_t& data) override
     {
         this->unread_data = data;
         this->upper->on_lower_rx_ready();
     }
 
-    virtual void on_rx_or_tx_error() override
+    void on_rx_or_tx_error() override
     {
         this->upper->on_lower_close();
     }
 
-    virtual void on_tx_complete() override
+    void on_tx_complete() override
     {
         this->upper->on_lower_tx_ready();
     }
 
-    // --- ILowerLayer ---
+    bool is_active() const override
+    {
+        return this->socket->is_active();
+    }
 
+private:
+
+    IAsioSocketWrapper* socket = nullptr;
+    ssp21::IUpperLayer* upper = nullptr;
     ssp21::seq32_t unread_data;
 };
 

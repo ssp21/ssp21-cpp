@@ -1,14 +1,15 @@
-#include "Proxy.h"
+#include "tcp/TcpProxy.h"
 
 #include <log4cpp/LogMacros.h>
 #include <ssp21/stack/LogLevels.h>
 
 #include "Session.h"
+#include "tcp/AsioTcpSocketWrapper.h"
 
 using namespace asio;
 using namespace ssp21;
 
-Proxy::Server::Server(asio::io_service& context, const std::string& address, uint16_t port) :
+TcpProxy::Server::Server(asio::io_service& context, const std::string& address, uint16_t port) :
     acceptor(context),
     socket(context),
     local_endpoint(ip::address::from_string(address), port)
@@ -18,7 +19,7 @@ Proxy::Server::Server(asio::io_service& context, const std::string& address, uin
     acceptor.listen();
 }
 
-Proxy::Proxy(
+TcpProxy::TcpProxy(
     const ProxyConfig& config,
     const std::shared_ptr<exe4cpp::BasicExecutor>& executor,
     const log4cpp::Logger& logger
@@ -27,12 +28,12 @@ Proxy::Proxy(
     logger(logger),
     factory(config.factory),
     server(*executor->get_service(), config.listen_endpoint, config.listen_port),
-    connect_endpoint(ip::address::from_string(config.connect_endpoint), config.connect_port),
+    connect_endpoint(ip::address::from_string(config.destination_endpoint), config.destination_port),
     mode(config.endpoint_mode),
     max_sessions(config.max_sessions == 0 ? 1 : config.max_sessions)
 {}
 
-void Proxy::start()
+void TcpProxy::start()
 {
     FORMAT_LOG_BLOCK(
         this->logger,
@@ -44,7 +45,7 @@ void Proxy::start()
     this->accept_next();
 }
 
-void Proxy::on_session_error(uint64_t session_id)
+void TcpProxy::on_session_error(uint64_t session_id)
 {
     const auto iter = this->sessions.find(session_id);
     if (iter != this->sessions.end())
@@ -55,7 +56,7 @@ void Proxy::on_session_error(uint64_t session_id)
     }
 }
 
-void Proxy::accept_next()
+void TcpProxy::accept_next()
 {
     auto accept_callback = [this](std::error_code ec)
     {
@@ -76,7 +77,7 @@ void Proxy::accept_next()
     server.acceptor.async_accept(server.socket, server.remote_endpoint, accept_callback);
 }
 
-void Proxy::start_connect(asio::ip::tcp::socket accepted_socket)
+void TcpProxy::start_connect(asio::ip::tcp::socket accepted_socket)
 {
     // let's now kick off a connect operation
     // won't need this once C++XX has move capture
@@ -112,18 +113,22 @@ void Proxy::start_connect(asio::ip::tcp::socket accepted_socket)
                 this->on_session_error(id);
             };
 
+            auto lower_layer_logger = this->logger.detach_and_append("-", id, "-lower");
+            auto lower_layer = std::make_unique<AsioLowerLayer>(lower_layer_logger);
+            auto lower_layer_socket = std::make_unique<AsioTcpSocketWrapper>(lower_layer_logger, *lower_layer, connect->get_lower_layer_socket(this->mode));
+
+            auto upper_layer_logger = this->logger.detach_and_append("-", id, "-upper");
+            auto upper_layer = std::make_unique<AsioUpperLayer>(upper_layer_logger);
+            auto upper_layer_socket = std::make_unique<AsioTcpSocketWrapper>(upper_layer_logger, *upper_layer, connect->get_upper_layer_socket(this->mode));
+
             const auto session = Session::create(
                                      id,
                                      error_handler,
                                      this->executor,
-                                     std::make_unique<socket_lower_layer_t>(
-                                         this->logger.detach_and_append("-", id, "-lower"),
-                                         std::move(connect->get_lower_layer_socket(this->mode))
-                                     ),
-                                     std::make_unique<socket_upper_layer_t>(
-                                         this->logger.detach_and_append("-", id, "-upper"),
-                                         std::move(connect->get_upper_layer_socket(this->mode))
-                                     ),
+                                     std::move(lower_layer_socket),
+                                     std::move(lower_layer),
+                                     std::move(upper_layer_socket),
+                                     std::move(upper_layer),
                                      factory(
                                          this->logger.detach_and_append("-", id, "-ssp21"),
                                          this->executor

@@ -4,6 +4,7 @@
 namespace props
 {
     static const char* log_levels = "log_levels";
+    static const char* proto_type = "proto_type";
     static const char* mode = "mode";
     static const char* handshake_mode = "handshake_mode";
     static const char* local_public_key_path = "local_public_key_path";
@@ -17,8 +18,8 @@ namespace props
     static const char* max_sessions = "max_sessions";
     static const char* listen_port = "listen_port";
     static const char* listen_endpoint = "listen_endpoint";
-    static const char* connect_port = "connect_port";
-    static const char* connect_endpoint = "connect_endpoint";
+    static const char* destination_port = "destination_port";
+    static const char* destination_endpoint = "destination_endpoint";
     static const char* serial_port = "serial_port";
 }
 
