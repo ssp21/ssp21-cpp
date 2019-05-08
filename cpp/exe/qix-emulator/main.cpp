@@ -43,11 +43,11 @@ class QIXPrinter : public IQIXFrameHandler
     }
 };
 
-int read_frames(const std::string& serial_port);
+int read_frames(const std::vector<std::string>& ports);
 
-int write_frames(const std::string& serial_port, uint64_t frame_count, uint16_t frames_per_sec);
+int write_frames(const std::vector<std::string>& ports, uint64_t frame_count, uint16_t frames_per_sec);
 
-std::string get_port(const argagg::parser_results& results);
+std::vector<std::string> get_ports(const argagg::parser_results& results);
 
 uint16_t get_key_rate(const argagg::parser_results& results);
 
@@ -74,13 +74,13 @@ int main(int argc, char*  argv[])
 			return 0;
 		}
 
-		const auto port = get_port(results);
+		const auto ports = get_ports(results);
 
 		if (results.has_option("read")) {
-			return read_frames(port);
+			return read_frames(ports);
 		}
 		else if (results.has_option("write")) {			
-			return write_frames(port, get_frame_count(results), get_key_rate(results));
+			return write_frames(ports, get_frame_count(results), get_key_rate(results));
 		}
 		else {
 			throw std::runtime_error("You must specify read or write mode");
@@ -94,14 +94,18 @@ int main(int argc, char*  argv[])
 	}		
 }
 
-int read_frames(const std::string& serial_port)
+int read_frames(const std::vector<std::string>& ports)
 {
+	if (ports.size() != 1) {
+		throw std::runtime_error("Can only read from a single serial port");
+	}
+
 	try
 	{
 		QIXFrameReader reader(
 			std::make_shared<QIXPrinter>(),
 			log4cpp::Logger(std::make_shared<log4cpp::ConsolePrettyPrinter>(), Module::id, "qix-reader", log4cpp::LogLevels(0xFF)),
-            serial_port
+            ports[0]
 		);
 
 		std::cout << "waiting for QIX frames" << std::endl;
@@ -117,8 +121,12 @@ int read_frames(const std::string& serial_port)
 	return 0;
 }
 
-int write_frames(const std::string& serial_port, uint64_t frame_count, uint16_t frames_per_sec)
+int write_frames(const std::vector<std::string>& ports, uint64_t frame_count, uint16_t frames_per_sec)
 {
+	if (ports.empty()) {
+		throw std::runtime_error("you must specify at least one serial port");
+	}
+
     if(frames_per_sec == 0) {
         throw std::runtime_error("frame rate cannot be zero");
     }
@@ -130,7 +138,11 @@ int write_frames(const std::string& serial_port, uint64_t frame_count, uint16_t 
 		throw std::runtime_error("can't initialize sodium backend");
 	}
 
-	QIXFrameWriter writer(serial_port);
+	std::vector<std::unique_ptr<QIXFrameWriter>> writers;
+
+	for (auto port : ports) {
+		writers.push_back(std::make_unique<QIXFrameWriter>(port));
+	}
 
 	StaticBuffer<uint32_t, 32> random_key;
 
@@ -143,7 +155,9 @@ int write_frames(const std::string& serial_port, uint64_t frame_count, uint16_t 
 
 		const QIXFrame frame { i , random_key.as_seq(), QIXFrame::Status::ok };
 
-		writer.write(frame);
+		for (const auto& writer : writers) {
+			writer->write(frame);
+		}
 
         std::cout << "wrote: " << frame.key_id << " - " << get_status_string(frame.status) << " - " << HexConversions::to_hex(frame.key_data) << std::endl;
 
@@ -158,17 +172,20 @@ int write_frames(const std::string& serial_port, uint64_t frame_count, uint16_t 
 	return 0;
 }
 
-std::string get_port(const argagg::parser_results& results)
+std::vector<std::string> get_ports(const argagg::parser_results& results)
 {
 	if (!results.has_option("port")) {
 		throw std::runtime_error("you must specify the serial port");
 	}
 
-	if (results["port"].count() != 1) {
-		throw std::runtime_error("port argument expects a single value");
+	std::vector<std::string> ports;
+
+	for (const auto& value : results["port"].all)
+	{
+		ports.push_back(value);
 	}
 
-	return results["port"][0];
+	return ports;
 }
 
 uint16_t get_key_rate(const argagg::parser_results& results)
