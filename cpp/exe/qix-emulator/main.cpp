@@ -61,7 +61,7 @@ int main(int argc, char*  argv[])
 			return write_frames(port, get_key_rate(results));
 		}
 		else {
-			throw std::exception("You must specify read or write mode");
+			throw std::runtime_error("You must specify read or write mode");
 		}		
 	}
 	catch (const std::exception & ex)
@@ -98,7 +98,7 @@ int read_frames(const std::string& serial_port)
 int write_frames(const std::string& serial_port, uint16_t frames_per_sec)
 {
 	if (!sodium::CryptoBackend::initialize()) {
-		throw std::exception("can't initialize sodium backend");
+		throw std::runtime_error("can't initialize sodium backend");
 	}
 
 	asio::io_service service;
@@ -145,11 +145,11 @@ int write_frames(const std::string& serial_port, uint16_t frames_per_sec)
 std::string get_port(const argagg::parser_results& results)
 {
 	if (!results.has_option("port")) {
-		throw std::exception("you must specify the serial port");
+		throw std::runtime_error("you must specify the serial port");
 	}
 
 	if (results["port"].count() != 1) {
-		throw std::exception("port argument expects a single value");
+		throw std::runtime_error("port argument expects a single value");
 	}
 
 	return results["port"][0];
