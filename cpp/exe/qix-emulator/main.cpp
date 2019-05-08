@@ -132,7 +132,6 @@ int write_frames(const std::string& serial_port, uint16_t frames_per_sec)
 			CastagnoliCRC32::calc(frame.as_seq().skip(2).take(41))
 		);
 
-
 		asio::write(port, asio::buffer(dest, dest.length()));
 
 		std::cout << "wrote frame # " << frame_count << std::endl;
@@ -141,11 +140,6 @@ int write_frames(const std::string& serial_port, uint16_t frames_per_sec)
 
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
-
-	
-
-
-	throw std::exception("writing frames not yet supported");
 }
 
 std::string get_port(const argagg::parser_results& results)
