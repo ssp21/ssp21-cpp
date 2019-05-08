@@ -68,6 +68,12 @@ int main(int argc, char*  argv[])
 		
 		const auto results = parser.parse(argc, argv);
 
+		if (results.has_option("help"))
+		{
+			std::cout << parser << std::endl;
+			return 0;
+		}
+
 		const auto port = get_port(results);
 
 		if (results.has_option("read")) {
@@ -82,8 +88,8 @@ int main(int argc, char*  argv[])
 	}
 	catch (const std::exception & ex)
 	{
-		std::cerr << ex.what() << std::endl;
-		
+		std::cerr << ex.what() << std::endl << std::endl;
+		std::cout << parser << std::endl;
 		return -1;
 	}		
 }
