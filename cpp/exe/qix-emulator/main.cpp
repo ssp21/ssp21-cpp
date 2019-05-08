@@ -78,8 +78,8 @@ int read_frames(const std::string& serial_port)
 	{
 		QIXFrameReader reader(
 			std::make_shared<QIXPrinter>(),
-			log4cpp::Logger(std::make_shared<log4cpp::ConsolePrettyPrinter>(), Module::id, "qix-reader", log4cpp::LogLevels(~0)),
-			"/dev/ttyS0"
+			log4cpp::Logger(std::make_shared<log4cpp::ConsolePrettyPrinter>(), Module::id, "qix-reader", log4cpp::LogLevels(0xFF)),
+            serial_port
 		);
 
 		std::cout << "waiting for QIX frames" << std::endl;
@@ -132,7 +132,7 @@ int write_frames(const std::string& serial_port, uint16_t frames_per_sec)
 			CastagnoliCRC32::calc(frame.as_seq().skip(2).take(41))
 		);
 
-		asio::write(port, asio::buffer(dest, dest.length()));
+		asio::write(port, asio::buffer(frame.as_seq(), frame.length()));
 
 		std::cout << "wrote frame # " << frame_count << std::endl;
 
