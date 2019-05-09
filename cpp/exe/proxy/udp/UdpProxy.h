@@ -8,7 +8,7 @@
 #include <asio.hpp>
 
 #include "Proxy.h"
-#include "ProxyConfig.h"
+#include "udp/UdpProxyConfig.h"
 #include "StackFactory.h"
 #include "Session.h"
 #include "udp/AsioUdpSocketWrapper.h"
@@ -21,7 +21,7 @@ class UdpProxy final : public Proxy
 public:
 
     UdpProxy(
-        const ProxyConfig& config,
+        const UdpProxyConfig& config,
         const std::shared_ptr<exe4cpp::BasicExecutor>& executor,
         const log4cpp::Logger& logger
     );
@@ -36,8 +36,10 @@ private:
 
     const std::shared_ptr<exe4cpp::BasicExecutor> executor;
     log4cpp::Logger logger;
-    AsioUdpSocketWrapper::endpoint_t listen_endpoint;
-    AsioUdpSocketWrapper::endpoint_t destination_endpoint;
+    AsioUdpSocketWrapper::endpoint_t listen_receive_endpoint;
+    AsioUdpSocketWrapper::endpoint_t listen_send_endpoint;
+    AsioUdpSocketWrapper::endpoint_t destination_receive_endpoint;
+    AsioUdpSocketWrapper::endpoint_t destination_send_endpoint;
     ProxyConfig::EndpointMode mode;
     stack_factory_t factory;
 

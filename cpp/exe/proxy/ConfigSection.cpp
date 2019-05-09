@@ -30,21 +30,16 @@ void ConfigSection::add(const std::string& propertyId, const std::string& value)
 std::unique_ptr<ProxyConfig> ConfigSection::get_config(const log4cpp::Logger& logger, const std::string& id)
 {
     const auto proto_type = this->get_proto_type();
-    const auto endpoint_mode = this->get_mode();
-    const log4cpp::LogLevels levels(this->get_levels());
 
-    auto ret = std::make_unique<ProxyConfig>(
-                   this->get_stack_factory(logger, endpoint_mode),
-                   id,
-                   levels,
-                   proto_type,
-                   endpoint_mode,
-                   this->get_integer_value_or_default<uint16_t>(props::max_sessions, 1),
-                   this->get_integer_value<uint16_t>(props::listen_port),
-                   this->consume_value(props::listen_endpoint),
-                   this->get_integer_value<uint16_t>(props::destination_port),
-                   this->consume_value(props::destination_endpoint)
-               );
+    std::unique_ptr<ProxyConfig> ret = nullptr;
+    if(proto_type == ProxyConfig::ProtoType::tcp)
+    {
+        ret = get_tcp_config(logger, id);
+    }
+    else
+    {
+        ret = get_udp_config(logger, id);
+    }
 
     for (auto& value : this->values)
     {
@@ -52,6 +47,43 @@ std::unique_ptr<ProxyConfig> ConfigSection::get_config(const log4cpp::Logger& lo
     }
 
     return std::move(ret);
+}
+
+std::unique_ptr<TcpProxyConfig> ConfigSection::get_tcp_config(const log4cpp::Logger& logger, const std::string& id)
+{
+    const auto endpoint_mode = this->get_mode();
+    const log4cpp::LogLevels levels(this->get_levels());
+
+    return std::make_unique<TcpProxyConfig>(
+        this->get_stack_factory(logger, endpoint_mode),
+        id,
+        levels,
+        endpoint_mode,
+        this->get_integer_value<uint16_t>(props::max_sessions),
+        this->get_integer_value<uint16_t>(props::listen_port),
+        this->consume_value(props::listen_endpoint),
+        this->get_integer_value<uint16_t>(props::connect_port),
+        this->consume_value(props::connect_endpoint)
+    );
+}
+
+std::unique_ptr<UdpProxyConfig> ConfigSection::get_udp_config(const log4cpp::Logger& logger, const std::string& id)
+{
+    const auto endpoint_mode = this->get_mode();
+    const log4cpp::LogLevels levels(this->get_levels());
+
+    return std::make_unique<UdpProxyConfig>(
+        this->get_stack_factory(logger, endpoint_mode),
+        id,
+        levels,
+        endpoint_mode,
+        this->get_integer_value<uint16_t>(props::listen_receive_port),
+        this->get_integer_value<uint16_t>(props::listen_send_port),
+        this->consume_value(props::listen_endpoint),
+        this->get_integer_value<uint16_t>(props::destination_receive_port),
+        this->get_integer_value<uint16_t>(props::destination_send_port),
+        this->consume_value(props::destination_endpoint)
+    );
 }
 
 stack_factory_t ConfigSection::get_stack_factory(const log4cpp::Logger& logger, ProxyConfig::EndpointMode ep_mode)
@@ -309,19 +341,6 @@ T ConfigSection::get_integer_value(const std::string& propertyId)
         throw Exception("bad integer value: ", value);
     }
     return val;
-}
-
-template <typename T>
-T ConfigSection::get_integer_value_or_default(const std::string& propertyId, T defaultValue)
-{
-    try
-    {
-        return get_integer_value<T>(propertyId);
-    }
-    catch(Exception)
-    {
-        return defaultValue;
-    }
 }
 
 ProxyConfig::ProtoType ConfigSection::get_proto_type()

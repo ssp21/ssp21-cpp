@@ -20,7 +20,7 @@ TcpProxy::Server::Server(asio::io_service& context, const std::string& address, 
 }
 
 TcpProxy::TcpProxy(
-    const ProxyConfig& config,
+    const TcpProxyConfig& config,
     const std::shared_ptr<exe4cpp::BasicExecutor>& executor,
     const log4cpp::Logger& logger
 ) :
@@ -28,7 +28,7 @@ TcpProxy::TcpProxy(
     logger(logger),
     factory(config.factory),
     server(*executor->get_service(), config.listen_endpoint, config.listen_port),
-    connect_endpoint(ip::address::from_string(config.destination_endpoint), config.destination_port),
+    connect_endpoint(ip::address::from_string(config.connect_endpoint), config.connect_port),
     mode(config.endpoint_mode),
     max_sessions(config.max_sessions == 0 ? 1 : config.max_sessions)
 {}

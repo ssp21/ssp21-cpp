@@ -59,7 +59,7 @@ std::unique_ptr<Proxy> create_proxy(log4cpp::Logger& logger, std::shared_ptr<exe
         FORMAT_LOG_BLOCK(logger, ssp21::levels::event, "initializing TCP proxy: %s", config.id.c_str());
 
         return std::make_unique<TcpProxy>(
-            config,
+            static_cast<const TcpProxyConfig&>(config),
             executor,
             logger.detach(config.id, config.log_levels)
         );
@@ -69,7 +69,7 @@ std::unique_ptr<Proxy> create_proxy(log4cpp::Logger& logger, std::shared_ptr<exe
         FORMAT_LOG_BLOCK(logger, ssp21::levels::event, "initializing UDP proxy: %s", config.id.c_str());
 
         return std::make_unique<UdpProxy>(
-            config,
+            static_cast<const UdpProxyConfig&>(config),
             executor,
             logger.detach(config.id, config.log_levels)
         );

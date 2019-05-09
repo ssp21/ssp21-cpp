@@ -2,6 +2,8 @@
 #define SSP21PROXY_CONFIGSECTION_H
 
 #include "ProxyConfig.h"
+#include "tcp/TcpProxyConfig.h"
+#include "udp/UdpProxyConfig.h"
 
 #include "ssp21/crypto/gen/ContainerEntryType.h"
 #include "ssp21/crypto/gen/HandshakeMode.h"
@@ -29,6 +31,10 @@ public:
 private:
 
     std::map<std::string, std::string> values;
+
+    std::unique_ptr<TcpProxyConfig> get_tcp_config(const log4cpp::Logger& logger, const std::string& id);
+
+    std::unique_ptr<UdpProxyConfig> get_udp_config(const log4cpp::Logger& logger, const std::string& id);
 
     stack_factory_t get_stack_factory(const log4cpp::Logger& logger, ProxyConfig::EndpointMode ep_mode);
 
@@ -66,9 +72,6 @@ private:
 
     template <typename T>
     T get_integer_value(const std::string& propertyId);
-
-    template <typename T>
-    T get_integer_value_or_default(const std::string& propertyId, T defaultValue);
 
     ProxyConfig::ProtoType get_proto_type();
 

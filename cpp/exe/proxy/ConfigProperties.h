@@ -15,12 +15,22 @@ namespace props
     static const char* local_cert_path = "local_cert_path";
     static const char* local_address = "local_address";
     static const char* remote_address = "remote_address";
+    static const char* serial_port = "serial_port";
+
+    // TCP proxy
     static const char* max_sessions = "max_sessions";
     static const char* listen_port = "listen_port";
     static const char* listen_endpoint = "listen_endpoint";
-    static const char* destination_port = "destination_port";
+    static const char* connect_port = "connect_port";
+    static const char* connect_endpoint = "connect_endpoint";
+
+    // UDP proxy
+    static const char* listen_receive_port = "listen_receive_port";
+    static const char* listen_send_port = "listen_send_port";
+    //static const char* listen_endpoint = "listen_endpoint";
+    static const char* destination_receive_port = "destination_receive_port";
+    static const char* destination_send_port = "destination_send_port";
     static const char* destination_endpoint = "destination_endpoint";
-    static const char* serial_port = "serial_port";
 }
 
 #endif

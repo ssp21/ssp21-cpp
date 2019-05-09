@@ -23,16 +23,17 @@ public:
     using socket_t = asio::ip::udp::socket;
     using endpoint_t = asio::ip::udp::endpoint;
 
-    AsioUdpSocketWrapper(const log4cpp::Logger& logger, IAsioLayer& layer, socket_t socket, endpoint_t endpoint) :
+    AsioUdpSocketWrapper(const log4cpp::Logger& logger, IAsioLayer& layer, socket_t socket, endpoint_t send_endpoint) :
         layer(layer),
         socket(std::move(socket)),
+        send_endpoint(send_endpoint),
         logger(logger),
         rx_buffer(ssp21::consts::link::max_frame_size)
     {
-        this->socket.open(endpoint.protocol());
-        this->socket.set_option(asio::socket_base::reuse_address(true));
-        this->socket.bind(endpoint);
-        this->socket.connect(endpoint);
+        //this->socket.open(endpoint.protocol());
+        //this->socket.set_option(asio::socket_base::reuse_address(true));
+        //this->socket.bind(endpoint);
+        //this->socket.connect(send_endpoint);
     }
 
     virtual ~AsioUdpSocketWrapper()
@@ -53,6 +54,8 @@ public:
 
     bool start_rx_from_socket() override
     {
+        if (this->is_rx_active) return false;
+
         FORMAT_LOG_BLOCK(
             this->logger,
             ssp21::levels::info,
@@ -60,15 +63,13 @@ public:
             this->socket.local_endpoint().address().to_string().c_str(), this->socket.local_endpoint().port()
         );
 
-        if (this->is_rx_active) return false;
-
         auto callback = [this](const std::error_code & ec, size_t num_rx)
         {
             this->is_rx_active = false;
 
             if (ec)
             {
-                FORMAT_LOG_BLOCK(this->logger, ssp21::levels::error, "rx error: %s", ec.message().c_str());
+                //FORMAT_LOG_BLOCK(this->logger, ssp21::levels::error, "rx error: %s", ec.message().c_str());
                 if (socket.is_open())
                 {
                     FORMAT_LOG_BLOCK(this->logger, ssp21::levels::error, "rx error: %s", ec.message().c_str());
@@ -105,14 +106,14 @@ public:
 
     bool start_tx_to_socket(const ssp21::seq32_t& data) override
     {
-        FORMAT_LOG_BLOCK(
+        if (this->is_tx_active) return false;
+
+        /*FORMAT_LOG_BLOCK(
             this->logger,
             ssp21::levels::info,
             "TX to %s:%u",
-            this->socket.local_endpoint().address().to_string().c_str(), this->socket.local_endpoint().port()
-        );
-
-        if (this->is_tx_active) return false;
+            this->socket.remote_endpoint().address().to_string().c_str(), this->socket.remote_endpoint().port()
+        );*/
 
         auto callback = [this](const std::error_code & ec, size_t num_tx)
         {
@@ -138,7 +139,7 @@ public:
 
         FORMAT_LOG_BLOCK(this->logger, ssp21::levels::debug, "start socket tx: %d, rx: %s", data.length(), bool_str(this->is_tx_active));
 
-        this->socket.async_send(asio::buffer(data, data.length()), callback);
+        this->socket.async_send_to(asio::buffer(data, data.length()), send_endpoint, callback);
 
         return true;
     }
@@ -165,6 +166,7 @@ private:
 
     IAsioLayer& layer;
     socket_t socket;
+    endpoint_t send_endpoint;
     log4cpp::Logger logger;
     ser4cpp::Buffer rx_buffer;
 };

@@ -8,7 +8,7 @@
 #include <asio.hpp>
 
 #include "Proxy.h"
-#include "ProxyConfig.h"
+#include "tcp/TcpProxyConfig.h"
 #include "StackFactory.h"
 #include "Session.h"
 
@@ -52,7 +52,7 @@ class TcpProxy final : public Proxy
 public:
 
     TcpProxy(
-        const ProxyConfig& config,
+        const TcpProxyConfig& config,
         const std::shared_ptr<exe4cpp::BasicExecutor>& executor,
         const log4cpp::Logger& logger
     );
