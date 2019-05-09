@@ -23,12 +23,17 @@ public:
     using socket_t = asio::ip::udp::socket;
     using endpoint_t = asio::ip::udp::endpoint;
 
-    AsioUdpSocketWrapper(const log4cpp::Logger& logger, IAsioLayer& layer, socket_t socket) :
+    AsioUdpSocketWrapper(const log4cpp::Logger& logger, IAsioLayer& layer, socket_t socket, endpoint_t endpoint) :
         layer(layer),
         socket(std::move(socket)),
         logger(logger),
         rx_buffer(ssp21::consts::link::max_frame_size)
-    {}
+    {
+        this->socket.open(endpoint.protocol());
+        this->socket.set_option(asio::socket_base::reuse_address(true));
+        this->socket.bind(endpoint);
+        this->socket.connect(endpoint);
+    }
 
     virtual ~AsioUdpSocketWrapper()
     {
@@ -48,6 +53,13 @@ public:
 
     bool start_rx_from_socket() override
     {
+        FORMAT_LOG_BLOCK(
+            this->logger,
+            ssp21::levels::info,
+            "RX from %s:%u",
+            this->socket.local_endpoint().address().to_string().c_str(), this->socket.local_endpoint().port()
+        );
+
         if (this->is_rx_active) return false;
 
         auto callback = [this](const std::error_code & ec, size_t num_rx)
@@ -56,10 +68,11 @@ public:
 
             if (ec)
             {
+                FORMAT_LOG_BLOCK(this->logger, ssp21::levels::error, "rx error: %s", ec.message().c_str());
                 if (socket.is_open())
                 {
                     FORMAT_LOG_BLOCK(this->logger, ssp21::levels::error, "rx error: %s", ec.message().c_str());
-                    this->try_close_socket();
+                    //this->try_close_socket();
                     this->layer.on_rx_or_tx_error();
                 }
                 /*else
@@ -92,6 +105,13 @@ public:
 
     bool start_tx_to_socket(const ssp21::seq32_t& data) override
     {
+        FORMAT_LOG_BLOCK(
+            this->logger,
+            ssp21::levels::info,
+            "TX to %s:%u",
+            this->socket.local_endpoint().address().to_string().c_str(), this->socket.local_endpoint().port()
+        );
+
         if (this->is_tx_active) return false;
 
         auto callback = [this](const std::error_code & ec, size_t num_tx)
@@ -100,12 +120,12 @@ public:
 
             if (ec)
             {
-                //if (socket.is_open())
-                //{
+                if (socket.is_open())
+                {
                     FORMAT_LOG_BLOCK(this->logger, ssp21::levels::error, "tx error: %s", ec.message().c_str());
-                    this->try_close_socket();
+                    //this->try_close_socket();
                     this->layer.on_rx_or_tx_error();
-                //}
+                }
             }
             else
             {

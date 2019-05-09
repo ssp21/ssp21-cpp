@@ -38,6 +38,7 @@ private:
     log4cpp::Logger logger;
     AsioUdpSocketWrapper::endpoint_t listen_endpoint;
     AsioUdpSocketWrapper::endpoint_t destination_endpoint;
+    ProxyConfig::EndpointMode mode;
     stack_factory_t factory;
 
     std::shared_ptr<Session> session;
