@@ -44,7 +44,7 @@ namespace ssp21
 
         explicit IFrameWriter(const log4cpp::Logger& logger);
 
-        virtual ~IFrameWriter() {}
+        virtual ~IFrameWriter() = default;
 
         WriteResult write(const IWritable& payload);
 

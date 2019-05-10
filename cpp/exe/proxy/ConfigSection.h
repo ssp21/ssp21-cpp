@@ -36,27 +36,27 @@ private:
 
     std::unique_ptr<UdpProxyConfig> get_udp_config(const log4cpp::Logger& logger, const std::string& id);
 
-    stack_factory_t get_stack_factory(const log4cpp::Logger& logger, ProxyConfig::EndpointMode ep_mode);
+    stack_factory_t get_stack_factory(const log4cpp::Logger& logger, ProxyConfig::EndpointMode ep_mode, bool crypto_only = false);
 
-    stack_factory_t get_initiator_factory(const log4cpp::Logger& logger, const ssp21::Addresses& addresses);
+    stack_factory_t get_initiator_factory(const log4cpp::Logger& logger, const ssp21::Addresses* addresses);
 
-    stack_factory_t get_initiator_shared_secert_factory(const ssp21::Addresses& addresses);
+    stack_factory_t get_initiator_shared_secret_factory(const ssp21::Addresses* addresses);
 
-    stack_factory_t get_initiator_qkd_factory(const log4cpp::Logger& logger, const ssp21::Addresses& addresses);
+    stack_factory_t get_initiator_qkd_factory(const log4cpp::Logger& logger, const ssp21::Addresses* addresses);
 
-    stack_factory_t get_initiator_preshared_public_key_factory(const ssp21::Addresses& addresses);
+    stack_factory_t get_initiator_preshared_public_key_factory(const ssp21::Addresses* addresses);
 
-    stack_factory_t get_initiator_certificate_mode_factory(const ssp21::Addresses& addresses);
+    stack_factory_t get_initiator_certificate_mode_factory(const ssp21::Addresses* addresses);
 
-    stack_factory_t get_responder_factory(const log4cpp::Logger& logger, const ssp21::Addresses& addresses);
+    stack_factory_t get_responder_factory(const log4cpp::Logger& logger, const ssp21::Addresses* addresses);
 
-    stack_factory_t get_responder_shared_secert_factory(const ssp21::Addresses& addresses);
+    stack_factory_t get_responder_shared_secret_factory(const ssp21::Addresses* addresses);
 
-    stack_factory_t get_responder_qkd_factory(const log4cpp::Logger& logger, const ssp21::Addresses& addresses);
+    stack_factory_t get_responder_qkd_factory(const log4cpp::Logger& logger, const ssp21::Addresses* addresses);
 
-    stack_factory_t get_responder_preshared_public_key_factory(const ssp21::Addresses& addresses);
+    stack_factory_t get_responder_preshared_public_key_factory(const ssp21::Addresses* addresses);
 
-    stack_factory_t get_responder_certificate_mode_factory(const ssp21::Addresses& addresses);
+    stack_factory_t get_responder_certificate_mode_factory(const ssp21::Addresses* addresses);
 
     ssp21::Addresses get_addresses();
 
@@ -72,6 +72,8 @@ private:
 
     template <typename T>
     T get_integer_value(const std::string& propertyId);
+
+    bool get_boolean_value(const std::string& propertyId);
 
     ProxyConfig::ProtoType get_proto_type();
 

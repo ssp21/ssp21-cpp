@@ -6,6 +6,7 @@ namespace props
     static const char* log_levels = "log_levels";
     static const char* proto_type = "proto_type";
     static const char* mode = "mode";
+    static const char* crypto_only = "crypto_only";
     static const char* handshake_mode = "handshake_mode";
     static const char* local_public_key_path = "local_public_key_path";
     static const char* local_private_key_path = "local_private_key_path";

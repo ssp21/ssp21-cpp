@@ -142,7 +142,7 @@ namespace ssp21
         CryptoSuite suite;
         suite.handshake_ephemeral = HandshakeEphemeral::nonce;
 
-        const auto initiator = initiator::factory::shared_secert_mode(
+        const auto initiator = initiator::factory::shared_secret_mode(
                                    Addresses(1, 10),
                                    InitiatorConfig(),
                                    ilogger,
@@ -250,12 +250,12 @@ namespace ssp21
     void IntegrationFixture::wire()
     {
         // wire the lower layers together
-        initiator_lower.configure(stacks.initiator->get_upper(), responder_lower);
-        responder_lower.configure(stacks.responder->get_upper(), initiator_lower);
+        initiator_lower.configure(*stacks.initiator, responder_lower);
+        responder_lower.configure(*stacks.responder, initiator_lower);
 
         // wire the upper layers
-        initiator_upper.configure(stacks.initiator->get_lower());
-        responder_upper.configure(stacks.responder->get_lower());
+        initiator_upper.configure(*stacks.initiator);
+        responder_upper.configure(*stacks.responder);
 
         // wire the initiator and responder
         stacks.initiator->bind(initiator_lower, initiator_upper);

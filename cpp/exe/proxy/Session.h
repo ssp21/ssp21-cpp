@@ -63,8 +63,8 @@ public:
     void start()
     {
         stack->bind(*(lower_layer), *(upper_layer));
-        upper_layer->bind(*upper_socket, stack->get_lower(), error_handler);
-        lower_layer->open(*lower_socket, stack->get_upper());
+        upper_layer->bind(*upper_socket, *stack, error_handler);
+        lower_layer->open(*lower_socket, *stack);
     }
 
     void shutdown()

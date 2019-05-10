@@ -18,6 +18,8 @@ namespace ssp21
  */
 class ILowerLayer
 {
+    friend class AbstractStack;
+
 public:
     /**
      * @brief Check if the layer is ready to transmit data.
