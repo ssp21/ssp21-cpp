@@ -30,20 +30,14 @@ public:
         logger(logger),
         rx_buffer(ssp21::consts::link::max_frame_size)
     {
-        //this->socket.open(endpoint.protocol());
-        //this->socket.set_option(asio::socket_base::reuse_address(true));
-        //this->socket.bind(endpoint);
-        //this->socket.connect(send_endpoint);
-    }
-
-    virtual ~AsioUdpSocketWrapper()
-    {
-
     }
 
     bool try_close_socket() override
     {
         if (!this->socket.is_open()) return false;
+
+        this->is_tx_open = false;
+        this->is_rx_open = false;
 
         std::error_code ec;
         this->socket.shutdown(asio::ip::udp::socket::shutdown_both, ec);
@@ -56,34 +50,22 @@ public:
     {
         if (this->is_rx_active) return false;
 
-        FORMAT_LOG_BLOCK(
-            this->logger,
-            ssp21::levels::info,
-            "RX from %s:%u",
-            this->socket.local_endpoint().address().to_string().c_str(), this->socket.local_endpoint().port()
-        );
-
         auto callback = [this](const std::error_code & ec, size_t num_rx)
         {
             this->is_rx_active = false;
 
             if (ec)
             {
-                //FORMAT_LOG_BLOCK(this->logger, ssp21::levels::error, "rx error: %s", ec.message().c_str());
-                if (socket.is_open())
+                FORMAT_LOG_BLOCK(this->logger, ssp21::levels::error, "rx error: %s", ec.message().c_str());
+                if (this->is_rx_open)
                 {
-                    FORMAT_LOG_BLOCK(this->logger, ssp21::levels::error, "rx error: %s", ec.message().c_str());
-                    //this->try_close_socket();
                     this->layer.on_rx_or_tx_error();
                 }
-                /*else
-                {
-                    this->start_rx_from_socket();
-                }*/
             }
             else
             {
-                const auto rx_data = this->rx_buffer.as_rslice().take(num_rx);
+                this->is_rx_open = true;
+                const auto rx_data = this->rx_buffer.as_rslice().take(static_cast<uint32_t>(num_rx));
                 FORMAT_LOG_BLOCK(this->logger, ssp21::levels::debug, "complete socket rx: %u, tx: %s", rx_data.length(), bool_str(this->is_tx_active));
                 if (this->logger.is_enabled(ssp21::levels::debug))
                 {
@@ -108,20 +90,13 @@ public:
     {
         if (this->is_tx_active) return false;
 
-        /*FORMAT_LOG_BLOCK(
-            this->logger,
-            ssp21::levels::info,
-            "TX to %s:%u",
-            this->socket.remote_endpoint().address().to_string().c_str(), this->socket.remote_endpoint().port()
-        );*/
-
         auto callback = [this](const std::error_code & ec, size_t num_tx)
         {
             this->is_tx_active = false;
 
             if (ec)
             {
-                if (socket.is_open())
+                if (this->is_tx_open)
                 {
                     FORMAT_LOG_BLOCK(this->logger, ssp21::levels::error, "tx error: %s", ec.message().c_str());
                     //this->try_close_socket();
@@ -130,6 +105,7 @@ public:
             }
             else
             {
+                this->is_tx_open = true;
                 FORMAT_LOG_BLOCK(this->logger, ssp21::levels::debug, "complete socket tx: %u - rx: %s", static_cast<uint32_t>(num_tx), bool_str(this->is_rx_active));
                 this->layer.on_tx_complete();
             }
@@ -161,6 +137,8 @@ private:
         return value ? "true" : "false";
     }
 
+    bool is_tx_open = false;
+    bool is_rx_open = false;
     bool is_tx_active = false;
     bool is_rx_active = false;
 

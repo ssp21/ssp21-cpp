@@ -1,4 +1,5 @@
 [i-proxy]
+proto_type=udp
 mode=initiator
 handshake_mode=certificate
 log_levels=iwemf
@@ -8,8 +9,11 @@ authority_cert_path=./authority.cert.icf
 local_cert_path=./initiator.cert.icf
 remote_address=1
 local_address=10
-max_sessions=1
-listen_port=20000
-listen_endpoint=127.0.0.1
-connect_port=20001
-connect_endpoint=127.0.0.1
+source_receive_endpoint=127.0.0.1
+source_receive_port=20000
+source_send_endpoint=127.0.0.1
+source_send_port=20001
+destination_receive_endpoint=127.0.0.1
+destination_receive_port=20002
+destination_send_endpoint=127.0.0.1
+destination_send_port=20003

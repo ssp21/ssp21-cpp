@@ -1,4 +1,5 @@
 [r-proxy]
+proto_type=tcp
 mode=responder
 handshake_mode=certificate
 log_levels=iwemf
@@ -6,8 +7,8 @@ local_public_key_path=./responder.pub.icf
 local_private_key_path=./responder.priv.icf
 authority_cert_path=./authority.cert.icf
 local_cert_path=./responder.cert.icf
-remote_address=1
-local_address=10
+remote_address=10
+local_address=1
 max_sessions=1
 listen_port=20001
 listen_endpoint=127.0.0.1

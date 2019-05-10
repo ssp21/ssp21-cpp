@@ -36,8 +36,8 @@ private:
 
     const std::shared_ptr<exe4cpp::BasicExecutor> executor;
     log4cpp::Logger logger;
-    AsioUdpSocketWrapper::endpoint_t listen_receive_endpoint;
-    AsioUdpSocketWrapper::endpoint_t listen_send_endpoint;
+    AsioUdpSocketWrapper::endpoint_t source_receive_endpoint;
+    AsioUdpSocketWrapper::endpoint_t source_send_endpoint;
     AsioUdpSocketWrapper::endpoint_t destination_receive_endpoint;
     AsioUdpSocketWrapper::endpoint_t destination_send_endpoint;
     ProxyConfig::EndpointMode mode;

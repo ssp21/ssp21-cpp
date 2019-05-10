@@ -25,13 +25,14 @@ namespace props
     static const char* connect_endpoint = "connect_endpoint";
 
     // UDP proxy
-    static const char* listen_receive_port = "listen_receive_port";
-    static const char* listen_send_port = "listen_send_port";
-    //static const char* listen_endpoint = "listen_endpoint";
+    static const char* source_receive_endpoint = "source_receive_endpoint";
+    static const char* source_receive_port = "source_receive_port";
+    static const char* source_send_endpoint = "source_send_endpoint";
+    static const char* source_send_port = "source_send_port";
+    static const char* destination_receive_endpoint = "destination_receive_endpoint";
     static const char* destination_receive_port = "destination_receive_port";
+    static const char* destination_send_endpoint = "destination_send_endpoint";
     static const char* destination_send_port = "destination_send_port";
-    static const char* destination_endpoint = "destination_endpoint";
 }
 
 #endif
-

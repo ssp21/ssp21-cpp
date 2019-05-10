@@ -77,12 +77,14 @@ std::unique_ptr<UdpProxyConfig> ConfigSection::get_udp_config(const log4cpp::Log
         id,
         levels,
         endpoint_mode,
-        this->get_integer_value<uint16_t>(props::listen_receive_port),
-        this->get_integer_value<uint16_t>(props::listen_send_port),
-        this->consume_value(props::listen_endpoint),
+        this->consume_value(props::source_receive_endpoint),
+        this->get_integer_value<uint16_t>(props::source_receive_port),
+        this->consume_value(props::source_send_endpoint),
+        this->get_integer_value<uint16_t>(props::source_send_port),
+        this->consume_value(props::destination_receive_endpoint),
         this->get_integer_value<uint16_t>(props::destination_receive_port),
-        this->get_integer_value<uint16_t>(props::destination_send_port),
-        this->consume_value(props::destination_endpoint)
+        this->consume_value(props::destination_send_endpoint),
+        this->get_integer_value<uint16_t>(props::destination_send_port)
     );
 }
 
