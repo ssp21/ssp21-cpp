@@ -10,7 +10,8 @@
 #include <log4cpp/LogMacros.h>
 
 #include "ConfigReader.h"
-#include "Proxy.h"
+#include "tcp/TcpProxy.h"
+#include "udp/UdpProxy.h"
 
 using namespace std;
 using namespace ssp21;
@@ -51,6 +52,31 @@ std::shared_ptr<log4cpp::ILogHandler> get_log_backend()
     return make_shared<log4cpp::ConsolePrettyPrinter>(settings);
 }
 
+std::unique_ptr<Proxy> create_proxy(log4cpp::Logger& logger, std::shared_ptr<exe4cpp::BasicExecutor> executor, const ProxyConfig& config)
+{
+    if(config.proto_type == ProxyConfig::ProtoType::tcp)
+    {
+        FORMAT_LOG_BLOCK(logger, ssp21::levels::event, "initializing TCP proxy: %s", config.id.c_str());
+
+        return std::make_unique<TcpProxy>(
+            static_cast<const TcpProxyConfig&>(config),
+            executor,
+            logger.detach(config.id, config.log_levels)
+        );
+    }
+    else
+    {
+        FORMAT_LOG_BLOCK(logger, ssp21::levels::event, "initializing UDP proxy: %s", config.id.c_str());
+
+        return std::make_unique<UdpProxy>(
+            static_cast<const UdpProxyConfig&>(config),
+            executor,
+            logger.detach(config.id, config.log_levels)
+        );
+    }
+    
+}
+
 void run(const std::string& config_file_path)
 {
     // setup the logging backend
@@ -71,15 +97,7 @@ void run(const std::string& config_file_path)
     // initialize all the proxies. might throw on bad configuration.
     for (auto& config : configurations)
     {
-        FORMAT_LOG_BLOCK(logger, ssp21::levels::event, "initializing proxy: %s", config->id.c_str());
-
-        proxies.push_back(
-            std::make_unique<Proxy>(
-                *config,
-                executor,
-                logger.detach(config->id, config->log_levels)
-            )
-        );
+        proxies.push_back(create_proxy(logger, executor, *config));
     }
 
     // start all the sessions

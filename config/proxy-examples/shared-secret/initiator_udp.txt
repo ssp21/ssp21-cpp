@@ -1,0 +1,15 @@
+[i-proxy]
+proto_type=udp
+crypto_only=true
+mode=initiator
+handshake_mode=shared_secret
+log_levels=iwemf
+shared_secret_key_path=./shared_secret.icf
+source_receive_endpoint=127.0.0.1
+source_receive_port=20000
+source_send_endpoint=127.0.0.1
+source_send_port=20001
+destination_receive_endpoint=127.0.0.1
+destination_receive_port=20002
+destination_send_endpoint=127.0.0.1
+destination_send_port=20003

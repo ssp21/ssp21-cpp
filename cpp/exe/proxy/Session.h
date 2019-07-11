@@ -1,16 +1,15 @@
 #ifndef SSP21PROXY_SESSION_H
 #define SSP21PROXY_SESSION_H
 
-#include "ASIOLowerLayer.h"
-#include "ASIOUpperLayer.h"
+#include "AsioLowerLayer.h"
+#include "AsioUpperLayer.h"
 
 #include <ssp21/stack/IStack.h>
 #include <exe4cpp/IExecutor.h>
 
 #include <functional>
+#include <memory>
 
-using socket_lower_layer_t = ASIOLowerLayer;
-using socket_upper_layer_t = ASIOUpperLayer;
 using session_error_handler_t = std::function<void()>;
 
 class Session : public std::enable_shared_from_this<Session>
@@ -22,15 +21,19 @@ public:
         uint64_t id,
         const session_error_handler_t& error_handler,
         const std::shared_ptr<exe4cpp::IExecutor>& executor,
-        std::unique_ptr<socket_lower_layer_t> lower,
-        std::unique_ptr<socket_upper_layer_t> upper,
+        std::unique_ptr<IAsioSocketWrapper> lower_socket,
+        std::unique_ptr<AsioLowerLayer> lower_layer,
+        std::unique_ptr<IAsioSocketWrapper> upper_socket,
+        std::unique_ptr<AsioUpperLayer> upper_layer,
         const std::shared_ptr<ssp21::IStack>& stack
     ) :
         id(id),
         error_handler(error_handler),
         executor(executor),
-        lower(std::move(lower)),
-        upper(std::move(upper)),
+        lower_socket(std::move(lower_socket)),
+        lower_layer(std::move(lower_layer)),
+        upper_socket(std::move(upper_socket)),
+        upper_layer(std::move(upper_layer)),
         stack(stack)
     {
 
@@ -40,24 +43,33 @@ public:
         uint64_t id,
         const session_error_handler_t& error_handler,
         const std::shared_ptr<exe4cpp::IExecutor>& executor,
-        std::unique_ptr<socket_lower_layer_t> lower,
-        std::unique_ptr<socket_upper_layer_t> upper,
+        std::unique_ptr<IAsioSocketWrapper> lower_socket,
+        std::unique_ptr<AsioLowerLayer> lower_layer,
+        std::unique_ptr<IAsioSocketWrapper> upper_socket,
+        std::unique_ptr<AsioUpperLayer> upper_layer,
         const std::shared_ptr<ssp21::IStack>& stack
     )
     {
-        return std::make_shared<Session>(id, error_handler, executor, std::move(lower), std::move(upper), stack);
+        return std::make_shared<Session>(id,
+                                         error_handler,
+                                         executor,
+                                         std::move(lower_socket),
+                                         std::move(lower_layer),
+                                         std::move(upper_socket),
+                                         std::move(upper_layer),
+                                         stack);
     }
 
     void start()
     {
-        stack->bind(*(lower), *(upper));
-        upper->bind(stack->get_lower(), error_handler);
-        lower->open(stack->get_upper());
+        stack->bind(*(lower_layer), *(upper_layer));
+        upper_layer->bind(*upper_socket, *stack, error_handler);
+        lower_layer->open(*lower_socket, *stack);
     }
 
     void shutdown()
     {
-        lower->close(); // start the shutdown bottom to top
+        lower_layer->close(); // start the shutdown bottom to top
         this->check_for_close(this->shared_from_this());
     }
 
@@ -76,14 +88,16 @@ private:
 
     inline bool is_shutdown() const
     {
-        return !(this->lower->is_active() || this->upper->is_active());
+        return !(this->lower_layer->is_active() || this->upper_layer->is_active());
     }
 
     const uint64_t id;
     const session_error_handler_t error_handler;
     const std::shared_ptr<exe4cpp::IExecutor> executor;
-    const std::unique_ptr<socket_lower_layer_t> lower;
-    const std::unique_ptr<socket_upper_layer_t> upper;
+    const std::unique_ptr<IAsioSocketWrapper> lower_socket;
+    const std::unique_ptr<AsioLowerLayer> lower_layer;
+    const std::unique_ptr<IAsioSocketWrapper> upper_socket;
+    const std::unique_ptr<AsioUpperLayer> upper_layer;
     const std::shared_ptr<ssp21::IStack> stack;
 };
 

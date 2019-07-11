@@ -1,14 +1,19 @@
 set(proxy_headers
-    ./ASIOLayerBase.h
-    ./ASIOLowerLayer.h
-    ./ASIOUpperLayer.h
+    ./AsioLowerLayer.h
+    ./AsioUpperLayer.h
     ./ConfigProperties.h
     ./ConfigReader.h
     ./ConfigSection.h
-    ./Proxy.h
+    ./IAsioLayer.h
     ./ProxyConfig.h
     ./Session.h
     ./StackFactory.h
+
+    ./tcp/AsioTcpSocketWrapper.h
+    ./tcp/TcpProxy.h
+
+    ./udp/AsioUdpSocketWrapper.h
+    ./udp/UdpProxy.h
 )
 
 set(proxy_srcs
@@ -16,8 +21,11 @@ set(proxy_srcs
 
     ./ConfigReader.cpp
     ./ConfigSection.cpp
-    ./Proxy.cpp
     ./Session.cpp
+
+    ./tcp/TcpProxy.cpp
+
+    ./udp/UdpProxy.cpp
 )
 
 add_executable(proxy ${proxy_headers} ${proxy_srcs})

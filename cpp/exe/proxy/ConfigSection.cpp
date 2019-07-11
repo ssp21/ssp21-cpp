@@ -29,20 +29,17 @@ void ConfigSection::add(const std::string& propertyId, const std::string& value)
 
 std::unique_ptr<ProxyConfig> ConfigSection::get_config(const log4cpp::Logger& logger, const std::string& id)
 {
-    const auto endpoint_mode = this->get_mode();
-    const log4cpp::LogLevels levels(this->get_levels());
+    const auto proto_type = this->get_proto_type();
 
-    auto ret = std::make_unique<ProxyConfig>(
-                   this->get_stack_factory(logger, endpoint_mode),
-                   id,
-                   levels,
-                   endpoint_mode,
-                   this->get_integer_value<uint16_t>(props::max_sessions),
-                   this->get_integer_value<uint16_t>(props::listen_port),
-                   this->consume_value(props::listen_endpoint),
-                   this->get_integer_value<uint16_t>(props::connect_port),
-                   this->consume_value(props::connect_endpoint)
-               );
+    std::unique_ptr<ProxyConfig> ret = nullptr;
+    if(proto_type == ProxyConfig::ProtoType::tcp)
+    {
+        ret = get_tcp_config(logger, id);
+    }
+    else
+    {
+        ret = get_udp_config(logger, id);
+    }
 
     for (auto& value : this->values)
     {
@@ -52,19 +49,66 @@ std::unique_ptr<ProxyConfig> ConfigSection::get_config(const log4cpp::Logger& lo
     return std::move(ret);
 }
 
-stack_factory_t ConfigSection::get_stack_factory(const log4cpp::Logger& logger, ProxyConfig::EndpointMode ep_mode)
+std::unique_ptr<TcpProxyConfig> ConfigSection::get_tcp_config(const log4cpp::Logger& logger, const std::string& id)
 {
-    const Addresses addresses(this->get_addresses());
-    return (ep_mode == ProxyConfig::EndpointMode::initiator) ? this->get_initiator_factory(logger, addresses) : this->get_responder_factory(logger, addresses);
+    const auto endpoint_mode = this->get_mode();
+    const log4cpp::LogLevels levels(this->get_levels());
+
+    return std::make_unique<TcpProxyConfig>(
+        this->get_stack_factory(logger, endpoint_mode),
+        id,
+        levels,
+        endpoint_mode,
+        this->get_integer_value<uint16_t>(props::max_sessions),
+        this->get_integer_value<uint16_t>(props::listen_port),
+        this->consume_value(props::listen_endpoint),
+        this->get_integer_value<uint16_t>(props::connect_port),
+        this->consume_value(props::connect_endpoint)
+    );
 }
 
-stack_factory_t ConfigSection::get_initiator_factory(const log4cpp::Logger& logger, const ssp21::Addresses& addresses)
+std::unique_ptr<UdpProxyConfig> ConfigSection::get_udp_config(const log4cpp::Logger& logger, const std::string& id)
+{
+    const auto endpoint_mode = this->get_mode();
+    const auto crypto_only = this->get_boolean_value(props::crypto_only);
+    const log4cpp::LogLevels levels(this->get_levels());
+
+    return std::make_unique<UdpProxyConfig>(
+        this->get_stack_factory(logger, endpoint_mode, crypto_only),
+        id,
+        levels,
+        endpoint_mode,
+        this->consume_value(props::source_receive_endpoint),
+        this->get_integer_value<uint16_t>(props::source_receive_port),
+        this->consume_value(props::source_send_endpoint),
+        this->get_integer_value<uint16_t>(props::source_send_port),
+        this->consume_value(props::destination_receive_endpoint),
+        this->get_integer_value<uint16_t>(props::destination_receive_port),
+        this->consume_value(props::destination_send_endpoint),
+        this->get_integer_value<uint16_t>(props::destination_send_port)
+    );
+}
+
+stack_factory_t ConfigSection::get_stack_factory(const log4cpp::Logger& logger, ProxyConfig::EndpointMode ep_mode, bool crypto_only)
+{
+    if (!crypto_only)
+    {
+        const Addresses addresses(this->get_addresses());
+        return (ep_mode == ProxyConfig::EndpointMode::initiator) ? this->get_initiator_factory(logger, &addresses) : this->get_responder_factory(logger, &addresses);
+    }
+    else
+    {
+        return (ep_mode == ProxyConfig::EndpointMode::initiator) ? this->get_initiator_factory(logger, nullptr) : this->get_responder_factory(logger, nullptr);
+    }
+}
+
+stack_factory_t ConfigSection::get_initiator_factory(const log4cpp::Logger& logger, const ssp21::Addresses* addresses)
 {
     const auto mode = this->get_handshake_mode();
     switch (mode)
     {
     case(HandshakeMode::shared_secret):
-        return this->get_initiator_shared_secert_factory(addresses);
+        return this->get_initiator_shared_secret_factory(addresses);
     case(HandshakeMode::quantum_key_distribution):
         return this->get_initiator_qkd_factory(logger, addresses);
     case(HandshakeMode::preshared_public_keys):
@@ -76,27 +120,40 @@ stack_factory_t ConfigSection::get_initiator_factory(const log4cpp::Logger& logg
     }
 }
 
-stack_factory_t ConfigSection::get_initiator_shared_secert_factory(const ssp21::Addresses& addresses)
+stack_factory_t ConfigSection::get_initiator_shared_secret_factory(const ssp21::Addresses* addresses)
 {
-    const auto shared_secret = this->get_shared_secert();
+    const auto shared_secret = this->get_shared_secret();
 
     return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
     {
         CryptoSuite suite;
         suite.handshake_ephemeral = HandshakeEphemeral::nonce;
 
-        return initiator::factory::shared_secert_mode(
-                   addresses,
-                   InitiatorConfig(),	// TODO: default
-                   logger,
-                   executor,
-                   suite,
-                   shared_secret
-               );
+        if (addresses)
+        {
+            return initiator::factory::shared_secret_mode(
+                    *addresses,
+                    InitiatorConfig(),	// TODO: default
+                    logger,
+                    executor,
+                    suite,
+                    shared_secret
+                );
+        }
+        else
+        {
+            return initiator::factory::shared_secret_mode(
+                    InitiatorConfig(),	// TODO: default
+                    logger,
+                    executor,
+                    suite,
+                    shared_secret
+                );
+        }
     };
 }
 
-stack_factory_t ConfigSection::get_initiator_qkd_factory(const log4cpp::Logger& logger, const ssp21::Addresses& addresses)
+stack_factory_t ConfigSection::get_initiator_qkd_factory(const log4cpp::Logger& logger, const ssp21::Addresses* addresses)
 {
     const auto key_cache = this->get_qix_key_cache(logger);
 
@@ -105,36 +162,62 @@ stack_factory_t ConfigSection::get_initiator_qkd_factory(const log4cpp::Logger& 
         CryptoSuite suite;
         suite.handshake_ephemeral = HandshakeEphemeral::none;
 
-        return initiator::factory::qkd_mode(
-                   addresses,
-                   InitiatorConfig(),	// TODO: default
-                   logger,
-                   executor,
-                   suite,
-                   key_cache
-               );
+        if(addresses)
+        {
+            return initiator::factory::qkd_mode(
+                    *addresses,
+                    InitiatorConfig(),	// TODO: default
+                    logger,
+                    executor,
+                    suite,
+                    key_cache
+                );
+        }
+        else
+        {
+            return initiator::factory::qkd_mode(
+                    InitiatorConfig(),	// TODO: default
+                    logger,
+                    executor,
+                    suite,
+                    key_cache
+                );
+        }
     };
 }
 
-stack_factory_t ConfigSection::get_initiator_preshared_public_key_factory(const ssp21::Addresses& addresses)
+stack_factory_t ConfigSection::get_initiator_preshared_public_key_factory(const ssp21::Addresses* addresses)
 {
     const auto local_keys = this->get_local_static_keys();
     const auto remote_public_key = this->get_crypto_key<ssp21::PublicKey>(props::remote_public_key_path, ContainerEntryType::x25519_public_key);
 
     return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
     {
-        return initiator::factory::preshared_public_key_mode(
-                   addresses,
-                   InitiatorConfig(),	// TODO: default
-                   logger,
-                   executor,
-                   CryptoSuite(),		// TODO: default
-                   local_keys,
-                   remote_public_key);
+        if(addresses)
+        {
+            return initiator::factory::preshared_public_key_mode(
+                    *addresses,
+                    InitiatorConfig(),	// TODO: default
+                    logger,
+                    executor,
+                    CryptoSuite(),		// TODO: default
+                    local_keys,
+                    remote_public_key);
+        }
+        else
+        {
+            return initiator::factory::preshared_public_key_mode(
+                    InitiatorConfig(),	// TODO: default
+                    logger,
+                    executor,
+                    CryptoSuite(),		// TODO: default
+                    local_keys,
+                    remote_public_key);
+        }
     };
 }
 
-stack_factory_t ConfigSection::get_initiator_certificate_mode_factory(const ssp21::Addresses& addresses)
+stack_factory_t ConfigSection::get_initiator_certificate_mode_factory(const ssp21::Addresses* addresses)
 {
     const auto local_keys = this->get_local_static_keys();
     const auto anchor_cert_data = this->get_file_data(props::authority_cert_path);
@@ -142,26 +225,41 @@ stack_factory_t ConfigSection::get_initiator_certificate_mode_factory(const ssp2
 
     return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
     {
-        return initiator::factory::certificate_public_key_mode(
-                   addresses,
-                   InitiatorConfig(),	// TODO: default
-                   logger,
-                   executor,
-                   CryptoSuite(),		// TODO: default
-                   local_keys,
-                   anchor_cert_data,
-                   local_cert_data
-               );
+        if(addresses)
+        {
+            return initiator::factory::certificate_public_key_mode(
+                    *addresses,
+                    InitiatorConfig(),	// TODO: default
+                    logger,
+                    executor,
+                    CryptoSuite(),		// TODO: default
+                    local_keys,
+                    anchor_cert_data,
+                    local_cert_data
+                );
+        }
+        else
+        {
+            return initiator::factory::certificate_public_key_mode(
+                    InitiatorConfig(),	// TODO: default
+                    logger,
+                    executor,
+                    CryptoSuite(),		// TODO: default
+                    local_keys,
+                    anchor_cert_data,
+                    local_cert_data
+                );
+        }
     };
 }
 
-stack_factory_t ConfigSection::get_responder_factory(const log4cpp::Logger& logger, const ssp21::Addresses& addresses)
+stack_factory_t ConfigSection::get_responder_factory(const log4cpp::Logger& logger, const ssp21::Addresses* addresses)
 {
     const auto mode = this->get_handshake_mode();
     switch (mode)
     {
     case(HandshakeMode::shared_secret):
-        return this->get_responder_shared_secert_factory(addresses);
+        return this->get_responder_shared_secret_factory(addresses);
     case(HandshakeMode::quantum_key_distribution):
         return this->get_responder_qkd_factory(logger, addresses);
     case(HandshakeMode::preshared_public_keys):
@@ -173,56 +271,92 @@ stack_factory_t ConfigSection::get_responder_factory(const log4cpp::Logger& logg
     }
 }
 
-stack_factory_t ConfigSection::get_responder_shared_secert_factory(const ssp21::Addresses& addresses)
+stack_factory_t ConfigSection::get_responder_shared_secret_factory(const ssp21::Addresses* addresses)
 {
-    const auto shared_secret = this->get_shared_secert();
+    const auto shared_secret = this->get_shared_secret();
 
     return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
     {
-        return responder::factory::shared_secret_mode(
-                   addresses,
+        if(addresses)
+        {
+            return responder::factory::shared_secret_mode(
+                    *addresses,
+                    ResponderConfig(),	// TODO: default
+                    logger,
+                    executor,
+                    shared_secret
+                );
+        }
+        else
+        {
+            return responder::factory::shared_secret_mode(
                    ResponderConfig(),	// TODO: default
                    logger,
                    executor,
                    shared_secret
                );
+        }
     };
 }
 
-stack_factory_t ConfigSection::get_responder_qkd_factory(const log4cpp::Logger& logger, const ssp21::Addresses& addresses)
+stack_factory_t ConfigSection::get_responder_qkd_factory(const log4cpp::Logger& logger, const ssp21::Addresses* addresses)
 {
     const auto key_cache = this->get_qix_key_cache(logger);
 
     return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
     {
-        return responder::factory::qkd_mode(
-                   addresses,
+        if(addresses)
+        {
+            return responder::factory::qkd_mode(
+                    *addresses,
+                    ResponderConfig(),	// TODO: default
+                    logger,
+                    executor,
+                    key_cache
+                );
+        }
+        else
+        {
+            return responder::factory::qkd_mode(
                    ResponderConfig(),	// TODO: default
                    logger,
                    executor,
                    key_cache
                );
+        }
     };
 }
 
-stack_factory_t ConfigSection::get_responder_preshared_public_key_factory(const ssp21::Addresses& addresses)
+stack_factory_t ConfigSection::get_responder_preshared_public_key_factory(const ssp21::Addresses* addresses)
 {
     const auto local_keys = this->get_local_static_keys();
     const auto remote_public_key = this->get_crypto_key<ssp21::PublicKey>(props::remote_public_key_path, ContainerEntryType::x25519_public_key);
 
     return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
     {
-        return responder::factory::preshared_public_key_mode(
-                   addresses,
+        if(addresses)
+        {
+            return responder::factory::preshared_public_key_mode(
+                    *addresses,
+                    ResponderConfig(),	// TODO: default
+                    logger,
+                    executor,
+                    local_keys,
+                    remote_public_key);
+        }
+        else
+        {
+            return responder::factory::preshared_public_key_mode(
                    ResponderConfig(),	// TODO: default
                    logger,
                    executor,
                    local_keys,
                    remote_public_key);
+        }
     };
 }
 
-stack_factory_t ConfigSection::get_responder_certificate_mode_factory(const ssp21::Addresses& addresses)
+stack_factory_t ConfigSection::get_responder_certificate_mode_factory(const ssp21::Addresses* addresses)
 {
     const auto local_keys = this->get_local_static_keys();
     const auto anchor_cert_data = this->get_file_data(props::authority_cert_path);
@@ -230,15 +364,29 @@ stack_factory_t ConfigSection::get_responder_certificate_mode_factory(const ssp2
 
     return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
     {
-        return responder::factory::certificate_public_key_mode(
-                   addresses,
-                   ResponderConfig(),	// TODO: default
-                   logger,
-                   executor,
-                   local_keys,
-                   anchor_cert_data,
-                   local_cert_data
-               );
+        if(addresses)
+        {
+            return responder::factory::certificate_public_key_mode(
+                    *addresses,
+                    ResponderConfig(),	// TODO: default
+                    logger,
+                    executor,
+                    local_keys,
+                    anchor_cert_data,
+                    local_cert_data
+                );
+        }
+        else
+        {
+            return responder::factory::certificate_public_key_mode(
+                    ResponderConfig(),	// TODO: default
+                    logger,
+                    executor,
+                    local_keys,
+                    anchor_cert_data,
+                    local_cert_data
+                );
+        }
     };
 }
 
@@ -258,7 +406,7 @@ ssp21::StaticKeys ConfigSection::get_local_static_keys()
            );
 }
 
-std::shared_ptr<const SymmetricKey> ConfigSection::get_shared_secert()
+std::shared_ptr<const SymmetricKey> ConfigSection::get_shared_secret()
 {
     return this->get_crypto_key<SymmetricKey>(props::shared_secret_key_path, ContainerEntryType::shared_secret);
 }
@@ -296,7 +444,7 @@ std::string ConfigSection::consume_value(const std::string& propertyId)
     return ret;
 }
 
-template <class T>
+template <typename T>
 T ConfigSection::get_integer_value(const std::string& propertyId)
 {
     const auto value = this->consume_value(propertyId);
@@ -307,6 +455,43 @@ T ConfigSection::get_integer_value(const std::string& propertyId)
         throw Exception("bad integer value: ", value);
     }
     return val;
+}
+
+bool ConfigSection::get_boolean_value(const std::string& propertyId)
+{
+    const auto value = this->consume_value(propertyId);
+
+    if (value == "true")
+    {
+        return true;
+    }
+    else if (value == "false")
+    {
+        return false;
+    }
+    else
+    {
+        throw Exception("bad boolean value: ", value);
+    }
+}
+
+
+ProxyConfig::ProtoType ConfigSection::get_proto_type()
+{
+    const auto value = this->consume_value(props::proto_type);
+
+    if (value == "tcp")
+    {
+        return ProxyConfig::ProtoType::tcp;
+    }
+    else if (value == "udp")
+    {
+        return ProxyConfig::ProtoType::udp;
+    }
+    else
+    {
+        throw Exception("Unknown protocol type: ", value);
+    }
 }
 
 ProxyConfig::EndpointMode ConfigSection::get_mode()

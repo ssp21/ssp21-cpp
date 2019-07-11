@@ -41,7 +41,10 @@ namespace ssp21
         {
             LinkParser::Result result;
             parser.read(result);
-            return result.payload;
+            if(result.destination == local_addr)
+            {
+                return result.payload;
+            }
         }
 
         return seq32_t::empty();

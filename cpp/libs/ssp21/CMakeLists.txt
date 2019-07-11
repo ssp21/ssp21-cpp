@@ -62,6 +62,7 @@ set(ssp21_public_headers
 set(ssp21_private_headers
     ./src/IFrameWriter.h
     ./src/IWritable.h
+    ./src/RawFrameWriter.h
 
     ./src/crypto/Algorithms.h
     ./src/crypto/AlgorithmSet.h
@@ -119,6 +120,7 @@ set(ssp21_private_headers
 
 set(ssp21_srcs
     ./src/IFrameWriter.cpp
+    ./src/RawFrameWriter.cpp
 
     ./src/crypto/Algorithms.cpp
     ./src/crypto/BufferTypes.cpp

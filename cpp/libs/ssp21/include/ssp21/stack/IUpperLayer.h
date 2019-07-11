@@ -16,6 +16,8 @@ namespace ssp21
  */
 class IUpperLayer
 {
+    friend class AbstractStack;
+
 public:
     /**
      * @brief Open the layer if it was closed.

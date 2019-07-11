@@ -4,7 +4,9 @@
 namespace props
 {
     static const char* log_levels = "log_levels";
+    static const char* proto_type = "proto_type";
     static const char* mode = "mode";
+    static const char* crypto_only = "crypto_only";
     static const char* handshake_mode = "handshake_mode";
     static const char* local_public_key_path = "local_public_key_path";
     static const char* local_private_key_path = "local_private_key_path";
@@ -14,13 +16,24 @@ namespace props
     static const char* local_cert_path = "local_cert_path";
     static const char* local_address = "local_address";
     static const char* remote_address = "remote_address";
+    static const char* serial_port = "serial_port";
+
+    // TCP proxy
     static const char* max_sessions = "max_sessions";
     static const char* listen_port = "listen_port";
     static const char* listen_endpoint = "listen_endpoint";
     static const char* connect_port = "connect_port";
     static const char* connect_endpoint = "connect_endpoint";
-    static const char* serial_port = "serial_port";
+
+    // UDP proxy
+    static const char* source_receive_endpoint = "source_receive_endpoint";
+    static const char* source_receive_port = "source_receive_port";
+    static const char* source_send_endpoint = "source_send_endpoint";
+    static const char* source_send_port = "source_send_port";
+    static const char* destination_receive_endpoint = "destination_receive_endpoint";
+    static const char* destination_receive_port = "destination_receive_port";
+    static const char* destination_send_endpoint = "destination_send_endpoint";
+    static const char* destination_send_port = "destination_send_port";
 }
 
 #endif
-
