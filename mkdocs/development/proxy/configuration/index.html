@@ -377,6 +377,33 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#transport-specific-parameters" title="Transport-specific parameters" class="md-nav__link">
+    Transport-specific parameters
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tcp-mode" title="TCP mode" class="md-nav__link">
+    TCP mode
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#udp-mode" title="UDP mode" class="md-nav__link">
+    UDP mode
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#mode-specific-parameters" title="Mode-specific parameters" class="md-nav__link">
     Mode-specific parameters
   </a>
@@ -486,6 +513,33 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#transport-specific-parameters" title="Transport-specific parameters" class="md-nav__link">
+    Transport-specific parameters
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tcp-mode" title="TCP mode" class="md-nav__link">
+    TCP mode
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#udp-mode" title="UDP mode" class="md-nav__link">
+    UDP mode
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#mode-specific-parameters" title="Mode-specific parameters" class="md-nav__link">
     Mode-specific parameters
   </a>
@@ -548,6 +602,7 @@
 This file may contain an arbitrary number of configuration sections. Each section represents a single SSP21 <code>initiator</code> or <code>responder</code>
 configuration, e.g.:</p>
 <div class="codehilite"><pre><span></span><span class="k">[i-proxy]</span>
+<span class="na">proto_type</span><span class="o">=</span><span class="s">tcp</span>
 <span class="na">mode</span><span class="o">=</span><span class="s">&lt;initiator|responder&gt;</span>
 <span class="na">log_levels</span><span class="o">=</span><span class="s">iwemf</span>
 <span class="na">remote_address</span><span class="o">=</span><span class="s">1</span>
@@ -573,56 +628,24 @@ configuration, e.g.:</p>
 </thead>
 <tbody>
 <tr>
+<td>proto_type</td>
+<td>Defines the proxy uses <code>tcp</code> or <code>udp</code> as its transport protocol.</td>
+</tr>
+<tr>
 <td>mode</td>
-<td>Defines whether the session is an SSP21 <code>initiator</code> or a <code>responder</code></td>
+<td>Defines whether the session is an SSP21 <code>initiator</code> or a <code>responder</code>.</td>
 </tr>
 <tr>
 <td>log_levels</td>
-<td>string of enabled log levels (see <a href="#log-levels">table</a>)</td>
+<td>string of enabled log levels (see <a href="#log-levels">table</a>).</td>
 </tr>
 <tr>
 <td>remote_address</td>
-<td>16-bit remote address field to place in SSP21 link frames</td>
+<td>16-bit remote address field to place in SSP21 link frames (only if a link-layer is used).</td>
 </tr>
 <tr>
 <td>local_address</td>
-<td>16-bit local address field to place in SSP21 link frames and expect from remote SSP21 peer</td>
-</tr>
-<tr>
-<td>max sessions</td>
-<td>Number of allowed concurrent connections. When a new connection is received, the oldest is closed.</td>
-</tr>
-<tr>
-<td>listen_port</td>
-<td>For <code>inititor</code> mode, port where proxy will listen for the insecure protocol connection.</td>
-</tr>
-<tr>
-<td></td>
-<td>For <code>responder</code> mode, port where proxy will listen for SSP21 connection from an <code>initiator</code></td>
-</tr>
-<tr>
-<td>listen_endpoint</td>
-<td>For <code>inititor</code> mode, the IP address of the adapter on which the proxy will listen for the insecure protocol connection.</td>
-</tr>
-<tr>
-<td></td>
-<td>For <code>responder</code> mode, the IP address of the adapter on which the proxy will listen for SSP21 connection from an <code>initiator</code></td>
-</tr>
-<tr>
-<td>connect_port</td>
-<td>For <code>inititor</code> mode, port where proxy will attempt to connect and send SSP21 traffic.</td>
-</tr>
-<tr>
-<td></td>
-<td>For <code>responder</code> mode, port where proxy will attempt to connect and send insecure protcol traffic.</td>
-</tr>
-<tr>
-<td>connect_endpoint</td>
-<td>For <code>inititor</code> mode, the IP address to connect to and send SSP21 traffic</td>
-</tr>
-<tr>
-<td></td>
-<td>For <code>responder</code> mode, the IP address to connect to and send insecure protcol traffic</td>
+<td>16-bit local address field to place in SSP21 link frames and expect from remote SSP21 peer (only is a link-layer is used).</td>
 </tr>
 <tr>
 <td>handshake_mode</td>
@@ -674,6 +697,145 @@ configuration, e.g.:</p>
 <td>crypto fields</td>
 <td>f</td>
 <td>Log the individual fields in SSP21 messages</td>
+</tr>
+</tbody>
+</table>
+<h2 id="transport-specific-parameters">Transport-specific parameters</h2>
+<h3 id="tcp-mode">TCP mode</h3>
+<p>In TCP, the link-layer is always used because the transport layer is stream based. Therefore, SSP21 link-layer acts
+as a framing protocol.</p>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>max_sessions</td>
+<td>Number of allowed concurrent connections. When a new connection is received, the oldest is closed.</td>
+</tr>
+<tr>
+<td>listen_port</td>
+<td>For <code>initiator</code> mode, port where proxy will listen for the insecure protocol connection.</td>
+</tr>
+<tr>
+<td></td>
+<td>For <code>responder</code> mode, port where proxy will listen for SSP21 connection from an <code>initiator</code></td>
+</tr>
+<tr>
+<td>listen_endpoint</td>
+<td>For <code>initiator</code> mode, the IP address of the adapter on which the proxy will listen for the insecure protocol connection.</td>
+</tr>
+<tr>
+<td></td>
+<td>For <code>responder</code> mode, the IP address of the adapter on which the proxy will listen for SSP21 connection from an <code>initiator</code></td>
+</tr>
+<tr>
+<td>connect_port</td>
+<td>For <code>initiator</code> mode, port where proxy will attempt to connect and send SSP21 traffic.</td>
+</tr>
+<tr>
+<td></td>
+<td>For <code>responder</code> mode, port where proxy will attempt to connect and send insecure protcol traffic.</td>
+</tr>
+<tr>
+<td>connect_endpoint</td>
+<td>For <code>initiator</code> mode, the IP address to connect to and send SSP21 traffic</td>
+</tr>
+<tr>
+<td></td>
+<td>For <code>responder</code> mode, the IP address to connect to and send insecure protcol traffic</td>
+</tr>
+</tbody>
+</table>
+<h3 id="udp-mode">UDP mode</h3>
+<p>In UDP, the link-layer is not mandatory, since the transport protocol is datagram based. Therefore, it is possible
+to configure the proxy to include or not the link-layer with the <code>crypto_only</code> setting. Adding the link-layer permits
+to do data integrity if the operating system is not doing it on UDP in IPv4 (the UDP checksum is mandatory in IPv6).</p>
+<p>Since UDP is a connectionless transport protocol, it is mandatory to specify all the addresses and ports. The following schema
+illustrates the different settings:</p>
+<p><img alt="UDP proxy" src="../../img/udp.svg" /></p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Be careful when setting the ports so that no communication loops back.</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>crypto_only</td>
+<td>Specify if the SSP21 stack should include the optional link-layer.</td>
+</tr>
+<tr>
+<td>source_receive_endpoint</td>
+<td>For <code>initiator</code> mode, IP address where the proxy will listen for the insecure protocol traffic.</td>
+</tr>
+<tr>
+<td></td>
+<td>For <code>responder</code> mode, IP address where the proxy will listen for SSP21 traffic from an <code>initiator</code>.</td>
+</tr>
+<tr>
+<td>source_receive_port</td>
+<td>For <code>initiator</code> mode, port where the proxy will listen for the insecure protocol connection.</td>
+</tr>
+<tr>
+<td></td>
+<td>For <code>responder</code> mode, port where the proxy will listen for the SSP21 connection from an <code>initiator</code>.</td>
+</tr>
+<tr>
+<td>source_send_endpoint</td>
+<td>For <code>initiator</code> mode, IP address where the proxy will send insecure protocol traffic.</td>
+</tr>
+<tr>
+<td></td>
+<td>For <code>responder</code> mode, IP address where the proxy will send SSP21 traffic.</td>
+</tr>
+<tr>
+<td>source_send_port</td>
+<td>For <code>initiator</code> mode, port where the proxy will send insecure protocol traffic.</td>
+</tr>
+<tr>
+<td></td>
+<td>For <code>responder</code> mode, port where the proxy will send SSP21 traffic.</td>
+</tr>
+<tr>
+<td>destination_receive_endpoint</td>
+<td>For <code>initiator</code> mode, IP address where the proxy will listen for SSP21 traffic from a <code>responder</code>.</td>
+</tr>
+<tr>
+<td></td>
+<td>For <code>responder</code> mode, IP address where the proxy will listen for insecure protocol traffic.</td>
+</tr>
+<tr>
+<td>destination_receive_port</td>
+<td>For <code>initiator</code> mode, port where the proxy will listen for SSP21 traffic from a <code>responder</code>.</td>
+</tr>
+<tr>
+<td></td>
+<td>For <code>responder</code> mode, port where the proxy will listen for insecure protocol traffic.</td>
+</tr>
+<tr>
+<td>destination_send_endpoint</td>
+<td>For <code>initiator</code> mode, IP address where the proxy will send SSP21 protocol traffic.</td>
+</tr>
+<tr>
+<td></td>
+<td>For <code>responder</code> mode, IP address where the proxy will send insecure protocol traffic.</td>
+</tr>
+<tr>
+<td>destination_send_port</td>
+<td>For <code>initiator</code> mode, port where the proxy will send SSP21 protocol traffic.</td>
+</tr>
+<tr>
+<td></td>
+<td>For <code>responder</code> mode, port where the proxy will send insecure protocol traffic.</td>
 </tr>
 </tbody>
 </table>
