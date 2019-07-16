@@ -45,22 +45,22 @@ namespace ssp21
         // IUpperLayer
         virtual void on_lower_open_impl()
         {
-            upper.on_lower_open_impl();
+            upper.on_lower_open();
         }
 
         virtual void on_lower_close_impl()
         {
-            upper.on_lower_close_impl();
+            upper.on_lower_close();
         }
 
         virtual void on_lower_tx_ready_impl()
         {
-            upper.on_lower_tx_ready_impl();
+            upper.on_lower_tx_ready();
         }
 
         virtual void on_lower_rx_ready_impl()
         {
-            upper.on_lower_rx_ready_impl();
+            upper.on_lower_rx_ready();
         }
 
     private:
