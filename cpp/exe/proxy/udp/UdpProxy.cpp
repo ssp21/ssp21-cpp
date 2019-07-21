@@ -61,25 +61,10 @@ void UdpProxy::start_session()
         this->on_session_error();
     };
 
-    AsioUdpSocketWrapper::endpoint_t lower_receive_endpoint;
-    AsioUdpSocketWrapper::endpoint_t lower_send_endpoint;
-    AsioUdpSocketWrapper::endpoint_t upper_receive_endpoint;
-    AsioUdpSocketWrapper::endpoint_t upper_send_endpoint;
-    
-    if(mode == ProxyConfig::EndpointMode::initiator)
-    {
-        lower_receive_endpoint = this->secure_rx_endpoint;
-        lower_send_endpoint = this->secure_tx_endpoint;
-        upper_receive_endpoint = this->raw_rx_endpoint;
-        upper_send_endpoint = this->raw_tx_endpoint;
-    }
-    else
-    {
-        lower_receive_endpoint = this->secure_rx_endpoint;
-        lower_send_endpoint = this->secure_tx_endpoint;
-        upper_receive_endpoint = this->raw_rx_endpoint;
-        upper_send_endpoint = this->raw_tx_endpoint;
-    }
+    AsioUdpSocketWrapper::endpoint_t lower_receive_endpoint(this->secure_rx_endpoint);
+    AsioUdpSocketWrapper::endpoint_t lower_send_endpoint(this->secure_tx_endpoint);
+    AsioUdpSocketWrapper::endpoint_t upper_receive_endpoint(this->raw_rx_endpoint);
+    AsioUdpSocketWrapper::endpoint_t upper_send_endpoint(this->raw_tx_endpoint);    
 
     auto lower_layer_logger = this->logger.detach_and_append("-lower");
     auto lower_layer = std::make_unique<AsioLowerLayer>(lower_layer_logger);
