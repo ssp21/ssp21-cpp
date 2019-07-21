@@ -12,7 +12,7 @@
    version="1.1"
    id="svg3781"
    sodipodi:docname="udp.svg"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
   <metadata
      id="metadata3787">
     <rdf:RDF>
@@ -21,7 +21,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -157,15 +157,15 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="2400"
-     inkscape:window-height="1271"
+     inkscape:window-width="2560"
+     inkscape:window-height="1377"
      id="namedview3783"
      showgrid="false"
-     inkscape:zoom="0.74281925"
-     inkscape:cx="115.44249"
-     inkscape:cy="417.01389"
-     inkscape:window-x="-9"
-     inkscape:window-y="19"
+     inkscape:zoom="1.0505051"
+     inkscape:cx="304.01505"
+     inkscape:cy="399.757"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg3781" />
   <rect
@@ -173,8 +173,8 @@
      id="rect4780-6"
      width="704.31305"
      height="353.62549"
-     x="52.919159"
-     y="514.67657" />
+     x="54.823006"
+     y="525.14771" />
   <rect
      style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.67088604;stroke-miterlimit:4;stroke-dasharray:10.02531572, 10.02531572;stroke-dashoffset:0;stroke-opacity:1"
      id="rect4780"
@@ -344,35 +344,14 @@
   <text
      xml:space="preserve"
      style="font-style:normal;font-weight:normal;font-size:40px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-     x="539.83521"
-     y="187.17514"
-     id="text4702"><tspan
-       sodipodi:role="line"
-       id="tspan4700"
-       x="539.83521"
-       y="187.17514"
-       style="font-size:14.66666698px;line-height:0.5">source_send_enpoint</tspan><tspan
-       sodipodi:role="line"
-       x="539.83521"
-       y="208.12083"
-       id="tspan4704"
-       style="font-size:14.66666698px;line-height:0.5">source_send_port</tspan></text>
-  <text
-     xml:space="preserve"
-     style="font-style:normal;font-weight:normal;font-size:40px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-     x="146.67683"
-     y="181.47177"
+     x="165.71529"
+     y="179.56793"
      id="text4702-8"><tspan
        sodipodi:role="line"
-       id="tspan4700-9"
-       x="146.67683"
-       y="181.47177"
-       style="font-size:14.66666698px;line-height:0.5">source_receive_enpoint</tspan><tspan
-       sodipodi:role="line"
-       x="146.67683"
-       y="202.41747"
+       x="165.71529"
+       y="179.56793"
        id="tspan4704-3"
-       style="font-size:14.66666698px;line-height:0.5">source_receive_port</tspan></text>
+       style="font-size:14.66666698px;line-height:0.5">raw.rx.{ip, port}</tspan></text>
   <path
      style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker4692-2)"
      d="M 523.68056,803.7061 V 632.06273"
@@ -396,97 +375,78 @@
   <text
      xml:space="preserve"
      style="font-style:normal;font-weight:normal;font-size:40px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-     x="533.71582"
-     y="540.91327"
-     id="text4702-9"><tspan
+     x="548.09283"
+     y="185.39444"
+     id="text4702-8-7"><tspan
        sodipodi:role="line"
-       id="tspan4700-6"
-       x="533.71582"
-       y="540.91327"
-       style="font-size:14.66666698px;line-height:0.5">source_send_enpoint</tspan><tspan
-       sodipodi:role="line"
-       x="533.71582"
-       y="561.85895"
-       id="tspan4704-4"
-       style="font-size:14.66666698px;line-height:0.5">source_send_port</tspan></text>
+       x="548.09283"
+       y="185.39444"
+       id="tspan4704-3-2"
+       style="font-size:14.66666698px;line-height:0.5">raw.tx.{ip, port}</tspan></text>
   <text
      xml:space="preserve"
      style="font-style:normal;font-weight:normal;font-size:40px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-     x="143.09558"
-     y="535.99738"
-     id="text4702-8-4"><tspan
+     x="164.46783"
+     y="327.23096"
+     id="text4702-8-5"><tspan
        sodipodi:role="line"
-       id="tspan4700-9-5"
-       x="143.09558"
-       y="535.99738"
-       style="font-size:14.66666698px;line-height:0.5">source_receive_enpoint</tspan><tspan
-       sodipodi:role="line"
-       x="143.09558"
-       y="556.94305"
-       id="tspan4704-3-7"
-       style="font-size:14.66666698px;line-height:0.5">source_receive_port</tspan></text>
+       x="164.46783"
+       y="327.23096"
+       id="tspan4704-3-0"
+       style="font-size:14.66666698px;line-height:0.5">secure.tx.{ip, port}</tspan></text>
   <text
      xml:space="preserve"
      style="font-style:normal;font-weight:normal;font-size:40px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-     x="529.67712"
-     y="305.32428"
-     id="text4702-9-5"><tspan
+     x="546.1579"
+     y="318.66367"
+     id="text4702-8-5-3"><tspan
        sodipodi:role="line"
-       id="tspan4700-6-4"
-       x="529.67712"
-       y="305.32428"
-       style="font-size:14.66666698px;line-height:0.5">destination_receive_enpoint</tspan><tspan
-       sodipodi:role="line"
-       x="529.67712"
-       y="326.26999"
-       id="tspan4704-4-4"
-       style="font-size:14.66666698px;line-height:0.5">destination_receive_port</tspan></text>
+       x="546.1579"
+       y="318.66367"
+       id="tspan4704-3-0-1"
+       style="font-size:14.66666698px;line-height:0.5">secure.rx.{ip, port}</tspan></text>
   <text
      xml:space="preserve"
      style="font-style:normal;font-weight:normal;font-size:40px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-     x="140.75241"
-     y="309.36295"
-     id="text4702-9-5-2"><tspan
+     x="164.19324"
+     y="556.64441"
+     id="text4702-8-5-3-0"><tspan
        sodipodi:role="line"
-       id="tspan4700-6-4-3"
-       x="140.75241"
-       y="309.36295"
-       style="font-size:14.66666698px;line-height:0.5">destination_send_enpoint</tspan><tspan
-       sodipodi:role="line"
-       x="140.75241"
-       y="330.30865"
-       id="tspan4704-4-4-9"
-       style="font-size:14.66666698px;line-height:0.5">destination_send_port</tspan></text>
+       x="164.19324"
+       y="556.64441"
+       id="tspan4704-3-0-1-2"
+       style="font-size:14.66666698px;line-height:0.5">secure.rx.{ip, port}</tspan></text>
   <text
      xml:space="preserve"
      style="font-style:normal;font-weight:normal;font-size:40px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-     x="136.04062"
-     y="657.36145"
-     id="text4702-9-5-4"><tspan
+     x="546.15784"
+     y="555.6925"
+     id="text4702-8-5-0"><tspan
        sodipodi:role="line"
-       id="tspan4700-6-4-9"
-       x="136.04062"
-       y="657.36145"
-       style="font-size:14.66666698px;line-height:0.5">destination_receive_enpoint</tspan><tspan
-       sodipodi:role="line"
-       x="136.04062"
-       y="678.30713"
-       id="tspan4704-4-4-92"
-       style="font-size:14.66666698px;line-height:0.5">destination_receive_port</tspan></text>
+       x="546.15784"
+       y="555.6925"
+       id="tspan4704-3-0-2"
+       style="font-size:14.66666698px;line-height:0.5">secure.tx.{ip, port}</tspan></text>
   <text
      xml:space="preserve"
      style="font-style:normal;font-weight:normal;font-size:40px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-     x="535.41125"
-     y="662.07324"
-     id="text4702-9-5-2-6"><tspan
+     x="557.61206"
+     y="681.34637"
+     id="text4702-8-2"><tspan
        sodipodi:role="line"
-       id="tspan4700-6-4-3-4"
-       x="535.41125"
-       y="662.07324"
-       style="font-size:14.66666698px;line-height:0.5">destination_send_enpoint</tspan><tspan
+       x="557.61206"
+       y="681.34637"
+       id="tspan4704-3-3"
+       style="font-size:14.66666698px;line-height:0.5">raw.rx.{ip, port}</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:40px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+     x="167.84596"
+     y="682.09637"
+     id="text4702-8-7-8"><tspan
        sodipodi:role="line"
-       x="535.41125"
-       y="683.01892"
-       id="tspan4704-4-4-9-1"
-       style="font-size:14.66666698px;line-height:0.5">destination_send_port</tspan></text>
+       x="167.84596"
+       y="682.09637"
+       id="tspan4704-3-2-8"
+       style="font-size:14.66666698px;line-height:0.5">raw.tx.{ip, port}</tspan></text>
 </svg>

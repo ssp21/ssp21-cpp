@@ -607,13 +607,8 @@ configuration, e.g.:</p>
 <span class="na">log_levels</span><span class="o">=</span><span class="s">iwemf</span>
 <span class="na">remote_address</span><span class="o">=</span><span class="s">1</span>
 <span class="na">local_address</span><span class="o">=</span><span class="s">10</span>
-<span class="na">max_sessions</span><span class="o">=</span><span class="s">1</span>
-<span class="na">listen_port</span><span class="o">=</span><span class="s">20000</span>
-<span class="na">listen_endpoint</span><span class="o">=</span><span class="s">127.0.0.1</span>
-<span class="na">connect_port</span><span class="o">=</span><span class="s">20001</span>
-<span class="na">connect_endpoint</span><span class="o">=</span><span class="s">127.0.0.1</span>
 <span class="na">handshake_mode</span><span class="o">=</span><span class="s">&lt;shared_secret|qkd|preshared|certificate&gt;</span>
-<span class="c1">; additional parameters depend on the handshake mode </span>
+<span class="c1">; additional parameters depend on the handshake mode or protocol type</span>
 </pre></div>
 
 
@@ -774,68 +769,36 @@ illustrates the different settings:</p>
 <td>Specify if the SSP21 stack should include the optional link-layer.</td>
 </tr>
 <tr>
-<td>source_receive_endpoint</td>
-<td>For <code>initiator</code> mode, IP address where the proxy will listen for the insecure protocol traffic.</td>
+<td>raw.rx.ip</td>
+<td>The IP address where the proxy listens for insecure traffic</td>
 </tr>
 <tr>
-<td></td>
-<td>For <code>responder</code> mode, IP address where the proxy will listen for SSP21 traffic from an <code>initiator</code>.</td>
+<td>raw.rx.port</td>
+<td>The port where the proxy listens for insecure traffic</td>
 </tr>
 <tr>
-<td>source_receive_port</td>
-<td>For <code>initiator</code> mode, port where the proxy will listen for the insecure protocol connection.</td>
+<td>raw.tx.ip</td>
+<td>The IP address to which the proxy writes insecure traffic</td>
 </tr>
 <tr>
-<td></td>
-<td>For <code>responder</code> mode, port where the proxy will listen for the SSP21 connection from an <code>initiator</code>.</td>
+<td>raw.tx.port</td>
+<td>The port to which the proxy writes insecure traffic</td>
 </tr>
 <tr>
-<td>source_send_endpoint</td>
-<td>For <code>initiator</code> mode, IP address where the proxy will send insecure protocol traffic.</td>
+<td>secure.rx.ip</td>
+<td>The IP address where the proxy listens for SSP21 traffic</td>
 </tr>
 <tr>
-<td></td>
-<td>For <code>responder</code> mode, IP address where the proxy will send SSP21 traffic.</td>
+<td>secure.rx.port</td>
+<td>The port where the proxy listens for SSP21 traffic</td>
 </tr>
 <tr>
-<td>source_send_port</td>
-<td>For <code>initiator</code> mode, port where the proxy will send insecure protocol traffic.</td>
+<td>secure.tx.ip</td>
+<td>The IP address to which the proxy writes SSP21 traffic</td>
 </tr>
 <tr>
-<td></td>
-<td>For <code>responder</code> mode, port where the proxy will send SSP21 traffic.</td>
-</tr>
-<tr>
-<td>destination_receive_endpoint</td>
-<td>For <code>initiator</code> mode, IP address where the proxy will listen for SSP21 traffic from a <code>responder</code>.</td>
-</tr>
-<tr>
-<td></td>
-<td>For <code>responder</code> mode, IP address where the proxy will listen for insecure protocol traffic.</td>
-</tr>
-<tr>
-<td>destination_receive_port</td>
-<td>For <code>initiator</code> mode, port where the proxy will listen for SSP21 traffic from a <code>responder</code>.</td>
-</tr>
-<tr>
-<td></td>
-<td>For <code>responder</code> mode, port where the proxy will listen for insecure protocol traffic.</td>
-</tr>
-<tr>
-<td>destination_send_endpoint</td>
-<td>For <code>initiator</code> mode, IP address where the proxy will send SSP21 protocol traffic.</td>
-</tr>
-<tr>
-<td></td>
-<td>For <code>responder</code> mode, IP address where the proxy will send insecure protocol traffic.</td>
-</tr>
-<tr>
-<td>destination_send_port</td>
-<td>For <code>initiator</code> mode, port where the proxy will send SSP21 protocol traffic.</td>
-</tr>
-<tr>
-<td></td>
-<td>For <code>responder</code> mode, port where the proxy will send insecure protocol traffic.</td>
+<td>secure.tx.port</td>
+<td>The port to which the proxy writes SSP21 traffic</td>
 </tr>
 </tbody>
 </table>
