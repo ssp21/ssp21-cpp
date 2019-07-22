@@ -124,66 +124,76 @@ stack_factory_t ConfigSection::get_initiator_shared_secret_factory(const ssp21::
 {
     const auto shared_secret = this->get_shared_secret();
 
-    return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
+    if(addresses)
     {
-        CryptoSuite suite;
-        suite.handshake_ephemeral = HandshakeEphemeral::nonce;
+        const auto addresses_copy = *addresses;
+        return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
+            CryptoSuite suite;
+            suite.handshake_ephemeral = HandshakeEphemeral::nonce;
 
-        if (addresses)
-        {
             return initiator::factory::shared_secret_mode(
-                    *addresses,
+                    addresses_copy,
+                    InitiatorConfig(),	// TODO: default
+                    logger,
+                    executor,
+                    suite,
+                    shared_secret
+            );
+        };
+    }
+    else
+    {
+        return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
+            CryptoSuite suite;
+            suite.handshake_ephemeral = HandshakeEphemeral::nonce;
+
+            return initiator::factory::shared_secret_mode(
                     InitiatorConfig(),	// TODO: default
                     logger,
                     executor,
                     suite,
                     shared_secret
                 );
-        }
-        else
-        {
-            return initiator::factory::shared_secret_mode(
-                    InitiatorConfig(),	// TODO: default
-                    logger,
-                    executor,
-                    suite,
-                    shared_secret
-                );
-        }
-    };
+        };
+    }
 }
 
 stack_factory_t ConfigSection::get_initiator_qkd_factory(const log4cpp::Logger& logger, const ssp21::Addresses* addresses)
 {
     const auto key_cache = this->get_qix_key_cache(logger);
 
-    return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
+    if(addresses)
     {
-        CryptoSuite suite;
-        suite.handshake_ephemeral = HandshakeEphemeral::none;
+        const auto addresses_copy = *addresses;
+        return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
+            CryptoSuite suite;
+            suite.handshake_ephemeral = HandshakeEphemeral::nonce;
 
-        if(addresses)
-        {
             return initiator::factory::qkd_mode(
-                    *addresses,
+                    addresses_copy,
+                    InitiatorConfig(),	// TODO: default
+                    logger,
+                    executor,
+                    suite,
+                    key_cache
+            );
+        };
+    }
+    else
+    {
+        return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
+            CryptoSuite suite;
+            suite.handshake_ephemeral = HandshakeEphemeral::nonce;
+
+            return initiator::factory::qkd_mode(
                     InitiatorConfig(),	// TODO: default
                     logger,
                     executor,
                     suite,
                     key_cache
                 );
-        }
-        else
-        {
-            return initiator::factory::qkd_mode(
-                    InitiatorConfig(),	// TODO: default
-                    logger,
-                    executor,
-                    suite,
-                    key_cache
-                );
-        }
-    };
+        };
+    }
 }
 
 stack_factory_t ConfigSection::get_initiator_preshared_public_key_factory(const ssp21::Addresses* addresses)
@@ -191,30 +201,40 @@ stack_factory_t ConfigSection::get_initiator_preshared_public_key_factory(const 
     const auto local_keys = this->get_local_static_keys();
     const auto remote_public_key = this->get_crypto_key<ssp21::PublicKey>(props::remote_public_key_path, ContainerEntryType::x25519_public_key);
 
-    return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
+    if(addresses)
     {
-        if(addresses)
-        {
+        const auto addresses_copy = *addresses;
+        return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
+            CryptoSuite suite;
+            suite.handshake_ephemeral = HandshakeEphemeral::nonce;
+
             return initiator::factory::preshared_public_key_mode(
-                    *addresses,
+                    addresses_copy,
                     InitiatorConfig(),	// TODO: default
                     logger,
                     executor,
                     CryptoSuite(),		// TODO: default
                     local_keys,
-                    remote_public_key);
-        }
-        else
-        {
+                    remote_public_key
+            );
+        };
+    }
+    else
+    {
+        return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
+            CryptoSuite suite;
+            suite.handshake_ephemeral = HandshakeEphemeral::nonce;
+
             return initiator::factory::preshared_public_key_mode(
                     InitiatorConfig(),	// TODO: default
                     logger,
                     executor,
                     CryptoSuite(),		// TODO: default
                     local_keys,
-                    remote_public_key);
-        }
-    };
+                    remote_public_key
+                );
+        };
+    }
 }
 
 stack_factory_t ConfigSection::get_initiator_certificate_mode_factory(const ssp21::Addresses* addresses)
@@ -223,12 +243,32 @@ stack_factory_t ConfigSection::get_initiator_certificate_mode_factory(const ssp2
     const auto anchor_cert_data = this->get_file_data(props::authority_cert_path);
     const auto local_cert_data = this->get_file_data(props::local_cert_path);
 
-    return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
+    if(addresses)
     {
-        if(addresses)
-        {
+        const auto addresses_copy = *addresses;
+        return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
+            CryptoSuite suite;
+            suite.handshake_ephemeral = HandshakeEphemeral::nonce;
+
             return initiator::factory::certificate_public_key_mode(
-                    *addresses,
+                    addresses_copy,
+                    InitiatorConfig(),	// TODO: default
+                    logger,
+                    executor,
+                    CryptoSuite(),		// TODO: default
+                    local_keys,
+                    anchor_cert_data,
+                    local_cert_data
+            );
+        };
+    }
+    else
+    {
+        return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
+            CryptoSuite suite;
+            suite.handshake_ephemeral = HandshakeEphemeral::nonce;
+
+            return initiator::factory::certificate_public_key_mode(
                     InitiatorConfig(),	// TODO: default
                     logger,
                     executor,
@@ -237,20 +277,8 @@ stack_factory_t ConfigSection::get_initiator_certificate_mode_factory(const ssp2
                     anchor_cert_data,
                     local_cert_data
                 );
-        }
-        else
-        {
-            return initiator::factory::certificate_public_key_mode(
-                    InitiatorConfig(),	// TODO: default
-                    logger,
-                    executor,
-                    CryptoSuite(),		// TODO: default
-                    local_keys,
-                    anchor_cert_data,
-                    local_cert_data
-                );
-        }
-    };
+        };
+    }
 }
 
 stack_factory_t ConfigSection::get_responder_factory(const log4cpp::Logger& logger, const ssp21::Addresses* addresses)
@@ -275,56 +303,72 @@ stack_factory_t ConfigSection::get_responder_shared_secret_factory(const ssp21::
 {
     const auto shared_secret = this->get_shared_secret();
 
-    return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
+    if(addresses)
     {
-        if(addresses)
-        {
+        const auto addresses_copy = *addresses;
+        return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
+            CryptoSuite suite;
+            suite.handshake_ephemeral = HandshakeEphemeral::nonce;
+
             return responder::factory::shared_secret_mode(
-                    *addresses,
+                    addresses_copy,
+                    ResponderConfig(),	// TODO: default
+                    logger,
+                    executor,
+                    shared_secret
+            );
+        };
+    }
+    else
+    {
+        return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
+            CryptoSuite suite;
+            suite.handshake_ephemeral = HandshakeEphemeral::nonce;
+
+            return responder::factory::shared_secret_mode(
                     ResponderConfig(),	// TODO: default
                     logger,
                     executor,
                     shared_secret
                 );
-        }
-        else
-        {
-            return responder::factory::shared_secret_mode(
-                   ResponderConfig(),	// TODO: default
-                   logger,
-                   executor,
-                   shared_secret
-               );
-        }
-    };
+        };
+    }
 }
 
 stack_factory_t ConfigSection::get_responder_qkd_factory(const log4cpp::Logger& logger, const ssp21::Addresses* addresses)
 {
     const auto key_cache = this->get_qix_key_cache(logger);
 
-    return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
+    if(addresses)
     {
-        if(addresses)
-        {
+        const auto addresses_copy = *addresses;
+        return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
+            CryptoSuite suite;
+            suite.handshake_ephemeral = HandshakeEphemeral::nonce;
+
             return responder::factory::qkd_mode(
-                    *addresses,
+                    addresses_copy,
+                    ResponderConfig(),	// TODO: default
+                    logger,
+                    executor,
+                    key_cache
+            );
+        };
+    }
+    else
+    {
+        return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
+            CryptoSuite suite;
+            suite.handshake_ephemeral = HandshakeEphemeral::nonce;
+
+            return responder::factory::qkd_mode(
                     ResponderConfig(),	// TODO: default
                     logger,
                     executor,
                     key_cache
                 );
-        }
-        else
-        {
-            return responder::factory::qkd_mode(
-                   ResponderConfig(),	// TODO: default
-                   logger,
-                   executor,
-                   key_cache
-               );
-        }
-    };
+        };
+    }
 }
 
 stack_factory_t ConfigSection::get_responder_preshared_public_key_factory(const ssp21::Addresses* addresses)
@@ -332,28 +376,38 @@ stack_factory_t ConfigSection::get_responder_preshared_public_key_factory(const 
     const auto local_keys = this->get_local_static_keys();
     const auto remote_public_key = this->get_crypto_key<ssp21::PublicKey>(props::remote_public_key_path, ContainerEntryType::x25519_public_key);
 
-    return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
+    if(addresses)
     {
-        if(addresses)
-        {
+        const auto addresses_copy = *addresses;
+        return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
+            CryptoSuite suite;
+            suite.handshake_ephemeral = HandshakeEphemeral::nonce;
+
             return responder::factory::preshared_public_key_mode(
-                    *addresses,
+                    addresses_copy,
                     ResponderConfig(),	// TODO: default
                     logger,
                     executor,
                     local_keys,
-                    remote_public_key);
-        }
-        else
-        {
+                    remote_public_key
+            );
+        };
+    }
+    else
+    {
+        return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
+            CryptoSuite suite;
+            suite.handshake_ephemeral = HandshakeEphemeral::nonce;
+
             return responder::factory::preshared_public_key_mode(
-                   ResponderConfig(),	// TODO: default
-                   logger,
-                   executor,
-                   local_keys,
-                   remote_public_key);
-        }
-    };
+                    ResponderConfig(),	// TODO: default
+                    logger,
+                    executor,
+                    local_keys,
+                    remote_public_key
+                );
+        };
+    }
 }
 
 stack_factory_t ConfigSection::get_responder_certificate_mode_factory(const ssp21::Addresses* addresses)
@@ -362,12 +416,31 @@ stack_factory_t ConfigSection::get_responder_certificate_mode_factory(const ssp2
     const auto anchor_cert_data = this->get_file_data(props::authority_cert_path);
     const auto local_cert_data = this->get_file_data(props::local_cert_path);
 
-    return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor)
+    if(addresses)
     {
-        if(addresses)
-        {
+        const auto addresses_copy = *addresses;
+        return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
+            CryptoSuite suite;
+            suite.handshake_ephemeral = HandshakeEphemeral::nonce;
+
             return responder::factory::certificate_public_key_mode(
-                    *addresses,
+                    addresses_copy,
+                    ResponderConfig(),	// TODO: default
+                    logger,
+                    executor,
+                    local_keys,
+                    anchor_cert_data,
+                    local_cert_data
+            );
+        };
+    }
+    else
+    {
+        return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
+            CryptoSuite suite;
+            suite.handshake_ephemeral = HandshakeEphemeral::nonce;
+
+            return responder::factory::certificate_public_key_mode(
                     ResponderConfig(),	// TODO: default
                     logger,
                     executor,
@@ -375,19 +448,8 @@ stack_factory_t ConfigSection::get_responder_certificate_mode_factory(const ssp2
                     anchor_cert_data,
                     local_cert_data
                 );
-        }
-        else
-        {
-            return responder::factory::certificate_public_key_mode(
-                    ResponderConfig(),	// TODO: default
-                    logger,
-                    executor,
-                    local_keys,
-                    anchor_cert_data,
-                    local_cert_data
-                );
-        }
-    };
+        };
+    }
 }
 
 Addresses ConfigSection::get_addresses()
