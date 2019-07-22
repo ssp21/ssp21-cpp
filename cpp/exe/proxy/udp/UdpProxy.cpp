@@ -17,10 +17,10 @@ UdpProxy::UdpProxy(
 ) :
     executor(executor),
     logger(logger),
-    source_receive_endpoint(ip::address::from_string(config.source_receive_endpoint), config.source_receive_port),
-    source_send_endpoint(ip::address::from_string(config.source_send_endpoint), config.source_send_port),
-    destination_receive_endpoint(ip::address::from_string(config.destination_receive_endpoint), config.destination_receive_port),
-    destination_send_endpoint(ip::address::from_string(config.destination_send_endpoint), config.destination_send_port),
+    raw_tx_endpoint(ip::address::from_string(config.raw_tx_endpoint.ip_address), config.raw_tx_endpoint.port),
+    raw_rx_endpoint(ip::address::from_string(config.raw_rx_endpoint.ip_address), config.raw_rx_endpoint.port),
+    secure_tx_endpoint(ip::address::from_string(config.secure_tx_endpoint.ip_address), config.secure_tx_endpoint.port),
+    secure_rx_endpoint(ip::address::from_string(config.secure_rx_endpoint.ip_address), config.secure_rx_endpoint.port),
     mode(config.endpoint_mode),
     factory(config.factory)
 {}
@@ -30,17 +30,19 @@ void UdpProxy::start()
     FORMAT_LOG_BLOCK(
         this->logger,
         levels::info,
-        "source: receiving on %s:%u and sending to %s:%u.",
-        this->source_receive_endpoint.address().to_string().c_str(), this->source_receive_endpoint.port(),
-        this->source_send_endpoint.address().to_string().c_str(), this->source_send_endpoint.port()
+        "receiving raw traffic on %s:%u, wrapping in SSP21, and sending to %s:%u",
+        this->raw_rx_endpoint.address().to_string().c_str(), this->raw_rx_endpoint.port(),
+        this->secure_tx_endpoint.address().to_string().c_str(), this->secure_tx_endpoint.port()
     );
+
     FORMAT_LOG_BLOCK(
         this->logger,
         levels::info,
-        "destination: receiving on %s:%u and sending to %s:%u.",
-        this->destination_receive_endpoint.address().to_string().c_str(), this->destination_receive_endpoint.port(),
-        this->destination_send_endpoint.address().to_string().c_str(), this->destination_send_endpoint.port()
+        "receiving SSP21 traffic on %s:%u, unwrapping, and sending raw traffic to %s:%u",
+        this->secure_rx_endpoint.address().to_string().c_str(), this->secure_rx_endpoint.port(),
+        this->raw_tx_endpoint.address().to_string().c_str(), this->raw_tx_endpoint.port()
     );
+
     this->start_session();
 }
 
@@ -59,24 +61,10 @@ void UdpProxy::start_session()
         this->on_session_error();
     };
 
-    AsioUdpSocketWrapper::endpoint_t lower_receive_endpoint;
-    AsioUdpSocketWrapper::endpoint_t lower_send_endpoint;
-    AsioUdpSocketWrapper::endpoint_t upper_receive_endpoint;
-    AsioUdpSocketWrapper::endpoint_t upper_send_endpoint;
-    if(mode == ProxyConfig::EndpointMode::initiator)
-    {
-        lower_receive_endpoint = destination_receive_endpoint;
-        lower_send_endpoint = destination_send_endpoint;
-        upper_receive_endpoint = source_receive_endpoint;
-        upper_send_endpoint = source_send_endpoint;
-    }
-    else
-    {
-        lower_receive_endpoint = source_receive_endpoint;
-        lower_send_endpoint = source_send_endpoint;
-        upper_receive_endpoint = destination_receive_endpoint;
-        upper_send_endpoint = destination_send_endpoint;
-    }
+    AsioUdpSocketWrapper::endpoint_t lower_receive_endpoint(this->secure_rx_endpoint);
+    AsioUdpSocketWrapper::endpoint_t lower_send_endpoint(this->secure_tx_endpoint);
+    AsioUdpSocketWrapper::endpoint_t upper_receive_endpoint(this->raw_rx_endpoint);
+    AsioUdpSocketWrapper::endpoint_t upper_send_endpoint(this->raw_tx_endpoint);    
 
     auto lower_layer_logger = this->logger.detach_and_append("-lower");
     auto lower_layer = std::make_unique<AsioLowerLayer>(lower_layer_logger);
