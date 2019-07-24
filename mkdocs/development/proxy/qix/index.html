@@ -454,13 +454,14 @@
 <h2 id="qix-emulator">QIX Emulator</h2>
 <p>The project includes a command line application called <code>qix-emulator</code> that can read and write frames via a serial port.</p>
 <div class="codehilite"><pre><span></span>&gt; qix-emulator --help
-
     -h, --help
         shows this help message
     -r, --read
         read QIX frames
     -w, --write
-        read QIX frames
+        write random QIX frames
+    -m, --twrite
+        write time-based QIX frames modulo n milliseconds
     -p, --port
         serial port
     -t, --rate
@@ -500,6 +501,21 @@ read: 4 - ok - 70 0A D4 86 E0 29 93 CC 04 4D 68 A0 89 84 0C F5 EA BB 97 BD 84 0C
 <p>If you want to write the same key data to two ports to test a proxy link without QKD hardware, just supply two port arguments:</p>
 <div class="codehilite"><pre><span></span>&gt; ./qix-emulator -w -p /dev/pts/1 -p /dev/pts/2
 </pre></div>
+
+
+<p>The emulator can also simulate (insecurely) a QKD receiver pair by generating key IDs and key data based on the system time:</p>
+<div class="codehilite"><pre><span></span>qix-emulator -m 500 -p /dev/pts/2
+wrote: 1563995785500 - ok - B4 27 31 95 04 BA D6 77 6F 47 1C C8 8B B1 8E 0F 22 BA F0 0E 53 2B 65 BB B5 40 36 69 27 56 6F E3
+wrote: 1563995786000 - ok - 8D B0 3C 4D AE 3C 44 38 FE A6 05 E7 92 06 9D 5A DD AA 7C 3C 5A C8 B3 0B 2D 9F E5 C6 D7 AE 89 E8
+wrote: 1563995786500 - ok - 87 92 D8 15 2E 3C 93 72 68 8D E5 17 30 74 FE 14 20 88 A4 E3 64 F4 D4 B0 DA ED 74 AF 3B 29 9A 26
+wrote: 1563995787000 - ok - A3 DF 17 5F 4C DA 44 AC 04 ED 56 35 C7 06 2F 4F 59 BB 39 86 8E 62 7C 24 E5 48 81 81 A3 F0 13 F2
+</pre></div>
+
+
+<p>In this mode, the emulator writes a key whenever the current time since epoch modulo parameter m == 0. In the example above, the emulator
+writes a key twice per second. The millisecond timestamp is used as the key identifier. The key data is the SHA256 hash of
+the big endian serialization of the key identifier. Multiple instances of the application will emit the same keys and identifiers if they are configured with
+the same modulo parameter. The synchronicity of their transmissions relies on the accuracy of their time sync.</p>
                 
                   
                 
