@@ -58,7 +58,7 @@ int main(int argc, char*  argv[])
 	argagg::parser parser {{
 		{ "help", { "-h", "--help" }, "shows this help message", 0 },
 		{ "read", { "-r", "--read" }, "read QIX frames", 0 },
-		{ "write", { "-w", "--write" }, "read QIX frames", 0 },
+		{ "write", { "-w", "--write" }, "write QIX frames", 0 },
 		{ "port", { "-p", "--port" }, "serial port", 1 },
 		{ "rate", { "-t", "--rate" }, "number of keys per second (write only) - defaults to 1", 1 },
         { "count", { "-c", "--count" }, "number of frames to transmit (write only) - defaults to 2^64 -1", 1 },
