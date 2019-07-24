@@ -216,9 +216,12 @@ int write_time_based_frames(const std::vector<std::string>& ports, uint64_t fram
         // the next millisecond modulo is the key id
         const auto key_id = to_ms_since_epoch(next);
 
-        // the key itself is the SHA2 hash of the key id
-        ser4cpp::UInt64::write_to(key_id_buffer.as_wseq(), key_id);  //serialize as BigEndian
-        ssp21::Crypto::hash_sha256({ key_id_buffer.as_seq() }, key_buffer);
+        {
+            auto output = key_id_buffer.as_wseq();
+            // the key itself is the SHA2 hash of the key id
+            ser4cpp::UInt64::write_to(output, key_id);  //serialize as BigEndian
+            ssp21::Crypto::hash_sha256({ key_id_buffer.as_seq() }, key_buffer);
+        }
 
         const QIXFrame frame{ key_id , key_buffer.as_seq(), QIXFrame::Status::ok };
 
