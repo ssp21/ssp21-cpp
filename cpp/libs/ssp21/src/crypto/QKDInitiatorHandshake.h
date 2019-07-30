@@ -18,7 +18,7 @@ namespace ssp21
     {
     public:
 
-        QKDInitiatorHandshake(const log4cpp::Logger& logger, const CryptoSuite& crypto_suite, const std::shared_ptr<IKeySource>& key_source);
+        QKDInitiatorHandshake(const log4cpp::Logger& logger, const CryptoSuite& crypto_suite, std::shared_ptr<IKeySource> key_source);
 
         inline static std::shared_ptr<IInitiatorHandshake> make_shared(const log4cpp::Logger& logger, const CryptoSuite& crypto_suite, const std::shared_ptr<IKeySource>& key_source)
         {

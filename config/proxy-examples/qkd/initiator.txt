@@ -1,8 +1,9 @@
 [i-proxy]
 mode=initiator
+proto_type=tcp
 handshake_mode=qkd
 log_levels=iwemf
-serial_port=COM2
+serial_port=/dev/pts/6
 remote_address=1
 local_address=10
 max_sessions=1

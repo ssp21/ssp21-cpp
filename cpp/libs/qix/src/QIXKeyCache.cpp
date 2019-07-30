@@ -67,7 +67,7 @@ void QIXKeyCache::handle(const QIXFrame& frame)
 
 void QIXKeyCache::add_key_to_map(const QIXFrame& frame)
 {
-    FORMAT_LOG_BLOCK(this->logger, ssp21::levels::info, "Received new key w/ id: %" PRIu64, frame.key_id);
+    //FORMAT_LOG_BLOCK(this->logger, ssp21::levels::info, "Received new key w/ id: %" PRIu64, frame.key_id);
     this->key_map[frame.key_id] = std::make_shared<ssp21::KeyRecord>(frame.key_id, frame.key_data);
 }
 

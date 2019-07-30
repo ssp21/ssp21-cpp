@@ -1,10 +1,11 @@
 [r-proxy]
 mode=responder
+proto_type=tcp
 handshake_mode=qkd
 log_levels=iwemf
-serial_port=COM2
-remote_address=1
-local_address=10
+serial_port=/dev/pts/3
+remote_address=10
+local_address=1
 max_sessions=1
 listen_port=20001
 listen_endpoint=127.0.0.1

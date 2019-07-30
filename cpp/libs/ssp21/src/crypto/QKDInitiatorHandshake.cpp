@@ -8,15 +8,15 @@
 
 namespace ssp21
 {
-    QKDInitiatorHandshake::QKDInitiatorHandshake(const log4cpp::Logger& logger, const CryptoSuite& crypto_suite, const std::shared_ptr<IKeySource>& key_source) :
+    QKDInitiatorHandshake::QKDInitiatorHandshake(const log4cpp::Logger& logger, const CryptoSuite& crypto_suite, std::shared_ptr<IKeySource> key_source) :
         logger(logger),
         crypto_suite(crypto_suite),
         algorithms(crypto_suite),
-        key_source(key_source)
+        key_source(std::move(key_source))
     {
         if (crypto_suite.handshake_ephemeral != HandshakeEphemeral::none)
         {
-            throw new Exception("handshake_ephemeral must be 'none'");
+            throw Exception("handshake_ephemeral must be 'none'");
         }
     }
 

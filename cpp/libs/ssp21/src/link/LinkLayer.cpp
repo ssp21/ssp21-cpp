@@ -66,7 +66,7 @@ namespace ssp21
         return this->lower->start_tx_from_upper(data);
     }
 
-    // ---- privat ehelpers -----
+    // ---- private helpers -----
 
     bool LinkLayer::get_frame()
     {
