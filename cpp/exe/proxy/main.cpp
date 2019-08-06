@@ -6,6 +6,7 @@
 
 #include <log4cpp/ConsolePrettyPrinter.h>
 #include <ssp21/stack/LogLevels.h>
+#include <ssp21/stack/Version.h>
 #include <sodium/CryptoBackend.h>
 #include <log4cpp/LogMacros.h>
 
@@ -28,8 +29,17 @@ int main(int argc, char*  argv[])
 
     if (argc != 2)
     {
-        cerr << "Usage: ssp21-proxy <path to ini file>" << endl;
+        cerr << "Usage:" << endl << endl;
+        cerr << "ssp21-proxy -v      # prints version info" << endl;
+        cerr << "ssp21-proxy <path>  # runs the proxy with specified configuration file" << endl;
         return -1;
+    }
+
+    if (strcmp(argv[1], "-v") == 0)
+    {
+        cout << "git commit date: " << version::git_commit_date() << std::endl;
+        cout << "git commit hash: " << version::git_commit_hash() << std::endl;
+        return 0;
     }
 
     try

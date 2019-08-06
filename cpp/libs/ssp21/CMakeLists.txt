@@ -47,6 +47,7 @@ set(ssp21_public_headers
     ./include/ssp21/stack/IStack.h
     ./include/ssp21/stack/IUpperLayer.h
     ./include/ssp21/stack/LogLevels.h
+    ./include/ssp21/stack/Version.h
 
     ./include/ssp21/util/ErrorCategory.h
     ./include/ssp21/util/Exception.h
@@ -184,8 +185,23 @@ set(ssp21_srcs
     ./src/link/LinkParser.cpp
 
     ./src/stack/Factory.cpp
+    ./src/stack/Version.cpp
 
     ./src/util/SecureFile.cpp
+)
+
+execute_process(
+		COMMAND git log -1 --format=%H
+		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+		OUTPUT_VARIABLE GIT_COMMIT_HASH
+		OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+execute_process(
+		COMMAND git log -1 --date=short --format=%ad
+		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+		OUTPUT_VARIABLE GIT_COMMIT_DATE
+		OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
 add_library(ssp21 ${ssp21_public_headers} ${ssp21_private_headers} ${ssp21_srcs})
@@ -197,6 +213,7 @@ target_include_directories(ssp21
 )
 target_link_libraries(ssp21 PUBLIC exe4cpp ser4cpp log4cpp)
 target_compile_features(ssp21 PUBLIC cxx_std_14)
+target_compile_definitions(ssp21 PRIVATE MACRO_SSP21_GIT_COMMIT_HASH=${GIT_COMMIT_HASH} MACRO_SSP21_GIT_COMMIT_DATE=${GIT_COMMIT_DATE})
 
 install(TARGETS ssp21 EXPORT Ssp21Targets
     LIBRARY DESTINATION lib
