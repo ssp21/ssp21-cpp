@@ -191,7 +191,7 @@ stack_factory_t ConfigSection::get_initiator_qkd_factory(const log4cpp::Logger& 
     {
         return [ = ](const log4cpp::Logger & logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
             CryptoSuite suite;
-            suite.handshake_ephemeral = HandshakeEphemeral::nonce;
+            suite.handshake_ephemeral = HandshakeEphemeral::none;
 
             return initiator::factory::qkd_mode(
                     InitiatorConfig(),	// TODO: default
