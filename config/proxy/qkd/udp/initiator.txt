@@ -1,0 +1,16 @@
+[i-proxy]
+proto_type=udp
+crypto_only=true
+mode=initiator
+handshake_mode=qkd
+log_levels=iwemf
+serial_port=/dev/pts/1
+raw.rx.ip = 127.0.0.1
+raw.rx.port = 20000
+raw.tx.ip = 127.0.0.1
+raw.tx.port = 20001
+secure.rx.ip = 127.0.0.1
+secure.rx.port = 20002
+secure.tx.ip = 127.0.0.1
+secure.tx.port = 20003
+
