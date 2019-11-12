@@ -5,33 +5,24 @@
 #include <thread>
 
 #include "log4cpp/Logger.h"
-#include "qix/IQIXFrameHandler.h"
+#include "IQIXFrameHandler.h"
+#include "SerialSettings.h"
 
-#include <asio.hpp>
+#include <exe4cpp/asio/BasicExecutor.h>
 
 class QIXFrameReader
 {
 public:
 
-    QIXFrameReader(const std::shared_ptr<IQIXFrameHandler>& handler, const log4cpp::Logger& logger, const std::string& serial_device);
-
+    QIXFrameReader(const std::shared_ptr<IQIXFrameHandler>& handler, const log4cpp::Logger& logger, const SerialSettings& settings);
     ~QIXFrameReader();
-
 
 private:
 
-    const std::shared_ptr<IQIXFrameHandler> handler;
-    log4cpp::Logger logger;
-
-    bool shutting_down = false;
-    asio::io_service service;
-    asio::serial_port port;
+    const std::shared_ptr<exe4cpp::BasicExecutor> executor;
     std::unique_ptr<std::thread> thread;
 
-    void run();
-
     void run_and_catch();
-
 };
 
 #endif

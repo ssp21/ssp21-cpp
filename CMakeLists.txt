@@ -14,7 +14,11 @@ add_subdirectory(./deps/argagg)
 add_subdirectory(./deps/asio)
 add_subdirectory(./deps/catch)
 add_subdirectory(./deps/exe4cpp)
-add_subdirectory(./deps/inih)
+
+SET(YAML_CPP_BUILD_TESTS OFF CACHE BOOL "don't build the yaml-cpp tests")
+SET(YAML_CPP_BUILD_TOOLS OFF CACHE BOOL "don't build the yaml-cpp utilities")
+add_subdirectory(./deps/yaml-cpp)
+
 add_subdirectory(./deps/ser4cpp)
 add_subdirectory(./deps/log4cpp)
 

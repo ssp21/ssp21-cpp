@@ -114,7 +114,7 @@ int read_frames(const std::vector<std::string>& ports)
 		QIXFrameReader reader(
 			std::make_shared<QIXPrinter>(),
 			log4cpp::Logger(std::make_shared<log4cpp::ConsolePrettyPrinter>(), Module::id, "qix-reader", log4cpp::LogLevels(0xFF)),
-            ports[0]
+            SerialSettings(ports[0])
 		);
 
 		std::cout << "waiting for QIX frames" << std::endl;

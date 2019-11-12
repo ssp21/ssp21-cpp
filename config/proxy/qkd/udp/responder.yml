@@ -1,0 +1,44 @@
+qkd_sources:
+  - qkd_source_id: "source1"
+    type: "qix"
+    key_cycle_length: 1
+    serial:
+      device: "/dev/pts/5"
+      baud: 9600
+      data_bits: 8
+      flow_control: none
+      stop_bits: one
+sessions:
+  - id: "session1"
+    levels: "iwemf"
+    link_layer:
+      enabled: true
+      address:
+        local: 10
+        remote: 1
+    security:
+      mode: "responder"	  
+      session:
+        max_payload_size: 4096                             # maximum size of a sent or received message payload
+        ttl_pad:                                           # how much pad to apply to session messages for time validity
+          value: 10
+          unit: seconds
+      handshake:
+        type: "qkd"
+        key_source_id: "source1"
+        modulus: 0
+        max_key_cache_size: 100
+    transport:
+      type: "udp"      
+      raw_rx:
+        address: "127.0.0.1"
+        port: 20004
+      raw_tx:
+        address: "127.0.0.1"
+        port: 20005
+      secure_rx:
+        address: "127.0.0.1"
+        port: 20003
+      secure_tx:
+        address: "127.0.0.1"
+        port: 20002        

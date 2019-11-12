@@ -1,0 +1,28 @@
+qkd_sources: []
+sessions:
+  - id: "session1"
+    levels: "iwemf"
+    link_layer:
+      enabled: true
+      address:
+        local: 10
+        remote: 1
+    security:
+      mode: "responder"	  
+      session:
+        max_payload_size: 4096                             # maximum size of a sent or received message payload
+        ttl_pad:                                           # how much pad to apply to session messages for time validity
+          value: 10
+          unit: seconds
+      handshake:
+        type: "shared_secret"
+        shared_secret_key_path: "./shared_secret.icf"
+    transport:
+      type: "tcp"
+      max_sessions: 1
+      listen:
+        address: "127.0.0.1"
+        port: 20000
+      connect:
+        address: "127.0.0.1"
+        port: 20001

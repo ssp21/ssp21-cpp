@@ -1,17 +1,19 @@
 set(qix_public_headers
+    ./include/qix/AsyncQIXFrameReader.h
     ./include/qix/IQIXFrameHandler.h
     ./include/qix/QIXFrame.h
     ./include/qix/QIXFrameParser.h
     ./include/qix/QIXFrameReader.h
     ./include/qix/QIXFrameWriter.h
-    ./include/qix/QIXKeyCache.h
+	./include/qix/QIXKeyStore.h
 )
 
 set(qix_srcs
+    ./src/AsyncQIXFrameReader.cpp
     ./src/QIXFrameParser.cpp
     ./src/QIXFrameReader.cpp
-    ./src/QIXFrameWriter.cpp
-    ./src/QIXKeyCache.cpp
+    ./src/QIXFrameWriter.cpp    
+	./src/QIXKeyStore.cpp
 )
 
 add_library(qix ${qix_public_headers} ${qix_srcs})

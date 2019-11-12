@@ -1,0 +1,47 @@
+qkd_sources: []
+sessions:
+  - id: "session1"
+    levels: "iwemf"
+    link_layer:
+      enabled: true
+      address:
+        local: 10
+        remote: 1
+    security:
+      mode: "initiator"	  
+      session:
+        max_payload_size: 4096                             # maximum size of a sent or received message payload
+        ttl_pad:                                           # how much pad to apply to session messages for time validity
+          value: 10
+          unit: seconds
+        max_nonce_value: 32768                             # maximum value for a session nonce
+        nonce_renegotiation_trigger_value: 32700           # nonce count when the initiator starts trying to renegotiate
+        max_session_duration:                              # maximum validity time for an established session
+          value: 1
+          unit: hours
+        session_time_renegotiation_trigger:                # session time when the initiator starts trying to renegotiate        
+          value: 59
+          unit: minutes
+      handshake:
+        response_timeout:
+          value: 2
+          unit: seconds
+        retry_timeout:
+          value: 5
+          unit: seconds
+        type: "shared_secret"
+        shared_secret_key_path: "./shared_secret.icf"
+    transport:
+      type: "udp"      
+      raw_rx:
+        address: "127.0.0.1"
+        port: 20000
+      raw_tx:
+        address: "127.0.0.1"
+        port: 20001
+      secure_rx:
+        address: "127.0.0.1"
+        port: 20002
+      secure_tx:
+        address: "127.0.0.1"
+        port: 20003

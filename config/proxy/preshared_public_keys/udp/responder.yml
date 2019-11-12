@@ -1,0 +1,35 @@
+qkd_sources: []
+sessions:
+  - id: "session1"
+    levels: "iwemf"
+    link_layer:
+      enabled: true
+      address:
+        local: 10
+        remote: 1
+    security:
+      mode: "responder"	  
+      session:
+        max_payload_size: 4096                             # maximum size of a sent or received message payload
+        ttl_pad:                                           # how much pad to apply to session messages for time validity
+          value: 10
+          unit: seconds
+      handshake:
+        type: "preshared_public_key"
+        local_private_key_path: "./responder_private_key.icf"
+        local_public_key_path: "./responder_public_key.icf"
+        remote_public_key_path: "./initiator_public_key.icf"
+    transport:
+      type: "udp"      
+      raw_rx:
+        address: "127.0.0.1"
+        port: 20004
+      raw_tx:
+        address: "127.0.0.1"
+        port: 20005
+      secure_rx:
+        address: "127.0.0.1"
+        port: 20003
+      secure_tx:
+        address: "127.0.0.1"
+        port: 20002        
