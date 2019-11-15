@@ -51,6 +51,11 @@ namespace config
 
         if (type == TransportType::TCP)
         {
+			if (!factory.get_uses_link_layer())
+			{
+				throw yaml::YAMLException(transport, "TCP transport may only be used inconjunction with the SSP21 link-layer");
+			}
+
             TcpConfig config(transport);
             return [=](const log4cpp::Logger& logger, std::shared_ptr<exe4cpp::BasicExecutor> executor) {
                 return std::make_unique<TcpProxySession>(

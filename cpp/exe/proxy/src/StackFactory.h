@@ -23,7 +23,7 @@ enum class StackType {
 class StackFactory
 {
 public:
-    StackFactory(StackType type, stack_factory_t impl) : type(type), impl(impl)
+    StackFactory(bool uses_link_layer, StackType type, stack_factory_t impl) : uses_link_layer(uses_link_layer), type(type), impl(impl)
     {}
 
     std::shared_ptr<ssp21::IStack> create_stack(const log4cpp::Logger& logger, const std::shared_ptr<exe4cpp::IExecutor>& exe)
@@ -36,7 +36,13 @@ public:
         return this->type;
     }
 
+    bool get_uses_link_layer() const
+    {
+        return this->uses_link_layer;
+    }
+
 private:
+    bool uses_link_layer;
     StackType type;
     stack_factory_t impl;
 };

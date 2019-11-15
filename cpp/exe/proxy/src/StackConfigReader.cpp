@@ -556,22 +556,22 @@ namespace config
             const auto addresses = get_addresses(yaml::require(link_layer, "address"));
             if (stack_type == StackType::initiator)
             {
-                return StackFactory(stack_type, get_initiator_factory(security, &addresses));
+                return StackFactory(true, stack_type, get_initiator_factory(security, &addresses));
             }
             else
             {
-                return StackFactory(stack_type, get_responder_factory(security, &addresses));
+                return StackFactory(true, stack_type, get_responder_factory(security, &addresses));
             }            
         }
         else
         {
             if (stack_type == StackType::initiator)
             {
-                return StackFactory(stack_type, get_initiator_factory(security, nullptr));
+                return StackFactory(false, stack_type, get_initiator_factory(security, nullptr));
             }
             else
             {
-                return StackFactory(stack_type, get_responder_factory(security, nullptr));
+                return StackFactory(false, stack_type, get_responder_factory(security, nullptr));
             }
         }
     }
