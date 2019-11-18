@@ -12,10 +12,7 @@ sessions:
   - id: "session1"
     levels: "iwemf"
     link_layer:
-      enabled: true
-      address:
-        local: 10
-        remote: 1
+      enabled: false
     security:
       mode: "responder"	  
       session:

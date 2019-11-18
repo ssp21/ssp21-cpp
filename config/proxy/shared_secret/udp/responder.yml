@@ -1,21 +1,9 @@
-qkd_sources:
-  - qkd_source_id: "source1"
-    type: "qix"
-    key_cycle_length: 1
-    serial:
-      device: "/dev/pts/5"
-      baud: 9600
-      data_bits: 8
-      flow_control: none
-      stop_bits: one
+qkd_sources: []
 sessions:
   - id: "session1"
     levels: "iwemf"
     link_layer:
-      enabled: true
-      address:
-        local: 10
-        remote: 1
+      enabled: false
     security:
       mode: "responder"	  
       session:
