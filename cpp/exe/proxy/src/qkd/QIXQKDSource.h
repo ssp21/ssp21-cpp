@@ -21,7 +21,7 @@ class QIXQKDSource : public IQKDSource
 
 		void handle(const QIXFrame& frame) override;
 
-        const uint16_t key_cycle_length;
+        const uint16_t num_subscribers;
         std::map<uint16_t, std::shared_ptr<QIXKeyStore>> subscribers;
 	};
 

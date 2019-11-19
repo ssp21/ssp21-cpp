@@ -55,15 +55,15 @@ SerialSettings read_serial_settings(const YAML::Node& node)
     );
 }
 
-QIXQKDSource::FrameHandler::FrameHandler(uint16_t key_cycle_length) : key_cycle_length(key_cycle_length)
+QIXQKDSource::FrameHandler::FrameHandler(uint16_t num_subscribers) : num_subscribers(num_subscribers)
 {}
 
 void QIXQKDSource::FrameHandler::handle(const QIXFrame& frame)
 {
     if (frame.status == QIXFrame::Status::ok)
     {
-        const uint16_t modulo = frame.key_id % this->key_cycle_length;
-        const auto subscriber = this->subscribers.find(modulo);
+        const uint16_t subscriber_id = frame.key_id % this->num_subscribers;
+        const auto subscriber = this->subscribers.find(subscriber_id);
         if (subscriber != this->subscribers.end())
         {
             subscriber->second->add_key(frame);
@@ -72,7 +72,7 @@ void QIXQKDSource::FrameHandler::handle(const QIXFrame& frame)
 }
 
 QIXQKDSource::QIXQKDSource(const YAML::Node& node, const std::shared_ptr<exe4cpp::BasicExecutor>& executor, log4cpp::Logger& logger) :
-	handler(std::make_shared<FrameHandler>(yaml::require_integer<uint16_t>(node, "key_cycle_length")))	
+	handler(std::make_shared<FrameHandler>(yaml::require_integer<uint16_t>(node, "num_subscribers")))
 {
    const auto settings = read_serial_settings(yaml::require(node, "serial"));
 

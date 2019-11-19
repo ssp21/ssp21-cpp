@@ -1,7 +1,7 @@
 qkd_sources:
   - qkd_source_id: "source1"
     type: "qix"
-    key_cycle_length: 1
+    num_subscribers: 1
     serial:
       device: "/dev/pts/5"
       baud: 9600
@@ -23,7 +23,7 @@ sessions:
       handshake:
         type: "qkd"
         key_source_id: "source1"
-        modulus: 0
+        subscriber_id: 0
         max_key_cache_size: 100
     transport:
       type: "udp"      

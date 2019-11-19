@@ -40,9 +40,9 @@ std::shared_ptr<IQKDSource> QKDSourceRegistry::create_qkd_source(const YAML::Nod
 	throw yaml::YAMLException(node.Mark(), "Unknown QKD source type: ", type);
 }
 
-uint16_t get_modulus(const YAML::Node& node)
+uint16_t get_subscriber_id(const YAML::Node& node)
 {
-	return yaml::require_integer<uint16_t>(node, "modulus");
+	return yaml::require_integer<uint16_t>(node, "subscriber_id");
 }
 
 uint16_t get_max_key_cache_size(const YAML::Node& node)
@@ -52,12 +52,12 @@ uint16_t get_max_key_cache_size(const YAML::Node& node)
 
 std::shared_ptr<ssp21::IKeySource> QKDSourceRegistry::get_initiator_key_source(const YAML::Node& node)
 {						
-	return get_key_source(node)->bind_initiator_key_source(get_modulus(node), get_max_key_cache_size(node));
+	return get_key_source(node)->bind_initiator_key_source(get_subscriber_id(node), get_max_key_cache_size(node));
 }
 
 std::shared_ptr<ssp21::IKeyLookup> QKDSourceRegistry::get_responder_key_lookup(const YAML::Node& node)
 {
-	return get_key_source(node)->bind_responder_key_lookup(get_modulus(node), get_max_key_cache_size(node));
+	return get_key_source(node)->bind_responder_key_lookup(get_subscriber_id(node), get_max_key_cache_size(node));
 }
 
 
