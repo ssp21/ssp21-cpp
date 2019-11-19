@@ -157,14 +157,14 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="2560"
-     inkscape:window-height="1377"
+     inkscape:window-width="2498"
+     inkscape:window-height="1417"
      id="namedview3783"
      showgrid="false"
      inkscape:zoom="1.0505051"
      inkscape:cx="304.01505"
      inkscape:cy="399.757"
-     inkscape:window-x="-8"
+     inkscape:window-x="2614"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg3781" />
@@ -241,7 +241,7 @@
      y="143.37059"
      id="svg_16-0"
      font-size="24"
-     xml:space="preserve">arbitrary protocol (P)</text>
+     xml:space="preserve">wrapped protocol</text>
   <rect
      style="fill:#ffffff;stroke:#000000;stroke-width:1.4678818"
      stroke-opacity="null"
@@ -314,7 +314,7 @@
      y="735.1864"
      id="svg_16-0-1"
      font-size="24"
-     xml:space="preserve">arbitrary protocol (P)</text>
+     xml:space="preserve">wrapped protocol</text>
   <text
      style="font-size:24px;font-family:Helvetica, Arial, sans-serif;text-anchor:start;fill:#000000;stroke:#000000;stroke-width:0"
      stroke-opacity="null"
@@ -323,7 +323,7 @@
      y="440.41824"
      id="svg_16-0-9"
      font-size="24"
-     xml:space="preserve">SSP21 wrapping P</text>
+     xml:space="preserve">SSP21</text>
   <rect
      style="opacity:1;fill:#ffffff;fill-opacity:0"
      id="rect4770"
@@ -351,7 +351,7 @@
        x="165.71529"
        y="179.56793"
        id="tspan4704-3"
-       style="font-size:14.66666698px;line-height:0.5">raw.rx.{ip, port}</tspan></text>
+       style="font-size:14.66666698px;line-height:0.5">raw_rx.{address, port}</tspan></text>
   <path
      style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker4692-2)"
      d="M 523.68056,803.7061 V 632.06273"
@@ -382,7 +382,7 @@
        x="548.09283"
        y="185.39444"
        id="tspan4704-3-2"
-       style="font-size:14.66666698px;line-height:0.5">raw.tx.{ip, port}</tspan></text>
+       style="font-size:14.66666698px;line-height:0.5">raw_tx.{address, port}</tspan></text>
   <text
      xml:space="preserve"
      style="font-style:normal;font-weight:normal;font-size:40px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
@@ -393,7 +393,7 @@
        x="164.46783"
        y="327.23096"
        id="tspan4704-3-0"
-       style="font-size:14.66666698px;line-height:0.5">secure.tx.{ip, port}</tspan></text>
+       style="font-size:14.66666698px;line-height:0.5">secure_tx.{address, port}</tspan></text>
   <text
      xml:space="preserve"
      style="font-style:normal;font-weight:normal;font-size:40px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
@@ -404,7 +404,7 @@
        x="546.1579"
        y="318.66367"
        id="tspan4704-3-0-1"
-       style="font-size:14.66666698px;line-height:0.5">secure.rx.{ip, port}</tspan></text>
+       style="font-size:14.66666698px;line-height:0.5">secure_rx.{address, port}</tspan></text>
   <text
      xml:space="preserve"
      style="font-style:normal;font-weight:normal;font-size:40px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
@@ -415,7 +415,7 @@
        x="164.19324"
        y="556.64441"
        id="tspan4704-3-0-1-2"
-       style="font-size:14.66666698px;line-height:0.5">secure.rx.{ip, port}</tspan></text>
+       style="font-size:14.66666698px;line-height:0.5">secure_rx.{address, port}</tspan></text>
   <text
      xml:space="preserve"
      style="font-style:normal;font-weight:normal;font-size:40px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
@@ -426,7 +426,7 @@
        x="546.15784"
        y="555.6925"
        id="tspan4704-3-0-2"
-       style="font-size:14.66666698px;line-height:0.5">secure.tx.{ip, port}</tspan></text>
+       style="font-size:14.66666698px;line-height:0.5">secure_tx.{address, port}</tspan></text>
   <text
      xml:space="preserve"
      style="font-style:normal;font-weight:normal;font-size:40px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
@@ -437,7 +437,7 @@
        x="557.61206"
        y="681.34637"
        id="tspan4704-3-3"
-       style="font-size:14.66666698px;line-height:0.5">raw.rx.{ip, port}</tspan></text>
+       style="font-size:14.66666698px;line-height:0.5">raw_rx.{address, port}</tspan></text>
   <text
      xml:space="preserve"
      style="font-style:normal;font-weight:normal;font-size:40px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
@@ -448,5 +448,5 @@
        x="167.84596"
        y="682.09637"
        id="tspan4704-3-2-8"
-       style="font-size:14.66666698px;line-height:0.5">raw.tx.{ip, port}</tspan></text>
+       style="font-size:14.66666698px;line-height:0.5">raw_tx.{address, port}</tspan></text>
 </svg>
