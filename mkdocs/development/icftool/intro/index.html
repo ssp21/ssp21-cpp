@@ -32,7 +32,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.1.1">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.3">
     
     
       
@@ -40,9 +40,9 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/application.3020aac5.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/application.30686662.css">
       
-        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.224b79ff.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.a8b3c06d.css">
       
       
         
@@ -51,12 +51,12 @@
       
     
     
-      <script src="../../assets/javascripts/modernizr.01ccdecf.js"></script>
+      <script src="../../assets/javascripts/modernizr.74668098.js"></script>
     
     
       
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,400i,700|Ubuntu+Mono">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,400i,700|Ubuntu+Mono&display=fallback">
         <style>body,input{font-family:"Ubuntu","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Ubuntu Mono","Courier New",Courier,monospace}</style>
       
     
@@ -110,7 +110,9 @@
               SSP21-CPP
             </span>
             <span class="md-header-nav__topic">
-              Usage
+              
+                Usage
+              
             </span>
           
         </div>
@@ -128,7 +130,7 @@
         
       
       
-      <main class="md-main">
+      <main class="md-main" role="main">
         <div class="md-main__inner md-grid" data-md-component="container">
           
             
@@ -309,7 +311,7 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#examples" title="Examples" class="md-nav__link">
+  <a href="#examples" class="md-nav__link">
     Examples
   </a>
   
@@ -317,28 +319,28 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#generate-x25519-keypair" title="generate x25519 keypair" class="md-nav__link">
+  <a href="#generate-x25519-keypair" class="md-nav__link">
     generate x25519 keypair
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#generate-ed25519-keypair" title="generate ed25519 keypair" class="md-nav__link">
+  <a href="#generate-ed25519-keypair" class="md-nav__link">
     generate ed25519 keypair
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#show-file-contents" title="show file contents" class="md-nav__link">
+  <a href="#show-file-contents" class="md-nav__link">
     show file contents
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#generate-certificates" title="generate certificates" class="md-nav__link">
+  <a href="#generate-certificates" class="md-nav__link">
     generate certificates
   </a>
   
@@ -446,7 +448,7 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#examples" title="Examples" class="md-nav__link">
+  <a href="#examples" class="md-nav__link">
     Examples
   </a>
   
@@ -454,28 +456,28 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#generate-x25519-keypair" title="generate x25519 keypair" class="md-nav__link">
+  <a href="#generate-x25519-keypair" class="md-nav__link">
     generate x25519 keypair
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#generate-ed25519-keypair" title="generate ed25519 keypair" class="md-nav__link">
+  <a href="#generate-ed25519-keypair" class="md-nav__link">
     generate ed25519 keypair
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#show-file-contents" title="show file contents" class="md-nav__link">
+  <a href="#show-file-contents" class="md-nav__link">
     show file contents
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#generate-certificates" title="generate certificates" class="md-nav__link">
+  <a href="#generate-certificates" class="md-nav__link">
     generate certificates
   </a>
   
@@ -513,98 +515,98 @@ Therefore, it didn't require manually writing any (un)parsers. The format for th
 conventional like the PEM format frequently used to encode X.509 and keys in the future since only the proxy relies on them.</p>
 </div>
 <p>The options presented with the <code>-h</code> (or ---help) argument are fairly self-explanatory.</p>
-<div class="codehilite"><pre><span></span>&gt; ./icftool  -h
+<div class="codehilite"><pre><span></span><span class="o">&gt;</span> .<span class="o">/</span><span class="nv">icftool</span>  <span class="o">-</span><span class="nv">h</span>
 
-Options:
+<span class="nv">Options</span>:
 
-    -h, --help
-        shows this help message
-    -s, --show
-        show contents of one or more &lt;icf files ....&gt;
-    -r, --shared
-        generate a shared secret &lt;key file&gt;
-    -x, --x25519
-        generate a x25519 key pair &lt;private key file&gt; &lt;public key file&gt;
-    -e, --ed25519
-        generate a Ed25519 key pair &lt;private key file&gt; &lt;public key file&gt;
-    -c, --cert
-        interactively generate a &lt;certificate file&gt; for a &lt;public key file&gt; signed by a &lt;private key file&gt;
-    -a, --append
-        append all entries from one &lt;icf file&gt; and another &lt;icf file&gt; and write them to a destination &lt;icf file&gt;
-    -d, --days
-        number of days for the certificate to remain valid from now
-    -l, --level
-        signing level [0, 5] of the certificate. 0 == endpoint. &gt;0  is an authority
+    <span class="o">-</span><span class="nv">h</span>, <span class="o">--</span><span class="nv">help</span>
+        <span class="nv">shows</span> <span class="nv">this</span> <span class="nv">help</span> <span class="nv">message</span>
+    <span class="o">-</span><span class="nv">s</span>, <span class="o">--</span><span class="k">show</span>
+        <span class="k">show</span> <span class="nv">contents</span> <span class="nv">of</span> <span class="nv">one</span> <span class="nv">or</span> <span class="nv">more</span> <span class="o">&lt;</span><span class="nv">icf</span> <span class="nv">files</span> ....<span class="o">&gt;</span>
+    <span class="o">-</span><span class="nv">r</span>, <span class="o">--</span><span class="nv">shared</span>
+        <span class="nv">generate</span> <span class="nv">a</span> <span class="nv">shared</span> <span class="nv">secret</span> <span class="o">&lt;</span><span class="nv">key</span> <span class="nv">file</span><span class="o">&gt;</span>
+    <span class="o">-</span><span class="nv">x</span>, <span class="o">--</span><span class="nv">x25519</span>
+        <span class="nv">generate</span> <span class="nv">a</span> <span class="nv">x25519</span> <span class="nv">key</span> <span class="nv">pair</span> <span class="o">&lt;</span><span class="nv">private</span> <span class="nv">key</span> <span class="nv">file</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="nv">public</span> <span class="nv">key</span> <span class="nv">file</span><span class="o">&gt;</span>
+    <span class="o">-</span><span class="nv">e</span>, <span class="o">--</span><span class="nv">ed25519</span>
+        <span class="nv">generate</span> <span class="nv">a</span> <span class="nv">Ed25519</span> <span class="nv">key</span> <span class="nv">pair</span> <span class="o">&lt;</span><span class="nv">private</span> <span class="nv">key</span> <span class="nv">file</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="nv">public</span> <span class="nv">key</span> <span class="nv">file</span><span class="o">&gt;</span>
+    <span class="o">-</span><span class="nv">c</span>, <span class="o">--</span><span class="nv">cert</span>
+        <span class="nv">interactively</span> <span class="nv">generate</span> <span class="nv">a</span> <span class="o">&lt;</span><span class="nv">certificate</span> <span class="nv">file</span><span class="o">&gt;</span> <span class="k">for</span> <span class="nv">a</span> <span class="o">&lt;</span><span class="nv">public</span> <span class="nv">key</span> <span class="nv">file</span><span class="o">&gt;</span> <span class="nv">signed</span> <span class="nv">by</span> <span class="nv">a</span> <span class="o">&lt;</span><span class="nv">private</span> <span class="nv">key</span> <span class="nv">file</span><span class="o">&gt;</span>
+    <span class="o">-</span><span class="nv">a</span>, <span class="o">--</span><span class="nv">append</span>
+        <span class="nv">append</span> <span class="nv">all</span> <span class="nv">entries</span> <span class="nv">from</span> <span class="nv">one</span> <span class="o">&lt;</span><span class="nv">icf</span> <span class="nv">file</span><span class="o">&gt;</span> <span class="nv">and</span> <span class="nv">another</span> <span class="o">&lt;</span><span class="nv">icf</span> <span class="nv">file</span><span class="o">&gt;</span> <span class="nv">and</span> <span class="nv">write</span> <span class="nv">them</span> <span class="nv">to</span> <span class="nv">a</span> <span class="nv">destination</span> <span class="o">&lt;</span><span class="nv">icf</span> <span class="nv">file</span><span class="o">&gt;</span>
+    <span class="o">-</span><span class="nv">d</span>, <span class="o">--</span><span class="nv">days</span>
+        <span class="nv">number</span> <span class="nv">of</span> <span class="nv">days</span> <span class="k">for</span> <span class="nv">the</span> <span class="nv">certificate</span> <span class="nv">to</span> <span class="nv">remain</span> <span class="nv">valid</span> <span class="nv">from</span> <span class="nv">now</span>
+    <span class="o">-</span><span class="nv">l</span>, <span class="o">--</span><span class="nv">level</span>
+        <span class="nv">signing</span> <span class="nv">level</span> [<span class="mi">0</span>, <span class="mi">5</span>] <span class="nv">of</span> <span class="nv">the</span> <span class="nv">certificate</span>. <span class="mi">0</span> <span class="o">==</span> <span class="nv">endpoint</span>. <span class="o">&gt;</span><span class="mi">0</span>  <span class="nv">is</span> <span class="nv">an</span> <span class="nv">authority</span>
 </pre></div>
 
 
 <h2 id="examples">Examples</h2>
 <h3 id="generate-x25519-keypair">generate x25519 keypair</h3>
-<div class="codehilite"><pre><span></span>./icftool.exe -x outstation25519.priv.icf outstation25519.pub.icf
-generating x25519 key pair...
-wrote: outstation25519.priv.icf
-wrote: outstation25519.pub.icf
+<div class="codehilite"><pre><span></span><span class="p">.</span><span class="o">/</span><span class="n">icftool</span><span class="p">.</span><span class="n">exe</span> <span class="o">-</span><span class="n">x</span> <span class="n">outstation25519</span><span class="p">.</span><span class="n">priv</span><span class="p">.</span><span class="n">icf</span> <span class="n">outstation25519</span><span class="p">.</span><span class="n">pub</span><span class="p">.</span><span class="n">icf</span>
+<span class="n">generating</span> <span class="n">x25519</span> <span class="k">key</span> <span class="n">pair</span><span class="p">...</span>
+<span class="n">wrote</span><span class="p">:</span> <span class="n">outstation25519</span><span class="p">.</span><span class="n">priv</span><span class="p">.</span><span class="n">icf</span>
+<span class="n">wrote</span><span class="p">:</span> <span class="n">outstation25519</span><span class="p">.</span><span class="n">pub</span><span class="p">.</span><span class="n">icf</span>
 </pre></div>
 
 
 <h3 id="generate-ed25519-keypair">generate ed25519 keypair</h3>
-<div class="codehilite"><pre><span></span>.\icftool.exe -d authority.priv.icf authority.pub.icf
-generating Ed25519 key pair
-wrote: authority.priv.icf
-wrote: authority.pub.icf
+<div class="codehilite"><pre><span></span><span class="p">.</span><span class="err">\</span><span class="n">icftool</span><span class="p">.</span><span class="n">exe</span> <span class="o">-</span><span class="n">d</span> <span class="n">authority</span><span class="p">.</span><span class="n">priv</span><span class="p">.</span><span class="n">icf</span> <span class="n">authority</span><span class="p">.</span><span class="n">pub</span><span class="p">.</span><span class="n">icf</span>
+<span class="n">generating</span> <span class="n">Ed25519</span> <span class="k">key</span> <span class="n">pair</span>
+<span class="n">wrote</span><span class="p">:</span> <span class="n">authority</span><span class="p">.</span><span class="n">priv</span><span class="p">.</span><span class="n">icf</span>
+<span class="n">wrote</span><span class="p">:</span> <span class="n">authority</span><span class="p">.</span><span class="n">pub</span><span class="p">.</span><span class="n">icf</span>
 </pre></div>
 
 
 <h3 id="show-file-contents">show file contents</h3>
-<div class="codehilite"><pre><span></span>./icftool.exe -s authority.priv.icf authority.pub.icf
+<div class="codehilite"><pre><span></span><span class="p">.</span><span class="o">/</span><span class="n">icftool</span><span class="p">.</span><span class="n">exe</span> <span class="o">-</span><span class="n">s</span> <span class="n">authority</span><span class="p">.</span><span class="n">priv</span><span class="p">.</span><span class="n">icf</span> <span class="n">authority</span><span class="p">.</span><span class="n">pub</span><span class="p">.</span><span class="n">icf</span>
 
-File: authority.priv.icf
-Type: ed25519_private_key
-  key-data (length == 64)
-    49:b4:d0:64:ca:60:c3:e5:c7:c4:56:8d:d3:82:b9:a0
-    6a:a4:9a:7e:18:cf:51:cb:43:85:45:3c:52:c4:5d:e3
-    23:28:0d:c2:43:c6:11:c7:1e:36:75:51:90:5f:01:3f
-    a4:5f:31:51:60:4c:20:3b:80:b5:d8:35:ae:c4:2c:8f
+<span class="n">File</span><span class="p">:</span> <span class="n">authority</span><span class="p">.</span><span class="n">priv</span><span class="p">.</span><span class="n">icf</span>
+<span class="k">Type</span><span class="p">:</span> <span class="n">ed25519_private_key</span>
+  <span class="k">key</span><span class="o">-</span><span class="k">data</span> <span class="p">(</span><span class="k">length</span> <span class="o">==</span> <span class="mi">64</span><span class="p">)</span>
+    <span class="mi">49</span><span class="p">:</span><span class="n">b4</span><span class="p">:</span><span class="n">d0</span><span class="p">:</span><span class="mi">64</span><span class="p">:</span><span class="n">ca</span><span class="p">:</span><span class="mi">60</span><span class="p">:</span><span class="n">c3</span><span class="p">:</span><span class="n">e5</span><span class="p">:</span><span class="n">c7</span><span class="p">:</span><span class="n">c4</span><span class="p">:</span><span class="mi">56</span><span class="p">:</span><span class="mi">8</span><span class="n">d</span><span class="p">:</span><span class="n">d3</span><span class="p">:</span><span class="mi">82</span><span class="p">:</span><span class="n">b9</span><span class="p">:</span><span class="n">a0</span>
+    <span class="mi">6</span><span class="n">a</span><span class="p">:</span><span class="n">a4</span><span class="p">:</span><span class="mi">9</span><span class="n">a</span><span class="p">:</span><span class="mi">7</span><span class="n">e</span><span class="p">:</span><span class="mi">18</span><span class="p">:</span><span class="n">cf</span><span class="p">:</span><span class="mi">51</span><span class="p">:</span><span class="n">cb</span><span class="p">:</span><span class="mi">43</span><span class="p">:</span><span class="mi">85</span><span class="p">:</span><span class="mi">45</span><span class="p">:</span><span class="mi">3</span><span class="k">c</span><span class="p">:</span><span class="mi">52</span><span class="p">:</span><span class="n">c4</span><span class="p">:</span><span class="mi">5</span><span class="n">d</span><span class="p">:</span><span class="n">e3</span>
+    <span class="mi">23</span><span class="p">:</span><span class="mi">28</span><span class="p">:</span><span class="mi">0</span><span class="n">d</span><span class="p">:</span><span class="n">c2</span><span class="p">:</span><span class="mi">43</span><span class="p">:</span><span class="n">c6</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="n">c7</span><span class="p">:</span><span class="mi">1</span><span class="n">e</span><span class="p">:</span><span class="mi">36</span><span class="p">:</span><span class="mi">75</span><span class="p">:</span><span class="mi">51</span><span class="p">:</span><span class="mi">90</span><span class="p">:</span><span class="mi">5</span><span class="n">f</span><span class="p">:</span><span class="mi">01</span><span class="p">:</span><span class="mi">3</span><span class="n">f</span>
+    <span class="n">a4</span><span class="p">:</span><span class="mi">5</span><span class="n">f</span><span class="p">:</span><span class="mi">31</span><span class="p">:</span><span class="mi">51</span><span class="p">:</span><span class="mi">60</span><span class="p">:</span><span class="mi">4</span><span class="k">c</span><span class="p">:</span><span class="mi">20</span><span class="p">:</span><span class="mi">3</span><span class="n">b</span><span class="p">:</span><span class="mi">80</span><span class="p">:</span><span class="n">b5</span><span class="p">:</span><span class="n">d8</span><span class="p">:</span><span class="mi">35</span><span class="p">:</span><span class="n">ae</span><span class="p">:</span><span class="n">c4</span><span class="p">:</span><span class="mi">2</span><span class="k">c</span><span class="p">:</span><span class="mi">8</span><span class="n">f</span>
 
-File: authority.pub.icf
-Type: ed25519_public_key
-  key-data (length == 32)
-    23:28:0d:c2:43:c6:11:c7:1e:36:75:51:90:5f:01:3f
-    a4:5f:31:51:60:4c:20:3b:80:b5:d8:35:ae:c4:2c:8f
+<span class="n">File</span><span class="p">:</span> <span class="n">authority</span><span class="p">.</span><span class="n">pub</span><span class="p">.</span><span class="n">icf</span>
+<span class="k">Type</span><span class="p">:</span> <span class="n">ed25519_public_key</span>
+  <span class="k">key</span><span class="o">-</span><span class="k">data</span> <span class="p">(</span><span class="k">length</span> <span class="o">==</span> <span class="mi">32</span><span class="p">)</span>
+    <span class="mi">23</span><span class="p">:</span><span class="mi">28</span><span class="p">:</span><span class="mi">0</span><span class="n">d</span><span class="p">:</span><span class="n">c2</span><span class="p">:</span><span class="mi">43</span><span class="p">:</span><span class="n">c6</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="n">c7</span><span class="p">:</span><span class="mi">1</span><span class="n">e</span><span class="p">:</span><span class="mi">36</span><span class="p">:</span><span class="mi">75</span><span class="p">:</span><span class="mi">51</span><span class="p">:</span><span class="mi">90</span><span class="p">:</span><span class="mi">5</span><span class="n">f</span><span class="p">:</span><span class="mi">01</span><span class="p">:</span><span class="mi">3</span><span class="n">f</span>
+    <span class="n">a4</span><span class="p">:</span><span class="mi">5</span><span class="n">f</span><span class="p">:</span><span class="mi">31</span><span class="p">:</span><span class="mi">51</span><span class="p">:</span><span class="mi">60</span><span class="p">:</span><span class="mi">4</span><span class="k">c</span><span class="p">:</span><span class="mi">20</span><span class="p">:</span><span class="mi">3</span><span class="n">b</span><span class="p">:</span><span class="mi">80</span><span class="p">:</span><span class="n">b5</span><span class="p">:</span><span class="n">d8</span><span class="p">:</span><span class="mi">35</span><span class="p">:</span><span class="n">ae</span><span class="p">:</span><span class="n">c4</span><span class="p">:</span><span class="mi">2</span><span class="k">c</span><span class="p">:</span><span class="mi">8</span><span class="n">f</span>
 </pre></div>
 
 
 <h3 id="generate-certificates">generate certificates</h3>
-<div class="codehilite"><pre><span></span>./icftool.exe -c outstation.cert.icf .\outstation25519.pub.icf authority.priv.icf
-How many days (from now) should the certificate remain valid?
-365
-Enter the certificate signing level (0 == endpoint certificate, max == 6):
-0
+<div class="codehilite"><pre><span></span><span class="p">.</span><span class="o">/</span><span class="n">icftool</span><span class="p">.</span><span class="n">exe</span> <span class="o">-</span><span class="k">c</span> <span class="n">outstation</span><span class="p">.</span><span class="n">cert</span><span class="p">.</span><span class="n">icf</span> <span class="p">.</span><span class="err">\</span><span class="n">outstation25519</span><span class="p">.</span><span class="n">pub</span><span class="p">.</span><span class="n">icf</span> <span class="n">authority</span><span class="p">.</span><span class="n">priv</span><span class="p">.</span><span class="n">icf</span>
+<span class="n">How</span> <span class="n">many</span> <span class="n">days</span> <span class="p">(</span><span class="k">from</span> <span class="n">now</span><span class="p">)</span> <span class="n">should</span> <span class="n">the</span> <span class="n">certificate</span> <span class="n">remain</span> <span class="k">valid</span><span class="o">?</span>
+<span class="mi">365</span>
+<span class="n">Enter</span> <span class="n">the</span> <span class="n">certificate</span> <span class="n">signing</span> <span class="k">level</span> <span class="p">(</span><span class="mi">0</span> <span class="o">==</span> <span class="n">endpoint</span> <span class="n">certificate</span><span class="p">,</span> <span class="k">max</span> <span class="o">==</span> <span class="mi">6</span><span class="p">):</span>
+<span class="mi">0</span>
 
-./icftool.exe -s .\outstation.cert.icf
+<span class="p">.</span><span class="o">/</span><span class="n">icftool</span><span class="p">.</span><span class="n">exe</span> <span class="o">-</span><span class="n">s</span> <span class="p">.</span><span class="err">\</span><span class="n">outstation</span><span class="p">.</span><span class="n">cert</span><span class="p">.</span><span class="n">icf</span>
 
-File: .\outstation.cert.icf
-Type: certificate_chain
+<span class="n">File</span><span class="p">:</span> <span class="p">.</span><span class="err">\</span><span class="n">outstation</span><span class="p">.</span><span class="n">cert</span><span class="p">.</span><span class="n">icf</span>
+<span class="k">Type</span><span class="p">:</span> <span class="n">certificate_chain</span>
 
-certificate #1
-  signature (length == 64)
-    ab:b8:8b:85:72:d8:ff:31:6c:e7:55:ac:cd:44:5e:b3
-    c7:2e:aa:b5:47:d7:65:5b:dd:4a:0a:fd:f1:c0:ba:99
-    3d:40:a5:27:83:aa:93:cc:88:2d:7b:c0:b6:cf:6e:de
-    d0:10:74:b3:1a:eb:f0:5d:60:6a:f8:15:51:bd:eb:0d
-  certificate_body (length == 52)
-    00:00:01:5d:48:26:95:79:00:00:01:5c:f0:75:69:79
-    00:01:20:a6:93:66:e0:f5:b0:08:1a:0e:5b:20:80:8b
-    fa:0f:48:83:67:6b:c5:92:7c:15:1a:1a:91:88:c4:28
-    60:01:15:00
-      valid_after: 1500154074489
-      valid_before: 1498682845561
-      signing_level: 0
-      public_key_type: X25519
-      public_key (length == 32)
-        a6:93:66:e0:f5:b0:08:1a:0e:5b:20:80:8b:fa:0f:48
-        83:67:6b:c5:92:7c:15:1a:1a:91:88:c4:28:60:01:15
-      extensions (count = 0)
+<span class="n">certificate</span> <span class="o">#</span><span class="mi">1</span>
+  <span class="n">signature</span> <span class="p">(</span><span class="k">length</span> <span class="o">==</span> <span class="mi">64</span><span class="p">)</span>
+    <span class="n">ab</span><span class="p">:</span><span class="n">b8</span><span class="p">:</span><span class="mi">8</span><span class="n">b</span><span class="p">:</span><span class="mi">85</span><span class="p">:</span><span class="mi">72</span><span class="p">:</span><span class="n">d8</span><span class="p">:</span><span class="n">ff</span><span class="p">:</span><span class="mi">31</span><span class="p">:</span><span class="mi">6</span><span class="k">c</span><span class="p">:</span><span class="n">e7</span><span class="p">:</span><span class="mi">55</span><span class="p">:</span><span class="n">ac</span><span class="p">:</span><span class="n">cd</span><span class="p">:</span><span class="mi">44</span><span class="p">:</span><span class="mi">5</span><span class="n">e</span><span class="p">:</span><span class="n">b3</span>
+    <span class="n">c7</span><span class="p">:</span><span class="mi">2</span><span class="n">e</span><span class="p">:</span><span class="n">aa</span><span class="p">:</span><span class="n">b5</span><span class="p">:</span><span class="mi">47</span><span class="p">:</span><span class="n">d7</span><span class="p">:</span><span class="mi">65</span><span class="p">:</span><span class="mi">5</span><span class="n">b</span><span class="p">:</span><span class="n">dd</span><span class="p">:</span><span class="mi">4</span><span class="n">a</span><span class="p">:</span><span class="mi">0</span><span class="n">a</span><span class="p">:</span><span class="n">fd</span><span class="p">:</span><span class="n">f1</span><span class="p">:</span><span class="n">c0</span><span class="p">:</span><span class="n">ba</span><span class="p">:</span><span class="mi">99</span>
+    <span class="mi">3</span><span class="n">d</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="n">a5</span><span class="p">:</span><span class="mi">27</span><span class="p">:</span><span class="mi">83</span><span class="p">:</span><span class="n">aa</span><span class="p">:</span><span class="mi">93</span><span class="p">:</span><span class="n">cc</span><span class="p">:</span><span class="mi">88</span><span class="p">:</span><span class="mi">2</span><span class="n">d</span><span class="p">:</span><span class="mi">7</span><span class="n">b</span><span class="p">:</span><span class="n">c0</span><span class="p">:</span><span class="n">b6</span><span class="p">:</span><span class="n">cf</span><span class="p">:</span><span class="mi">6</span><span class="n">e</span><span class="p">:</span><span class="n">de</span>
+    <span class="n">d0</span><span class="p">:</span><span class="mi">10</span><span class="p">:</span><span class="mi">74</span><span class="p">:</span><span class="n">b3</span><span class="p">:</span><span class="mi">1</span><span class="n">a</span><span class="p">:</span><span class="n">eb</span><span class="p">:</span><span class="n">f0</span><span class="p">:</span><span class="mi">5</span><span class="n">d</span><span class="p">:</span><span class="mi">60</span><span class="p">:</span><span class="mi">6</span><span class="n">a</span><span class="p">:</span><span class="n">f8</span><span class="p">:</span><span class="mi">15</span><span class="p">:</span><span class="mi">51</span><span class="p">:</span><span class="n">bd</span><span class="p">:</span><span class="n">eb</span><span class="p">:</span><span class="mi">0</span><span class="n">d</span>
+  <span class="n">certificate_body</span> <span class="p">(</span><span class="k">length</span> <span class="o">==</span> <span class="mi">52</span><span class="p">)</span>
+    <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">01</span><span class="p">:</span><span class="mi">5</span><span class="n">d</span><span class="p">:</span><span class="mi">48</span><span class="p">:</span><span class="mi">26</span><span class="p">:</span><span class="mi">95</span><span class="p">:</span><span class="mi">79</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">01</span><span class="p">:</span><span class="mi">5</span><span class="k">c</span><span class="p">:</span><span class="n">f0</span><span class="p">:</span><span class="mi">75</span><span class="p">:</span><span class="mi">69</span><span class="p">:</span><span class="mi">79</span>
+    <span class="mi">00</span><span class="p">:</span><span class="mi">01</span><span class="p">:</span><span class="mi">20</span><span class="p">:</span><span class="n">a6</span><span class="p">:</span><span class="mi">93</span><span class="p">:</span><span class="mi">66</span><span class="p">:</span><span class="n">e0</span><span class="p">:</span><span class="n">f5</span><span class="p">:</span><span class="n">b0</span><span class="p">:</span><span class="mi">08</span><span class="p">:</span><span class="mi">1</span><span class="n">a</span><span class="p">:</span><span class="mi">0</span><span class="n">e</span><span class="p">:</span><span class="mi">5</span><span class="n">b</span><span class="p">:</span><span class="mi">20</span><span class="p">:</span><span class="mi">80</span><span class="p">:</span><span class="mi">8</span><span class="n">b</span>
+    <span class="n">fa</span><span class="p">:</span><span class="mi">0</span><span class="n">f</span><span class="p">:</span><span class="mi">48</span><span class="p">:</span><span class="mi">83</span><span class="p">:</span><span class="mi">67</span><span class="p">:</span><span class="mi">6</span><span class="n">b</span><span class="p">:</span><span class="n">c5</span><span class="p">:</span><span class="mi">92</span><span class="p">:</span><span class="mi">7</span><span class="k">c</span><span class="p">:</span><span class="mi">15</span><span class="p">:</span><span class="mi">1</span><span class="n">a</span><span class="p">:</span><span class="mi">1</span><span class="n">a</span><span class="p">:</span><span class="mi">91</span><span class="p">:</span><span class="mi">88</span><span class="p">:</span><span class="n">c4</span><span class="p">:</span><span class="mi">28</span>
+    <span class="mi">60</span><span class="p">:</span><span class="mi">01</span><span class="p">:</span><span class="mi">15</span><span class="p">:</span><span class="mi">00</span>
+      <span class="n">valid_after</span><span class="p">:</span> <span class="mi">1500154074489</span>
+      <span class="n">valid_before</span><span class="p">:</span> <span class="mi">1498682845561</span>
+      <span class="n">signing_level</span><span class="p">:</span> <span class="mi">0</span>
+      <span class="n">public_key_type</span><span class="p">:</span> <span class="n">X25519</span>
+      <span class="n">public_key</span> <span class="p">(</span><span class="k">length</span> <span class="o">==</span> <span class="mi">32</span><span class="p">)</span>
+        <span class="n">a6</span><span class="p">:</span><span class="mi">93</span><span class="p">:</span><span class="mi">66</span><span class="p">:</span><span class="n">e0</span><span class="p">:</span><span class="n">f5</span><span class="p">:</span><span class="n">b0</span><span class="p">:</span><span class="mi">08</span><span class="p">:</span><span class="mi">1</span><span class="n">a</span><span class="p">:</span><span class="mi">0</span><span class="n">e</span><span class="p">:</span><span class="mi">5</span><span class="n">b</span><span class="p">:</span><span class="mi">20</span><span class="p">:</span><span class="mi">80</span><span class="p">:</span><span class="mi">8</span><span class="n">b</span><span class="p">:</span><span class="n">fa</span><span class="p">:</span><span class="mi">0</span><span class="n">f</span><span class="p">:</span><span class="mi">48</span>
+        <span class="mi">83</span><span class="p">:</span><span class="mi">67</span><span class="p">:</span><span class="mi">6</span><span class="n">b</span><span class="p">:</span><span class="n">c5</span><span class="p">:</span><span class="mi">92</span><span class="p">:</span><span class="mi">7</span><span class="k">c</span><span class="p">:</span><span class="mi">15</span><span class="p">:</span><span class="mi">1</span><span class="n">a</span><span class="p">:</span><span class="mi">1</span><span class="n">a</span><span class="p">:</span><span class="mi">91</span><span class="p">:</span><span class="mi">88</span><span class="p">:</span><span class="n">c4</span><span class="p">:</span><span class="mi">28</span><span class="p">:</span><span class="mi">60</span><span class="p">:</span><span class="mi">01</span><span class="p">:</span><span class="mi">15</span>
+      <span class="n">extensions</span> <span class="p">(</span><span class="k">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
 </pre></div>
                 
                   
@@ -675,7 +677,7 @@ certificate #1
       
     </div>
     
-      <script src="../../assets/javascripts/application.dc02f8ce.js"></script>
+      <script src="../../assets/javascripts/application.ac79c3b0.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
       

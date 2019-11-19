@@ -32,7 +32,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.1.1">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.3">
     
     
       
@@ -40,9 +40,9 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/application.3020aac5.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/application.30686662.css">
       
-        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.224b79ff.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.a8b3c06d.css">
       
       
         
@@ -51,12 +51,12 @@
       
     
     
-      <script src="../../assets/javascripts/modernizr.01ccdecf.js"></script>
+      <script src="../../assets/javascripts/modernizr.74668098.js"></script>
     
     
       
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,400i,700|Ubuntu+Mono">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,400i,700|Ubuntu+Mono&display=fallback">
         <style>body,input{font-family:"Ubuntu","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Ubuntu Mono","Courier New",Courier,monospace}</style>
       
     
@@ -110,7 +110,9 @@
               SSP21-CPP
             </span>
             <span class="md-header-nav__topic">
-              QIX
+              
+                QIX
+              
             </span>
           
         </div>
@@ -128,7 +130,7 @@
         
       
       
-      <main class="md-main">
+      <main class="md-main" role="main">
         <div class="md-main__inner md-grid" data-md-component="container">
           
             
@@ -369,7 +371,7 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#qix-emulator" title="QIX Emulator" class="md-nav__link">
+  <a href="#qix-emulator" class="md-nav__link">
     QIX Emulator
   </a>
   
@@ -412,7 +414,7 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#qix-emulator" title="QIX Emulator" class="md-nav__link">
+  <a href="#qix-emulator" class="md-nav__link">
     QIX Emulator
   </a>
   
@@ -453,69 +455,53 @@
 </ul>
 <h2 id="qix-emulator">QIX Emulator</h2>
 <p>The project includes a command line application called <code>qix-emulator</code> that can read and write frames via a serial port.</p>
-<div class="codehilite"><pre><span></span>&gt; qix-emulator --help
-    -h, --help
-        shows this help message
-    -r, --read
-        read QIX frames
-    -w, --write
-        write random QIX frames
-    -m, --twrite
-        write time-based QIX frames modulo n milliseconds
-    -p, --port
-        serial port
-    -t, --rate
-        number of keys per second (write only) - defaults to 1
-    -c, --count
-        number of frames to transmit (write only) - defaults to 2^64 -1
+<div class="codehilite"><pre><span></span><span class="o">&gt;</span> <span class="n">qix</span><span class="o">-</span><span class="n">emulator</span> <span class="c1">--help</span>
+
+    <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="c1">--help</span>
+        <span class="n">shows</span> <span class="n">this</span> <span class="n">help</span> <span class="n">message</span>
+    <span class="o">-</span><span class="n">r</span><span class="p">,</span> <span class="c1">--read</span>
+        <span class="k">read</span> <span class="n">QIX</span> <span class="n">frames</span>
+    <span class="o">-</span><span class="n">w</span><span class="p">,</span> <span class="c1">--write</span>
+        <span class="k">read</span> <span class="n">QIX</span> <span class="n">frames</span>
+    <span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="c1">--port</span>
+        <span class="nb">serial</span> <span class="n">port</span>
+    <span class="o">-</span><span class="n">t</span><span class="p">,</span> <span class="c1">--rate</span>
+        <span class="nb">number</span> <span class="k">of</span> <span class="n">keys</span> <span class="n">per</span> <span class="k">second</span> <span class="p">(</span><span class="k">write</span> <span class="k">only</span><span class="p">)</span> <span class="o">-</span> <span class="k">defaults</span> <span class="k">to</span> <span class="mi">1</span>
+    <span class="o">-</span><span class="k">c</span><span class="p">,</span> <span class="c1">--count</span>
+        <span class="nb">number</span> <span class="k">of</span> <span class="n">frames</span> <span class="k">to</span> <span class="n">transmit</span> <span class="p">(</span><span class="k">write</span> <span class="k">only</span><span class="p">)</span> <span class="o">-</span> <span class="k">defaults</span> <span class="k">to</span> <span class="mi">2</span><span class="o">^</span><span class="mi">64</span> <span class="o">-</span><span class="mi">1</span>
 </pre></div>
 
 
 <p>For testing purposes, you can use <code>socat</code> to create a virtual null-modem serial port pair:</p>
-<div class="codehilite"><pre><span></span>&gt; socat -d -d pty,raw,echo=0 pty,raw,echo=0
-2019/05/08 13:02:31 socat[50869] N PTY is /dev/pts/1
-2019/05/08 13:02:31 socat[50869] N PTY is /dev/pts/2
-2019/05/08 13:02:31 socat[50869] N starting data transfer loop with FDs [5,5] and [7,7]
+<div class="codehilite"><pre><span></span><span class="o">&gt;</span> <span class="nv">socat</span> <span class="o">-</span><span class="nv">d</span> <span class="o">-</span><span class="nv">d</span> <span class="nv">pty</span>,<span class="nv">raw</span>,<span class="nv">echo</span><span class="o">=</span><span class="mi">0</span> <span class="nv">pty</span>,<span class="nv">raw</span>,<span class="nv">echo</span><span class="o">=</span><span class="mi">0</span>
+<span class="mi">2019</span><span class="o">/</span><span class="mi">05</span><span class="o">/</span><span class="mi">08</span> <span class="mi">13</span>:<span class="mi">02</span>:<span class="mi">31</span> <span class="nv">socat</span>[<span class="mi">50869</span>] <span class="nv">N</span> <span class="nv">PTY</span> <span class="nv">is</span> <span class="o">/</span><span class="nv">dev</span><span class="o">/</span><span class="nv">pts</span><span class="o">/</span><span class="mi">1</span>
+<span class="mi">2019</span><span class="o">/</span><span class="mi">05</span><span class="o">/</span><span class="mi">08</span> <span class="mi">13</span>:<span class="mi">02</span>:<span class="mi">31</span> <span class="nv">socat</span>[<span class="mi">50869</span>] <span class="nv">N</span> <span class="nv">PTY</span> <span class="nv">is</span> <span class="o">/</span><span class="nv">dev</span><span class="o">/</span><span class="nv">pts</span><span class="o">/</span><span class="mi">2</span>
+<span class="mi">2019</span><span class="o">/</span><span class="mi">05</span><span class="o">/</span><span class="mi">08</span> <span class="mi">13</span>:<span class="mi">02</span>:<span class="mi">31</span> <span class="nv">socat</span>[<span class="mi">50869</span>] <span class="nv">N</span> <span class="nv">starting</span> <span class="nv">data</span> <span class="nv">transfer</span> <span class="k">loop</span> <span class="nv">with</span> <span class="nv">FDs</span> [<span class="mi">5</span>,<span class="mi">5</span>] <span class="nv">and</span> [<span class="mi">7</span>,<span class="mi">7</span>]
 </pre></div>
 
 
 <p>You can then start writing and reading on each end of the null-modem pair:</p>
-<div class="codehilite"><pre><span></span>&gt; ./cpp/exe/qix-emulator/qix-emulator -w -p /dev/pts/1
-wrote: 0 - ok - 7F 24 C9 E1 91 50 1B 27 24 74 BD 0E ED F9 2D 2F 2B 7A 70 8D 7F DB CB 1D ED 5E 72 51 00 05 EA 0C
-wrote: 1 - ok - FF 0E 81 E5 C1 A3 52 CD 43 9A E9 DF 4B 50 CC BB 98 70 7C DD A5 41 24 BB 38 B6 F6 6A 2B B2 45 E3
-wrote: 2 - ok - E2 A4 53 E5 9E 88 59 BB 33 25 E8 35 71 16 9A 0D E4 C9 BE EA B1 11 52 A1 15 1A 09 67 D9 C5 DD 6D
-wrote: 3 - ok - 96 D8 D8 C0 14 29 9D 00 3E 45 7B 73 0A 84 75 50 DF 94 3A DF A9 8E 24 24 98 87 9F 41 98 E8 93 48
-wrote: 4 - ok - 70 0A D4 86 E0 29 93 CC 04 4D 68 A0 89 84 0C F5 EA BB 97 BD 84 0C 9F BC 68 DD 75 C2 76 B9 ED F4
+<div class="codehilite"><pre><span></span><span class="o">&gt;</span> <span class="p">.</span><span class="o">/</span><span class="n">cpp</span><span class="o">/</span><span class="n">exe</span><span class="o">/</span><span class="n">qix</span><span class="o">-</span><span class="n">emulator</span><span class="o">/</span><span class="n">qix</span><span class="o">-</span><span class="n">emulator</span> <span class="o">-</span><span class="n">w</span> <span class="o">-</span><span class="n">p</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">pts</span><span class="o">/</span><span class="mi">1</span>
+<span class="n">wrote</span><span class="p">:</span> <span class="mi">0</span> <span class="o">-</span> <span class="n">ok</span> <span class="o">-</span> <span class="mi">7</span><span class="n">F</span> <span class="mi">24</span> <span class="n">C9</span> <span class="n">E1</span> <span class="mi">91</span> <span class="mi">50</span> <span class="mi">1</span><span class="n">B</span> <span class="mi">27</span> <span class="mi">24</span> <span class="mi">74</span> <span class="n">BD</span> <span class="mi">0</span><span class="n">E</span> <span class="n">ED</span> <span class="n">F9</span> <span class="mi">2</span><span class="n">D</span> <span class="mi">2</span><span class="n">F</span> <span class="mi">2</span><span class="n">B</span> <span class="mi">7</span><span class="n">A</span> <span class="mi">70</span> <span class="mi">8</span><span class="n">D</span> <span class="mi">7</span><span class="n">F</span> <span class="n">DB</span> <span class="n">CB</span> <span class="mi">1</span><span class="n">D</span> <span class="n">ED</span> <span class="mi">5</span><span class="n">E</span> <span class="mi">72</span> <span class="mi">51</span> <span class="mi">00</span> <span class="mi">05</span> <span class="n">EA</span> <span class="mi">0</span><span class="k">C</span>
+<span class="n">wrote</span><span class="p">:</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">ok</span> <span class="o">-</span> <span class="n">FF</span> <span class="mi">0</span><span class="n">E</span> <span class="mi">81</span> <span class="n">E5</span> <span class="n">C1</span> <span class="n">A3</span> <span class="mi">52</span> <span class="n">CD</span> <span class="mi">43</span> <span class="mi">9</span><span class="n">A</span> <span class="n">E9</span> <span class="n">DF</span> <span class="mi">4</span><span class="n">B</span> <span class="mi">50</span> <span class="n">CC</span> <span class="n">BB</span> <span class="mi">98</span> <span class="mi">70</span> <span class="mi">7</span><span class="k">C</span> <span class="n">DD</span> <span class="n">A5</span> <span class="mi">41</span> <span class="mi">24</span> <span class="n">BB</span> <span class="mi">38</span> <span class="n">B6</span> <span class="n">F6</span> <span class="mi">6</span><span class="n">A</span> <span class="mi">2</span><span class="n">B</span> <span class="n">B2</span> <span class="mi">45</span> <span class="n">E3</span>
+<span class="n">wrote</span><span class="p">:</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">ok</span> <span class="o">-</span> <span class="n">E2</span> <span class="n">A4</span> <span class="mi">53</span> <span class="n">E5</span> <span class="mi">9</span><span class="n">E</span> <span class="mi">88</span> <span class="mi">59</span> <span class="n">BB</span> <span class="mi">33</span> <span class="mi">25</span> <span class="n">E8</span> <span class="mi">35</span> <span class="mi">71</span> <span class="mi">16</span> <span class="mi">9</span><span class="n">A</span> <span class="mi">0</span><span class="n">D</span> <span class="n">E4</span> <span class="n">C9</span> <span class="n">BE</span> <span class="n">EA</span> <span class="n">B1</span> <span class="mi">11</span> <span class="mi">52</span> <span class="n">A1</span> <span class="mi">15</span> <span class="mi">1</span><span class="n">A</span> <span class="mi">09</span> <span class="mi">67</span> <span class="n">D9</span> <span class="n">C5</span> <span class="n">DD</span> <span class="mi">6</span><span class="n">D</span>
+<span class="n">wrote</span><span class="p">:</span> <span class="mi">3</span> <span class="o">-</span> <span class="n">ok</span> <span class="o">-</span> <span class="mi">96</span> <span class="n">D8</span> <span class="n">D8</span> <span class="n">C0</span> <span class="mi">14</span> <span class="mi">29</span> <span class="mi">9</span><span class="n">D</span> <span class="mi">00</span> <span class="mi">3</span><span class="n">E</span> <span class="mi">45</span> <span class="mi">7</span><span class="n">B</span> <span class="mi">73</span> <span class="mi">0</span><span class="n">A</span> <span class="mi">84</span> <span class="mi">75</span> <span class="mi">50</span> <span class="n">DF</span> <span class="mi">94</span> <span class="mi">3</span><span class="n">A</span> <span class="n">DF</span> <span class="n">A9</span> <span class="mi">8</span><span class="n">E</span> <span class="mi">24</span> <span class="mi">24</span> <span class="mi">98</span> <span class="mi">87</span> <span class="mi">9</span><span class="n">F</span> <span class="mi">41</span> <span class="mi">98</span> <span class="n">E8</span> <span class="mi">93</span> <span class="mi">48</span>
+<span class="n">wrote</span><span class="p">:</span> <span class="mi">4</span> <span class="o">-</span> <span class="n">ok</span> <span class="o">-</span> <span class="mi">70</span> <span class="mi">0</span><span class="n">A</span> <span class="n">D4</span> <span class="mi">86</span> <span class="n">E0</span> <span class="mi">29</span> <span class="mi">93</span> <span class="n">CC</span> <span class="mi">04</span> <span class="mi">4</span><span class="n">D</span> <span class="mi">68</span> <span class="n">A0</span> <span class="mi">89</span> <span class="mi">84</span> <span class="mi">0</span><span class="k">C</span> <span class="n">F5</span> <span class="n">EA</span> <span class="n">BB</span> <span class="mi">97</span> <span class="n">BD</span> <span class="mi">84</span> <span class="mi">0</span><span class="k">C</span> <span class="mi">9</span><span class="n">F</span> <span class="n">BC</span> <span class="mi">68</span> <span class="n">DD</span> <span class="mi">75</span> <span class="n">C2</span> <span class="mi">76</span> <span class="n">B9</span> <span class="n">ED</span> <span class="n">F4</span>
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&gt; ./cpp/exe/qix-emulator/qix-emulator -r -p /dev/pts/2
-read: 0 - ok - 7F 24 C9 E1 91 50 1B 27 24 74 BD 0E ED F9 2D 2F 2B 7A 70 8D 7F DB CB 1D ED 5E 72 51 00 05 EA 0C
-read: 1 - ok - FF 0E 81 E5 C1 A3 52 CD 43 9A E9 DF 4B 50 CC BB 98 70 7C DD A5 41 24 BB 38 B6 F6 6A 2B B2 45 E3
-read: 2 - ok - E2 A4 53 E5 9E 88 59 BB 33 25 E8 35 71 16 9A 0D E4 C9 BE EA B1 11 52 A1 15 1A 09 67 D9 C5 DD 6D
-read: 3 - ok - 96 D8 D8 C0 14 29 9D 00 3E 45 7B 73 0A 84 75 50 DF 94 3A DF A9 8E 24 24 98 87 9F 41 98 E8 93 48
-read: 4 - ok - 70 0A D4 86 E0 29 93 CC 04 4D 68 A0 89 84 0C F5 EA BB 97 BD 84 0C 9F BC 68 DD 75 C2 76 B9 ED F4
+<div class="codehilite"><pre><span></span><span class="o">&gt;</span> <span class="p">.</span><span class="o">/</span><span class="n">cpp</span><span class="o">/</span><span class="n">exe</span><span class="o">/</span><span class="n">qix</span><span class="o">-</span><span class="n">emulator</span><span class="o">/</span><span class="n">qix</span><span class="o">-</span><span class="n">emulator</span> <span class="o">-</span><span class="n">r</span> <span class="o">-</span><span class="n">p</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">pts</span><span class="o">/</span><span class="mi">2</span>
+<span class="k">read</span><span class="p">:</span> <span class="mi">0</span> <span class="o">-</span> <span class="n">ok</span> <span class="o">-</span> <span class="mi">7</span><span class="n">F</span> <span class="mi">24</span> <span class="n">C9</span> <span class="n">E1</span> <span class="mi">91</span> <span class="mi">50</span> <span class="mi">1</span><span class="n">B</span> <span class="mi">27</span> <span class="mi">24</span> <span class="mi">74</span> <span class="n">BD</span> <span class="mi">0</span><span class="n">E</span> <span class="n">ED</span> <span class="n">F9</span> <span class="mi">2</span><span class="n">D</span> <span class="mi">2</span><span class="n">F</span> <span class="mi">2</span><span class="n">B</span> <span class="mi">7</span><span class="n">A</span> <span class="mi">70</span> <span class="mi">8</span><span class="n">D</span> <span class="mi">7</span><span class="n">F</span> <span class="n">DB</span> <span class="n">CB</span> <span class="mi">1</span><span class="n">D</span> <span class="n">ED</span> <span class="mi">5</span><span class="n">E</span> <span class="mi">72</span> <span class="mi">51</span> <span class="mi">00</span> <span class="mi">05</span> <span class="n">EA</span> <span class="mi">0</span><span class="k">C</span>
+<span class="k">read</span><span class="p">:</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">ok</span> <span class="o">-</span> <span class="n">FF</span> <span class="mi">0</span><span class="n">E</span> <span class="mi">81</span> <span class="n">E5</span> <span class="n">C1</span> <span class="n">A3</span> <span class="mi">52</span> <span class="n">CD</span> <span class="mi">43</span> <span class="mi">9</span><span class="n">A</span> <span class="n">E9</span> <span class="n">DF</span> <span class="mi">4</span><span class="n">B</span> <span class="mi">50</span> <span class="n">CC</span> <span class="n">BB</span> <span class="mi">98</span> <span class="mi">70</span> <span class="mi">7</span><span class="k">C</span> <span class="n">DD</span> <span class="n">A5</span> <span class="mi">41</span> <span class="mi">24</span> <span class="n">BB</span> <span class="mi">38</span> <span class="n">B6</span> <span class="n">F6</span> <span class="mi">6</span><span class="n">A</span> <span class="mi">2</span><span class="n">B</span> <span class="n">B2</span> <span class="mi">45</span> <span class="n">E3</span>
+<span class="k">read</span><span class="p">:</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">ok</span> <span class="o">-</span> <span class="n">E2</span> <span class="n">A4</span> <span class="mi">53</span> <span class="n">E5</span> <span class="mi">9</span><span class="n">E</span> <span class="mi">88</span> <span class="mi">59</span> <span class="n">BB</span> <span class="mi">33</span> <span class="mi">25</span> <span class="n">E8</span> <span class="mi">35</span> <span class="mi">71</span> <span class="mi">16</span> <span class="mi">9</span><span class="n">A</span> <span class="mi">0</span><span class="n">D</span> <span class="n">E4</span> <span class="n">C9</span> <span class="n">BE</span> <span class="n">EA</span> <span class="n">B1</span> <span class="mi">11</span> <span class="mi">52</span> <span class="n">A1</span> <span class="mi">15</span> <span class="mi">1</span><span class="n">A</span> <span class="mi">09</span> <span class="mi">67</span> <span class="n">D9</span> <span class="n">C5</span> <span class="n">DD</span> <span class="mi">6</span><span class="n">D</span>
+<span class="k">read</span><span class="p">:</span> <span class="mi">3</span> <span class="o">-</span> <span class="n">ok</span> <span class="o">-</span> <span class="mi">96</span> <span class="n">D8</span> <span class="n">D8</span> <span class="n">C0</span> <span class="mi">14</span> <span class="mi">29</span> <span class="mi">9</span><span class="n">D</span> <span class="mi">00</span> <span class="mi">3</span><span class="n">E</span> <span class="mi">45</span> <span class="mi">7</span><span class="n">B</span> <span class="mi">73</span> <span class="mi">0</span><span class="n">A</span> <span class="mi">84</span> <span class="mi">75</span> <span class="mi">50</span> <span class="n">DF</span> <span class="mi">94</span> <span class="mi">3</span><span class="n">A</span> <span class="n">DF</span> <span class="n">A9</span> <span class="mi">8</span><span class="n">E</span> <span class="mi">24</span> <span class="mi">24</span> <span class="mi">98</span> <span class="mi">87</span> <span class="mi">9</span><span class="n">F</span> <span class="mi">41</span> <span class="mi">98</span> <span class="n">E8</span> <span class="mi">93</span> <span class="mi">48</span>
+<span class="k">read</span><span class="p">:</span> <span class="mi">4</span> <span class="o">-</span> <span class="n">ok</span> <span class="o">-</span> <span class="mi">70</span> <span class="mi">0</span><span class="n">A</span> <span class="n">D4</span> <span class="mi">86</span> <span class="n">E0</span> <span class="mi">29</span> <span class="mi">93</span> <span class="n">CC</span> <span class="mi">04</span> <span class="mi">4</span><span class="n">D</span> <span class="mi">68</span> <span class="n">A0</span> <span class="mi">89</span> <span class="mi">84</span> <span class="mi">0</span><span class="k">C</span> <span class="n">F5</span> <span class="n">EA</span> <span class="n">BB</span> <span class="mi">97</span> <span class="n">BD</span> <span class="mi">84</span> <span class="mi">0</span><span class="k">C</span> <span class="mi">9</span><span class="n">F</span> <span class="n">BC</span> <span class="mi">68</span> <span class="n">DD</span> <span class="mi">75</span> <span class="n">C2</span> <span class="mi">76</span> <span class="n">B9</span> <span class="n">ED</span> <span class="n">F4</span>
 </pre></div>
 
 
 <p>If you want to write the same key data to two ports to test a proxy link without QKD hardware, just supply two port arguments:</p>
-<div class="codehilite"><pre><span></span>&gt; ./qix-emulator -w -p /dev/pts/1 -p /dev/pts/2
+<div class="codehilite"><pre><span></span><span class="o">&gt;</span> <span class="p">.</span><span class="o">/</span><span class="n">qix</span><span class="o">-</span><span class="n">emulator</span> <span class="o">-</span><span class="n">w</span> <span class="o">-</span><span class="n">p</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">pts</span><span class="o">/</span><span class="mi">1</span> <span class="o">-</span><span class="n">p</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">pts</span><span class="o">/</span><span class="mi">2</span>
 </pre></div>
-
-
-<p>The emulator can also simulate (insecurely) a QKD receiver pair by generating key IDs and key data based on the system time:</p>
-<div class="codehilite"><pre><span></span>qix-emulator -m 500 -p /dev/pts/2
-wrote: 1563995785500 - ok - B4 27 31 95 04 BA D6 77 6F 47 1C C8 8B B1 8E 0F 22 BA F0 0E 53 2B 65 BB B5 40 36 69 27 56 6F E3
-wrote: 1563995786000 - ok - 8D B0 3C 4D AE 3C 44 38 FE A6 05 E7 92 06 9D 5A DD AA 7C 3C 5A C8 B3 0B 2D 9F E5 C6 D7 AE 89 E8
-wrote: 1563995786500 - ok - 87 92 D8 15 2E 3C 93 72 68 8D E5 17 30 74 FE 14 20 88 A4 E3 64 F4 D4 B0 DA ED 74 AF 3B 29 9A 26
-wrote: 1563995787000 - ok - A3 DF 17 5F 4C DA 44 AC 04 ED 56 35 C7 06 2F 4F 59 BB 39 86 8E 62 7C 24 E5 48 81 81 A3 F0 13 F2
-</pre></div>
-
-
-<p>In this mode, the emulator writes a key whenever the current time since epoch modulo parameter m == 0. In the example above, the emulator
-writes a key twice per second. The millisecond timestamp is used as the key identifier. The key data is the SHA256 hash of
-the big endian serialization of the key identifier. Multiple instances of the application will emit the same keys and identifiers if they are configured with
-the same modulo parameter. The synchronicity of their transmissions relies on the accuracy of their time sync.</p>
                 
                   
                 
@@ -571,7 +557,7 @@ the same modulo parameter. The synchronicity of their transmissions relies on th
       
     </div>
     
-      <script src="../../assets/javascripts/application.dc02f8ce.js"></script>
+      <script src="../../assets/javascripts/application.ac79c3b0.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
       

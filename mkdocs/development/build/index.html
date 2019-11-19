@@ -32,7 +32,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.1.1">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.3">
     
     
       
@@ -40,9 +40,9 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/application.3020aac5.css">
+      <link rel="stylesheet" href="../assets/stylesheets/application.30686662.css">
       
-        <link rel="stylesheet" href="../assets/stylesheets/application-palette.224b79ff.css">
+        <link rel="stylesheet" href="../assets/stylesheets/application-palette.a8b3c06d.css">
       
       
         
@@ -51,12 +51,12 @@
       
     
     
-      <script src="../assets/javascripts/modernizr.01ccdecf.js"></script>
+      <script src="../assets/javascripts/modernizr.74668098.js"></script>
     
     
       
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,400i,700|Ubuntu+Mono">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,400i,700|Ubuntu+Mono&display=fallback">
         <style>body,input{font-family:"Ubuntu","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Ubuntu Mono","Courier New",Courier,monospace}</style>
       
     
@@ -110,7 +110,9 @@
               SSP21-CPP
             </span>
             <span class="md-header-nav__topic">
-              Building
+              
+                Building
+              
             </span>
           
         </div>
@@ -128,7 +130,7 @@
         
       
       
-      <main class="md-main">
+      <main class="md-main" role="main">
         <div class="md-main__inner md-grid" data-md-component="container">
           
             
@@ -188,14 +190,14 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#cloning" title="Cloning" class="md-nav__link">
+  <a href="#cloning" class="md-nav__link">
     Cloning
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#dependencies" title="Dependencies" class="md-nav__link">
+  <a href="#dependencies" class="md-nav__link">
     Dependencies
   </a>
   
@@ -203,14 +205,14 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#required" title="Required" class="md-nav__link">
+  <a href="#required" class="md-nav__link">
     Required
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional" title="Optional" class="md-nav__link">
+  <a href="#optional" class="md-nav__link">
     Optional
   </a>
   
@@ -222,21 +224,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#install-libsodium" title="Install libsodium" class="md-nav__link">
+  <a href="#install-libsodium" class="md-nav__link">
     Install libsodium
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#invoke-cmake" title="Invoke CMake" class="md-nav__link">
+  <a href="#invoke-cmake" class="md-nav__link">
     Invoke CMake
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#build-and-install" title="Build and install" class="md-nav__link">
+  <a href="#build-and-install" class="md-nav__link">
     Build and install
   </a>
   
@@ -452,14 +454,14 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#cloning" title="Cloning" class="md-nav__link">
+  <a href="#cloning" class="md-nav__link">
     Cloning
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#dependencies" title="Dependencies" class="md-nav__link">
+  <a href="#dependencies" class="md-nav__link">
     Dependencies
   </a>
   
@@ -467,14 +469,14 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#required" title="Required" class="md-nav__link">
+  <a href="#required" class="md-nav__link">
     Required
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional" title="Optional" class="md-nav__link">
+  <a href="#optional" class="md-nav__link">
     Optional
   </a>
   
@@ -486,21 +488,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#install-libsodium" title="Install libsodium" class="md-nav__link">
+  <a href="#install-libsodium" class="md-nav__link">
     Install libsodium
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#invoke-cmake" title="Invoke CMake" class="md-nav__link">
+  <a href="#invoke-cmake" class="md-nav__link">
     Invoke CMake
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#build-and-install" title="Build and install" class="md-nav__link">
+  <a href="#build-and-install" class="md-nav__link">
     Build and install
   </a>
   
@@ -637,16 +639,16 @@ add the following flag so that libsodium can be located:</p>
 <h2 id="invoke-cmake">Invoke CMake</h2>
 <p><a href="https://cmake.org/">CMake</a> is used to generate a build system for your platform. Create a separate folder for your build artifacts,
 and then invoke CMake telling it where to find the root CMakeLists.txt file.</p>
-<div class="codehilite"><pre><span></span>&gt; cd ssp21-cpp
-&gt; mkdir build; cd build
-&gt; cmake .. 
+<div class="codehilite"><pre><span></span><span class="o">&gt;</span> <span class="n">cd</span> <span class="n">ssp21</span><span class="o">-</span><span class="n">cpp</span>
+<span class="o">&gt;</span> <span class="n">mkdir</span> <span class="n">build</span><span class="p">;</span> <span class="n">cd</span> <span class="n">build</span>
+<span class="o">&gt;</span> <span class="n">cmake</span> <span class="p">..</span> 
 </pre></div>
 
 
 <p>This will create your Makefile, Visual Studio Solution, etc. You can then build and install the library.</p>
 <h2 id="build-and-install">Build and install</h2>
 <p>The actual build command / proceedure depends on your platform, e.g. on Linux:</p>
-<div class="codehilite"><pre><span></span>&gt; sudo make install
+<div class="codehilite"><pre><span></span><span class="o">&gt;</span> <span class="n">sudo</span> <span class="n">make</span> <span class="n">install</span>
 </pre></div>
                 
                   
@@ -717,7 +719,7 @@ and then invoke CMake telling it where to find the root CMakeLists.txt file.</p>
       
     </div>
     
-      <script src="../assets/javascripts/application.dc02f8ce.js"></script>
+      <script src="../assets/javascripts/application.ac79c3b0.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
       
