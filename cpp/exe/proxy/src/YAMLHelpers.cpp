@@ -105,6 +105,28 @@ namespace yaml
         return value.Scalar();
     }
 
+    exe4cpp::duration_t get_duration_value(const YAML::Node& node)
+    {
+        const auto value = extract_integer<int64_t>(yaml::require(node, "value"));
+
+        switch (get_time_unit(node))
+        {
+        case(TimeUnit::milliseconds):
+            return std::chrono::milliseconds(value);
+        case(TimeUnit::seconds):
+            return std::chrono::seconds(value);
+        case(TimeUnit::minutes):
+            return std::chrono::minutes(value);
+        default:
+            return std::chrono::hours(value);
+        }
+    }
+
+    exe4cpp::duration_t require_duration(const YAML::Node& node, const std::string& key)
+    {
+        return get_duration_value(yaml::require(node, key));
+    }
+
 	exe4cpp::duration_t optional_duration(const YAML::Node& node, const std::string& key, exe4cpp::duration_t default_value)
 	{
 		if (!node) {
@@ -117,19 +139,7 @@ namespace yaml
 			return default_value;
 		}
 
-		const auto value = extract_integer<int64_t>(yaml::require(duration, "value"));
-
-		switch (get_time_unit(duration))
-		{
-		    case(TimeUnit::milliseconds):
-				return std::chrono::milliseconds(value);
-			case(TimeUnit::seconds):
-				return std::chrono::seconds(value);
-			case(TimeUnit::minutes):
-				return std::chrono::minutes(value);
-			default:
-				return std::chrono::hours(value);
-		}		
+        return get_duration_value(duration);
 	}
 }
 

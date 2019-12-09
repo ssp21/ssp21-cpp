@@ -39,6 +39,8 @@ namespace yaml
 
     std::string optional_string(const YAML::Node& node, const std::string& key, const std::string& default_value);
 
+    exe4cpp::duration_t require_duration(const YAML::Node& node, const std::string& key);
+
 	exe4cpp::duration_t optional_duration(const YAML::Node& node, const std::string& key, exe4cpp::duration_t default_value);
 
 	template <typename T>
