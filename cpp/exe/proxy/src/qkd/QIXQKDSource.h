@@ -20,7 +20,7 @@ class QIXQKDSource : public IQKDSource
 	class FrameHandler : public IQIXFrameHandler
 	{	
     public:
-        FrameHandler(const YAML::Node& node, log4cpp::Logger& logger);
+        FrameHandler(const YAML::Node& config, const YAML::Node& metrics, log4cpp::Logger& logger);
 
 		void handle(const QIXFrame& frame) override;
 
@@ -28,14 +28,18 @@ class QIXQKDSource : public IQKDSource
 
     private:
 
+	    struct KeyStat {
+            std::chrono::high_resolution_clock::time_point arrival_time;
+	    };
+
         const uint16_t num_subscribers;
-        const std::chrono::high_resolution_clock::duration key_metric_update_rate;
-        const uint16_t key_metric_bin_size;
+        const std::chrono::high_resolution_clock::duration metric_update_period;
+        const uint16_t metric_bin_size;
 
         log4cpp::Logger logger;
 
         std::chrono::high_resolution_clock::time_point last_metric_update_time;
-        std::deque<std::chrono::high_resolution_clock::time_point> key_data_bin;
+        std::deque<KeyStat> key_data_bin;
 
         double calc_mean_time_between_keys();
         double calc_std_dev_of_time_between_keys(double mean_time_between_keys);

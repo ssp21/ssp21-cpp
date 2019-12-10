@@ -62,12 +62,12 @@ SerialSettings read_serial_settings(const YAML::Node& node)
     );
 }
 
-QIXQKDSource::FrameHandler::FrameHandler(const YAML::Node& node, log4cpp::Logger& logger) :
-    num_subscribers(yaml::require_integer<uint16_t>(node, "num_subscribers")),
-    key_metric_update_rate(yaml::require_duration(node, "key_metric_update_rate")),
-    key_metric_bin_size(yaml::require_integer<uint16_t>(node, "key_metric_bin_size")),
+QIXQKDSource::FrameHandler::FrameHandler(const YAML::Node& config, const YAML::Node& metrics, log4cpp::Logger& logger) :
+    num_subscribers(yaml::require_integer<uint16_t>(config, "num_subscribers")),
+    metric_update_period(yaml::require_duration(metrics, "update_period")),
+    metric_bin_size(yaml::require_integer<uint16_t>(metrics, "bin_size")),
     logger(logger),
-    last_metric_update_time(high_resolution_clock::time_point::min())
+    last_metric_update_time(high_resolution_clock::now())
 {
 
 }
@@ -75,7 +75,6 @@ QIXQKDSource::FrameHandler::FrameHandler(const YAML::Node& node, log4cpp::Logger
 void QIXQKDSource::FrameHandler::handle(const QIXFrame& frame)
 {
     const auto now = high_resolution_clock::now();
-    const auto elapsed = now - this->last_metric_update_time;
 
     if (frame.status != QIXFrame::Status::ok)
     {
@@ -92,16 +91,19 @@ void QIXQKDSource::FrameHandler::handle(const QIXFrame& frame)
     }
 
     // add the time to the bin and trim the bin if necessary
-    this->key_data_bin.push_back(now);
-    if (this->key_data_bin.size() > this->key_metric_bin_size)
+    this->key_data_bin.push_back({now});
+    if (this->key_data_bin.size() > this->metric_bin_size)
     {
         this->key_data_bin.pop_front();
     }
 
+    const auto elapsed_time = now - this->last_metric_update_time;
+    const auto enough_elapsed_time = elapsed_time > this->metric_update_period;
+    const auto enough_samples = this->key_data_bin.size() == this->metric_bin_size;
+
     // do a metric update if the bin is at capacity
     // and enough time has elapsed since the last update
-    if (this->key_data_bin.size() == this->key_metric_bin_size
-        && elapsed > this->key_metric_update_rate)
+    if (enough_elapsed_time && enough_samples)
     {
         this->last_metric_update_time = now;
 
@@ -130,17 +132,17 @@ void for_each_pair(Iter start, Iter end, F func)
     }
 }
 
-double fractional_seconds(std::chrono::high_resolution_clock::duration duration)
+double interval_in_sec(std::chrono::high_resolution_clock::time_point t1, std::chrono::high_resolution_clock::time_point t2)
 {
-    const auto ratio = std::chrono::high_resolution_clock::duration::period();
-    
-    return static_cast<double>(duration.count()) * static_cast<double>(ratio.den) / static_cast<double>(ratio.num);
+    const std::chrono::duration<double, std::ratio<1> > seconds = t2 - t1;
+    return seconds.count();
 }
+
 
 double QIXQKDSource::FrameHandler::calc_mean_time_between_keys()
 {
     // don't divide by zero
-    if (this->key_data_bin.empty())
+    if (this->key_data_bin.size() < 2)
     {
         return std::numeric_limits<double>::infinity();
     }
@@ -150,18 +152,18 @@ double QIXQKDSource::FrameHandler::calc_mean_time_between_keys()
     for_each_pair(
         this->key_data_bin.begin(),
         this->key_data_bin.end(), 
-        [&](high_resolution_clock::time_point t1, high_resolution_clock::time_point t2) {
-            sum += fractional_seconds(t2 - t1);
+        [&](const KeyStat& k1, KeyStat& k2) {
+            sum += interval_in_sec(k1.arrival_time, k2.arrival_time);
         }
     );
 
-    return sum / static_cast<double>(this->key_data_bin.size());
+    return sum / static_cast<double>(this->key_data_bin.size() - 1);
 }
 
 double QIXQKDSource::FrameHandler::calc_std_dev_of_time_between_keys(double mean)
 {
     // don't divide by zero
-    if (this->key_data_bin.empty())
+    if (this->key_data_bin.size() < 2)
     {
         return std::numeric_limits<double>::infinity();
     }
@@ -172,17 +174,17 @@ double QIXQKDSource::FrameHandler::calc_std_dev_of_time_between_keys(double mean
         this->key_data_bin.begin(),
         this->key_data_bin.end(),
         [&](auto t1, auto t2) {
-            const auto diff = fractional_seconds(t2 - t1);
+            const auto diff = interval_in_sec(t1.arrival_time, t2.arrival_time);
             const auto diff_minus_mean = diff - mean;
             sum_of_squares += diff_minus_mean * diff_minus_mean;
         }
     );
 
-    return std::sqrt(sum_of_squares / static_cast<double>(this->key_data_bin.size()));
+    return std::sqrt(sum_of_squares / static_cast<double>(this->key_data_bin.size() -1));
 }
 
 QIXQKDSource::QIXQKDSource(const YAML::Node& node, const std::shared_ptr<exe4cpp::BasicExecutor>& executor, log4cpp::Logger& logger) :
-	handler(std::make_shared<FrameHandler>(node, logger))
+	handler(std::make_shared<FrameHandler>(node, yaml::require(node, "metrics"), logger))
 {
    const auto settings = read_serial_settings(yaml::require(node, "serial"));
 
