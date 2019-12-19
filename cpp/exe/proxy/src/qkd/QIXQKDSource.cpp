@@ -82,6 +82,12 @@ void QIXQKDSource::FrameHandler::handle(const QIXFrame& frame)
         return;
     }
 
+	if (frame.key_data.length() != 256)
+	{
+		FORMAT_LOG_BLOCK(this->logger, ssp21::levels::warn, "key length not 256: %d", frame.key_data.length());
+		return;
+	}
+
     // route to the correct subscriber first before re-calculating metrics
     const uint16_t subscriber_id = frame.key_id % this->num_subscribers;
     const auto subscriber = this->subscribers.find(subscriber_id);
@@ -97,6 +103,13 @@ void QIXQKDSource::FrameHandler::handle(const QIXFrame& frame)
         this->key_data_bin.pop_front();
     }
 
+	// update the frequency counts
+	for (auto i = 0; i < frame.key_data.length(); ++i)
+	{
+		++this->counts[i];
+		this->num_bytes += frame.key_data.length();
+	}
+
     const auto elapsed_time = now - this->last_metric_update_time;
     const auto enough_elapsed_time = elapsed_time > this->metric_update_period;
     const auto enough_samples = this->key_data_bin.size() == this->metric_bin_size;
@@ -109,9 +122,11 @@ void QIXQKDSource::FrameHandler::handle(const QIXFrame& frame)
 
         const auto mean = this->calc_mean_time_between_keys();
         const auto std_dev = this->calc_std_dev_of_time_between_keys(mean);
+		const auto entropy = this->calculate_shannon_entropy();
 
         FORMAT_LOG_BLOCK(this->logger, ssp21::levels::metric, "mean_time_between_keys: %f", mean);
         FORMAT_LOG_BLOCK(this->logger, ssp21::levels::metric, "std_dev_of_time_between_keys: %f", std_dev);
+		FORMAT_LOG_BLOCK(this->logger, ssp21::levels::metric, "shannon entropy (bytes): %f", entropy);
     }
 }
 
@@ -181,6 +196,25 @@ double QIXQKDSource::FrameHandler::calc_std_dev_of_time_between_keys(double mean
     );
 
     return std::sqrt(sum_of_squares / static_cast<double>(this->key_data_bin.size() -1));
+}
+
+double QIXQKDSource::FrameHandler::calculate_shannon_entropy()
+{
+	double frequencies[256];
+
+	for (auto i = 0; i < 256; ++i)
+	{
+		frequencies[i] = static_cast<double>(counts[i]) / static_cast<double>(this->num_bytes);
+	}
+
+	double sum = 0;
+
+	for (auto i = 0; i < 256; ++i)
+	{
+		sum += frequencies[i] * log2(frequencies[i]);
+	}
+
+	return -sum;
 }
 
 QIXQKDSource::QIXQKDSource(const YAML::Node& node, const std::shared_ptr<exe4cpp::BasicExecutor>& executor, log4cpp::Logger& logger) :

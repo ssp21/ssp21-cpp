@@ -28,6 +28,12 @@ class QIXQKDSource : public IQKDSource
 
     private:
 
+		// total number of key bytes received
+		uint64_t num_bytes = 0;
+		// count of each byte value
+		uint64_t counts[256] = { 0 };
+		
+
 	    struct KeyStat {
             std::chrono::high_resolution_clock::time_point arrival_time;
 	    };
@@ -43,6 +49,7 @@ class QIXQKDSource : public IQKDSource
 
         double calc_mean_time_between_keys();
         double calc_std_dev_of_time_between_keys(double mean_time_between_keys);
+		double calculate_shannon_entropy();
 	};
 
 public:
