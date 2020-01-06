@@ -82,9 +82,9 @@ void QIXQKDSource::FrameHandler::handle(const QIXFrame& frame)
         return;
     }
 
-	if (frame.key_data.length() != 256)
+	if (frame.key_data.length() != 32)
 	{
-		FORMAT_LOG_BLOCK(this->logger, ssp21::levels::warn, "key length not 256: %d", frame.key_data.length());
+		FORMAT_LOG_BLOCK(this->logger, ssp21::levels::warn, "key length not 32 bytes: %d", frame.key_data.length());
 		return;
 	}
 
