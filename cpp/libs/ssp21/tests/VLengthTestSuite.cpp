@@ -80,11 +80,6 @@ TEST_CASE(SUITE("decoding fails when fewer bytes could have been used to encode 
 	test_decoding_failure("84 00 FF FF FF", ParseError::bad_vlength);
 }
 
-TEST_CASE(SUITE("decoding fails when maximum value is exceeded on the last byte"))
-{
-    test_decoding_failure("FF FF FF FF 10", ParseError::bad_vlength);
-}
-
 TEST_CASE(SUITE("decoding fails when insufficient bytes"))
 {
     test_decoding_failure("", ParseError::insufficient_bytes);
