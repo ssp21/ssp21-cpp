@@ -9,39 +9,34 @@ namespace ssp21
 {
     /**
     *
-    *	Variable-length unsigned 32-bit integer encoding/decoding
-    *
-    *   num bytes | # bits | max value   |  encoding
-    *   ______________________________________________________
-    *		1	  |    7    |  127        |  { 0x7F }
-    *		2	  |	   14   |  16383      |  { 0xFF, 0x7F }
-    *       3	  |    21   |  2097151    |  { 0xFF, 0xFF, 0x7F }
-    *       4	  |    28   |  268435455  |  { 0xFF, 0xFF, 0xFF, 0x7F }
-    *
-    *  We can only use the bottom 4 bits of the 5th byte.
-    *
-    *  2^32 - 1 encodes to { 0xFF, 0xFF, 0xFF, 0xFF, 0x0F }
-    *
-    *  Therefore, the 5th byte can NEVER be > than 0x0F
-    *
+    *	Variable-length unsigned 32-bit integer encoding/decoding ala ASN.1 DER
+	*
+	*   The first byte may represent a number in the interval [0,127] OR if the top
+	*   bit is set, the lower 7 bytes encode the count of bytes that follow.
+	*	
+	*   Values SHALL be encoded in the fewest bytes possible, and parsers SHALL reject
+	*   such invalid encodings.
+	*
+    *   num bytes  |  min         |  max          |  Notes
+    *   __________________________________________|_______________________________
+    *		1	   |   0          |  127          |  Only if top bit is NOT set
+    *		2	   |   128        |  255          |  First byte == 0x81
+    *       3	   |   256        |  65535        |  First byte == 0x82
+    *       4	   |   65536      |  16777215     |  First byte == 0x83
+    *       5      |   16777216   |  4294967295   |  First byte == 0x84
+	*
     */
-    class VLength : private ser4cpp::StaticOnly
-    {
-        static const uint8_t top_bit_mask = 0x80;
-        static const uint8_t bottom_bits_mask = 0x7F;
-
-        static const uint32_t max_1_byte_value = 127;
-        static const uint32_t max_2_byte_value = 16383;
-        static const uint32_t max_3_byte_value = 2097151;
-        static const uint32_t max_4_byte_value = 268435455;
-
-    public:
-
+    struct VLength : private ser4cpp::StaticOnly
+    {            
         static FormatError write(uint32_t value, wseq32_t& dest);
 
         static ParseError read(uint32_t& value, seq32_t& src);
 
-        static size_t size_in_bytes(uint32_t value);
+        static uint8_t num_values_bytes(uint32_t value);
+
+		static size_t size(uint32_t value) {
+			return static_cast<size_t>(num_values_bytes(value)) + 1;
+		}
     };
 
 }

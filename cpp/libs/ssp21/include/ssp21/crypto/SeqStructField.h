@@ -32,7 +32,7 @@ namespace ssp21
                 sum += this->get(i)->size();
             }
 
-            return VLength::size_in_bytes(this->count()) + sum;
+            return VLength::size(this->count()) + sum;
         }
 
         ParseError read(seq32_t& input)

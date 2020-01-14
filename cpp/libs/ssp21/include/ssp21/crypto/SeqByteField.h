@@ -23,7 +23,7 @@ namespace ssp21
 
         size_t size() const
         {
-            return VLength::size_in_bytes(this->length()) + this->length();
+            return VLength::size(this->length()) + this->length();
         }
 
         SeqByteField() {}
