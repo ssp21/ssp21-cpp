@@ -18,6 +18,7 @@ add_subdirectory(./deps/asio)
 add_subdirectory(./deps/catch)
 add_subdirectory(./deps/exe4cpp)
 
+SET(YAML_CPP_INSTALL OFF CACHE BOOL "don't produce the yaml-cpp install task")
 SET(YAML_CPP_BUILD_TESTS OFF CACHE BOOL "don't build the yaml-cpp tests")
 SET(YAML_CPP_BUILD_TOOLS OFF CACHE BOOL "don't build the yaml-cpp utilities")
 SET(YAML_CPP_CLANG_FORMAT_EXE OFF CACHE BOOL "don't produce the yaml-cpp custom format task")
