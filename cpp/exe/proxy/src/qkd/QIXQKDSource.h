@@ -12,17 +12,44 @@
 
 #include <map>
 #include <mutex>
+#include <chrono>
+#include <deque>
 
 class QIXQKDSource : public IQKDSource
 {    
-	struct FrameHandler : public IQIXFrameHandler
-	{	    
-        FrameHandler(uint16_t key_cycle_length);
+	class FrameHandler : public IQIXFrameHandler
+	{	
+    public:
+        FrameHandler(const YAML::Node& config, const YAML::Node& metrics, log4cpp::Logger& logger);
 
 		void handle(const QIXFrame& frame) override;
 
-        const uint16_t num_subscribers;
         std::map<uint16_t, std::shared_ptr<QIXKeyStore>> subscribers;
+
+    private:
+
+		// total number of key bytes received
+		uint64_t num_bytes = 0;
+		// count of each byte value
+		uint64_t counts[256] = { 0 };
+		
+
+	    struct KeyStat {
+            std::chrono::high_resolution_clock::time_point arrival_time;
+	    };
+
+        const uint16_t num_subscribers;
+        const std::chrono::high_resolution_clock::duration metric_update_period;
+        const uint16_t metric_bin_size;
+
+        log4cpp::Logger logger;
+
+        std::chrono::high_resolution_clock::time_point last_metric_update_time;
+        std::deque<KeyStat> key_data_bin;
+
+        double calc_mean_time_between_keys();
+        double calc_std_dev_of_time_between_keys(double mean_time_between_keys);
+		double calculate_shannon_entropy();
 	};
 
 public:

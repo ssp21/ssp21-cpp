@@ -2,15 +2,20 @@ qkd_sources:
   - qkd_source_id: "source1"
     type: "qix"
     num_subscribers: 1
+    metrics:
+      bin_size: 10
+      update_period:
+        value: 5
+        unit: seconds
     serial:
-      device: "/dev/pts/5"
+      device: "/dev/pts/3"
       baud: 9600
       data_bits: 8
       flow_control: none
       stop_bits: one
 sessions:
   - id: "session1"
-    levels: "iwemf"
+    levels: "iwecfm"
     link_layer:
       enabled: true
       address:

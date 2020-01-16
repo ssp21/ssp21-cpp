@@ -27,11 +27,14 @@ log4cpp::LogLevels get_log_levels(const YAML::Node& node)
         case('d'):
             levels |= log4cpp::LogLevels(ssp21::levels::debug.value);
             break;
-        case('m'):
+        case('c'):
             levels |= log4cpp::LogLevels(ssp21::levels::rx_crypto_msg.value | ssp21::levels::tx_crypto_msg.value);
             break;
         case('f'):
             levels |= log4cpp::LogLevels(ssp21::levels::rx_crypto_msg_fields.value | ssp21::levels::tx_crypto_msg_fields.value);
+            break;
+        case('m'):
+            levels |= log4cpp::LogLevels(ssp21::levels::metric.value);
             break;
         default:
             throw yaml::YAMLException(node, "unknown log level: ", flag);

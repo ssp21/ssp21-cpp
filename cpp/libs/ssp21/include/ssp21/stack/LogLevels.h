@@ -41,6 +41,9 @@ namespace ssp21
         /// TC decoded messages logs
         const log4cpp::LogLevel tx_crypto_msg_fields = rx_crypto_msg_fields.next();
 
+        /// Metrics
+        const log4cpp::LogLevel metric = tx_crypto_msg.next();
+
     }
 }
 

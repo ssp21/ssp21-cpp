@@ -214,6 +214,7 @@ target_include_directories(ssp21
 target_link_libraries(ssp21 PUBLIC exe4cpp ser4cpp log4cpp)
 target_compile_features(ssp21 PUBLIC cxx_std_14)
 target_compile_definitions(ssp21 PRIVATE MACRO_SSP21_GIT_COMMIT_HASH=${GIT_COMMIT_HASH} MACRO_SSP21_GIT_COMMIT_DATE=${GIT_COMMIT_DATE})
+clang_format(ssp21 EXCLUDES "/include/ssp21/crypto/gen" "/src/crypto/gen")
 
 install(TARGETS ssp21 EXPORT Ssp21Targets
     LIBRARY DESTINATION lib
