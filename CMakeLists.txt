@@ -3,6 +3,9 @@ cmake_minimum_required (VERSION 3.8)
 set(SSP21_VERSION 0.0.1)
 project(ssp21-cpp VERSION ${SSP21_VERSION})
 
+# clang-tidy and clang-format
+include(./cmake/ClangFormat.cmake)
+
 enable_testing()
 
 # Dependencies
