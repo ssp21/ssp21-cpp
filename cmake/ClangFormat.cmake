@@ -12,9 +12,8 @@ function(clang_format target)
 
     if(TARGET ${target})
         get_target_property(source_files ${target} SOURCES)
-        get_property(all_source_files GLOBAL PROPERTY CLANG_FORMAT_FILES)
-        foreach(file ${source_files})
-
+        get_property(all_source_files GLOBAL PROPERTY CLANG_FORMAT_FILES)		
+        foreach(file ${source_files})            
             unset(excluded)
 
             foreach(exclude ${clang_format_EXCLUDES})
@@ -42,7 +41,7 @@ endfunction()
 function(define_clang_format)
     if(CLANG_FORMAT_EXE)
         message(STATUS "Using clang-format: ${CLANG_FORMAT_EXE}")
-        get_property(all_files GLOBAL PROPERTY CLANG_FORMAT_FILES)
+        get_property(all_files GLOBAL PROPERTY CLANG_FORMAT_FILES)		
         add_custom_target(clang-format
             COMMAND "${CLANG_FORMAT_EXE}" -i -style=file -fallback-style=none ${all_files}
             COMMENT "Format source files"
