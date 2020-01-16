@@ -8,7 +8,7 @@ qkd_sources:
         value: 5
         unit: seconds
     serial:
-      device: "/dev/pts/3"
+      device: "/dev/pts/2"
       baud: 9600
       data_bits: 8
       flow_control: none

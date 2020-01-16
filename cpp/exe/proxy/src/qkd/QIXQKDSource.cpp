@@ -12,7 +12,6 @@
 
 using namespace std::chrono;
 
-
 asio::serial_port::flow_control::type get_flow_control(const YAML::Node& node)
 {
     const auto value = yaml::optional_string(node, "flow_control", "none");
@@ -82,9 +81,9 @@ void QIXQKDSource::FrameHandler::handle(const QIXFrame& frame)
         return;
     }
 
-	if (frame.key_data.length() != 256)
+	if (frame.key_data.length() != 32)
 	{
-		FORMAT_LOG_BLOCK(this->logger, ssp21::levels::warn, "key length not 256: %d", frame.key_data.length());
+		FORMAT_LOG_BLOCK(this->logger, ssp21::levels::warn, "key length not 32 bytes: %d", frame.key_data.length());
 		return;
 	}
 
@@ -106,9 +105,10 @@ void QIXQKDSource::FrameHandler::handle(const QIXFrame& frame)
 	// update the frequency counts
 	for (auto i = 0; i < frame.key_data.length(); ++i)
 	{
-		++this->counts[i];
-		this->num_bytes += frame.key_data.length();
+		++this->counts[frame.key_data[i]];
 	}
+
+    this->num_bytes += frame.key_data.length();
 
     const auto elapsed_time = now - this->last_metric_update_time;
     const auto enough_elapsed_time = elapsed_time > this->metric_update_period;
@@ -198,6 +198,12 @@ double QIXQKDSource::FrameHandler::calc_std_dev_of_time_between_keys(double mean
     return std::sqrt(sum_of_squares / static_cast<double>(this->key_data_bin.size() -1));
 }
 
+double log256(double x)
+{
+    // log_b(x) == log_d(x) / log_d(b) -> log8(x) == log2(x)/log2(256) == log2(x)/8
+    return log2(x) / 8.0;
+}
+
 double QIXQKDSource::FrameHandler::calculate_shannon_entropy()
 {
 	double frequencies[256];
@@ -207,15 +213,16 @@ double QIXQKDSource::FrameHandler::calculate_shannon_entropy()
 		frequencies[i] = static_cast<double>(counts[i]) / static_cast<double>(this->num_bytes);
 	}
 
-	double sum = 0;
+    double sum = 0;
 
-	for (auto i = 0; i < 256; ++i)
+	for (auto f: frequencies)
 	{
-		sum += frequencies[i] * log2(frequencies[i]);
+		sum += f * log256(f);
 	}
 
 	return -sum;
 }
+
 
 QIXQKDSource::QIXQKDSource(const YAML::Node& node, const std::shared_ptr<exe4cpp::BasicExecutor>& executor, log4cpp::Logger& logger) :
 	handler(std::make_shared<FrameHandler>(node, yaml::require(node, "metrics"), logger))
