@@ -4,19 +4,17 @@
 #include "AsioLowerLayer.h"
 #include "AsioUpperLayer.h"
 
-#include <ssp21/stack/IStack.h>
 #include <exe4cpp/IExecutor.h>
+#include <ssp21/stack/IStack.h>
 
 #include <functional>
 #include <memory>
 
 using session_error_handler_t = std::function<void()>;
 
-class Session : public std::enable_shared_from_this<Session>
-{
+class Session : public std::enable_shared_from_this<Session> {
 
 public:
-
     Session(
         uint64_t id,
         const session_error_handler_t& error_handler,
@@ -25,18 +23,16 @@ public:
         std::unique_ptr<AsioLowerLayer> lower_layer,
         std::unique_ptr<IAsioSocketWrapper> upper_socket,
         std::unique_ptr<AsioUpperLayer> upper_layer,
-        const std::shared_ptr<ssp21::IStack>& stack
-    ) :
-        id(id),
-        error_handler(error_handler),
-        executor(executor),
-        lower_socket(std::move(lower_socket)),
-        lower_layer(std::move(lower_layer)),
-        upper_socket(std::move(upper_socket)),
-        upper_layer(std::move(upper_layer)),
-        stack(stack)
+        const std::shared_ptr<ssp21::IStack>& stack)
+        : id(id)
+        , error_handler(error_handler)
+        , executor(executor)
+        , lower_socket(std::move(lower_socket))
+        , lower_layer(std::move(lower_layer))
+        , upper_socket(std::move(upper_socket))
+        , upper_layer(std::move(upper_layer))
+        , stack(stack)
     {
-
     }
 
     static std::shared_ptr<Session> create(
@@ -47,8 +43,7 @@ public:
         std::unique_ptr<AsioLowerLayer> lower_layer,
         std::unique_ptr<IAsioSocketWrapper> upper_socket,
         std::unique_ptr<AsioUpperLayer> upper_layer,
-        const std::shared_ptr<ssp21::IStack>& stack
-    )
+        const std::shared_ptr<ssp21::IStack>& stack)
     {
         return std::make_shared<Session>(id,
                                          error_handler,
@@ -74,13 +69,10 @@ public:
     }
 
 private:
-
     void check_for_close(const std::shared_ptr<Session>& self)
     {
-        if (!self->is_shutdown())
-        {
-            self->executor->post([self]()
-            {
+        if (!self->is_shutdown()) {
+            self->executor->post([self]() {
                 self->check_for_close(self);
             });
         }

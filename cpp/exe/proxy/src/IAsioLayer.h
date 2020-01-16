@@ -3,11 +3,9 @@
 
 #include <ssp21/util/SequenceTypes.h>
 
-class IAsioLayer
-{
+class IAsioLayer {
 
 public:
-
     virtual ~IAsioLayer() = default;
 
     virtual void on_rx_complete(const ssp21::seq32_t& data) = 0;

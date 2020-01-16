@@ -2,53 +2,46 @@
 #ifndef SSP21_ISESSIONMODE_H
 #define SSP21_ISESSIONMODE_H
 
-
-#include "ssp21/util/SequenceTypes.h"
-#include "ssp21/crypto/BufferTypes.h"
-#include "crypto/gen/SessionData.h"
 #include "IFrameWriter.h"
+#include "crypto/gen/SessionData.h"
+#include "ssp21/crypto/BufferTypes.h"
+#include "ssp21/util/SequenceTypes.h"
 
 #include "ssp21/crypto/gen/CryptoError.h"
 
 #include <system_error>
 
-namespace ssp21
-{
+namespace ssp21 {
 
-    class ISessionMode
+class ISessionMode {
+
+public:
+    virtual ~ISessionMode() {}
+
+    // checks preconditions and invokes the read implementation
+    seq32_t read(const SymmetricKey& key, const SessionData& msg, wseq32_t dest, std::error_code& ec) const
     {
-
-    public:
-
-        virtual ~ISessionMode() {}
-
-        // checks preconditions and invokes the read implementation
-        seq32_t read(const SymmetricKey& key, const SessionData& msg, wseq32_t dest, std::error_code& ec) const
-        {
-            if (key.get_type() != BufferType::symmetric_key)
-            {
-                ec = CryptoError::bad_buffer_size;
-                return seq32_t::empty();
-            }
-
-            return this->read_impl(key, msg, dest, ec);
+        if (key.get_type() != BufferType::symmetric_key) {
+            ec = CryptoError::bad_buffer_size;
+            return seq32_t::empty();
         }
 
-        // checks preconditions and invokes the write implementation
-        seq32_t write(IFrameWriter& writer, const SymmetricKey& key, const AuthMetadata& metadata, seq32_t& user_data, std::error_code& ec) const
-        {
-            if (key.get_type() != BufferType::symmetric_key)
-            {
-                ec = CryptoError::bad_buffer_size;
-                return seq32_t::empty();
-            }
+        return this->read_impl(key, msg, dest, ec);
+    }
 
-            return this->write_impl(writer, key, metadata, user_data, ec);
+    // checks preconditions and invokes the write implementation
+    seq32_t write(IFrameWriter& writer, const SymmetricKey& key, const AuthMetadata& metadata, seq32_t& user_data, std::error_code& ec) const
+    {
+        if (key.get_type() != BufferType::symmetric_key) {
+            ec = CryptoError::bad_buffer_size;
+            return seq32_t::empty();
         }
 
-    protected:
+        return this->write_impl(writer, key, metadata, user_data, ec);
+    }
 
-        /**
+protected:
+    /**
         * Authenticates (and possibly decrypts) a session message payload and returns a slice pointing to the cleartext output.
         *
         * @key the symmetric key used for authentication (and optionally decryption)
@@ -58,14 +51,13 @@ namespace ssp21
         *
         * @return A slice pointing to the cleartext. This slice will be empty if an error occured.
         */
-        virtual seq32_t read_impl(
-            const SymmetricKey& key,
-            const SessionData& msg,
-            wseq32_t dest,
-            std::error_code& ec
-        ) const = 0;
+    virtual seq32_t read_impl(
+        const SymmetricKey& key,
+        const SessionData& msg,
+        wseq32_t dest,
+        std::error_code& ec) const = 0;
 
-        /**
+    /**
         * Writes a SessionData message using the supplied IFrameWriter
         *
         * @writer interface used to write the message (and any framing) to an output buffer owned by the IFrameWriter
@@ -76,32 +68,30 @@ namespace ssp21
         *
         * @return A slice pointing to the possibly encrypted user data. This slice will be empty if an error occured.
         */
-        virtual seq32_t write_impl(
-            IFrameWriter& writer,
-            const SymmetricKey& key,
-            const AuthMetadata& metadata,
-            seq32_t& user_data,
-            std::error_code& ec
-        ) const = 0;
+    virtual seq32_t write_impl(
+        IFrameWriter& writer,
+        const SymmetricKey& key,
+        const AuthMetadata& metadata,
+        seq32_t& user_data,
+        std::error_code& ec) const = 0;
 
-        using  metadata_buffer_t = ser4cpp::StaticBuffer<uint32_t, AuthMetadata::fixed_size_bytes>;
-        using user_data_length_buffer_t = ser4cpp::StaticBuffer<uint32_t, ser4cpp::UInt16::size>;
+    using metadata_buffer_t = ser4cpp::StaticBuffer<uint32_t, AuthMetadata::fixed_size_bytes>;
+    using user_data_length_buffer_t = ser4cpp::StaticBuffer<uint32_t, ser4cpp::UInt16::size>;
 
-        inline static seq32_t get_metadata_bytes(const AuthMetadata& metadata, metadata_buffer_t& buffer)
-        {
-            auto dest = buffer.as_wseq();
-            metadata.write(dest);
-            return buffer.as_seq();
-        }
+    inline static seq32_t get_metadata_bytes(const AuthMetadata& metadata, metadata_buffer_t& buffer)
+    {
+        auto dest = buffer.as_wseq();
+        metadata.write(dest);
+        return buffer.as_seq();
+    }
 
-        inline static seq32_t get_user_data_length_bytes(uint16_t user_data_length, user_data_length_buffer_t& buffer)
-        {
-            auto dest = buffer.as_wseq();
-            ser4cpp::UInt16::write_to(dest, user_data_length);
-            return buffer.as_seq();
-        }
-
-    };
+    inline static seq32_t get_user_data_length_bytes(uint16_t user_data_length, user_data_length_buffer_t& buffer)
+    {
+        auto dest = buffer.as_wseq();
+        ser4cpp::UInt16::write_to(dest, user_data_length);
+        return buffer.as_seq();
+    }
+};
 
 }
 

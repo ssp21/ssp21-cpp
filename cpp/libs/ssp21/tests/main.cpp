@@ -5,11 +5,10 @@
 #include "mocks/MockCryptoBackend.h"
 #include "ssp21/crypto/Crypto.h"
 
-int main(int argc, char*  argv[])
+int main(int argc, char* argv[])
 {
     // global setup...
-    if(!ssp21::MockCryptoBackend::initialize())
-    {
+    if (!ssp21::MockCryptoBackend::initialize()) {
         std::cerr << "unable to initialize mock cyrpto backend" << std::endl;
         return -1;
     }

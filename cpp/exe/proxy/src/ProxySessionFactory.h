@@ -3,11 +3,11 @@
 
 #include "IProxySession.h"
 
-#include <log4cpp/Logger.h>
 #include <exe4cpp/asio/BasicExecutor.h>
+#include <log4cpp/Logger.h>
 
 #include <functional>
 
-using proxy_session_factory_t = std::function<std::unique_ptr<IProxySession> (const log4cpp::Logger& logger, std::shared_ptr<exe4cpp::BasicExecutor> executor)>;
+using proxy_session_factory_t = std::function<std::unique_ptr<IProxySession>(const log4cpp::Logger& logger, std::shared_ptr<exe4cpp::BasicExecutor> executor)>;
 
 #endif

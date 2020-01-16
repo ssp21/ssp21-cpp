@@ -1,7 +1,7 @@
 #include "UserInput.h"
 
-#include <iostream>
 #include <chrono>
+#include <iostream>
 
 using namespace std::chrono;
 
@@ -18,8 +18,7 @@ uint8_t UserInput::get_signing_level_from_user()
     std::cout << "Enter the certificate signing level (0 == endpoint certificate, max == 6):" << std::endl;
     uint32_t signing_level = 256;
 
-    while (signing_level > 6)
-    {
+    while (signing_level > 6) {
         std::cin >> signing_level;
     }
 

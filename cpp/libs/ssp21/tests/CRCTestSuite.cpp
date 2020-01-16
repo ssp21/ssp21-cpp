@@ -2,8 +2,8 @@
 
 #include "catch.hpp"
 
-#include "ssp21/link/CastagnoliCRC32.h"
 #include "ser4cpp/util/HexConversions.h"
+#include "ssp21/link/CastagnoliCRC32.h"
 
 #define SUITE(name) "CRCTestSuite - " name
 
@@ -40,8 +40,7 @@ TEST_CASE(SUITE("Castagnoli test vector #2"))
 
 TEST_CASE(SUITE("Castagnoli test vector #3"))
 {
-	const std::string data("abcdefghijklmnopqrstuvwxyz012345");
-	const auto slice = rseq_t(reinterpret_cast<const uint8_t*>(data.c_str()), static_cast<uint32_t>(data.length()));
-	REQUIRE(CastagnoliCRC32::calc(slice) == 0x242D5EBD);
+    const std::string data("abcdefghijklmnopqrstuvwxyz012345");
+    const auto slice = rseq_t(reinterpret_cast<const uint8_t*>(data.c_str()), static_cast<uint32_t>(data.length()));
+    REQUIRE(CastagnoliCRC32::calc(slice) == 0x242D5EBD);
 }
-

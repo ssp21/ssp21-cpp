@@ -7,15 +7,14 @@
 
 #include <functional>
 
-class AsioUpperLayer final : public ssp21::IUpperLayer, public IAsioLayer
-{
+class AsioUpperLayer final : public ssp21::IUpperLayer, public IAsioLayer {
 
 public:
-
     AsioUpperLayer(const log4cpp::Logger& logger)
-    {}
+    {
+    }
 
-    void bind(IAsioSocketWrapper& socket, ssp21::ILowerLayer& crypto_layer, const std::function<void ()>& error_handler)
+    void bind(IAsioSocketWrapper& socket, ssp21::ILowerLayer& crypto_layer, const std::function<void()>& error_handler)
     {
         this->socket = &socket;
         this->crypto_layer = &crypto_layer;
@@ -23,11 +22,11 @@ public:
     }
 
 private:
-
     void try_read_from_crypto()
     {
         const auto data = this->crypto_layer->start_rx_from_upper();
-        if (data.is_not_empty()) this->socket->start_tx_to_socket(data);
+        if (data.is_not_empty())
+            this->socket->start_tx_to_socket(data);
     }
 
     // --- IUpperLayer ---
@@ -53,11 +52,11 @@ private:
     {
         // crypto layer has data to be read
         // try to read it if we're not already transmitting
-        if (!this->socket->get_is_tx_active()) this->try_read_from_crypto();
+        if (!this->socket->get_is_tx_active())
+            this->try_read_from_crypto();
     }
 
 public:
-
     // --- IAsioLayer ---
 
     void on_rx_complete(const ssp21::seq32_t& data) override
@@ -84,11 +83,9 @@ public:
     }
 
 private:
-
     ssp21::ILowerLayer* crypto_layer = nullptr;
     IAsioSocketWrapper* socket = nullptr;
     std::function<void()> error_handler = nullptr;
-
 };
 
 #endif

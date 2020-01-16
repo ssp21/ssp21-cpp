@@ -2,12 +2,12 @@
 
 #include "catch.hpp"
 
+#include "crypto/MessageParser.h"
 #include "ssp21/crypto/EnumField.h"
 #include "ssp21/crypto/IntegerField.h"
-#include "crypto/MessageParser.h"
 
-#include "ssp21/crypto/SeqByteField.h"
 #include "ser4cpp/util/HexConversions.h"
+#include "ssp21/crypto/SeqByteField.h"
 
 #define SUITE(name) "MessageParserTestSuite - " name
 
@@ -107,4 +107,3 @@ TEST_CASE(SUITE("returns error if SeqOfByte incomplete"))
     auto err = MessageParser::read_fields(slice, field);
     REQUIRE(err == ParseError::insufficient_bytes);
 }
-

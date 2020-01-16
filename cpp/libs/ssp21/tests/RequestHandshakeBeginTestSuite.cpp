@@ -2,16 +2,16 @@
 
 #include "catch.hpp"
 
-#include "crypto/gen/RequestHandshakeBegin.h"
 #include "crypto/LogMessagePrinter.h"
+#include "crypto/gen/RequestHandshakeBegin.h"
 #include "ssp21/crypto/Constants.h"
 
 #include "ser4cpp/container/StaticBuffer.h"
 #include "ser4cpp/util/HexConversions.h"
 
 #include "log4cpp/MockLogHandler.h"
-#include "ssp21/stack/LogLevels.h"
 #include "mocks/HexSequences.h"
+#include "ssp21/stack/LogLevels.h"
 
 #define SUITE(name) "RequestHandshakeBeginTestSuite - " name
 
@@ -89,22 +89,18 @@ TEST_CASE(SUITE("pretty prints message"))
 
     RequestHandshakeBegin msg(
         7,
-        CryptoSpec(			
+        CryptoSpec(
             HandshakeEphemeral::x25519,
             HandshakeHash::sha256,
             HandshakeKDF::hkdf_sha256,
-			SessionNonceMode::greater_than_last_rx,
-            SessionCryptoMode::hmac_sha256_16
-        ),
+            SessionNonceMode::greater_than_last_rx,
+            SessionCryptoMode::hmac_sha256_16),
         SessionConstraints(
             32768,
-            0xCAFEBABE
-        ),
+            0xCAFEBABE),
         HandshakeMode::preshared_public_keys,
         public_key,
-        seq32_t::empty()
-    );
-
+        seq32_t::empty());
 
     log4cpp::MockLogHandler log("log");
     LogMessagePrinter printer(log.logger, ssp21::levels::info, 16);
@@ -112,20 +108,18 @@ TEST_CASE(SUITE("pretty prints message"))
     msg.print(printer);
 
     log.expect(
-        "version: 7",        
+        "version: 7",
         "handshake_ephemeral: x25519",
         "handshake_hash: sha256",
         "handshake_kdf: hkdf_sha256",
-		"session_nonce_mode: greater_than_last_rx",
+        "session_nonce_mode: greater_than_last_rx",
         "session_crypto_mode: hmac_sha256_16",
         "max_nonce: 32768",
         "max_session_duration: 3405691582",
         "handshake_mode: preshared_public_keys",
         "ephemeral_data (length = 2)",
         "CA:FE",
-        "mode_data (length = 0)"
-    );
-
+        "mode_data (length = 0)");
 }
 
 TEST_CASE(SUITE("rejects unknown enum"))
@@ -166,7 +160,7 @@ TEST_CASE(SUITE("formats default value"))
 
 TEST_CASE(SUITE("returns error if insufficient buffer space"))
 {
-    ser4cpp::StaticBuffer < uint32_t, RequestHandshakeBegin::min_size_bytes - 1 > buffer;
+    ser4cpp::StaticBuffer<uint32_t, RequestHandshakeBegin::min_size_bytes - 1> buffer;
     RequestHandshakeBegin msg;
     auto dest = buffer.as_wseq();
     REQUIRE(msg.write(dest).err == FormatError::insufficient_space);

@@ -7,8 +7,7 @@
 
 #include "ssp21/util/SequenceTypes.h"
 
-namespace ssp21
-{
+namespace ssp21 {
 
 /**
  * @brief Performs asynchronous RX/TX operations on behalf of an @ref IUpperLayer.
@@ -16,8 +15,7 @@ namespace ssp21
  * This class is used by @ref IStack. User of the library must implement this interface
  * to send and receive the bytes on the wire.
  */
-class ILowerLayer
-{
+class ILowerLayer {
     friend class AbstractStack;
 
 public:
@@ -50,16 +48,14 @@ public:
      */
     inline seq32_t start_rx_from_upper()
     {
-        if (this->upper_is_processing_rx_data)
-        {
+        if (this->upper_is_processing_rx_data) {
             this->discard_rx_data();
             this->upper_is_processing_rx_data = false;
         }
 
         const auto ret = this->start_rx_from_upper_impl();
 
-        if (ret.is_not_empty())
-        {
+        if (ret.is_not_empty()) {
             this->upper_is_processing_rx_data = true;
         }
 

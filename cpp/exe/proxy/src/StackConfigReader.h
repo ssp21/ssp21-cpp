@@ -5,10 +5,8 @@
 
 #include <yaml-cpp/yaml.h>
 
-namespace config
-{  
-    StackFactory get_stack_factory(const YAML::Node& node);       
+namespace config {
+StackFactory get_stack_factory(const YAML::Node& node);
 }
 
 #endif
-

@@ -39,7 +39,7 @@ void test_decoding_failure(const std::string& data, ParseError expected_err)
     uint32_t parsed_value;
 
     const auto err = VLength::read(parsed_value, slice);
-	REQUIRE(err == expected_err);    
+    REQUIRE(err == expected_err);
 }
 
 TEST_CASE(SUITE("encodes max and  min"))
@@ -68,16 +68,16 @@ TEST_CASE(SUITE("encodes at three byte boundary"))
 
 TEST_CASE(SUITE("byte counts not in [1, 4] fail"))
 {
-	test_decoding_failure("80", ParseError::bad_vlength);	
-	test_decoding_failure("85", ParseError::bad_vlength);
+    test_decoding_failure("80", ParseError::bad_vlength);
+    test_decoding_failure("85", ParseError::bad_vlength);
 }
 
 TEST_CASE(SUITE("decoding fails when fewer bytes could have been used to encode value"))
-{   
+{
     test_decoding_failure("81 7F", ParseError::bad_vlength);
     test_decoding_failure("82 00 FF", ParseError::bad_vlength);
-	test_decoding_failure("83 00 FF FF", ParseError::bad_vlength);
-	test_decoding_failure("84 00 FF FF FF", ParseError::bad_vlength);
+    test_decoding_failure("83 00 FF FF", ParseError::bad_vlength);
+    test_decoding_failure("84 00 FF FF FF", ParseError::bad_vlength);
 }
 
 TEST_CASE(SUITE("decoding fails when insufficient bytes"))
@@ -88,4 +88,3 @@ TEST_CASE(SUITE("decoding fails when insufficient bytes"))
     test_decoding_failure("83 00 00", ParseError::insufficient_bytes);
     test_decoding_failure("84 00 00 00", ParseError::insufficient_bytes);
 }
-

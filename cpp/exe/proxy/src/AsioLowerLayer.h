@@ -11,13 +11,12 @@
 
 #include <asio.hpp>
 
-class AsioLowerLayer final : public ssp21::ILowerLayer, public IAsioLayer
-{
+class AsioLowerLayer final : public ssp21::ILowerLayer, public IAsioLayer {
 
 public:
-
     AsioLowerLayer(const log4cpp::Logger& logger)
-    {}
+    {
+    }
 
     void open(IAsioSocketWrapper& socket, ssp21::IUpperLayer& upper)
     {
@@ -35,7 +34,6 @@ public:
     }
 
 private:
-
     // --- ILowerLayer ---
 
     bool start_tx_from_upper(const ssp21::seq32_t& data) override
@@ -55,13 +53,13 @@ private:
 
     ssp21::seq32_t start_rx_from_upper_impl() override
     {
-        if (this->unread_data.is_empty()) this->socket->start_rx_from_socket();
+        if (this->unread_data.is_empty())
+            this->socket->start_rx_from_socket();
 
         return this->unread_data;
     }
 
 public:
-
     // --- IAsioLayer ---
 
     void on_rx_complete(const ssp21::seq32_t& data) override
@@ -86,7 +84,6 @@ public:
     }
 
 private:
-
     IAsioSocketWrapper* socket = nullptr;
     ssp21::IUpperLayer* upper = nullptr;
     ssp21::seq32_t unread_data;

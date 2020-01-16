@@ -1,8 +1,8 @@
 #ifndef SSP21PROXY_ISTACKFACTORY_H
 #define SSP21PROXY_ISTACKFACTORY_H
 
-#include <log4cpp/Logger.h>
 #include <exe4cpp/IExecutor.h>
+#include <log4cpp/Logger.h>
 #include <ssp21/stack/IStack.h>
 #include <yaml-cpp/yaml.h>
 
@@ -12,19 +12,21 @@
 // abstracts the creation of responder or initiator
 using stack_factory_t = std::function<std::shared_ptr<ssp21::IStack>(
     const log4cpp::Logger& logger,
-    const std::shared_ptr<exe4cpp::IExecutor>& exe
-)>;
+    const std::shared_ptr<exe4cpp::IExecutor>& exe)>;
 
 enum class StackType {
     initiator,
     responder
 };
 
-class StackFactory
-{
+class StackFactory {
 public:
-    StackFactory(bool uses_link_layer, StackType type, stack_factory_t impl) : uses_link_layer(uses_link_layer), type(type), impl(impl)
-    {}
+    StackFactory(bool uses_link_layer, StackType type, stack_factory_t impl)
+        : uses_link_layer(uses_link_layer)
+        , type(type)
+        , impl(impl)
+    {
+    }
 
     std::shared_ptr<ssp21::IStack> create_stack(const log4cpp::Logger& logger, const std::shared_ptr<exe4cpp::IExecutor>& exe)
     {
@@ -48,4 +50,3 @@ private:
 };
 
 #endif
-

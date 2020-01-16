@@ -6,133 +6,122 @@
 
 #include "ssp21/util/SequenceTypes.h"
 
-#include "ser4cpp/util/Uncopyable.h"
 #include "ser4cpp/container/StaticBuffer.h"
+#include "ser4cpp/util/Uncopyable.h"
 
-namespace ssp21
-{
-    // the BufferType also indirectly defines the length
-    enum class BufferType
-    {
-        empty,
-        x25519_key,
-        ed25519_public_key,
-        ed25519_private_key,
-        sha256,
-        ed25519_signature,
-        symmetric_key
-    };
+namespace ssp21 {
+// the BufferType also indirectly defines the length
+enum class BufferType {
+    empty,
+    x25519_key,
+    ed25519_public_key,
+    ed25519_private_key,
+    sha256,
+    ed25519_signature,
+    symmetric_key
+};
 
-    class BufferBase : private ser4cpp::Uncopyable
-    {
-    public:
+class BufferBase : private ser4cpp::Uncopyable {
+public:
+    virtual ~BufferBase() {}
 
-        virtual ~BufferBase() {}
+    seq32_t as_seq() const;
 
-        seq32_t as_seq() const;
+    wseq32_t as_wseq();
 
-        wseq32_t as_wseq();
+    BufferType get_type() const;
 
-        BufferType get_type() const;
+    void set_type(BufferType key_type);
 
-        void set_type(BufferType key_type);
+    void copy(const BufferBase& other);
 
-        void copy(const BufferBase& other);
+    static uint8_t get_buffer_length(BufferType);
 
-        static uint8_t get_buffer_length(BufferType);
+protected:
+    BufferBase() = default;
 
-    protected:
+private:
+    uint8_t length = 0;
+    BufferType buffer_type = BufferType::empty;
 
-        BufferBase() = default;
+protected:
+    ser4cpp::StaticBuffer<uint32_t, consts::crypto::max_primitive_buffer_length> buffer;
+};
 
-    private:
-
-        uint8_t length = 0;
-        BufferType buffer_type = BufferType::empty;
-
-    protected:
-
-        ser4cpp::StaticBuffer<uint32_t, consts::crypto::max_primitive_buffer_length> buffer;
-    };
-
-    /**
+/**
     	A secure key zeros its buffer upon destruction
     	and provides a clear method
     */
-    class SecureBuffer : public BufferBase
+class SecureBuffer : public BufferBase {
+public:
+    virtual ~SecureBuffer();
+
+    void zero();
+
+protected:
+    SecureBuffer() {}
+};
+
+// specialized types that actually get used
+
+class PublicKey final : public BufferBase {
+public:
+    PublicKey() {}
+
+    PublicKey(const PublicKey& other)
     {
-    public:
-        virtual ~SecureBuffer();
+        this->copy(other);
+    }
+};
 
-        void zero();
+class PrivateKey final : public SecureBuffer {
+public:
+    PrivateKey() {}
 
-    protected:
-        SecureBuffer() {}
-    };
-
-    // specialized types that actually get used
-
-    class PublicKey final : public BufferBase
+    PrivateKey(const PrivateKey& other)
     {
-    public:
+        this->copy(other);
+    }
+};
 
-        PublicKey() {}
+class DHOutput final : public SecureBuffer {
+};
 
-        PublicKey(const PublicKey& other)
-        {
-            this->copy(other);
-        }
-    };
+class HashOutput : public SecureBuffer {
+};
 
-    class PrivateKey final : public SecureBuffer
+class DSAOutput final : public SecureBuffer {
+};
+
+class SymmetricKey final : public SecureBuffer {
+};
+
+struct KeyPair final {
+    PublicKey public_key;
+    PrivateKey private_key;
+};
+
+struct SessionKeys final {
+    SymmetricKey rx_key;
+    SymmetricKey tx_key;
+
+    inline void zero()
     {
-    public:
+        this->rx_key.zero();
+        this->tx_key.zero();
+    }
 
-        PrivateKey() {}
-
-        PrivateKey(const PrivateKey& other)
-        {
-            this->copy(other);
-        }
-    };
-
-    class DHOutput final : public SecureBuffer {};
-
-    class HashOutput : public SecureBuffer {};
-
-    class DSAOutput final : public SecureBuffer {};
-
-    class SymmetricKey final : public SecureBuffer {};
-
-    struct KeyPair final
+    inline void copy(const SessionKeys& other)
     {
-        PublicKey public_key;
-        PrivateKey private_key;
-    };
+        this->rx_key.copy(other.rx_key);
+        this->tx_key.copy(other.tx_key);
+    }
 
-    struct SessionKeys final
+    inline bool valid() const
     {
-        SymmetricKey rx_key;
-        SymmetricKey tx_key;
-
-        inline void zero()
-        {
-            this->rx_key.zero();
-            this->tx_key.zero();
-        }
-
-        inline void copy(const SessionKeys& other)
-        {
-            this->rx_key.copy(other.rx_key);
-            this->tx_key.copy(other.tx_key);
-        }
-
-        inline bool valid() const
-        {
-            return (rx_key.get_type() == BufferType::symmetric_key) && (tx_key.get_type() == BufferType::symmetric_key);
-        }
-    };
-
+        return (rx_key.get_type() == BufferType::symmetric_key) && (tx_key.get_type() == BufferType::symmetric_key);
+    }
+};
 
 }
 

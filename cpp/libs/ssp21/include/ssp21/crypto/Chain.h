@@ -2,24 +2,21 @@
 #ifndef SSP21_CHAIN_H
 #define SSP21_CHAIN_H
 
+#include "ssp21/crypto/CryptoTypedefs.h"
 #include "ssp21/crypto/gen/CertificateBody.h"
 #include "ssp21/crypto/gen/CertificateEnvelope.h"
 #include "ssp21/crypto/gen/HandshakeError.h"
-#include "ssp21/crypto/CryptoTypedefs.h"
 
 #include "ser4cpp/util/Uncopyable.h"
 
-namespace ssp21
-{
-    /**
+namespace ssp21 {
+/**
     * Operations for verifying certificate chains
     */
-    class Chain final : ser4cpp::StaticOnly
-    {
+class Chain final : ser4cpp::StaticOnly {
 
-    public:
-
-        /**
+public:
+    /**
         * Verify a certificate chain
         *
         * @param anchor certificate to verify against
@@ -28,9 +25,9 @@ namespace ssp21
         * @return Verification error or HandshakeError::none for success
         *
         */
-        static HandshakeError verify(const CertificateBody& anchor, const ICollection<CertificateEnvelope>& certificates, CertificateBody& result);
+    static HandshakeError verify(const CertificateBody& anchor, const ICollection<CertificateEnvelope>& certificates, CertificateBody& result);
 
-        /**
+    /**
         *
         * Using the previously verified parent certifivate, verify the next untrusted child certificate
         *
@@ -40,20 +37,18 @@ namespace ssp21
         * @return An error condition. HandshakeError::none, if the verification was successful
         *
         */
-        static HandshakeError verify_pair(const CertificateBody& parent, const CertificateEnvelope& child, CertificateBody& child_body);
+    static HandshakeError verify_pair(const CertificateBody& parent, const CertificateEnvelope& child, CertificateBody& child_body);
 
-    private:
-
-        struct DSAInfo
-        {
-            verify_dsa_t verify;
-            uint8_t signature_length;
-        };
-
-        static DSAInfo try_get_dsa_info(PublicKeyType type);
-
-        static bool is_dh_key(PublicKeyType type);
+private:
+    struct DSAInfo {
+        verify_dsa_t verify;
+        uint8_t signature_length;
     };
+
+    static DSAInfo try_get_dsa_info(PublicKeyType type);
+
+    static bool is_dh_key(PublicKeyType type);
+};
 }
 
 #endif

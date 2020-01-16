@@ -32,19 +32,16 @@
 
 #include <memory>
 
-namespace ssp21
-{
-    /**
+namespace ssp21 {
+/**
      * @brief Responder namespace.
      */
-    namespace responder
-    {
-        /**
+namespace responder {
+    /**
          * @brief Responder factory functions.
          */
-        namespace factory
-        {
-            /**
+    namespace factory {
+        /**
              * @brief Create a shared secret responder stack.
              * @param addresses Link-layer addresses used
              * @param config    Responder configuration
@@ -53,15 +50,14 @@ namespace ssp21
              * @param key       Shared secret
              * @return Stack to which an @ref IUpperLayer and an @ref ILowerLayer must be bind
              */
-            std::shared_ptr<IStack> shared_secret_mode(
-                const Addresses& addresses,
-                const ResponderConfig& config,
-                const log4cpp::Logger& logger,
-                const std::shared_ptr<exe4cpp::IExecutor>& executor,
-                const std::shared_ptr<const SymmetricKey>& key
-            );
+        std::shared_ptr<IStack> shared_secret_mode(
+            const Addresses& addresses,
+            const ResponderConfig& config,
+            const log4cpp::Logger& logger,
+            const std::shared_ptr<exe4cpp::IExecutor>& executor,
+            const std::shared_ptr<const SymmetricKey>& key);
 
-            /**
+        /**
              * @brief Create a shared secret responder stack without the link-layer.
              * @param config    Responder configuration
              * @param logger    Logger used by the stack
@@ -69,14 +65,13 @@ namespace ssp21
              * @param key       Shared secret
              * @return Stack to which an @ref IUpperLayer and an @ref ILowerLayer must be bind
              */
-            std::shared_ptr<IStack> shared_secret_mode(
-                const ResponderConfig& config,
-                const log4cpp::Logger& logger,
-                const std::shared_ptr<exe4cpp::IExecutor>& executor,
-                const std::shared_ptr<const SymmetricKey>& key
-            );
+        std::shared_ptr<IStack> shared_secret_mode(
+            const ResponderConfig& config,
+            const log4cpp::Logger& logger,
+            const std::shared_ptr<exe4cpp::IExecutor>& executor,
+            const std::shared_ptr<const SymmetricKey>& key);
 
-            /**
+        /**
              * @brief Create a quantum key destribution (QKD) responder stack.
              * @param addresses  Link-layer addresses used
              * @param config     Responder configuration
@@ -85,15 +80,14 @@ namespace ssp21
              * @param key_lookup Key lookup interface
              * @return Stack to which an @ref IUpperLayer and an @ref ILowerLayer must be bind
              */
-            std::shared_ptr<IStack> qkd_mode(
-                const Addresses& addresses,
-                const ResponderConfig& config,
-                const log4cpp::Logger& logger,
-                const std::shared_ptr<exe4cpp::IExecutor>& executor,
-                const std::shared_ptr<IKeyLookup>& key_lookup
-            );
+        std::shared_ptr<IStack> qkd_mode(
+            const Addresses& addresses,
+            const ResponderConfig& config,
+            const log4cpp::Logger& logger,
+            const std::shared_ptr<exe4cpp::IExecutor>& executor,
+            const std::shared_ptr<IKeyLookup>& key_lookup);
 
-            /**
+        /**
              * @brief Create a quantum key destribution (QKD) responder stack without the link-layer.
              * @param config     Responder configuration
              * @param logger     Logger used by the stack
@@ -101,14 +95,13 @@ namespace ssp21
              * @param key_lookup Key lookup interface
              * @return Stack to which an @ref IUpperLayer and an @ref ILowerLayer must be bind
              */
-            std::shared_ptr<IStack> qkd_mode(
-                const ResponderConfig& config,
-                const log4cpp::Logger& logger,
-                const std::shared_ptr<exe4cpp::IExecutor>& executor,
-                const std::shared_ptr<IKeyLookup>& key_lookup
-            );
+        std::shared_ptr<IStack> qkd_mode(
+            const ResponderConfig& config,
+            const log4cpp::Logger& logger,
+            const std::shared_ptr<exe4cpp::IExecutor>& executor,
+            const std::shared_ptr<IKeyLookup>& key_lookup);
 
-            /**
+        /**
              * @brief Create a preshared public key responder stack.
              * @param addresses         Link-layer addresses used
              * @param config            Responder configuration
@@ -118,16 +111,15 @@ namespace ssp21
              * @param remote_public_key Remote preshared public key
              * @return Stack to which an @ref IUpperLayer and an @ref ILowerLayer must be bind
              */
-            std::shared_ptr<IStack> preshared_public_key_mode(
-                const Addresses& addresses,
-                const ResponderConfig& config,
-                const log4cpp::Logger& logger,
-                const std::shared_ptr<exe4cpp::IExecutor>& executor,
-                const StaticKeys& local_keys,
-                const std::shared_ptr<const PublicKey>& remote_public_key
-            );
+        std::shared_ptr<IStack> preshared_public_key_mode(
+            const Addresses& addresses,
+            const ResponderConfig& config,
+            const log4cpp::Logger& logger,
+            const std::shared_ptr<exe4cpp::IExecutor>& executor,
+            const StaticKeys& local_keys,
+            const std::shared_ptr<const PublicKey>& remote_public_key);
 
-            /**
+        /**
              * @brief Create a preshared public key responder stack without the link-layer
              * @param config            Responder configuration
              * @param logger            Logger used by the stack
@@ -136,15 +128,14 @@ namespace ssp21
              * @param remote_public_key Remote preshared public key
              * @return Stack to which an @ref IUpperLayer and an @ref ILowerLayer must be bind
              */
-            std::shared_ptr<IStack> preshared_public_key_mode(
-                const ResponderConfig& config,
-                const log4cpp::Logger& logger,
-                const std::shared_ptr<exe4cpp::IExecutor>& executor,
-                const StaticKeys& local_keys,
-                const std::shared_ptr<const PublicKey>& remote_public_key
-            );
+        std::shared_ptr<IStack> preshared_public_key_mode(
+            const ResponderConfig& config,
+            const log4cpp::Logger& logger,
+            const std::shared_ptr<exe4cpp::IExecutor>& executor,
+            const StaticKeys& local_keys,
+            const std::shared_ptr<const PublicKey>& remote_public_key);
 
-            /**
+        /**
              * @brief Create a certificate-based responder stack.
              * @param addresses                 Link-layer addresses used
              * @param config                    Responder configuration
@@ -155,17 +146,16 @@ namespace ssp21
              * @param presented_chain_file_data Certificate chain to present to the remote
              * @return Stack to which an @ref IUpperLayer and an @ref ILowerLayer must be bind
              */
-            std::shared_ptr<IStack> certificate_public_key_mode(
-                const Addresses& addresses,
-                const ResponderConfig& config,
-                const log4cpp::Logger& logger,
-                const std::shared_ptr<exe4cpp::IExecutor>& executor,
-                const StaticKeys& local_keys,
-                const std::shared_ptr<ssp21::SecureDynamicBuffer>& anchor_cert_file_data,
-                const std::shared_ptr<ssp21::SecureDynamicBuffer>& presented_chain_file_data
-            );
+        std::shared_ptr<IStack> certificate_public_key_mode(
+            const Addresses& addresses,
+            const ResponderConfig& config,
+            const log4cpp::Logger& logger,
+            const std::shared_ptr<exe4cpp::IExecutor>& executor,
+            const StaticKeys& local_keys,
+            const std::shared_ptr<ssp21::SecureDynamicBuffer>& anchor_cert_file_data,
+            const std::shared_ptr<ssp21::SecureDynamicBuffer>& presented_chain_file_data);
 
-            /**
+        /**
              * @brief Create a certificate-based responder stack without the link-layer
              * @param config                    Responder configuration
              * @param logger                    Logger used by the stack
@@ -175,30 +165,27 @@ namespace ssp21
              * @param presented_chain_file_data Certificate chain to present to the remote
              * @return Stack to which an @ref IUpperLayer and an @ref ILowerLayer must be bind
              */
-            std::shared_ptr<IStack> certificate_public_key_mode(
-                const ResponderConfig& config,
-                const log4cpp::Logger& logger,
-                const std::shared_ptr<exe4cpp::IExecutor>& executor,
-                const StaticKeys& local_keys,
-                const std::shared_ptr<ssp21::SecureDynamicBuffer>& anchor_cert_file_data,
-                const std::shared_ptr<ssp21::SecureDynamicBuffer>& presented_chain_file_data
-            );
-
-        }
+        std::shared_ptr<IStack> certificate_public_key_mode(
+            const ResponderConfig& config,
+            const log4cpp::Logger& logger,
+            const std::shared_ptr<exe4cpp::IExecutor>& executor,
+            const StaticKeys& local_keys,
+            const std::shared_ptr<ssp21::SecureDynamicBuffer>& anchor_cert_file_data,
+            const std::shared_ptr<ssp21::SecureDynamicBuffer>& presented_chain_file_data);
 
     }
 
-    /**
+}
+
+/**
      * @brief Initiator namespace.
      */
-    namespace initiator
-    {
-        /**
+namespace initiator {
+    /**
          * @brief Initiator factory functions.
          */
-        namespace factory
-        {
-            /**
+    namespace factory {
+        /**
              * @brief Create a shared secret initiator stack.
              * @param addresses    Link-layer addresses used
              * @param config       Responder configuration
@@ -210,16 +197,15 @@ namespace ssp21
              * 
              * @note The only valid @ref HandshakeEphemeral for this mode is @ref HandshakeEphemeral::nonce.
              */
-            std::shared_ptr<IStack> shared_secret_mode(
-                const Addresses& addresses,
-                const InitiatorConfig& config,
-                const log4cpp::Logger& logger,
-                const std::shared_ptr<exe4cpp::IExecutor>& executor,
-                const CryptoSuite& crypto_suite,
-                const std::shared_ptr<const SymmetricKey>& key
-            );
+        std::shared_ptr<IStack> shared_secret_mode(
+            const Addresses& addresses,
+            const InitiatorConfig& config,
+            const log4cpp::Logger& logger,
+            const std::shared_ptr<exe4cpp::IExecutor>& executor,
+            const CryptoSuite& crypto_suite,
+            const std::shared_ptr<const SymmetricKey>& key);
 
-            /**
+        /**
              * @brief Create a shared secret initiator stack without the link-layer.
              * @param config       Responder configuration
              * @param logger       Logger used by the stack
@@ -230,15 +216,14 @@ namespace ssp21
              * 
              * @note The only valid @ref HandshakeEphemeral for this mode is @ref HandshakeEphemeral::nonce.
              */
-            std::shared_ptr<IStack> shared_secret_mode(
-                const InitiatorConfig& config,
-                const log4cpp::Logger& logger,
-                const std::shared_ptr<exe4cpp::IExecutor>& executor,
-                const CryptoSuite& crypto_suite,
-                const std::shared_ptr<const SymmetricKey>& key
-            );
+        std::shared_ptr<IStack> shared_secret_mode(
+            const InitiatorConfig& config,
+            const log4cpp::Logger& logger,
+            const std::shared_ptr<exe4cpp::IExecutor>& executor,
+            const CryptoSuite& crypto_suite,
+            const std::shared_ptr<const SymmetricKey>& key);
 
-            /**
+        /**
              * @brief Create a quantum key distribution (QKD) initiator stack.
              * @param addresses    Link-layer addresses used
              * @param config       Responder configuration
@@ -250,16 +235,15 @@ namespace ssp21
              * 
              * @note The only valid @ref HandshakeEphemeral for this mode is @ref HandshakeEphemeral::none.
              */
-            std::shared_ptr<IStack> qkd_mode(
-                const Addresses& addresses,
-                const InitiatorConfig& config,
-                const log4cpp::Logger& logger,
-                const std::shared_ptr<exe4cpp::IExecutor>& executor,
-                const CryptoSuite& crypto_suite,
-                const std::shared_ptr<IKeySource>& key_source
-            );
+        std::shared_ptr<IStack> qkd_mode(
+            const Addresses& addresses,
+            const InitiatorConfig& config,
+            const log4cpp::Logger& logger,
+            const std::shared_ptr<exe4cpp::IExecutor>& executor,
+            const CryptoSuite& crypto_suite,
+            const std::shared_ptr<IKeySource>& key_source);
 
-            /**
+        /**
              * @brief Create a quantum key distribution (QKD) initiator stack without the link-layer.
              * @param config       Responder configuration
              * @param logger       Logger used by the stack
@@ -270,15 +254,14 @@ namespace ssp21
              * 
              * @note The only valid @ref HandshakeEphemeral for this mode is @ref HandshakeEphemeral::none.
              */
-            std::shared_ptr<IStack> qkd_mode(
-                const InitiatorConfig& config,
-                const log4cpp::Logger& logger,
-                const std::shared_ptr<exe4cpp::IExecutor>& executor,
-                const CryptoSuite& crypto_suite,
-                const std::shared_ptr<IKeySource>& key_source
-            );
+        std::shared_ptr<IStack> qkd_mode(
+            const InitiatorConfig& config,
+            const log4cpp::Logger& logger,
+            const std::shared_ptr<exe4cpp::IExecutor>& executor,
+            const CryptoSuite& crypto_suite,
+            const std::shared_ptr<IKeySource>& key_source);
 
-            /**
+        /**
              * @brief Create a preshared public key initiator stack.
              * @param addresses         Link-layer addresses used
              * @param config            Responder configuration
@@ -291,17 +274,16 @@ namespace ssp21
              * 
              * @note The only valid @ref HandshakeEphemeral for this mode is @ref HandshakeEphemeral::x25519.
              */
-            std::shared_ptr<IStack> preshared_public_key_mode(
-                const Addresses& addresses,
-                const InitiatorConfig& config,
-                const log4cpp::Logger& logger,
-                const std::shared_ptr<exe4cpp::IExecutor>& executor,
-                const CryptoSuite& crypto_suite,
-                const StaticKeys& local_keys,
-                const std::shared_ptr<const PublicKey>& remote_public_key
-            );
+        std::shared_ptr<IStack> preshared_public_key_mode(
+            const Addresses& addresses,
+            const InitiatorConfig& config,
+            const log4cpp::Logger& logger,
+            const std::shared_ptr<exe4cpp::IExecutor>& executor,
+            const CryptoSuite& crypto_suite,
+            const StaticKeys& local_keys,
+            const std::shared_ptr<const PublicKey>& remote_public_key);
 
-            /**
+        /**
              * @brief Create a preshared public key initiator stack without the link-layer.
              * @param config            Responder configuration
              * @param logger            Logger used by the stack
@@ -313,16 +295,15 @@ namespace ssp21
              * 
              * @note The only valid @ref HandshakeEphemeral for this mode is @ref HandshakeEphemeral::x25519.
              */
-            std::shared_ptr<IStack> preshared_public_key_mode(
-                const InitiatorConfig& config,
-                const log4cpp::Logger& logger,
-                const std::shared_ptr<exe4cpp::IExecutor>& executor,
-                const CryptoSuite& crypto_suite,
-                const StaticKeys& local_keys,
-                const std::shared_ptr<const PublicKey>& remote_public_key
-            );
+        std::shared_ptr<IStack> preshared_public_key_mode(
+            const InitiatorConfig& config,
+            const log4cpp::Logger& logger,
+            const std::shared_ptr<exe4cpp::IExecutor>& executor,
+            const CryptoSuite& crypto_suite,
+            const StaticKeys& local_keys,
+            const std::shared_ptr<const PublicKey>& remote_public_key);
 
-            /**
+        /**
              * @brief Create a certificate-based initiator stack.
              * @param addresses                 Link-layer addresses used
              * @param config                    Responder configuration
@@ -336,18 +317,17 @@ namespace ssp21
              * 
              * @note The only valid @ref HandshakeEphemeral for this mode is @ref HandshakeEphemeral::x25519.
              */
-            std::shared_ptr<IStack> certificate_public_key_mode(
-                const Addresses& addresses,
-                const InitiatorConfig& config,
-                const log4cpp::Logger& logger,
-                const std::shared_ptr<exe4cpp::IExecutor>& executor,
-                const CryptoSuite& crypto_suite,
-                const StaticKeys& local_keys,
-                const std::shared_ptr<ssp21::SecureDynamicBuffer>& anchor_cert_file_data,
-                const std::shared_ptr<ssp21::SecureDynamicBuffer>& presented_chain_file_data
-            );
+        std::shared_ptr<IStack> certificate_public_key_mode(
+            const Addresses& addresses,
+            const InitiatorConfig& config,
+            const log4cpp::Logger& logger,
+            const std::shared_ptr<exe4cpp::IExecutor>& executor,
+            const CryptoSuite& crypto_suite,
+            const StaticKeys& local_keys,
+            const std::shared_ptr<ssp21::SecureDynamicBuffer>& anchor_cert_file_data,
+            const std::shared_ptr<ssp21::SecureDynamicBuffer>& presented_chain_file_data);
 
-            /**
+        /**
              * @brief Create a certificate-based initiator stack without the link-layer.
              * @param config                    Responder configuration
              * @param logger                    Logger used by the stack
@@ -360,18 +340,17 @@ namespace ssp21
              * 
              * @note The only valid @ref HandshakeEphemeral for this mode is @ref HandshakeEphemeral::x25519.
              */
-            std::shared_ptr<IStack> certificate_public_key_mode(
-                const InitiatorConfig& config,
-                const log4cpp::Logger& logger,
-                const std::shared_ptr<exe4cpp::IExecutor>& executor,
-                const CryptoSuite& crypto_suite,
-                const StaticKeys& local_keys,
-                const std::shared_ptr<ssp21::SecureDynamicBuffer>& anchor_cert_file_data,
-                const std::shared_ptr<ssp21::SecureDynamicBuffer>& presented_chain_file_data
-            );
+        std::shared_ptr<IStack> certificate_public_key_mode(
+            const InitiatorConfig& config,
+            const log4cpp::Logger& logger,
+            const std::shared_ptr<exe4cpp::IExecutor>& executor,
+            const CryptoSuite& crypto_suite,
+            const StaticKeys& local_keys,
+            const std::shared_ptr<ssp21::SecureDynamicBuffer>& anchor_cert_file_data,
+            const std::shared_ptr<ssp21::SecureDynamicBuffer>& presented_chain_file_data);
 
-        }
     }
+}
 }
 
 #endif

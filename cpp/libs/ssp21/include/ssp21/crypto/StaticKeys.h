@@ -6,21 +6,19 @@
 
 #include <memory>
 
-namespace ssp21
-{
-    struct StaticKeys
+namespace ssp21 {
+struct StaticKeys {
+    StaticKeys(
+        const std::shared_ptr<const PublicKey>& public_key,
+        const std::shared_ptr<const PrivateKey>& private_key)
+        : public_key(public_key)
+        , private_key(private_key)
     {
-        StaticKeys(
-            const std::shared_ptr<const PublicKey>& public_key,
-            const std::shared_ptr<const PrivateKey>& private_key
-        ) :
-            public_key(public_key),
-            private_key(private_key)
-        {}
+    }
 
-        const std::shared_ptr<const PublicKey> public_key;
-        const std::shared_ptr<const PrivateKey> private_key;
-    };
+    const std::shared_ptr<const PublicKey> public_key;
+    const std::shared_ptr<const PrivateKey> private_key;
+};
 }
 
 #endif

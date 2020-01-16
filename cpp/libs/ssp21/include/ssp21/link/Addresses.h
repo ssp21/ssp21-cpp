@@ -7,22 +7,22 @@
 
 #include <cstdint>
 
-namespace ssp21
-{
+namespace ssp21 {
 
 /**
  * @brief Link-layer pair of addresses.
  */
-struct Addresses
-{
+struct Addresses {
     /**
      * @brief Constructor.
      * @param destination Destination address
      * @param source Source address
      */
-    Addresses(uint16_t destination = 0, uint16_t source = 0) :
-        destination(destination), source(source)
-    {}
+    Addresses(uint16_t destination = 0, uint16_t source = 0)
+        : destination(destination)
+        , source(source)
+    {
+    }
 
     /**
      * @brief Destination address.

@@ -4,24 +4,21 @@
 
 #include "ssp21/crypto/IMessagePrinter.h"
 
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 
-class ConsolePrinter : public ssp21::IMessagePrinter
-{
+class ConsolePrinter : public ssp21::IMessagePrinter {
 
     size_t indentation_level = 0;
 
     void write_line_prefix()
     {
-        for (size_t i = 0; i < indentation_level; ++i)
-        {
+        for (size_t i = 0; i < indentation_level; ++i) {
             std::cout << " ";
         }
     }
 
 public:
-
     void push_indent()
     {
         this->indentation_level += 2;
@@ -57,16 +54,15 @@ public:
 
         this->push_indent();
         ssp21::seq32_t remainder = data;
-        while (remainder.is_not_empty())
-        {
+        while (remainder.is_not_empty()) {
             const ssp21::seq32_t line = remainder.take(16u);
             remainder = remainder.skip(16);
 
             this->write_line_prefix();
 
-            for (uint32_t i = 0; i < line.length(); ++i)
-            {
-                if (i != 0) std::cout << ":";
+            for (uint32_t i = 0; i < line.length(); ++i) {
+                if (i != 0)
+                    std::cout << ":";
                 std::cout << std::setw(2) << std::setfill('0') << std::hex << (int)line[i];
             }
             std::cout << std::endl;
@@ -75,7 +71,6 @@ public:
 
         std::cout << std::dec;
     }
-
 };
 
 #endif

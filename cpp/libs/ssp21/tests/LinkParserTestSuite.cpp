@@ -10,11 +10,9 @@
 using namespace ssp21;
 using namespace ser4cpp;
 
-class CountingReporter : public LinkParser::IReporter
-{
+class CountingReporter : public LinkParser::IReporter {
 
 public:
-
     virtual void on_bad_header_crc(uint32_t expected, uint32_t actual) override
     {
         ++num_bad_header_crc;
@@ -39,7 +37,6 @@ public:
     {
         num_bad_header_crc = num_bad_body_crc = num_bad_length = 0;
     }
-
 
     uint32_t num_bad_header_crc = 0;
     uint32_t num_bad_body_crc = 0;
@@ -76,7 +73,6 @@ TEST_CASE(SUITE("reads a full message properly"))
     REQUIRE(result.destination == 1);
     REQUIRE(result.source == 2);
     REQUIRE(HexConversions::to_hex(result.payload) == "DD DD DD DD DD DD");
-
 }
 
 TEST_CASE(SUITE("discards leading data properly"))

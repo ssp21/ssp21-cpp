@@ -24,4 +24,3 @@ TEST_CASE(SUITE("test secure comparison"))
     REQUIRE_FALSE(Crypto::secure_equals(slice1, slice2));
     REQUIRE_FALSE(Crypto::secure_equals(slice1, slice3));
 }
-

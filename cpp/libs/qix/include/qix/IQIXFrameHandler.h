@@ -3,14 +3,11 @@
 
 #include "QIXFrame.h"
 
-class IQIXFrameHandler
-{
+class IQIXFrameHandler {
 public:
-
-	virtual ~IQIXFrameHandler() = default;
+    virtual ~IQIXFrameHandler() = default;
 
     virtual void handle(const QIXFrame& frame) = 0;
-
 };
 
 #endif

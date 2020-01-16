@@ -5,8 +5,7 @@
  * @brief Interface @ref ssp21::IUpperLayer.
  */
 
-namespace ssp21
-{
+namespace ssp21 {
 
 /**
  * @brief Performs asynchronous RX/TX operations on behalf of an @ref ILowerLayer.
@@ -14,8 +13,7 @@ namespace ssp21
  * This class is used by @ref IStack. User of the library must implement this interface
  * to send and receive the bytes to the host application.
  */
-class IUpperLayer
-{
+class IUpperLayer {
     friend class AbstractStack;
 
 public:
@@ -27,12 +25,9 @@ public:
      */
     inline bool on_lower_open()
     {
-        if (this->is_open_flag)
-        {
+        if (this->is_open_flag) {
             return false;
-        }
-        else
-        {
+        } else {
             this->is_open_flag = true;
             this->on_lower_open_impl();
             return true;
@@ -47,14 +42,11 @@ public:
      */
     inline bool on_lower_close()
     {
-        if (this->is_open_flag)
-        {
+        if (this->is_open_flag) {
             this->is_open_flag = false;
             this->on_lower_close_impl();
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
@@ -67,13 +59,10 @@ public:
      */
     inline bool on_lower_tx_ready()
     {
-        if (this->is_open_flag)
-        {
+        if (this->is_open_flag) {
             this->on_lower_tx_ready_impl();
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
@@ -86,13 +75,10 @@ public:
      */
     inline bool on_lower_rx_ready()
     {
-        if (this->is_open_flag)
-        {
+        if (this->is_open_flag) {
             this->on_lower_rx_ready_impl();
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }

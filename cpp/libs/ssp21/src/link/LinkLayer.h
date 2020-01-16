@@ -7,63 +7,58 @@
 #include "link/LinkParser.h"
 #include "ssp21/link/LinkConstants.h"
 
-namespace ssp21
-{
+namespace ssp21 {
 
-    class LinkLayer final : public IUpperLayer, public ILowerLayer, private LinkParser::IReporter
+class LinkLayer final : public IUpperLayer, public ILowerLayer, private LinkParser::IReporter {
+
+public:
+    LinkLayer(uint16_t local_addr, uint16_t remote_addr);
+
+    void bind(ILowerLayer& lower, IUpperLayer& upper)
     {
+        this->lower = &lower;
+        this->upper = &upper;
+    }
 
-    public:
+private:
+    // ---- IUpperLayer ----
 
-        LinkLayer(uint16_t local_addr, uint16_t remote_addr);
+    virtual void on_lower_open_impl() override;
+    virtual void on_lower_close_impl() override;
+    virtual void on_lower_tx_ready_impl() override;
+    virtual void on_lower_rx_ready_impl() override;
 
-        void bind(ILowerLayer& lower, IUpperLayer& upper)
-        {
-            this->lower = &lower;
-            this->upper = &upper;
-        }
+    // ---- ILowerLayer ----
+    virtual bool is_tx_ready() const override;
+    virtual bool start_tx_from_upper(const seq32_t& data) override;
+    virtual void discard_rx_data() override;
+    virtual seq32_t start_rx_from_upper_impl() override;
 
-    private:
+    // ---- LinkParser::IReporter ----
 
-        // ---- IUpperLayer ----
+    virtual void on_bad_header_crc(uint32_t expected, uint32_t actual) override {}
+    virtual void on_bad_body_crc(uint32_t expected, uint32_t actual) override {}
+    virtual void on_bad_body_length(uint32_t max_allowed, uint32_t actual) override {}
 
-        virtual void on_lower_open_impl() override;
-        virtual void on_lower_close_impl() override;
-        virtual void on_lower_tx_ready_impl() override;
-        virtual void on_lower_rx_ready_impl() override;
+    // ---- private helpers ----
 
-        // ---- ILowerLayer ----
-        virtual bool is_tx_ready() const override;
-        virtual bool start_tx_from_upper(const seq32_t& data) override;
-        virtual void discard_rx_data() override;
-        virtual seq32_t start_rx_from_upper_impl() override;
+    bool get_frame();
 
-        // ---- LinkParser::IReporter ----
+    // return true to continue
+    bool read_frame_one_iteration();
 
-        virtual void on_bad_header_crc(uint32_t expected, uint32_t actual) override {}
-        virtual void on_bad_body_crc(uint32_t expected, uint32_t actual) override {}
-        virtual void on_bad_body_length(uint32_t max_allowed, uint32_t actual) override {}
+    bool parse(seq32_t& data);
 
-        // ---- private helpers ----
+    ILowerLayer* lower = nullptr;
+    IUpperLayer* upper = nullptr;
 
-        bool get_frame();
+    const uint16_t local_addr;
+    const uint16_t remote_addr;
 
-        // return true to continue
-        bool read_frame_one_iteration();
-
-        bool parse(seq32_t& data);
-
-        ILowerLayer* lower = nullptr;
-        IUpperLayer* upper = nullptr;
-
-        const uint16_t local_addr;
-        const uint16_t remote_addr;
-
-        seq32_t remainder;
-        LinkParser parser;
-    };
+    seq32_t remainder;
+    LinkParser parser;
+};
 
 }
-
 
 #endif

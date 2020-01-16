@@ -1,17 +1,17 @@
 
-#include "crypto/gen/RequestHandshakeBegin.h"
 #include "crypto/gen/ReplyHandshakeBegin.h"
+#include "crypto/gen/RequestHandshakeBegin.h"
 #include "crypto/gen/SessionData.h"
-#include "ssp21/crypto/gen/CertificateEnvelope.h"
 #include "ssp21/crypto/gen/CertificateBody.h"
+#include "ssp21/crypto/gen/CertificateEnvelope.h"
 
-#include "log4cpp/ConsolePrettyPrinter.h"
 #include "crypto/LogMessagePrinter.h"
+#include "log4cpp/ConsolePrettyPrinter.h"
 #include "ssp21/stack/LogLevels.h"
 #include "ssp21/util/Exception.h"
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
 using namespace ssp21;
 
@@ -21,8 +21,7 @@ void parse_input_as(const seq32_t& input, IMessagePrinter& printer)
     seq32_t copy = input;
     T message;
     const auto err = message.read(copy);
-    if(!any(err))
-    {
+    if (!any(err)) {
         message.print(printer);
     }
 }
@@ -33,8 +32,7 @@ void parse_input_as(const seq32_t& input, const char* name, IMessagePrinter& pri
     seq32_t copy = input;
     T message;
     const auto err = message.read(copy);
-    if(!any(err))
-    {
+    if (!any(err)) {
         message.print(name, printer);
     }
 }
@@ -48,18 +46,16 @@ void write_default_seed(const std::string& directory, const std::string& filenam
     wseq32_t output(buffer, max_bytes);
     T message;
     const auto result = message.write(output);
-    if(any(result.err))
-    {
+    if (any(result.err)) {
         throw Exception("unable to write default seed: ", FormatErrorSpec::to_string(result.err));
     }
 
     const auto path = directory + "/" + filename;
 
     std::ofstream file(path, std::ios::out | std::ios::binary | std::ios::trunc);
-    if(!file.is_open()) {
+    if (!file.is_open()) {
         throw Exception("unable to open seed file for writing: ", path);
     }
-
 
     file.write(reinterpret_cast<const char*>(buffer), result.written.length());
 }
@@ -73,15 +69,14 @@ void write_default_seed_field(const std::string& directory, const std::string& f
     wseq32_t output(buffer, max_bytes);
     T message;
     const auto err = message.write(output);
-    if(any(err))
-    {
+    if (any(err)) {
         throw Exception("unable to write default seed: ", FormatErrorSpec::to_string(err));
     }
 
     const auto path = directory + "/" + filename;
 
     std::ofstream file(path, std::ios::out | std::ios::binary | std::ios::trunc);
-    if(!file.is_open()) {
+    if (!file.is_open()) {
         throw Exception("unable to open seed file for writing: ", path);
     }
 
@@ -101,11 +96,10 @@ int perform_fuzzing()
     // set up pretty printing
     const auto console_logger = std::make_shared<log4cpp::ConsolePrettyPrinter>();
     log4cpp::Logger logger(
-            std::make_shared<log4cpp::ConsolePrettyPrinter>(),
-            ssp21::Module::id,
-            "fuzz",
-            log4cpp::LogLevels::everything()
-    );
+        std::make_shared<log4cpp::ConsolePrettyPrinter>(),
+        ssp21::Module::id,
+        "fuzz",
+        log4cpp::LogLevels::everything());
     LogMessagePrinter printer(logger, levels::event);
 
     // try the input for each of the message / cert types
@@ -129,7 +123,7 @@ int write_seeds(const std::string& directory)
     return 0;
 }
 
-int main(int argc, char*  argv[])
+int main(int argc, char* argv[])
 {
     return (argc > 1) ? write_seeds(argv[1]) : perform_fuzzing();
 }

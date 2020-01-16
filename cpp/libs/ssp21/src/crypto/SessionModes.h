@@ -4,27 +4,23 @@
 
 #include "TruncatedMacSessionMode.h"
 
-namespace ssp21
-{
-    class SessionModes : private ser4cpp::StaticOnly
+namespace ssp21 {
+class SessionModes : private ser4cpp::StaticOnly {
+
+public:
+    static ISessionMode& get_hmac_sha_256_trunc16()
     {
+        return hmac_sha_256_trunc16;
+    }
 
-    public:
+    static ISessionMode& default_mode()
+    {
+        return hmac_sha_256_trunc16;
+    }
 
-        static ISessionMode& get_hmac_sha_256_trunc16()
-        {
-            return hmac_sha_256_trunc16;
-        }
-
-        static ISessionMode& default_mode()
-        {
-            return hmac_sha_256_trunc16;
-        }
-
-    private:
-
-        static TruncatedMacSessionMode hmac_sha_256_trunc16;
-    };
+private:
+    static TruncatedMacSessionMode hmac_sha_256_trunc16;
+};
 
 }
 

@@ -7,10 +7,8 @@
 
 #include "QIXFrame.h"
 
-class QIXFrameWriter
-{
+class QIXFrameWriter {
 public:
-
     QIXFrameWriter(const std::string& serial_device);
 
     ~QIXFrameWriter();
@@ -18,7 +16,6 @@ public:
     void write(const QIXFrame& frame);
 
 private:
-
     asio::io_service service;
     asio::serial_port port;
 };

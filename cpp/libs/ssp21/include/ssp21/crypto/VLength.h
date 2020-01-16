@@ -1,13 +1,12 @@
 #ifndef SSP21_SEQUENCELENGTH_H
 #define SSP21_SEQUENCELENGTH_H
 
-#include "ssp21/util/SequenceTypes.h"
-#include "ssp21/crypto/gen/ParseError.h"
 #include "ssp21/crypto/gen/FormatError.h"
+#include "ssp21/crypto/gen/ParseError.h"
+#include "ssp21/util/SequenceTypes.h"
 
-namespace ssp21
-{
-    /**
+namespace ssp21 {
+/**
     *
     *	Variable-length unsigned 32-bit integer encoding/decoding ala ASN.1 DER
 	*
@@ -26,18 +25,18 @@ namespace ssp21
     *       5      |   16777216   |  4294967295   |  First byte == 0x84
 	*
     */
-    struct VLength : private ser4cpp::StaticOnly
-    {            
-        static FormatError write(uint32_t value, wseq32_t& dest);
+struct VLength : private ser4cpp::StaticOnly {
+    static FormatError write(uint32_t value, wseq32_t& dest);
 
-        static ParseError read(uint32_t& value, seq32_t& src);
+    static ParseError read(uint32_t& value, seq32_t& src);
 
-        static uint8_t num_values_bytes(uint32_t value);
+    static uint8_t num_values_bytes(uint32_t value);
 
-		static size_t size(uint32_t value) {
-			return static_cast<size_t>(num_values_bytes(value)) + 1;
-		}
-    };
+    static size_t size(uint32_t value)
+    {
+        return static_cast<size_t>(num_values_bytes(value)) + 1;
+    }
+};
 
 }
 

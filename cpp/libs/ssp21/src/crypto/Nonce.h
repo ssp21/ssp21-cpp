@@ -6,38 +6,33 @@
 
 #include <cstdint>
 
-namespace ssp21
-{
-    class Nonce final : private ser4cpp::Uncopyable
+namespace ssp21 {
+class Nonce final : private ser4cpp::Uncopyable {
+
+public:
+    void increment()
     {
+        ++value;
+    }
 
-    public:
+    void set(uint16_t new_value)
+    {
+        value = new_value;
+    }
 
-        void increment()
-        {
-            ++value;
-        }
+    inline uint16_t get() const
+    {
+        return value;
+    }
 
-        void set(uint16_t new_value)
-        {
-            value = new_value;
-        }
+    bool is_zero() const
+    {
+        return this->value == 0;
+    }
 
-        inline uint16_t get() const
-        {
-            return value;
-        }
-
-        bool is_zero() const
-        {
-            return this->value == 0;
-        }
-
-    private:
-
-        uint16_t value = 0;
-
-    };
+private:
+    uint16_t value = 0;
+};
 
 }
 

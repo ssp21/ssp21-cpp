@@ -4,14 +4,11 @@
 
 #include "Actions.h"
 
-class UserInput
-{
+class UserInput {
 
 public:
-
     static Actions::Times get_validity_times_from_user();
     static uint8_t get_signing_level_from_user();
-
 
     static Actions::Times days_to_times(uint16_t days);
 };

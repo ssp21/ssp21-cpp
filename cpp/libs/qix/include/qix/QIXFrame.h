@@ -8,12 +8,9 @@
 /**
 * Data contained in a QIX Frame
 */
-class QIXFrame
-{
+class QIXFrame {
 public:
-
-    enum class Status : uint8_t
-    {
+    enum class Status : uint8_t {
         ok = 0x01,
         key_compromised = 0xFF,
         undefined = 0xFE

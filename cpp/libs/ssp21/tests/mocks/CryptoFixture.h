@@ -4,29 +4,26 @@
 
 #include "gen/CryptoAction.h"
 
+#include <assert.h>
 #include <deque>
 #include <sstream>
-#include <assert.h>
 
-namespace ssp21
-{
-    class CryptoFixture
-    {
+namespace ssp21 {
+class CryptoFixture {
 
-    public:
+public:
+    CryptoFixture();
+    ~CryptoFixture();
 
-        CryptoFixture();
-        ~CryptoFixture();
+    uint8_t fill_byte = 0xFF;
+    bool fail_dh_x25519 = false;
+    std::deque<CryptoAction> actions;
 
-        uint8_t fill_byte = 0xFF;
-        bool fail_dh_x25519 = false;
-        std::deque<CryptoAction> actions;
-
-        void set_fail_dh_x25519(bool fail);
-        bool empty_actions() const;
-        void expect(const std::initializer_list<CryptoAction>& expected);
-        void expect_empty();
-    };
+    void set_fail_dh_x25519(bool fail);
+    bool empty_actions() const;
+    void expect(const std::initializer_list<CryptoAction>& expected);
+    void expect_empty();
+};
 
 }
 

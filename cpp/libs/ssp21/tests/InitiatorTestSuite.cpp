@@ -165,10 +165,10 @@ TEST_CASE(SUITE("goes to retry state if auth reply doesn't authenticate"))
     REQUIRE(end_stats.num_init == start_stats.num_init);
 
     fix.expect(
-    {
-        CryptoAction::hmac_sha256,  // authenticate
-        CryptoAction::secure_equals // last action since it fails
-    });
+        {
+            CryptoAction::hmac_sha256,  // authenticate
+            CryptoAction::secure_equals // last action since it fails
+        });
 }
 
 // ---------- helper implementations -----------
@@ -190,17 +190,16 @@ void test_request_handshake_begin(InitiatorFixture& fix)
     REQUIRE(fix.lower.num_tx_messages() == 1);
 
     const auto expected = hex::request_handshake_begin(
-                              0,
-                              SessionNonceMode::increment_last_rx,
-                              HandshakeEphemeral::x25519,
-                              HandshakeHash::sha256,
-                              HandshakeKDF::hkdf_sha256,
-                              SessionCryptoMode::hmac_sha256_16,
-                              consts::crypto::initiator::default_max_nonce,
-                              consts::crypto::initiator::default_max_session_time_ms,
-                              HandshakeMode::preshared_public_keys,
-                              hex::repeat(0xFF, 32)
-                          );
+        0,
+        SessionNonceMode::increment_last_rx,
+        HandshakeEphemeral::x25519,
+        HandshakeHash::sha256,
+        HandshakeKDF::hkdf_sha256,
+        SessionCryptoMode::hmac_sha256_16,
+        consts::crypto::initiator::default_max_nonce,
+        consts::crypto::initiator::default_max_session_time_ms,
+        HandshakeMode::preshared_public_keys,
+        hex::repeat(0xFF, 32));
 
     REQUIRE(fix.lower.pop_tx_message() == expected);
     REQUIRE(fix.exe->num_pending_timers() == 1);
@@ -245,15 +244,13 @@ void test_reply_handshake_begin(InitiatorFixture& fix)
 
     // causes the master to go through key derivation
     fix.expect(
-    {
-        CryptoAction::hash_sha256, // mix ck
-        CryptoAction::dh_x25519,   // triple DH
-        CryptoAction::dh_x25519,
-        CryptoAction::dh_x25519,
+        { CryptoAction::hash_sha256, // mix ck
+          CryptoAction::dh_x25519,   // triple DH
+          CryptoAction::dh_x25519,
+          CryptoAction::dh_x25519,
 
-        CryptoAction::hkdf_sha256, // KDF
-        CryptoAction::hmac_sha256
-    });
+          CryptoAction::hkdf_sha256, // KDF
+          CryptoAction::hmac_sha256 });
 
     REQUIRE(fix.exe->num_timer_cancel() == (num_timer_cancel + 1));
     REQUIRE(fix.exe->num_pending_timers() == 1);
@@ -275,10 +272,8 @@ void test_reply_handshake_auth(InitiatorFixture& fix)
 
     // causes the master to go through key derivation
     fix.expect(
-    {
-        CryptoAction::hmac_sha256, // authenticate
-        CryptoAction::secure_equals
-    });
+        { CryptoAction::hmac_sha256, // authenticate
+          CryptoAction::secure_equals });
 
     REQUIRE(fix.upper.get_is_open());
 }
@@ -289,4 +284,3 @@ void test_open_and_full_handshake(InitiatorFixture& fix)
     test_reply_handshake_begin(fix);
     test_reply_handshake_auth(fix);
 }
-

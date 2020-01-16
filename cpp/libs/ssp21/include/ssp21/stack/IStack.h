@@ -8,14 +8,12 @@
 #include "ILowerLayer.h"
 #include "IUpperLayer.h"
 
-namespace ssp21
-{
+namespace ssp21 {
 
 /**
  * A stack provides both lower/upper layers and can be bound to provided lower/upper layers
  */
-class IStack : public ILowerLayer, public IUpperLayer
-{
+class IStack : public ILowerLayer, public IUpperLayer {
 public:
     virtual ~IStack() = default;
 

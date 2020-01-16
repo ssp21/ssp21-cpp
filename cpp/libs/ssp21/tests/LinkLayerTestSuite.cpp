@@ -69,8 +69,7 @@ TEST_CASE(SUITE("forwards transmitted data"))
     IUpperLayer& link_upper = fix.link;
     ILowerLayer& link_lower = fix.link;
 
-    for (int i = 0; i < 3; ++i)
-    {
+    for (int i = 0; i < 3; ++i) {
         REQUIRE(fix.upper.num_tx_ready == i);
         REQUIRE(link_lower.start_tx_from_upper(message->as_rslice()));
         REQUIRE(fix.lower.pop_tx_message() == "CA FE");

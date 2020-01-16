@@ -7,85 +7,78 @@
 #include "exe4cpp/IExecutor.h"
 #include "ser4cpp/container/Buffer.h"
 
-#include <stdexcept>
-#include <memory>
 #include <deque>
+#include <memory>
+#include <stdexcept>
 
-namespace ssp21
-{
+namespace ssp21 {
 
-    class LowerLayer final : public ILowerLayer
+class LowerLayer final : public ILowerLayer {
+    using message_t = ser4cpp::Buffer;
+
+public:
+    explicit LowerLayer(const std::shared_ptr<exe4cpp::IExecutor>& executor)
+        : executor(executor)
     {
-		using message_t = ser4cpp::Buffer;
+    }
 
-    public:
+    bool start_tx_from_upper(const seq32_t& data) override
+    {
+        this->sibling->messages.push_back(std::make_unique<message_t>(data));
 
-        explicit LowerLayer(const std::shared_ptr<exe4cpp::IExecutor>& executor) : executor(executor)
-        {}
+        // notify the sibling that there's data available to be read
+        executor->post([this]() {
+            this->sibling->on_new_data();
+        });
 
-        bool start_tx_from_upper(const seq32_t& data) override
-        {
-            this->sibling->messages.push_back(std::make_unique<message_t>(data));
+        // simulate asynchronous transmission
+        executor->post([this]() {
+            this->upper->on_lower_tx_ready();
+        });
 
-            // notify the sibling that there's data available to be read
-            executor->post([this]()
-            {
-                this->sibling->on_new_data();
-            });
+        return true;
+    }
 
-            // simulate asynchronous transmission
-            executor->post([this]()
-            {
-                this->upper->on_lower_tx_ready();
-            });
+    seq32_t start_rx_from_upper_impl() override
+    {
+        return this->messages.empty() ? seq32_t::empty() : messages.front()->as_rslice();
+    }
 
-            return true;
+    bool is_tx_ready() const override
+    {
+        return true;
+    }
+
+    void configure(IUpperLayer& upper, LowerLayer& sibling)
+    {
+        this->upper = &upper;
+        this->sibling = &sibling;
+    }
+
+private:
+    void discard_rx_data() override
+    {
+        if (this->messages.empty()) {
+            throw std::logic_error("no messages to discard");
+        } else {
+            this->messages.pop_front();
         }
+    }
 
-        seq32_t start_rx_from_upper_impl() override
-        {
-            return this->messages.empty() ? seq32_t::empty() : messages.front()->as_rslice();
-        }
+    // sibling layer notification that data has been placed in queue
+    void on_new_data()
+    {
+        this->upper->on_lower_rx_ready();
+    }
 
-        bool is_tx_ready() const override
-        {
-            return true;
-        }
+    const std::shared_ptr<exe4cpp::IExecutor> executor;
 
-        void configure(IUpperLayer& upper, LowerLayer& sibling)
-        {
-            this->upper = &upper;
-            this->sibling = &sibling;
-        }
+    std::deque<std::unique_ptr<message_t>> messages;
 
-    private:
-
-        void discard_rx_data() override
-        {
-            if (this->messages.empty())
-            {
-                throw std::logic_error("no messages to discard");
-            }
-            else
-            {
-                this->messages.pop_front();
-            }
-        }
-
-        // sibling layer notification that data has been placed in queue
-        void on_new_data()
-        {
-            this->upper->on_lower_rx_ready();
-        }
-
-        const std::shared_ptr<exe4cpp::IExecutor> executor;
-
-        std::deque<std::unique_ptr<message_t>> messages;
-
-        // set during configure step
-        LowerLayer* sibling = nullptr;
-        IUpperLayer* upper = nullptr;
-    };
+    // set during configure step
+    LowerLayer* sibling = nullptr;
+    IUpperLayer* upper = nullptr;
+};
 
 }
 

@@ -5,19 +5,15 @@
 #include "IWritable.h"
 #include "ssp21/crypto/gen/ParseError.h"
 
-namespace ssp21
-{
-    /**
+namespace ssp21 {
+/**
     * Messages can be read, written, and printed
     */
-    class IMessage : public IWritable
-    {
+class IMessage : public IWritable {
 
-    public:
-
-        virtual ParseError read(seq32_t input) = 0;
-
-    };
+public:
+    virtual ParseError read(seq32_t input) = 0;
+};
 
 }
 

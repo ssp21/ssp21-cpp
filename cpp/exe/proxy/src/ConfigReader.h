@@ -5,10 +5,8 @@
 
 #include <yaml-cpp/yaml.h>
 
-namespace config
-{     
-    proxy_session_factory_t get_session_factory(const YAML::Node& node);
+namespace config {
+proxy_session_factory_t get_session_factory(const YAML::Node& node);
 }
 
 #endif
-

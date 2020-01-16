@@ -4,11 +4,10 @@
 
 #include "sodium/CryptoBackend.h"
 
-int main(int argc, char*  argv[])
+int main(int argc, char* argv[])
 {
     // global setup...
-    if(!ssp21::sodium::CryptoBackend::initialize())
-    {
+    if (!ssp21::sodium::CryptoBackend::initialize()) {
         std::cerr << "unable to initialize sodium backend" << std::endl;
         return -1;
     }

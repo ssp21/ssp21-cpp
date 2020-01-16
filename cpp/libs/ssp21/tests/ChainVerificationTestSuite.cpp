@@ -47,7 +47,7 @@ TEST_CASE(SUITE("rejects terminal cert w/ signing_level != 0"))
     CertificateChain chain;
     REQUIRE(chain.certificates.push(endpoint.envelope));
 
-    test_chain_validation(2, chain, HandshakeError::bad_certificate_chain, { CryptoAction::verify_ed25519  });
+    test_chain_validation(2, chain, HandshakeError::bad_certificate_chain, { CryptoAction::verify_ed25519 });
 }
 
 TEST_CASE(SUITE("rejects terminal cert w/ non-DH key"))
@@ -67,8 +67,7 @@ HandshakeError test_chain_validation(uint8_t anchor_signing_level, CertificateCh
     CertificateBody body;
     const auto err = Chain::verify(anchor.body, chain.certificates, body);
 
-    if (err != expected_result)
-    {
+    if (err != expected_result) {
         throw Exception("expected ", HandshakeErrorSpec::to_string(expected_result), " but result was: ", HandshakeErrorSpec::to_string(err));
     }
 

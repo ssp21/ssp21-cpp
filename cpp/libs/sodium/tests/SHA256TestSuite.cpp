@@ -20,7 +20,7 @@ TEST_CASE(SUITE("sha256"))
     auto slice = seq32_t(reinterpret_cast<const uint8_t*>(text.c_str()), text.size());
 
     HashOutput output;
-    Crypto::hash_sha256({slice}, output);
+    Crypto::hash_sha256({ slice }, output);
     REQUIRE(output.get_type() == BufferType::sha256);
 
     auto hex = HexConversions::to_hex(output.as_seq(), false);
@@ -85,5 +85,3 @@ TEST_CASE(SUITE("HKDF-sha256"))
     REQUIRE(hex_key_1 == "848036BCEE099D03B956D92DE8C41A2345887836760EA09CE15885E8CAA7444C");
     REQUIRE(hex_key_2 == "5A72EE93D8AE3FF67C25680A02AD5C99DC2E6CA2ADBB85A251809EE4A76C6EF5");
 }
-
-

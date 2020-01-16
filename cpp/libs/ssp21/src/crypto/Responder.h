@@ -6,52 +6,45 @@
 
 #include "crypto/IResponderHandshake.h"
 
-namespace ssp21
-{
-    /**
+namespace ssp21 {
+/**
     	Responder implementation - Inherits most of its functionality from the CryptoLayer base class.
 
     	Adds responder hand shaking support.
     */
-    class Responder final : public CryptoLayer
-    {
+class Responder final : public CryptoLayer {
 
-    public:
+public:
+    Responder(
+        const ResponderConfig& config,
+        const log4cpp::Logger& logger,
+        const std::shared_ptr<IFrameWriter>& frame_writer,
+        const std::shared_ptr<exe4cpp::IExecutor>& executor,
+        const std::shared_ptr<IResponderHandshake>& handshake);
 
-        Responder(
-            const ResponderConfig& config,
-            const log4cpp::Logger& logger,
-            const std::shared_ptr<IFrameWriter>& frame_writer,
-            const std::shared_ptr<exe4cpp::IExecutor>& executor,
-            const std::shared_ptr<IResponderHandshake>& handshake
-        );
+private:
+    const std::shared_ptr<IResponderHandshake> handshake;
 
-    private:
+    // ---- final implementations from IUpperLayer ----
 
-        const std::shared_ptr<IResponderHandshake> handshake;
+    virtual void on_lower_open_impl() override {}
 
-        // ---- final implementations from IUpperLayer ----
+    // ---- private helper methods -----
 
-        virtual void on_lower_open_impl() override {}
+    void reply_with_handshake_error(HandshakeError err);
 
-        // ---- private helper methods -----
+    // ---- implement CryptoLayer -----
 
-        void reply_with_handshake_error(HandshakeError err);
+    virtual void reset_state_on_close_from_lower() override;
 
+    virtual bool supports(Function function) const override;
 
-        // ---- implement CryptoLayer -----
+    virtual void on_parse_error(Function function, ParseError error) override;
 
-        virtual void reset_state_on_close_from_lower() override;
+    virtual void on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now) override;
 
-        virtual bool supports(Function function) const override;
-
-        virtual void on_parse_error(Function function, ParseError error) override;
-
-        virtual void on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now) override;
-
-        virtual void on_auth_session(const SessionData& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now) override;
-
-    };
+    virtual void on_auth_session(const SessionData& msg, const seq32_t& raw_data, const exe4cpp::steady_time_t& now) override;
+};
 
 }
 

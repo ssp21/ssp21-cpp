@@ -9,9 +9,9 @@
 using namespace ssp21;
 using namespace ser4cpp;
 
-QIXFrameWriter::QIXFrameWriter(const std::string& serial_device) :
-        service(1),
-        port(service)
+QIXFrameWriter::QIXFrameWriter(const std::string& serial_device)
+    : service(1)
+    , port(service)
 {
     port.open(serial_device);
 
@@ -32,7 +32,7 @@ QIXFrameWriter::~QIXFrameWriter()
 
 void QIXFrameWriter::write(const QIXFrame& frame)
 {
-    if(frame.key_data.length() != 32) {
+    if (frame.key_data.length() != 32) {
         throw std::runtime_error("key data must be 32 bytes in length");
     }
 
@@ -48,12 +48,9 @@ void QIXFrameWriter::write(const QIXFrame& frame)
 
     // write the CRC
     UInt32::write_to(
-            dest,
-            // skip the sync bytes, calculate over count(8) + key(32) + status(1) == 41 bytes
-            CastagnoliCRC32::calc(frame_buffer.as_seq().skip(2).take(41))
-    );
+        dest,
+        // skip the sync bytes, calculate over count(8) + key(32) + status(1) == 41 bytes
+        CastagnoliCRC32::calc(frame_buffer.as_seq().skip(2).take(41)));
 
     asio::write(port, asio::buffer(frame_buffer.as_seq(), frame_buffer.length()));
 }
-
-

@@ -5,32 +5,31 @@
 #include "IWritable.h"
 #include "log4cpp/Logger.h"
 
-namespace ssp21
-{
+namespace ssp21 {
 
-    class WriteResult final : public FormatResult
+class WriteResult final : public FormatResult {
+public:
+    seq32_t frame;
+
+    static WriteResult error(FormatError err)
     {
-    public:
+        return WriteResult(err, seq32_t::empty(), seq32_t::empty());
+    }
 
-        seq32_t frame;
+    static WriteResult success(FormatResult res, const seq32_t& frame)
+    {
+        return WriteResult(res.err, res.written, frame);
+    }
 
-        static WriteResult error(FormatError err)
-        {
-            return WriteResult(err, seq32_t::empty(), seq32_t::empty());
-        }
+private:
+    WriteResult(FormatError err, const seq32_t& written, const seq32_t& frame)
+        : FormatResult(err, written)
+        , frame(frame)
+    {
+    }
+};
 
-        static WriteResult success(FormatResult res, const seq32_t& frame)
-        {
-            return WriteResult(res.err, res.written, frame);
-        }
-
-    private:
-
-        WriteResult(FormatError err, const seq32_t& written, const seq32_t& frame) : FormatResult(err, written), frame(frame)
-        {}
-    };
-
-    /**
+/**
     *
     * Abstract interface for formatting a frame inside the cryptographic layer
     *
@@ -38,24 +37,21 @@ namespace ssp21
     * unnecessary copying.
     *
     */
-    class IFrameWriter
-    {
-    public:
+class IFrameWriter {
+public:
+    explicit IFrameWriter(const log4cpp::Logger& logger);
 
-        explicit IFrameWriter(const log4cpp::Logger& logger);
+    virtual ~IFrameWriter() = default;
 
-        virtual ~IFrameWriter() = default;
+    WriteResult write(const IWritable& payload);
 
-        WriteResult write(const IWritable& payload);
+    virtual uint16_t get_max_payload_size() const = 0;
 
-        virtual uint16_t get_max_payload_size() const = 0;
+private:
+    virtual WriteResult write_impl(const IWritable& payload) = 0;
 
-    private:
-
-        virtual WriteResult write_impl(const IWritable& payload) = 0;
-
-        log4cpp::Logger logger;
-    };
+    log4cpp::Logger logger;
+};
 
 }
 

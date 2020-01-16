@@ -9,26 +9,24 @@
 
 #include "link/LinkLayer.h"
 
-namespace ssp21
-{
-    class LinkLayerFixture
+namespace ssp21 {
+class LinkLayerFixture {
+
+public:
+    LinkLayerFixture()
+        : log("responder")
+        , link(1, 10)
     {
+        upper.bind_lower(link);
+        lower.bind_upper(link);
+        link.bind(lower, upper);
+    }
 
-    public:
-
-        LinkLayerFixture() : log("responder"), link(1, 10)
-        {
-            upper.bind_lower(link);
-            lower.bind_upper(link);
-            link.bind(lower, upper);
-        }
-
-        log4cpp::MockLogHandler log;
-        MockLowerLayer lower;
-        MockUpperLayer upper;
-        LinkLayer link;
-
-    };
+    log4cpp::MockLogHandler log;
+    MockLowerLayer lower;
+    MockUpperLayer upper;
+    LinkLayer link;
+};
 }
 
 #endif

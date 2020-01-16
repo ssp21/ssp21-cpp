@@ -1,8 +1,8 @@
 
 #include "catch.hpp"
 
-#include "crypto/Session.h"
 #include "crypto/MessageOnlyFrameWriter.h"
+#include "crypto/Session.h"
 #include "ssp21/crypto/gen/CryptoError.h"
 
 #include "mocks/CryptoFixture.h"
@@ -22,26 +22,25 @@ using namespace ser4cpp;
 const auto test_user_data = "CA FE";
 const auto test_auth_tag = HexConversions::repeat_hex(0xFF, consts::crypto::trunc16);
 
-struct SessionFixture
-{
+struct SessionFixture {
     const std::shared_ptr<MessageOnlyFrameWriter> frame_writer;
     const std::shared_ptr<SessionStatistics> statistics;
     CryptoFixture crypto;
     Session session;
 
-    SessionFixture(const SessionConfig& config = SessionConfig()) :
-        frame_writer(std::make_shared<MessageOnlyFrameWriter>()),
-        statistics(std::make_shared<SessionStatistics>()),
-        session(frame_writer, statistics, config)
+    SessionFixture(const SessionConfig& config = SessionConfig())
+        : frame_writer(std::make_shared<MessageOnlyFrameWriter>())
+        , statistics(std::make_shared<SessionStatistics>())
+        , session(frame_writer, statistics, config)
     {
-
     }
 
-    SessionFixture(const std::shared_ptr<MessageOnlyFrameWriter>& frame_writer) :
-        frame_writer(frame_writer),
-        statistics(std::make_shared<SessionStatistics>()),
-        session(frame_writer, statistics, SessionConfig())
-    {}
+    SessionFixture(const std::shared_ptr<MessageOnlyFrameWriter>& frame_writer)
+        : frame_writer(frame_writer)
+        , statistics(std::make_shared<SessionStatistics>())
+        , session(frame_writer, statistics, SessionConfig())
+    {
+    }
 
     void init(const Session::Param& parameters = Session::Param());
     std::string validate(uint16_t nonce, uint32_t ttl, const exe4cpp::steady_time_t& now, const std::string& user_data_hex, const std::string& auth_tag_hex, std::error_code& ec);
@@ -92,9 +91,9 @@ TEST_CASE(SUITE("rejects data if max session time exceeded"))
 
     SessionFixture fixture;
     fixture.test_validation_failure(parameters, 1,
-        static_cast<uint32_t>(std::chrono::duration_cast<std::chrono::milliseconds>(parameters.max_session_time).count()),
-        exe4cpp::steady_time_t() + parameters.max_session_time + std::chrono::milliseconds(1),
-        test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::max_session_time_exceeded);
+                                    static_cast<uint32_t>(std::chrono::duration_cast<std::chrono::milliseconds>(parameters.max_session_time).count()),
+                                    exe4cpp::steady_time_t() + parameters.max_session_time + std::chrono::milliseconds(1),
+                                    test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::max_session_time_exceeded);
 }
 
 TEST_CASE(SUITE("rejects data if clock rollback detected"))
@@ -143,7 +142,6 @@ TEST_CASE(SUITE("rejects minimum ttl + 1"))
     SessionFixture fixture;
     fixture.test_validation_failure(param, 1, ttl, param.session_start + std::chrono::milliseconds(ttl + 1), test_user_data, test_auth_tag, { CryptoAction::hmac_sha256, CryptoAction::secure_equals }, CryptoError::expired_ttl);
 }
-
 
 //// ---- formatting tests ----
 
@@ -199,8 +197,7 @@ TEST_CASE(SUITE("won't format a message if adding the TTL would exceed the maxim
 TEST_CASE(SUITE("forwards the formatting error if the session::write function can't write to the output buffer"))
 {
     SessionFixture fixture(
-        std::make_shared<MessageOnlyFrameWriter>(log4cpp::Logger::empty(), 0)
-    );
+        std::make_shared<MessageOnlyFrameWriter>(log4cpp::Logger::empty(), 0));
 
     fixture.test_format_failure(Session::Param(), exe4cpp::steady_time_t(), "CA FE", CryptoError::bad_buffer_size);
 }
@@ -212,8 +209,7 @@ TEST_CASE(SUITE("successfully formats and increments nonce"))
 
     auto data = HexConversions::from_hex("CAFE");
 
-    for (uint16_t nonce = 1; nonce < 4; ++nonce)
-    {
+    for (uint16_t nonce = 1; nonce < 4; ++nonce) {
         std::error_code ec;
         auto input = data->as_rslice();
 
@@ -223,7 +219,6 @@ TEST_CASE(SUITE("successfully formats and increments nonce"))
         REQUIRE(output.is_not_empty());
         fixture.crypto.expect({ CryptoAction::hmac_sha256 });
     }
-
 }
 
 // ------- helpers methods impls -------------
@@ -245,11 +240,9 @@ std::string SessionFixture::validate(uint16_t nonce, uint32_t ttl, const exe4cpp
     const SessionData msg(
         AuthMetadata(
             nonce,
-            ttl
-        ),
+            ttl),
         user_data,
-        auth_tag
-    );
+        auth_tag);
 
     ser4cpp::StaticBuffer<uint32_t, 1024> buffer;
     const auto result = this->session.validate_session_data(msg, now, buffer.as_wseq(), ec);
@@ -280,7 +273,6 @@ void SessionFixture::test_validation_failure(const Session::Param& parameters, u
     REQUIRE(user_data.empty());
 
     crypto.expect(actions);
-
 }
 
 void SessionFixture::test_format_failure(const Session::Param& parameters, const exe4cpp::steady_time_t& now, const std::string& clear_text, const std::error_code& expected)

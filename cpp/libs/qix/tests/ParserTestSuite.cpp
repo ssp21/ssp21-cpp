@@ -2,9 +2,9 @@
 
 #include "catch.hpp"
 
+#include "log4cpp/MockLogHandler.h"
 #include "qix/QIXFrameParser.h"
 #include "ser4cpp/util/HexConversions.h"
-#include "log4cpp/MockLogHandler.h"
 
 #define SUITE(name) "ParserTestSuite - " name
 

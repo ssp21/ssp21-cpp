@@ -28,28 +28,23 @@
 #include "ser4cpp/util/Uncopyable.h"
 #include "ssp21/util/SequenceTypes.h"
 
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 #include <string>
 
-namespace ssp21
-{
-    class PrintHex : private ser4cpp::StaticOnly
+namespace ssp21 {
+class PrintHex : private ser4cpp::StaticOnly {
+
+public:
+    static void print_line(const seq32_t& data)
     {
-
-    public:
-
-        static void print_line(const seq32_t& data)
-        {
-            for (uint32_t i = 0; i < data.length(); ++i)
-            {
-                std::cout << std::hex << std::setfill('0') << std::setw(2) << (int) data[i] << " ";
-            }
-
-            std::cout << std::endl;
+        for (uint32_t i = 0; i < data.length(); ++i) {
+            std::cout << std::hex << std::setfill('0') << std::setw(2) << (int)data[i] << " ";
         }
 
-    };
+        std::cout << std::endl;
+    }
+};
 
 }
 

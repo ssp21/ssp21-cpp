@@ -5,25 +5,21 @@
 
 #include "ser4cpp/util/Uncopyable.h"
 
-namespace ssp21
-{
+namespace ssp21 {
 
-    class MessagePrinting : private ser4cpp::StaticOnly
+class MessagePrinting : private ser4cpp::StaticOnly {
+
+public:
+    template <typename T, typename... Args>
+    static void print_fields(IMessagePrinter& printer, const char* name, const T& value, Args&... args)
     {
+        value.print(name, printer);
+        return print_fields(printer, args...);
+    }
 
-    public:
-
-        template <typename T, typename... Args>
-        static void print_fields(IMessagePrinter& printer, const char* name, const T& value, Args& ... args)
-        {
-            value.print(name, printer);
-            return print_fields(printer, args...);
-        }
-
-    private:
-
-        static void print_fields(IMessagePrinter& printer) {}
-    };
+private:
+    static void print_fields(IMessagePrinter& printer) {}
+};
 }
 
 #endif

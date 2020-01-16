@@ -6,47 +6,41 @@
 #include <deque>
 #include <memory>
 
-namespace ssp21
-{
-    class SeqValidator final : public IReceiveValidator
+namespace ssp21 {
+class SeqValidator final : public IReceiveValidator {
+public:
+    virtual void validate(const seq32_t& data) override
     {
-    public:
-
-        virtual void validate(const seq32_t& data) override
-        {
-            if (this->expected_seqs.empty())
-            {
-                throw std::logic_error("not expecting data!");
-            }
-
-            const auto expected = expected_seqs.front();
-            expected_seqs.pop_front();
-
-            if (!data.equals(expected))
-            {
-                throw std::logic_error("bad comparison!");
-            }
+        if (this->expected_seqs.empty()) {
+            throw std::logic_error("not expecting data!");
         }
 
-        void expect(const seq32_t& data)
-        {
-            this->expected_seqs.push_back(data);
+        const auto expected = expected_seqs.front();
+        expected_seqs.pop_front();
+
+        if (!data.equals(expected)) {
+            throw std::logic_error("bad comparison!");
         }
+    }
 
-        bool is_empty() const
-        {
-            return expected_seqs.empty();
-        }
+    void expect(const seq32_t& data)
+    {
+        this->expected_seqs.push_back(data);
+    }
 
-        static std::shared_ptr<SeqValidator> create()
-        {
-            return std::make_shared<SeqValidator>();
-        }
+    bool is_empty() const
+    {
+        return expected_seqs.empty();
+    }
 
-    private:
+    static std::shared_ptr<SeqValidator> create()
+    {
+        return std::make_shared<SeqValidator>();
+    }
 
-        std::deque<seq32_t> expected_seqs;
-    };
+private:
+    std::deque<seq32_t> expected_seqs;
+};
 
 }
 

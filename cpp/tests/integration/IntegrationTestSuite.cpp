@@ -4,8 +4,8 @@
 
 #include "fixtures/IntegrationFixture.h"
 
-#include "ssp21/stack/LogLevels.h"
 #include "log4cpp/ConsolePrettyPrinter.h"
+#include "ssp21/stack/LogLevels.h"
 
 #define SUITE(name) "IntegrationTestSuite - " name
 
@@ -25,8 +25,7 @@ void for_each_mode(const T& action)
 
 TEST_CASE(SUITE("fixture construction"))
 {
-    auto run_test = [](Mode mode)
-    {
+    auto run_test = [](Mode mode) {
         IntegrationFixture fix(mode);
     };
 
@@ -35,8 +34,7 @@ TEST_CASE(SUITE("fixture construction"))
 
 TEST_CASE(SUITE("completes handshake"))
 {
-    auto run_test = [](Mode mode)
-    {
+    auto run_test = [](Mode mode) {
         IntegrationFixture fix(Mode::shared_secret);
         open_and_test_handshake(fix);
     };
@@ -46,18 +44,17 @@ TEST_CASE(SUITE("completes handshake"))
 
 TEST_CASE(SUITE("can transfer data bidirectionally multiple times"))
 {
-    auto run_test = [](Mode mode)
-    {
+    auto run_test = [](Mode mode) {
         IntegrationFixture fix(mode);
         open_and_test_handshake(fix);
 
         const auto num_bytes_tx = 64;
         uint8_t payload[num_bytes_tx] = { 0x00 };
-        for (int i = 0; i < num_bytes_tx; ++i) payload[i] = i % 256;
+        for (int i = 0; i < num_bytes_tx; ++i)
+            payload[i] = i % 256;
         const auto slice = seq32_t(payload, num_bytes_tx);
 
-        for (int i = 0; i < 5; ++i)
-        {
+        for (int i = 0; i < 5; ++i) {
             test_bidirectional_data_transfer(fix, slice);
         }
     };

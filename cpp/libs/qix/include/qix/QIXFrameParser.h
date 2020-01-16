@@ -10,8 +10,7 @@
 /**
 * Data contained in a QIX Frame
 */
-class QIXFrameParser : ser4cpp::Uncopyable
-{
+class QIXFrameParser : ser4cpp::Uncopyable {
     static const uint8_t sync1 = 0x5A;
     static const uint8_t sync2 = 0xA5;
 
@@ -28,13 +27,15 @@ class QIXFrameParser : ser4cpp::Uncopyable
     static const uint8_t total_frame_size = sync_size + crc_data_size + crc_size;
 
 public:
-
     inline static uint8_t get_fixed_frame_size()
     {
         return total_frame_size;
     }
 
-    QIXFrameParser(const log4cpp::Logger& logger) : logger(logger) {}
+    QIXFrameParser(const log4cpp::Logger& logger)
+        : logger(logger)
+    {
+    }
 
     // the buffer that needs to be filled with data before calling parse()
     ssp21::wseq32_t get_write_slice();
@@ -43,7 +44,6 @@ public:
     bool parse(QIXFrame& frame);
 
 private:
-
     static QIXFrame::Status get_status(uint8_t value);
 
     void read_frame_fields(QIXFrame& frame);
@@ -58,7 +58,6 @@ private:
     ser4cpp::StaticBuffer<uint32_t, total_frame_size> buffer;
 
     log4cpp::Logger logger;
-
 };
 
 #endif

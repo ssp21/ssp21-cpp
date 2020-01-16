@@ -12,14 +12,13 @@
 using namespace ssp21;
 using namespace ser4cpp;
 
-class HexWritable : public ssp21::IWritable
-{
+class HexWritable : public ssp21::IWritable {
 
 public:
-
     HexWritable(const std::string& payload)
         : payload(HexConversions::from_hex(payload))
-    {}
+    {
+    }
 
     FormatResult write(wseq32_t& output) const override
     {
@@ -29,13 +28,12 @@ public:
 
     void print(IMessagePrinter& printer) const override {}
 
-    Function get_function() const override 
+    Function get_function() const override
     {
         return Function::undefined;
     }
 
 private:
-
     std::unique_ptr<ser4cpp::Buffer> payload;
 };
 

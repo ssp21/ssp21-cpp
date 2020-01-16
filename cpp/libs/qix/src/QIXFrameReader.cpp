@@ -4,15 +4,14 @@
 
 #include "qix/AsyncQIXFrameReader.h"
 
-QIXFrameReader::QIXFrameReader(const std::shared_ptr<IQIXFrameHandler>& handler, const log4cpp::Logger& logger, const SerialSettings& settings) :
-    executor(std::make_shared<exe4cpp::BasicExecutor>(std::make_shared<asio::io_service>()))
+QIXFrameReader::QIXFrameReader(const std::shared_ptr<IQIXFrameHandler>& handler, const log4cpp::Logger& logger, const SerialSettings& settings)
+    : executor(std::make_shared<exe4cpp::BasicExecutor>(std::make_shared<asio::io_service>()))
 {
     // launch an asynchronous reader onto the event loop
     qix::async::start_frame_reader(handler, logger, this->executor, settings);
 
     // run the event loop from a thread
-    thread = std::make_unique<std::thread>([this]()
-    {
+    thread = std::make_unique<std::thread>([this]() {
         this->run_and_catch();
     });
 }
@@ -26,13 +25,8 @@ QIXFrameReader::~QIXFrameReader()
 
 void QIXFrameReader::run_and_catch()
 {
-    try
-    {
+    try {
         this->executor->get_service()->run();
-    }
-    catch (const std::exception&)
-    {
-
+    } catch (const std::exception&) {
     }
 }
-
