@@ -16,6 +16,7 @@ set(icftool_srcs
 add_executable(icftool ${icftool_headers} ${icftool_srcs})
 target_include_directories(icftool PRIVATE .)
 target_link_libraries(icftool PRIVATE ssp21 sodium_backend argagg)
+clang_format(icftool)
 
 install(TARGETS icftool EXPORT Ssp21Targets
     RUNTIME DESTINATION bin

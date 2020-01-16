@@ -24,6 +24,7 @@ target_include_directories(qix
     PRIVATE ./src
 )
 target_link_libraries(qix PUBLIC ssp21 asio)
+clang_format(qix)
 
 #install(TARGETS qix EXPORT Ssp21Targets
 #    LIBRARY DESTINATION lib

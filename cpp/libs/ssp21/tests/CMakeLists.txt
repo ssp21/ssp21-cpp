@@ -39,4 +39,5 @@ set(ssp21_tests_srcs
 add_executable(ssp21_tests ${ssp21_tests_headers} ${ssp21_tests_srcs})
 target_include_directories(ssp21_tests PRIVATE . ../src)
 target_link_libraries(ssp21_tests PRIVATE ssp21 catch)
+clang_format(ssp21_tests)
 add_test(NAME ssp21_tests COMMAND ssp21_tests)

@@ -18,6 +18,7 @@ target_include_directories(sodium_backend
     PRIVATE ./src
 )
 target_link_libraries(sodium_backend PUBLIC ssp21 PRIVATE sodium)
+clang_format(sodium_backend)
 
 install(TARGETS sodium_backend EXPORT Ssp21Targets
     LIBRARY DESTINATION lib

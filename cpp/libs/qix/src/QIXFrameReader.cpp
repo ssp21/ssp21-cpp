@@ -30,7 +30,7 @@ void QIXFrameReader::run_and_catch()
     {
         this->executor->get_service()->run();
     }
-    catch (const std::exception& ex)
+    catch (const std::exception&)
     {
 
     }
