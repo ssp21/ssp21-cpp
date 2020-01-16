@@ -10,10 +10,11 @@
 
 namespace ssp21 {
 
-Session::Session(const std::shared_ptr<IFrameWriter>& frame_writer, const std::shared_ptr<SessionStatistics>& statistics, const SessionConfig& config)
-    : frame_writer(frame_writer)
-    , statistics(statistics)
+Session::Session(std::shared_ptr<IFrameWriter> frame_writer, std::shared_ptr<SessionStatistics> statistics, const SessionConfig& config)
+    : frame_writer(std::move(frame_writer))
+    , statistics(std::move(statistics))
     , config(config)
+    , encrypt_buffer(calc_max_crypto_payload_length(this->frame_writer->get_max_payload_size()))
 {
 }
 
@@ -172,15 +173,25 @@ seq32_t Session::format_session_data_no_nonce_check(const exe4cpp::steady_time_t
         this->tx_nonce.get(),
         static_cast<uint32_t>(std::chrono::duration_cast<std::chrono::milliseconds>(session_time + std::chrono::milliseconds(config.ttl_pad_ms)).count()));
 
-    const auto frame = this->algorithms.session_mode->write(*this->frame_writer, this->keys.tx_key, metadata, clear_text, ec);
+    MACOutput mac;
+
+    const auto message = this->algorithms.session_mode->write(this->keys.tx_key, metadata, clear_text, this->encrypt_buffer.as_wslice(), mac, ec);
     if (ec) {
+        return seq32_t::empty();
+    }
+
+    // now serialize the message
+    const auto result = this->frame_writer->write(message);
+
+    if (result.is_error()) {
+        ec = result.err;
         return seq32_t::empty();
     }
 
     // everything succeeded, so increment the nonce
     this->tx_nonce.increment();
 
-    return frame;
+    return result.frame;
 }
 
 }

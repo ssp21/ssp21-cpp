@@ -23,7 +23,7 @@
 
 namespace ssp21 {
 
-struct ReplyHandshakeError final : public IMessage, private ser4cpp::Uncopyable
+struct ReplyHandshakeError final : public IMessage
 {
     ReplyHandshakeError();
 

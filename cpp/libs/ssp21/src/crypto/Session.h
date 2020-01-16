@@ -4,6 +4,7 @@
 
 #include "exe4cpp/Typedefs.h"
 #include "log4cpp/Logger.h"
+#include "ser4cpp/container/Buffer.h"
 #include "ser4cpp/util/Uncopyable.h"
 
 #include "crypto/Algorithms.h"
@@ -41,7 +42,7 @@ public:
         exe4cpp::duration_t max_session_time = std::chrono::milliseconds(consts::crypto::initiator::default_max_session_time_ms);
     };
 
-    Session(const std::shared_ptr<IFrameWriter>& frame_writer, const std::shared_ptr<SessionStatistics>& statistics, const SessionConfig& config = SessionConfig());
+    Session(std::shared_ptr<IFrameWriter> frame_writer, std::shared_ptr<SessionStatistics> statistics, const SessionConfig& config = SessionConfig());
 
     bool initialize(const Algorithms::Session& algorithms, const Param& parameters, const SessionKeys& keys);
 
@@ -83,8 +84,8 @@ private:
     seq32_t validate_session_data_with_nonce_func(const SessionData& message, const exe4cpp::steady_time_t& now, wseq32_t dest, verify_nonce_func_t verify, std::error_code& ec);
 
     /**
-        * Given a maximum link layer payload, how big could the crypto payload be?
-        */
+    *    Given a maximum link layer payload, how big could the crypto payload be?
+    */
     static constexpr uint32_t calc_max_crypto_payload_length(uint32_t max_link_payload_size);
 
     bool valid = false;
@@ -99,6 +100,7 @@ private:
     SessionKeys keys;
     Algorithms::Session algorithms;
     Param parameters;
+    ser4cpp::Buffer encrypt_buffer;
 };
 
 }

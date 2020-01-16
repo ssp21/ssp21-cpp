@@ -49,9 +49,9 @@ protected:
 };
 
 /**
-    	A secure key zeros its buffer upon destruction
-    	and provides a clear method
-    */
+    A secure key zeros its buffer upon destruction
+    and provides a clear method
+*/
 class SecureBuffer : public BufferBase {
 public:
     virtual ~SecureBuffer();
@@ -85,6 +85,10 @@ public:
 };
 
 class DHOutput final : public SecureBuffer {
+};
+
+// either an HMAC or an AEAD tag
+class MACOutput final : public SecureBuffer {
 };
 
 class HashOutput : public SecureBuffer {

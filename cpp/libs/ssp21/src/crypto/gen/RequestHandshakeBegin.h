@@ -29,7 +29,7 @@
 
 namespace ssp21 {
 
-struct RequestHandshakeBegin final : public IMessage, private ser4cpp::Uncopyable
+struct RequestHandshakeBegin final : public IMessage
 {
     RequestHandshakeBegin();
 

@@ -30,14 +30,14 @@ public:
     }
 
     // checks preconditions and invokes the write implementation
-    seq32_t write(IFrameWriter& writer, const SymmetricKey& key, const AuthMetadata& metadata, seq32_t& user_data, std::error_code& ec) const
+    SessionData write(const SymmetricKey& key, const AuthMetadata& metadata, seq32_t& user_data, wseq32_t encrypt_buffer, MACOutput& mac, std::error_code& ec) const
     {
         if (key.get_type() != BufferType::symmetric_key) {
             ec = CryptoError::bad_buffer_size;
-            return seq32_t::empty();
+            return SessionData();
         }
 
-        return this->write_impl(writer, key, metadata, user_data, ec);
+        return this->write_impl(key, metadata, user_data, encrypt_buffer, mac, ec);
     }
 
 protected:
@@ -58,22 +58,19 @@ protected:
         std::error_code& ec) const = 0;
 
     /**
-        * Writes a SessionData message using the supplied IFrameWriter
+        * Creates a SessionData struct ready for transmisson. The user_data field may point to an encrypted payload or to a segment of user_data if
+		* the implementation is auth-only.
         *
-        * @writer interface used to write the message (and any framing) to an output buffer owned by the IFrameWriter
         * @key the symmetric key used for authentication (and possibly encryption)
         * @metadata the metadata to use with the message
         * @user_data the cleartext userdata that will be authenticated (and possibly encrypted). Buffer mat only be partially consumed if insufficient space.
-        * @ec An error condition will be signaled if the output buffer is too small for the payload
+		* @encrypt_buffer an output buffer where the implementation may place the encrypted part of the AEAD.
+		* @mac buffer where the MAC (HMAC or detached AEAD tag) will be placed
+        * @ec An error condition will be signaled if encrypt_buffer is too small for the payload
         *
-        * @return A slice pointing to the possibly encrypted user data. This slice will be empty if an error occured.
+        * @return A SessionData struct ready for transmission, or an error code
         */
-    virtual seq32_t write_impl(
-        IFrameWriter& writer,
-        const SymmetricKey& key,
-        const AuthMetadata& metadata,
-        seq32_t& user_data,
-        std::error_code& ec) const = 0;
+    virtual SessionData write_impl(const SymmetricKey& key, const AuthMetadata& metadata, seq32_t& user_data, wseq32_t encrypt_buffer, MACOutput& mac, std::error_code& ec) const = 0;
 
     using metadata_buffer_t = ser4cpp::StaticBuffer<uint32_t, AuthMetadata::fixed_size_bytes>;
     using user_data_length_buffer_t = ser4cpp::StaticBuffer<uint32_t, ser4cpp::UInt16::size>;

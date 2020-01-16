@@ -24,11 +24,12 @@ private:
         wseq32_t dest,
         std::error_code& ec) const override;
 
-    virtual seq32_t write_impl(
-        IFrameWriter& writer,
+    virtual SessionData write_impl(
         const SymmetricKey& key,
         const AuthMetadata& metadata,
         seq32_t& user_data,
+        wseq32_t encrypt_buffer,
+        MACOutput& mac,
         std::error_code& ec) const override;
 
     const mac_func_t mac_func;

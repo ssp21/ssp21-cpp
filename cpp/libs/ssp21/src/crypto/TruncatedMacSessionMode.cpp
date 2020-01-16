@@ -4,6 +4,8 @@
 #include "ssp21/crypto/Crypto.h"
 #include "ssp21/crypto/gen/CryptoError.h"
 
+#include <algorithm>
+
 namespace ssp21 {
 seq32_t TruncatedMacSessionMode::read_impl(
     const SymmetricKey& key,
@@ -37,29 +39,25 @@ seq32_t TruncatedMacSessionMode::read_impl(
     return dest.copy_from(msg.user_data);
 }
 
-seq32_t TruncatedMacSessionMode::write_impl(
-    IFrameWriter& writer,
+SessionData TruncatedMacSessionMode::write_impl(
     const SymmetricKey& key,
     const AuthMetadata& metadata,
     seq32_t& user_data,
+    wseq32_t encrypt_buffer,
+    MACOutput& mac,
     std::error_code& ec) const
 {
-    // first calculate how much user data we can place in the message
-    const uint16_t max_message_size = writer.get_max_payload_size();
-
-    const uint16_t min_message_size = SessionData::min_size_bytes + this->auth_tag_length;
-
-    if (max_message_size <= min_message_size) // we have to be able to write at least one byte of payload
-    {
+    // we need to be able to encrypt at least one byte
+    if (encrypt_buffer.is_empty()) {
         ec = CryptoError::bad_buffer_size;
-        return seq32_t::empty();
+        return SessionData();
     }
 
-    // the maximum amount of user data we could conceivably transmit
-    const uint16_t max_tx_user_data_length = max_message_size - min_message_size;
-
-    // the actual amount we're going to try to transmit
-    const uint16_t tx_user_data_length = user_data.length() < max_tx_user_data_length ? static_cast<uint16_t>(user_data.length()) : max_tx_user_data_length;
+    // we transmit the smaller of the encrypt buffer size, the user_data size, or u16 max value
+    const uint16_t tx_user_data_length = static_cast<uint16_t>(
+        std::min(
+            std::min(user_data.length(), encrypt_buffer.length()),
+            static_cast<uint32_t>(std::numeric_limits<uint16_t>::max())));
 
     metadata_buffer_t buffer;
     auto ad_bytes = get_metadata_bytes(metadata, buffer);
@@ -67,27 +65,18 @@ seq32_t TruncatedMacSessionMode::write_impl(
     user_data_length_buffer_t length_buffer;
     const auto user_data_length_bytes = get_user_data_length_bytes(tx_user_data_length, length_buffer);
 
-    HashOutput tag;
-
     // Now calculate the mac
-    mac_func(key.as_seq(), { ad_bytes, user_data_length_bytes, user_data }, tag);
+    mac_func(key.as_seq(), { ad_bytes, user_data_length_bytes, user_data }, mac);
 
     const SessionData message(
         metadata,
         user_data.take(tx_user_data_length),
-        tag.as_seq().take(this->auth_tag_length) // truncate the MAC
+        mac.as_seq().take(this->auth_tag_length) // truncate the MAC
     );
-
-    const auto res = writer.write(message);
-
-    if (res.is_error()) {
-        ec = res.err;
-        return seq32_t::empty();
-    }
 
     user_data.advance(tx_user_data_length);
 
-    return res.frame;
+    return message;
 }
 
 }
