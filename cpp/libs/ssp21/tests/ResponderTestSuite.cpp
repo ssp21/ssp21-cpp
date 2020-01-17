@@ -89,7 +89,7 @@ TEST_CASE(SUITE("ignores auth session w/ invalid HMAC value"))
 
     test_begin_handshake_success(fix);
 
-    const auto request = hex::session_data(0, 0xFFFFFF, "", hex::repeat(0xEE, consts::crypto::sha256_hash_output_length));
+    const auto request = hex::session_data(0, 0xFFFFFF, "", hex::repeat(0xEE, consts::crypto::trunc16));
     fix.lower.enqueue_message(request);
     fix.expect({ CryptoAction::hmac_sha256, CryptoAction::secure_equals });
     REQUIRE(fix.lower.num_tx_messages() == 0);
@@ -102,7 +102,7 @@ TEST_CASE(SUITE("ignores auth session w/ invalid HMAC size"))
 
     test_begin_handshake_success(fix);
 
-    const auto request = hex::session_data(0, 0xFFFFFF, "", hex::repeat(0xFF, consts::crypto::sha256_hash_output_length - 1));
+    const auto request = hex::session_data(0, 0xFFFFFF, "", hex::repeat(0xFF, consts::crypto::trunc16 - 1));
     fix.lower.enqueue_message(request);
     fix.expect({ CryptoAction::hmac_sha256, CryptoAction::secure_equals });
     REQUIRE(fix.lower.num_tx_messages() == 0);
