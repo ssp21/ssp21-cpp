@@ -137,4 +137,17 @@ bool MockCryptoBackend::verify_ed25519(const seq32_t& message, const seq32_t& si
     fixture->actions.push_back(CryptoAction::verify_ed25519);
     return true;
 }
+
+AEADResult MockCryptoBackend::aes256_gcm_encrypt(const SymmetricKey& key, uint16_t nonce, seq32_t ad, seq32_t plaintext, wseq32_t encrypt_buffer, MACOutput& mac)
+{
+    this->assert_fixture();
+
+	const auto encrypted = encrypt_buffer.copy_from(plaintext); // just mirror the plaintext
+    auto mac_output = mac.as_wseq().take(consts::crypto::aes_gcm_tag_length);
+    mac_output.set_all_to(fixture->fill_byte);
+
+    fixture->actions.push_back(CryptoAction::aes_gcm_encrypt);
+    return AEADResult::success(encrypted, mac_output.readonly());
+}
+
 }

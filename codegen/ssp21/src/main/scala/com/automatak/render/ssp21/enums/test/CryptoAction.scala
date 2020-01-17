@@ -26,7 +26,9 @@ object CryptoAction extends EnumModel {
     "dh_x25519",
     "gen_keypair_ed25519",
     "sign_ed25519",
-    "verify_ed25519"
+    "verify_ed25519",
+    "aes_gcm_encrypt",
+    "aes_gcm_decrypt",
   )
 
   override def defaultValue: Option[EnumValue] = None

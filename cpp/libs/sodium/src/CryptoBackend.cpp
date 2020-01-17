@@ -9,6 +9,8 @@
 
 #include <sodium.h>
 
+#include <ser4cpp/serialization/BigEndian.h>
+
 namespace ssp21 {
 namespace sodium {
 
@@ -24,6 +26,13 @@ namespace sodium {
     static_assert(consts::crypto::ed25519_public_key_length == crypto_sign_PUBLICKEYBYTES, "ed25519 public key length mismatch");
     static_assert(consts::crypto::ed25519_private_key_length == crypto_sign_SECRETKEYBYTES, "ed25519 private key length mismatch");
     static_assert(consts::crypto::ed25519_signature_length == crypto_sign_BYTES, "ed25519 signature length mismatch");
+
+    // assertions for AESGCM
+    static_assert(crypto_aead_aes256gcm_KEYBYTES == consts::crypto::symmetric_key_length, "GCM key not the same size as SSP21 key");
+    static_assert(crypto_aead_aes256gcm_ABYTES == consts::crypto::aes_gcm_tag_length, "GCM auth tag mismatch");
+    static_assert(crypto_aead_aes256gcm_ABYTES <= consts::crypto::max_primitive_buffer_length, "GCM auth tag cannot fit inside the primitive buffer");
+    static_assert(crypto_aead_aes256gcm_NSECBYTES == 0, "Unexpected NSECBYTES for GCM");
+    static_assert(crypto_aead_aes256gcm_NPUBBYTES == consts::crypto::aes_gcm_nonce_length, "Unexpected NPUBBYTES for GCM");
 
     bool CryptoBackend::initialize()
     {
@@ -130,5 +139,40 @@ namespace sodium {
         return crypto_sign_verify_detached(signature, message, message.length(), public_key) == 0;
     }
 
+    AEADResult CryptoBackend::aes256_gcm_encrypt(const SymmetricKey& key, uint16_t nonce, seq32_t ad, seq32_t plaintext, wseq32_t encrypt_buffer, MACOutput& mac)
+    {
+        if (encrypt_buffer.length() < plaintext.length()) {
+            return AEADResult::failure(CryptoError::bad_buffer_size);
+        }
+
+		// The leftmost bytes are zero padded, with the last 2 byte being the big endian representation of the uint16_t nonce
+        uint8_t nonce_buffer[crypto_aead_aes256gcm_NPUBBYTES] = { 0x00 };		
+		auto dest = wseq32_t(nonce_buffer, crypto_aead_aes256gcm_NPUBBYTES).skip(crypto_aead_aes256gcm_NPUBBYTES - 2);
+        ser4cpp::UInt16::write_to(dest, nonce);
+
+        const auto result = crypto_aead_aes256gcm_encrypt_detached(
+                encrypt_buffer,
+                mac.as_wseq(),
+                nullptr, // MAC length output
+                plaintext,
+                plaintext.length(),
+                ad,
+                ad.length(),
+                nullptr, // nsec
+			    nonce_buffer,
+                key.as_seq()
+         );
+
+		 if (result) {
+            return AEADResult::failure(CryptoError::aes_gcm_encrypt_fail);
+		 }
+
+		 return AEADResult::success(
+                     encrypt_buffer.readonly().take(plaintext.length()),
+                     mac.as_seq().take(crypto_aead_aes256gcm_ABYTES)
+         );
+    }
+
+  
 }
 }

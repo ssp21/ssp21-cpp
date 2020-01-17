@@ -56,7 +56,9 @@ enum class CryptoError : uint8_t
     /// Received a session message with no user data
     empty_user_data = 0xD,
     /// A rollback of the monotonic clock was detected
-    clock_rollback = 0xE
+    clock_rollback = 0xE,
+    /// AES GCM encryption failed in the underlying implementation
+    aes_gcm_encrypt_fail = 0xF
 };
 
 struct CryptoErrorSpec : private ser4cpp::StaticOnly

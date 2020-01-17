@@ -10,6 +10,23 @@
 #include <system_error>
 
 namespace ssp21 {
+
+struct AEADResult {
+    std::error_code ec;
+    seq32_t ciphertext;
+    seq32_t auth_tag;
+
+    static AEADResult success(seq32_t ciphertext, seq32_t auth_tag)
+    {
+        return AEADResult{ std::error_code(), ciphertext, auth_tag };
+    }
+
+	static AEADResult failure(std::error_code ec)
+    {
+        return AEADResult{ ec, seq32_t::empty(), seq32_t::empty() };
+    }
+};
+
 /**
     * Pluggable crypto backend
     */
@@ -56,6 +73,8 @@ public:
     virtual void sign_ed25519(const seq32_t& input, const seq32_t& private_key, DSAOutput& output, std::error_code& ec) = 0;
 
     virtual bool verify_ed25519(const seq32_t& message, const seq32_t& signature, const seq32_t& public_key) = 0;
+
+    virtual AEADResult aes256_gcm_encrypt(const SymmetricKey& key, uint16_t nonce, seq32_t ad, seq32_t plaintext, wseq32_t encrypt_buffer, MACOutput& mac) = 0;
 };
 }
 

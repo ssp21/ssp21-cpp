@@ -17,6 +17,8 @@ namespace consts {
         const uint8_t ed25519_public_key_length = 32;
         const uint8_t ed25519_private_key_length = 64;
         const uint8_t ed25519_signature_length = 64;
+        const uint8_t aes_gcm_tag_length = 16;
+        const uint8_t aes_gcm_nonce_length = 12;
 
         const uint8_t symmetric_key_length = 32;
         const uint8_t nonce_length = 32;

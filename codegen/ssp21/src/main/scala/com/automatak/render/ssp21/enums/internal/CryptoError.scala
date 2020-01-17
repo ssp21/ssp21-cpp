@@ -37,7 +37,8 @@ object CryptoError extends EnumModel {
     EnumValue("max_nonce_exceeded", 11, "A nonce has reached a configured maximum value"),
     EnumValue("max_session_time_exceeded", 12, "The session time has reached a configured maximum value"),
     EnumValue("empty_user_data", 13, "Received a session message with no user data"),
-    EnumValue("clock_rollback", 14, "A rollback of the monotonic clock was detected")
+    EnumValue("clock_rollback", 14, "A rollback of the monotonic clock was detected"),
+    EnumValue("aes_gcm_encrypt_fail", 15, "AES GCM encryption failed in the underlying implementation"),
   )
 
 }
