@@ -66,6 +66,10 @@ namespace sodium {
 
     bool CryptoBackend::secure_equals_impl(const seq32_t& lhs, const seq32_t& rhs)
     {
+        if (lhs.length() != rhs.length()) {
+            return false;
+        }
+
         return sodium_memcmp(lhs, rhs, lhs.length()) == 0;
     }
 

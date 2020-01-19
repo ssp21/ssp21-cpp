@@ -93,4 +93,16 @@ bool Crypto::verify_ed25519(const seq32_t& message, const seq32_t& signature, co
     return backend->verify_ed25519(message, signature, public_key);
 }
 
+AEADResult Crypto::aes256_gcm_encrypt(const SymmetricKey& key, uint16_t nonce, seq32_t ad, seq32_t plaintext, wseq32_t encrypt_buffer, MACOutput& mac)
+{
+    assert(backend);
+    return backend->aes256_gcm_encrypt(key, nonce, ad, plaintext, encrypt_buffer, mac);
+}
+
+seq32_t Crypto::aes256_gcm_decrypt(const SymmetricKey& key, uint16_t nonce, seq32_t ad, seq32_t ciphertext, seq32_t auth_tag, wseq32_t plaintext, std::error_code& ec)
+{
+    assert(backend);
+    return backend->aes256_gcm_decrypt(key, nonce, ad, ciphertext, auth_tag, plaintext, ec);
+}
+
 }
