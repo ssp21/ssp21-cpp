@@ -3,6 +3,7 @@
 #define SSP21_ICRYTPTOBACKEND_H
 
 #include "ssp21/crypto/BufferTypes.h"
+#include "ssp21/crypto/CryptoTypedefs.h"
 
 #include "ser4cpp/util/Uncopyable.h"
 
@@ -10,22 +11,6 @@
 #include <system_error>
 
 namespace ssp21 {
-
-struct AEADResult {
-    std::error_code ec;
-    seq32_t ciphertext;
-    seq32_t auth_tag;
-
-    static AEADResult success(seq32_t ciphertext, seq32_t auth_tag)
-    {
-        return AEADResult{ std::error_code(), ciphertext, auth_tag };
-    }
-
-    static AEADResult failure(std::error_code ec)
-    {
-        return AEADResult{ ec, seq32_t::empty(), seq32_t::empty() };
-    }
-};
 
 /**
 * Pluggable crypto backend
