@@ -53,8 +53,10 @@ const char* CryptoErrorSpec::to_string(CryptoError arg)
             return "empty_user_data";
         case(CryptoError::clock_rollback):
             return "clock_rollback";
-        case(CryptoError::aes_gcm_encrypt_fail):
-            return "aes_gcm_encrypt_fail";
+        case(CryptoError::aead_encrypt_fail):
+            return "aead_encrypt_fail";
+        case(CryptoError::aead_decrypt_fail):
+            return "aead_decrypt_fail";
         default:
             return "undefined";
     }

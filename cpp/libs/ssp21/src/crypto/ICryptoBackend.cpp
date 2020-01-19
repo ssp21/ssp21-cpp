@@ -99,4 +99,19 @@ AEADResult ICryptoBackend::aes256_gcm_encrypt(const SymmetricKey& key, uint16_t 
     return this->aes256_gcm_encrypt_impl(key, nonce, ad, plaintext, encrypt_buffer, mac);
 }
 
+seq32_t ICryptoBackend::aes256_gcm_decrypt(const SymmetricKey& key, uint16_t nonce, seq32_t ad, seq32_t ciphertext, seq32_t auth_tag, wseq32_t cleartext, std::error_code& ec)
+{
+    if (cleartext.length() < ciphertext.length()) {
+        ec = CryptoError::bad_buffer_size;
+        return seq32_t::empty();
+    }
+
+    if (auth_tag.length() != consts::crypto::aes_gcm_tag_length) {
+        ec = CryptoError::bad_length;
+        return seq32_t::empty();
+    }
+
+    return this->aes256_gcm_decrypt_impl(key, nonce, ad, ciphertext, auth_tag, cleartext, ec);
+}
+
 }

@@ -52,6 +52,8 @@ namespace sodium {
         bool verify_ed25519_impl(const seq32_t& message, const seq32_t& signature, const seq32_t& public_key) override;
 
         AEADResult aes256_gcm_encrypt_impl(const SymmetricKey& key, uint16_t nonce, seq32_t ad, seq32_t plaintext, wseq32_t encrypt_buffer, MACOutput& mac) override;
+
+        seq32_t aes256_gcm_decrypt_impl(const SymmetricKey& key, uint16_t nonce, seq32_t ad, seq32_t ciphertext, seq32_t auth_tag, wseq32_t plaintext, std::error_code& ec) override;
     };
 
 }

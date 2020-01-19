@@ -150,4 +150,14 @@ AEADResult MockCryptoBackend::aes256_gcm_encrypt_impl(const SymmetricKey& key, u
     return AEADResult::success(encrypted, mac_output.readonly());
 }
 
+seq32_t MockCryptoBackend::aes256_gcm_decrypt_impl(const SymmetricKey& key, uint16_t nonce, seq32_t ad, seq32_t ciphertext, seq32_t auth_tag, wseq32_t cleartext, std::error_code& ec)
+{
+    this->assert_fixture();
+
+    fixture->actions.push_back(CryptoAction::aes_gcm_decrypt);
+
+    // just copy the ciphertext into the cleartext
+    return cleartext.copy_from(ciphertext);
+}
+
 }

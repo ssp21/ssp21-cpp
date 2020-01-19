@@ -34,6 +34,19 @@ namespace sodium {
     static_assert(crypto_aead_aes256gcm_NSECBYTES == 0, "Unexpected NSECBYTES for GCM");
     static_assert(crypto_aead_aes256gcm_NPUBBYTES == consts::crypto::aes_gcm_nonce_length, "Unexpected NPUBBYTES for GCM");
 
+    class GCMNonceBuffer {
+        uint8_t nonce_buffer[crypto_aead_aes256gcm_NPUBBYTES] = { 0x00 };
+
+    public:
+        seq32_t set(uint16_t value)
+        {
+            // The leftmost bytes are zero padded, with the last 2 byte being the big endian representation of the uint16_t nonce
+            auto dest = wseq32_t(nonce_buffer, crypto_aead_aes256gcm_NPUBBYTES).skip(crypto_aead_aes256gcm_NPUBBYTES - 2);
+            ser4cpp::UInt16::write_to(dest, value);
+            return seq32_t(nonce_buffer, crypto_aead_aes256gcm_NPUBBYTES);
+        }
+    };
+
     bool CryptoBackend::initialize()
     {
         if (sodium_init() != 0)
@@ -138,10 +151,7 @@ namespace sodium {
 
     AEADResult CryptoBackend::aes256_gcm_encrypt_impl(const SymmetricKey& key, uint16_t nonce, seq32_t ad, seq32_t plaintext, wseq32_t encrypt_buffer, MACOutput& mac)
     {
-        // The leftmost bytes are zero padded, with the last 2 byte being the big endian representation of the uint16_t nonce
-        uint8_t nonce_buffer[crypto_aead_aes256gcm_NPUBBYTES] = { 0x00 };
-        auto dest = wseq32_t(nonce_buffer, crypto_aead_aes256gcm_NPUBBYTES).skip(crypto_aead_aes256gcm_NPUBBYTES - 2);
-        ser4cpp::UInt16::write_to(dest, nonce);
+        GCMNonceBuffer nb{};
 
         const auto result = crypto_aead_aes256gcm_encrypt_detached(
             encrypt_buffer,
@@ -152,16 +162,39 @@ namespace sodium {
             ad,
             ad.length(),
             nullptr, // nsec
-            nonce_buffer,
+            nb.set(nonce),
             key.as_seq());
 
         if (result) {
-            return AEADResult::failure(CryptoError::aes_gcm_encrypt_fail);
+            return AEADResult::failure(CryptoError::aead_encrypt_fail);
         }
 
         return AEADResult::success(
             encrypt_buffer.readonly().take(plaintext.length()),
             mac.as_seq().take(crypto_aead_aes256gcm_ABYTES));
+    }
+
+    seq32_t CryptoBackend::aes256_gcm_decrypt_impl(const SymmetricKey& key, uint16_t nonce, seq32_t ad, seq32_t ciphertext, seq32_t auth_tag, wseq32_t cleartext, std::error_code& ec)
+    {
+        GCMNonceBuffer nb{};
+
+        const auto result = crypto_aead_aes256gcm_decrypt_detached(
+            cleartext,
+            nullptr, //nsec
+            ciphertext,
+            ciphertext.length(),
+            auth_tag,
+            ad,
+            ad.length(),
+            nb.set(nonce),
+            key.as_seq());
+
+        if (result) {
+            ec = CryptoError::aead_decrypt_fail;
+            return seq32_t::empty();
+        }
+
+        return cleartext.readonly().take(ciphertext.length());
     }
 
 }

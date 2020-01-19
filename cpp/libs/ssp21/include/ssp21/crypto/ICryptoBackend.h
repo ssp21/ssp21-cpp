@@ -76,6 +76,8 @@ public:
 
     AEADResult aes256_gcm_encrypt(const SymmetricKey& key, uint16_t nonce, seq32_t ad, seq32_t plaintext, wseq32_t encrypt_buffer, MACOutput& mac);
 
+    seq32_t aes256_gcm_decrypt(const SymmetricKey& key, uint16_t nonce, seq32_t ad, seq32_t ciphertext, seq32_t auth_tag, wseq32_t plaintext, std::error_code& ec);
+
 protected:
     virtual void zero_memory_impl(const wseq32_t& data) = 0;
 
@@ -117,6 +119,8 @@ protected:
     virtual bool verify_ed25519_impl(const seq32_t& message, const seq32_t& signature, const seq32_t& public_key) = 0;
 
     virtual AEADResult aes256_gcm_encrypt_impl(const SymmetricKey& key, uint16_t nonce, seq32_t ad, seq32_t plaintext, wseq32_t encrypt_buffer, MACOutput& mac) = 0;
+
+    virtual seq32_t aes256_gcm_decrypt_impl(const SymmetricKey& key, uint16_t nonce, seq32_t ad, seq32_t ciphertext, seq32_t auth_tag, wseq32_t cleartext, std::error_code& ec) = 0;
 };
 }
 
