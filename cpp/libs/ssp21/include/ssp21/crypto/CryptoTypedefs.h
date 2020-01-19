@@ -36,15 +36,15 @@ using mac_func_t = void (*)(
     const std::initializer_list<seq32_t>& data,
     SecureBuffer& output);
 
-using aead_encrypt_t = AEADResult (*)(
+using aead_encrypt_func_t = AEADResult (*)(
     const SymmetricKey& key,
     uint16_t nonce,
     seq32_t ad,
-    seq32_t plaintext,
+    seq32_t cleartext,
     wseq32_t encrypt_buffer,
     MACOutput& mac);
 
-using aead_decrypt_t = seq32_t (*)(
+using aead_decrypt_func_t = seq32_t (*)(
     const SymmetricKey& key,
     uint16_t nonce,
     seq32_t ad,

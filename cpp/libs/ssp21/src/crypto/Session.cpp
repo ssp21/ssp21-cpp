@@ -96,7 +96,7 @@ seq32_t Session::validate_session_data_with_nonce_func(const SessionData& messag
         return seq32_t::empty();
     }
 
-    const auto payload = this->algorithms.session_mode->read(this->keys.rx_key, message, dest, ec);
+    const auto payload = this->algorithms.session_mode.read(this->keys.rx_key, message, dest, ec);
 
     if (ec) {
         this->statistics->num_auth_fail.increment();
@@ -175,7 +175,7 @@ seq32_t Session::format_session_data_no_nonce_check(const exe4cpp::steady_time_t
 
     MACOutput mac;
 
-    const auto message = this->algorithms.session_mode->write(this->keys.tx_key, metadata, clear_text, this->encrypt_buffer.as_wslice(), mac, ec);
+    const auto message = this->algorithms.session_mode.write(this->keys.tx_key, metadata, clear_text, this->encrypt_buffer.as_wslice(), mac, ec);
     if (ec) {
         return seq32_t::empty();
     }
