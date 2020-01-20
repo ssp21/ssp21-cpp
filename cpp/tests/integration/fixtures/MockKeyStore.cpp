@@ -22,7 +22,7 @@ std::shared_ptr<const KeyRecord> MockKeyStore::consume_key()
     {
         auto dest = key_data.as_wseq();
         Crypto::gen_random(dest);
-        key_data.set_type(BufferType::symmetric_key);
+        key_data.set_length(BufferLength::length_32);
     }
 
     this->current_key = std::make_shared<KeyRecord>(this->key_id, key_data.as_seq());

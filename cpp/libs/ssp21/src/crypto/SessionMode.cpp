@@ -32,7 +32,7 @@ SessionMode::SessionMode(aead_encrypt_func_t encrypt, aead_decrypt_func_t decryp
 
 seq32_t SessionMode::read(const SymmetricKey& key, const SessionData& msg, wseq32_t dest, std::error_code& ec) const
 {
-    if (key.get_type() != BufferType::symmetric_key) {
+    if (key.get_length_in_bytes() != consts::crypto::symmetric_key_length) {
         ec = CryptoError::bad_buffer_size;
         return seq32_t::empty();
     }
@@ -45,7 +45,7 @@ seq32_t SessionMode::read(const SymmetricKey& key, const SessionData& msg, wseq3
 
 SessionData SessionMode::write(const SymmetricKey& key, const AuthMetadata& metadata, seq32_t& user_data, wseq32_t encrypt_buffer, MACOutput& mac, std::error_code& ec) const
 {
-    if (key.get_type() != BufferType::symmetric_key) {
+    if (key.get_length_in_bytes() != consts::crypto::symmetric_key_length) {
         ec = CryptoError::bad_buffer_size;
         return SessionData();
     }

@@ -59,7 +59,7 @@ void MockCryptoBackend::hash_sha256_impl(const std::initializer_list<seq32_t>& d
     this->assert_fixture();
     fixture->actions.push_back(CryptoAction::hash_sha256);
     output.as_wseq().take(consts::crypto::sha256_hash_output_length).set_all_to(fixture->fill_byte);
-    output.set_type(BufferType::sha256);
+    output.set_length(BufferLength::length_32);
 }
 
 void MockCryptoBackend::hmac_sha256_impl(const seq32_t& key, const std::initializer_list<seq32_t>& data, SecureBuffer& output)
@@ -68,7 +68,7 @@ void MockCryptoBackend::hmac_sha256_impl(const seq32_t& key, const std::initiali
     fixture->actions.push_back(CryptoAction::hmac_sha256);
 
     output.as_wseq().take(consts::crypto::sha256_hash_output_length).set_all_to(fixture->fill_byte);
-    output.set_type(BufferType::sha256);
+    output.set_length(BufferLength::length_32);
 }
 
 void MockCryptoBackend::hkdf_sha256_impl(const seq32_t& chaining_key, const std::initializer_list<seq32_t>& input_key_material, SymmetricKey& key1, SymmetricKey& key2)
@@ -80,7 +80,7 @@ void MockCryptoBackend::hkdf_sha256_impl(const seq32_t& chaining_key, const std:
          {
              &key1, &key2 }) {
         key->as_wseq().take(consts::crypto::sha256_hash_output_length).set_all_to(fixture->fill_byte);
-        key->set_type(BufferType::symmetric_key);
+        key->set_length(BufferLength::length_32);
     }
 }
 
@@ -90,10 +90,10 @@ void MockCryptoBackend::gen_keypair_x25519_impl(KeyPair& pair)
     fixture->actions.push_back(CryptoAction::gen_keypair_x25519);
 
     pair.private_key.as_wseq().take(consts::crypto::x25519_key_length).set_all_to(fixture->fill_byte);
-    pair.private_key.set_type(BufferType::x25519_key);
+    pair.private_key.set_length(BufferLength::length_32);
 
     pair.public_key.as_wseq().take(consts::crypto::x25519_key_length).set_all_to(fixture->fill_byte);
-    pair.public_key.set_type(BufferType::x25519_key);
+    pair.public_key.set_length(BufferLength::length_32);
 }
 
 void MockCryptoBackend::dh_x25519_impl(const PrivateKey& priv_key, const seq32_t& pub_key, DHOutput& output, std::error_code& ec)
@@ -107,7 +107,7 @@ void MockCryptoBackend::dh_x25519_impl(const PrivateKey& priv_key, const seq32_t
     }
 
     output.as_wseq().take(consts::crypto::x25519_key_length).set_all_to(fixture->fill_byte);
-    output.set_type(BufferType::x25519_key);
+    output.set_length(BufferLength::length_32);
 }
 
 void MockCryptoBackend::gen_keypair_ed25519_impl(KeyPair& pair)
@@ -116,10 +116,10 @@ void MockCryptoBackend::gen_keypair_ed25519_impl(KeyPair& pair)
     fixture->actions.push_back(CryptoAction::gen_keypair_ed25519);
 
     pair.private_key.as_wseq().take(consts::crypto::ed25519_private_key_length).set_all_to(fixture->fill_byte);
-    pair.private_key.set_type(BufferType::ed25519_private_key);
+    pair.private_key.set_length(BufferLength::length_64);
 
     pair.public_key.as_wseq().take(consts::crypto::ed25519_public_key_length).set_all_to(fixture->fill_byte);
-    pair.public_key.set_type(BufferType::ed25519_public_key);
+    pair.public_key.set_length(BufferLength::length_64);
 }
 
 void MockCryptoBackend::sign_ed25519_impl(const seq32_t& input, const seq32_t& private_key, DSAOutput& output, std::error_code& ec)
@@ -128,7 +128,7 @@ void MockCryptoBackend::sign_ed25519_impl(const seq32_t& input, const seq32_t& p
     fixture->actions.push_back(CryptoAction::sign_ed25519);
 
     output.as_wseq().take(consts::crypto::ed25519_signature_length).set_all_to(fixture->fill_byte);
-    output.set_type(BufferType::ed25519_signature);
+    output.set_length(BufferLength::length_64);
 }
 
 bool MockCryptoBackend::verify_ed25519_impl(const seq32_t& message, const seq32_t& signature, const seq32_t& public_key)

@@ -84,7 +84,7 @@ namespace sodium {
 
         crypto_hash_sha256_final(&state, output.as_wseq());
 
-        output.set_type(BufferType::sha256);
+        output.set_length(BufferLength::length_32);
     }
 
     void CryptoBackend::hmac_sha256_impl(const seq32_t& key, const std::initializer_list<seq32_t>& data, SecureBuffer& output)
@@ -98,7 +98,7 @@ namespace sodium {
 
         crypto_auth_hmacsha256_final(&state, output.as_wseq());
 
-        output.set_type(BufferType::sha256);
+        output.set_length(BufferLength::length_32);
     }
 
     void CryptoBackend::hkdf_sha256_impl(const seq32_t& salt, const std::initializer_list<seq32_t>& input_key_material, SymmetricKey& key1, SymmetricKey& key2)
@@ -114,8 +114,8 @@ namespace sodium {
         // can't fail despite error code - NACL ABI relic
         crypto_scalarmult_base(pair.public_key.as_wseq(), dest);
 
-        pair.public_key.set_type(BufferType::x25519_key);
-        pair.private_key.set_type(BufferType::x25519_key);
+        pair.public_key.set_length(BufferLength::length_32);
+        pair.private_key.set_length(BufferLength::length_32);
     }
 
     void CryptoBackend::dh_x25519_impl(const PrivateKey& priv_key, const seq32_t& pub_key, DHOutput& output, std::error_code& ec)
@@ -125,7 +125,7 @@ namespace sodium {
             return;
         }
 
-        output.set_type(BufferType::x25519_key);
+        output.set_length(BufferLength::length_32);
     }
 
     void CryptoBackend::gen_keypair_ed25519_impl(KeyPair& pair)
@@ -136,8 +136,8 @@ namespace sodium {
         // can't fail despite error code - NACL ABI relic
         crypto_sign_keypair(publicDest, privateDest);
 
-        pair.public_key.set_type(BufferType::ed25519_public_key);
-        pair.private_key.set_type(BufferType::ed25519_private_key);
+        pair.public_key.set_length(BufferLength::length_32);
+        pair.private_key.set_length(BufferLength::length_64);
     }
 
     void CryptoBackend::sign_ed25519_impl(const seq32_t& input, const seq32_t& key, DSAOutput& output, std::error_code& ec)
@@ -145,7 +145,7 @@ namespace sodium {
         // can't fail despite error code - NACL ABI relic
         crypto_sign_detached(output.as_wseq(), nullptr, input, input.length(), key);
 
-        output.set_type(BufferType::ed25519_signature);
+        output.set_length(BufferLength::length_64);
     }
 
     bool CryptoBackend::verify_ed25519_impl(const seq32_t& message, const seq32_t& signature, const seq32_t& public_key)
@@ -173,9 +173,11 @@ namespace sodium {
             return AEADResult::failure(CryptoError::aead_encrypt_fail);
         }
 
+        mac.set_length(BufferLength::length_16);
+
         return AEADResult::success(
             encrypt_buffer.readonly().take(plaintext.length()),
-            mac.as_seq().take(crypto_aead_aes256gcm_ABYTES));
+            mac.as_seq());
     }
 
     seq32_t CryptoBackend::aes256_gcm_decrypt_impl(const SymmetricKey& key, uint16_t nonce, seq32_t ad, seq32_t ciphertext, seq32_t auth_tag, wseq32_t cleartext, std::error_code& ec)

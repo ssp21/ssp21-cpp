@@ -181,7 +181,7 @@ std::shared_ptr<const SymmetricKey> IntegrationFixture::generate_shared_secret()
     const std::shared_ptr<SymmetricKey> key = std::make_shared<SymmetricKey>();
 
     Crypto::gen_random(key->as_wseq().take(consts::crypto::symmetric_key_length));
-    key->set_type(BufferType::symmetric_key);
+    key->set_length(BufferLength::length_32);
 
     return key;
 }

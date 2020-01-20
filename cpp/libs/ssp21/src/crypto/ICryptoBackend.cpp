@@ -46,7 +46,7 @@ void ICryptoBackend::dh_x25519(
     DHOutput& output,
     std::error_code& ec)
 {
-    if ((priv_key.get_type() != BufferType::x25519_key) || (pub_key.length() != consts::crypto::x25519_key_length)) {
+    if ((priv_key.get_length_in_bytes() != consts::crypto::x25519_key_length) || (pub_key.length() != consts::crypto::x25519_key_length)) {
         ec = CryptoError::bad_key_type;
         return;
     }

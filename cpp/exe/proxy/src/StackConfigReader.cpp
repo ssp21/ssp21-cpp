@@ -75,15 +75,14 @@ std::shared_ptr<const T> get_crypto_key(const std::string& path, ssp21::Containe
         throw Exception("Unexpected file type (", ContainerEntryTypeSpec::to_string(file.container_entry_type), ") in file: ", path);
     }
 
-    const auto expected_length = ssp21::BufferBase::get_buffer_length(ssp21::BufferType::x25519_key);
-    if (file.payload.length() != expected_length) {
+    if (file.payload.length() != consts::crypto::x25519_key_length) {
         throw Exception("Unexpected key length: ", file.payload.length());
     }
 
     const auto ret = std::make_shared<T>();
 
     ret->as_wseq().copy_from(file.payload);
-    ret->set_type(BufferType::x25519_key);
+    ret->set_length(BufferLength::length_32);
 
     return ret;
 }

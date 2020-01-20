@@ -21,7 +21,7 @@ TEST_CASE(SUITE("sha256"))
 
     HashOutput output;
     Crypto::hash_sha256({ slice }, output);
-    REQUIRE(output.get_type() == BufferType::sha256);
+    REQUIRE(output.get_length() == BufferLength::length_32);
 
     auto hex = HexConversions::to_hex(output.as_seq(), false);
     REQUIRE(hex == "5CAC4F980FEDC3D3F1F99B4BE3472C9B30D56523E632D151237EC9309048BDA9");
@@ -52,7 +52,7 @@ TEST_CASE(SUITE("HMAC-sha256"))
 
     HashOutput output;
     Crypto::hmac_sha256(key_slice, { text_slice }, output);
-    REQUIRE(output.get_type() == BufferType::sha256);
+    REQUIRE(output.get_length() == BufferLength::length_32);
 
     auto hex = HexConversions::to_hex(output.as_seq(), false);
     REQUIRE(hex == "9F93EAF321335A7F3B4F9FBB872123F37E51F494F4062D32588295FEEDB08F82");
@@ -76,8 +76,8 @@ TEST_CASE(SUITE("HKDF-sha256"))
 
     Crypto::hkdf_sha256(seq32_t(salt, 8), { ikm->as_rslice() }, key1, key2);
 
-    REQUIRE(key1.get_type() == BufferType::symmetric_key);
-    REQUIRE(key2.get_type() == BufferType::symmetric_key);
+    REQUIRE(key1.get_length() == BufferLength::length_32);
+    REQUIRE(key2.get_length() == BufferLength::length_32);
 
     auto hex_key_1 = HexConversions::to_hex(key1.as_seq(), false);
     auto hex_key_2 = HexConversions::to_hex(key2.as_seq(), false);
