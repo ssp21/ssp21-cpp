@@ -21,7 +21,8 @@ object SessionCryptoMode extends EnumModel {
   override def defaultValue: Option[EnumValue] = Some(EnumValue.undefined(255))
 
   private val codes = List(
-    EnumValue("hmac_sha256_16", 0, "HMAC-SHA256 truncated to 16 bytes")
+    EnumValue("hmac_sha256_16", 0, "HMAC-SHA256 truncated to 16 bytes"),
+    EnumValue("aes_256_gcm", 1, "AES 256 in GCM mode"),
   )
 
 }

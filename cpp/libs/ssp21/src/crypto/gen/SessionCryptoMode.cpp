@@ -27,6 +27,8 @@ SessionCryptoMode SessionCryptoModeSpec::from_type(uint8_t arg)
     {
         case(0x0):
             return SessionCryptoMode::hmac_sha256_16;
+        case(0x1):
+            return SessionCryptoMode::aes_256_gcm;
         default:
             return SessionCryptoMode::undefined;
     }
@@ -37,6 +39,8 @@ const char* SessionCryptoModeSpec::to_string(SessionCryptoMode arg)
     {
         case(SessionCryptoMode::hmac_sha256_16):
             return "hmac_sha256_16";
+        case(SessionCryptoMode::aes_256_gcm):
+            return "aes_256_gcm";
         default:
             return "undefined";
     }

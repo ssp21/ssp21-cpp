@@ -19,7 +19,10 @@ HandshakeError Algorithms::Session::configure(SessionNonceMode nonce_mode, Sessi
 
     switch (session_mode) {
     case (SessionCryptoMode::hmac_sha256_16):
-        this->session_mode = SessionModes::get_hmac_sha_256_trunc16();
+        this->session_mode = SessionModes::hmac_sha_256_trunc16();
+        break;
+    case (SessionCryptoMode::aes_256_gcm):
+        this->session_mode = SessionModes::aes_256_gcm();
         break;
     default:
         return HandshakeError::unsupported_session_mode;
