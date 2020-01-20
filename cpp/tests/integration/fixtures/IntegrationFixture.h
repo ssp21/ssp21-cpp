@@ -10,13 +10,16 @@
 #include "log4cpp/ConsolePrettyPrinter.h"
 #include "log4cpp/MockLogHandler.h"
 
+#include "ssp21/crypto/CryptoSuite.h"
 #include "ssp21/crypto/StaticKeys.h"
 #include "ssp21/crypto/gen/PublicKeyType.h"
+#include "ssp21/crypto/gen/SessionCryptoMode.h"
 #include "ssp21/stack/IStack.h"
 #include "ssp21/util/SecureDynamicBuffer.h"
 
 namespace ssp21 {
-enum class Mode : uint8_t {
+
+enum class HandshakeType : uint8_t {
     preshared_key,
     certificates,
     shared_secret,
@@ -41,7 +44,7 @@ class IntegrationFixture {
     };
 
 public:
-    IntegrationFixture(Mode mode);
+    IntegrationFixture(HandshakeType handshake_type, SessionCryptoMode session_mode);
 
     const std::shared_ptr<exe4cpp::MockExecutor> exe;
     log4cpp::MockLogHandler ilog;
@@ -59,15 +62,15 @@ public:
     Stacks stacks;
 
 private:
-    static Stacks get_stacks(Mode mode, log4cpp::Logger rlogger, log4cpp::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe);
+    static Stacks get_stacks(HandshakeType handshake_type, SessionCryptoMode session_mode, log4cpp::Logger rlogger, log4cpp::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe);
 
-    static Stacks preshared_key_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe);
+    static Stacks preshared_key_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, CryptoSuite suite, std::shared_ptr<exe4cpp::IExecutor> exe);
 
-    static Stacks qkd_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe);
+    static Stacks qkd_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, CryptoSuite suite, std::shared_ptr<exe4cpp::IExecutor> exe);
 
-    static Stacks certificate_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe);
+    static Stacks certificate_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, CryptoSuite suite, std::shared_ptr<exe4cpp::IExecutor> exe);
 
-    static Stacks shared_secret_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe);
+    static Stacks shared_secret_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, CryptoSuite suite, std::shared_ptr<exe4cpp::IExecutor> exe);
 
     static EndpointKeys generate_random_keys();
 

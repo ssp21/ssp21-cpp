@@ -17,34 +17,38 @@
 
 namespace ssp21 {
 
-IntegrationFixture::IntegrationFixture(Mode mode)
+IntegrationFixture::IntegrationFixture(HandshakeType handshake_type, SessionCryptoMode session_mode)
     : exe(std::make_shared<exe4cpp::MockExecutor>())
     , ilog("initiator")
     , rlog("responder")
     , initiator_lower(exe)
     , responder_lower(exe)
-    , stacks(this->get_stacks(mode, rlog.logger, ilog.logger, exe))
+    , stacks(this->get_stacks(handshake_type, session_mode, rlog.logger, ilog.logger, exe))
 {
     this->wire();
 }
 
-IntegrationFixture::Stacks IntegrationFixture::get_stacks(Mode mode, log4cpp::Logger rlogger, log4cpp::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe)
+IntegrationFixture::Stacks IntegrationFixture::get_stacks(HandshakeType handshake_type, SessionCryptoMode session_mode, log4cpp::Logger rlogger, log4cpp::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe)
 {
-    switch (mode) {
-    case (Mode::preshared_key):
-        return preshared_key_stacks(rlogger, ilogger, exe);
-    case (Mode::certificates):
-        return certificate_stacks(rlogger, ilogger, exe);
-    case (Mode::shared_secret):
-        return shared_secret_stacks(rlogger, ilogger, exe);
-    case (Mode::qkd):
-        return qkd_stacks(rlogger, ilogger, exe);
+    // start with the default algorithms, then define the specified session mode
+    CryptoSuite suite{};
+    suite.session_crypto_mode = session_mode;
+
+    switch (handshake_type) {
+    case (HandshakeType::preshared_key):
+        return preshared_key_stacks(rlogger, ilogger, suite, exe);
+    case (HandshakeType::certificates):
+        return certificate_stacks(rlogger, ilogger, suite, exe);
+    case (HandshakeType::shared_secret):
+        return shared_secret_stacks(rlogger, ilogger, suite, exe);
+    case (HandshakeType::qkd):
+        return qkd_stacks(rlogger, ilogger, suite, exe);
     default:
         throw new Exception("Unsupported integration test mode");
     }
 }
 
-IntegrationFixture::Stacks IntegrationFixture::preshared_key_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe)
+IntegrationFixture::Stacks IntegrationFixture::preshared_key_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, CryptoSuite suite, std::shared_ptr<exe4cpp::IExecutor> exe)
 {
     const auto keys = generate_random_keys();
 
@@ -53,7 +57,7 @@ IntegrationFixture::Stacks IntegrationFixture::preshared_key_stacks(log4cpp::Log
         InitiatorConfig(),
         ilogger,
         exe,
-        CryptoSuite(), // defaults
+        suite,
         keys.initiator,
         keys.responder.public_key);
 
@@ -68,11 +72,10 @@ IntegrationFixture::Stacks IntegrationFixture::preshared_key_stacks(log4cpp::Log
     return Stacks{ initiator, responder };
 }
 
-IntegrationFixture::Stacks IntegrationFixture::qkd_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe)
+IntegrationFixture::Stacks IntegrationFixture::qkd_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, CryptoSuite suite, std::shared_ptr<exe4cpp::IExecutor> exe)
 {
     const auto key_store = std::make_shared<MockKeyStore>();
 
-    CryptoSuite suite;
     suite.handshake_ephemeral = HandshakeEphemeral::none;
 
     const auto initiator = initiator::factory::qkd_mode(
@@ -93,7 +96,7 @@ IntegrationFixture::Stacks IntegrationFixture::qkd_stacks(log4cpp::Logger rlogge
     return Stacks{ initiator, responder };
 }
 
-IntegrationFixture::Stacks IntegrationFixture::certificate_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe)
+IntegrationFixture::Stacks IntegrationFixture::certificate_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, CryptoSuite suite, std::shared_ptr<exe4cpp::IExecutor> exe)
 {
     const auto keys = generate_random_keys();
 
@@ -109,7 +112,7 @@ IntegrationFixture::Stacks IntegrationFixture::certificate_stacks(log4cpp::Logge
         InitiatorConfig(),
         ilogger,
         exe,
-        CryptoSuite(), // defaults
+        suite,
         keys.initiator,
         authority_data.certificate_file_data,
         initiator_cert_data);
@@ -126,11 +129,10 @@ IntegrationFixture::Stacks IntegrationFixture::certificate_stacks(log4cpp::Logge
     return Stacks{ initiator, responder };
 }
 
-IntegrationFixture::Stacks IntegrationFixture::shared_secret_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, std::shared_ptr<exe4cpp::IExecutor> exe)
+IntegrationFixture::Stacks IntegrationFixture::shared_secret_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, CryptoSuite suite, std::shared_ptr<exe4cpp::IExecutor> exe)
 {
     const auto shared_secret = generate_shared_secret();
 
-    CryptoSuite suite;
     suite.handshake_ephemeral = HandshakeEphemeral::nonce;
 
     const auto initiator = initiator::factory::shared_secret_mode(
