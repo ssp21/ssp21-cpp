@@ -30,7 +30,10 @@ AEADResult aead_mac_encrypt(
     const auto length = static_cast<uint16_t>(cleartext.length());
 
     ser4cpp::StaticBuffer<uint32_t, ser4cpp::UInt16::size> length_buffer;
-    ser4cpp::UInt16::write_to(length_buffer.as_wseq(), length);
+    {
+        auto dest = length_buffer.as_wseq();
+        ser4cpp::UInt16::write_to(dest, length);
+    }
 
     // set auth_tag = MAC(key, ad || len(cleartext) || cleartext)
     MAC(key.as_seq(), { ad, length_buffer.as_seq(), cleartext }, mac);
@@ -60,7 +63,10 @@ seq32_t aead_mac_decrypt(
     const auto length = static_cast<uint16_t>(ciphertext.length());
 
     ser4cpp::StaticBuffer<uint32_t, ser4cpp::UInt16::size> length_buffer;
-    ser4cpp::UInt16::write_to(length_buffer.as_wseq(), length);
+    {
+        auto dest = length_buffer.as_wseq();
+        ser4cpp::UInt16::write_to(dest, length);
+    }
 
     MACOutput mac;
 
