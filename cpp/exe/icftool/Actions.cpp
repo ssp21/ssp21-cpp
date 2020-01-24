@@ -57,7 +57,7 @@ void Actions::gen_shared_secert(const std::string& path)
     std::cout << "creating shared secret..." << std::endl;
     SymmetricKey key;
     Crypto::gen_random(key.as_wseq().take(consts::crypto::symmetric_key_length));
-    key.set_type(BufferType::symmetric_key);
+    key.set_length(BufferLength::length_32);
 
     write(path, ContainerEntryType::shared_secret, key.as_seq());
 }

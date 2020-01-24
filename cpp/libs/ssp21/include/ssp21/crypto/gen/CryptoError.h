@@ -56,7 +56,11 @@ enum class CryptoError : uint8_t
     /// Received a session message with no user data
     empty_user_data = 0xD,
     /// A rollback of the monotonic clock was detected
-    clock_rollback = 0xE
+    clock_rollback = 0xE,
+    /// AEAD encryption failed in the underlying implementation
+    aead_encrypt_fail = 0xF,
+    /// AEAD authentication failed in the underlying implementation
+    aead_decrypt_fail = 0x10
 };
 
 struct CryptoErrorSpec : private ser4cpp::StaticOnly

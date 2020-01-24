@@ -58,7 +58,7 @@ protected:
     static void init_key(BufferBase& buffer)
     {
         buffer.as_wseq().set_all_to(0xFF);
-        buffer.set_type(BufferType::x25519_key);
+        buffer.set_length(BufferLength::length_32);
     }
 
 public:

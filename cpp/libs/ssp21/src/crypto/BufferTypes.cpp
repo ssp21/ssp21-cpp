@@ -6,14 +6,20 @@
 #include <cstring>
 
 namespace ssp21 {
+
 seq32_t BufferBase::as_seq() const
 {
-    return this->buffer.as_seq(get_buffer_length(this->buffer_type));
+    return this->buffer.as_seq(lookup_length_in_bytes(this->length));
 }
 
-BufferType BufferBase::get_type() const
+uint8_t BufferBase::get_length_in_bytes() const
 {
-    return this->buffer_type;
+    return lookup_length_in_bytes(this->length);
+}
+
+BufferLength BufferBase::get_length() const
+{
+    return this->length;
 }
 
 wseq32_t BufferBase::as_wseq()
@@ -21,33 +27,26 @@ wseq32_t BufferBase::as_wseq()
     return this->buffer.as_wseq();
 }
 
-void BufferBase::set_type(BufferType buffer_type)
+void BufferBase::set_length(BufferLength length)
 {
-    this->buffer_type = buffer_type;
-    this->length = get_buffer_length(buffer_type);
+    this->length = length;
 }
 
 void BufferBase::copy(const BufferBase& other)
 {
-    this->buffer_type = other.buffer_type;
-    memcpy(this->buffer.as_wseq(), other.buffer.as_seq(), get_buffer_length(other.buffer_type));
+    this->length = other.length;
+    memcpy(this->buffer.as_wseq(), other.buffer.as_seq(), other.get_length_in_bytes());
 }
 
-uint8_t BufferBase::get_buffer_length(BufferType key_type)
+uint8_t BufferBase::lookup_length_in_bytes(BufferLength length)
 {
-    switch (key_type) {
-    case (BufferType::x25519_key):
-        return consts::crypto::x25519_key_length;
-    case (BufferType::ed25519_public_key):
-        return consts::crypto::ed25519_public_key_length;
-    case (BufferType::ed25519_private_key):
-        return consts::crypto::ed25519_private_key_length;
-    case (BufferType::sha256):
-        return consts::crypto::sha256_hash_output_length;
-    case (BufferType::ed25519_signature):
-        return consts::crypto::ed25519_signature_length;
-    case (BufferType::symmetric_key):
-        return consts::crypto::symmetric_key_length;
+    switch (length) {
+    case (BufferLength::length_16):
+        return 16;
+    case (BufferLength::length_32):
+        return 32;
+    case (BufferLength::length_64):
+        return 64;
     default:
         return 0;
     }
@@ -60,7 +59,7 @@ SecureBuffer::~SecureBuffer()
 
 void SecureBuffer::zero()
 {
-    this->set_type(BufferType::empty);
+    this->set_length(BufferLength::empty);
     Crypto::zero_memory(this->buffer.as_wseq());
 }
 

@@ -75,15 +75,14 @@ std::shared_ptr<const T> get_crypto_key(const std::string& path, ssp21::Containe
         throw Exception("Unexpected file type (", ContainerEntryTypeSpec::to_string(file.container_entry_type), ") in file: ", path);
     }
 
-    const auto expected_length = ssp21::BufferBase::get_buffer_length(ssp21::BufferType::x25519_key);
-    if (file.payload.length() != expected_length) {
+    if (file.payload.length() != consts::crypto::x25519_key_length) {
         throw Exception("Unexpected key length: ", file.payload.length());
     }
 
     const auto ret = std::make_shared<T>();
 
     ret->as_wseq().copy_from(file.payload);
-    ret->set_type(BufferType::x25519_key);
+    ret->set_length(BufferLength::length_32);
 
     return ret;
 }
@@ -185,16 +184,40 @@ ssp21::StaticKeys get_local_static_keys(const YAML::Node& node)
         get_crypto_key<PrivateKey>(yaml::require_string(node, "local_private_key_path"), ContainerEntryType::x25519_private_key));
 }
 
+ssp21::SessionCryptoMode get_session_crypto_mode(const YAML::Node& node)
+{
+    const auto mode = yaml::require_string(node, "session_crypto_mode");
+
+    if (mode == "hmac_sha256_16") {
+        return ssp21::SessionCryptoMode::hmac_sha256_16;
+    }
+
+    if (mode == "aes_256_gcm") {
+        return ssp21::SessionCryptoMode::aes_256_gcm;
+    }
+
+    throw ssp21::Exception("Unknown session mode: ", mode);
+}
+
+ssp21::CryptoSuite get_crypto_suite(const YAML::Node& node)
+{
+    const auto algorithms = yaml::require(node, "algorithms");
+
+    CryptoSuite suite{};
+    suite.session_crypto_mode = get_session_crypto_mode(algorithms);
+    return suite;
+}
+
 stack_factory_t get_initiator_shared_secret_factory(const YAML::Node& node, const ssp21::InitiatorConfig& initiator_config, const ssp21::Addresses* addresses)
 {
     const auto shared_secret = get_shared_secret(node);
 
+    CryptoSuite suite = get_crypto_suite(node);
+    suite.handshake_ephemeral = HandshakeEphemeral::nonce;
+
     if (addresses) {
         const auto addresses_copy = *addresses;
         return [=](const log4cpp::Logger& logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
-            CryptoSuite suite;
-            suite.handshake_ephemeral = HandshakeEphemeral::nonce;
-
             return initiator::factory::shared_secret_mode(
                 addresses_copy,
                 initiator_config,
@@ -205,9 +228,6 @@ stack_factory_t get_initiator_shared_secret_factory(const YAML::Node& node, cons
         };
     } else {
         return [=](const log4cpp::Logger& logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
-            CryptoSuite suite;
-            suite.handshake_ephemeral = HandshakeEphemeral::nonce;
-
             return initiator::factory::shared_secret_mode(
                 initiator_config,
                 logger,
@@ -222,13 +242,13 @@ stack_factory_t get_initiator_qkd_factory(const YAML::Node& node, const ssp21::I
 {
     const auto key_source = QKDSourceRegistry::get_initiator_key_source(node);
 
+    CryptoSuite suite = get_crypto_suite(node);
+    suite.handshake_ephemeral = HandshakeEphemeral::none;
+
     if (addresses) {
         const auto addresses_copy = *addresses;
 
         return [=](const log4cpp::Logger& logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
-            CryptoSuite suite;
-            suite.handshake_ephemeral = HandshakeEphemeral::none;
-
             return initiator::factory::qkd_mode(
                 addresses_copy,
                 initiator_config,
@@ -239,9 +259,6 @@ stack_factory_t get_initiator_qkd_factory(const YAML::Node& node, const ssp21::I
         };
     } else {
         return [=](const log4cpp::Logger& logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
-            CryptoSuite suite;
-            suite.handshake_ephemeral = HandshakeEphemeral::none;
-
             return initiator::factory::qkd_mode(
                 initiator_config,
                 logger,
@@ -256,32 +273,27 @@ stack_factory_t get_initiator_preshared_public_key_factory(const YAML::Node& nod
 {
     const auto local_keys = get_local_static_keys(node);
     const auto remote_public_key = get_crypto_key<ssp21::PublicKey>(yaml::require_string(node, "remote_public_key_path"), ContainerEntryType::x25519_public_key);
+    const auto suite = get_crypto_suite(node);
 
     if (addresses) {
         const auto addresses_copy = *addresses;
         return [=](const log4cpp::Logger& logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
-            CryptoSuite suite;
-            suite.handshake_ephemeral = HandshakeEphemeral::nonce;
-
             return initiator::factory::preshared_public_key_mode(
                 addresses_copy,
                 initiator_config,
                 logger,
                 executor,
-                CryptoSuite(), // TODO: default
+                suite,
                 local_keys,
                 remote_public_key);
         };
     } else {
         return [=](const log4cpp::Logger& logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
-            CryptoSuite suite;
-            suite.handshake_ephemeral = HandshakeEphemeral::nonce;
-
             return initiator::factory::preshared_public_key_mode(
                 initiator_config,
                 logger,
                 executor,
-                CryptoSuite(), // TODO: default
+                suite,
                 local_keys,
                 remote_public_key);
         };
@@ -293,13 +305,11 @@ stack_factory_t get_initiator_certificate_mode_factory(const YAML::Node& node, c
     const auto local_keys = get_local_static_keys(node);
     const auto anchor_cert_data = get_file_data(node, "authority_cert_path");
     const auto local_cert_data = get_file_data(node, "local_cert_path");
+    const auto algorithms = yaml::require(node, "algorithms");
 
     if (addresses) {
         const auto addresses_copy = *addresses;
         return [=](const log4cpp::Logger& logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
-            CryptoSuite suite;
-            suite.handshake_ephemeral = HandshakeEphemeral::nonce;
-
             return initiator::factory::certificate_public_key_mode(
                 addresses_copy,
                 initiator_config,
@@ -312,9 +322,6 @@ stack_factory_t get_initiator_certificate_mode_factory(const YAML::Node& node, c
         };
     } else {
         return [=](const log4cpp::Logger& logger, const std::shared_ptr<exe4cpp::IExecutor>& executor) {
-            CryptoSuite suite;
-            suite.handshake_ephemeral = HandshakeEphemeral::nonce;
-
             return initiator::factory::certificate_public_key_mode(
                 initiator_config,
                 logger,

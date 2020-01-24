@@ -27,7 +27,7 @@ struct Algorithms : private ser4cpp::StaticOnly {
             SessionCryptoMode session_mode);
 
         verify_nonce_func_t verify_nonce = NonceFunctions::default_verify();
-        ISessionMode* session_mode = &SessionModes::default_mode();
+        SessionMode session_mode = SessionModes::default_mode();
     };
 
     struct SharedSecretHandshake {

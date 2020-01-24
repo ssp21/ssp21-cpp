@@ -226,8 +226,8 @@ TEST_CASE(SUITE("successfully formats and increments nonce"))
 void SessionFixture::init(const Session::Param& parameters)
 {
     SessionKeys keys;
-    keys.rx_key.set_type(BufferType::symmetric_key);
-    keys.tx_key.set_type(BufferType::symmetric_key);
+    keys.rx_key.set_length(BufferLength::length_32);
+    keys.tx_key.set_length(BufferLength::length_32);
 
     REQUIRE(this->session.initialize(Algorithms::Session(), parameters, keys));
 }

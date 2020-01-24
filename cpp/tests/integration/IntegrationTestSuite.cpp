@@ -14,19 +14,23 @@ using namespace ssp21;
 void open_and_test_handshake(IntegrationFixture& fix);
 void test_bidirectional_data_transfer(IntegrationFixture& fix, const seq32_t& data);
 
+const auto HANDSHAKE_TYPES = { HandshakeType::shared_secret, HandshakeType::qkd, HandshakeType::preshared_key, HandshakeType::certificates };
+const auto SESSION_MODES = { SessionCryptoMode::hmac_sha256_16, SessionCryptoMode::aes_256_gcm };
+
 template <class T>
 void for_each_mode(const T& action)
 {
-    action(Mode::shared_secret);
-    action(Mode::qkd);
-    action(Mode::preshared_key);
-    action(Mode::certificates);
+    for (auto type : HANDSHAKE_TYPES) {
+        for (auto mode : SESSION_MODES) {
+            action(type, mode);
+        }
+    }
 }
 
 TEST_CASE(SUITE("fixture construction"))
 {
-    auto run_test = [](Mode mode) {
-        IntegrationFixture fix(mode);
+    auto run_test = [](HandshakeType type, SessionCryptoMode mode) {
+        IntegrationFixture fix(type, mode);
     };
 
     for_each_mode(run_test);
@@ -34,8 +38,8 @@ TEST_CASE(SUITE("fixture construction"))
 
 TEST_CASE(SUITE("completes handshake"))
 {
-    auto run_test = [](Mode mode) {
-        IntegrationFixture fix(Mode::shared_secret);
+    auto run_test = [](HandshakeType type, SessionCryptoMode mode) {
+        IntegrationFixture fix(type, mode);
         open_and_test_handshake(fix);
     };
 
@@ -44,8 +48,8 @@ TEST_CASE(SUITE("completes handshake"))
 
 TEST_CASE(SUITE("can transfer data bidirectionally multiple times"))
 {
-    auto run_test = [](Mode mode) {
-        IntegrationFixture fix(mode);
+    auto run_test = [](HandshakeType type, SessionCryptoMode mode) {
+        IntegrationFixture fix(type, mode);
         open_and_test_handshake(fix);
 
         const auto num_bytes_tx = 64;

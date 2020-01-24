@@ -16,7 +16,7 @@ std::shared_ptr<const SymmetricKey> KeyRecord::create_key(const ssp21::seq32_t& 
     else {
         auto ret = std::make_shared<SymmetricKey>();
         ret->as_wseq().copy_from(key);
-        ret->set_type(BufferType::symmetric_key);
+        ret->set_length(BufferLength::length_32);
         return ret;
     }
 }

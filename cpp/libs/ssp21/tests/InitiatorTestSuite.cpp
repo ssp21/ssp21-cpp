@@ -155,7 +155,7 @@ TEST_CASE(SUITE("goes to retry state if auth reply doesn't authenticate"))
     const auto start_stats = fix.initiator.get_statistics();
 
     // incorrect MAC
-    fix.lower.enqueue_message(hex::session_auth(0xFFFFFFFF, "", hex::repeat(0xEE, consts::crypto::sha256_hash_output_length)));
+    fix.lower.enqueue_message(hex::session_auth(0xFFFFFFFF, "", hex::repeat(0xEE, consts::crypto::trunc16)));
 
     const auto end_stats = fix.initiator.get_statistics();
     const auto end_num_timer_cancel = fix.exe->num_timer_cancel();

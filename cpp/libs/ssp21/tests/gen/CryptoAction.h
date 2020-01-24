@@ -44,7 +44,11 @@ enum class CryptoAction : uint8_t {
     ///
     sign_ed25519 = 0x8,
     ///
-    verify_ed25519 = 0x9
+    verify_ed25519 = 0x9,
+    ///
+    aes_gcm_encrypt = 0xA,
+    ///
+    aes_gcm_decrypt = 0xB
 };
 
 struct CryptoActionSpec : private ser4cpp::StaticOnly {

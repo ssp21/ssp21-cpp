@@ -28,6 +28,8 @@ enum class SessionCryptoMode : uint8_t
 {
     /// HMAC-SHA256 truncated to 16 bytes
     hmac_sha256_16 = 0x0,
+    /// AES 256 in GCM mode
+    aes_256_gcm = 0x1,
     /// value not defined
     undefined = 0xFF
 };

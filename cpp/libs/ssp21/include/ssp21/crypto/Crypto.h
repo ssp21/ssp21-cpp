@@ -7,10 +7,11 @@
 #include <memory>
 
 namespace ssp21 {
+
 /**
-    * Assumming for the time being that a static backend is fine
-    * to keep dependency injection simple.
-    */
+* Assumming for the time being that a static backend is fine
+* to keep dependency injection simple.
+*/
 class Crypto final : ser4cpp::StaticOnly {
 
     static std::shared_ptr<ICryptoBackend> backend;
@@ -56,6 +57,10 @@ public:
     static void sign_ed25519(const seq32_t& input, const seq32_t& private_key, DSAOutput& output, std::error_code& ec);
 
     static bool verify_ed25519(const seq32_t& message, const seq32_t& signature, const seq32_t& public_key);
+
+    static AEADResult aes256_gcm_encrypt(const SymmetricKey& key, uint16_t nonce, seq32_t ad, seq32_t plaintext, wseq32_t encrypt_buffer, MACOutput& mac);
+
+    static seq32_t aes256_gcm_decrypt(const SymmetricKey& key, uint16_t nonce, seq32_t ad, seq32_t ciphertext, seq32_t auth_tag, wseq32_t plaintext, std::error_code& ec);
 };
 }
 

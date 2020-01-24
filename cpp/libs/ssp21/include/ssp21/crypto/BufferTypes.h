@@ -10,15 +10,12 @@
 #include "ser4cpp/util/Uncopyable.h"
 
 namespace ssp21 {
-// the BufferType also indirectly defines the length
-enum class BufferType {
+
+enum class BufferLength {
     empty,
-    x25519_key,
-    ed25519_public_key,
-    ed25519_private_key,
-    sha256,
-    ed25519_signature,
-    symmetric_key
+    length_16,
+    length_32,
+    length_64
 };
 
 class BufferBase : private ser4cpp::Uncopyable {
@@ -29,20 +26,21 @@ public:
 
     wseq32_t as_wseq();
 
-    BufferType get_type() const;
+    BufferLength get_length() const;
 
-    void set_type(BufferType key_type);
+    void set_length(BufferLength key_type);
 
     void copy(const BufferBase& other);
 
-    static uint8_t get_buffer_length(BufferType);
+    uint8_t get_length_in_bytes() const;
+
+    static uint8_t lookup_length_in_bytes(BufferLength);
 
 protected:
     BufferBase() = default;
 
 private:
-    uint8_t length = 0;
-    BufferType buffer_type = BufferType::empty;
+    BufferLength length = BufferLength::empty;
 
 protected:
     ser4cpp::StaticBuffer<uint32_t, consts::crypto::max_primitive_buffer_length> buffer;
@@ -123,7 +121,7 @@ struct SessionKeys final {
 
     inline bool valid() const
     {
-        return (rx_key.get_type() == BufferType::symmetric_key) && (tx_key.get_type() == BufferType::symmetric_key);
+        return (rx_key.get_length() == BufferLength::length_32) && (tx_key.get_length() == BufferLength::length_32);
     }
 };
 

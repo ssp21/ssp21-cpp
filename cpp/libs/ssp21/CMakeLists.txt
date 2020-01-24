@@ -79,8 +79,8 @@ set(ssp21_private_headers
     ./src/crypto/InitiatorHandshakes.h
     ./src/crypto/InitiatorHandshakeStates.h
     ./src/crypto/IResponderHandshake.h
-    ./src/crypto/ISessionMode.h
     ./src/crypto/LogMessagePrinter.h
+	./src/crypto/MacAdapters.h
     ./src/crypto/MessageFormatter.h
     ./src/crypto/MessageOnlyFrameWriter.h
     ./src/crypto/MessageParser.h
@@ -95,12 +95,12 @@ set(ssp21_private_headers
     ./src/crypto/Responder.h
     ./src/crypto/ResponderHandshakes.h
     ./src/crypto/Session.h
+	./src/crypto/SessionMode.h
     ./src/crypto/SessionModes.h
     ./src/crypto/Sessions.h
     ./src/crypto/SharedSecretInitiatorHandshake.h
     ./src/crypto/SharedSecretResponderHandshake.h
     ./src/crypto/TripleDH.h
-    ./src/crypto/TruncatedMacSessionMode.h
     ./src/crypto/TxState.h
 
     ./src/crypto/gen/AuthMetadata.h
@@ -131,6 +131,7 @@ set(ssp21_srcs
     ./src/crypto/FlagsPrinting.cpp
     ./src/crypto/HandshakeHasher.cpp
     ./src/crypto/ICertificateHandler.cpp
+	./src/crypto/ICryptoBackend.cpp
     ./src/crypto/IndustrialCertificateHandler.cpp
     ./src/crypto/Initiator.cpp
     ./src/crypto/InitiatorHandshakes.cpp
@@ -145,12 +146,11 @@ set(ssp21_srcs
     ./src/crypto/Responder.cpp
     ./src/crypto/ResponderHandshakes.cpp
     ./src/crypto/Session.cpp
-    ./src/crypto/SessionModes.cpp
+	./src/crypto/SessionMode.cpp
     ./src/crypto/Sessions.cpp
     ./src/crypto/SharedSecretInitiatorHandshake.cpp
     ./src/crypto/SharedSecretResponderHandshake.cpp
     ./src/crypto/TripleDH.cpp
-    ./src/crypto/TruncatedMacSessionMode.cpp
     ./src/crypto/VLength.cpp
 
     ./src/crypto/gen/AuthMetadata.cpp    

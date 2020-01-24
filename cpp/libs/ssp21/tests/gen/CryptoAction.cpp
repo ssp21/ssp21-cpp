@@ -40,6 +40,10 @@ const char* CryptoActionSpec::to_string(CryptoAction arg)
         return "sign_ed25519";
     case (CryptoAction::verify_ed25519):
         return "verify_ed25519";
+    case (CryptoAction::aes_gcm_encrypt):
+        return "aes_gcm_encrypt";
+    case (CryptoAction::aes_gcm_decrypt):
+        return "aes_gcm_decrypt";
     default:
         return "undefined";
     }
