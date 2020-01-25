@@ -7,9 +7,9 @@
 // |_| \_|\___/  |______\__,_|_|\__|_|_| |_|\__, (_|_|_)
 //                                           __/ |
 //                                          |___/
-// 
+//
 // This file is auto-generated. Do not edit manually
-// 
+//
 // Licensed under the terms of the BSDv3 license
 //
 
@@ -38,7 +38,7 @@ struct RequestHandshakeBegin final : public IMessage
         const CryptoSpec& spec,
         const SessionConstraints& constraints,
         HandshakeMode handshake_mode,
-        const seq32_t& ephemeral_data,
+        const seq32_t& mode_ephemeral,
         const seq32_t& mode_data
     );
 
@@ -56,7 +56,7 @@ struct RequestHandshakeBegin final : public IMessage
     CryptoSpec spec;
     SessionConstraints constraints;
     EnumField<HandshakeModeSpec> handshake_mode;
-    SeqByteField ephemeral_data;
+    SeqByteField mode_ephemeral;
     SeqByteField mode_data;
 
 };

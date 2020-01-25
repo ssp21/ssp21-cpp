@@ -24,7 +24,7 @@ std::shared_ptr<IInitiatorHandshake> InitiatorHandshakes::qkd_mode(
 
 std::shared_ptr<IInitiatorHandshake> InitiatorHandshakes::public_key_mode(
     const log4cpp::Logger& logger,
-    const CryptoSuite& crypto_suite,
+    const DHCryptoSuite& crypto_suite,
     const StaticKeys& static_keys,
     const std::shared_ptr<ICertificateHandler>& cert_handler)
 {

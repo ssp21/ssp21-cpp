@@ -4,7 +4,7 @@
 
 #include "crypto/IInitiatorHandshake.h"
 
-#include "crypto/AlgorithmSet.h"
+#include "crypto/Algorithms.h"
 #include "ssp21/crypto/ICertificateHandler.h"
 #include "ssp21/crypto/StaticKeys.h"
 
@@ -15,16 +15,17 @@ namespace ssp21 {
     */
 class PublicKeyInitiatorHandshake final : public IInitiatorHandshake {
 public:
-    PublicKeyInitiatorHandshake(const log4cpp::Logger& logger, const StaticKeys& static_keys, const CryptoSuite& crypto_suite, const std::shared_ptr<ICertificateHandler>& cert_handler)
+    PublicKeyInitiatorHandshake(const log4cpp::Logger& logger, const StaticKeys& static_keys, const DHCryptoSuite& crypto_suite, const std::shared_ptr<ICertificateHandler>& cert_handler)
         : logger(logger)
         , static_keys(static_keys)
         , crypto_suite(crypto_suite)
-        , algorithms(crypto_suite)
+        , algorithms(Algorithms::Common::get_or_throw(crypto_suite.base))
+        , dh_algorithms(Algorithms::DH::get_or_throw(crypto_suite.handshake_ephemeral))
         , cert_handler(cert_handler)
     {
     }
 
-    inline static std::shared_ptr<IInitiatorHandshake> make_shared(const log4cpp::Logger& logger, const StaticKeys& static_keys, const CryptoSuite& crypto_suite, const std::shared_ptr<ICertificateHandler>& cert_handler)
+    inline static std::shared_ptr<IInitiatorHandshake> make_shared(const log4cpp::Logger& logger, const StaticKeys& static_keys, const DHCryptoSuite& crypto_suite, const std::shared_ptr<ICertificateHandler>& cert_handler)
     {
         return std::make_shared<PublicKeyInitiatorHandshake>(logger, static_keys, crypto_suite, cert_handler);
     }
@@ -40,7 +41,7 @@ public:
         return cert_handler->mode();
     }
 
-    virtual CryptoSuite get_crypto_suite() const override
+    virtual DHCryptoSuite get_crypto_suite() const override
     {
         return this->crypto_suite;
     }
@@ -53,8 +54,9 @@ private:
     const StaticKeys static_keys;
 
     // specific algorithms used to perform steps
-    const CryptoSuite crypto_suite;
-    const public_key_algorithms_t algorithms;
+    const DHCryptoSuite crypto_suite;
+    const Algorithms::Common algorithms;
+    const Algorithms::DH dh_algorithms;
     const std::shared_ptr<ICertificateHandler> cert_handler;
 
     // ephemeral keys

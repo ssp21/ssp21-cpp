@@ -77,7 +77,7 @@ TEST_CASE(SUITE("successfully parses message"))
     REQUIRE(msg.constraints.max_nonce == 0xFFFF);
     REQUIRE(msg.constraints.max_session_duration == 0xCAFEBABE);
     REQUIRE(msg.handshake_mode == HandshakeMode::shared_secret);
-    REQUIRE(HexConversions::to_hex(msg.ephemeral_data) == "AA AA AA");
+    REQUIRE(HexConversions::to_hex(msg.mode_ephemeral) == "AA AA AA");
 
     REQUIRE(msg.mode_data.is_empty());
 }
@@ -117,7 +117,7 @@ TEST_CASE(SUITE("pretty prints message"))
         "max_nonce: 32768",
         "max_session_duration: 3405691582",
         "handshake_mode: preshared_public_keys",
-        "ephemeral_data (length = 2)",
+        "mode_ephemeral (length = 2)",
         "CA:FE",
         "mode_data (length = 0)");
 }

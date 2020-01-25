@@ -10,12 +10,9 @@ namespace ssp21 {
 QKDInitiatorHandshake::QKDInitiatorHandshake(const log4cpp::Logger& logger, const CryptoSuite& crypto_suite, std::shared_ptr<IKeySource> key_source)
     : logger(logger)
     , crypto_suite(crypto_suite)
-    , algorithms(crypto_suite)
+    , algorithms(Algorithms::Common::get_or_throw(crypto_suite))
     , key_source(std::move(key_source))
 {
-    if (crypto_suite.handshake_ephemeral != HandshakeEphemeral::none) {
-        throw Exception("handshake_ephemeral must be 'none'");
-    }
 }
 
 IInitiatorHandshake::InitResult QKDInitiatorHandshake::initialize_new_handshake()
@@ -51,13 +48,13 @@ bool QKDInitiatorHandshake::initialize_session(const ReplyHandshakeBegin& msg, c
         return false;
     }
 
-    if (msg.ephemeral_data.is_not_empty()) {
-        FORMAT_LOG_BLOCK(this->logger, levels::warn, "non-empty emphemeral data: %u", msg.ephemeral_data.length());
+    if (msg.mode_ephemeral.is_not_empty()) {
+        FORMAT_LOG_BLOCK(this->logger, levels::warn, "non-empty mode ephemeral field: %u", msg.mode_ephemeral.length());
         return false;
     }
 
     if (msg.mode_data.is_not_empty()) {
-        FORMAT_LOG_BLOCK(this->logger, levels::warn, "non-empty handshake data: %u", msg.mode_data.length());
+        FORMAT_LOG_BLOCK(this->logger, levels::warn, "non-empty mode data field: %u", msg.mode_data.length());
         return false;
     }
 

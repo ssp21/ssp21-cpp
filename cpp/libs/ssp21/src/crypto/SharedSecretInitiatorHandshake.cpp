@@ -10,12 +10,9 @@ namespace ssp21 {
 SharedSecretInitiatorHandshake::SharedSecretInitiatorHandshake(const log4cpp::Logger& logger, const CryptoSuite& crypto_suite, const std::shared_ptr<const SymmetricKey>& key)
     : logger(logger)
     , crypto_suite(crypto_suite)
-    , algorithms(crypto_suite)
+    , algorithms(Algorithms::Common::get_or_throw(crypto_suite))
     , key(key)
 {
-    if (crypto_suite.handshake_ephemeral != HandshakeEphemeral::nonce) {
-        throw new Exception("handshake_ephemeral must be nonce");
-    }
 }
 
 IInitiatorHandshake::InitResult SharedSecretInitiatorHandshake::initialize_new_handshake()
@@ -33,13 +30,13 @@ void SharedSecretInitiatorHandshake::finalize_request_tx(const seq32_t& request_
 
 bool SharedSecretInitiatorHandshake::initialize_session(const ReplyHandshakeBegin& msg, const seq32_t& reply_data, const SessionLimits& limits, const exe4cpp::steady_time_t& now, Session& session)
 {
-    if (msg.ephemeral_data.length() != consts::crypto::nonce_length) {
-        FORMAT_LOG_BLOCK(this->logger, levels::warn, "bad nonce length: %u", msg.ephemeral_data.length());
+    if (msg.mode_ephemeral.length() != consts::crypto::nonce_length) {
+        FORMAT_LOG_BLOCK(this->logger, levels::warn, "bad nonce length: %u", msg.mode_data.length());
         return false;
     }
 
     if (msg.mode_data.is_not_empty()) {
-        FORMAT_LOG_BLOCK(this->logger, levels::warn, "non-empty mode data: %u", msg.mode_data.length());
+        FORMAT_LOG_BLOCK(this->logger, levels::warn, "non-empty mode data field: %u", msg.mode_data.length());
         return false;
     }
 
@@ -52,7 +49,7 @@ bool SharedSecretInitiatorHandshake::initialize_session(const ReplyHandshakeBegi
     // perform key derivation
     this->algorithms.handshake.kdf(
         salt,
-        { this->key->as_seq(), this->nonce_buffer.as_seq(), msg.ephemeral_data },
+        { this->key->as_seq(), this->nonce_buffer.as_seq(), msg.mode_ephemeral },
         session_keys.tx_key,
         session_keys.rx_key);
 

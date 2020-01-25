@@ -7,9 +7,9 @@
 // |_| \_|\___/  |______\__,_|_|\__|_|_| |_|\__, (_|_|_)
 //                                           __/ |
 //                                          |___/
-// 
+//
 // This file is auto-generated. Do not edit manually
-// 
+//
 // Licensed under the terms of the BSDv3 license
 //
 
@@ -22,15 +22,15 @@
 namespace ssp21 {
 
 /**
-    Specifies the meaning of the ephemeral data in RequestHandshakeBegin
+    Type of ephemeral value used during the handshake
 */
 enum class HandshakeEphemeral : uint8_t
 {
-    /// x25519 DH public key
+    /// x25519
     x25519 = 0x0,
-    /// 32-byte random nonce
+    /// nonce
     nonce = 0x1,
-    /// Empty ephemeral used for QKD mode
+    /// none
     none = 0x2,
     /// value not defined
     undefined = 0xFF

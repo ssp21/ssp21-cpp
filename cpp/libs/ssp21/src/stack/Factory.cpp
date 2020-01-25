@@ -245,7 +245,7 @@ namespace initiator {
                 executor,
                 InitiatorHandshakes::public_key_mode(
                     logger,
-                    crypto_suite,
+                    DHCryptoSuite(crypto_suite, HandshakeEphemeral::x25519),
                     local_keys,
                     ICertificateHandler::preshared_key(remote_public_key)));
         }
@@ -264,7 +264,7 @@ namespace initiator {
                 executor,
                 InitiatorHandshakes::public_key_mode(
                     logger,
-                    crypto_suite,
+                    DHCryptoSuite(crypto_suite, HandshakeEphemeral::x25519),
                     local_keys,
                     ICertificateHandler::preshared_key(remote_public_key)));
         }
@@ -286,7 +286,7 @@ namespace initiator {
                 executor,
                 InitiatorHandshakes::public_key_mode(
                     logger,
-                    crypto_suite,
+                    DHCryptoSuite(crypto_suite, HandshakeEphemeral::x25519),
                     local_keys,
                     ICertificateHandler::certificates(anchor_cert_file_data, presented_chain_file_data)));
         }
@@ -306,7 +306,7 @@ namespace initiator {
                 executor,
                 InitiatorHandshakes::public_key_mode(
                     logger,
-                    crypto_suite,
+                    DHCryptoSuite(crypto_suite, HandshakeEphemeral::x25519),
                     local_keys,
                     ICertificateHandler::certificates(anchor_cert_file_data, presented_chain_file_data)));
         }

@@ -102,15 +102,15 @@ namespace responder {
             const std::shared_ptr<IKeyLookup>& key_lookup);
 
         /**
-             * @brief Create a preshared public key responder stack.
-             * @param addresses         Link-layer addresses used
-             * @param config            Responder configuration
-             * @param logger            Logger used by the stack
-             * @param executor          Executor used by the stack
-             * @param local_keys        Local key pair
-             * @param remote_public_key Remote preshared public key
-             * @return Stack to which an @ref IUpperLayer and an @ref ILowerLayer must be bind
-             */
+        * @brief Create a preshared public key responder stack.
+        * @param addresses         Link-layer addresses used
+        * @param config            Responder configuration
+        * @param logger            Logger used by the stack
+        * @param executor          Executor used by the stack
+        * @param local_keys        Local key pair
+        * @param remote_public_key Remote preshared public key
+        * @return Stack to which an @ref IUpperLayer and an @ref ILowerLayer must be bind
+        */
         std::shared_ptr<IStack> preshared_public_key_mode(
             const Addresses& addresses,
             const ResponderConfig& config,

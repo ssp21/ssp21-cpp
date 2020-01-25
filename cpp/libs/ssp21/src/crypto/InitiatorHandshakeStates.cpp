@@ -21,10 +21,10 @@ Initiator::IHandshakeState* InitiatorHandshakeStates::Idle::on_handshake_require
 
     const CryptoSpec crypto_spec(
         suite.handshake_ephemeral,
-        suite.handshake_hash,
-        suite.handshake_kdf,
-        suite.session_nonce_mode,
-        suite.session_crypto_mode);
+        suite.base.handshake_hash,
+        suite.base.handshake_kdf,
+        suite.base.session_nonce_mode,
+        suite.base.session_crypto_mode);
 
     const auto init_result = ctx.handshake->initialize_new_handshake();
 
@@ -41,7 +41,7 @@ Initiator::IHandshakeState* InitiatorHandshakeStates::Idle::on_handshake_require
             ctx.session_limits.max_nonce_value,
             ctx.session_limits.max_session_time_ms),
         ctx.handshake->get_handshake_mode(),
-        init_result.ephemeral_data,
+        init_result.mode_ephemeral,
         init_result.mode_data);
 
     const auto result = ctx.frame_writer->write(request);

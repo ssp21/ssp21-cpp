@@ -8,6 +8,7 @@
 #include "ssp21/crypto/CryptoTypedefs.h"
 
 #include "crypto/gen/CryptoSpec.h"
+#include "ssp21/crypto/gen/HandshakeEphemeral.h"
 #include "ssp21/crypto/gen/HandshakeError.h"
 
 #include "ser4cpp/util/Uncopyable.h"
@@ -15,12 +16,14 @@
 
 namespace ssp21 {
 /**
-    * Represents a complete set of algorithms for the handshake and the session
-    */
+* Various groupings of algorithms and the functions to configure them
+*/
 struct Algorithms : private ser4cpp::StaticOnly {
 
     struct Session {
         Session() = default;
+
+        //static Session get_or_throw(SessionNonceMode nonce_mode, SessionCryptoMode session_mode);
 
         HandshakeError configure(
             SessionNonceMode nonce_mode,
@@ -30,11 +33,12 @@ struct Algorithms : private ser4cpp::StaticOnly {
         SessionMode session_mode = SessionModes::default_mode();
     };
 
-    struct SharedSecretHandshake {
-        SharedSecretHandshake() = default;
+    struct Handshake {
+        Handshake() = default;
+
+        //static Handshake get_or_throw(HandshakeKDF handshake_kdf, HandshakeHash handshake_hash);
 
         HandshakeError configure(
-            HandshakeEphemeral handshake_ephemeral,
             HandshakeKDF handshake_kdf,
             HandshakeHash handshake_hash);
 
@@ -42,16 +46,32 @@ struct Algorithms : private ser4cpp::StaticOnly {
         hash_func_t hash = &Crypto::hash_sha256;
     };
 
-    struct PublicKeyHandshake : public SharedSecretHandshake {
-        PublicKeyHandshake() = default;
+    // session + handshake algorithms common to every mode
+    struct Common {
+        Common() = default;
 
-        HandshakeError configure(
-            HandshakeEphemeral handshake_ephemeral,
-            HandshakeKDF handshake_kdf,
-            HandshakeHash handshake_hash);
+        static Common get_or_throw(const CryptoSuite& suite);
+
+        HandshakeError configure(const CryptoSpec& spec);
+
+        HandshakeError configure(HandshakeHash handshake_hash,
+                                 HandshakeKDF handshake_kdf,
+                                 SessionNonceMode session_nonce_mode,
+                                 SessionCryptoMode session_crypto_mode);
+
+        Session session;
+        Handshake handshake;
+    };
+
+    struct DH {
+        DH() = default;
+
+        static DH get_or_throw(HandshakeEphemeral type);
+
+        HandshakeError configure(HandshakeEphemeral type);
 
         dh_func_t dh = &Crypto::dh_x25519;
-        gen_keypair_func_t gen_keypair = &Crypto::gen_keypair_x25519;
+        gen_keypair_func_t gen_key_pair = &Crypto::gen_keypair_x25519;
     };
 };
 

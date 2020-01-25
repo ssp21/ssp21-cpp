@@ -7,10 +7,14 @@
 #include "crypto/TripleDH.h"
 
 namespace ssp21 {
+
 IInitiatorHandshake::InitResult PublicKeyInitiatorHandshake::initialize_new_handshake()
 {
-    this->algorithms.handshake.gen_keypair(this->local_ephemeral_keys);
-    return InitResult::success(this->local_ephemeral_keys.public_key.as_seq(), this->cert_handler->certificate_data());
+    this->dh_algorithms.gen_key_pair(this->local_ephemeral_keys);
+
+    return InitResult::success(
+        this->local_ephemeral_keys.public_key.as_seq(),
+        this->cert_handler->certificate_data());
 }
 
 void PublicKeyInitiatorHandshake::finalize_request_tx(const seq32_t& request_data, const exe4cpp::steady_time_t& now)
@@ -37,11 +41,11 @@ bool PublicKeyInitiatorHandshake::initialize_session(const ReplyHandshakeBegin& 
 
     std::error_code ec;
     const auto ikm = triple_dh.compute(
-        this->algorithms.handshake.dh,
+        this->dh_algorithms.dh,
         this->static_keys,
         this->local_ephemeral_keys,
         remote_public_key,
-        msg.ephemeral_data,
+        msg.mode_ephemeral,
         ec);
 
     if (ec) {
