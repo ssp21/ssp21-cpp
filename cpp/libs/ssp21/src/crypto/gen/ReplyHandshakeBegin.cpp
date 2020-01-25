@@ -7,9 +7,9 @@
 // |_| \_|\___/  |______\__,_|_|\__|_|_| |_|\__, (_|_|_)
 //                                           __/ |
 //                                          |___/
-// 
+//
 // This file is auto-generated. Do not edit manually
-// 
+//
 // Licensed under the terms of the BSDv3 license
 //
 
@@ -25,10 +25,10 @@ ReplyHandshakeBegin::ReplyHandshakeBegin()
 {}
 
 ReplyHandshakeBegin::ReplyHandshakeBegin(
-    const seq32_t& ephemeral_data,
+    const seq32_t& mode_ephemeral,
     const seq32_t& mode_data
 ) :
-    ephemeral_data(ephemeral_data),
+    mode_ephemeral(mode_ephemeral),
     mode_data(mode_data)
 {}
 
@@ -36,7 +36,7 @@ size_t ReplyHandshakeBegin::size() const
 {
     return MessageFormatter::sum_sizes(
         1,
-        ephemeral_data,
+        mode_ephemeral,
         mode_data
     );
 }
@@ -48,7 +48,7 @@ ParseError ReplyHandshakeBegin::read(seq32_t input)
     {
         return MessageParser::read_fields(
             input,
-            ephemeral_data,
+            mode_ephemeral,
             mode_data
         );
     };
@@ -62,7 +62,7 @@ FormatResult ReplyHandshakeBegin::write(wseq32_t& output) const
     {
         return MessageFormatter::write_fields(
             output,
-            ephemeral_data,
+            mode_ephemeral,
             mode_data
         );
     };
@@ -73,8 +73,8 @@ void ReplyHandshakeBegin::print(IMessagePrinter& printer) const
 {
     MessagePrinting::print_fields(
         printer,
-        "ephemeral_data",
-        ephemeral_data,
+        "mode_ephemeral",
+        mode_ephemeral,
         "mode_data",
         mode_data
     );

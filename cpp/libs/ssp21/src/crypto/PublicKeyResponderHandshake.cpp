@@ -1,7 +1,6 @@
 
 #include "PublicKeyResponderHandshake.h"
 
-#include "crypto/AlgorithmSet.h"
 #include "crypto/HandshakeHasher.h"
 #include "crypto/TripleDH.h"
 #include "crypto/gen/ReplyHandshakeBegin.h"
@@ -21,12 +20,27 @@ PublicKeyResponderHandshake::PublicKeyResponderHandshake(const log4cpp::Logger& 
 
 IResponderHandshake::Result PublicKeyResponderHandshake::process(const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const exe4cpp::steady_time_t& now, IFrameWriter& writer, Session& session)
 {
-    if (msg.spec.handshake_ephemeral != HandshakeEphemeral::x25519) {
-        return Result::failure(HandshakeError::unsupported_handshake_ephemeral);
+    // lookup the base algorithms
+    Algorithms::Common algorithms;
+    {
+        const auto err = algorithms.configure(msg.spec);
+        if (any(err)) {
+            return IResponderHandshake::Result::failure(err);
+        }
+    }
+
+    // try to retrieve the required DH algorithms
+    Algorithms::DH dh_algorithms;
+    {
+        const auto err = dh_algorithms.configure(msg.spec.handshake_ephemeral);
+        if (any(err)) {
+            return IResponderHandshake::Result::failure(err);
+        }
     }
 
     // verify that the public key length matches the DH mode
-    if (msg.ephemeral_data.length() != consts::crypto::x25519_key_length) {
+    // TODO - lookup the length? Better place to put this validation?
+    if (msg.mode_ephemeral.length() != consts::crypto::x25519_key_length) {
         return Result::failure(HandshakeError::bad_message_format);
     }
 
@@ -39,18 +53,9 @@ IResponderHandshake::Result PublicKeyResponderHandshake::process(const RequestHa
         }
     }
 
-    public_key_algorithms_t algorithms;
-
-    {
-        const auto err = algorithms.configure(msg.spec);
-        if (any(err)) {
-            return Result::failure(err);
-        }
-    }
-
     // generate an ephemeral key pair
     KeyPair ephemeralKeys;
-    algorithms.handshake.gen_keypair(ephemeralKeys);
+    dh_algorithms.gen_key_pair(ephemeralKeys);
 
     // prepare the response
     const ReplyHandshakeBegin reply(
@@ -70,11 +75,11 @@ IResponderHandshake::Result PublicKeyResponderHandshake::process(const RequestHa
     TripleDH triple_dh;
     std::error_code ec;
     const auto ikm = triple_dh.compute(
-        algorithms.handshake.dh,
+        dh_algorithms.dh,
         this->static_keys,
         ephemeralKeys,
         remote_public_static_key,
-        msg.ephemeral_data,
+        msg.mode_ephemeral,
         ec);
 
     if (ec) {

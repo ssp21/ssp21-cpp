@@ -28,7 +28,7 @@ set(ssp21_public_headers
     ./include/ssp21/crypto/gen/CryptoError.h
     ./include/ssp21/crypto/gen/ExtensionEnvelope.h
     ./include/ssp21/crypto/gen/FormatError.h
-    ./include/ssp21/crypto/gen/HandshakeEphemeral.h
+	./include/ssp21/crypto/gen/HandshakeEphemeral.h
     ./include/ssp21/crypto/gen/HandshakeError.h
     ./include/ssp21/crypto/gen/HandshakeHash.h
     ./include/ssp21/crypto/gen/HandshakeKDF.h
@@ -66,7 +66,6 @@ set(ssp21_private_headers
     ./src/RawFrameWriter.h
 
     ./src/crypto/Algorithms.h
-    ./src/crypto/AlgorithmSet.h
     ./src/crypto/CryptoLayer.h
     ./src/crypto/FlagsPrinting.h
     ./src/crypto/FormatResult.h

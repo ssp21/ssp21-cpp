@@ -76,8 +76,6 @@ IntegrationFixture::Stacks IntegrationFixture::qkd_stacks(log4cpp::Logger rlogge
 {
     const auto key_store = std::make_shared<MockKeyStore>();
 
-    suite.handshake_ephemeral = HandshakeEphemeral::none;
-
     const auto initiator = initiator::factory::qkd_mode(
         Addresses(1, 10),
         InitiatorConfig(),
@@ -132,8 +130,6 @@ IntegrationFixture::Stacks IntegrationFixture::certificate_stacks(log4cpp::Logge
 IntegrationFixture::Stacks IntegrationFixture::shared_secret_stacks(log4cpp::Logger rlogger, log4cpp::Logger ilogger, CryptoSuite suite, std::shared_ptr<exe4cpp::IExecutor> exe)
 {
     const auto shared_secret = generate_shared_secret();
-
-    suite.handshake_ephemeral = HandshakeEphemeral::nonce;
 
     const auto initiator = initiator::factory::shared_secret_mode(
         Addresses(1, 10),

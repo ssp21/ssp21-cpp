@@ -28,9 +28,11 @@ package object render {
   def space: Iterator[String] = "".iter
 
   def commented(lines: Iterator[String]): Iterator[String] = {
-    "//".iter ++
-      lines.map(l => "// " + l) ++
-      "//".iter
+    def wrap(line: String) : String = {
+      if(line.isEmpty) { "//" } else { "// " + line }
+    }
+
+    "//".iter ++ lines.map(wrap) ++ "//".iter
   }
 
   def bracketWithCap(indent: Indentation, cap: String)(inner: => Iterator[String]): Iterator[String] = {

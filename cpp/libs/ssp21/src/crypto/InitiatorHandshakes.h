@@ -29,7 +29,7 @@ struct InitiatorHandshakes : private ser4cpp::StaticOnly {
 
     static std::shared_ptr<IInitiatorHandshake> public_key_mode(
         const log4cpp::Logger& logger,
-        const CryptoSuite& crypto_suite,
+        const DHCryptoSuite& crypto_suite,
         const StaticKeys& static_keys,
         const std::shared_ptr<ICertificateHandler>& cert_handler);
 };

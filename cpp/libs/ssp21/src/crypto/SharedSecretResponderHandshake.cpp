@@ -3,7 +3,7 @@
 
 #include "ssp21/util/Exception.h"
 
-#include "crypto/AlgorithmSet.h"
+#include "crypto/Algorithms.h"
 #include "crypto/HandshakeHasher.h"
 #include "crypto/gen/ReplyHandshakeBegin.h"
 
@@ -20,29 +20,25 @@ SharedSecretResponderHandshake::SharedSecretResponderHandshake(const log4cpp::Lo
 
 IResponderHandshake::Result SharedSecretResponderHandshake::process(const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const exe4cpp::steady_time_t& now, IFrameWriter& writer, Session& session)
 {
-    if (msg.spec.handshake_ephemeral != HandshakeEphemeral::nonce) {
-        FORMAT_LOG_BLOCK(this->logger, levels::warn, "unsupported handshake emphemeral: %s", HandshakeEphemeralSpec::to_string(msg.spec.handshake_ephemeral));
-        return Result::failure(HandshakeError::unsupported_handshake_ephemeral);
-    }
-
     // verify that the nonce is the correct length
-    if (msg.ephemeral_data.length() != consts::crypto::nonce_length) {
-        FORMAT_LOG_BLOCK(this->logger, levels::warn, "bad nonce length: %u", msg.ephemeral_data.length());
+    if (msg.mode_ephemeral.length() != consts::crypto::nonce_length) {
+        FORMAT_LOG_BLOCK(this->logger, levels::warn, "bad nonce length: %u", msg.mode_data.length());
         return Result::failure(HandshakeError::bad_message_format);
     }
 
-    // verify that the mode data is empty
+    // verify that the certificate data is empty
     if (!msg.mode_data.is_empty()) {
-        FORMAT_LOG_BLOCK(this->logger, levels::warn, "non-empty mode data: %u", msg.mode_data.length());
+        FORMAT_LOG_BLOCK(this->logger, levels::warn, "non-empty certificates field: %u", msg.mode_data.length());
         return Result::failure(HandshakeError::bad_message_format);
     }
 
-    shared_secret_algorithms_t algorithms;
+    Algorithms::Common algorithms;
 
     {
         const auto err = algorithms.configure(msg.spec);
-        if (any(err))
+        if (any(err)) {
             return Result::failure(err);
+        }
     }
 
     // generate a nonce
@@ -67,7 +63,7 @@ IResponderHandshake::Result SharedSecretResponderHandshake::process(const Reques
 
     algorithms.handshake.kdf(
         handshake_hash,
-        { this->key->as_seq(), msg.ephemeral_data, nonce_buffer.as_seq() },
+        { this->key->as_seq(), msg.mode_ephemeral, nonce_buffer.as_seq() },
         session_keys.rx_key,
         session_keys.tx_key);
 

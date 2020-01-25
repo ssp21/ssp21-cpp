@@ -24,14 +24,14 @@ public:
     public:
         // true if we were able to initialize the handshake, false otherwise
         const bool is_success;
-        // if succesful, this contains the ephemeral data to send to the responder
-        const seq32_t ephemeral_data;
+        // if succesful, this contains the mode ephemeral to send to the responder
+        const seq32_t mode_ephemeral;
         // if succesful, this contains the mode data to send to the responder
         const seq32_t mode_data;
 
-        static InitResult success(const seq32_t& ephemeral_data, const seq32_t& mode_data)
+        static InitResult success(seq32_t mode_ephemeral, seq32_t mode_data)
         {
-            return InitResult(true, ephemeral_data, mode_data);
+            return InitResult(true, mode_ephemeral, mode_data);
         }
 
         static InitResult failure()
@@ -40,9 +40,9 @@ public:
         }
 
     private:
-        InitResult(bool is_success, const seq32_t& ephemeral_data, const seq32_t& mode_data)
+        InitResult(bool is_success, seq32_t mode_ephemeral, seq32_t mode_data)
             : is_success(is_success)
-            , ephemeral_data(ephemeral_data)
+            , mode_ephemeral(mode_ephemeral)
             , mode_data(mode_data)
         {
         }
@@ -86,7 +86,7 @@ public:
     /**
         * The crypto suite that this handshake mode is configured to use
         */
-    virtual CryptoSuite get_crypto_suite() const = 0;
+    virtual DHCryptoSuite get_crypto_suite() const = 0;
 };
 
 }

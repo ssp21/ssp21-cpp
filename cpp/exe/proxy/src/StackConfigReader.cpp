@@ -213,7 +213,6 @@ stack_factory_t get_initiator_shared_secret_factory(const YAML::Node& node, cons
     const auto shared_secret = get_shared_secret(node);
 
     CryptoSuite suite = get_crypto_suite(node);
-    suite.handshake_ephemeral = HandshakeEphemeral::nonce;
 
     if (addresses) {
         const auto addresses_copy = *addresses;
@@ -243,7 +242,6 @@ stack_factory_t get_initiator_qkd_factory(const YAML::Node& node, const ssp21::I
     const auto key_source = QKDSourceRegistry::get_initiator_key_source(node);
 
     CryptoSuite suite = get_crypto_suite(node);
-    suite.handshake_ephemeral = HandshakeEphemeral::none;
 
     if (addresses) {
         const auto addresses_copy = *addresses;

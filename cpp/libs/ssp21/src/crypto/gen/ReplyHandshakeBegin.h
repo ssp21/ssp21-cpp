@@ -7,9 +7,9 @@
 // |_| \_|\___/  |______\__,_|_|\__|_|_| |_|\__, (_|_|_)
 //                                           __/ |
 //                                          |___/
-// 
+//
 // This file is auto-generated. Do not edit manually
-// 
+//
 // Licensed under the terms of the BSDv3 license
 //
 
@@ -27,7 +27,7 @@ struct ReplyHandshakeBegin final : public IMessage
     ReplyHandshakeBegin();
 
     ReplyHandshakeBegin(
-        const seq32_t& ephemeral_data,
+        const seq32_t& mode_ephemeral,
         const seq32_t& mode_data
     );
 
@@ -41,7 +41,7 @@ struct ReplyHandshakeBegin final : public IMessage
     static const uint8_t min_size_bytes = 3;
     static const Function function = Function::reply_handshake_begin;
 
-    SeqByteField ephemeral_data;
+    SeqByteField mode_ephemeral;
     SeqByteField mode_data;
 
 };

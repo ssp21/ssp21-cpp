@@ -4,7 +4,7 @@
 
 #include "crypto/IInitiatorHandshake.h"
 
-#include "crypto/AlgorithmSet.h"
+#include "crypto/Algorithms.h"
 
 namespace ssp21 {
 
@@ -32,9 +32,9 @@ public:
         return HandshakeMode::shared_secret;
     }
 
-    virtual CryptoSuite get_crypto_suite() const override
+    virtual DHCryptoSuite get_crypto_suite() const override
     {
-        return this->crypto_suite;
+        return DHCryptoSuite(this->crypto_suite, HandshakeEphemeral::nonce);
     }
 
 private:
@@ -42,7 +42,7 @@ private:
 
     log4cpp::Logger logger;
     const CryptoSuite crypto_suite;
-    const shared_secret_algorithms_t algorithms;
+    const Algorithms::Common algorithms;
     const std::shared_ptr<const SymmetricKey> key;
 
     ser4cpp::StaticBuffer<uint32_t, consts::crypto::nonce_length> nonce_buffer;

@@ -3,7 +3,7 @@
 
 #include "ssp21/util/Exception.h"
 
-#include "crypto/AlgorithmSet.h"
+#include "crypto/Algorithms.h"
 #include "crypto/HandshakeHasher.h"
 #include "crypto/gen/ReplyHandshakeBegin.h"
 
@@ -20,16 +20,19 @@ QKDResponderHandshake::QKDResponderHandshake(const log4cpp::Logger& logger, cons
 
 IResponderHandshake::Result QKDResponderHandshake::process(const RequestHandshakeBegin& msg, const seq32_t& msg_bytes, const exe4cpp::steady_time_t& now, IFrameWriter& writer, Session& session)
 {
-    if (msg.spec.handshake_ephemeral != HandshakeEphemeral::none) {
-        return Result::failure(HandshakeError::unsupported_handshake_ephemeral);
-    }
-
-    // ephemeral data must be empty
-    if (msg.ephemeral_data.is_not_empty()) {
+    // mode ephemeral must be empty
+    if (msg.mode_ephemeral.is_not_empty()) {
         return Result::failure(HandshakeError::bad_message_format);
     }
 
-    shared_secret_algorithms_t algorithms;
+    Algorithms::Common algorithms;
+
+    {
+        const auto err = algorithms.configure(msg.spec);
+        if (any(err)) {
+            return IResponderHandshake::Result::failure(err);
+        }
+    }
 
     // deserialize the key identifier from the handshake data
     uint64_t key_id;

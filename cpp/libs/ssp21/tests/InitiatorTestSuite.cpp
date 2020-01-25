@@ -33,7 +33,7 @@ TEST_CASE(SUITE("throws exception during construction if algorithms aren't suppo
 {
     InitiatorConfig config;
     CryptoSuite suite;
-    suite.handshake_ephemeral = HandshakeEphemeral::undefined;
+    suite.handshake_hash = HandshakeHash::undefined;
 
     REQUIRE_THROWS([&]() {
         InitiatorFixture fix(config, suite);

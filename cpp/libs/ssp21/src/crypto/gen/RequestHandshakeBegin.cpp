@@ -7,9 +7,9 @@
 // |_| \_|\___/  |______\__,_|_|\__|_|_| |_|\__, (_|_|_)
 //                                           __/ |
 //                                          |___/
-// 
+//
 // This file is auto-generated. Do not edit manually
-// 
+//
 // Licensed under the terms of the BSDv3 license
 //
 
@@ -29,14 +29,14 @@ RequestHandshakeBegin::RequestHandshakeBegin(
     const CryptoSpec& spec,
     const SessionConstraints& constraints,
     HandshakeMode handshake_mode,
-    const seq32_t& ephemeral_data,
+    const seq32_t& mode_ephemeral,
     const seq32_t& mode_data
 ) :
     version(version),
     spec(spec),
     constraints(constraints),
     handshake_mode(handshake_mode),
-    ephemeral_data(ephemeral_data),
+    mode_ephemeral(mode_ephemeral),
     mode_data(mode_data)
 {}
 
@@ -48,7 +48,7 @@ size_t RequestHandshakeBegin::size() const
         spec,
         constraints,
         handshake_mode,
-        ephemeral_data,
+        mode_ephemeral,
         mode_data
     );
 }
@@ -64,7 +64,7 @@ ParseError RequestHandshakeBegin::read(seq32_t input)
             spec,
             constraints,
             handshake_mode,
-            ephemeral_data,
+            mode_ephemeral,
             mode_data
         );
     };
@@ -82,7 +82,7 @@ FormatResult RequestHandshakeBegin::write(wseq32_t& output) const
             spec,
             constraints,
             handshake_mode,
-            ephemeral_data,
+            mode_ephemeral,
             mode_data
         );
     };
@@ -101,8 +101,8 @@ void RequestHandshakeBegin::print(IMessagePrinter& printer) const
         constraints,
         "handshake_mode",
         handshake_mode,
-        "ephemeral_data",
-        ephemeral_data,
+        "mode_ephemeral",
+        mode_ephemeral,
         "mode_data",
         mode_data
     );
