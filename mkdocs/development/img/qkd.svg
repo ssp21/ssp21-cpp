@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="800"
+   height="500"
+   version="1.1"
+   id="svg3781"
+   sodipodi:docname="qkd.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata3787">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs3785" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="2560"
+     inkscape:window-height="1377"
+     id="namedview3783"
+     showgrid="false"
+     inkscape:zoom="1.4856385"
+     inkscape:cx="186.0303"
+     inkscape:cy="268.5579"
+     inkscape:window-x="2552"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg3781" />
+  <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
+  <g
+     id="g3757"
+     transform="matrix(1,0.00483564,0.01437468,1.0000695,-4.2692792,-95.42298)">
+    <title
+       id="title3751">background</title>
+    <g
+       display="none"
+       overflow="visible"
+       y="0"
+       x="0"
+       height="100%"
+       width="100%"
+       id="canvasGrid"
+       style="display:none;overflow:visible">
+      <rect
+         y="0"
+         x="0"
+         height="100%"
+         width="100%"
+         id="rect3754"
+         style="fill:url(#gridpattern);stroke-width:0" />
+    </g>
+  </g>
+  <rect
+     style="fill:#ffffff;stroke:#000000;stroke-width:1.5"
+     stroke-opacity="null"
+     fill-opacity="null"
+     x="178.14903"
+     y="62.966347"
+     width="1"
+     height="0"
+     id="svg_13" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+     x="266.53845"
+     y="232.03366"
+     id="text3888"><tspan
+       sodipodi:role="line"
+       id="tspan3886"
+       x="266.53845"
+       y="268.52686" /></text>
+  <rect
+     style="opacity:1;fill:#ffffff;fill-opacity:0;stroke-width:1.38255668"
+     id="rect4770"
+     width="529.75165"
+     height="283.97879"
+     x="45.283741"
+     y="29.192511" />
+  <rect
+     style="fill:#ffffff;stroke:#000000;stroke-width:2.21047044"
+     stroke-opacity="null"
+     fill-opacity="null"
+     x="32.382164"
+     y="108.83295"
+     width="735.54004"
+     height="105.10085"
+     id="svg_12-2-14"
+     transform="matrix(0.99999336,-0.00364364,0.00392956,0.99999228,0,0)" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:55.30226898px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.38255668"
+     x="40.855469"
+     y="138.3943"
+     id="text913-4"
+     transform="scale(1.012629,0.98752851)"><tspan
+       sodipodi:role="line"
+       x="40.855469"
+       y="138.3943"
+       style="font-size:22.12090683px;stroke-width:1.38255668"
+       id="tspan1713">QIX QKD source</tspan><tspan
+       sodipodi:role="line"
+       x="40.855469"
+       y="207.52214"
+       style="font-size:22.12090683px;stroke-width:1.38255668"
+       id="tspan1837" /><tspan
+       sodipodi:role="line"
+       x="40.855469"
+       y="276.64996"
+       style="font-size:22.12090683px;stroke-width:1.38255668"
+       id="tspan1839" /></text>
+  <path
+     style="opacity:1;fill:#aaaaaa;fill-opacity:0.66666667;stroke:#000000;stroke-width:1.74592066"
+     inkscape:connector-curvature="0"
+     stroke-opacity="null"
+     d="M 151.28753,55.416665 133.2425,89.12036 115.19747,55.416665 h 9.02251 V 21.55077 h 18.04503 v 33.865881 z"
+     id="svg_14-1-0" />
+  <path
+     style="opacity:1;fill:#aaaaaa;fill-opacity:0.66666667;stroke:#000000;stroke-width:1.74592066"
+     inkscape:connector-curvature="0"
+     stroke-opacity="null"
+     d="m 156.61835,318.60067 -18.04503,33.7037 -18.04503,-33.7037 h 9.02251 v -33.8659 h 18.04503 v 33.86587 z"
+     id="svg_14-1-0-5" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:55.30226898px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.38255668"
+     x="190.23137"
+     y="58.77103"
+     id="text913-9"
+     transform="scale(1.012629,0.98752851)"><tspan
+       sodipodi:role="line"
+       id="tspan911-3"
+       x="190.23137"
+       y="58.77103"
+       style="font-size:22.12090683px;stroke-width:1.38255668">QIX frames arrive via the serial port</tspan></text>
+  <rect
+     style="fill:#ffffff;stroke:#000000;stroke-width:1.18502927"
+     stroke-opacity="null"
+     fill-opacity="null"
+     x="33.41943"
+     y="374.73688"
+     width="219.94936"
+     height="101.01331"
+     id="svg_12-2-14-8"
+     transform="matrix(0.99993142,-0.011711,0.00122253,0.99999925,0,0)" />
+  <g
+     transform="matrix(0.1365449,0,0,0.06437089,45.311836,391.24364)"
+     id="g6">
+    <g
+       id="g4">
+      <path
+         inkscape:connector-curvature="0"
+         d="M 256,0 C 136.384,0 42.667,42.176 42.667,96 v 320 c 0,53.824 93.717,96 213.333,96 119.616,0 213.333,-42.176 213.333,-96 V 96 C 469.333,42.176 375.616,0 256,0 Z m 192,416 c 0,35.307 -78.848,74.667 -192,74.667 -113.152,0 -192,-39.36 -192,-74.667 v -64.384 c 34.197,32.043 106.347,53.717 192,53.717 85.653,0 157.803,-21.675 192,-53.717 z m 0,-106.667 C 448,344.64 369.152,384 256,384 142.848,384 64,344.64 64,309.333 v -64.384 c 34.197,32.043 106.347,53.717 192,53.717 85.653,0 157.803,-21.675 192,-53.717 z m 0,-106.666 c 0,35.307 -78.848,74.667 -192,74.667 -113.152,0 -192,-39.36 -192,-74.667 V 138.283 C 98.197,170.325 170.347,192 256,192 c 85.653,0 157.803,-21.675 192,-53.717 z m -192,-32 C 142.848,170.667 64,131.307 64,96 64,60.693 142.848,21.333 256,21.333 c 113.152,0 192,39.36 192,74.667 0,35.307 -78.848,74.667 -192,74.667 z"
+         id="path2" />
+    </g>
+  </g>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:55.30226898px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.38255668"
+     x="58.896835"
+     y="165.98282"
+     id="text913-9-3"
+     transform="scale(1.012629,0.98752851)"><tspan
+       sodipodi:role="line"
+       id="tspan911-3-2"
+       x="58.896835"
+       y="165.98282"
+       style="font-size:14.74727154px;stroke-width:1.38255668">The source maintains a map of subscribers, and uses the 64-bit key identifier modulo</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:55.30226898px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.38255668"
+     x="59.226692"
+     y="187.04025"
+     id="text913-9-3-1"
+     transform="scale(1.012629,0.98752851)"><tspan
+       sodipodi:role="line"
+       id="tspan911-3-2-9"
+       x="59.226692"
+       y="187.04025"
+       style="font-size:14.74727154px;stroke-width:1.38255668">the number of subscribers to look up which subscriber will receive the key.</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+     x="212.71274"
+     y="275.97156"
+     id="text913-9-3-1-0"><tspan
+       sodipodi:role="line"
+       id="tspan911-3-2-9-0"
+       x="212.71274"
+       y="312.46478"
+       style="font-size:10.66666698px" /></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:14.74727154px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.38255668"
+     x="128.29057"
+     y="417.80704"
+     id="text1920"
+     transform="scale(1.012629,0.98752851)"><tspan
+       sodipodi:role="line"
+       id="tspan1918"
+       x="128.29057"
+       y="417.80704"
+       style="stroke-width:1.38255668">subscriber #0</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:14.74727154px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.38255668"
+     x="62.438816"
+     y="462.06656"
+     id="text1948"
+     transform="scale(1.012629,0.98752851)"><tspan
+       sodipodi:role="line"
+       id="tspan1946"
+       x="62.438816"
+       y="462.06656"
+       style="stroke-width:1.38255668">Initiator or responder</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:14.74727154px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.38255668"
+     x="33.484875"
+     y="241.62187"
+     id="text1948-6"
+     transform="scale(1.012629,0.98752851)"><tspan
+       sodipodi:role="line"
+       id="tspan1946-9"
+       x="33.484875"
+       y="241.62187"
+       style="font-size:14.74727154px;stroke-width:1.38255668">all keys where </tspan><tspan
+       sodipodi:role="line"
+       x="33.484875"
+       y="260.05597"
+       id="tspan1986"
+       style="font-size:14.74727154px;stroke-width:1.38255668">key_id % num_subscribers</tspan><tspan
+       sodipodi:role="line"
+       x="33.484875"
+       y="278.49005"
+       style="font-size:14.74727154px;stroke-width:1.38255668"
+       id="tspan872">equals 0</tspan></text>
+  <path
+     style="opacity:1;fill:#aaaaaa;fill-opacity:0.66666667;stroke:#000000;stroke-width:1.74592066"
+     inkscape:connector-curvature="0"
+     stroke-opacity="null"
+     d="m 425.82549,315.68236 -18.04503,33.70371 -18.04503,-33.70371 h 9.02251 v -33.8659 h 18.04503 v 33.86588 z"
+     id="svg_14-1-0-5-2" />
+  <rect
+     style="fill:#ffffff;stroke:#000000;stroke-width:1.18502927"
+     stroke-opacity="null"
+     fill-opacity="null"
+     x="302.64474"
+     y="374.97147"
+     width="219.94936"
+     height="101.01331"
+     id="svg_12-2-14-8-6"
+     transform="matrix(0.99993142,-0.011711,0.00122253,0.99999925,0,0)" />
+  <g
+     transform="matrix(0.1365449,0,0,0.06437089,314.51897,388.32534)"
+     id="g6-7">
+    <g
+       id="g4-9">
+      <path
+         inkscape:connector-curvature="0"
+         d="M 256,0 C 136.384,0 42.667,42.176 42.667,96 v 320 c 0,53.824 93.717,96 213.333,96 119.616,0 213.333,-42.176 213.333,-96 V 96 C 469.333,42.176 375.616,0 256,0 Z m 192,416 c 0,35.307 -78.848,74.667 -192,74.667 -113.152,0 -192,-39.36 -192,-74.667 v -64.384 c 34.197,32.043 106.347,53.717 192,53.717 85.653,0 157.803,-21.675 192,-53.717 z m 0,-106.667 C 448,344.64 369.152,384 256,384 142.848,384 64,344.64 64,309.333 v -64.384 c 34.197,32.043 106.347,53.717 192,53.717 85.653,0 157.803,-21.675 192,-53.717 z m 0,-106.666 c 0,35.307 -78.848,74.667 -192,74.667 -113.152,0 -192,-39.36 -192,-74.667 V 138.283 C 98.197,170.325 170.347,192 256,192 c 85.653,0 157.803,-21.675 192,-53.717 z m -192,-32 C 142.848,170.667 64,131.307 64,96 64,60.693 142.848,21.333 256,21.333 c 113.152,0 192,39.36 192,74.667 0,35.307 -78.848,74.667 -192,74.667 z"
+         id="path2-4" />
+    </g>
+  </g>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:14.74727154px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.38255668"
+     x="394.14029"
+     y="414.85187"
+     id="text1920-6"
+     transform="scale(1.012629,0.98752851)"><tspan
+       sodipodi:role="line"
+       id="tspan1918-2"
+       x="394.14029"
+       y="414.85187"
+       style="stroke-width:1.38255668">subscriber #1</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:14.74727154px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.38255668"
+     x="328.28851"
+     y="459.11136"
+     id="text1948-4"
+     transform="scale(1.012629,0.98752851)"><tspan
+       sodipodi:role="line"
+       id="tspan1946-6"
+       x="328.28851"
+       y="459.11136"
+       style="stroke-width:1.38255668">Initiator or responder</tspan></text>
+  <path
+     style="opacity:1;fill:#aaaaaa;fill-opacity:0.66666667;stroke:#000000;stroke-width:1.74592066"
+     inkscape:connector-curvature="0"
+     stroke-opacity="null"
+     d="m 687.7027,312.43317 -18.04503,33.70371 -18.04503,-33.70371 h 9.0225 v -33.8659 h 18.04503 v 33.86589 z"
+     id="svg_14-1-0-5-0" />
+  <rect
+     style="fill:#ffffff;stroke:#000000;stroke-width:1.18502927"
+     stroke-opacity="null"
+     fill-opacity="null"
+     x="564.54004"
+     y="374.78937"
+     width="219.94936"
+     height="101.01331"
+     id="svg_12-2-14-8-9"
+     transform="matrix(0.99993142,-0.011711,0.00122253,0.99999925,0,0)" />
+  <g
+     transform="matrix(0.1365449,0,0,0.06437089,576.39618,385.07614)"
+     id="g6-1">
+    <g
+       id="g4-7">
+      <path
+         inkscape:connector-curvature="0"
+         d="M 256,0 C 136.384,0 42.667,42.176 42.667,96 v 320 c 0,53.824 93.717,96 213.333,96 119.616,0 213.333,-42.176 213.333,-96 V 96 C 469.333,42.176 375.616,0 256,0 Z m 192,416 c 0,35.307 -78.848,74.667 -192,74.667 -113.152,0 -192,-39.36 -192,-74.667 v -64.384 c 34.197,32.043 106.347,53.717 192,53.717 85.653,0 157.803,-21.675 192,-53.717 z m 0,-106.667 C 448,344.64 369.152,384 256,384 142.848,384 64,344.64 64,309.333 v -64.384 c 34.197,32.043 106.347,53.717 192,53.717 85.653,0 157.803,-21.675 192,-53.717 z m 0,-106.666 c 0,35.307 -78.848,74.667 -192,74.667 -113.152,0 -192,-39.36 -192,-74.667 V 138.283 C 98.197,170.325 170.347,192 256,192 c 85.653,0 157.803,-21.675 192,-53.717 z m -192,-32 C 142.848,170.667 64,131.307 64,96 64,60.693 142.848,21.333 256,21.333 c 113.152,0 192,39.36 192,74.667 0,35.307 -78.848,74.667 -192,74.667 z"
+         id="path2-2" />
+    </g>
+  </g>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:14.74727154px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.38255668"
+     x="652.7514"
+     y="411.56168"
+     id="text1920-0"
+     transform="scale(1.012629,0.98752851)"><tspan
+       sodipodi:role="line"
+       id="tspan1918-3"
+       x="652.7514"
+       y="411.56168"
+       style="stroke-width:1.38255668">subscriber #2</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:14.74727154px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.38255668"
+     x="586.89972"
+     y="455.82117"
+     id="text1948-5"
+     transform="scale(1.012629,0.98752851)"><tspan
+       sodipodi:role="line"
+       id="tspan1946-92"
+       x="586.89972"
+       y="455.82117"
+       style="stroke-width:1.38255668">Initiator or responder</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:14.74727154px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.38255668"
+     x="294.73495"
+     y="240.29695"
+     id="text1948-6-6"
+     transform="scale(1.012629,0.98752851)"><tspan
+       sodipodi:role="line"
+       id="tspan1946-9-9"
+       x="294.73495"
+       y="240.29695"
+       style="font-size:14.74727154px;stroke-width:1.38255668">all keys where </tspan><tspan
+       sodipodi:role="line"
+       x="294.73495"
+       y="258.73105"
+       id="tspan1986-2"
+       style="font-size:14.74727154px;stroke-width:1.38255668">key_id % num_subscribers</tspan><tspan
+       sodipodi:role="line"
+       x="294.73495"
+       y="277.16513"
+       style="font-size:14.74727154px;stroke-width:1.38255668"
+       id="tspan872-6">equals 1</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:14.74727154px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.38255668"
+     x="554.00421"
+     y="238.32283"
+     id="text1948-6-60"
+     transform="scale(1.012629,0.98752851)"><tspan
+       sodipodi:role="line"
+       id="tspan1946-9-6"
+       x="554.00421"
+       y="238.32283"
+       style="font-size:14.74727154px;stroke-width:1.38255668">all keys where </tspan><tspan
+       sodipodi:role="line"
+       x="554.00421"
+       y="256.75693"
+       id="tspan1986-1"
+       style="font-size:14.74727154px;stroke-width:1.38255668">key_id % num_subscribers</tspan><tspan
+       sodipodi:role="line"
+       x="554.00421"
+       y="275.19101"
+       style="font-size:14.74727154px;stroke-width:1.38255668"
+       id="tspan872-2">equals 2</tspan></text>
+</svg>

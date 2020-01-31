@@ -380,6 +380,53 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#handhake-parameters" class="md-nav__link">
+    Handhake Parameters
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-modes" class="md-nav__link">
+    Key modes
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shared-secret" class="md-nav__link">
+    Shared-secret
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pre-shared-public-key" class="md-nav__link">
+    Pre-shared public key
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qkd" class="md-nav__link">
+    QKD
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#transport-modes" class="md-nav__link">
     Transport modes
   </a>
@@ -397,40 +444,6 @@
           <li class="md-nav__item">
   <a href="#udp" class="md-nav__link">
     UDP
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#handshake-configuration" class="md-nav__link">
-    Handshake configuration
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#shared-secret" class="md-nav__link">
-    Shared-secret
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#qkd" class="md-nav__link">
-    QKD
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#pre-shared-public-key" class="md-nav__link">
-    Pre-shared public key
   </a>
   
 </li>
@@ -510,6 +523,53 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#handhake-parameters" class="md-nav__link">
+    Handhake Parameters
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-modes" class="md-nav__link">
+    Key modes
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shared-secret" class="md-nav__link">
+    Shared-secret
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pre-shared-public-key" class="md-nav__link">
+    Pre-shared public key
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qkd" class="md-nav__link">
+    QKD
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#transport-modes" class="md-nav__link">
     Transport modes
   </a>
@@ -527,40 +587,6 @@
           <li class="md-nav__item">
   <a href="#udp" class="md-nav__link">
     UDP
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#handshake-configuration" class="md-nav__link">
-    Handshake configuration
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#shared-secret" class="md-nav__link">
-    Shared-secret
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#qkd" class="md-nav__link">
-    QKD
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#pre-shared-public-key" class="md-nav__link">
-    Pre-shared public key
   </a>
   
 </li>
@@ -686,7 +712,7 @@ addresses which can be used for multiplexing multiple sessions on a single trans
 
 
 <h2 id="session-parameters">Session parameters</h2>
-<p>The initiator requires a handful of additional parameters not required when configuring a responder.</p>
+<p>The initiator requires a handful of additional session parameters not required when configuring a responder.</p>
 <div class="codehilite"><pre><span></span><span class="nv">security</span>:
   <span class="nv">mode</span>: <span class="s2">&quot;</span><span class="s">initiator</span><span class="s2">&quot;</span>   
   <span class="nv">session</span>:
@@ -706,11 +732,110 @@ addresses which can be used for multiplexing multiple sessions on a single trans
 </pre></div>
 
 
+<h2 id="handhake-parameters">Handhake Parameters</h2>
+<p>The initiator specifies the cryptographic primitives to use when establishing a session. There is no negotiation in 
+SSP21, therefore these parameters are only required when configuring an initiator.</p>
+<div class="codehilite"><pre><span></span><span class="nn">...</span>
+<span class="nt">handshake</span><span class="p">:</span>
+  <span class="nt">algorithms</span><span class="p">:</span>
+    <span class="nt">session_crypto_mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hmac_sha256_16</span>              <span class="c1"># { hmac_sha256_16, aes_256_gcm }</span>
+<span class="nn">...</span>
+</pre></div>
+
+
+<p>You can currently choose between an HMAC auth-only mode or authenticated encryption using AES-GCM.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>In the future, the initiator will also allow you to specify which cryptographic primitives (suite) to use
-when SSP21 formally specifies more than one primitive per function.</p>
+<p>In the future, the initiator will also allow you to specify additional cryptographic primitives
+for the the KDF, handshake hash, and ECC key types in public key modes. At the moment, there
+is only one choice for these primitives.</p>
 </div>
+<h3 id="key-modes">Key modes</h3>
+<p>Different handshake modes require different paramters described in the following sub-sections.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Initiator's require some additional configuration in the handshake section to specify some timeouts:</p>
+</div>
+<div class="codehilite"><pre><span></span><span class="nt">handshake</span><span class="p">:</span>
+  <span class="nt">response_timeout</span><span class="p">:</span>
+    <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+    <span class="nt">unit</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">seconds</span>
+  <span class="nt">retry_timeout</span><span class="p">:</span>
+    <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
+    <span class="nt">unit</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">seconds</span>
+  <span class="nt">type</span><span class="p">:</span> <span class="c1"># ....</span>
+</pre></div>
+
+
+<p>These timeout parameters are not required when configuring a responder.</p>
+<h4 id="shared-secret">Shared-secret</h4>
+<p>A shared secret handshake only requires a single parameter specifiying where the shared key resides.</p>
+<div class="codehilite"><pre><span></span><span class="nt">handshake</span><span class="p">:</span>
+  <span class="nt">type</span><span class="p">:</span> <span class="s">&quot;shared_secret&quot;</span>
+  <span class="nt">shared_secret_key_path</span><span class="p">:</span> <span class="s">&quot;./shared_secret.icf&quot;</span>  <span class="c1"># path to the file containing the shared secret</span>
+</pre></div>
+
+
+<h4 id="pre-shared-public-key">Pre-shared public key</h4>
+<p>Pre-shared key modes requires the paths to 3 keys be provideded:</p>
+<div class="codehilite"><pre><span></span> <span class="n">handshake</span><span class="p">:</span>  
+  <span class="k">type</span><span class="p">:</span> <span class="ss">&quot;preshared_public_key&quot;</span>
+  <span class="n">local_private_key_path</span><span class="p">:</span> <span class="ss">&quot;./local_private_key.icf&quot;</span>     <span class="o">#</span> <span class="n">private</span> <span class="n">part</span> <span class="k">of</span> <span class="n">the</span> <span class="k">local</span> <span class="k">static</span> <span class="n">DH</span> <span class="k">key</span>
+  <span class="n">local_public_key_path</span><span class="p">:</span> <span class="ss">&quot;./local_public_key.icf&quot;</span>       <span class="o">#</span> <span class="k">public</span> <span class="n">part</span> <span class="k">of</span> <span class="n">the</span> <span class="k">local</span> <span class="k">static</span> <span class="n">DH</span> <span class="k">key</span>
+  <span class="n">remote_public_key_path</span><span class="p">:</span> <span class="err">&quot;</span><span class="p">.</span><span class="o">/</span><span class="n">remote_public_key</span><span class="p">.</span><span class="n">icf</span>      <span class="o">#</span> <span class="k">public</span> <span class="k">key</span> <span class="k">of</span> <span class="n">the</span> <span class="n">remote</span> <span class="n">party</span>
+</pre></div>
+
+
+<h4 id="qkd">QKD</h4>
+<p>QKD mode allows for a source of keys to be shared across multiple proxy sessions. The first item
+in a configuration file is a list of these sources</p>
+<div class="codehilite"><pre><span></span><span class="c1"># a sequence of QKD sources</span>
+<span class="nt">qkd_sources</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">qkd_source_id</span><span class="p">:</span> <span class="s">&quot;source1&quot;</span>        <span class="c1"># a unique identifier for the source</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="s">&quot;qix&quot;</span>                     <span class="c1"># the only supported type ATM is qix</span>
+    <span class="nt">num_subscribers</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>              <span class="c1"># the number of subscribers</span>
+    <span class="nt">serial</span><span class="p">:</span>                  
+      <span class="nt">device</span><span class="p">:</span> <span class="s">&quot;/dev/pts/3&quot;</span>          <span class="c1"># the serial device, e.g. /dev/ttyS0 or COM1</span>
+      <span class="nt">baud</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">9600</span>                    <span class="c1"># baud rate, defaults to 9600 if not specified</span>
+      <span class="nt">data_bits</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">8</span>                  <span class="c1"># data bits, defaults to 8 if not specified</span>
+      <span class="nt">flow_control</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>            <span class="c1"># flow control, defaults to &#39;none&#39; if not specified</span>
+      <span class="nt">stop_bits</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">one</span>                <span class="c1"># stop bits, defaults to &#39;one&#39; if not specified</span>
+</pre></div>
+
+
+<p>In a session's handshake configuration section, the following parameters are required:</p>
+<div class="codehilite"><pre><span></span>  <span class="nv">handshake</span>:
+    <span class="nv">type</span>: <span class="s2">&quot;</span><span class="s">qkd</span><span class="s2">&quot;</span>               
+    <span class="nv">key_source_id</span>: <span class="s2">&quot;</span><span class="s">source1</span><span class="s2">&quot;</span>        # <span class="nv">source</span> <span class="nv">id</span> <span class="nv">matching</span> <span class="nv">the</span> <span class="nv">id</span> <span class="nv">in</span> <span class="nv">the</span> <span class="nv">list</span> <span class="nv">above</span>
+    <span class="nv">subscriber_id</span>: <span class="mi">0</span>                # <span class="nv">unique</span> <span class="nv">subscriber</span> <span class="nv">id</span> <span class="nv">in</span> <span class="nv">the</span> <span class="nv">range</span> [<span class="mi">0</span> .. <span class="ss">(</span><span class="nv">num_subscribers</span> <span class="o">-</span> <span class="mi">1</span><span class="ss">)</span>]
+    <span class="nv">max_key_cache_size</span>: <span class="mi">100</span>         # <span class="nv">maximum</span> <span class="nv">number</span> <span class="nv">of</span> <span class="nv">cached</span> <span class="nv">keys</span> <span class="k">for</span> <span class="nv">this</span> <span class="nv">particular</span> <span class="nv">session</span>.
+</pre></div>
+
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The format of the key data transmitted over the serial port is not standardized yet and is only interoperable at the moment with QKD transceivers from 
+<a href="http://qubitekk.com/">Qubitekk</a>.</p>
+</div>
+<p>QIX keys contain <code>uint64_t</code> key identifier field which increments. This allows the QKD source (serial port) to send the keys to each subscriber in a round-robin fashion.
+Each subscribing session maintains a key off of configurable length (<code>max_key_cache_size</code>). </p>
+<p>Each key is sent to a subscribing session using the key identifier modulo the number of subscribers:</p>
+<div class="codehilite"><pre><span></span><span class="n">subscriber_id</span> <span class="o">=</span> <span class="n">key_identifier</span> <span class="o">%</span> <span class="n">num_subscribers</span>
+</pre></div>
+
+
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Sessions at paired ends of a QKD link must agree on both the <code>num_subscribers</code> parameter, and each paired session
+must agree on <code>subscriber_id</code>. If either of these two parameters don't match, initiators and subscribers will not
+have keys with the same key identifiers in their corresponding key caches, and they will not be able to perform a
+handshake. If a responder returns the error code <code>KEY_NOT_FOUND</code> this is a good indicator of a misconfiguration. </p>
+</div>
+<p><img alt="QKD subscribers" src="../../img/qkd.svg" /></p>
+<p>The diagram above shows a configuration with a single QKD source receiving QIX frames and sending the keys
+to subscribers #0, #1, and #2. In this case the <code>num_subscribers</code> parameter is set to 3.  If it was set to a number greater
+than 3, keys where <code>key_id % num_subscribers &gt; 2</code> would be silently discarded . If it were set to a number less than 3,
+the proxy would fail to start with a configuration error since one or more of the subscriber would never receive keys.</p>
 <h2 id="transport-modes">Transport modes</h2>
 <p>The proxy supports TCP and UDP transport. Both modes take specific parameters. The following subsections provide configuration
 snippets for each mode.</p>
@@ -719,7 +844,7 @@ snippets for each mode.</p>
 <div class="codehilite"><pre><span></span><span class="nv">transport</span>:
   <span class="nv">type</span>: <span class="s2">&quot;</span><span class="s">tcp</span><span class="s2">&quot;</span>
   <span class="nv">max_sessions</span>: <span class="mi">1</span>                # <span class="nv">The</span> <span class="nv">maximum</span> <span class="nv">number</span> <span class="nv">of</span> <span class="nv">concurrent</span> <span class="nv">sessions</span> <span class="nv">on</span> <span class="nv">the</span> <span class="nv">listening</span> <span class="nv">side</span>
-    <span class="nv">listen</span>:           
+    <span class="nv">listen</span>:
       <span class="nv">address</span>: <span class="s2">&quot;</span><span class="s">127.0.0.1</span><span class="s2">&quot;</span>       # <span class="nv">IP</span> <span class="nv">address</span> <span class="nv">of</span> <span class="nv">adapter</span> <span class="nv">on</span> <span class="nv">which</span> <span class="nv">to</span> <span class="nv">listen</span>
       <span class="nv">port</span>: <span class="mi">20000</span>                # <span class="nv">Port</span> <span class="nv">on</span> <span class="nv">which</span> <span class="nv">to</span> <span class="nv">listen</span>
     <span class="k">connect</span>:
@@ -746,7 +871,7 @@ of the connection occurs.</p>
 <p>UDP is a connectionless transport protocol, so you must specify addresses and ports
 for both receiving and transmitting separately.</p>
 <div class="codehilite"><pre><span></span><span class="n">transport</span><span class="o">:</span>
-  <span class="n">type</span><span class="o">:</span> <span class="s2">&quot;udp&quot;</span>      
+  <span class="n">type</span><span class="o">:</span> <span class="s2">&quot;udp&quot;</span>
   <span class="n">raw_rx</span><span class="o">:</span>
     <span class="n">address</span><span class="o">:</span> <span class="s2">&quot;127.0.0.1&quot;</span>
     <span class="n">port</span><span class="o">:</span> <span class="mi">20000</span>
@@ -768,77 +893,6 @@ for both receiving and transmitting separately.</p>
 <p class="admonition-title">Warning</p>
 <p>Be careful when setting the ports so that no communication loops back creating a cycle.</p>
 </div>
-<h2 id="handshake-configuration">Handshake configuration</h2>
-<p>Different handshake modes require different paramters described in the following sub-sections.</p>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>Initiator's require some additional configuration in the handshake section to specify some timeouts:</p>
-</div>
-<div class="codehilite"><pre><span></span><span class="nt">handshake</span><span class="p">:</span>
-  <span class="nt">response_timeout</span><span class="p">:</span>
-    <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
-    <span class="nt">unit</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">seconds</span>
-  <span class="nt">retry_timeout</span><span class="p">:</span>
-    <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
-    <span class="nt">unit</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">seconds</span>
-  <span class="nt">type</span><span class="p">:</span> <span class="c1"># ....</span>
-</pre></div>
-
-
-<p>These timeout parameters are not required when configuring a responder.</p>
-<h3 id="shared-secret">Shared-secret</h3>
-<p>A shared secret handshake only requires a single parameter specifiying where the shared key resides.</p>
-<div class="codehilite"><pre><span></span><span class="nt">handshake</span><span class="p">:</span>
-  <span class="nt">type</span><span class="p">:</span> <span class="s">&quot;shared_secret&quot;</span>
-  <span class="nt">shared_secret_key_path</span><span class="p">:</span> <span class="s">&quot;./shared_secret.icf&quot;</span>  <span class="c1"># path to the file containing the shared secret</span>
-</pre></div>
-
-
-<h3 id="qkd">QKD</h3>
-<p>QKD mode allows for a source of keys to be shared across multiple proxy sessions. The first item
-in a configuration file is a list of these sources</p>
-<div class="codehilite"><pre><span></span><span class="c1"># a sequence of QKD sources</span>
-<span class="nt">qkd_sources</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="nt">qkd_source_id</span><span class="p">:</span> <span class="s">&quot;source1&quot;</span>        <span class="c1"># a unique identifier for the source</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="s">&quot;qix&quot;</span>                     <span class="c1"># the only supported type ATM is qix</span>
-    <span class="nt">num_subscribers</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>              <span class="c1"># the number of subscribers</span>
-    <span class="nt">serial</span><span class="p">:</span>                  
-      <span class="nt">device</span><span class="p">:</span> <span class="s">&quot;/dev/pts/3&quot;</span>          <span class="c1"># the serial device, e.g. /dev/ttyS0 or COM1</span>
-      <span class="nt">baud</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">9600</span>                    <span class="c1"># baud rate, defaults to 9600 if not specified</span>
-      <span class="nt">data_bits</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">8</span>                  <span class="c1"># data bits, defaults to 8 if not specified</span>
-      <span class="nt">flow_control</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>            <span class="c1"># flow control, defaults to &#39;none&#39; if not specified</span>
-      <span class="nt">stop_bits</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">one</span>                <span class="c1"># stop bits, defaults to &#39;one&#39; if not specified</span>
-</pre></div>
-
-
-<p>Down within a session's handshake section, the following parameters are required:</p>
-<div class="codehilite"><pre><span></span>  <span class="nv">handshake</span>:
-    <span class="nv">type</span>: <span class="s2">&quot;</span><span class="s">qkd</span><span class="s2">&quot;</span>               
-    <span class="nv">key_source_id</span>: <span class="s2">&quot;</span><span class="s">source1</span><span class="s2">&quot;</span>        # <span class="nv">source</span> <span class="nv">id</span> <span class="nv">matching</span> <span class="nv">the</span> <span class="nv">id</span> <span class="nv">in</span> <span class="nv">the</span> <span class="nv">list</span> <span class="nv">above</span>
-    <span class="nv">subscriber_id</span>: <span class="mi">0</span>                # <span class="nv">unique</span> <span class="nv">subscriber</span> <span class="nv">id</span> <span class="nv">in</span> <span class="nv">the</span> <span class="nv">range</span> [<span class="mi">0</span> .. <span class="ss">(</span><span class="nv">num_subscribers</span> <span class="o">-</span> <span class="mi">1</span><span class="ss">)</span>]
-    <span class="nv">max_key_cache_size</span>: <span class="mi">100</span>         # <span class="nv">maximum</span> <span class="nv">number</span> <span class="nv">of</span> <span class="nv">cached</span> <span class="nv">keys</span> <span class="k">for</span> <span class="nv">this</span> <span class="nv">particular</span> <span class="nv">session</span>.
-</pre></div>
-
-
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The format of the key data transmitted over the serial port is not standarized yet and is only interoperable at the moment with QKD transceivers from 
-<a href="http://qubitekk.com/">Qubitekk</a>.</p>
-</div>
-<p>The source expects the key identifier to increment so that it can send the keys to each subscriber in a predictable fashion. The correct subscriber
-for any keys is calculated as:</p>
-<div class="codehilite"><pre><span></span><span class="n">subscriber_id</span> <span class="o">=</span> <span class="n">key_identifier</span> <span class="o">%</span> <span class="n">num_subscribers</span>
-</pre></div>
-
-
-<h3 id="pre-shared-public-key">Pre-shared public key</h3>
-<p>Pre-shared key modes requires the paths to 3 keys be provideded:</p>
-<div class="codehilite"><pre><span></span> <span class="n">handshake</span><span class="p">:</span>  
-  <span class="k">type</span><span class="p">:</span> <span class="ss">&quot;preshared_public_key&quot;</span>
-  <span class="n">local_private_key_path</span><span class="p">:</span> <span class="ss">&quot;./local_private_key.icf&quot;</span>     <span class="o">#</span> <span class="n">private</span> <span class="n">part</span> <span class="k">of</span> <span class="n">the</span> <span class="k">local</span> <span class="k">static</span> <span class="n">DH</span> <span class="k">key</span>
-  <span class="n">local_public_key_path</span><span class="p">:</span> <span class="ss">&quot;./local_public_key.icf&quot;</span>       <span class="o">#</span> <span class="k">public</span> <span class="n">part</span> <span class="k">of</span> <span class="n">the</span> <span class="k">local</span> <span class="k">static</span> <span class="n">DH</span> <span class="k">key</span>
-  <span class="n">remote_public_key_path</span><span class="p">:</span> <span class="err">&quot;</span><span class="p">.</span><span class="o">/</span><span class="n">remote_public_key</span><span class="p">.</span><span class="n">icf</span>      <span class="o">#</span> <span class="k">public</span> <span class="k">key</span> <span class="k">of</span> <span class="n">the</span> <span class="n">remote</span> <span class="n">party</span>
-</pre></div>
                 
                   
                 
