@@ -23,6 +23,8 @@ sessions:
           value: 59
           unit: minutes
       handshake:
+        algorithms:
+          session_crypto_mode: hmac_sha256_16              # { hmac_sha256_16, aes_256_gcm }
         response_timeout:
           value: 2
           unit: seconds
