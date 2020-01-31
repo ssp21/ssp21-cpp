@@ -14,7 +14,7 @@ public:
         ++value;
     }
 
-    operator const uint64_t&() const
+    operator const uint64_t &() const
     {
         return value;
     }

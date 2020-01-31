@@ -2,7 +2,7 @@
 #ifndef SSP21_CRYTPTO_H
 #define SSP21_CRYTPTO_H
 
-#include "ssp21/crypto/ICryptoBackend.h"
+#include "ssp21/crypto/CryptoBackend.h"
 
 #include <memory>
 
@@ -14,20 +14,46 @@ namespace ssp21 {
 */
 class Crypto final : ser4cpp::StaticOnly {
 
-    static std::shared_ptr<ICryptoBackend> backend;
+    // flag to say if we've intialized the backend
+    static bool initialized;
+
+    // the actual backend
+    static CryptoBackend backend;
+
+    static void check_initialized();
+    static void check_supports_sha256();
+    static void check_supports_x25519();
+    static void check_supports_ed25519();
+    static void check_supports_aes256_gcm();
 
 public:
-    // --- Inject a backend. Callable only once ---
+    /**
+	 * Intialize a backend. Callable only once.
+	 *
+	 * Throws an exception if the backend doesn't support mandatory primitives.	 
+	 */
+    static void initialize(const CryptoBackend& backend);
 
-    static bool initialize(const std::shared_ptr<ICryptoBackend>& backend);
-
-    // --- proxy functions that invoke the static backend, enforcing preconditions ---
+    // --- required functions can be called directly ---
 
     static void zero_memory(const wseq32_t& data);
 
     static void gen_random(const wseq32_t& dest);
 
     static bool secure_equals(const seq32_t& lhs, const seq32_t& rhs);
+
+    // --- optional primitives must be checked for support ---
+
+    // supports SHA-256 && HMAC-SHA-256 && HKDF-SHA-256
+    static bool supports_sha256();
+    // supports x25519 keygen and DH
+    static bool supports_x25519();
+    // supports ed25519 keygen, sign, and verify
+    static bool supports_ed25519();
+    // supports AES-GCM encrypt/decrypt
+    static bool supports_aes256_gcm();
+
+    // --- optional primitives will exit application if called with no support ---
 
     static void hash_sha256(
         const std::initializer_list<seq32_t>& data,

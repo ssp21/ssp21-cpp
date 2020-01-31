@@ -3,8 +3,6 @@
 
 #include "Actions.h"
 
-#include "sodium/CryptoBackend.h"
-
 #include <iostream>
 
 #include "UserInput.h"
@@ -22,9 +20,6 @@ Program::Program()
                 { flags::days, { "-d", "--days" }, "number of days for the certificate to remain valid from now", 1 },
                 { flags::level, { "-l", "--level" }, "signing level [0, 5] of the certificate. 0 == endpoint. >0  is an authority", 1 } } }
 {
-    if (!ssp21::sodium::CryptoBackend::initialize()) {
-        throw ssp21::Exception("unable to initialize crypto backend");
-    }
 }
 
 void Program::run(int argc, char* argv[])

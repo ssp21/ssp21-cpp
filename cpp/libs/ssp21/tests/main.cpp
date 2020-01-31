@@ -8,10 +8,7 @@
 int main(int argc, char* argv[])
 {
     // global setup...
-    if (!ssp21::MockCryptoBackend::initialize()) {
-        std::cerr << "unable to initialize mock cyrpto backend" << std::endl;
-        return -1;
-    }
+    ssp21::MockCryptoBackend::initialize();
 
     return Catch::Session().run(argc, argv);
 }

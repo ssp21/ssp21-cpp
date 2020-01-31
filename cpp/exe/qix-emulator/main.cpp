@@ -4,7 +4,7 @@
 #include <ssp21/link/CastagnoliCRC32.h>
 #include <ssp21/stack/LogLevels.h>
 
-#include <sodium/CryptoBackend.h>
+#include <sodium/Backend.h>
 
 #include <log4cpp/ConsolePrettyPrinter.h>
 #include <log4cpp/LogMacros.h>
@@ -82,8 +82,10 @@ int main(int argc, char* argv[])
         if (results.has_option("read")) {
             return read_frames(ports);
         } else if (results.has_option("write")) {
+            ssp21::sodium::initialize();
             return write_random_frames(ports, get_frame_count(results), get_key_rate(results));
         } else if (results.has_option("twrite")) {
+            ssp21::sodium::initialize();
             return write_time_based_frames(ports, get_frame_count(results), results["twrite"][0].as<uint32_t>());
         } else {
             throw std::runtime_error("You must specify read or write mode");
@@ -131,10 +133,6 @@ int write_random_frames(const std::vector<std::string>& ports, uint64_t frame_co
 
     const auto frame_delay = std::chrono::milliseconds(1000 / frames_per_sec);
 
-    if (!sodium::CryptoBackend::initialize()) {
-        throw std::runtime_error("can't initialize sodium backend");
-    }
-
     std::vector<std::unique_ptr<QIXFrameWriter>> writers;
 
     for (auto port : ports) {
@@ -176,10 +174,6 @@ int write_time_based_frames(const std::vector<std::string>& ports, uint64_t fram
 
     if (ms_modulo < 100) {
         throw std::runtime_error("twrite moduluo cannot be less than 100");
-    }
-
-    if (!sodium::CryptoBackend::initialize()) {
-        throw std::runtime_error("can't initialize sodium backend");
     }
 
     std::vector<std::unique_ptr<QIXFrameWriter>> writers;

@@ -3,12 +3,12 @@ set(ssp21_public_headers
     ./include/ssp21/crypto/Chain.h
     ./include/ssp21/crypto/Constants.h
     ./include/ssp21/crypto/Crypto.h
+	./include/ssp21/crypto/CryptoBackend.h
     ./include/ssp21/crypto/CryptoLayerConfig.h
     ./include/ssp21/crypto/CryptoSuite.h
     ./include/ssp21/crypto/CryptoTypedefs.h
     ./include/ssp21/crypto/EnumField.h
-    ./include/ssp21/crypto/ICertificateHandler.h
-    ./include/ssp21/crypto/ICryptoBackend.h
+    ./include/ssp21/crypto/ICertificateHandler.h    
     ./include/ssp21/crypto/IKeyLookup.h
     ./include/ssp21/crypto/IKeySource.h
     ./include/ssp21/crypto/IMessagePrinter.h
@@ -130,7 +130,6 @@ set(ssp21_srcs
     ./src/crypto/FlagsPrinting.cpp
     ./src/crypto/HandshakeHasher.cpp
     ./src/crypto/ICertificateHandler.cpp
-	./src/crypto/ICryptoBackend.cpp
     ./src/crypto/IndustrialCertificateHandler.cpp
     ./src/crypto/Initiator.cpp
     ./src/crypto/InitiatorHandshakes.cpp

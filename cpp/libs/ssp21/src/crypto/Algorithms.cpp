@@ -19,10 +19,17 @@ HandshakeError Algorithms::Session::configure(SessionNonceMode nonce_mode, Sessi
     }
 
     switch (session_mode) {
-    case (SessionCryptoMode::hmac_sha256_16):
+    case (SessionCryptoMode::hmac_sha256_16): {
+        if (!Crypto::supports_sha256()) {
+            return HandshakeError::unsupported_session_mode;
+        }
         this->session_mode = SessionModes::hmac_sha_256_trunc16();
         break;
+    }
     case (SessionCryptoMode::aes_256_gcm):
+        if (!Crypto::supports_aes256_gcm()) {
+            return HandshakeError::unsupported_session_mode;
+        }
         this->session_mode = SessionModes::aes_256_gcm();
         break;
     default:
@@ -38,6 +45,9 @@ HandshakeError Algorithms::Handshake::configure(
 {
     switch (handshake_hash) {
     case (HandshakeHash::sha256):
+        if (!Crypto::supports_sha256()) {
+            return HandshakeError::unsupported_handshake_hash;
+        }
         this->hash = &Crypto::hash_sha256;
         break;
     default:
@@ -46,6 +56,9 @@ HandshakeError Algorithms::Handshake::configure(
 
     switch (handshake_kdf) {
     case (HandshakeKDF::hkdf_sha256):
+        if (!Crypto::supports_sha256()) {
+            return HandshakeError::unsupported_handshake_kdf;
+        }
         this->kdf = &Crypto::hkdf_sha256;
         break;
     default:
@@ -115,6 +128,9 @@ HandshakeError Algorithms::DH::configure(HandshakeEphemeral type)
 {
     switch (type) {
     case (HandshakeEphemeral::x25519):
+        if (!Crypto::supports_x25519()) {
+            return HandshakeError::unsupported_dh_key_type;
+        }
         this->dh = &Crypto::dh_x25519;
         this->gen_key_pair = &Crypto::gen_keypair_x25519;
         return HandshakeError::none;
