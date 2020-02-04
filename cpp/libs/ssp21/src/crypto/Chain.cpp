@@ -78,8 +78,13 @@ HandshakeError Chain::verify_pair(const CertificateBody& parent, const Certifica
 Chain::DSAInfo Chain::try_get_dsa_info(PublicKeyType type)
 {
     switch (type) {
-    case (PublicKeyType::Ed25519):
-        return DSAInfo{ Crypto::verify_ed25519, consts::crypto::ed25519_signature_length };
+    case (PublicKeyType::Ed25519): {
+        if (Crypto::supports_ed25519()) {
+            return DSAInfo{ Crypto::verify_ed25519, consts::crypto::ed25519_signature_length };
+        } else {
+            return DSAInfo{ nullptr, 0 };
+        }
+    }
     default:
         return DSAInfo{ nullptr, 0 };
     }

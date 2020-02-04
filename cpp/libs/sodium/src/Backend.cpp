@@ -1,6 +1,6 @@
 
 
-#include "sodium/CryptoBackend.h"
+#include "sodium/Backend.h"
 
 #include "ssp21/crypto/Crypto.h"
 #include "ssp21/crypto/gen/CryptoError.h"
@@ -10,6 +10,9 @@
 #include <sodium.h>
 
 #include <ser4cpp/serialization/BigEndian.h>
+
+#include <iostream>
+#include <stdlib.h>
 
 namespace ssp21 {
 namespace sodium {
@@ -47,24 +50,17 @@ namespace sodium {
         }
     };
 
-    bool CryptoBackend::initialize()
-    {
-        if (sodium_init() != 0)
-            return false;
-        return Crypto::initialize(std::make_shared<CryptoBackend>());
-    }
-
-    void CryptoBackend::zero_memory_impl(const wseq32_t& data)
+    void zero_memory(const wseq32_t& data)
     {
         sodium_memzero(data, data.length());
     }
 
-    void CryptoBackend::gen_random_impl(const wseq32_t& dest)
+    void gen_random(const wseq32_t& dest)
     {
         randombytes_buf(dest, dest.length());
     }
 
-    bool CryptoBackend::secure_equals_impl(const seq32_t& lhs, const seq32_t& rhs)
+    bool secure_equals(const seq32_t& lhs, const seq32_t& rhs)
     {
         if (lhs.length() != rhs.length()) {
             return false;
@@ -73,7 +69,7 @@ namespace sodium {
         return sodium_memcmp(lhs, rhs, lhs.length()) == 0;
     }
 
-    void CryptoBackend::hash_sha256_impl(const std::initializer_list<seq32_t>& data, SecureBuffer& output)
+    void hash_sha256(const std::initializer_list<seq32_t>& data, SecureBuffer& output)
     {
         crypto_hash_sha256_state state;
         crypto_hash_sha256_init(&state);
@@ -87,7 +83,7 @@ namespace sodium {
         output.set_length(BufferLength::length_32);
     }
 
-    void CryptoBackend::hmac_sha256_impl(const seq32_t& key, const std::initializer_list<seq32_t>& data, SecureBuffer& output)
+    void hmac_sha256(const seq32_t& key, const std::initializer_list<seq32_t>& data, SecureBuffer& output)
     {
         crypto_auth_hmacsha256_state state;
         crypto_auth_hmacsha256_init(&state, key, key.length());
@@ -101,12 +97,12 @@ namespace sodium {
         output.set_length(BufferLength::length_32);
     }
 
-    void CryptoBackend::hkdf_sha256_impl(const seq32_t& salt, const std::initializer_list<seq32_t>& input_key_material, SymmetricKey& key1, SymmetricKey& key2)
+    void hkdf_sha256(const seq32_t& salt, const std::initializer_list<seq32_t>& input_key_material, SymmetricKey& key1, SymmetricKey& key2)
     {
         hkdf<Crypto::hmac_sha256>(salt, input_key_material, key1, key2);
     }
 
-    void CryptoBackend::gen_keypair_x25519_impl(KeyPair& pair)
+    void gen_keypair_x25519(KeyPair& pair)
     {
         auto dest = pair.private_key.as_wseq();
         randombytes_buf(dest, crypto_scalarmult_BYTES);
@@ -118,7 +114,7 @@ namespace sodium {
         pair.private_key.set_length(BufferLength::length_32);
     }
 
-    void CryptoBackend::dh_x25519_impl(const PrivateKey& priv_key, const seq32_t& pub_key, DHOutput& output, std::error_code& ec)
+    void dh_x25519(const PrivateKey& priv_key, const seq32_t& pub_key, DHOutput& output, std::error_code& ec)
     {
         if (crypto_scalarmult(output.as_wseq(), priv_key.as_seq(), pub_key) != 0) {
             ec = ssp21::CryptoError::dh_x25519_fail;
@@ -128,7 +124,7 @@ namespace sodium {
         output.set_length(BufferLength::length_32);
     }
 
-    void CryptoBackend::gen_keypair_ed25519_impl(KeyPair& pair)
+    void gen_keypair_ed25519(KeyPair& pair)
     {
         auto publicDest = pair.public_key.as_wseq();
         auto privateDest = pair.private_key.as_wseq();
@@ -140,7 +136,7 @@ namespace sodium {
         pair.private_key.set_length(BufferLength::length_64);
     }
 
-    void CryptoBackend::sign_ed25519_impl(const seq32_t& input, const seq32_t& key, DSAOutput& output, std::error_code& ec)
+    void sign_ed25519(const seq32_t& input, const seq32_t& key, DSAOutput& output, std::error_code& ec)
     {
         // can't fail despite error code - NACL ABI relic
         crypto_sign_detached(output.as_wseq(), nullptr, input, input.length(), key);
@@ -148,14 +144,14 @@ namespace sodium {
         output.set_length(BufferLength::length_64);
     }
 
-    bool CryptoBackend::verify_ed25519_impl(const seq32_t& message, const seq32_t& signature, const seq32_t& public_key)
+    bool verify_ed25519(const seq32_t& message, const seq32_t& signature, const seq32_t& public_key)
     {
         return crypto_sign_verify_detached(signature, message, message.length(), public_key) == 0;
     }
 
-    AEADResult CryptoBackend::aes256_gcm_encrypt_impl(const SymmetricKey& key, uint16_t nonce, seq32_t ad, seq32_t plaintext, wseq32_t encrypt_buffer, MACOutput& mac)
+    AEADResult aes256_gcm_encrypt(const SymmetricKey& key, uint16_t nonce, seq32_t ad, seq32_t plaintext, wseq32_t encrypt_buffer, MACOutput& mac)
     {
-        GCMNonceBuffer nb{};
+        GCMNonceBuffer nb;
 
         const auto result = crypto_aead_aes256gcm_encrypt_detached(
             encrypt_buffer,
@@ -180,7 +176,7 @@ namespace sodium {
             mac.as_seq());
     }
 
-    seq32_t CryptoBackend::aes256_gcm_decrypt_impl(const SymmetricKey& key, uint16_t nonce, seq32_t ad, seq32_t ciphertext, seq32_t auth_tag, wseq32_t cleartext, std::error_code& ec)
+    seq32_t aes256_gcm_decrypt(const SymmetricKey& key, uint16_t nonce, seq32_t ad, seq32_t ciphertext, seq32_t auth_tag, wseq32_t cleartext, std::error_code& ec)
     {
         GCMNonceBuffer nb{};
 
@@ -203,5 +199,32 @@ namespace sodium {
         return cleartext.readonly().take(ciphertext.length());
     }
 
+    CryptoBackend get_backend()
+    {
+        return CryptoBackend(
+            zero_memory,
+            gen_random,
+            secure_equals,
+            hash_sha256,
+            hmac_sha256,
+            gen_keypair_x25519,
+            dh_x25519,
+            hkdf_sha256,
+            gen_keypair_ed25519,
+            sign_ed25519,
+            verify_ed25519,
+            aes256_gcm_encrypt,
+            aes256_gcm_decrypt);
+    }
+
+    void initialize()
+    {
+        if (sodium_init()) {
+            std::cerr << "unable to initialize libsodium" << std::endl;
+            exit(-1);
+        }
+
+        Crypto::initialize(get_backend());
+    }
 }
 }

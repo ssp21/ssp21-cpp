@@ -41,7 +41,7 @@ public:
 
 private:
     struct DSAInfo {
-        verify_dsa_t verify;
+        verify_dsa_func_t verify;
         uint8_t signature_length;
     };
 

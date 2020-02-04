@@ -2,15 +2,12 @@
 #define CATCH_CONFIG_RUNNER
 #include "catch.hpp"
 
-#include "sodium/CryptoBackend.h"
+#include "sodium/Backend.h"
 
 int main(int argc, char* argv[])
 {
     // global setup...
-    if (!ssp21::sodium::CryptoBackend::initialize()) {
-        std::cerr << "unable to initialize sodium backend" << std::endl;
-        return -1;
-    }
+    ssp21::sodium::initialize();
 
     int result = Catch::Session().run(argc, argv);
 

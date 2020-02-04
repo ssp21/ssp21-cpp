@@ -25,6 +25,12 @@ struct AEADResult {
     }
 };
 
+using zero_memory_func_t = void (*)(const wseq32_t& buffer);
+
+using gen_random_func_t = void (*)(const wseq32_t& buffer);
+
+using secure_equals_func_t = bool (*)(const seq32_t& lhs, const seq32_t& rhs);
+
 using gen_keypair_func_t = void (*)(KeyPair& pair);
 
 using hash_func_t = void (*)(
@@ -65,7 +71,13 @@ using kdf_func_t = void (*)(
     SymmetricKey& key1,
     SymmetricKey& key2);
 
-using verify_dsa_t = bool (*)(
+using sign_dsa_func_t = void (*)(
+    const seq32_t& input,
+    const seq32_t& private_key,
+    DSAOutput& output,
+    std::error_code& ec);
+
+using verify_dsa_func_t = bool (*)(
     const seq32_t& message,
     const seq32_t& signature,
     const seq32_t& public_key);
