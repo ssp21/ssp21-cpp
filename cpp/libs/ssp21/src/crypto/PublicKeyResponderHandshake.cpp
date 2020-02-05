@@ -2,6 +2,7 @@
 #include "PublicKeyResponderHandshake.h"
 
 #include "crypto/HandshakeHasher.h"
+#include "crypto/ProtocolVersion.h"
 #include "crypto/TripleDH.h"
 #include "crypto/gen/ReplyHandshakeBegin.h"
 
@@ -59,6 +60,7 @@ IResponderHandshake::Result PublicKeyResponderHandshake::process(const RequestHa
 
     // prepare the response
     const ReplyHandshakeBegin reply(
+        version::get(),
         ephemeralKeys.public_key.as_seq(),
         this->cert_handler->certificate_data());
 

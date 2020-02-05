@@ -87,6 +87,7 @@ set(ssp21_private_headers
     ./src/crypto/Nonce.h
     ./src/crypto/NonceFunctions.h
     ./src/crypto/PresharedKeyCertificateHandler.h
+	./src/crypto/ProtocolVersion.h
     ./src/crypto/PublicKeyInitiatorHandshake.h
     ./src/crypto/PublicKeyResponderHandshake.h
     ./src/crypto/QKDInitiatorHandshake.h
@@ -110,6 +111,7 @@ set(ssp21_private_headers
     ./src/crypto/gen/RequestHandshakeBegin.h
     ./src/crypto/gen/SessionConstraints.h
     ./src/crypto/gen/SessionData.h
+	./src/crypto/gen/Version.h
     
     ./src/link/LinkFrameWriter.h
     ./src/link/LinkLayer.h
@@ -137,6 +139,7 @@ set(ssp21_srcs
     ./src/crypto/KeyRecord.cpp
     ./src/crypto/LogLevels.cpp
     ./src/crypto/LogMessagePrinter.cpp
+	./src/crypto/ProtocolVersion.cpp
     ./src/crypto/PublicKeyInitiatorHandshake.cpp
     ./src/crypto/PublicKeyResponderHandshake.cpp
     ./src/crypto/QKDInitiatorHandshake.cpp
@@ -176,6 +179,7 @@ set(ssp21_srcs
     ./src/crypto/gen/SessionConstraints.cpp
     ./src/crypto/gen/SessionData.cpp
     ./src/crypto/gen/SessionCryptoMode.cpp
+	./src/crypto/gen/Version.cpp
 
     ./src/link/CastagnoliCRC32.cpp
     ./src/link/LinkFrameWriter.cpp

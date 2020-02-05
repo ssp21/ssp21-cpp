@@ -55,7 +55,8 @@ object GeneratedFiles {
   private def structsImpl: List[WriteCppFiles] = List(
     AuthMetadata,
     CryptoSpec,
-    SessionConstraints
+    SessionConstraints,
+    Version,
   ).map(x => StructGenerator(x, false))
 
   private def messages: List[WriteCppFiles] = List(

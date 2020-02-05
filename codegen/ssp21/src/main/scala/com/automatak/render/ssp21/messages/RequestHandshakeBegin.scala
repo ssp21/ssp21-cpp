@@ -5,6 +5,7 @@ package com.automatak.render.ssp21.messages
 
 import com.automatak.render.EnumValue
 import com.automatak.render.ssp21.enums.ssp21._
+import com.automatak.render.ssp21.messages.struct.Version
 
 
 object CryptoSpec extends Struct {
@@ -43,7 +44,7 @@ object RequestHandshakeBegin extends Message {
   def function: EnumValue = CryptoFunction.requestHandshakeBegin
 
   override def fields: List[Field] = List(
-    U16("version"),
+    StructField("version", Version),
     StructField("spec", CryptoSpec),
     StructField("constraints", SessionConstraints),
     Enum(HandshakeMode),

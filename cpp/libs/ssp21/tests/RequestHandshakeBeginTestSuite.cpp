@@ -62,12 +62,13 @@ TEST_CASE(SUITE("successfully parses message"))
 {
     RequestHandshakeBegin msg;
 
-    auto input = HexConversions::from_hex("00 D1 D2 00 00 00 00 00 FF FF CA FE BA BE 00 03 AA AA AA 00");
+    auto input = HexConversions::from_hex("00 D1 D2 A3 A4 00 00 00 00 00 FF FF CA FE BA BE 00 03 AA AA AA 00");
     auto slice = input->as_rslice();
 
     auto err = msg.read(slice);
     REQUIRE(!any(err));
-    REQUIRE(msg.version == 0xD1D2);
+    REQUIRE(msg.version.major == 0xD1D2);
+    REQUIRE(msg.version.minor == 0xA3A4);
     REQUIRE(msg.spec.session_nonce_mode == SessionNonceMode::increment_last_rx);
     REQUIRE(msg.spec.handshake_ephemeral == HandshakeEphemeral::x25519);
     REQUIRE(msg.spec.handshake_hash == HandshakeHash::sha256);
@@ -88,7 +89,7 @@ TEST_CASE(SUITE("pretty prints message"))
     HexSeq public_key("CA FE");
 
     RequestHandshakeBegin msg(
-        7,
+        Version(7, 12),
         CryptoSpec(
             HandshakeEphemeral::x25519,
             HandshakeHash::sha256,
@@ -108,7 +109,8 @@ TEST_CASE(SUITE("pretty prints message"))
     msg.print(printer);
 
     log.expect(
-        "version: 7",
+        "major: 7",
+        "minor: 12",
         "handshake_ephemeral: x25519",
         "handshake_hash: sha256",
         "handshake_kdf: hkdf_sha256",
@@ -138,8 +140,8 @@ TEST_CASE(SUITE("rejects trailing data"))
 {
     RequestHandshakeBegin msg;
 
-    //                               ---------------------------------------------------------------VV VV------ zero certificate data
-    auto input = HexConversions::from_hex("00 D1 D2 00 00 00 00 00 FF FF CA FE BA BE 00 03 AA AA AA 00 00 02");
+    //                                     ---------------------------------------------------------------VV VV------ zero certificate data
+    auto input = HexConversions::from_hex("00 D1 D2 A1 A2 00 00 00 00 00 FF FF CA FE BA BE 00 03 AA AA AA 00 00 02");
     auto slice = input->as_rslice();
 
     auto err = msg.read(slice);
@@ -155,7 +157,7 @@ TEST_CASE(SUITE("formats default value"))
 
     REQUIRE(!res.is_error());
     REQUIRE(res.written.length() == msg.size());
-    REQUIRE(HexConversions::to_hex(res.written) == "00 00 00 FF FF FF FF FF 00 00 00 00 00 00 FF 00 00");
+    REQUIRE(HexConversions::to_hex(res.written) == "00 00 00 00 00 FF FF FF FF FF 00 00 00 00 00 00 FF 00 00");
 }
 
 TEST_CASE(SUITE("returns error if insufficient buffer space"))

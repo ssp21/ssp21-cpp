@@ -19,6 +19,7 @@
 #include "ssp21/crypto/EnumField.h"
 #include "ssp21/crypto/gen/HandshakeError.h"
 #include "crypto/IMessage.h"
+#include "crypto/gen/Version.h"
 #include "crypto/gen/Function.h"
 
 namespace ssp21 {
@@ -27,7 +28,8 @@ struct ReplyHandshakeError final : public IMessage
 {
     ReplyHandshakeError();
 
-    explicit ReplyHandshakeError(
+    ReplyHandshakeError(
+        const Version& version,
         HandshakeError handshake_error
     );
 
@@ -38,9 +40,10 @@ struct ReplyHandshakeError final : public IMessage
     virtual void print(IMessagePrinter& printer) const override;
     virtual Function get_function() const override { return Function::reply_handshake_error; }
 
-    static const uint8_t fixed_size_bytes = 2;
+    static const uint8_t fixed_size_bytes = 6;
     static const Function function = Function::reply_handshake_error;
 
+    Version version;
     EnumField<HandshakeErrorSpec> handshake_error;
 
 };

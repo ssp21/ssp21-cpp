@@ -25,7 +25,7 @@ RequestHandshakeBegin::RequestHandshakeBegin()
 {}
 
 RequestHandshakeBegin::RequestHandshakeBegin(
-    uint16_t version,
+    const Version& version,
     const CryptoSpec& spec,
     const SessionConstraints& constraints,
     HandshakeMode handshake_mode,

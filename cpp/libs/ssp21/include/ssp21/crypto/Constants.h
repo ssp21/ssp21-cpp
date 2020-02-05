@@ -9,7 +9,9 @@
 namespace ssp21 {
 namespace consts {
     namespace crypto {
-        const uint16_t protocol_version = 0x0000;
+
+        const uint16_t protocol_major_version = 0x0001;
+        const uint16_t protocol_minor_version = 0x0000;
 
         // cryptographic constants
         const uint8_t sha256_hash_output_length = 32;

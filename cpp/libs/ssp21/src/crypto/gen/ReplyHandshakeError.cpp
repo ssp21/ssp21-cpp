@@ -25,8 +25,10 @@ ReplyHandshakeError::ReplyHandshakeError()
 {}
 
 ReplyHandshakeError::ReplyHandshakeError(
+    const Version& version,
     HandshakeError handshake_error
 ) :
+    version(version),
     handshake_error(handshake_error)
 {}
 
@@ -34,6 +36,7 @@ size_t ReplyHandshakeError::size() const
 {
     return MessageFormatter::sum_sizes(
         1,
+        version,
         handshake_error
     );
 }
@@ -45,6 +48,7 @@ ParseError ReplyHandshakeError::read(seq32_t input)
     {
         return MessageParser::read_fields(
             input,
+            version,
             handshake_error
         );
     };
@@ -58,6 +62,7 @@ FormatResult ReplyHandshakeError::write(wseq32_t& output) const
     {
         return MessageFormatter::write_fields(
             output,
+            version,
             handshake_error
         );
     };
@@ -68,6 +73,8 @@ void ReplyHandshakeError::print(IMessagePrinter& printer) const
 {
     MessagePrinting::print_fields(
         printer,
+        "version",
+        version,
         "handshake_error",
         handshake_error
     );

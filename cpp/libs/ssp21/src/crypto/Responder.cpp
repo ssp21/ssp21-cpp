@@ -3,6 +3,7 @@
 
 #include "log4cpp/LogMacros.h"
 
+#include "crypto/ProtocolVersion.h"
 #include "ssp21/stack/LogLevels.h"
 
 namespace ssp21 {
@@ -24,7 +25,9 @@ Responder::Responder(
 
 void Responder::reply_with_handshake_error(HandshakeError err)
 {
-    const ReplyHandshakeError msg(err);
+    const ReplyHandshakeError msg(
+        version::get(),
+        err);
     const auto res = this->frame_writer->write(msg);
     if (!res.is_error()) {
         this->lower->start_tx_from_upper(res.frame);
@@ -60,8 +63,8 @@ void Responder::on_parse_error(Function function, ParseError error)
 
 void Responder::on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_msg, const exe4cpp::steady_time_t& now)
 {
-    if (msg.version != consts::crypto::protocol_version) {
-        FORMAT_LOG_BLOCK(this->logger, levels::warn, "Handshake request with unsupported version: %u", msg.version.value);
+    if (msg.version.major.value != consts::crypto::protocol_major_version) {
+        FORMAT_LOG_BLOCK(this->logger, levels::warn, "Handshake request with unsupported major version: %u", msg.version.major.value);
         this->reply_with_handshake_error(HandshakeError::unsupported_version);
         return;
     }

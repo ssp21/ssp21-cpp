@@ -4,6 +4,7 @@
 #include "ser4cpp/container/StaticBuffer.h"
 #include "ser4cpp/util/HexConversions.h"
 
+#include "crypto/ProtocolVersion.h"
 #include "crypto/gen/ReplyHandshakeBegin.h"
 #include "crypto/gen/ReplyHandshakeError.h"
 #include "crypto/gen/RequestHandshakeBegin.h"
@@ -55,7 +56,7 @@ namespace hex {
         HexSeq pub_key(hex_ephem_pub_key);
 
         RequestHandshakeBegin msg(
-            version,
+            version::get(),
             CryptoSpec(
                 handshake_ephemeral,
                 handshake_hash,
@@ -77,14 +78,14 @@ namespace hex {
     {
         HexSeq pub_key(hex_ephem_pub_key);
 
-        ReplyHandshakeBegin msg(pub_key, seq32_t::empty());
+        ReplyHandshakeBegin msg(version::get(), pub_key, seq32_t::empty());
 
         return write_message(msg);
     }
 
     std::string reply_handshake_error(HandshakeError err)
     {
-        ReplyHandshakeError msg(err);
+        ReplyHandshakeError msg(version::get(), err);
         return write_message(msg);
     }
 

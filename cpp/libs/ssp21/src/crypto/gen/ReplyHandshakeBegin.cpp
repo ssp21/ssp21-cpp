@@ -25,9 +25,11 @@ ReplyHandshakeBegin::ReplyHandshakeBegin()
 {}
 
 ReplyHandshakeBegin::ReplyHandshakeBegin(
+    const Version& version,
     const seq32_t& mode_ephemeral,
     const seq32_t& mode_data
 ) :
+    version(version),
     mode_ephemeral(mode_ephemeral),
     mode_data(mode_data)
 {}
@@ -36,6 +38,7 @@ size_t ReplyHandshakeBegin::size() const
 {
     return MessageFormatter::sum_sizes(
         1,
+        version,
         mode_ephemeral,
         mode_data
     );
@@ -48,6 +51,7 @@ ParseError ReplyHandshakeBegin::read(seq32_t input)
     {
         return MessageParser::read_fields(
             input,
+            version,
             mode_ephemeral,
             mode_data
         );
@@ -62,6 +66,7 @@ FormatResult ReplyHandshakeBegin::write(wseq32_t& output) const
     {
         return MessageFormatter::write_fields(
             output,
+            version,
             mode_ephemeral,
             mode_data
         );
@@ -73,6 +78,8 @@ void ReplyHandshakeBegin::print(IMessagePrinter& printer) const
 {
     MessagePrinting::print_fields(
         printer,
+        "version",
+        version,
         "mode_ephemeral",
         mode_ephemeral,
         "mode_data",

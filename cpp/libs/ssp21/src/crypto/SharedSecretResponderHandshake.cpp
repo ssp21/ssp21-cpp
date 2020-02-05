@@ -5,6 +5,7 @@
 
 #include "crypto/Algorithms.h"
 #include "crypto/HandshakeHasher.h"
+#include "crypto/ProtocolVersion.h"
 #include "crypto/gen/ReplyHandshakeBegin.h"
 
 #include "log4cpp/LogMacros.h"
@@ -47,6 +48,7 @@ IResponderHandshake::Result SharedSecretResponderHandshake::process(const Reques
 
     // prepare the response
     const ReplyHandshakeBegin reply(
+        version::get(),
         nonce_buffer.as_seq(),
         seq32_t::empty());
 

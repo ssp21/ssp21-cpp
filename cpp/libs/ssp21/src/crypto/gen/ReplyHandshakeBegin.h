@@ -18,6 +18,7 @@
 
 #include "ssp21/crypto/SeqByteField.h"
 #include "crypto/IMessage.h"
+#include "crypto/gen/Version.h"
 #include "crypto/gen/Function.h"
 
 namespace ssp21 {
@@ -27,6 +28,7 @@ struct ReplyHandshakeBegin final : public IMessage
     ReplyHandshakeBegin();
 
     ReplyHandshakeBegin(
+        const Version& version,
         const seq32_t& mode_ephemeral,
         const seq32_t& mode_data
     );
@@ -38,9 +40,10 @@ struct ReplyHandshakeBegin final : public IMessage
     virtual void print(IMessagePrinter& printer) const override;
     virtual Function get_function() const override { return Function::reply_handshake_begin; }
 
-    static const uint8_t min_size_bytes = 3;
+    static const uint8_t min_size_bytes = 7;
     static const Function function = Function::reply_handshake_begin;
 
+    Version version;
     SeqByteField mode_ephemeral;
     SeqByteField mode_data;
 

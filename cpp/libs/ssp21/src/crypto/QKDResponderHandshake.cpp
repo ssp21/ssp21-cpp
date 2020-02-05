@@ -5,6 +5,7 @@
 
 #include "crypto/Algorithms.h"
 #include "crypto/HandshakeHasher.h"
+#include "crypto/ProtocolVersion.h"
 #include "crypto/gen/ReplyHandshakeBegin.h"
 
 #include "log4cpp/LogMacros.h"
@@ -57,7 +58,10 @@ IResponderHandshake::Result QKDResponderHandshake::process(const RequestHandshak
     }
 
     // prepare the response
-    const ReplyHandshakeBegin reply(seq32_t::empty(), seq32_t::empty());
+    const ReplyHandshakeBegin reply(
+        version::get(),
+        seq32_t::empty(),
+        seq32_t::empty());
 
     const auto result = writer.write(reply);
     if (any(result.err)) {

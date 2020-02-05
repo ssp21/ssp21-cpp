@@ -1,6 +1,7 @@
 
 #include "crypto/InitiatorHandshakeStates.h"
 
+#include "ProtocolVersion.h"
 #include "crypto/TripleDH.h"
 #include "ssp21/stack/LogLevels.h"
 
@@ -35,7 +36,7 @@ Initiator::IHandshakeState* InitiatorHandshakeStates::Idle::on_handshake_require
     }
 
     const RequestHandshakeBegin request(
-        consts::crypto::protocol_version,
+        version::get(),
         crypto_spec,
         SessionConstraints(
             ctx.session_limits.max_nonce_value,
