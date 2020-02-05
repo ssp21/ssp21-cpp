@@ -28,11 +28,11 @@ HandshakeMode HandshakeModeSpec::from_type(uint8_t arg)
         case(0x0):
             return HandshakeMode::shared_secret;
         case(0x1):
-            return HandshakeMode::preshared_public_keys;
+            return HandshakeMode::public_keys;
         case(0x2):
-            return HandshakeMode::industrial_certificates;
-        case(0x3):
             return HandshakeMode::quantum_key_distribution;
+        case(0x3):
+            return HandshakeMode::industrial_certificates;
         default:
             return HandshakeMode::undefined;
     }
@@ -43,12 +43,12 @@ const char* HandshakeModeSpec::to_string(HandshakeMode arg)
     {
         case(HandshakeMode::shared_secret):
             return "shared_secret";
-        case(HandshakeMode::preshared_public_keys):
-            return "preshared_public_keys";
-        case(HandshakeMode::industrial_certificates):
-            return "industrial_certificates";
+        case(HandshakeMode::public_keys):
+            return "public_keys";
         case(HandshakeMode::quantum_key_distribution):
             return "quantum_key_distribution";
+        case(HandshakeMode::industrial_certificates):
+            return "industrial_certificates";
         default:
             return "undefined";
     }

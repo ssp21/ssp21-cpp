@@ -28,12 +28,12 @@ public:
 
     virtual HandshakeMode mode() const override
     {
-        return HandshakeMode::preshared_public_keys;
+        return HandshakeMode::public_keys;
     }
 
     virtual HandshakeError validate(HandshakeMode mode, const seq32_t& certificate_data, seq32_t& public_key_output) override
     {
-        if (mode != HandshakeMode::preshared_public_keys)
+        if (mode != HandshakeMode::public_keys)
             return HandshakeError::unsupported_handshake_mode;
         if (certificate_data.is_not_empty())
             return HandshakeError::bad_message_format;

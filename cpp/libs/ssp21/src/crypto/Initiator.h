@@ -27,7 +27,7 @@ public:
     class IHandshakeState : private ser4cpp::Uncopyable {
 
     public:
-        enum Enum {
+        enum class Enum {
             idle,
             wait_for_begin_reply,
             wait_for_auth_reply,

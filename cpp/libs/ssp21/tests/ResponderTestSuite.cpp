@@ -46,14 +46,14 @@ TEST_CASE(SUITE("responds to invalid key length with bad_message_format"))
 
     const auto request = hex::request_handshake_begin(
         0,
-        SessionNonceMode::increment_last_rx,
+        SessionNonceMode::strict_increment,
         HandshakeEphemeral::x25519,
         HandshakeHash::sha256,
         HandshakeKDF::hkdf_sha256,
         SessionCryptoMode::hmac_sha256_16,
         consts::crypto::initiator::default_max_nonce,
         consts::crypto::initiator::default_max_session_time_ms,
-        HandshakeMode::preshared_public_keys,
+        HandshakeMode::public_keys,
         hex::repeat(0xFF, (consts::crypto::x25519_key_length - 1)));
 
     test_handshake_error(fix, request, HandshakeError::bad_message_format, {});
@@ -318,14 +318,14 @@ void test_begin_handshake_success(ResponderFixture& fix, uint16_t max_nonce, uin
 {
     const auto request = hex::request_handshake_begin(
         0,
-        SessionNonceMode::increment_last_rx,
+        SessionNonceMode::strict_increment,
         HandshakeEphemeral::x25519,
         HandshakeHash::sha256,
         HandshakeKDF::hkdf_sha256,
         SessionCryptoMode::hmac_sha256_16,
         max_nonce,
         max_session_time,
-        HandshakeMode::preshared_public_keys,
+        HandshakeMode::public_keys,
         hex::repeat(0xFF, consts::crypto::x25519_key_length));
 
     fix.lower.enqueue_message(request);

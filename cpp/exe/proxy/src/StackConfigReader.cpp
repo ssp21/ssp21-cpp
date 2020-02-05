@@ -52,7 +52,7 @@ ssp21::HandshakeMode get_handshake_mode(const YAML::Node& node)
     } else if (value == "qkd") {
         return HandshakeMode::quantum_key_distribution;
     } else if (value == "preshared_public_key") {
-        return HandshakeMode::preshared_public_keys;
+        return HandshakeMode::public_keys;
     } else if (value == "certificate") {
         return HandshakeMode::industrial_certificates;
     } else {
@@ -345,7 +345,7 @@ stack_factory_t get_initiator_factory(const YAML::Node& node, const ssp21::Addre
         return get_initiator_shared_secret_factory(handshake, config, addresses);
     case (HandshakeMode::quantum_key_distribution):
         return get_initiator_qkd_factory(handshake, config, addresses);
-    case (HandshakeMode::preshared_public_keys):
+    case (HandshakeMode::public_keys):
         return get_initiator_preshared_public_key_factory(handshake, config, addresses);
     case (HandshakeMode::industrial_certificates):
         return get_initiator_certificate_mode_factory(handshake, config, addresses);
@@ -475,7 +475,7 @@ stack_factory_t get_responder_factory(const YAML::Node& node, const ssp21::Addre
         return get_responder_shared_secret_factory(handshake, config, addresses);
     case (HandshakeMode::quantum_key_distribution):
         return get_responder_qkd_factory(handshake, config, addresses);
-    case (HandshakeMode::preshared_public_keys):
+    case (HandshakeMode::public_keys):
         return get_responder_preshared_public_key_factory(handshake, config, addresses);
     case (HandshakeMode::industrial_certificates):
         return get_responder_certificate_mode_factory(handshake, config, addresses);

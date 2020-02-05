@@ -30,7 +30,7 @@ HandshakeError HandshakeErrorSpec::from_type(uint8_t arg)
         case(0x1):
             return HandshakeError::unsupported_version;
         case(0x2):
-            return HandshakeError::unsupported_dh_key_type;
+            return HandshakeError::unsupported_handshake_ephemeral;
         case(0x3):
             return HandshakeError::unsupported_handshake_hash;
         case(0x4):
@@ -69,8 +69,8 @@ const char* HandshakeErrorSpec::to_string(HandshakeError arg)
             return "bad_message_format";
         case(HandshakeError::unsupported_version):
             return "unsupported_version";
-        case(HandshakeError::unsupported_dh_key_type):
-            return "unsupported_dh_key_type";
+        case(HandshakeError::unsupported_handshake_ephemeral):
+            return "unsupported_handshake_ephemeral";
         case(HandshakeError::unsupported_handshake_hash):
             return "unsupported_handshake_hash";
         case(HandshakeError::unsupported_handshake_kdf):

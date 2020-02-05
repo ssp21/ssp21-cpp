@@ -30,7 +30,7 @@ struct CryptoSuite {
 
     HandshakeHash handshake_hash = HandshakeHash::sha256;
     HandshakeKDF handshake_kdf = HandshakeKDF::hkdf_sha256;
-    SessionNonceMode session_nonce_mode = SessionNonceMode::increment_last_rx;
+    SessionNonceMode session_nonce_mode = SessionNonceMode::strict_increment;
     SessionCryptoMode session_crypto_mode = SessionCryptoMode::hmac_sha256_16;
 };
 

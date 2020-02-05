@@ -27,7 +27,7 @@ object HandshakeError extends EnumModel {
   private val codes = List(
     EnumValue("bad_message_format", 0, "A received handshake message was malformed in some manner"),
     EnumValue("unsupported_version", 1, "The requested version is not supported"),
-    EnumValue("unsupported_dh_key_type", 2, "The requested DH key type is not supported"),
+    EnumValue("unsupported_handshake_ephemeral", 2, "The requested handshake ephemeral is not supported or doesn't match the handshake mode. a"),
     EnumValue("unsupported_handshake_hash", 3, "The requested handshake hash is not supported"),
     EnumValue("unsupported_handshake_kdf", 4, "The requested handshake KDF is not supported"),
     EnumValue("unsupported_session_mode", 5, "The requested session mode is not supported"),

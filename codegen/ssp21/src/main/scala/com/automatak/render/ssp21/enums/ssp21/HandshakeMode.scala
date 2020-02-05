@@ -22,9 +22,9 @@ object HandshakeMode extends EnumModel {
 
   private val codes = List(
     EnumValue("shared_secret", 0, "both parties have a shared secret"),
-    EnumValue("preshared_public_keys", 1, "both parties know each others public DH keys"),
-    EnumValue("industrial_certificates", 2, "Industrial certificate format"),
-    EnumValue("quantum_key_distribution", 3, "Single-use shared secrets delivered via QKD")
+    EnumValue("public_keys", 1, "both parties know each others public DH keys"),
+    EnumValue("quantum_key_distribution", 2, "Single-use shared secrets delivered via QKD"),
+    EnumValue("industrial_certificates", 3, "Industrial certificate format"),
   )
 
 }

@@ -26,7 +26,7 @@ SessionNonceMode SessionNonceModeSpec::from_type(uint8_t arg)
     switch(arg)
     {
         case(0x0):
-            return SessionNonceMode::increment_last_rx;
+            return SessionNonceMode::strict_increment;
         case(0x1):
             return SessionNonceMode::greater_than_last_rx;
         default:
@@ -37,8 +37,8 @@ const char* SessionNonceModeSpec::to_string(SessionNonceMode arg)
 {
     switch(arg)
     {
-        case(SessionNonceMode::increment_last_rx):
-            return "increment_last_rx";
+        case(SessionNonceMode::strict_increment):
+            return "strict_increment";
         case(SessionNonceMode::greater_than_last_rx):
             return "greater_than_last_rx";
         default:

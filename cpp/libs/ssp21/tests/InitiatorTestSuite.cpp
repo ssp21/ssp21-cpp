@@ -191,14 +191,14 @@ void test_request_handshake_begin(InitiatorFixture& fix)
 
     const auto expected = hex::request_handshake_begin(
         0,
-        SessionNonceMode::increment_last_rx,
+        SessionNonceMode::strict_increment,
         HandshakeEphemeral::x25519,
         HandshakeHash::sha256,
         HandshakeKDF::hkdf_sha256,
         SessionCryptoMode::hmac_sha256_16,
         consts::crypto::initiator::default_max_nonce,
         consts::crypto::initiator::default_max_session_time_ms,
-        HandshakeMode::preshared_public_keys,
+        HandshakeMode::public_keys,
         hex::repeat(0xFF, 32));
 
     REQUIRE(fix.lower.pop_tx_message() == expected);

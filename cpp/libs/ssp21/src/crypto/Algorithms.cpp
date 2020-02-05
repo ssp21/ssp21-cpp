@@ -11,7 +11,7 @@ HandshakeError Algorithms::Session::configure(SessionNonceMode nonce_mode, Sessi
     case (SessionNonceMode::greater_than_last_rx):
         this->verify_nonce = &NonceFunctions::verify_greater_than_last;
         break;
-    case (SessionNonceMode::increment_last_rx):
+    case (SessionNonceMode::strict_increment):
         this->verify_nonce = &NonceFunctions::verify_strict_increment;
         break;
     default:
@@ -129,13 +129,13 @@ HandshakeError Algorithms::DH::configure(HandshakeEphemeral type)
     switch (type) {
     case (HandshakeEphemeral::x25519):
         if (!Crypto::supports_x25519()) {
-            return HandshakeError::unsupported_dh_key_type;
+            return HandshakeError::unsupported_handshake_ephemeral;
         }
         this->dh = &Crypto::dh_x25519;
         this->gen_key_pair = &Crypto::gen_keypair_x25519;
         return HandshakeError::none;
     default:
-        return HandshakeError::unsupported_dh_key_type;
+        return HandshakeError::unsupported_handshake_ephemeral;
     }
 }
 

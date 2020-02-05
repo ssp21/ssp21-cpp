@@ -29,11 +29,11 @@ enum class HandshakeMode : uint8_t
     /// both parties have a shared secret
     shared_secret = 0x0,
     /// both parties know each others public DH keys
-    preshared_public_keys = 0x1,
-    /// Industrial certificate format
-    industrial_certificates = 0x2,
+    public_keys = 0x1,
     /// Single-use shared secrets delivered via QKD
-    quantum_key_distribution = 0x3,
+    quantum_key_distribution = 0x2,
+    /// Industrial certificate format
+    industrial_certificates = 0x3,
     /// value not defined
     undefined = 0xFF
 };

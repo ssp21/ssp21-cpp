@@ -27,7 +27,7 @@ namespace ssp21 {
 enum class SessionNonceMode : uint8_t
 {
     /// new nonce must strictly be equal to last nonce plus one
-    increment_last_rx = 0x0,
+    strict_increment = 0x0,
     /// new nonce must be greater than last nonce
     greater_than_last_rx = 0x1,
     /// value not defined
