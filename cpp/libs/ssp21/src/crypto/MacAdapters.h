@@ -14,7 +14,7 @@ namespace ssp21 {
 
 // converts a mac_func_t signature into an aead_encrypt_func_t signature
 // in accordance with the SSP21 spec
-template <mac_func_t MAC, uint8_t TRUNC>
+template <class MAC, uint8_t TRUNC>
 AEADResult aead_mac_encrypt(
     const SymmetricKey& key,
     uint16_t nonce,
@@ -36,7 +36,7 @@ AEADResult aead_mac_encrypt(
     }
 
     // set auth_tag = MAC(key, ad || len(cleartext) || cleartext)
-    MAC(key.as_seq(), { ad, length_buffer.as_seq(), cleartext }, mac);
+    MAC::calc(key.as_seq(), { ad, length_buffer.as_seq(), cleartext }, mac);
 
     return AEADResult::success(
         cleartext, // ciphertext is just the cleartext for auth-only MAC modes
@@ -45,7 +45,7 @@ AEADResult aead_mac_encrypt(
 
 // converts a mac_func_t signature into an aead_decrypt_func_t signature
 // in accordance with the SSP21 spec
-template <mac_func_t MAC, uint8_t TRUNC>
+template <class MAC, uint8_t TRUNC>
 seq32_t aead_mac_decrypt(
     const SymmetricKey& key,
     uint16_t nonce,
@@ -71,7 +71,7 @@ seq32_t aead_mac_decrypt(
     MACOutput mac;
 
     // set auth_tag = MAC(key, ad || len(cleartext) || cleartext)
-    MAC(key.as_seq(), { ad, length_buffer.as_seq(), ciphertext }, mac);
+    MAC::calc(key.as_seq(), { ad, length_buffer.as_seq(), ciphertext }, mac);
 
     // verify the MAC
     if (!Crypto::secure_equals(mac.as_seq().take(TRUNC), auth_tag)) {
