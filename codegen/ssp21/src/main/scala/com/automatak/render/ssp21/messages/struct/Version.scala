@@ -10,8 +10,8 @@ object Version extends Struct {
   override def name: String = "Version"
 
   override def fields: List[Field] = List(
-    U16("major"),
-    U16("minor")
+    U16("major_version"),
+    U16("minor_version")
   )
 
   override def public: Boolean = false

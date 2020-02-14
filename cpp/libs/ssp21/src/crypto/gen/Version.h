@@ -31,16 +31,16 @@ struct Version final
     Version();
 
     Version(
-        uint16_t major,
-        uint16_t minor
+        uint16_t major_version,
+        uint16_t minor_version
     );
 
     size_t size() const;
 
     static const uint8_t fixed_size_bytes = 4;
 
-    IntegerField<ser4cpp::UInt16> major;
-    IntegerField<ser4cpp::UInt16> minor;
+    IntegerField<ser4cpp::UInt16> major_version;
+    IntegerField<ser4cpp::UInt16> minor_version;
 
     ParseError read(seq32_t& input);
     ParseError read_all(const seq32_t& input);

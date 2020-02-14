@@ -25,19 +25,19 @@ Version::Version()
 {}
 
 Version::Version(
-    uint16_t major,
-    uint16_t minor
+    uint16_t major_version,
+    uint16_t minor_version
 ) :
-    major(major),
-    minor(minor)
+    major_version(major_version),
+    minor_version(minor_version)
 {}
 
 size_t Version::size() const
 {
     return MessageFormatter::sum_sizes(
         0,
-        major,
-        minor
+        major_version,
+        minor_version
     );
 }
 
@@ -45,8 +45,8 @@ ParseError Version::read(seq32_t& input)
 {
     return MessageParser::read_fields(
         input,
-        major,
-        minor
+        major_version,
+        minor_version
     );
 }
 
@@ -62,8 +62,8 @@ FormatError Version::write(wseq32_t& output) const
 {
     return MessageFormatter::write_fields(
         output,
-        major,
-        minor
+        major_version,
+        minor_version
     );
 }
 
@@ -71,10 +71,10 @@ void Version::print(const char* name, IMessagePrinter& printer) const
 {
     MessagePrinting::print_fields(
         printer,
-        "major",
-        major,
-        "minor",
-        minor
+        "major_version",
+        major_version,
+        "minor_version",
+        minor_version
     );
 }
 

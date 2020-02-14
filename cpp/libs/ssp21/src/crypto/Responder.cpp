@@ -63,8 +63,8 @@ void Responder::on_parse_error(Function function, ParseError error)
 
 void Responder::on_message(const RequestHandshakeBegin& msg, const seq32_t& raw_msg, const exe4cpp::steady_time_t& now)
 {
-    if (msg.version.major.value != consts::crypto::protocol_major_version) {
-        FORMAT_LOG_BLOCK(this->logger, levels::warn, "Handshake request with unsupported major version: %u", msg.version.major.value);
+    if (msg.version.major_version.value != consts::crypto::protocol_major_version) {
+        FORMAT_LOG_BLOCK(this->logger, levels::warn, "Handshake request with unsupported major version: %u", msg.version.major_version.value);
         this->reply_with_handshake_error(HandshakeError::unsupported_version);
         return;
     }

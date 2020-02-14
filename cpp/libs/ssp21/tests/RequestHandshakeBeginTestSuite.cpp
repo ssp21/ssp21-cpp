@@ -67,8 +67,8 @@ TEST_CASE(SUITE("successfully parses message"))
 
     auto err = msg.read(slice);
     REQUIRE(!any(err));
-    REQUIRE(msg.version.major == 0xD1D2);
-    REQUIRE(msg.version.minor == 0xA3A4);
+    REQUIRE(msg.version.major_version == 0xD1D2);
+    REQUIRE(msg.version.minor_version == 0xA3A4);
     REQUIRE(msg.spec.session_nonce_mode == SessionNonceMode::strict_increment);
     REQUIRE(msg.spec.handshake_ephemeral == HandshakeEphemeral::x25519);
     REQUIRE(msg.spec.handshake_hash == HandshakeHash::sha256);
@@ -109,8 +109,8 @@ TEST_CASE(SUITE("pretty prints message"))
     msg.print(printer);
 
     log.expect(
-        "major: 7",
-        "minor: 12",
+        "major_version: 7",
+        "minor_version: 12",
         "handshake_ephemeral: x25519",
         "handshake_hash: sha256",
         "handshake_kdf: hkdf_sha256",
