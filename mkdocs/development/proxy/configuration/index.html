@@ -414,6 +414,19 @@
     QKD
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#metrics" class="md-nav__link">
+    Metrics
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -556,6 +569,19 @@
   <a href="#qkd" class="md-nav__link">
     QKD
   </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#metrics" class="md-nav__link">
+    Metrics
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -794,6 +820,11 @@ in a configuration file is a list of these sources</p>
   <span class="p p-Indicator">-</span> <span class="nt">qkd_source_id</span><span class="p">:</span> <span class="s">&quot;source1&quot;</span>        <span class="c1"># a unique identifier for the source</span>
     <span class="nt">type</span><span class="p">:</span> <span class="s">&quot;qix&quot;</span>                     <span class="c1"># the only supported type ATM is qix</span>
     <span class="nt">num_subscribers</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>              <span class="c1"># the number of subscribers</span>
+    <span class="nt">metrics</span><span class="p">:</span>               
+      <span class="nt">bin_size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>                  <span class="c1"># the number of samples in a FIFO bin</span>
+      <span class="nt">update_period</span><span class="p">:</span>                <span class="c1"># how frequently the metrics are recalculated</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
+        <span class="nt">unit</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">seconds</span>
     <span class="nt">serial</span><span class="p">:</span>                  
       <span class="nt">device</span><span class="p">:</span> <span class="s">&quot;/dev/pts/3&quot;</span>          <span class="c1"># the serial device, e.g. /dev/ttyS0 or COM1</span>
       <span class="nt">baud</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">9600</span>                    <span class="c1"># baud rate, defaults to 9600 if not specified</span>
@@ -836,6 +867,21 @@ handshake. If a responder returns the error code <code>KEY_NOT_FOUND</code> this
 to subscribers #0, #1, and #2. In this case the <code>num_subscribers</code> parameter is set to 3.  If it was set to a number greater
 than 3, keys where <code>key_id % num_subscribers &gt; 2</code> would be silently discarded . If it were set to a number less than 3,
 the proxy would fail to start with a configuration error since one or more of the subscriber would never receive keys.</p>
+<h5 id="metrics">Metrics</h5>
+<p>The QIX module that parsers incoming key frames calculates a couple of metrics on the fly:</p>
+<ul>
+<li>The average interval between frames (the inverse of the frames/sec, i.e. sec/frame)</li>
+<li>The stddev in this interval</li>
+<li>The running shannon entropy of all keys received</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The Shannon entropy is calculated with bytes [0,255] being the input symbols. The module maintains an
+array (<code>uint64_t[256]</code>) where the number of each byte value is counted. The calculated entropy value will
+converge to 1.0 for a uniformly random distribution of byte values.</p>
+</div>
+<p>You can control the frequency of metric outputs to the log stream using the <code>qkd_sources.metrics.update_period</code> parameter.
+The <code>qkd_sources.metrics.bin_size</code> parameter has no effect on the entropy calculation. </p>
 <h2 id="transport-modes">Transport modes</h2>
 <p>The proxy supports TCP and UDP transport. Both modes take specific parameters. The following subsections provide configuration
 snippets for each mode.</p>
