@@ -196,7 +196,7 @@ int write_frames_from_std_in(const std::vector<std::string>& ports)
             for (size_t bit = 0; bit < 8; ++bit) {                
                 switch (line[(byte * 8) + bit]) {
                 case ('1'):
-                    sum = sum | (1 << bit);
+                    sum = sum | (1 << (7 - bit));
                     break;
                 case ('0'):
                     break;
@@ -204,7 +204,7 @@ int write_frames_from_std_in(const std::vector<std::string>& ports)
                     std::cerr << "input may only consist of '1' or '0' characters" << std::endl;
                     return -1;
 				}
-            }
+            }            
             key[byte] = sum;
         }
 
@@ -213,9 +213,11 @@ int write_frames_from_std_in(const std::vector<std::string>& ports)
         frame.key_id = key_id;
         frame.status = QIXFrame::Status::ok;
 
+		++key_id;
+
 		for (auto& writer : writers) {
             writer->write(frame);
-		}
+		}		
     }
 
     return 0;
