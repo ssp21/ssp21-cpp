@@ -19,34 +19,33 @@ namespace ssp21 {
 
 const char* CryptoActionSpec::to_string(CryptoAction arg)
 {
-    switch(arg)
-    {
-        case(CryptoAction::secure_equals):
-            return "secure_equals";
-        case(CryptoAction::gen_random):
-            return "gen_random";
-        case(CryptoAction::hash_sha256):
-            return "hash_sha256";
-        case(CryptoAction::hmac_sha256):
-            return "hmac_sha256";
-        case(CryptoAction::hkdf_sha256):
-            return "hkdf_sha256";
-        case(CryptoAction::gen_keypair_x25519):
-            return "gen_keypair_x25519";
-        case(CryptoAction::dh_x25519):
-            return "dh_x25519";
-        case(CryptoAction::gen_keypair_ed25519):
-            return "gen_keypair_ed25519";
-        case(CryptoAction::sign_ed25519):
-            return "sign_ed25519";
-        case(CryptoAction::verify_ed25519):
-            return "verify_ed25519";
-        case(CryptoAction::aes_gcm_encrypt):
-            return "aes_gcm_encrypt";
-        case(CryptoAction::aes_gcm_decrypt):
-            return "aes_gcm_decrypt";
-        default:
-            return "undefined";
+    switch (arg) {
+    case (CryptoAction::secure_equals):
+        return "secure_equals";
+    case (CryptoAction::gen_random):
+        return "gen_random";
+    case (CryptoAction::hash_sha256):
+        return "hash_sha256";
+    case (CryptoAction::hmac_sha256):
+        return "hmac_sha256";
+    case (CryptoAction::hkdf_sha256):
+        return "hkdf_sha256";
+    case (CryptoAction::gen_keypair_x25519):
+        return "gen_keypair_x25519";
+    case (CryptoAction::dh_x25519):
+        return "dh_x25519";
+    case (CryptoAction::gen_keypair_ed25519):
+        return "gen_keypair_ed25519";
+    case (CryptoAction::sign_ed25519):
+        return "sign_ed25519";
+    case (CryptoAction::verify_ed25519):
+        return "verify_ed25519";
+    case (CryptoAction::aes_gcm_encrypt):
+        return "aes_gcm_encrypt";
+    case (CryptoAction::aes_gcm_decrypt):
+        return "aes_gcm_decrypt";
+    default:
+        return "undefined";
     }
 }
 

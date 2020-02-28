@@ -46,6 +46,8 @@ int read_frames(const std::vector<std::string>& ports);
 
 int write_random_frames(const std::vector<std::string>& ports, uint64_t frame_count, uint16_t frames_per_sec);
 
+int write_frames_from_std_in(const std::vector<std::string>& ports);
+
 int write_time_based_frames(const std::vector<std::string>& ports, uint64_t frame_count, uint32_t ms_modulo);
 
 std::vector<std::string> get_ports(const argagg::parser_results& results);
@@ -62,6 +64,7 @@ int main(int argc, char* argv[])
         { "help", { "-h", "--help" }, "shows this help message", 0 },
         { "read", { "-r", "--read" }, "read QIX frames", 0 },
         { "write", { "-w", "--write" }, "write random QIX frames", 0 },
+        { "stdin", { "-d", "--stdin" }, "read lines of key data from stdin and write the specified port", 0 },
         { "twrite", { "-m", "--twrite" }, "write time-based QIX frames modulo n milliseconds", 1 },
         { "port", { "-p", "--port" }, "serial port", 1 },
         { "rate", { "-t", "--rate" }, "number of keys per second (write only) - defaults to 1", 1 },
@@ -81,6 +84,8 @@ int main(int argc, char* argv[])
 
         if (results.has_option("read")) {
             return read_frames(ports);
+        } else if (results.has_option("stdin")) {
+            return write_frames_from_std_in(ports);
         } else if (results.has_option("write")) {
             ssp21::sodium::initialize();
             return write_random_frames(ports, get_frame_count(results), get_key_rate(results));
@@ -166,6 +171,56 @@ int write_random_frames(const std::vector<std::string>& ports, uint64_t frame_co
     return 0;
 }
 
+int write_frames_from_std_in(const std::vector<std::string>& ports)
+{
+    std::vector<std::unique_ptr<QIXFrameWriter>> writers;
+
+    for (auto port : ports) {
+        writers.push_back(std::make_unique<QIXFrameWriter>(port));
+    }
+
+    uint64_t key_id = 0;
+
+    // the input should consist of 256 0's and 1's
+    std::string line;
+    while (std::getline(std::cin, line)) {
+        if (line.length() != 256) {
+            std::cerr << "input must be 256 characters long" << std::endl;
+            return -1;
+        }
+
+        uint8_t key[32];
+
+        for (size_t byte = 0; byte < 32; ++byte) {
+            uint8_t sum = 0;
+            for (size_t bit = 0; bit < 8; ++bit) {                
+                switch (line[(byte * 8) + bit]) {
+                case ('1'):
+                    sum = sum | (1 << bit);
+                    break;
+                case ('0'):
+                    break;
+                default:
+                    std::cerr << "input may only consist of '1' or '0' characters" << std::endl;
+                    return -1;
+				}
+            }
+            key[byte] = sum;
+        }
+
+		QIXFrame frame;
+        frame.key_data = seq32_t(key, 32);
+        frame.key_id = key_id;
+        frame.status = QIXFrame::Status::ok;
+
+		for (auto& writer : writers) {
+            writer->write(frame);
+		}
+    }
+
+    return 0;
+}
+
 int write_time_based_frames(const std::vector<std::string>& ports, uint64_t frame_count, uint32_t ms_modulo)
 {
     if (ports.empty()) {
@@ -218,11 +273,11 @@ int write_time_based_frames(const std::vector<std::string>& ports, uint64_t fram
 
 std::vector<std::string> get_ports(const argagg::parser_results& results)
 {
-    if (!results.has_option("port")) {
-        throw std::runtime_error("you must specify the serial port");
-    }
-
     std::vector<std::string> ports;
+
+    if (!results.has_option("port")) {
+        return ports;
+    }
 
     for (const auto& value : results["port"].all) {
         ports.push_back(value);

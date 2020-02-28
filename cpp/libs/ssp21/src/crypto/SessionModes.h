@@ -11,16 +11,15 @@ namespace ssp21 {
 class SessionModes : private ser4cpp::StaticOnly {
 
 public:
-
     /*
      * This is required instead of just making the template
      * parameter the function itself b/c of bug/limitation
      * in GCC 5&6.
      */
     struct HMACSHA256 {
-        static void calc(  const seq32_t& key,
-                    const std::initializer_list<seq32_t>& data,
-                    SecureBuffer& output)
+        static void calc(const seq32_t& key,
+                         const std::initializer_list<seq32_t>& data,
+                         SecureBuffer& output)
         {
             Crypto::hmac_sha256(key, data, output);
         }
