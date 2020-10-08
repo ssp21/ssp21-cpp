@@ -10,8 +10,12 @@ Sessions::Sessions(const std::shared_ptr<IFrameWriter>& frame_writer, const std:
 
 void Sessions::reset_both()
 {
-    this->active->reset();
-    this->pending->reset();
+    if (this->active) {
+        this->active->reset();
+    }
+    if(this->pending) {
+        this->pending->reset();
+    }
 }
 
 void Sessions::activate_pending()
