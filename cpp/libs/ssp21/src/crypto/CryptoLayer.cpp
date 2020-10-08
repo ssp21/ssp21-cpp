@@ -198,7 +198,7 @@ void CryptoLayer::check_transmit()
         FORMAT_LOG_BLOCK(this->logger, levels::warn, "Error formatting session message: %s", ec.message().c_str());
 
         // if any error occurs with transmission, we reset the session and notify the upper layer
-        this->sessions.active.reset();
+        this->sessions.active->reset();
         this->upper->on_lower_close();
 
         return;
