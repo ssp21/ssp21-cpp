@@ -10,6 +10,19 @@ namespace ssp21 {
 using metadata_buffer_t = ser4cpp::StaticBuffer<uint32_t, AuthMetadata::fixed_size_bytes>;
 using user_data_length_buffer_t = ser4cpp::StaticBuffer<uint32_t, ser4cpp::UInt16::size>;
 
+uint16_t calc_user_data_tx_length(uint32_t total_user_data_len, uint32_t encrypt_buffer_len, uint32_t max_frame_payload)
+{
+    static constexpr auto MAX_U16_AS_U32 = static_cast<uint32_t>(std::numeric_limits<uint16_t>::max());
+
+    const auto value = std::min(
+        std::min(total_user_data_len, encrypt_buffer_len),
+        max_frame_payload
+    );
+
+    // finally, ensure that the value doesn't exceed U16 MAX before downcasting
+    return static_cast<uint16_t>(std::min(value, MAX_U16_AS_U32));
+}
+
 seq32_t get_metadata_bytes(const AuthMetadata& metadata, metadata_buffer_t& buffer)
 {
     auto dest = buffer.as_wseq();
@@ -56,11 +69,7 @@ SessionData SessionMode::write(const SymmetricKey& key, const AuthMetadata& meta
         return SessionData();
     }
 
-    // we transmit the smaller of the encrypt buffer size, the user_data size, or u16 max value
-    const uint16_t tx_user_data_length = static_cast<uint16_t>(
-        std::min(
-            std::min(user_data.length(), encrypt_buffer.length()),
-            static_cast<uint32_t>(std::numeric_limits<uint16_t>::max())));
+    const uint16_t tx_user_data_length = calc_user_data_tx_length(user_data.length(), encrypt_buffer.length(), 1024); // TODO - make this magic number dependent on the frame type
 
     metadata_buffer_t buffer;
     const auto ad_bytes = get_metadata_bytes(metadata, buffer);

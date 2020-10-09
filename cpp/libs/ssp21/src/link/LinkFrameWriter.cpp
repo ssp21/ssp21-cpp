@@ -17,8 +17,9 @@ LinkFrameWriter::LinkFrameWriter(const log4cpp::Logger& logger, Addresses addr, 
 WriteResult LinkFrameWriter::write_impl(const IWritable& payload)
 {
     const auto res = this->write_body_and_crc(payload);
-    if (res.is_error())
+    if (res.is_error()) {
         return WriteResult::error(res.err);
+    }
 
     // now that we've written the body, we can write the header
 
@@ -55,8 +56,9 @@ FormatResult LinkFrameWriter::write_body_and_crc(const IWritable& payload)
     dest.advance(consts::link::header_total_size);
 
     const auto result = payload.write(dest);
-    if (result.is_error())
+    if (result.is_error()) {
         return result;
+    }
 
     if (!ser4cpp::BigEndian::write(dest, CastagnoliCRC32::calc(result.written))) {
         return FormatResult::error(FormatError::insufficient_space);
